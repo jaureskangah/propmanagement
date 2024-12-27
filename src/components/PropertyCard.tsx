@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Edit, Trash2 } from "lucide-react";
+import { Building2, Edit, Trash2, DollarSign } from "lucide-react";
 
 interface PropertyCardProps {
   property: {
@@ -20,9 +20,10 @@ interface PropertyCardProps {
   };
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onViewFinancials: (id: string) => void;
 }
 
-const PropertyCard = ({ property, onEdit, onDelete }: PropertyCardProps) => {
+const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: PropertyCardProps) => {
   console.log("Rendering PropertyCard for:", property.name);
   
   return (
@@ -34,6 +35,13 @@ const PropertyCard = ({ property, onEdit, onDelete }: PropertyCardProps) => {
             <CardTitle className="text-lg">{property.name}</CardTitle>
           </div>
           <div className="flex gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => onViewFinancials(property.id)}
+            >
+              <DollarSign className="h-4 w-4" />
+            </Button>
             <Button
               variant="ghost"
               size="icon"
