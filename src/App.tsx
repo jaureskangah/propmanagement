@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Properties from "@/pages/Properties";
+import Maintenance from "@/pages/Maintenance";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +20,7 @@ function App() {
                 <Routes>
                   <Route path="/" element={<div>Dashboard</div>} />
                   <Route path="/properties" element={<Properties />} />
+                  <Route path="/maintenance" element={<Maintenance />} />
                 </Routes>
               </main>
             </div>
