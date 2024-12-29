@@ -29,37 +29,37 @@ const Dashboard = () => {
   return (
     <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-slate-100 shadow-sm">
-        <h1 className="text-3xl font-bold mb-2 text-slate-800">Bienvenue sur RentEase</h1>
+        <h1 className="text-3xl font-bold mb-2 text-slate-800">Welcome to RentEase</h1>
         <p className="text-slate-600">
-          Voici un aperçu de vos propriétés locatives
+          Here's an overview of your rental properties
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <DashboardMetric
-          title="Propriétés Totales"
+          title="Total Properties"
           value={mockData.properties.toString()}
           icon={<Building2 className="h-4 w-4 text-blue-600" />}
         />
         <DashboardMetric
-          title="Taux d'Occupation"
+          title="Occupancy Rate"
           value={mockData.occupancyRate}
           icon={<Users className="h-4 w-4 text-blue-600" />}
         />
         <DashboardMetric
-          title="Paiements en Attente"
+          title="Pending Payments"
           value={mockData.pendingPayments}
           icon={<DollarSign className="h-4 w-4 text-blue-600" />}
         />
         <DashboardMetric
-          title="Demandes d'Entretien"
+          title="Maintenance Requests"
           value={mockData.maintenanceRequests.toString()}
           icon={<Wrench className="h-4 w-4 text-blue-600" />}
         />
       </div>
 
       <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-slate-100 shadow-sm">
-        <h2 className="text-xl font-semibold mb-4 text-slate-800">Collection des Loyers Mensuels</h2>
+        <h2 className="text-xl font-semibold mb-4 text-slate-800">Monthly Rent Collection</h2>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={mockData.rentData}>
