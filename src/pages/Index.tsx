@@ -27,48 +27,60 @@ const mockData = {
 
 const Dashboard = () => {
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Welcome to RentEase</h1>
-        <p className="text-muted-foreground">
-          Here's an overview of your rental properties
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-slate-100 shadow-sm">
+        <h1 className="text-3xl font-bold mb-2 text-slate-800">Bienvenue sur RentEase</h1>
+        <p className="text-slate-600">
+          Voici un aperçu de vos propriétés locatives
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <DashboardMetric
-          title="Total Properties"
+          title="Propriétés Totales"
           value={mockData.properties.toString()}
-          icon={<Building2 className="h-4 w-4 text-muted-foreground" />}
+          icon={<Building2 className="h-4 w-4 text-blue-600" />}
         />
         <DashboardMetric
-          title="Occupancy Rate"
+          title="Taux d'Occupation"
           value={mockData.occupancyRate}
-          icon={<Users className="h-4 w-4 text-muted-foreground" />}
+          icon={<Users className="h-4 w-4 text-blue-600" />}
         />
         <DashboardMetric
-          title="Pending Payments"
+          title="Paiements en Attente"
           value={mockData.pendingPayments}
-          icon={<DollarSign className="h-4 w-4 text-muted-foreground" />}
+          icon={<DollarSign className="h-4 w-4 text-blue-600" />}
         />
         <DashboardMetric
-          title="Maintenance Requests"
+          title="Demandes d'Entretien"
           value={mockData.maintenanceRequests.toString()}
-          icon={<Wrench className="h-4 w-4 text-muted-foreground" />}
+          icon={<Wrench className="h-4 w-4 text-blue-600" />}
         />
       </div>
 
-      <div className="h-[400px]">
-        <h2 className="text-xl font-semibold mb-4">Monthly Rent Collection</h2>
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={mockData.rentData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="amount" fill="#1E40AF" />
-          </BarChart>
-        </ResponsiveContainer>
+      <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl border border-slate-100 shadow-sm">
+        <h2 className="text-xl font-semibold mb-4 text-slate-800">Collection des Loyers Mensuels</h2>
+        <div className="h-[400px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={mockData.rentData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+              <XAxis dataKey="month" stroke="#64748b" />
+              <YAxis stroke="#64748b" />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: "white",
+                  border: "1px solid #e2e8f0",
+                  borderRadius: "0.5rem",
+                }}
+              />
+              <Bar 
+                dataKey="amount" 
+                fill="#2563eb"
+                radius={[4, 4, 0, 0]}
+              />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </div>
   );
