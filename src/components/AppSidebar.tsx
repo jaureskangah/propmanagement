@@ -1,50 +1,65 @@
-import { Building2, Home, Users, Wrench, CreditCard } from "lucide-react";
-import { useNavigate, useLocation } from "react-router-dom";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
+import { NavLink } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Building2, Home, Users, Wrench } from "lucide-react";
 
-const menuItems = [
-  { title: "Dashboard", icon: Home, path: "/" },
-  { title: "Properties", icon: Building2, path: "/properties" },
-  { title: "Tenants", icon: Users, path: "/tenants" },
-  { title: "Maintenance", icon: Wrench, path: "/maintenance" },
-  { title: "Payments", icon: CreditCard, path: "/payments" },
-];
-
-export function AppSidebar() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
+const AppSidebar = () => {
   return (
-    <Sidebar>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>RentEase</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    onClick={() => navigate(item.path)}
-                    className={location.pathname === item.path ? "bg-primary/10" : ""}
-                  >
-                    <item.icon className="w-5 h-5" />
-                    <span>{item.title}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+    <div className="min-h-screen w-64 bg-gray-100/40 border-r px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-xl font-bold text-center">RentEase</h1>
+      </div>
+      <nav className="space-y-2">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
+              isActive && "bg-gray-100 font-medium"
+            )
+          }
+        >
+          <Home className="h-5 w-5" />
+          Dashboard
+        </NavLink>
+        <NavLink
+          to="/properties"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
+              isActive && "bg-gray-100 font-medium"
+            )
+          }
+        >
+          <Building2 className="h-5 w-5" />
+          Properties
+        </NavLink>
+        <NavLink
+          to="/tenants"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
+              isActive && "bg-gray-100 font-medium"
+            )
+          }
+        >
+          <Users className="h-5 w-5" />
+          Tenants
+        </NavLink>
+        <NavLink
+          to="/maintenance"
+          className={({ isActive }) =>
+            cn(
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
+              isActive && "bg-gray-100 font-medium"
+            )
+          }
+        >
+          <Wrench className="h-5 w-5" />
+          Maintenance
+        </NavLink>
+      </nav>
+    </div>
   );
-}
+};
+
+export default AppSidebar;
