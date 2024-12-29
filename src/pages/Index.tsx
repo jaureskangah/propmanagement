@@ -27,9 +27,11 @@ const mockData = {
 
 const Dashboard = () => {
   return (
-    <div className="space-y-8 p-6 min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-100">
-      <div className="bg-white/90 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 shadow-lg">
-        <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">Welcome to RentEase</h1>
+    <div className="space-y-8 p-6 min-h-screen bg-gradient-to-br from-[#F1F0FB] via-[#E5DEFF] to-[#F1F0FB]">
+      <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-slate-200/60 shadow-lg transition-all duration-300 hover:shadow-xl">
+        <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
+          Welcome to RentEase
+        </h1>
         <p className="text-slate-600">
           Here's an overview of your rental properties
         </p>
@@ -39,26 +41,30 @@ const Dashboard = () => {
         <DashboardMetric
           title="Total Properties"
           value={mockData.properties.toString()}
-          icon={<Building2 className="h-4 w-4 text-red-600" />}
+          icon={<Building2 className="h-4 w-4 text-rose-500" />}
+          description="Active rental properties"
         />
         <DashboardMetric
           title="Occupancy Rate"
           value={mockData.occupancyRate}
-          icon={<Users className="h-4 w-4 text-emerald-600" />}
+          icon={<Users className="h-4 w-4 text-emerald-500" />}
+          description="Current occupancy"
         />
         <DashboardMetric
           title="Pending Payments"
           value={mockData.pendingPayments}
-          icon={<DollarSign className="h-4 w-4 text-blue-600" />}
+          icon={<DollarSign className="h-4 w-4 text-blue-500" />}
+          description="Outstanding rent"
         />
         <DashboardMetric
           title="Maintenance Requests"
           value={mockData.maintenanceRequests.toString()}
-          icon={<Wrench className="h-4 w-4 text-amber-600" />}
+          icon={<Wrench className="h-4 w-4 text-amber-500" />}
+          description="Open requests"
         />
       </div>
 
-      <div className="bg-white/90 backdrop-blur-md p-6 rounded-xl border border-slate-200/60 shadow-lg">
+      <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-slate-200/60 shadow-lg transition-all duration-300 hover:shadow-xl">
         <h2 className="text-xl font-semibold mb-4 text-slate-800">Monthly Rent Collection</h2>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
@@ -81,8 +87,8 @@ const Dashboard = () => {
               >
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#1E40AF" stopColor-opacity={0.8}/>
-                    <stop offset="100%" stopColor="#60A5FA" stopColor-opacity={0.8}/>
+                    <stop offset="0%" stopColor="#818CF8" stopColor-opacity={0.8}/>
+                    <stop offset="100%" stopColor="#C7D2FE" stopColor-opacity={0.8}/>
                   </linearGradient>
                 </defs>
               </Bar>
