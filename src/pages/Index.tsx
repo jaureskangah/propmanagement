@@ -1,133 +1,102 @@
-import { DashboardMetric } from "@/components/DashboardMetric";
-import { Building2, DollarSign, Users, Wrench } from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-
-const mockData = {
-  properties: 5,
-  occupancyRate: "92%",
-  pendingPayments: "$3,450",
-  maintenanceRequests: 3,
-  rentData: [
-    { month: "Jan", amount: 12000 },
-    { month: "Feb", amount: 12000 },
-    { month: "Mar", amount: 15000 },
-    { month: "Apr", amount: 15000 },
-    { month: "May", amount: 15000 },
-    { month: "Jun", amount: 18000 },
-  ],
-};
-
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-slate-200/60 shadow-lg">
-        <p className="font-semibold text-slate-900">{label}</p>
-        <p className="text-blue-600 font-medium">
-          ${payload[0].value.toLocaleString()}
-        </p>
-        <p className="text-xs text-slate-500">Monthly rent collection</p>
-      </div>
-    );
-  }
-  return null;
-};
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Building2, Shield, Users, Wrench } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F1F0FB] via-[#E5DEFF] to-[#F1F0FB]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
-        <div className="bg-white/80 backdrop-blur-lg p-8 rounded-2xl border border-slate-200/60 shadow-lg transition-all duration-300 hover:shadow-xl">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
-            Welcome to RentEase
+      {/* Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center space-y-8">
+          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent animate-fade-in">
+            Simplifiez votre gestion immobilière
           </h1>
-          <p className="text-slate-600 text-lg">
-            Here's an overview of your rental properties
+          <p className="text-slate-600 text-xl md:text-2xl max-w-3xl mx-auto animate-fade-in delay-100">
+            Une solution complète pour gérer vos propriétés, vos locataires et vos maintenances en toute simplicité.
+          </p>
+          <div className="flex justify-center gap-4 animate-fade-in delay-200">
+            <Button asChild size="lg" className="group">
+              <Link to="/properties">
+                Commencer maintenant
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link to="/contact">En savoir plus</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+            Tout ce dont vous avez besoin
+          </h2>
+          <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+            Des outils puissants pour une gestion efficace de votre patrimoine immobilier
           </p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <DashboardMetric
-            title="Total Properties"
-            value={mockData.properties.toString()}
-            icon={<Building2 className="h-4 w-4 text-rose-500" />}
-            description="Active rental properties"
-          />
-          <DashboardMetric
-            title="Occupancy Rate"
-            value={mockData.occupancyRate}
-            icon={<Users className="h-4 w-4 text-emerald-500" />}
-            description="Current occupancy"
-          />
-          <DashboardMetric
-            title="Pending Payments"
-            value={mockData.pendingPayments}
-            icon={<DollarSign className="h-4 w-4 text-blue-500" />}
-            description="Outstanding rent"
-          />
-          <DashboardMetric
-            title="Maintenance Requests"
-            value={mockData.maintenanceRequests.toString()}
-            icon={<Wrench className="h-4 w-4 text-amber-500" />}
-            description="Open requests"
-          />
-        </div>
-
-        <div className="bg-white/80 backdrop-blur-lg p-8 rounded-2xl border border-slate-200/60 shadow-lg transition-all duration-300 hover:shadow-xl">
-          <h2 className="text-2xl font-semibold mb-6 text-slate-800">Monthly Rent Collection</h2>
-          <div className="h-[400px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart 
-                data={mockData.rentData}
-                className="animate-fade-in"
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-              >
-                <defs>
-                  <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#818CF8" stopOpacity={0.8} />
-                    <stop offset="100%" stopColor="#C7D2FE" stopOpacity={0.8} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid 
-                  strokeDasharray="3 3" 
-                  stroke="#e2e8f0" 
-                  vertical={false}
-                />
-                <XAxis 
-                  dataKey="month" 
-                  stroke="#64748b"
-                  axisLine={false}
-                  tickLine={false}
-                  dy={10}
-                />
-                <YAxis 
-                  stroke="#64748b"
-                  axisLine={false}
-                  tickLine={false}
-                  dx={-10}
-                  tickFormatter={(value) => `$${value.toLocaleString()}`}
-                />
-                <Tooltip 
-                  content={<CustomTooltip />}
-                  cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
-                />
-                <Bar 
-                  dataKey="amount" 
-                  fill="url(#barGradient)"
-                  radius={[4, 4, 0, 0]}
-                  animationDuration={1500}
-                  animationBegin={200}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Building2 className="text-blue-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Gestion des biens</h3>
+            <p className="text-slate-600">
+              Suivez vos propriétés et leurs performances en temps réel
+            </p>
           </div>
+
+          <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Users className="text-green-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Gestion des locataires</h3>
+            <p className="text-slate-600">
+              Gérez facilement vos locataires et leurs documents
+            </p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <div className="w-12 h-12 bg-amber-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Wrench className="text-amber-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Maintenance</h3>
+            <p className="text-slate-600">
+              Suivez et gérez les demandes de maintenance
+            </p>
+          </div>
+
+          <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-slate-200/60 shadow-lg hover:shadow-xl transition-all duration-300 group">
+            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <Shield className="text-purple-600" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">Sécurité</h3>
+            <p className="text-slate-600">
+              Vos données sont sécurisées et protégées
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 md:p-12 text-center text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            Prêt à simplifier votre gestion ?
+          </h2>
+          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+            Rejoignez des milliers de propriétaires qui font confiance à notre solution
+          </p>
+          <Button asChild size="lg" variant="secondary" className="group">
+            <Link to="/signup">
+              Essayer gratuitement
+              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
         </div>
       </div>
     </div>
