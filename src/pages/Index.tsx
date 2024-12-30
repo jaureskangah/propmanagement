@@ -25,6 +25,21 @@ const mockData = {
   ],
 };
 
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg border border-slate-200/60 shadow-lg">
+        <p className="font-semibold text-slate-900">{label}</p>
+        <p className="text-blue-600 font-medium">
+          ${payload[0].value.toLocaleString()}
+        </p>
+        <p className="text-xs text-slate-500">Monthly rent collection</p>
+      </div>
+    );
+  }
+  return null;
+};
+
 const Dashboard = () => {
   return (
     <div className="space-y-8 p-6 min-h-screen bg-gradient-to-br from-[#F1F0FB] via-[#E5DEFF] to-[#F1F0FB]">
@@ -68,30 +83,46 @@ const Dashboard = () => {
         <h2 className="text-xl font-semibold mb-4 text-slate-800">Monthly Rent Collection</h2>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={mockData.rentData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-              <XAxis dataKey="month" stroke="#64748b" />
-              <YAxis stroke="#64748b" />
+            <BarChart 
+              data={mockData.rentData}
+              className="animate-fade-in"
+            >
+              <defs>
+                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#818CF8" stopOpacity={0.8} />
+                  <stop offset="100%" stopColor="#C7D2FE" stopOpacity={0.8} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                stroke="#e2e8f0" 
+                vertical={false}
+              />
+              <XAxis 
+                dataKey="month" 
+                stroke="#64748b"
+                axisLine={false}
+                tickLine={false}
+                dy={10}
+              />
+              <YAxis 
+                stroke="#64748b"
+                axisLine={false}
+                tickLine={false}
+                dx={-10}
+                tickFormatter={(value) => `$${value.toLocaleString()}`}
+              />
               <Tooltip 
-                contentStyle={{
-                  backgroundColor: "rgba(255, 255, 255, 0.95)",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "0.5rem",
-                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                }}
+                content={<CustomTooltip />}
+                cursor={{ fill: 'rgba(255, 255, 255, 0.1)' }}
               />
               <Bar 
                 dataKey="amount" 
-                fill="url(#colorGradient)"
+                fill="url(#barGradient)"
                 radius={[4, 4, 0, 0]}
-              >
-                <defs>
-                  <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#818CF8" stopColor-opacity={0.8}/>
-                    <stop offset="100%" stopColor="#C7D2FE" stopColor-opacity={0.8}/>
-                  </linearGradient>
-                </defs>
-              </Bar>
+                animationDuration={1500}
+                animationBegin={200}
+              />
             </BarChart>
           </ResponsiveContainer>
         </div>
