@@ -28,7 +28,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormP
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nom de la propriété</FormLabel>
+              <FormLabel>Property Name</FormLabel>
               <FormControl>
                 <Input placeholder="Maple Heights" {...field} />
               </FormControl>
@@ -41,9 +41,9 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormP
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Adresse</FormLabel>
+              <FormLabel>Address</FormLabel>
               <FormControl>
-                <Input placeholder="123 Rue Principale" {...field} />
+                <Input placeholder="123 Main Street" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -54,7 +54,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormP
           name="units"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Nombre d'unités</FormLabel>
+              <FormLabel>Number of Units</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 
@@ -72,9 +72,9 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormP
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Type de propriété</FormLabel>
+              <FormLabel>Property Type</FormLabel>
               <FormControl>
-                <Input placeholder="Appartement, Maison, etc." {...field} />
+                <Input placeholder="Apartment, House, etc." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -82,10 +82,10 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormP
         />
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={onCancel}>
-            Annuler
+            Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Ajout en cours..." : "Ajouter"}
+            {isSubmitting ? "Adding..." : "Add Property"}
           </Button>
         </div>
       </form>

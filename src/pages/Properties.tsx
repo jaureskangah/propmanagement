@@ -74,15 +74,14 @@ const Properties = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Propriétés</h1>
+      <div className="flex justify-end mb-6">
         <AddPropertyModal />
       </div>
       
       {properties.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            Vous n'avez pas encore de propriétés. Commencez par en ajouter une !
+            Start by adding your first property!
           </p>
         </div>
       ) : (
@@ -99,13 +98,13 @@ const Properties = () => {
         </div>
       )}
 
-      {selectedProperty && (
+      {selectedPropertyId && (
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">
-            Aperçu financier - {selectedProperty.name}
+            Financial Overview - {properties.find(p => p.id === selectedPropertyId)?.name}
           </h2>
           <PropertyFinancials
-            propertyId={selectedProperty.id}
+            propertyId={selectedPropertyId}
             rentRoll={mockFinancials.rentRoll}
             expenses={mockFinancials.expenses}
             maintenance={mockFinancials.maintenance}

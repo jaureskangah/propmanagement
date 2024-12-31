@@ -21,12 +21,12 @@ export function AddPropertyModal() {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Ajouter une propriété
+          Add Property
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ajouter une nouvelle propriété</DialogTitle>
+          <DialogTitle>Add New Property</DialogTitle>
         </DialogHeader>
         <PropertyForm 
           onSubmit={handleSubmit}
