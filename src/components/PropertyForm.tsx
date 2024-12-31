@@ -3,6 +3,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PropertyFormData } from "@/hooks/useProperties";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PropertyFormProps {
   onSubmit: (data: PropertyFormData) => Promise<void>;
@@ -10,6 +11,15 @@ interface PropertyFormProps {
   isSubmitting: boolean;
   initialData?: PropertyFormData;
 }
+
+const PROPERTY_TYPES = [
+  "Apartment",
+  "House",
+  "Studio",
+  "Condo",
+  "Office",
+  "Commercial Space"
+] as const;
 
 export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: PropertyFormProps) {
   const form = useForm<PropertyFormData>({
@@ -74,9 +84,20 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
           render={({ field }) => (
             <FormItem>
               <FormLabel>Property Type</FormLabel>
-              <FormControl>
-                <Input placeholder="Apartment, House, etc." {...field} />
-              </FormControl>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a property type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {PROPERTY_TYPES.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
