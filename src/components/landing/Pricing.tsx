@@ -4,41 +4,41 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 
 const plans = [
   {
-    name: "Basic",
-    price: "29",
+    name: "Freemium",
+    price: "Free",
     features: [
-      "Jusqu'à 5 propriétés",
-      "Gestion des locataires",
-      "Suivi des paiements",
-      "Support par email",
+      "Up to 2 properties",
+      "Rent management",
+      "Digital documents",
     ],
+    buttonText: "Get Started Free",
   },
   {
     name: "Pro",
-    price: "79",
+    price: "39.99",
     popular: true,
     features: [
-      "Jusqu'à 20 propriétés",
-      "Gestion des locataires",
-      "Suivi des paiements",
-      "Support prioritaire",
-      "Rapports avancés",
-      "Documents personnalisés",
+      "Up to 5 properties",
+      "Rent management",
+      "Digital documents",
+      "Mobile app",
+      "Tenant screening",
+      "Priority support",
     ],
+    buttonText: "Start Now",
   },
   {
     name: "Enterprise",
-    price: "199",
+    price: "99.99",
     features: [
-      "Propriétés illimitées",
-      "Gestion des locataires",
-      "Suivi des paiements",
-      "Support dédié 24/7",
-      "Rapports avancés",
-      "Documents personnalisés",
-      "API access",
-      "Intégrations personnalisées",
+      "Up to 20 properties",
+      "Rent management",
+      "Digital documents",
+      "Mobile app",
+      "Tenant screening",
+      "24/7 Priority support",
     ],
+    buttonText: "Start Now",
   },
 ];
 
@@ -48,10 +48,10 @@ export default function Pricing() {
       <div className="container px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Des prix simples et transparents
+            Simple and transparent pricing
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Choisissez le plan qui correspond le mieux à vos besoins
+            Choose the plan that best suits your needs
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
@@ -65,7 +65,7 @@ export default function Pricing() {
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">
-                    Plus populaire
+                    Most Popular
                   </span>
                 </div>
               )}
@@ -74,8 +74,14 @@ export default function Pricing() {
               </CardHeader>
               <CardContent className="flex-1">
                 <div className="mt-2 flex items-baseline text-gray-900">
-                  <span className="text-4xl font-bold tracking-tight">€{plan.price}</span>
-                  <span className="ml-1 text-sm font-semibold">/mois</span>
+                  {plan.price === "Free" ? (
+                    <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
+                  ) : (
+                    <>
+                      <span className="text-4xl font-bold tracking-tight">CA${plan.price}</span>
+                      <span className="ml-1 text-sm font-semibold">/month</span>
+                    </>
+                  )}
                 </div>
                 <ul className="mt-8 space-y-4">
                   {plan.features.map((feature) => (
@@ -90,7 +96,7 @@ export default function Pricing() {
                 <Button 
                   className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90 text-white"
                 >
-                  Commencer maintenant
+                  {plan.buttonText}
                 </Button>
               </CardFooter>
             </Card>
