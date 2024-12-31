@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
 import { AddTenantModal } from "@/components/tenant/AddTenantModal";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@supabase/auth-helpers-react";
+import { useAuth } from "@/components/AuthProvider"; // Updated this import
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -17,7 +17,7 @@ const Tenants = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { tenants, isLoading } = useTenants();
   const { toast } = useToast();
-  const user = useAuth();
+  const { user } = useAuth(); // Updated to use the correct hook
 
   console.log("Rendering Tenants page with tenants:", tenants);
 
