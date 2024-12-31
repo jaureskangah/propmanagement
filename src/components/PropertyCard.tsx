@@ -27,7 +27,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   console.log("Rendering PropertyCard for:", property.name);
   
   return (
-    <Card className="w-full">
+    <Card className="w-full min-w-[300px] h-auto">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -58,7 +58,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
             </Button>
           </div>
         </div>
-        <CardDescription>{property.address}</CardDescription>
+        <CardDescription className="mt-2 text-sm break-words">{property.address}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
