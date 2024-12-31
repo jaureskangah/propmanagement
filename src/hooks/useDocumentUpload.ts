@@ -22,7 +22,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
       console.log("Uploading to storage with path:", fileName);
 
-      const { error: uploadError, data: uploadData } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
           cacheControl: '3600',
@@ -37,11 +37,15 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       console.log("File uploaded successfully, getting public URL");
 
       // 2. Generate public URL
-      const { data: { publicUrl } } = supabase.storage
+      const { data: publicUrlData } = await supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
 
-      console.log("Generated public URL:", publicUrl);
+      if (!publicUrlData?.publicUrl) {
+        throw new Error("Failed to generate public URL");
+      }
+
+      console.log("Generated public URL:", publicUrlData.publicUrl);
 
       // 3. Save document reference with public URL in database
       const { error: dbError } = await supabase
@@ -49,7 +53,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         .insert({
           tenant_id: tenantId,
           name: file.name,
-          file_url: publicUrl
+          file_url: publicUrlData.publicUrl
         });
 
       if (dbError) {
@@ -57,7 +61,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         throw dbError;
       }
 
-      console.log("Document reference saved in database with URL:", publicUrl);
+      console.log("Document reference saved in database with URL:", publicUrlData.publicUrl);
 
       toast({
         title: "Document chargé",
