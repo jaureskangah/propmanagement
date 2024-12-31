@@ -2,7 +2,17 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Plus, Search, Home, Pencil } from "lucide-react";
+import { Plus, Search, Home, Pencil, Trash2 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import TenantProfile from "@/components/TenantProfile";
 import { useTenants } from "@/hooks/useTenants";
 import { useToast } from "@/hooks/use-toast";
@@ -17,7 +27,8 @@ const Tenants = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { tenants, isLoading, updateTenant } = useTenants();
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { tenants, isLoading, updateTenant, deleteTenant } = useTenants();
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -67,6 +78,14 @@ const Tenants = () => {
       id: selectedTenantData.id,
       ...data,
     });
+  };
+
+  const handleDeleteTenant = async () => {
+    if (!selectedTenantData) return;
+
+    await deleteTenant.mutateAsync(selectedTenantData.id);
+    setSelectedTenant(null);
+    setIsDeleteDialogOpen(false);
   };
 
   const handleEditClick = (tenantId: string) => {
@@ -123,16 +142,30 @@ const Tenants = () => {
                         {tenant.properties?.name} - Unité {tenant.unit_number}
                       </p>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleEditClick(tenant.id);
-                      }}
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditClick(tenant.id);
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="text-destructive hover:text-destructive/90"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedTenant(tenant.id);
+                          setIsDeleteDialogOpen(true);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -165,6 +198,26 @@ const Tenants = () => {
           onSubmit={handleUpdateTenant}
         />
       )}
+
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce locataire ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Cette action est irréversible. Toutes les données associées à ce locataire seront supprimées.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleDeleteTenant}
+            >
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

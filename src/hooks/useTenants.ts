@@ -133,10 +133,35 @@ export const useTenants = () => {
     },
   });
 
+  const deleteTenant = useMutation({
+    mutationFn: async (id: string) => {
+      console.log("Deleting tenant:", id);
+      const { error } = await supabase.from("tenants").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      console.log("Tenant deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["tenants"] });
+      toast({
+        title: "Success",
+        description: "Tenant deleted successfully",
+      });
+    },
+    onError: (error: Error) => {
+      console.error("Error deleting tenant:", error);
+      toast({
+        title: "Error deleting tenant",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   return {
     tenants,
     isLoading,
     addTenant,
     updateTenant,
+    deleteTenant,
   };
 };
