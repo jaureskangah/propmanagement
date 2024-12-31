@@ -5,6 +5,7 @@ import { TenantDocuments } from "./tenant/TenantDocuments";
 import { TenantPayments } from "./tenant/TenantPayments";
 import { TenantMaintenance } from "./tenant/TenantMaintenance";
 import { TenantCommunications } from "./tenant/TenantCommunications";
+import { Card } from "@/components/ui/card";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantProfileProps {
@@ -12,6 +13,14 @@ interface TenantProfileProps {
 }
 
 const TenantProfile = ({ tenant }: TenantProfileProps) => {
+  if (!tenant) {
+    return (
+      <Card className="h-[300px] flex items-center justify-center">
+        <p className="text-muted-foreground">Aucun locataire sélectionné</p>
+      </Card>
+    );
+  }
+
   console.log("Rendering TenantProfile for:", tenant.name);
 
   return (
@@ -21,7 +30,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       <Tabs defaultValue="documents" className="w-full">
         <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="payments">Paiements</TabsTrigger>
           <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           <TabsTrigger value="communications">Communications</TabsTrigger>
         </TabsList>

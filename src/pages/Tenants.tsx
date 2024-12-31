@@ -36,11 +36,15 @@ const Tenants = () => {
     tenant.properties?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const selectedTenantData = selectedTenant 
+    ? filteredTenants?.find(t => t.id === selectedTenant)
+    : null;
+
   const handleAddTenant = async (data: any) => {
     if (!user) {
       toast({
-        title: "Error",
-        description: "You must be logged in to add a tenant",
+        title: "Erreur",
+        description: "Vous devez être connecté pour ajouter un locataire",
         variant: "destructive",
       });
       return;
@@ -57,7 +61,6 @@ const Tenants = () => {
   };
 
   const handleUpdateTenant = async (data: any) => {
-    const selectedTenantData = filteredTenants?.find(t => t.id === selectedTenant);
     if (!selectedTenantData) return;
 
     await updateTenant.mutateAsync({
@@ -72,19 +75,19 @@ const Tenants = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Tenant Management</h1>
+        <h1 className="text-2xl font-bold">Gestion des locataires</h1>
         <Button 
           className="flex items-center gap-2"
           onClick={() => setIsAddModalOpen(true)}
         >
           <Plus className="h-4 w-4" />
-          Add Tenant
+          Ajouter un locataire
         </Button>
       </div>
 
@@ -94,7 +97,7 @@ const Tenants = () => {
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search tenants..."
+                placeholder="Rechercher des locataires..."
                 className="pl-9"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -117,7 +120,7 @@ const Tenants = () => {
                       <h3 className="text-lg font-semibold">{tenant.name}</h3>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Home className="h-4 w-4" />
-                        {tenant.properties?.name} - Unit {tenant.unit_number}
+                        {tenant.properties?.name} - Unité {tenant.unit_number}
                       </p>
                     </div>
                     <Button
@@ -138,13 +141,11 @@ const Tenants = () => {
         </div>
 
         <div className="lg:col-span-2">
-          {selectedTenant && filteredTenants ? (
-            <TenantProfile 
-              tenant={filteredTenants.find(t => t.id === selectedTenant)!} 
-            />
+          {selectedTenantData ? (
+            <TenantProfile tenant={selectedTenantData} />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-muted-foreground">Select a tenant to view details</p>
+              <p className="text-muted-foreground">Sélectionnez un locataire pour voir les détails</p>
             </Card>
           )}
         </div>
@@ -156,11 +157,11 @@ const Tenants = () => {
         onSubmit={handleAddTenant}
       />
 
-      {selectedTenant && filteredTenants && (
+      {selectedTenantData && (
         <EditTenantModal
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
-          tenant={filteredTenants.find(t => t.id === selectedTenant)!}
+          tenant={selectedTenantData}
           onSubmit={handleUpdateTenant}
         />
       )}
