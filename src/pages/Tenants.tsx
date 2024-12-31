@@ -7,12 +7,17 @@ import TenantProfile from "@/components/TenantProfile";
 import { useTenants } from "@/hooks/useTenants";
 import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
+import { AddTenantModal } from "@/components/tenant/AddTenantModal";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@supabase/auth-helpers-react";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { tenants, isLoading } = useTenants();
   const { toast } = useToast();
+  const user = useAuth();
 
   console.log("Rendering Tenants page with tenants:", tenants);
 
@@ -31,6 +36,26 @@ const Tenants = () => {
     tenant.properties?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleAddTenant = async (data: any) => {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to add a tenant",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const { error } = await supabase.from("tenants").insert({
+      ...data,
+      user_id: user.id,
+    });
+
+    if (error) {
+      throw error;
+    }
+  };
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -39,7 +64,10 @@ const Tenants = () => {
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Tenant Management</h1>
-        <Button className="flex items-center gap-2">
+        <Button 
+          className="flex items-center gap-2"
+          onClick={() => setIsAddModalOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           Add Tenant
         </Button>
@@ -96,6 +124,12 @@ const Tenants = () => {
           )}
         </div>
       </div>
+
+      <AddTenantModal 
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddTenant}
+      />
     </div>
   );
 };
