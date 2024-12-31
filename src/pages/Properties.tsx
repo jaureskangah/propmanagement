@@ -5,6 +5,7 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useProperties } from "@/hooks/useProperties";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 const Properties = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
@@ -58,6 +59,19 @@ const Properties = () => {
     );
   }
 
+  // Mock financial data since it's not in the database yet
+  const mockFinancials = {
+    rentRoll: [
+      { unit: "1A", tenant: "John Doe", rent: 1200, status: "Active" }
+    ],
+    expenses: [
+      { category: "Maintenance", amount: 500, date: "2024-01-15" }
+    ],
+    maintenance: [
+      { description: "Plumbing repair", cost: 300, date: "2024-01-10" }
+    ]
+  };
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
@@ -92,9 +106,9 @@ const Properties = () => {
           </h2>
           <PropertyFinancials
             propertyId={selectedProperty.id}
-            rentRoll={selectedProperty.financials?.rentRoll || []}
-            expenses={selectedProperty.financials?.expenses || []}
-            maintenance={selectedProperty.financials?.maintenance || []}
+            rentRoll={mockFinancials.rentRoll}
+            expenses={mockFinancials.expenses}
+            maintenance={mockFinancials.maintenance}
           />
         </div>
       )}
