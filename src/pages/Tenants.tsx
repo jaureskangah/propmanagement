@@ -6,6 +6,7 @@ import { Plus, Search, Home } from "lucide-react";
 import TenantProfile from "@/components/TenantProfile";
 import { useTenants } from "@/hooks/useTenants";
 import { useToast } from "@/hooks/use-toast";
+import type { Tenant } from "@/types/tenant";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -13,9 +14,19 @@ const Tenants = () => {
   const { tenants, isLoading } = useTenants();
   const { toast } = useToast();
 
-  console.log("Rendering Tenants page");
+  console.log("Rendering Tenants page with tenants:", tenants);
 
-  const filteredTenants = tenants?.filter(tenant =>
+  const mapTenantData = (tenant: any): Tenant => {
+    return {
+      ...tenant,
+      documents: tenant.tenant_documents || [],
+      paymentHistory: tenant.tenant_payments || [],
+      maintenanceRequests: tenant.maintenance_requests || [],
+      communications: tenant.tenant_communications || [],
+    };
+  };
+
+  const filteredTenants = tenants?.map(mapTenantData).filter(tenant =>
     tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     tenant.properties?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -74,9 +85,9 @@ const Tenants = () => {
         </div>
 
         <div className="lg:col-span-2">
-          {selectedTenant ? (
+          {selectedTenant && filteredTenants ? (
             <TenantProfile 
-              tenant={tenants?.find(t => t.id === selectedTenant)!} 
+              tenant={filteredTenants.find(t => t.id === selectedTenant)!} 
             />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
