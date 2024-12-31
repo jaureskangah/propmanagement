@@ -32,15 +32,21 @@ export function useProperties() {
         .from("profiles")
         .select("id")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
 
-      if (profileError || !profile) {
-        console.error("Profile not found, creating one...");
+      if (!profile) {
+        console.log("Profile not found, creating one...");
         const { error: insertError } = await supabase
           .from("profiles")
           .insert([{ id: user.id }]);
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          console.error("Error creating profile:", insertError);
+          throw insertError;
+        }
+      } else if (profileError) {
+        console.error("Error checking profile:", profileError);
+        throw profileError;
       }
 
       console.log("Adding property with user_id:", user.id);
