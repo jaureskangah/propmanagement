@@ -29,8 +29,8 @@ const Dashboard = () => {
   console.log("Rendering Dashboard");
   
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+    <div className="space-y-6 font-sans">
+      <h1 className="text-3xl font-bold font-sans">Dashboard</h1>
 
       {/* Metrics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -61,7 +61,7 @@ const Dashboard = () => {
       </div>
 
       {/* Revenue Chart */}
-      <Card>
+      <Card className="font-sans">
         <CardHeader>
           <CardTitle>Monthly Revenue</CardTitle>
         </CardHeader>
@@ -105,7 +105,7 @@ const Dashboard = () => {
       </Card>
 
       {/* Recent Activity */}
-      <Card>
+      <Card className="font-sans">
         <CardHeader>
           <CardTitle>Recent Activity</CardTitle>
         </CardHeader>
