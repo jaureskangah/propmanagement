@@ -24,7 +24,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
     );
   }
 
-  const handleDocumentUpdate = () => {
+  const handleDataUpdate = () => {
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
   };
 
@@ -37,7 +37,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       <Tabs defaultValue="documents" className="w-full">
         <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="payments">Paiements</TabsTrigger>
           <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           <TabsTrigger value="communications">Communications</TabsTrigger>
         </TabsList>
@@ -46,12 +46,16 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
           <TenantDocuments 
             documents={tenant.documents} 
             tenantId={tenant.id}
-            onDocumentUpdate={handleDocumentUpdate}
+            onDocumentUpdate={handleDataUpdate}
           />
         </TabsContent>
 
         <TabsContent value="payments" className="mt-4">
-          <TenantPayments payments={tenant.paymentHistory} />
+          <TenantPayments 
+            payments={tenant.paymentHistory} 
+            tenantId={tenant.id}
+            onPaymentUpdate={handleDataUpdate}
+          />
         </TabsContent>
 
         <TabsContent value="maintenance" className="mt-4">
