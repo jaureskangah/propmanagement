@@ -3,6 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
@@ -19,49 +21,90 @@ export const AddMaintenanceDialog = ({
   tenantId,
   onSuccess,
 }: AddMaintenanceDialogProps) => {
-  const [issue, setIssue] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [priority, setPriority] = useState("Medium");
+  const [photos, setPhotos] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!issue.trim()) {
+    if (!title.trim() || !description.trim()) {
       toast({
         title: "Error",
-        description: "Please describe the maintenance issue",
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
       return;
     }
 
     setIsSubmitting(true);
-    const { error } = await supabase
-      .from("maintenance_requests")
-      .insert({
-        tenant_id: tenantId,
-        issue: issue.trim(),
-        status: "Pending",
+    
+    try {
+      // Upload photos if any
+      const photoUrls: string[] = [];
+      
+      if (photos.length > 0) {
+        for (const photo of photos) {
+          const fileExt = photo.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const filePath = `${tenantId}/${fileName}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('tenant_documents')
+            .upload(filePath, photo);
+            
+          if (uploadError) throw uploadError;
+          
+          const { data: { publicUrl } } = supabase.storage
+            .from('tenant_documents')
+            .getPublicUrl(filePath);
+            
+          photoUrls.push(publicUrl);
+        }
+      }
+
+      const { error } = await supabase
+        .from("maintenance_requests")
+        .insert({
+          tenant_id: tenantId,
+          title: title.trim(),
+          description: description.trim(),
+          issue: title.trim(), // Keep issue field for backward compatibility
+          priority,
+          photos: photoUrls,
+          status: "Pending",
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Maintenance request created successfully",
       });
-
-    setIsSubmitting(false);
-
-    if (error) {
+      onSuccess();
+      onClose();
+      setTitle("");
+      setDescription("");
+      setPriority("Medium");
+      setPhotos([]);
+    } catch (error: any) {
       console.error("Error adding maintenance request:", error);
       toast({
         title: "Error",
         description: "Failed to create maintenance request",
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsSubmitting(false);
     }
+  };
 
-    toast({
-      title: "Success",
-      description: "Maintenance request created successfully",
-    });
-    onSuccess();
-    onClose();
-    setIssue("");
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setPhotos(Array.from(e.target.files));
+    }
   };
 
   return (
@@ -72,15 +115,60 @@ export const AddMaintenanceDialog = ({
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="issue">Issue Description</Label>
-            <Textarea
-              id="issue"
-              value={issue}
-              onChange={(e) => setIssue(e.target.value)}
-              placeholder="Describe the maintenance issue..."
-              className="min-h-[100px]"
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="e.g., Water leak in bathroom"
+              required
             />
           </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe the maintenance issue in detail..."
+              className="min-h-[100px]"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="priority">Priority</Label>
+            <Select value={priority} onValueChange={setPriority}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select priority" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Low">Low</SelectItem>
+                <SelectItem value="Medium">Medium</SelectItem>
+                <SelectItem value="High">High</SelectItem>
+                <SelectItem value="Urgent">Urgent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="photos">Photos</Label>
+            <Input
+              id="photos"
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={handlePhotoChange}
+              className="cursor-pointer"
+            />
+            {photos.length > 0 && (
+              <p className="text-sm text-muted-foreground">
+                {photos.length} photo(s) selected
+              </p>
+            )}
+          </div>
+
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel

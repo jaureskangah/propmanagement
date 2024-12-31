@@ -12,26 +12,38 @@ export type Database = {
       maintenance_requests: {
         Row: {
           created_at: string
+          description: string
           id: string
           issue: string
+          photos: string[] | null
+          priority: string
           status: string
           tenant_id: string | null
+          title: string
           updated_at: string
         }
         Insert: {
           created_at?: string
+          description?: string
           id?: string
           issue: string
+          photos?: string[] | null
+          priority?: string
           status?: string
           tenant_id?: string | null
+          title?: string
           updated_at?: string
         }
         Update: {
           created_at?: string
+          description?: string
           id?: string
           issue?: string
+          photos?: string[] | null
+          priority?: string
           status?: string
           tenant_id?: string | null
+          title?: string
           updated_at?: string
         }
         Relationships: [
