@@ -1,9 +1,11 @@
-import { FileText, Download, ExternalLink } from "lucide-react";
+import { FileText, Download, ExternalLink, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DocumentUpload } from "./DocumentUpload";
 import { TenantDocument } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface TenantDocumentsProps {
   documents: TenantDocument[];
@@ -16,6 +18,8 @@ export const TenantDocuments = ({
   tenantId,
   onDocumentUpdate 
 }: TenantDocumentsProps) => {
+  const { toast } = useToast();
+
   const handleDownload = (url: string, filename: string) => {
     console.log("Downloading document:", filename, "from URL:", url);
     const link = document.createElement('a');
@@ -24,6 +28,36 @@ export const TenantDocuments = ({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  const handleDelete = async (documentId: string, filename: string) => {
+    try {
+      console.log("Deleting document:", filename);
+
+      const { error: deleteError } = await supabase
+        .from('tenant_documents')
+        .delete()
+        .eq('id', documentId);
+
+      if (deleteError) {
+        console.error("Error deleting document:", deleteError);
+        throw deleteError;
+      }
+
+      toast({
+        title: "Document supprimé",
+        description: "Le document a été supprimé avec succès",
+      });
+
+      onDocumentUpdate();
+    } catch (error) {
+      console.error('Delete error:', error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -77,6 +111,15 @@ export const TenantDocuments = ({
                         >
                           <ExternalLink className="h-4 w-4" />
                         </a>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDelete(doc.id, doc.name)}
+                        className="text-destructive hover:text-destructive"
+                        title="Supprimer le document"
+                      >
+                        <Trash2 className="h-4 w-4" />
                       </Button>
                     </>
                   )}
