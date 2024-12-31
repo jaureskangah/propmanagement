@@ -74,7 +74,7 @@ const LandingPage = () => {
               A complete solution to manage your properties, tenants, and maintenance with ease.
             </p>
             <div className="flex justify-center gap-4 animate-fade-in delay-200">
-              <Button asChild size="lg" className="group bg-white hover:bg-white/90 text-red-600 border border-red-100">
+              <Button asChild size="lg" className="group bg-red-600 hover:bg-red-700 text-white">
                 <Link to="/properties">
                   Get Started Now
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
