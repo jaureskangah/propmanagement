@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Building2, Shield, Users, Wrench, DollarSign, LogIn, List, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/components/AuthProvider";
+import AuthModal from "@/components/auth/AuthModal";
 
 const LandingPage = () => {
+  const { user } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-red-50 to-white">
       {/* Header */}
@@ -29,10 +35,23 @@ const LandingPage = () => {
                 <Gift className="h-4 w-4" />
                 <span>Free Trial</span>
               </div>
-              <Button variant="outline" size="sm" className="flex items-center gap-2">
-                <LogIn className="h-4 w-4" />
-                Sign In
-              </Button>
+              {user ? (
+                <Button asChild variant="outline" size="sm" className="flex items-center gap-2">
+                  <Link to="/dashboard">
+                    Dashboard
+                  </Link>
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => setShowAuthModal(true)}
+                >
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </Button>
+              )}
             </nav>
 
             {/* Mobile menu button */}
@@ -140,6 +159,11 @@ const LandingPage = () => {
           </div>
         </div>
       </div>
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+      />
     </div>
   );
 };
