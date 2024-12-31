@@ -17,21 +17,35 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log("Starting upload for file:", file.name);
+
     try {
       // Upload file to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
+      console.log("Uploading to storage with path:", fileName);
+
       const { error: uploadError, data } = await supabase.storage
         .from('tenant_documents')
-        .upload(fileName, file);
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error("Storage upload error:", uploadError);
+        throw uploadError;
+      }
+
+      console.log("File uploaded successfully, getting public URL");
 
       // Get the public URL
       const { data: { publicUrl } } = supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
+
+      console.log("Got public URL:", publicUrl);
 
       // Save document reference in the database
       const { error: dbError } = await supabase
@@ -42,19 +56,28 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
           file_url: publicUrl
         });
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error("Database insert error:", dbError);
+        throw dbError;
+      }
+
+      console.log("Document reference saved in database");
 
       toast({
-        title: "Document téléchargé",
-        description: "Le document a été téléchargé avec succès",
+        title: "Document chargé",
+        description: "Le document a été chargé avec succès",
       });
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
 
       onUploadComplete();
     } catch (error) {
       console.error('Upload error:', error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors du téléchargement",
+        description: "Une erreur est survenue lors du chargement",
         variant: "destructive",
       });
     }
