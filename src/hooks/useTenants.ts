@@ -109,9 +109,34 @@ export const useTenants = () => {
     },
   });
 
+  const updateTenant = useMutation({
+    mutationFn: async ({ id, ...data }: any) => {
+      console.log("Updating tenant:", id, data);
+      const { data: updatedData, error } = await supabase
+        .from("tenants")
+        .update(data)
+        .eq("id", id);
+      if (error) throw error;
+      return updatedData;
+    },
+    onSuccess: () => {
+      console.log("Tenant updated successfully");
+      queryClient.invalidateQueries({ queryKey: ["tenants"] });
+    },
+    onError: (error: Error) => {
+      console.error("Error updating tenant:", error);
+      toast({
+        title: "Error updating tenant",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
   return {
     tenants,
     isLoading,
     addTenant,
+    updateTenant,
   };
 };

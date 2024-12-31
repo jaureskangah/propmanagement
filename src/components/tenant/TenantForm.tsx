@@ -11,14 +11,15 @@ interface TenantFormProps {
   onSubmit: (data: TenantFormValues) => Promise<void>;
   isSubmitting: boolean;
   onCancel: () => void;
+  defaultValues?: Partial<TenantFormValues>;
 }
 
-export function TenantForm({ onSubmit, isSubmitting, onCancel }: TenantFormProps) {
+export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: TenantFormProps) {
   const { properties } = useProperties();
   
   const form = useForm<TenantFormValues>({
     resolver: zodResolver(tenantFormSchema),
-    defaultValues: {
+    defaultValues: defaultValues || {
       name: "",
       email: "",
       phone: "",

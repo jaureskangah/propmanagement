@@ -2,24 +2,24 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { Plus, Search, Home } from "lucide-react";
+import { Plus, Search, Home, Pencil } from "lucide-react";
 import TenantProfile from "@/components/TenantProfile";
 import { useTenants } from "@/hooks/useTenants";
 import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
 import { AddTenantModal } from "@/components/tenant/AddTenantModal";
+import { EditTenantModal } from "@/components/tenant/EditTenantModal";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider"; // Updated this import
+import { useAuth } from "@/components/AuthProvider";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const { tenants, isLoading } = useTenants();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const { tenants, isLoading, updateTenant } = useTenants();
   const { toast } = useToast();
-  const { user } = useAuth(); // Updated to use the correct hook
-
-  console.log("Rendering Tenants page with tenants:", tenants);
+  const { user } = useAuth();
 
   const mapTenantData = (tenant: any): Tenant => {
     return {
@@ -54,6 +54,21 @@ const Tenants = () => {
     if (error) {
       throw error;
     }
+  };
+
+  const handleUpdateTenant = async (data: any) => {
+    const selectedTenantData = filteredTenants?.find(t => t.id === selectedTenant);
+    if (!selectedTenantData) return;
+
+    await updateTenant.mutateAsync({
+      id: selectedTenantData.id,
+      ...data,
+    });
+  };
+
+  const handleEditClick = (tenantId: string) => {
+    setSelectedTenant(tenantId);
+    setIsEditModalOpen(true);
   };
 
   if (isLoading) {
@@ -105,6 +120,16 @@ const Tenants = () => {
                         {tenant.properties?.name} - Unit {tenant.unit_number}
                       </p>
                     </div>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEditClick(tenant.id);
+                      }}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                   </div>
                 </div>
               </Card>
@@ -130,6 +155,15 @@ const Tenants = () => {
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={handleAddTenant}
       />
+
+      {selectedTenant && filteredTenants && (
+        <EditTenantModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          tenant={filteredTenants.find(t => t.id === selectedTenant)!}
+          onSubmit={handleUpdateTenant}
+        />
+      )}
     </div>
   );
 };
