@@ -1,7 +1,10 @@
-import { Building2, List, DollarSign, Gift, LogIn } from "lucide-react";
+import { Building2, List, DollarSign, Gift, LogIn, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
+import { supabase } from "@/lib/supabase";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
@@ -9,6 +12,18 @@ interface HeaderProps {
 
 export default function Header({ onShowAuthModal }: HeaderProps) {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSignOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success("Successfully signed out");
+      navigate("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error("Error signing out");
+    }
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
@@ -33,11 +48,22 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
               <span>Free Trial</span>
             </div>
             {user ? (
-              <Button asChild variant="default" size="sm">
-                <Link to="/dashboard">
-                  Dashboard
-                </Link>
-              </Button>
+              <div className="flex items-center gap-4">
+                <Button asChild variant="default" size="sm">
+                  <Link to="/dashboard">
+                    Dashboard
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="text-slate-600 hover:text-[#ea384c]"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
             ) : (
               <Button
                 variant="default"
