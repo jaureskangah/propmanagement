@@ -17,6 +17,7 @@ export const TenantDocuments = ({
   onDocumentUpdate 
 }: TenantDocumentsProps) => {
   const handleDownload = (url: string, filename: string) => {
+    console.log("Downloading document:", filename, "from URL:", url);
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
@@ -59,6 +60,7 @@ export const TenantDocuments = ({
                         variant="ghost"
                         size="icon"
                         onClick={() => handleDownload(doc.file_url!, doc.name)}
+                        title="Télécharger le document"
                       >
                         <Download className="h-4 w-4" />
                       </Button>
@@ -66,6 +68,7 @@ export const TenantDocuments = ({
                         variant="ghost"
                         size="icon"
                         asChild
+                        title="Ouvrir dans un nouvel onglet"
                       >
                         <a 
                           href={doc.file_url} 
