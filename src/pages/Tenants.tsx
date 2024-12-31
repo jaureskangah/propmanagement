@@ -1,54 +1,28 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Plus, Search, FileText, MessageSquare, History, Home } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card";
+import { Plus, Search, Home } from "lucide-react";
 import TenantProfile from "@/components/TenantProfile";
-
-// Mock data - replace with real data when backend is integrated
-const mockTenants = [
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "(555) 123-4567",
-    propertyId: "1",
-    propertyName: "Maple Heights",
-    unitNumber: "101",
-    leaseStart: "2024-01-01",
-    leaseEnd: "2024-12-31",
-    rentAmount: 1500,
-    documents: [
-      { id: "1", name: "Lease Agreement", date: "2024-01-01" },
-      { id: "2", name: "Background Check", date: "2023-12-15" },
-    ],
-    paymentHistory: [
-      { id: "1", date: "2024-03-01", amount: 1500, status: "Paid" },
-      { id: "2", date: "2024-02-01", amount: 1500, status: "Paid" },
-    ],
-    maintenanceRequests: [
-      { id: "1", date: "2024-02-15", issue: "Leaking faucet", status: "Resolved" },
-      { id: "2", date: "2024-03-10", issue: "AC not cooling", status: "In Progress" },
-    ],
-    communications: [
-      { id: "1", date: "2024-03-15", type: "Email", subject: "Maintenance Request Follow-up" },
-      { id: "2", date: "2024-03-01", type: "SMS", subject: "Rent Payment Reminder" },
-    ],
-  },
-  // ... Add more mock tenants as needed
-];
+import { useTenants } from "@/hooks/useTenants";
+import { useToast } from "@/hooks/use-toast";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const { tenants, isLoading } = useTenants();
+  const { toast } = useToast();
 
   console.log("Rendering Tenants page");
 
-  const filteredTenants = mockTenants.filter(tenant =>
+  const filteredTenants = tenants?.filter(tenant =>
     tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tenant.propertyName.toLowerCase().includes(searchQuery.toLowerCase())
+    tenant.properties?.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6">
@@ -75,7 +49,7 @@ const Tenants = () => {
           </div>
 
           <div className="space-y-4">
-            {filteredTenants.map((tenant) => (
+            {filteredTenants?.map((tenant) => (
               <Card
                 key={tenant.id}
                 className={`cursor-pointer hover:bg-accent ${
@@ -83,17 +57,17 @@ const Tenants = () => {
                 }`}
                 onClick={() => setSelectedTenant(tenant.id)}
               >
-                <CardHeader className="p-4">
+                <div className="p-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-lg">{tenant.name}</CardTitle>
+                      <h3 className="text-lg font-semibold">{tenant.name}</h3>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
                         <Home className="h-4 w-4" />
-                        {tenant.propertyName} - Unit {tenant.unitNumber}
+                        {tenant.properties?.name} - Unit {tenant.unit_number}
                       </p>
                     </div>
                   </div>
-                </CardHeader>
+                </div>
               </Card>
             ))}
           </div>
@@ -101,7 +75,9 @@ const Tenants = () => {
 
         <div className="lg:col-span-2">
           {selectedTenant ? (
-            <TenantProfile tenant={mockTenants.find(t => t.id === selectedTenant)!} />
+            <TenantProfile 
+              tenant={tenants?.find(t => t.id === selectedTenant)!} 
+            />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
               <p className="text-muted-foreground">Select a tenant to view details</p>
