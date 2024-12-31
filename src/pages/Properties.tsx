@@ -77,6 +77,25 @@ const Properties = () => {
 
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
 
+  // Mock financial data
+  const mockFinancials = {
+    rentRoll: [
+      { unit: "1A", tenant: "John Doe", rent: 1200, status: "Active" },
+      { unit: "1B", tenant: "Jane Smith", rent: 1300, status: "Active" },
+      { unit: "2A", tenant: "", rent: 1100, status: "Vacant" }
+    ],
+    expenses: [
+      { category: "Maintenance", amount: 500, date: "2024-01-15" },
+      { category: "Utilities", amount: 300, date: "2024-01-20" },
+      { category: "Insurance", amount: 800, date: "2024-01-01" }
+    ],
+    maintenance: [
+      { description: "Plumbing repair", cost: 300, date: "2024-01-10" },
+      { description: "HVAC maintenance", cost: 200, date: "2024-01-05" },
+      { description: "Paint touch-up", cost: 150, date: "2024-01-18" }
+    ]
+  };
+
   if (isLoadingProperties) {
     return (
       <div className="flex items-center justify-center h-full">
