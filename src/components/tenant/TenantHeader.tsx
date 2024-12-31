@@ -23,12 +23,12 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm">
-              Lease: {tenant.leaseStart} to {tenant.leaseEnd}
+              Lease: {tenant.lease_start} to {tenant.lease_end}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Rent: ${tenant.rentAmount}/month</span>
+            <span className="text-sm">Rent: ${tenant.rent_amount}/month</span>
           </div>
         </div>
       </CardHeader>

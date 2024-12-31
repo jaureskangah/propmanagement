@@ -25,7 +25,9 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-sm">{comm.type}</span>
-                <span className="text-sm text-muted-foreground">{comm.date}</span>
+                <span className="text-sm text-muted-foreground">
+                  {comm.created_at}
+                </span>
               </div>
             </div>
           ))}

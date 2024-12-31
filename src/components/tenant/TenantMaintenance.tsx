@@ -34,7 +34,7 @@ export const TenantMaintenance = ({ requests }: TenantMaintenanceProps) => {
                   {request.status}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  {request.date}
+                  {request.created_at}
                 </span>
               </div>
             </div>

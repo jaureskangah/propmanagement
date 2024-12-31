@@ -23,7 +23,9 @@ export const TenantDocuments = ({ documents }: TenantDocumentsProps) => {
                 <FileText className="h-4 w-4" />
                 <span>{doc.name}</span>
               </div>
-              <span className="text-sm text-muted-foreground">{doc.date}</span>
+              <span className="text-sm text-muted-foreground">
+                {doc.created_at}
+              </span>
             </div>
           ))}
         </div>

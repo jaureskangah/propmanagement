@@ -34,7 +34,7 @@ export const TenantPayments = ({ payments }: TenantPaymentsProps) => {
                   {payment.status}
                 </span>
                 <span className="text-sm text-muted-foreground">
-                  {payment.date}
+                  {payment.payment_date}
                 </span>
               </div>
             </div>
