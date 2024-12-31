@@ -37,7 +37,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       <Tabs defaultValue="documents" className="w-full">
         <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="payments">Paiements</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
           <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
           <TabsTrigger value="communications">Communications</TabsTrigger>
         </TabsList>

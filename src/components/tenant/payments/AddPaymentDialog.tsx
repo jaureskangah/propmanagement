@@ -25,9 +25,9 @@ import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
 const paymentSchema = z.object({
-  amount: z.string().min(1, "Le montant est requis"),
-  status: z.string().min(1, "Le statut est requis"),
-  payment_date: z.string().min(1, "La date est requise"),
+  amount: z.string().min(1, "Amount is required"),
+  status: z.string().min(1, "Status is required"),
+  payment_date: z.string().min(1, "Date is required"),
 });
 
 interface AddPaymentDialogProps {
@@ -49,7 +49,7 @@ export const AddPaymentDialog = ({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
       amount: "",
-      status: "payé",
+      status: "paid",
       payment_date: format(new Date(), "yyyy-MM-dd"),
     },
   });
@@ -68,16 +68,16 @@ export const AddPaymentDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Paiement ajouté",
-        description: "Le paiement a été enregistré avec succès.",
+        title: "Payment Added",
+        description: "The payment has been recorded successfully.",
       });
       
       onPaymentAdded();
     } catch (error) {
       console.error("Error adding payment:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'ajout du paiement.",
+        title: "Error",
+        description: "An error occurred while adding the payment.",
         variant: "destructive",
       });
     } finally {
@@ -89,7 +89,7 @@ export const AddPaymentDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Ajouter un paiement</DialogTitle>
+          <DialogTitle>Add Payment</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -99,7 +99,7 @@ export const AddPaymentDialog = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Montant (€)</FormLabel>
+                  <FormLabel>Amount ($)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -118,20 +118,20 @@ export const AddPaymentDialog = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Statut</FormLabel>
+                  <FormLabel>Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner un statut" />
+                        <SelectValue placeholder="Select a status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="payé">Payé</SelectItem>
-                      <SelectItem value="en attente">En attente</SelectItem>
-                      <SelectItem value="en retard">En retard</SelectItem>
+                      <SelectItem value="paid">Paid</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="overdue">Overdue</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -144,7 +144,7 @@ export const AddPaymentDialog = ({
               name="payment_date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date de paiement</FormLabel>
+                  <FormLabel>Payment Date</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -159,14 +159,14 @@ export const AddPaymentDialog = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Annuler
+                Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isSubmitting}
                 className="bg-[#ea384c] hover:bg-[#ea384c]/90"
               >
-                {isSubmitting ? "Ajout..." : "Ajouter"}
+                {isSubmitting ? "Adding..." : "Add"}
               </Button>
             </div>
           </form>

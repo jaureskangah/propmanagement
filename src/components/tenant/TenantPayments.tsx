@@ -8,7 +8,7 @@ import { AddPaymentDialog } from "./payments/AddPaymentDialog";
 import { EditPaymentDialog } from "./payments/EditPaymentDialog";
 import { DeletePaymentDialog } from "./payments/DeletePaymentDialog";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 interface TenantPaymentsProps {
   payments: TenantPayment[];
@@ -37,20 +37,20 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Historique des paiements</CardTitle>
+        <CardTitle className="text-lg">Payment History</CardTitle>
         <Button 
           onClick={() => setIsAddPaymentOpen(true)}
           className="bg-[#ea384c] hover:bg-[#ea384c]/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Ajouter un paiement
+          Add Payment
         </Button>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {payments.length === 0 ? (
             <p className="text-center text-muted-foreground py-4">
-              Aucun paiement enregistré
+              No payments recorded
             </p>
           ) : (
             payments
@@ -61,9 +61,9 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
                   className="flex items-center justify-between p-4 border rounded hover:bg-accent/50"
                 >
                   <div className="flex flex-col gap-1">
-                    <span className="font-medium">{payment.amount} €</span>
+                    <span className="font-medium">${payment.amount}</span>
                     <span className="text-sm text-muted-foreground">
-                      {format(new Date(payment.payment_date), 'dd MMMM yyyy', { locale: fr })}
+                      {format(new Date(payment.payment_date), 'MMMM dd, yyyy', { locale: enUS })}
                     </span>
                   </div>
                   <div className="flex items-center gap-4">

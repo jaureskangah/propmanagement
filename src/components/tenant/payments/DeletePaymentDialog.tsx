@@ -13,7 +13,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { TenantPayment } from "@/types/tenant";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 interface DeletePaymentDialogProps {
   open: boolean;
@@ -42,16 +42,16 @@ export const DeletePaymentDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Paiement supprimé",
-        description: "Le paiement a été supprimé avec succès.",
+        title: "Payment Deleted",
+        description: "The payment has been deleted successfully.",
       });
       
       onPaymentDeleted();
     } catch (error) {
       console.error("Error deleting payment:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la suppression du paiement.",
+        title: "Error",
+        description: "An error occurred while deleting the payment.",
         variant: "destructive",
       });
     } finally {
@@ -63,21 +63,21 @@ export const DeletePaymentDialog = ({
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Êtes-vous sûr de vouloir supprimer ce paiement ?</AlertDialogTitle>
+          <AlertDialogTitle>Are you sure you want to delete this payment?</AlertDialogTitle>
           <AlertDialogDescription>
-            Vous êtes sur le point de supprimer le paiement de {payment.amount}€ du{" "}
-            {format(new Date(payment.payment_date), "dd MMMM yyyy", { locale: fr })}.
-            Cette action est irréversible.
+            You are about to delete the payment of ${payment.amount} from{" "}
+            {format(new Date(payment.payment_date), "MMMM dd, yyyy", { locale: enUS })}.
+            This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             disabled={isDeleting}
             className="bg-destructive hover:bg-destructive/90"
           >
-            {isDeleting ? "Suppression..." : "Supprimer"}
+            {isDeleting ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

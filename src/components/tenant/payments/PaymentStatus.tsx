@@ -8,20 +8,20 @@ interface PaymentStatusProps {
 export const PaymentStatus = ({ status }: PaymentStatusProps) => {
   const getStatusConfig = (status: string) => {
     switch (status.toLowerCase()) {
-      case "payé":
+      case "paid":
         return {
           color: "bg-green-100 text-green-800 hover:bg-green-100/80",
-          label: "Payé"
+          label: "Paid"
         };
-      case "en attente":
+      case "pending":
         return {
           color: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80",
-          label: "En attente"
+          label: "Pending"
         };
-      case "en retard":
+      case "overdue":
         return {
           color: "bg-red-100 text-red-800 hover:bg-red-100/80",
-          label: "En retard"
+          label: "Overdue"
         };
       default:
         return {

@@ -26,9 +26,9 @@ import { format } from "date-fns";
 import { TenantPayment } from "@/types/tenant";
 
 const paymentSchema = z.object({
-  amount: z.string().min(1, "Le montant est requis"),
-  status: z.string().min(1, "Le statut est requis"),
-  payment_date: z.string().min(1, "La date est requise"),
+  amount: z.string().min(1, "Amount is required"),
+  status: z.string().min(1, "Status is required"),
+  payment_date: z.string().min(1, "Date is required"),
 });
 
 interface EditPaymentDialogProps {
@@ -70,16 +70,16 @@ export const EditPaymentDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Paiement modifié",
-        description: "Le paiement a été modifié avec succès.",
+        title: "Payment Updated",
+        description: "The payment has been updated successfully.",
       });
       
       onPaymentUpdated();
     } catch (error) {
       console.error("Error updating payment:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la modification du paiement.",
+        title: "Error",
+        description: "An error occurred while updating the payment.",
         variant: "destructive",
       });
     } finally {
@@ -91,7 +91,7 @@ export const EditPaymentDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Modifier le paiement</DialogTitle>
+          <DialogTitle>Edit Payment</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -101,7 +101,7 @@ export const EditPaymentDialog = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Montant (€)</FormLabel>
+                  <FormLabel>Amount ($)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -120,20 +120,20 @@ export const EditPaymentDialog = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Statut</FormLabel>
+                  <FormLabel>Status</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner un statut" />
+                        <SelectValue placeholder="Select a status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="payé">Payé</SelectItem>
-                      <SelectItem value="en attente">En attente</SelectItem>
-                      <SelectItem value="en retard">En retard</SelectItem>
+                      <SelectItem value="paid">Paid</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="overdue">Overdue</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -146,7 +146,7 @@ export const EditPaymentDialog = ({
               name="payment_date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Date de paiement</FormLabel>
+                  <FormLabel>Payment Date</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -161,14 +161,14 @@ export const EditPaymentDialog = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Annuler
+                Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isSubmitting}
                 className="bg-[#ea384c] hover:bg-[#ea384c]/90"
               >
-                {isSubmitting ? "Modification..." : "Modifier"}
+                {isSubmitting ? "Updating..." : "Update"}
               </Button>
             </div>
           </form>
