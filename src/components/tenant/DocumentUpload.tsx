@@ -12,11 +12,16 @@ interface DocumentUploadProps {
 export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadProps) => {
   const { toast } = useToast();
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [isUploading, setIsUploading] = React.useState(false);
 
   const handleUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (!file) return;
+    if (!file) {
+      console.log("No file selected");
+      return;
+    }
 
+    setIsUploading(true);
     console.log("Starting upload for file:", file.name);
 
     try {
@@ -80,6 +85,8 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         description: "Une erreur est survenue lors du chargement",
         variant: "destructive",
       });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -96,9 +103,10 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         onClick={() => fileInputRef.current?.click()}
         className="w-full"
         variant="outline"
+        disabled={isUploading}
       >
         <Upload className="mr-2 h-4 w-4" />
-        Charger un document
+        {isUploading ? "Chargement en cours..." : "Charger un document"}
       </Button>
     </div>
   );
