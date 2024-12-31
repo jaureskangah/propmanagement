@@ -14,22 +14,22 @@ export default function Features() {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         <FeatureCard
-          icon={<Building2 className="text-red-600" />}
+          icon={<Building2 className="text-[#ea384c]" />}
           title="Property Management"
           description="Track your properties and their performance in real-time"
         />
         <FeatureCard
-          icon={<Users className="text-red-600" />}
+          icon={<Users className="text-[#ea384c]" />}
           title="Tenant Management"
           description="Easily manage your tenants and their documents"
         />
         <FeatureCard
-          icon={<Wrench className="text-red-600" />}
+          icon={<Wrench className="text-[#ea384c]" />}
           title="Maintenance"
           description="Track and manage maintenance requests"
         />
         <FeatureCard
-          icon={<Shield className="text-red-600" />}
+          icon={<Shield className="text-[#ea384c]" />}
           title="Security"
           description="Your data is secure and protected"
         />
@@ -47,7 +47,7 @@ interface FeatureCardProps {
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
-      <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+      <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
         {icon}
       </div>
       <h3 className="text-xl font-semibold text-slate-900 mb-2">{title}</h3>

@@ -59,12 +59,12 @@ export default function Pricing() {
             <Card 
               key={plan.name}
               className={`relative flex flex-col ${
-                plan.popular ? 'border-primary shadow-lg' : ''
+                plan.popular ? 'border-[#ea384c] shadow-lg' : ''
               }`}
             >
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-primary text-white text-sm font-medium px-3 py-1 rounded-full">
+                  <span className="bg-[#ea384c] text-white text-sm font-medium px-3 py-1 rounded-full">
                     Most Popular
                   </span>
                 </div>
@@ -94,7 +94,7 @@ export default function Pricing() {
               </CardContent>
               <CardFooter>
                 <Button 
-                  className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90 text-white"
+                  className="w-full bg-[#ea384c] hover:bg-[#d41f32] text-white"
                 >
                   {plan.buttonText}
                 </Button>

@@ -16,7 +16,7 @@ export default function Contact() {
 
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-            <div className="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <Phone className="h-6 w-6 text-[#ea384c]" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Phone</h3>
@@ -24,7 +24,7 @@ export default function Contact() {
           </div>
 
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-            <div className="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <Mail className="h-6 w-6 text-[#ea384c]" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Email</h3>
@@ -32,7 +32,7 @@ export default function Contact() {
           </div>
 
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
-            <div className="h-12 w-12 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <MapPin className="h-6 w-6 text-[#ea384c]" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Office</h3>
@@ -41,7 +41,7 @@ export default function Contact() {
         </div>
 
         <div className="mt-12 text-center">
-          <Button className="bg-[#ea384c] hover:bg-[#ea384c]/90 text-white">
+          <Button className="bg-[#ea384c] hover:bg-[#d41f32] text-white">
             Send us a message
           </Button>
         </div>
