@@ -1,52 +1,15 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import React, { useState } from "react";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFinancials from "@/components/PropertyFinancials";
 import { AddPropertyModal } from "@/components/AddPropertyModal";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-
-interface Property {
-  id: string;
-  name: string;
-  address: string;
-  units: number;
-  type: string;
-  image_url?: string;
-  financials?: {
-    rentRoll: any[];
-    expenses: any[];
-    maintenance: any[];
-  };
-}
+import { useProperties } from "@/hooks/useProperties";
+import { Loader2 } from "lucide-react";
 
 const Properties = () => {
-  const [properties, setProperties] = useState<Property[]>([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const { properties, isLoadingProperties } = useProperties();
   const { toast } = useToast();
-
-  useEffect(() => {
-    fetchProperties();
-  }, []);
-
-  const fetchProperties = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("properties")
-        .select("*");
-
-      if (error) throw error;
-
-      setProperties(data || []);
-    } catch (error) {
-      console.error("Erreur lors du chargement des propriétés:", error);
-      toast({
-        variant: "destructive",
-        title: "Erreur",
-        description: "Impossible de charger les propriétés.",
-      });
-    }
-  };
 
   const handleEdit = (id: string) => {
     console.log("Edit property:", id);
@@ -62,7 +25,6 @@ const Properties = () => {
 
       if (error) throw error;
 
-      setProperties(properties.filter(property => property.id !== id));
       if (selectedPropertyId === id) {
         setSelectedPropertyId(null);
       }
@@ -88,6 +50,14 @@ const Properties = () => {
 
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
 
+  if (isLoadingProperties) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
@@ -95,17 +65,25 @@ const Properties = () => {
         <AddPropertyModal />
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {properties.map((property) => (
-          <PropertyCard
-            key={property.id}
-            property={property}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onViewFinancials={handleViewFinancials}
-          />
-        ))}
-      </div>
+      {properties.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">
+            Vous n'avez pas encore de propriétés. Commencez par en ajouter une !
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {properties.map((property) => (
+            <PropertyCard
+              key={property.id}
+              property={property}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+              onViewFinancials={handleViewFinancials}
+            />
+          ))}
+        </div>
+      )}
 
       {selectedProperty && (
         <div className="mt-8">
