@@ -59,7 +59,11 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
         </TabsContent>
 
         <TabsContent value="maintenance" className="mt-4">
-          <TenantMaintenance requests={tenant.maintenanceRequests} />
+          <TenantMaintenance 
+            requests={tenant.maintenanceRequests} 
+            tenantId={tenant.id}
+            onMaintenanceUpdate={handleDataUpdate}
+          />
         </TabsContent>
 
         <TabsContent value="communications" className="mt-4">
