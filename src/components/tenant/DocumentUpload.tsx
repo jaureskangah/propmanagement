@@ -75,7 +75,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         variant="outline"
       >
         <Upload className="mr-2 h-4 w-4" />
-        Télécharger un document
+        Charger un document
       </Button>
     </div>
   );
