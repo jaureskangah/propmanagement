@@ -17,19 +17,40 @@ export function useProperties() {
 
   const addProperty = async (data: PropertyFormData) => {
     if (!user) {
-      throw new Error("User not authenticated");
+      toast({
+        variant: "destructive",
+        title: "Erreur",
+        description: "Vous devez être connecté pour ajouter une propriété.",
+      });
+      return false;
     }
 
     setIsLoading(true);
     try {
+      // First, ensure the user has a profile
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError || !profile) {
+        console.error("Profile not found, creating one...");
+        const { error: insertError } = await supabase
+          .from("profiles")
+          .insert([{ id: user.id }]);
+
+        if (insertError) throw insertError;
+      }
+
       console.log("Adding property with user_id:", user.id);
       
-      const { error } = await supabase.from("properties").insert([
-        {
+      const { error } = await supabase
+        .from("properties")
+        .insert([{
           ...data,
           user_id: user.id,
-        },
-      ]);
+        }]);
 
       if (error) throw error;
 
