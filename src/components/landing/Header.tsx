@@ -33,16 +33,16 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
               <span>Free Trial</span>
             </div>
             {user ? (
-              <Button asChild variant="outline" size="sm" className="flex items-center gap-2">
+              <Button asChild variant="default" size="sm" className="flex items-center gap-2">
                 <Link to="/dashboard">
                   Dashboard
                 </Link>
               </Button>
             ) : (
               <Button
-                variant="outline"
+                variant="default"
                 size="sm"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-red-600 hover:bg-red-700"
                 onClick={onShowAuthModal}
               >
                 <LogIn className="h-4 w-4" />
