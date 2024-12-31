@@ -23,6 +23,7 @@ export interface Tenant {
 export interface TenantDocument {
   id: string;
   name: string;
+  file_url?: string;
   created_at: string;
 }
 

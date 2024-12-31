@@ -7,12 +7,15 @@ import { TenantMaintenance } from "./tenant/TenantMaintenance";
 import { TenantCommunications } from "./tenant/TenantCommunications";
 import { Card } from "@/components/ui/card";
 import type { Tenant } from "@/types/tenant";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TenantProfileProps {
   tenant: Tenant;
 }
 
 const TenantProfile = ({ tenant }: TenantProfileProps) => {
+  const queryClient = useQueryClient();
+
   if (!tenant) {
     return (
       <Card className="h-[300px] flex items-center justify-center">
@@ -20,6 +23,10 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       </Card>
     );
   }
+
+  const handleDocumentUpdate = () => {
+    queryClient.invalidateQueries({ queryKey: ["tenants"] });
+  };
 
   console.log("Rendering TenantProfile for:", tenant.name);
 
@@ -36,7 +43,11 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
         </TabsList>
 
         <TabsContent value="documents" className="mt-4">
-          <TenantDocuments documents={tenant.documents} />
+          <TenantDocuments 
+            documents={tenant.documents} 
+            tenantId={tenant.id}
+            onDocumentUpdate={handleDocumentUpdate}
+          />
         </TabsContent>
 
         <TabsContent value="payments" className="mt-4">
