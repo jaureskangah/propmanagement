@@ -6,7 +6,12 @@ const AppSidebar = () => {
   return (
     <div className="min-h-screen w-64 bg-gray-100/40 border-r px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-xl font-bold text-center">RentEase</h1>
+        <NavLink
+          to="/"
+          className="text-xl font-bold text-center block hover:text-[#ea384c] transition-colors"
+        >
+          PropManager
+        </NavLink>
       </div>
       <nav className="space-y-2">
         <NavLink
