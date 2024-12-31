@@ -45,16 +45,16 @@ export const TenantDocuments = ({
       }
 
       toast({
-        title: "Document supprimé",
-        description: "Le document a été supprimé avec succès",
+        title: "Document deleted",
+        description: "The document has been successfully deleted",
       });
 
       onDocumentUpdate();
     } catch (error) {
       console.error('Delete error:', error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la suppression",
+        title: "Error",
+        description: "An error occurred while deleting the document",
         variant: "destructive",
       });
     }
@@ -63,14 +63,14 @@ export const TenantDocuments = ({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Documents du bail</CardTitle>
+        <CardTitle className="text-lg">Lease Documents</CardTitle>
         <DocumentUpload tenantId={tenantId} onUploadComplete={onDocumentUpdate} />
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {documents.length === 0 ? (
             <p className="text-sm text-muted-foreground text-center py-4">
-              Aucun document disponible
+              No documents available
             </p>
           ) : (
             documents.map((doc) => (
@@ -92,7 +92,7 @@ export const TenantDocuments = ({
                     variant="ghost"
                     size="icon"
                     onClick={() => handleDownload(doc.file_url!, doc.name)}
-                    title="Télécharger le document"
+                    title="Download document"
                   >
                     <Download className="h-4 w-4" />
                   </Button>
@@ -100,7 +100,7 @@ export const TenantDocuments = ({
                     variant="ghost"
                     size="icon"
                     asChild
-                    title="Ouvrir dans un nouvel onglet"
+                    title="Open in new tab"
                   >
                     <a 
                       href={doc.file_url} 
@@ -115,7 +115,7 @@ export const TenantDocuments = ({
                     size="icon"
                     onClick={() => handleDelete(doc.id, doc.name)}
                     className="text-destructive hover:text-destructive"
-                    title="Supprimer le document"
+                    title="Delete document"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

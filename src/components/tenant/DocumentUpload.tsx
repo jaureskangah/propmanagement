@@ -38,7 +38,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         disabled={isUploading}
       >
         <Upload className="mr-2 h-4 w-4" />
-        {isUploading ? "Chargement en cours..." : "Charger un document"}
+        {isUploading ? "Uploading..." : "Upload Document"}
       </Button>
     </div>
   );
