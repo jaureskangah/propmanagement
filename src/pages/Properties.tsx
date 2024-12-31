@@ -5,9 +5,10 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useProperties, Property } from "@/hooks/useProperties";
-import { Loader2 } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const PROPERTY_TYPES = [
   "All",
@@ -23,6 +24,7 @@ const Properties = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [selectedType, setSelectedType] = useState<string>("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const { properties, isLoadingProperties } = useProperties();
   const { toast } = useToast();
 
@@ -65,9 +67,13 @@ const Properties = () => {
     setSelectedPropertyId(id);
   };
 
-  const filteredProperties = selectedType === "All" 
-    ? properties 
-    : properties.filter(property => property.type === selectedType);
+  const filteredProperties = properties
+    .filter(property => selectedType === "All" || property.type === selectedType)
+    .filter(property => 
+      searchQuery === "" || 
+      property.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      property.address.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
 
@@ -79,37 +85,36 @@ const Properties = () => {
     );
   }
 
-  // Mock financial data
-  const mockFinancials = {
-    rentRoll: [
-      { unit: "1A", tenant: "John Doe", rent: 1200, status: "Active" }
-    ],
-    expenses: [
-      { category: "Maintenance", amount: 500, date: "2024-01-15" }
-    ],
-    maintenance: [
-      { description: "Plumbing repair", cost: 300, date: "2024-01-10" }
-    ]
-  };
-
   return (
     <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <div className="w-64">
-          <Select value={selectedType} onValueChange={setSelectedType}>
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by type" />
-            </SelectTrigger>
-            <SelectContent>
-              {PROPERTY_TYPES.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {type}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-64">
+            <Select value={selectedType} onValueChange={setSelectedType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Filter by type" />
+              </SelectTrigger>
+              <SelectContent>
+                {PROPERTY_TYPES.map((type) => (
+                  <SelectItem key={type} value={type}>
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+            <Input
+              type="text"
+              placeholder="Search by name or address..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 w-full"
+            />
+          </div>
+          <AddPropertyModal />
         </div>
-        <AddPropertyModal />
       </div>
       
       {filteredProperties.length === 0 ? (
@@ -117,7 +122,7 @@ const Properties = () => {
           <p className="text-muted-foreground">
             {properties.length === 0 
               ? "Start by adding your first property!"
-              : "No properties match the selected filter."}
+              : "No properties match the selected filters."}
           </p>
         </div>
       ) : (
