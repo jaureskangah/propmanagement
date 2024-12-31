@@ -43,7 +43,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
         name="unit_number"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Unit Number *</FormLabel>
+            <FormLabel>Unit Number</FormLabel>
             <FormControl>
               <Input placeholder="A1" {...field} />
             </FormControl>
