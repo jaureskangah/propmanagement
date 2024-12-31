@@ -14,17 +14,15 @@ import {
   Users,
   Wrench,
   DollarSign,
-  ArrowUp,
-  ArrowDown,
 } from "lucide-react";
 
 const revenueData = [
   { month: "Jan", amount: 12000 },
-  { month: "Fév", amount: 12500 },
+  { month: "Feb", amount: 12500 },
   { month: "Mar", amount: 13200 },
-  { month: "Avr", amount: 12800 },
-  { month: "Mai", amount: 13500 },
-  { month: "Juin", amount: 14200 },
+  { month: "Apr", amount: 12800 },
+  { month: "May", amount: 13500 },
+  { month: "Jun", amount: 14200 },
 ];
 
 const Dashboard = () => {
@@ -32,40 +30,40 @@ const Dashboard = () => {
   
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Tableau de bord</h1>
+      <h1 className="text-3xl font-bold">Dashboard</h1>
 
       {/* Metrics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <DashboardMetric
-          title="Propriétés"
+          title="Properties"
           value="12"
           icon={<Building2 className="h-4 w-4 text-blue-600" />}
-          description="2 nouvelles ce mois-ci"
+          description="2 new this month"
         />
         <DashboardMetric
-          title="Locataires"
+          title="Tenants"
           value="48"
           icon={<Users className="h-4 w-4 text-green-600" />}
-          description="Taux d'occupation 92%"
+          description="92% occupancy rate"
         />
         <DashboardMetric
           title="Maintenance"
           value="8"
           icon={<Wrench className="h-4 w-4 text-amber-600" />}
-          description="3 requêtes en attente"
+          description="3 pending requests"
         />
         <DashboardMetric
-          title="Revenus mensuels"
-          value="14 200 €"
+          title="Monthly Revenue"
+          value="$14,200"
           icon={<DollarSign className="h-4 w-4 text-emerald-600" />}
-          description="+5% vs mois dernier"
+          description="+5% vs last month"
         />
       </div>
 
       {/* Revenue Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Revenus mensuels</CardTitle>
+          <CardTitle>Monthly Revenue</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-[300px]">
@@ -90,7 +88,7 @@ const Dashboard = () => {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `${value}€`}
+                  tickFormatter={(value) => `$${value}`}
                 />
                 <Tooltip />
                 <Area
@@ -109,7 +107,7 @@ const Dashboard = () => {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle>Activité récente</CardTitle>
+          <CardTitle>Recent Activity</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -118,36 +116,36 @@ const Dashboard = () => {
                 <Users className="h-4 w-4 text-blue-600" />
               </div>
               <div className="flex-1">
-                <p className="font-medium">Nouveau locataire</p>
+                <p className="font-medium">New Tenant</p>
                 <p className="text-sm text-muted-foreground">
-                  Marie Dupont - Appartement 4B
+                  Mary Smith - Apartment 4B
                 </p>
               </div>
-              <p className="text-sm text-muted-foreground">Il y a 2h</p>
+              <p className="text-sm text-muted-foreground">2h ago</p>
             </div>
             <div className="flex items-center gap-4 rounded-lg border p-4">
               <div className="rounded-full bg-emerald-100 p-2">
                 <DollarSign className="h-4 w-4 text-emerald-600" />
               </div>
               <div className="flex-1">
-                <p className="font-medium">Paiement reçu</p>
+                <p className="font-medium">Payment Received</p>
                 <p className="text-sm text-muted-foreground">
-                  850€ - Studio 2A
+                  $850 - Studio 2A
                 </p>
               </div>
-              <p className="text-sm text-muted-foreground">Il y a 5h</p>
+              <p className="text-sm text-muted-foreground">5h ago</p>
             </div>
             <div className="flex items-center gap-4 rounded-lg border p-4">
               <div className="rounded-full bg-amber-100 p-2">
                 <Wrench className="h-4 w-4 text-amber-600" />
               </div>
               <div className="flex-1">
-                <p className="font-medium">Maintenance terminée</p>
+                <p className="font-medium">Maintenance Completed</p>
                 <p className="text-sm text-muted-foreground">
-                  Plomberie - Appartement 1C
+                  Plumbing - Apartment 1C
                 </p>
               </div>
-              <p className="text-sm text-muted-foreground">Il y a 1j</p>
+              <p className="text-sm text-muted-foreground">1d ago</p>
             </div>
           </div>
         </CardContent>
