@@ -8,11 +8,12 @@ interface PropertyFormProps {
   onSubmit: (data: PropertyFormData) => Promise<void>;
   onCancel: () => void;
   isSubmitting: boolean;
+  initialData?: PropertyFormData;
 }
 
-export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormProps) {
+export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: PropertyFormProps) {
   const form = useForm<PropertyFormData>({
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       address: "",
       units: 0,
@@ -85,7 +86,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting }: PropertyFormP
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Adding..." : "Add Property"}
+            {isSubmitting ? "Saving..." : initialData ? "Update Property" : "Add Property"}
           </Button>
         </div>
       </form>

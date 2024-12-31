@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export interface PropertyFormData {
   name: string;
@@ -27,6 +27,7 @@ export function useProperties() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const fetchProperties = async (): Promise<Property[]> => {
     console.log("Fetching properties for user:", user?.id);
@@ -56,15 +57,14 @@ export function useProperties() {
     if (!user) {
       toast({
         variant: "destructive",
-        title: "Erreur",
-        description: "Vous devez être connecté pour ajouter une propriété.",
+        title: "Error",
+        description: "You must be logged in to add a property.",
       });
       return false;
     }
 
     setIsLoading(true);
     try {
-      // First, ensure the user has a profile
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("id")
@@ -97,18 +97,61 @@ export function useProperties() {
 
       if (error) throw error;
 
+      queryClient.invalidateQueries({ queryKey: ["properties", user.id] });
+
       toast({
-        title: "Propriété ajoutée avec succès",
-        description: `${data.name} a été ajoutée à votre portfolio.`,
+        title: "Success",
+        description: `${data.name} has been added to your portfolio.`,
       });
 
       return true;
     } catch (error) {
-      console.error("Erreur lors de l'ajout de la propriété:", error);
+      console.error("Error adding property:", error);
       toast({
         variant: "destructive",
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'ajout de la propriété.",
+        title: "Error",
+        description: "An error occurred while adding the property.",
+      });
+      return false;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateProperty = async (id: string, data: PropertyFormData) => {
+    if (!user) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "You must be logged in to update a property.",
+      });
+      return false;
+    }
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase
+        .from("properties")
+        .update(data)
+        .eq("id", id)
+        .eq("user_id", user.id);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ["properties", user.id] });
+
+      toast({
+        title: "Success",
+        description: `${data.name} has been updated.`,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error updating property:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "An error occurred while updating the property.",
       });
       return false;
     } finally {
@@ -120,6 +163,7 @@ export function useProperties() {
     properties,
     isLoadingProperties,
     addProperty,
+    updateProperty,
     isLoading
   };
 }

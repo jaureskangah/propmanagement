@@ -2,19 +2,23 @@ import React, { useState } from "react";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFinancials from "@/components/PropertyFinancials";
 import { AddPropertyModal } from "@/components/AddPropertyModal";
+import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
-import { useProperties } from "@/hooks/useProperties";
+import { useProperties, Property } from "@/hooks/useProperties";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
 const Properties = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const { properties, isLoadingProperties } = useProperties();
   const { toast } = useToast();
 
   const handleEdit = (id: string) => {
-    console.log("Edit property:", id);
-    // Implement edit functionality
+    const property = properties.find(p => p.id === id);
+    if (property) {
+      setEditingProperty(property);
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -31,15 +35,15 @@ const Properties = () => {
       }
 
       toast({
-        title: "Propriété supprimée",
-        description: "La propriété a été supprimée avec succès.",
+        title: "Property deleted",
+        description: "The property has been successfully deleted.",
       });
     } catch (error) {
-      console.error("Erreur lors de la suppression:", error);
+      console.error("Error deleting property:", error);
       toast({
         variant: "destructive",
-        title: "Erreur",
-        description: "Impossible de supprimer la propriété.",
+        title: "Error",
+        description: "Unable to delete the property.",
       });
     }
   };
@@ -59,7 +63,7 @@ const Properties = () => {
     );
   }
 
-  // Mock financial data since it's not in the database yet
+  // Mock financial data
   const mockFinancials = {
     rentRoll: [
       { unit: "1A", tenant: "John Doe", rent: 1200, status: "Active" }
@@ -101,7 +105,7 @@ const Properties = () => {
       {selectedPropertyId && (
         <div className="mt-8">
           <h2 className="text-xl font-bold mb-4">
-            Financial Overview - {properties.find(p => p.id === selectedPropertyId)?.name}
+            Financial Overview - {selectedProperty?.name}
           </h2>
           <PropertyFinancials
             propertyId={selectedPropertyId}
@@ -110,6 +114,14 @@ const Properties = () => {
             maintenance={mockFinancials.maintenance}
           />
         </div>
+      )}
+
+      {editingProperty && (
+        <EditPropertyModal
+          property={editingProperty}
+          isOpen={true}
+          onClose={() => setEditingProperty(null)}
+        />
       )}
     </div>
   );
