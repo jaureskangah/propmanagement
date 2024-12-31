@@ -16,12 +16,13 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     console.log("Starting upload for file:", file.name);
 
     try {
+      // 1. Upload file to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
       console.log("Uploading to storage with path:", fileName);
 
-      const { error: uploadError } = await supabase.storage
+      const { error: uploadError, data: uploadData } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
           cacheControl: '3600',
@@ -35,12 +36,14 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
       console.log("File uploaded successfully, getting public URL");
 
+      // 2. Generate public URL
       const { data: { publicUrl } } = supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
 
       console.log("Generated public URL:", publicUrl);
 
+      // 3. Save document reference with public URL in database
       const { error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
