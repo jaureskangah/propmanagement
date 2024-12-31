@@ -88,41 +88,37 @@ export const TenantDocuments = ({
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  {doc.file_url && (
-                    <>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDownload(doc.file_url!, doc.name)}
-                        title="Télécharger le document"
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        asChild
-                        title="Ouvrir dans un nouvel onglet"
-                      >
-                        <a 
-                          href={doc.file_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => handleDelete(doc.id, doc.name)}
-                        className="text-destructive hover:text-destructive"
-                        title="Supprimer le document"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </>
-                  )}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDownload(doc.file_url!, doc.name)}
+                    title="Télécharger le document"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    title="Ouvrir dans un nouvel onglet"
+                  >
+                    <a 
+                      href={doc.file_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(doc.id, doc.name)}
+                    className="text-destructive hover:text-destructive"
+                    title="Supprimer le document"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
                 </div>
               </div>
             ))
