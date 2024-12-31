@@ -1,86 +1,157 @@
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Building2, Shield, Users, Wrench } from "lucide-react";
-import { Link } from "react-router-dom";
+import { DashboardMetric } from "@/components/DashboardMetric";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import {
+  Building2,
+  Users,
+  Wrench,
+  DollarSign,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
+
+const revenueData = [
+  { month: "Jan", amount: 12000 },
+  { month: "Fév", amount: 12500 },
+  { month: "Mar", amount: 13200 },
+  { month: "Avr", amount: 12800 },
+  { month: "Mai", amount: 13500 },
+  { month: "Juin", amount: 14200 },
+];
 
 const Dashboard = () => {
+  console.log("Rendering Dashboard");
+  
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* KPI Cards */}
-          <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-4">
-              <div className="bg-blue-100 p-3 rounded-lg">
-                <Building2 className="h-6 w-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Propriétés</p>
-                <p className="text-2xl font-semibold">12</p>
-              </div>
-            </div>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Tableau de bord</h1>
+
+      {/* Metrics Grid */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+        <DashboardMetric
+          title="Propriétés"
+          value="12"
+          icon={<Building2 className="h-4 w-4 text-blue-600" />}
+          description="2 nouvelles ce mois-ci"
+        />
+        <DashboardMetric
+          title="Locataires"
+          value="48"
+          icon={<Users className="h-4 w-4 text-green-600" />}
+          description="Taux d'occupation 92%"
+        />
+        <DashboardMetric
+          title="Maintenance"
+          value="8"
+          icon={<Wrench className="h-4 w-4 text-amber-600" />}
+          description="3 requêtes en attente"
+        />
+        <DashboardMetric
+          title="Revenus mensuels"
+          value="14 200 €"
+          icon={<DollarSign className="h-4 w-4 text-emerald-600" />}
+          description="+5% vs mois dernier"
+        />
+      </div>
+
+      {/* Revenue Chart */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Revenus mensuels</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={revenueData}>
+                <defs>
+                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.1} />
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                <XAxis
+                  dataKey="month"
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  stroke="#888888"
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  tickFormatter={(value) => `${value}€`}
+                />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  stroke="#3B82F6"
+                  fillOpacity={1}
+                  fill="url(#colorRevenue)"
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </div>
+        </CardContent>
+      </Card>
 
-          <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-4">
-              <div className="bg-green-100 p-3 rounded-lg">
-                <Users className="h-6 w-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Locataires</p>
-                <p className="text-2xl font-semibold">48</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-4">
-              <div className="bg-amber-100 p-3 rounded-lg">
-                <Wrench className="h-6 w-6 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Maintenances</p>
-                <p className="text-2xl font-semibold">8</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-4">
-              <div className="bg-purple-100 p-3 rounded-lg">
-                <Shield className="h-6 w-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">Contrats actifs</p>
-                <p className="text-2xl font-semibold">36</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Graph Section */}
-        <div className="mt-8 bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Revenus mensuels</h2>
-          {/* Add your graph component here */}
-        </div>
-
-        {/* Recent Activity */}
-        <div className="mt-8 bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Activité récente</h2>
+      {/* Recent Activity */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Activité récente</CardTitle>
+        </CardHeader>
+        <CardContent>
           <div className="space-y-4">
-            {/* Activity items */}
-            <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-              <div className="bg-blue-100 p-2 rounded-full">
+            <div className="flex items-center gap-4 rounded-lg border p-4">
+              <div className="rounded-full bg-blue-100 p-2">
                 <Users className="h-4 w-4 text-blue-600" />
               </div>
-              <div>
-                <p className="text-sm font-medium">Nouveau locataire</p>
-                <p className="text-xs text-gray-500">Il y a 2 heures</p>
+              <div className="flex-1">
+                <p className="font-medium">Nouveau locataire</p>
+                <p className="text-sm text-muted-foreground">
+                  Marie Dupont - Appartement 4B
+                </p>
               </div>
+              <p className="text-sm text-muted-foreground">Il y a 2h</p>
             </div>
-            {/* Add more activity items as needed */}
+            <div className="flex items-center gap-4 rounded-lg border p-4">
+              <div className="rounded-full bg-emerald-100 p-2">
+                <DollarSign className="h-4 w-4 text-emerald-600" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium">Paiement reçu</p>
+                <p className="text-sm text-muted-foreground">
+                  850€ - Studio 2A
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground">Il y a 5h</p>
+            </div>
+            <div className="flex items-center gap-4 rounded-lg border p-4">
+              <div className="rounded-full bg-amber-100 p-2">
+                <Wrench className="h-4 w-4 text-amber-600" />
+              </div>
+              <div className="flex-1">
+                <p className="font-medium">Maintenance terminée</p>
+                <p className="text-sm text-muted-foreground">
+                  Plomberie - Appartement 1C
+                </p>
+              </div>
+              <p className="text-sm text-muted-foreground">Il y a 1j</p>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
