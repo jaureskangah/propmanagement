@@ -7,10 +7,22 @@ import { useToast } from "@/components/ui/use-toast";
 import { useProperties, Property } from "@/hooks/useProperties";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const PROPERTY_TYPES = [
+  "All",
+  "Apartment",
+  "House",
+  "Studio",
+  "Condo",
+  "Office",
+  "Commercial Space"
+] as const;
 
 const Properties = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  const [selectedType, setSelectedType] = useState<string>("All");
   const { properties, isLoadingProperties } = useProperties();
   const { toast } = useToast();
 
@@ -53,6 +65,10 @@ const Properties = () => {
     setSelectedPropertyId(id);
   };
 
+  const filteredProperties = selectedType === "All" 
+    ? properties 
+    : properties.filter(property => property.type === selectedType);
+
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
 
   if (isLoadingProperties) {
@@ -78,19 +94,35 @@ const Properties = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex justify-end mb-6">
+      <div className="flex justify-between items-center mb-6">
+        <div className="w-64">
+          <Select value={selectedType} onValueChange={setSelectedType}>
+            <SelectTrigger>
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              {PROPERTY_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <AddPropertyModal />
       </div>
       
-      {properties.length === 0 ? (
+      {filteredProperties.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
-            Start by adding your first property!
+            {properties.length === 0 
+              ? "Start by adding your first property!"
+              : "No properties match the selected filter."}
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
+          {filteredProperties.map((property) => (
             <PropertyCard
               key={property.id}
               property={property}
