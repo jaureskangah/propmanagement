@@ -25,13 +25,13 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
     console.log("Starting upload for file:", file.name);
 
     try {
-      // Upload file to Supabase Storage
+      // 1. Upload file to Supabase Storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
       console.log("Uploading to storage with path:", fileName);
 
-      const { error: uploadError, data } = await supabase.storage
+      const { error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
           cacheControl: '3600',
@@ -45,14 +45,14 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
 
       console.log("File uploaded successfully, getting public URL");
 
-      // Get the public URL
+      // 2. Get the public URL using the correct path
       const { data: { publicUrl } } = supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
 
-      console.log("Got public URL:", publicUrl);
+      console.log("Generated public URL:", publicUrl);
 
-      // Save document reference in the database
+      // 3. Save document reference in the database with the public URL
       const { error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
@@ -66,7 +66,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         throw dbError;
       }
 
-      console.log("Document reference saved in database");
+      console.log("Document reference saved in database with URL:", publicUrl);
 
       toast({
         title: "Document chargé",
