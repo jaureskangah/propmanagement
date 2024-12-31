@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Building2, Shield, Users, Wrench, DollarSign, LogIn, List, Gift, Star, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Building2, Shield, Users, Wrench, DollarSign, LogIn, List, Gift } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/components/AuthProvider";
 import AuthModal from "@/components/auth/AuthModal";
@@ -10,33 +10,35 @@ const LandingPage = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-white via-red-50 to-white">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-blue-100">
+      <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-red-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
+            {/* Logo and Name */}
             <div className="flex items-center gap-2">
-              <Building2 className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-blue-600">RentEase</span>
+              <Building2 className="h-8 w-8 text-red-600" />
+              <span className="text-xl font-bold text-red-600">PropManager</span>
             </div>
 
+            {/* Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#features" className="flex items-center gap-1 text-slate-600 hover:text-blue-600 transition-colors">
+              <div className="flex items-center gap-1 text-slate-600 hover:text-red-600 transition-colors">
                 <List className="h-4 w-4" />
-                <span>Fonctionnalités</span>
-              </a>
-              <a href="#pricing" className="flex items-center gap-1 text-slate-600 hover:text-blue-600 transition-colors">
+                <span>Features</span>
+              </div>
+              <div className="flex items-center gap-1 text-slate-600 hover:text-red-600 transition-colors">
                 <DollarSign className="h-4 w-4" />
-                <span>Tarifs</span>
-              </a>
-              <a href="#testimonials" className="flex items-center gap-1 text-slate-600 hover:text-blue-600 transition-colors">
-                <Star className="h-4 w-4" />
-                <span>Témoignages</span>
-              </a>
+                <span>Pricing</span>
+              </div>
+              <div className="flex items-center gap-1 text-slate-600 hover:text-red-600 transition-colors">
+                <Gift className="h-4 w-4" />
+                <span>Free Trial</span>
+              </div>
               {user ? (
-                <Button asChild variant="default" size="sm" className="bg-blue-600 hover:bg-blue-700">
+                <Button asChild variant="outline" size="sm" className="flex items-center gap-2">
                   <Link to="/dashboard">
-                    Tableau de bord
+                    Dashboard
                   </Link>
                 </Button>
               ) : (
@@ -47,11 +49,12 @@ const LandingPage = () => {
                   onClick={() => setShowAuthModal(true)}
                 >
                   <LogIn className="h-4 w-4" />
-                  Connexion
+                  Sign In
                 </Button>
               )}
             </nav>
 
+            {/* Mobile menu button */}
             <Button variant="ghost" size="icon" className="md:hidden">
               <List className="h-6 w-6" />
             </Button>
@@ -59,213 +62,99 @@ const LandingPage = () => {
         </div>
       </header>
 
+      {/* Add margin-top to account for fixed header */}
       <div className="pt-16">
         {/* Hero Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center space-y-8">
-            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-700 to-blue-500 bg-clip-text text-transparent animate-fade-in">
-              Simplifiez votre gestion immobilière
+            <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-red-700 to-red-500 bg-clip-text text-transparent animate-fade-in">
+              Simplify Your Property Management
             </h1>
             <p className="text-slate-600 text-xl md:text-2xl max-w-3xl mx-auto animate-fade-in delay-100">
-              Une solution complète pour gérer vos propriétés, locataires et maintenance en toute simplicité.
+              A complete solution to manage your properties, tenants, and maintenance with ease.
             </p>
             <div className="flex justify-center gap-4 animate-fade-in delay-200">
-              <Button size="lg" className="group bg-blue-600 hover:bg-blue-700" onClick={() => setShowAuthModal(true)}>
-                Commencer gratuitement
-                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              <Button asChild size="lg" className="group bg-red-600 hover:bg-red-700">
+                <Link to="/properties">
+                  Get Started Now
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
-              <Button variant="outline" size="lg">
-                En savoir plus
+              <Button asChild variant="outline" size="lg">
+                <Link to="/contact">Learn More</Link>
               </Button>
             </div>
           </div>
         </div>
 
         {/* Features Section */}
-        <div id="features" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Tout ce dont vous avez besoin
+              Everything You Need
             </h2>
             <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-              Des outils puissants pour une gestion efficace de votre portefeuille immobilier
+              Powerful tools for efficient management of your real estate portfolio
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="bg-white p-6 rounded-xl border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Building2 className="text-blue-600" />
+            <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Building2 className="text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">Gestion des biens</h3>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Property Management</h3>
               <p className="text-slate-600">
-                Suivez vos propriétés et leur performance en temps réel
+                Track your properties and their performance in real-time
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Users className="text-blue-600" />
+            <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Users className="text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">Gestion des locataires</h3>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Tenant Management</h3>
               <p className="text-slate-600">
-                Gérez facilement vos locataires et leurs documents
+                Easily manage your tenants and their documents
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Wrench className="text-blue-600" />
+            <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Wrench className="text-red-600" />
               </div>
               <h3 className="text-xl font-semibold text-slate-900 mb-2">Maintenance</h3>
               <p className="text-slate-600">
-                Suivez et gérez les demandes de maintenance
+                Track and manage maintenance requests
               </p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl border border-blue-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Shield className="text-blue-600" />
+            <div className="bg-white/80 backdrop-blur-lg p-6 rounded-xl border border-red-100 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <Shield className="text-red-600" />
               </div>
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">Sécurité</h3>
+              <h3 className="text-xl font-semibold text-slate-900 mb-2">Security</h3>
               <p className="text-slate-600">
-                Vos données sont sécurisées et protégées
+                Your data is secure and protected
               </p>
             </div>
-          </div>
-        </div>
-
-        {/* Testimonials Section */}
-        <div id="testimonials" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Ce que disent nos clients
-            </h2>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-              Découvrez pourquoi les propriétaires font confiance à RentEase
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sophie Martin",
-                role: "Propriétaire",
-                content: "RentEase a complètement transformé ma façon de gérer mes biens immobiliers. Tout est tellement plus simple maintenant !"
-              },
-              {
-                name: "Thomas Dubois",
-                role: "Investisseur immobilier",
-                content: "Une solution complète qui m'a permis de gagner un temps précieux dans la gestion de mon portefeuille."
-              },
-              {
-                name: "Marie Lambert",
-                role: "Gestionnaire immobilier",
-                content: "L'interface est intuitive et les fonctionnalités sont exactement ce dont j'avais besoin. Je recommande !"
-              }
-            ].map((testimonial, index) => (
-              <div key={index} className="bg-white p-6 rounded-xl border border-blue-100 shadow-lg">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <Users className="text-blue-600 h-6 w-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-900">{testimonial.name}</h4>
-                    <p className="text-sm text-slate-600">{testimonial.role}</p>
-                  </div>
-                </div>
-                <p className="text-slate-600">{testimonial.content}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Pricing Section */}
-        <div id="pricing" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white/50">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Des tarifs adaptés à vos besoins
-            </h2>
-            <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-              Choisissez le plan qui vous convient le mieux
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Débutant",
-                price: "0€",
-                period: "par mois",
-                features: ["Jusqu'à 3 propriétés", "Gestion des locataires", "Support par email"],
-                cta: "Commencer gratuitement"
-              },
-              {
-                name: "Pro",
-                price: "29€",
-                period: "par mois",
-                features: ["Propriétés illimitées", "Gestion avancée", "Support prioritaire", "Rapports personnalisés"],
-                cta: "Essayer 14 jours gratuits",
-                highlighted: true
-              },
-              {
-                name: "Entreprise",
-                price: "Sur mesure",
-                period: "",
-                features: ["Fonctionnalités personnalisées", "API dédiée", "Support dédié", "Formation incluse"],
-                cta: "Nous contacter"
-              }
-            ].map((plan, index) => (
-              <div 
-                key={index} 
-                className={`bg-white p-8 rounded-xl border ${
-                  plan.highlighted ? 'border-blue-500 shadow-blue-100' : 'border-blue-100'
-                } shadow-lg hover:shadow-xl transition-all duration-300`}
-              >
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">{plan.name}</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-slate-900">{plan.price}</span>
-                  {plan.period && <span className="text-slate-600">/{plan.period}</span>}
-                </div>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature, featureIndex) => (
-                    <li key={featureIndex} className="flex items-center gap-2 text-slate-600">
-                      <CheckCircle2 className="h-5 w-5 text-blue-600" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Button 
-                  className={`w-full ${
-                    plan.highlighted ? 'bg-blue-600 hover:bg-blue-700' : 'bg-white text-blue-600 border-blue-600 hover:bg-blue-50'
-                  }`}
-                  variant={plan.highlighted ? 'default' : 'outline'}
-                  onClick={() => setShowAuthModal(true)}
-                >
-                  {plan.cta}
-                </Button>
-              </div>
-            ))}
           </div>
         </div>
 
         {/* CTA Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-8 md:p-12 text-center text-white">
+          <div className="bg-gradient-to-r from-red-600 to-red-800 rounded-2xl p-8 md:p-12 text-center text-white">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Prêt à simplifier votre gestion ?
+              Ready to Simplify Your Management?
             </h2>
-            <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-              Rejoignez des milliers de propriétaires qui font confiance à notre solution
+            <p className="text-red-100 text-lg mb-8 max-w-2xl mx-auto">
+              Join thousands of property owners who trust our solution
             </p>
-            <Button 
-              size="lg" 
-              variant="secondary" 
-              className="group bg-white text-blue-600 hover:bg-blue-50"
-              onClick={() => setShowAuthModal(true)}
-            >
-              Essayer gratuitement
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+            <Button asChild size="lg" variant="secondary" className="group">
+              <Link to="/signup">
+                Try For Free
+                <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
             </Button>
           </div>
         </div>
