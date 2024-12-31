@@ -1,4 +1,4 @@
-import { Building2, List, DollarSign, Gift, LogIn } from "lucide-react";
+import { Building2, List, DollarSign, Gift, LogIn, Leaf } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
@@ -15,7 +15,10 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
-            <Building2 className="h-8 w-8 text-[#ea384c]" />
+            <div className="flex items-center gap-1">
+              <Building2 className="h-8 w-8 text-[#ea384c]" />
+              <Leaf className="h-5 w-5 text-[#ea384c]" />
+            </div>
             <span className="text-xl font-bold text-[#ea384c]">PropManager</span>
           </div>
 
