@@ -33,8 +33,8 @@ const AppSidebar = () => {
           to="/properties"
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
-              isActive && "bg-gray-100 font-medium"
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-[#d41f32] hover:text-white",
+              isActive ? "bg-[#ea384c] text-white" : "hover:bg-[#ea384c]/10"
             )
           }
         >
@@ -45,8 +45,8 @@ const AppSidebar = () => {
           to="/tenants"
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
-              isActive && "bg-gray-100 font-medium"
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-[#d41f32] hover:text-white",
+              isActive ? "bg-[#ea384c] text-white" : "hover:bg-[#ea384c]/10"
             )
           }
         >
@@ -57,8 +57,8 @@ const AppSidebar = () => {
           to="/maintenance"
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
-              isActive && "bg-gray-100 font-medium"
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-[#d41f32] hover:text-white",
+              isActive ? "bg-[#ea384c] text-white" : "hover:bg-[#ea384c]/10"
             )
           }
         >
