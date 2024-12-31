@@ -10,7 +10,10 @@ const AppSidebar = () => {
           to="/"
           className="text-xl font-bold text-center block hover:text-[#ea384c] transition-colors"
         >
-          PropManager
+          <div className="flex items-center justify-center gap-2">
+            <Building2 className="h-8 w-8 text-[#ea384c]" />
+            <span>PropManager</span>
+          </div>
         </NavLink>
       </div>
       <nav className="space-y-2">
