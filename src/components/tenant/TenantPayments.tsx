@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Plus } from "lucide-react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TenantPayment } from "@/types/tenant";
 import { PaymentStatus } from "./payments/PaymentStatus";
 import { AddPaymentDialog } from "./payments/AddPaymentDialog";
+import { EditPaymentDialog } from "./payments/EditPaymentDialog";
+import { DeletePaymentDialog } from "./payments/DeletePaymentDialog";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -16,8 +18,21 @@ interface TenantPaymentsProps {
 
 export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPaymentsProps) => {
   const [isAddPaymentOpen, setIsAddPaymentOpen] = useState(false);
+  const [isEditPaymentOpen, setIsEditPaymentOpen] = useState(false);
+  const [isDeletePaymentOpen, setIsDeletePaymentOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<TenantPayment | null>(null);
 
   console.log("Rendering TenantPayments with payments:", payments);
+
+  const handleEditClick = (payment: TenantPayment) => {
+    setSelectedPayment(payment);
+    setIsEditPaymentOpen(true);
+  };
+
+  const handleDeleteClick = (payment: TenantPayment) => {
+    setSelectedPayment(payment);
+    setIsDeletePaymentOpen(true);
+  };
 
   return (
     <Card>
@@ -51,7 +66,26 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
                       {format(new Date(payment.payment_date), 'dd MMMM yyyy', { locale: fr })}
                     </span>
                   </div>
-                  <PaymentStatus status={payment.status} />
+                  <div className="flex items-center gap-4">
+                    <PaymentStatus status={payment.status} />
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleEditClick(payment)}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleDeleteClick(payment)}
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               ))
           )}
@@ -67,6 +101,32 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
           setIsAddPaymentOpen(false);
         }}
       />
+
+      {selectedPayment && (
+        <>
+          <EditPaymentDialog
+            open={isEditPaymentOpen}
+            onOpenChange={setIsEditPaymentOpen}
+            payment={selectedPayment}
+            onPaymentUpdated={() => {
+              onPaymentUpdate();
+              setIsEditPaymentOpen(false);
+              setSelectedPayment(null);
+            }}
+          />
+
+          <DeletePaymentDialog
+            open={isDeletePaymentOpen}
+            onOpenChange={setIsDeletePaymentOpen}
+            payment={selectedPayment}
+            onPaymentDeleted={() => {
+              onPaymentUpdate();
+              setIsDeletePaymentOpen(false);
+              setSelectedPayment(null);
+            }}
+          />
+        </>
+      )}
     </Card>
   );
 };
