@@ -10,11 +10,11 @@ const AppSidebar = () => {
       </div>
       <nav className="space-y-2">
         <NavLink
-          to="/"
+          to="/dashboard"
           className={({ isActive }) =>
             cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-gray-100",
-              isActive && "bg-gray-100 font-medium"
+              "flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-[#d41f32] hover:text-white",
+              isActive ? "bg-[#ea384c] text-white" : "hover:bg-[#ea384c]/10"
             )
           }
         >
