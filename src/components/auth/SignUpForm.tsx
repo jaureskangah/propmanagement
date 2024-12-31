@@ -138,7 +138,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90" disabled={loading}>
           {loading ? 'Signing up...' : 'Sign Up'}
         </Button>
       </form>

@@ -84,7 +84,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={loading}>
+        <Button type="submit" className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90" disabled={loading}>
           {loading ? 'Signing in...' : 'Sign In'}
         </Button>
       </form>
