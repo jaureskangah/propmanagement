@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthProvider";
 
 interface PropertyFormData {
   name: string;
@@ -18,6 +19,8 @@ interface PropertyFormData {
 export function AddPropertyModal() {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  
   const form = useForm<PropertyFormData>({
     defaultValues: {
       name: "",
@@ -29,10 +32,16 @@ export function AddPropertyModal() {
 
   const onSubmit = async (data: PropertyFormData) => {
     try {
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      console.log("Adding property with user_id:", user.id);
+      
       const { error } = await supabase.from("properties").insert([
         {
           ...data,
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: user.id,
         },
       ]);
 
