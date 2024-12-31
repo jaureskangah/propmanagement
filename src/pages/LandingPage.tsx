@@ -80,7 +80,7 @@ const LandingPage = () => {
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button asChild variant="outline" size="lg" className="bg-white text-red-600 border-red-100 hover:bg-red-50">
                 <Link to="/contact">Learn More</Link>
               </Button>
             </div>
