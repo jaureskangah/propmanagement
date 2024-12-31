@@ -150,7 +150,7 @@ const LandingPage = () => {
             <p className="text-red-100 text-lg mb-8 max-w-2xl mx-auto">
               Join thousands of property owners who trust our solution
             </p>
-            <Button asChild size="lg" variant="secondary" className="group">
+            <Button asChild size="lg" className="group bg-white hover:bg-white/90 text-red-600 border border-red-100">
               <Link to="/signup">
                 Try For Free
                 <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
