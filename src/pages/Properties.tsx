@@ -106,6 +106,7 @@ const Properties = () => {
 
   return (
     <div className="container mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-8">Properties Management</h1>
       <div className="flex flex-col gap-4 mb-6">
         <div className="flex items-center gap-4">
           <div className="w-64">
