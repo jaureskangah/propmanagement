@@ -31,6 +31,9 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
     },
   });
 
+  // Détermine si nous sommes en mode édition en vérifiant si des valeurs par défaut sont fournies
+  const isEditMode = !!defaultValues;
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -159,7 +162,7 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
             Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Adding..." : "Add Tenant"}
+            {isSubmitting ? "Saving..." : isEditMode ? "Update Tenant" : "Add Tenant"}
           </Button>
         </div>
       </form>
