@@ -1,8 +1,11 @@
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
-export default function Hero() {
+interface HeroProps {
+  onShowAuthModal: () => void;
+}
+
+export default function Hero({ onShowAuthModal }: HeroProps) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div className="text-center space-y-8">
@@ -13,14 +16,21 @@ export default function Hero() {
           A complete solution to manage your properties, tenants, and maintenance with ease.
         </p>
         <div className="flex justify-center gap-4 animate-fade-in delay-200">
-          <Button asChild size="lg" className="group bg-red-600 hover:bg-red-700 text-white">
-            <Link to="/properties">
-              Get Started Now
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Link>
+          <Button 
+            size="lg" 
+            className="group bg-red-600 hover:bg-red-700 text-white"
+            onClick={onShowAuthModal}
+          >
+            Get Started Now
+            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
-          <Button asChild variant="outline" size="lg" className="bg-white text-red-600 border-red-100 hover:bg-red-50">
-            <Link to="/contact">Learn More</Link>
+          <Button 
+            variant="outline" 
+            size="lg" 
+            className="bg-white text-red-600 border-red-100 hover:bg-red-50"
+            onClick={onShowAuthModal}
+          >
+            Learn More
           </Button>
         </div>
       </div>

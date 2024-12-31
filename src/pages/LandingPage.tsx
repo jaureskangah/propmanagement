@@ -12,9 +12,9 @@ export default function LandingPage() {
     <div className="min-h-screen bg-gradient-to-br from-white via-red-50 to-white">
       <Header onShowAuthModal={() => setShowAuthModal(true)} />
       <div className="pt-16">
-        <Hero />
+        <Hero onShowAuthModal={() => setShowAuthModal(true)} />
         <Features />
-        <CallToAction />
+        <CallToAction onShowAuthModal={() => setShowAuthModal(true)} />
       </div>
 
       <AuthModal
