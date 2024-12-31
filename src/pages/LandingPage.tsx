@@ -1,10 +1,11 @@
-import { useState } from "react";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";
 import Pricing from "@/components/landing/Pricing";
-import CallToAction from "@/components/landing/CallToAction";
+import Contact from "@/components/landing/Contact";
+import Footer from "@/components/landing/Footer";
 import AuthModal from "@/components/auth/AuthModal";
+import { useState } from "react";
 
 export default function LandingPage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -16,7 +17,8 @@ export default function LandingPage() {
         <Hero onShowAuthModal={() => setShowAuthModal(true)} />
         <Features />
         <Pricing />
-        <CallToAction onShowAuthModal={() => setShowAuthModal(true)} />
+        <Contact />
+        <Footer />
       </div>
 
       <AuthModal
