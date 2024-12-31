@@ -1,1 +1,4 @@
 project_id = "jhjhzwbvmkurwfohjxlu"
+
+[functions.lease-expiry-notifications]
+verify_jwt = false
