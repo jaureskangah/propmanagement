@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "./components/AuthProvider";
 import AppSidebar from "./components/AppSidebar";
 import LandingPage from "./pages/LandingPage";
@@ -10,12 +10,15 @@ import { useAuth } from "./components/AuthProvider";
 
 function AppRoutes() {
   const { user } = useAuth();
+  const location = useLocation();
   const isAuthenticated = !!user;
+  const isLandingPage = location.pathname === "/";
+  const showSidebar = isAuthenticated && !isLandingPage;
 
   return (
     <div className="flex min-h-screen">
-      {isAuthenticated && <AppSidebar />}
-      <main className={`flex-1 ${!isAuthenticated ? 'p-0' : 'p-8'}`}>
+      {showSidebar && <AppSidebar />}
+      <main className={`flex-1 ${!showSidebar ? 'p-0' : 'p-8'}`}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
