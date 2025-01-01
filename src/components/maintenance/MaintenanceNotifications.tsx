@@ -42,20 +42,23 @@ export const MaintenanceNotifications = () => {
         return;
       }
 
-      // Récupérer les budgets et dépenses pour les alertes
+      // Récupérer les budgets
       const { data: budgetData, error: budgetError } = await supabase
         .from('maintenance_budgets')
-        .select(`
-          *,
-          maintenance_expenses (
-            amount,
-            category,
-            date
-          )
-        `);
+        .select('*');
 
       if (budgetError) {
         console.error('Error fetching budget data:', budgetError);
+        return;
+      }
+
+      // Récupérer les dépenses séparément
+      const { data: expensesData, error: expensesError } = await supabase
+        .from('maintenance_expenses')
+        .select('*');
+
+      if (expensesError) {
+        console.error('Error fetching expenses data:', expensesError);
         return;
       }
 
@@ -63,10 +66,15 @@ export const MaintenanceNotifications = () => {
       const alerts: BudgetAlert[] = [];
 
       budgetData?.forEach((budget) => {
-        const totalExpenses = budget.maintenance_expenses?.reduce(
-          (sum: number, expense: { amount: number }) => sum + expense.amount,
+        // Calculer les dépenses totales pour ce budget
+        const budgetExpenses = expensesData?.filter(expense => 
+          expense.property_id === budget.property_id
+        ) || [];
+
+        const totalExpenses = budgetExpenses.reduce(
+          (sum, expense) => sum + (expense.amount || 0),
           0
-        ) || 0;
+        );
 
         // Alerte de dépassement de budget
         if (totalExpenses > budget.amount) {
@@ -80,14 +88,13 @@ export const MaintenanceNotifications = () => {
         }
 
         // Alerte pour coûts inhabituels (20% au-dessus de la moyenne)
-        const expenses = budget.maintenance_expenses || [];
-        if (expenses.length > 0) {
-          const averageExpense = totalExpenses / expenses.length;
-          const unusualExpenses = expenses.filter(
-            (expense: { amount: number }) => expense.amount > averageExpense * 1.2
+        if (budgetExpenses.length > 0) {
+          const averageExpense = totalExpenses / budgetExpenses.length;
+          const unusualExpenses = budgetExpenses.filter(
+            expense => expense.amount > averageExpense * 1.2
           );
 
-          unusualExpenses.forEach((expense: { amount: number, category: string }) => {
+          unusualExpenses.forEach(expense => {
             alerts.push({
               id: `unusual-${expense.category}`,
               title: "Coût Inhabituel Détecté",
