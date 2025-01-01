@@ -47,8 +47,10 @@ export const DashboardHeader = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <div className="flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-1">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          Dashboard
+        </h1>
+        <div className="flex items-center gap-2 rounded-lg bg-gray-50/50 backdrop-blur-sm px-3 py-1 shadow-sm">
           <span className="text-sm font-medium text-gray-600">Calculating...</span>
         </div>
       </div>
@@ -60,9 +62,11 @@ export const DashboardHeader = () => {
 
   return (
     <div className="flex items-center justify-between">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
-      <div className={`flex items-center gap-2 rounded-lg px-3 py-1 ${
-        isPositive ? 'bg-green-50' : 'bg-red-50'
+      <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+        Dashboard
+      </h1>
+      <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 shadow-sm transition-all duration-300 hover:scale-105 ${
+        isPositive ? 'bg-green-50/50 backdrop-blur-sm' : 'bg-red-50/50 backdrop-blur-sm'
       }`}>
         {isPositive ? (
           <TrendingUp className="h-4 w-4 text-green-600" />

@@ -9,10 +9,12 @@ interface DashboardMetricProps {
 
 export function DashboardMetric({ title, value, icon, description }: DashboardMetricProps) {
   return (
-    <Card className="group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
+    <Card className="group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <div className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+          {title}
+        </CardTitle>
+        <div className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 text-primary">
           {icon}
         </div>
       </CardHeader>
