@@ -29,7 +29,7 @@ export const NotificationItem = ({ title, issue, priority, deadline, icon: Icon 
           <p className="text-sm text-muted-foreground mt-1">{issue}</p>
           {deadline && (
             <p className="text-xs text-muted-foreground mt-2">
-              Échéance: {new Date(deadline).toLocaleDateString()}
+              Deadline: {new Date(deadline).toLocaleDateString()}
             </p>
           )}
         </div>

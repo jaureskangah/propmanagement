@@ -68,10 +68,10 @@ const Maintenance = () => {
 
       <Tabs defaultValue="preventive" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="preventive">Maintenance Préventive</TabsTrigger>
-          <TabsTrigger value="work-orders">Ordres de Travail</TabsTrigger>
-          <TabsTrigger value="vendors">Prestataires</TabsTrigger>
-          <TabsTrigger value="financials">Coûts</TabsTrigger>
+          <TabsTrigger value="preventive">Preventive Maintenance</TabsTrigger>
+          <TabsTrigger value="work-orders">Work Orders</TabsTrigger>
+          <TabsTrigger value="vendors">Vendors</TabsTrigger>
+          <TabsTrigger value="financials">Costs</TabsTrigger>
         </TabsList>
 
         <TabsContent value="preventive">

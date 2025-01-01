@@ -28,14 +28,14 @@ export const PreventiveMaintenance = () => {
   const [tasks, setTasks] = useState<MaintenanceTask[]>([
     {
       id: "1",
-      title: "Inspection mensuelle des détecteurs de fumée",
+      title: "Monthly smoke detector inspection",
       date: new Date(),
       completed: false,
       type: "regular",
     },
     {
       id: "2",
-      title: "Vérification trimestrielle de la plomberie",
+      title: "Quarterly plumbing check",
       date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
       completed: false,
       type: "inspection",
@@ -85,20 +85,20 @@ export const PreventiveMaintenance = () => {
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <CalendarIcon className="h-5 w-5" />
-            Calendrier d'entretien
+            Maintenance Calendar
           </CardTitle>
           <Select
             value={selectedType}
             onValueChange={(value) => setSelectedType(value)}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Type de tâche" />
+              <SelectValue placeholder="Task type" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Toutes les tâches</SelectItem>
-              <SelectItem value="regular">Tâches régulières</SelectItem>
+              <SelectItem value="all">All tasks</SelectItem>
+              <SelectItem value="regular">Regular tasks</SelectItem>
               <SelectItem value="inspection">Inspections</SelectItem>
-              <SelectItem value="seasonal">Tâches saisonnières</SelectItem>
+              <SelectItem value="seasonal">Seasonal tasks</SelectItem>
             </SelectContent>
           </Select>
         </CardHeader>
@@ -125,7 +125,7 @@ export const PreventiveMaintenance = () => {
           />
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-medium">Tâches prévues</h3>
+              <h3 className="font-medium">Scheduled Tasks</h3>
               <AddTaskDialog onAddTask={handleAddTask} />
             </div>
             <TaskList 
