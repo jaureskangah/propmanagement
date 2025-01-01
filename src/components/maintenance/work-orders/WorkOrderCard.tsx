@@ -7,9 +7,12 @@ import { WorkOrderActions } from "./card/WorkOrderActions";
 
 interface WorkOrderCardProps {
   order: WorkOrder;
+  onUpdate: () => void;
+  onDelete: () => void;
+  onDuplicate: () => void;
 }
 
-export const WorkOrderCard = ({ order }: WorkOrderCardProps) => {
+export const WorkOrderCard = ({ order, onUpdate, onDelete, onDuplicate }: WorkOrderCardProps) => {
   return (
     <Card>
       <WorkOrderHeader title={order.title} />
@@ -24,7 +27,13 @@ export const WorkOrderCard = ({ order }: WorkOrderCardProps) => {
           <div className="flex items-center gap-2 mt-2">
             <WorkOrderStatus status={order.status} />
           </div>
-          <WorkOrderActions />
+          <WorkOrderActions 
+            orderId={order.id}
+            status={order.status}
+            onStatusChange={onUpdate}
+            onDelete={onDelete}
+            onDuplicate={onDuplicate}
+          />
         </div>
       </CardContent>
     </Card>

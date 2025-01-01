@@ -6,19 +6,35 @@ import { WorkOrderFilters } from "./WorkOrderFilters";
 import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
 import { useToast } from "@/hooks/use-toast";
 import { WorkOrder } from "@/types/workOrder";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface WorkOrderListProps {
-  workOrders: WorkOrder[];
   propertyId: string;
-  onWorkOrderCreated?: () => void;
 }
 
-export const WorkOrderList = ({ workOrders, propertyId, onWorkOrderCreated }: WorkOrderListProps) => {
+export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "cost">("date");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  const { data: workOrders = [], isLoading, refetch } = useQuery({
+    queryKey: ['work-orders'],
+    queryFn: async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Not authenticated");
+
+      const { data, error } = await supabase
+        .from('vendor_interventions')
+        .select('*')
+        .eq('user_id', userData.user.id);
+
+      if (error) throw error;
+      return data;
+    },
+  });
 
   // Filter and sort work orders
   const filteredAndSortedOrders = useMemo(() => {
@@ -27,39 +43,49 @@ export const WorkOrderList = ({ workOrders, propertyId, onWorkOrderCreated }: Wo
         const matchesStatus = statusFilter === "all" || order.status === statusFilter;
         const matchesSearch = 
           order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.property.toLowerCase().includes(searchQuery.toLowerCase());
+          order.description.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
       })
       .sort((a, b) => {
         if (sortBy === "date") {
-          return (b.date || "").localeCompare(a.date || "");
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
         } else {
-          return b.cost - a.cost;
+          return (b.cost || 0) - (a.cost || 0);
         }
       });
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
   const handleCreateSuccess = () => {
-    console.log("Work order created successfully");
+    refetch();
+    setIsCreateDialogOpen(false);
     toast({
       title: "Ordre de travail créé",
       description: "L'ordre de travail a été créé avec succès",
     });
-    setIsCreateDialogOpen(false);
-    if (onWorkOrderCreated) {
-      onWorkOrderCreated();
-    }
   };
+
+  const handleUpdate = () => {
+    refetch();
+  };
+
+  const handleDelete = () => {
+    refetch();
+  };
+
+  const handleDuplicate = () => {
+    refetch();
+  };
+
+  if (isLoading) {
+    return <div>Chargement...</div>;
+  }
 
   return (
     <>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Ordres de Travail</h2>
         <Button 
-          onClick={() => {
-            console.log("Opening create dialog");
-            setIsCreateDialogOpen(true);
-          }}
+          onClick={() => setIsCreateDialogOpen(true)}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
@@ -78,16 +104,19 @@ export const WorkOrderList = ({ workOrders, propertyId, onWorkOrderCreated }: Wo
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {filteredAndSortedOrders.map((order) => (
-          <WorkOrderCard key={order.id} order={order} />
+          <WorkOrderCard 
+            key={order.id} 
+            order={order}
+            onUpdate={handleUpdate}
+            onDelete={handleDelete}
+            onDuplicate={handleDuplicate}
+          />
         ))}
       </div>
 
       <CreateWorkOrderDialog
         isOpen={isCreateDialogOpen}
-        onClose={() => {
-          console.log("Closing create dialog");
-          setIsCreateDialogOpen(false);
-        }}
+        onClose={() => setIsCreateDialogOpen(false)}
         onSuccess={handleCreateSuccess}
         propertyId={propertyId}
       />
