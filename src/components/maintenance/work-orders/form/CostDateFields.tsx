@@ -19,7 +19,7 @@ export const CostDateFields = ({
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
-        <Label htmlFor="cost">Estimated Cost (€)</Label>
+        <Label htmlFor="cost">Estimated Cost ($)</Label>
         <div className="relative">
           <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
           <Input
