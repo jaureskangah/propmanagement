@@ -51,10 +51,11 @@ export const MaintenanceNotifications = () => {
         },
         (payload: RealtimePostgresChangesPayload<Notification>) => {
           console.log('Real-time update:', payload);
-          if (payload.new) {
+          const newNotification = payload.new as Notification;
+          if (newNotification?.title) {
             toast({
               title: "Nouvelle demande de maintenance",
-              description: `${payload.new.title}`,
+              description: newNotification.title,
             });
             fetchNotifications();
           }
