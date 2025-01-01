@@ -495,6 +495,9 @@ export type Database = {
           comment: string
           created_at: string
           id: string
+          price_rating: number | null
+          punctuality_rating: number | null
+          quality_rating: number | null
           rating: number
           user_id: string
           vendor_id: string | null
@@ -503,6 +506,9 @@ export type Database = {
           comment: string
           created_at?: string
           id?: string
+          price_rating?: number | null
+          punctuality_rating?: number | null
+          quality_rating?: number | null
           rating: number
           user_id: string
           vendor_id?: string | null
@@ -511,6 +517,9 @@ export type Database = {
           comment?: string
           created_at?: string
           id?: string
+          price_rating?: number | null
+          punctuality_rating?: number | null
+          quality_rating?: number | null
           rating?: number
           user_id?: string
           vendor_id?: string | null

@@ -9,6 +9,8 @@ import { VendorFilters } from "./VendorFilters";
 import { VendorCard } from "./VendorCard";
 import { VendorDialog } from "./VendorDialog";
 import { useToast } from "@/hooks/use-toast";
+import { VendorReviewList } from "./reviews/VendorReviewList";
+import { VendorReviewDialog } from "./reviews/VendorReviewDialog";
 
 interface Vendor {
   id: string;
@@ -26,6 +28,9 @@ interface VendorReview {
   comment: string;
   rating: number;
   created_at: string;
+  quality_rating: number;
+  price_rating: number;
+  punctuality_rating: number;
 }
 
 interface VendorIntervention {
@@ -46,6 +51,11 @@ export const VendorList = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedVendor, setSelectedVendor] = useState<Vendor | undefined>();
   const { toast } = useToast();
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [selectedVendorForReview, setSelectedVendorForReview] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const { data: vendors = [], refetch } = useQuery({
     queryKey: ['vendors'],
@@ -166,29 +176,49 @@ export const VendorList = () => {
         </TabsContent>
 
         <TabsContent value="reviews">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {reviews.map((review) => {
-              const vendor = vendors.find(v => v.id === review.vendor_id);
-              return (
-                <Card key={review.id}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{vendor?.name}</CardTitle>
-                      <Star className="h-5 w-5 text-yellow-500" />
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <p><strong>Note:</strong> {review.rating}/5</p>
-                      <p>{review.comment}</p>
-                      <p className="text-sm text-gray-500">
-                        {new Date(review.created_at).toLocaleDateString()}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-semibold">Évaluations des prestataires</h3>
+              <Select
+                value={selectedVendorForReview?.id || ""}
+                onValueChange={(value) => {
+                  const vendor = vendors.find((v) => v.id === value);
+                  if (vendor) {
+                    setSelectedVendorForReview({
+                      id: vendor.id,
+                      name: vendor.name,
+                    });
+                    setReviewDialogOpen(true);
+                  }
+                }}
+              >
+                <SelectTrigger className="w-[250px]">
+                  <SelectValue placeholder="Sélectionner un prestataire" />
+                </SelectTrigger>
+                <SelectContent>
+                  {vendors.map((vendor) => (
+                    <SelectItem key={vendor.id} value={vendor.id}>
+                      {vendor.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <VendorReviewList reviews={reviews} />
+
+            {selectedVendorForReview && (
+              <VendorReviewDialog
+                open={reviewDialogOpen}
+                onOpenChange={setReviewDialogOpen}
+                vendorId={selectedVendorForReview.id}
+                vendorName={selectedVendorForReview.name}
+                onSuccess={() => {
+                  refetch();
+                  setSelectedVendorForReview(null);
+                }}
+              />
+            )}
           </div>
         </TabsContent>
 
