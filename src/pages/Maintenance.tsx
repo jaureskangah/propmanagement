@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+import { DashboardMetric } from "@/components/DashboardMetric";
 import { 
   Wrench, 
   Calendar, 
@@ -11,57 +10,82 @@ import {
   FileImage, 
   DollarSign,
   Plus,
-  CheckSquare
+  CheckSquare,
+  Clock,
+  AlertTriangle,
+  CheckCircle2,
+  HourglassIcon
 } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useQuery } from "@tanstack/react-query";
 
-// Mock data - replace with real data when backend is integrated
-const initialWorkOrders = [
-  {
-    id: "1",
-    title: "Fix Leaking Faucet",
-    property: "Maple Heights",
-    unit: "101",
-    status: "pending",
-    priority: "medium",
-    description: "Kitchen faucet is leaking",
-    vendor: "Plumbing Pro",
-    cost: 150,
-    photos: [],
-    createdAt: "2024-03-20",
-  },
-];
-
-const initialVendors = [
-  {
-    id: "1",
-    name: "Plumbing Pro",
-    specialty: "Plumbing",
-    phone: "555-0123",
-    email: "contact@plumbingpro.com",
-    rating: 4.5,
-  },
-];
+// Fetch maintenance requests
+const fetchMaintenanceRequests = async () => {
+  const { data, error } = await supabase
+    .from('maintenance_requests')
+    .select('*');
+  
+  if (error) throw error;
+  return data;
+};
 
 const Maintenance = () => {
-  const [workOrders, setWorkOrders] = useState(initialWorkOrders);
-  const [vendors, setVendors] = useState(initialVendors);
-  const [selectedTab, setSelectedTab] = useState("work-orders");
+  const { data: requests = [], isLoading } = useQuery({
+    queryKey: ['maintenance_requests'],
+    queryFn: fetchMaintenanceRequests,
+  });
 
-  console.log("Rendering Maintenance page");
+  // Calculate statistics
+  const totalRequests = requests.length;
+  const pendingRequests = requests.filter(r => r.status === 'Pending').length;
+  const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
+  const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
 
-  const handleCreateWorkOrder = () => {
-    console.log("Creating new work order");
-    // Implement work order creation logic
-  };
-
-  const handleAddVendor = () => {
-    console.log("Adding new vendor");
-    // Implement vendor addition logic
+  const averageResolutionTime = () => {
+    const resolvedReqs = requests.filter(r => r.status === 'Resolved');
+    if (resolvedReqs.length === 0) return "N/A";
+    
+    const totalTime = resolvedReqs.reduce((acc, req) => {
+      const created = new Date(req.created_at);
+      const updated = new Date(req.updated_at);
+      return acc + (updated.getTime() - created.getTime());
+    }, 0);
+    
+    const avgDays = Math.round((totalTime / resolvedReqs.length) / (1000 * 60 * 60 * 24));
+    return `${avgDays} days`;
   };
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
+
+      {/* Dashboard Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <DashboardMetric
+          title="Total Requests"
+          value={totalRequests.toString()}
+          icon={<Wrench className="h-4 w-4 text-blue-500" />}
+          description="All maintenance requests"
+        />
+        <DashboardMetric
+          title="Pending Requests"
+          value={pendingRequests.toString()}
+          icon={<HourglassIcon className="h-4 w-4 text-yellow-500" />}
+          description="Awaiting resolution"
+        />
+        <DashboardMetric
+          title="Resolved Requests"
+          value={resolvedRequests.toString()}
+          icon={<CheckCircle2 className="h-4 w-4 text-green-500" />}
+          description="Completed maintenance tasks"
+        />
+        <DashboardMetric
+          title="Urgent Issues"
+          value={urgentRequests.toString()}
+          icon={<AlertTriangle className="h-4 w-4 text-red-500" />}
+          description="High priority requests"
+        />
+      </div>
 
       <Tabs defaultValue="work-orders" className="space-y-4">
         <TabsList>
