@@ -20,7 +20,7 @@ export const EmergencyContactCard = ({ vendor, onCall }: EmergencyContactCardPro
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg flex items-center gap-2">
             {vendor.name}
-            <Badge variant={isAvailable ? "success" : "destructive"}>
+            <Badge variant={isAvailable ? "default" : "destructive"} className={isAvailable ? "bg-green-500 hover:bg-green-600" : ""}>
               {isAvailable ? "Disponible" : "Indisponible"}
             </Badge>
           </CardTitle>
