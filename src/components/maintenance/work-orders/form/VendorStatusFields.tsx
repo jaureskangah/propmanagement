@@ -16,13 +16,19 @@ export const VendorStatusFields = ({
   status,
   setStatus,
 }: VendorStatusFieldsProps) => {
-  const { data: vendors = [] } = useQuery({
+  const { data: vendors = [], isLoading } = useQuery({
     queryKey: ['vendors'],
     queryFn: async () => {
       console.log("Fetching vendors...");
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        throw new Error("User not authenticated");
+      }
+
       const { data, error } = await supabase
         .from('vendors')
         .select('id, name')
+        .eq('user_id', userData.user.id)
         .order('name');
       
       if (error) {
@@ -41,7 +47,7 @@ export const VendorStatusFields = ({
         <Label>Prestataire</Label>
         <Select value={vendor} onValueChange={setVendor}>
           <SelectTrigger>
-            <SelectValue placeholder="Sélectionner un prestataire" />
+            <SelectValue placeholder={isLoading ? "Chargement..." : "Sélectionner un prestataire"} />
           </SelectTrigger>
           <SelectContent>
             {vendors.map((vendor) => (
