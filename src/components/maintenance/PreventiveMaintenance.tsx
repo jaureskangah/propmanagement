@@ -110,8 +110,12 @@ export const PreventiveMaintenance = () => {
             }}
             modifiersStyles={{
               hasTasks: {
-                backgroundColor: "rgb(234, 56, 76, 0.1)",
+                backgroundColor: "#ea384c",
+                color: "white",
                 fontWeight: "bold",
+                transform: "scale(1.1)",
+                borderRadius: "100%",
+                transition: "all 0.2s ease-in-out",
               },
             }}
           />
