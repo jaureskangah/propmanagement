@@ -23,39 +23,39 @@ export const ExpensesFilters = ({
   return (
     <div className="space-y-4 mb-6">
       <div className="flex flex-col md:flex-row gap-4">
-        {/* Filtre par période */}
+        {/* Period Filter */}
         <Select value={period} onValueChange={setPeriod}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Période" />
+            <SelectValue placeholder="Period" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes les périodes</SelectItem>
-            <SelectItem value="month">Ce mois</SelectItem>
-            <SelectItem value="quarter">Ce trimestre</SelectItem>
-            <SelectItem value="year">Cette année</SelectItem>
+            <SelectItem value="all">All Periods</SelectItem>
+            <SelectItem value="month">This Month</SelectItem>
+            <SelectItem value="quarter">This Quarter</SelectItem>
+            <SelectItem value="year">This Year</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Tri */}
+        {/* Sort */}
         <Select value={sortBy} onValueChange={setSortBy}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Trier par" />
+            <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="date-desc">Date (récent)</SelectItem>
-            <SelectItem value="date-asc">Date (ancien)</SelectItem>
-            <SelectItem value="amount-desc">Montant (élevé)</SelectItem>
-            <SelectItem value="amount-asc">Montant (faible)</SelectItem>
-            <SelectItem value="category">Catégorie</SelectItem>
+            <SelectItem value="date-desc">Date (Recent)</SelectItem>
+            <SelectItem value="date-asc">Date (Oldest)</SelectItem>
+            <SelectItem value="amount-desc">Amount (High)</SelectItem>
+            <SelectItem value="amount-asc">Amount (Low)</SelectItem>
+            <SelectItem value="category">Category</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Recherche */}
+        {/* Search */}
         <div className="flex-1">
           <div className="relative">
             <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500" />
             <Input
-              placeholder="Rechercher des dépenses..."
+              placeholder="Search expenses..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"

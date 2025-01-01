@@ -29,7 +29,7 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
     let filtered = [...expenses];
     const now = new Date();
     
-    // Filtrage par période
+    // Period filtering
     if (period !== "all") {
       let startDate;
       switch (period) {
@@ -53,7 +53,7 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
       }
     }
 
-    // Filtrage par recherche
+    // Search filtering
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(expense =>
@@ -61,7 +61,7 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
       );
     }
 
-    // Tri
+    // Sorting
     return filtered.sort((a, b) => {
       switch (sortBy) {
         case "date-desc":
@@ -83,8 +83,8 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dépenses</CardTitle>
-        <CardDescription>Dépenses par propriété</CardDescription>
+        <CardTitle>Expenses</CardTitle>
+        <CardDescription>Property expenses</CardDescription>
       </CardHeader>
       <CardContent>
         <ExpensesFilters
@@ -99,8 +99,8 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Catégorie</TableHead>
-              <TableHead>Montant</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Amount</TableHead>
               <TableHead>Date</TableHead>
             </TableRow>
           </TableHeader>
@@ -108,7 +108,7 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
             {filteredAndSortedExpenses.map((expense, index) => (
               <TableRow key={index}>
                 <TableCell>{expense.category}</TableCell>
-                <TableCell>{expense.amount.toLocaleString()}€</TableCell>
+                <TableCell>${expense.amount.toLocaleString()}</TableCell>
                 <TableCell>{new Date(expense.date).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
