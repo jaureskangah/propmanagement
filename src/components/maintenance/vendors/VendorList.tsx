@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Plus, Users, Star, History, Phone } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -9,17 +6,12 @@ import { VendorDialog } from "./VendorDialog";
 import { VendorMainList } from "./main/VendorMainList";
 import { EmergencyContactList } from "./emergency/EmergencyContactList";
 import { VendorReviewList } from "./reviews/VendorReviewList";
-import { VendorInterventionList } from "./interventions/VendorInterventionList";
-import { VendorReviewDialog } from "./reviews/VendorReviewDialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Vendor, VendorReview, VendorIntervention } from "@/types/vendor";
 import { InterventionHistory } from "./interventions/InterventionHistory";
+import { VendorReviewDialog } from "./reviews/VendorReviewDialog";
+import { VendorListHeader } from "./header/VendorListHeader";
+import { VendorSearchFilters } from "./filters/VendorSearchFilters";
+import { VendorSpecialtyFilters } from "./filters/VendorSpecialtyFilters";
+import { Vendor } from "@/types/vendor";
 
 export const VendorList = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
@@ -46,29 +38,7 @@ export const VendorList = () => {
     },
   });
 
-  const { data: reviews = [], refetch: refetchReviews } = useQuery({
-    queryKey: ['vendor_reviews'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('vendor_reviews')
-        .select('*')
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      return data as VendorReview[];
-    },
-  });
-
-  const { data: interventions = [] } = useQuery({
-    queryKey: ['vendor_interventions'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('vendor_interventions')
-        .select('*')
-        .order('date', { ascending: false });
-      if (error) throw error;
-      return data as VendorIntervention[];
-    },
-  });
+  const specialties = [...new Set(vendors.map(vendor => vendor.specialty))];
 
   const filteredVendors = vendors.filter(vendor => {
     const matchesSpecialty = !selectedSpecialty || vendor.specialty === selectedSpecialty;
@@ -95,13 +65,7 @@ export const VendorList = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Vendors</h2>
-        <Button onClick={() => setDialogOpen(true)} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
-          Add Vendor
-        </Button>
-      </div>
+      <VendorListHeader onAddVendor={() => setDialogOpen(true)} />
 
       <Tabs defaultValue="all" className="space-y-4">
         <TabsList>
@@ -112,19 +76,28 @@ export const VendorList = () => {
         </TabsList>
 
         <TabsContent value="all">
-          <VendorMainList
-            vendors={filteredVendors}
-            selectedSpecialty={selectedSpecialty}
-            onSpecialtyChange={setSelectedSpecialty}
-            searchQuery={searchQuery}
-            onSearchChange={setSearchQuery}
-            selectedRating={selectedRating}
-            onRatingChange={setSelectedRating}
-            showEmergencyOnly={showEmergencyOnly}
-            onEmergencyChange={setShowEmergencyOnly}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
+          <div className="space-y-4">
+            <VendorSearchFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedRating={selectedRating}
+              onRatingChange={setSelectedRating}
+              showEmergencyOnly={showEmergencyOnly}
+              onEmergencyChange={setShowEmergencyOnly}
+            />
+
+            <VendorSpecialtyFilters
+              specialties={specialties}
+              selectedSpecialty={selectedSpecialty}
+              onSpecialtyChange={setSelectedSpecialty}
+            />
+
+            <VendorMainList
+              vendors={filteredVendors}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          </div>
         </TabsContent>
 
         <TabsContent value="emergency">
@@ -136,43 +109,16 @@ export const VendorList = () => {
         </TabsContent>
 
         <TabsContent value="reviews">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Vendor Reviews</h3>
-              <Select
-                value={selectedVendorForReview?.id || ""}
-                onValueChange={(value) => {
-                  const vendor = vendors.find((v) => v.id === value);
-                  if (vendor) {
-                    setSelectedVendorForReview({
-                      id: vendor.id,
-                      name: vendor.name,
-                    });
-                    setReviewDialogOpen(true);
-                  }
-                }}
-              >
-                <SelectTrigger className="w-[250px]">
-                  <SelectValue placeholder="Select a vendor" />
-                </SelectTrigger>
-                <SelectContent>
-                  {vendors.map((vendor) => (
-                    <SelectItem key={vendor.id} value={vendor.id}>
-                      {vendor.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <VendorReviewList 
-              reviews={reviews} 
-              onEdit={(review) => {
-                console.log('Edit review:', review);
-              }}
-              onRefresh={refetchReviews}
-            />
-          </div>
+          <VendorReviewList
+            vendors={vendors}
+            onSelectVendor={(vendor) => {
+              setSelectedVendorForReview({
+                id: vendor.id,
+                name: vendor.name,
+              });
+              setReviewDialogOpen(true);
+            }}
+          />
         </TabsContent>
 
         <TabsContent value="history">
@@ -197,7 +143,7 @@ export const VendorList = () => {
           vendorId={selectedVendorForReview.id}
           vendorName={selectedVendorForReview.name}
           onSuccess={() => {
-            refetchReviews();
+            setReviewDialogOpen(false);
             setSelectedVendorForReview(null);
           }}
         />
