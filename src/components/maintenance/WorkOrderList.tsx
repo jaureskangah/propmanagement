@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Wrench, FileImage, CheckSquare, Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Wrench, FileImage, CheckSquare, Plus, Search } from "lucide-react";
 
 // Types
 interface WorkOrder {
@@ -12,6 +14,7 @@ interface WorkOrder {
   status: string;
   vendor: string;
   cost: number;
+  date?: string; // Adding date field for sorting
 }
 
 interface WorkOrderListProps {
@@ -20,6 +23,30 @@ interface WorkOrderListProps {
 }
 
 export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListProps) => {
+  // State for filters and search
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"date" | "cost">("date");
+
+  // Filter and sort work orders
+  const filteredAndSortedOrders = useMemo(() => {
+    return workOrders
+      .filter((order) => {
+        const matchesStatus = statusFilter === "all" || order.status === statusFilter;
+        const matchesSearch = 
+          order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          order.property.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesStatus && matchesSearch;
+      })
+      .sort((a, b) => {
+        if (sortBy === "date") {
+          return (b.date || "").localeCompare(a.date || "");
+        } else {
+          return b.cost - a.cost;
+        }
+      });
+  }, [workOrders, statusFilter, searchQuery, sortBy]);
+
   return (
     <>
       <div className="flex justify-between items-center mb-4">
@@ -30,8 +57,49 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         </Button>
       </div>
 
+      <div className="space-y-4 mb-6">
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Search input */}
+          <div className="flex-1">
+            <div className="relative">
+              <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500" />
+              <Input
+                placeholder="Rechercher par titre ou propriété..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-8"
+              />
+            </div>
+          </div>
+
+          {/* Status filter */}
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filtrer par statut" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les statuts</SelectItem>
+              <SelectItem value="En cours">En cours</SelectItem>
+              <SelectItem value="Planifié">Planifié</SelectItem>
+              <SelectItem value="Terminé">Terminé</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Sort selection */}
+          <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Trier par" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="date">Date</SelectItem>
+              <SelectItem value="cost">Coût</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {workOrders.map((order) => (
+        {filteredAndSortedOrders.map((order) => (
           <Card key={order.id}>
             <CardHeader>
               <div className="flex items-center justify-between">
