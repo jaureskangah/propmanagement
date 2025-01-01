@@ -5,12 +5,7 @@ import { MaintenanceTable } from "./tables/MaintenanceTable";
 import { ExportButtons } from "./ExportButtons";
 
 interface DataTablesProps {
-  rentRoll: {
-    unit: string;
-    tenant: string;
-    rent: number;
-    status: string;
-  }[];
+  propertyId: string;
   expenses: {
     category: string;
     amount: number;
@@ -23,11 +18,11 @@ interface DataTablesProps {
   }[];
 }
 
-export const DataTables = ({ rentRoll, expenses, maintenance }: DataTablesProps) => {
+export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProps) => {
   return (
     <div className="space-y-6">
       <ExportButtons expenses={expenses} maintenance={maintenance} />
-      <RentRollTable rentRoll={rentRoll} />
+      <RentRollTable propertyId={propertyId} />
       <div className="grid gap-4 md:grid-cols-2">
         <ExpensesTable expenses={expenses} />
         <MaintenanceTable maintenance={maintenance} />

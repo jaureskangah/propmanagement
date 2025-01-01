@@ -7,17 +7,43 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface RentRollTableProps {
-  rentRoll: {
-    unit: string;
-    tenant: string;
-    rent: number;
-    status: string;
-  }[];
+  propertyId: string;
 }
 
-export const RentRollTable = ({ rentRoll }: RentRollTableProps) => {
+export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
+  const { data: rentRoll, isLoading } = useQuery({
+    queryKey: ["rentRoll", propertyId],
+    queryFn: async () => {
+      console.log("Fetching rent roll data for property:", propertyId);
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("unit_number, name, rent_amount, lease_end")
+        .eq("property_id", propertyId)
+        .order("unit_number");
+
+      if (error) {
+        console.error("Error fetching rent roll:", error);
+        throw error;
+      }
+
+      console.log("Rent roll data fetched:", data);
+      return data.map(tenant => ({
+        unit: tenant.unit_number,
+        tenant: tenant.name,
+        rent: tenant.rent_amount,
+        status: new Date(tenant.lease_end) > new Date() ? "Active" : "Expired"
+      }));
+    },
+  });
+
+  if (isLoading) {
+    return <div>Loading rent roll data...</div>;
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -35,7 +61,7 @@ export const RentRollTable = ({ rentRoll }: RentRollTableProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rentRoll.map((item, index) => (
+            {rentRoll?.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.unit}</TableCell>
                 <TableCell>{item.tenant}</TableCell>
