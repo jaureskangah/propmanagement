@@ -1,11 +1,54 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus } from "lucide-react";
+import { Plus, Wrench, FileImage, CheckSquare, Users } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
 import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+// Mock data for work orders
+const workOrders = [
+  {
+    id: 1,
+    title: "Réparation Plomberie",
+    property: "Résidence A",
+    unit: "101",
+    status: "En cours",
+    vendor: "Plomberie Express",
+    cost: 250,
+  },
+  {
+    id: 2,
+    title: "Maintenance HVAC",
+    property: "Résidence B",
+    unit: "202",
+    status: "Planifié",
+    vendor: "ClimaPro",
+    cost: 350,
+  },
+];
+
+// Mock data for vendors
+const vendors = [
+  {
+    id: 1,
+    name: "Plomberie Express",
+    specialty: "Plomberie",
+    phone: "514-555-0123",
+    email: "contact@plomberieexpress.com",
+    rating: 4.5,
+  },
+  {
+    id: 2,
+    name: "ClimaPro",
+    specialty: "HVAC",
+    phone: "514-555-0124",
+    email: "service@climapro.com",
+    rating: 4.8,
+  },
+];
 
 // Fetch maintenance requests
 const fetchMaintenanceRequests = async () => {
@@ -28,6 +71,16 @@ const Maintenance = () => {
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
   const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
   const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
+
+  const handleCreateWorkOrder = () => {
+    console.log("Creating new work order");
+    // Implement work order creation logic
+  };
+
+  const handleAddVendor = () => {
+    console.log("Adding new vendor");
+    // Implement vendor addition logic
+  };
 
   return (
     <div className="container mx-auto p-6">
@@ -52,11 +105,11 @@ const Maintenance = () => {
         </TabsContent>
 
         <TabsContent value="work-orders">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Work Orders</h2>
-            <Button className="flex items-center gap-2">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Ordres de Travail</h2>
+            <Button onClick={handleCreateWorkOrder} className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              Create Work Order
+              Créer un Ordre
             </Button>
           </div>
 
@@ -71,11 +124,11 @@ const Maintenance = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <p><strong>Property:</strong> {order.property}</p>
-                    <p><strong>Unit:</strong> {order.unit}</p>
-                    <p><strong>Status:</strong> {order.status}</p>
-                    <p><strong>Vendor:</strong> {order.vendor}</p>
-                    <p><strong>Cost:</strong> ${order.cost}</p>
+                    <p><strong>Propriété:</strong> {order.property}</p>
+                    <p><strong>Unité:</strong> {order.unit}</p>
+                    <p><strong>Statut:</strong> {order.status}</p>
+                    <p><strong>Prestataire:</strong> {order.vendor}</p>
+                    <p><strong>Coût:</strong> {order.cost}€</p>
                     <div className="flex gap-2 mt-4">
                       <Button variant="outline" size="sm">
                         <FileImage className="h-4 w-4 mr-2" />
@@ -83,7 +136,7 @@ const Maintenance = () => {
                       </Button>
                       <Button variant="outline" size="sm">
                         <CheckSquare className="h-4 w-4 mr-2" />
-                        Update Status
+                        Mettre à jour
                       </Button>
                     </div>
                   </div>
@@ -94,11 +147,11 @@ const Maintenance = () => {
         </TabsContent>
 
         <TabsContent value="vendors">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Vendors</h2>
-            <Button className="flex items-center gap-2">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Prestataires</h2>
+            <Button onClick={handleAddVendor} className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              Add Vendor
+              Ajouter un Prestataire
             </Button>
           </div>
 
@@ -113,10 +166,10 @@ const Maintenance = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
-                    <p><strong>Specialty:</strong> {vendor.specialty}</p>
-                    <p><strong>Phone:</strong> {vendor.phone}</p>
+                    <p><strong>Spécialité:</strong> {vendor.specialty}</p>
+                    <p><strong>Téléphone:</strong> {vendor.phone}</p>
                     <p><strong>Email:</strong> {vendor.email}</p>
-                    <p><strong>Rating:</strong> {vendor.rating}/5</p>
+                    <p><strong>Note:</strong> {vendor.rating}/5</p>
                   </div>
                 </CardContent>
               </Card>
