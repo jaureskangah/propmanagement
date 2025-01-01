@@ -30,6 +30,34 @@ const fetchMaintenanceRequests = async () => {
 };
 
 const Maintenance = () => {
+  // Initial mock data for vendors and work orders
+  const [workOrders, setWorkOrders] = useState([
+    {
+      id: "1",
+      title: "Fix Leaking Faucet",
+      property: "Maple Heights",
+      unit: "101",
+      status: "pending",
+      priority: "medium",
+      description: "Kitchen faucet is leaking",
+      vendor: "Plumbing Pro",
+      cost: 150,
+      photos: [],
+      createdAt: "2024-03-20",
+    },
+  ]);
+
+  const [vendors, setVendors] = useState([
+    {
+      id: "1",
+      name: "Plumbing Pro",
+      specialty: "Plumbing",
+      phone: "555-0123",
+      email: "contact@plumbingpro.com",
+      rating: 4.5,
+    },
+  ]);
+
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: fetchMaintenanceRequests,
@@ -41,18 +69,14 @@ const Maintenance = () => {
   const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
   const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
 
-  const averageResolutionTime = () => {
-    const resolvedReqs = requests.filter(r => r.status === 'Resolved');
-    if (resolvedReqs.length === 0) return "N/A";
-    
-    const totalTime = resolvedReqs.reduce((acc, req) => {
-      const created = new Date(req.created_at);
-      const updated = new Date(req.updated_at);
-      return acc + (updated.getTime() - created.getTime());
-    }, 0);
-    
-    const avgDays = Math.round((totalTime / resolvedReqs.length) / (1000 * 60 * 60 * 24));
-    return `${avgDays} days`;
+  const handleCreateWorkOrder = () => {
+    console.log("Creating new work order");
+    // Implement work order creation logic
+  };
+
+  const handleAddVendor = () => {
+    console.log("Adding new vendor");
+    // Implement vendor addition logic
   };
 
   return (
