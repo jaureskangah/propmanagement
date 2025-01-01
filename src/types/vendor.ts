@@ -43,4 +43,8 @@ export interface VendorIntervention {
   status: string;
   user_id: string;
   photos?: string[];
+  vendors?: {
+    name: string;
+    specialty: string;
+  };
 }
