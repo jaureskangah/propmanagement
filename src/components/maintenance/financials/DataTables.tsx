@@ -24,10 +24,12 @@ interface DataTablesProps {
 
 export const DataTables = ({ rentRoll, expenses, maintenance }: DataTablesProps) => {
   return (
-    <div className="grid gap-4 md:grid-cols-2">
+    <div className="space-y-6">
       <RentRollTable rentRoll={rentRoll} />
-      <ExpensesTable expenses={expenses} />
-      <MaintenanceTable maintenance={maintenance} />
+      <div className="grid gap-4 md:grid-cols-2">
+        <ExpensesTable expenses={expenses} />
+        <MaintenanceTable maintenance={maintenance} />
+      </div>
     </div>
   );
 };
