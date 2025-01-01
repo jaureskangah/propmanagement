@@ -1,23 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DashboardMetric } from "@/components/DashboardMetric";
-import { 
-  Wrench, 
-  Calendar, 
-  Users, 
-  FileImage, 
-  DollarSign,
-  Plus,
-  CheckSquare,
-  Clock,
-  AlertTriangle,
-  CheckCircle2,
-  HourglassIcon
-} from "lucide-react";
+import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
+import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
+import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
 
 // Fetch maintenance requests
 const fetchMaintenanceRequests = async () => {
@@ -30,34 +18,6 @@ const fetchMaintenanceRequests = async () => {
 };
 
 const Maintenance = () => {
-  // Initial mock data for vendors and work orders
-  const [workOrders, setWorkOrders] = useState([
-    {
-      id: "1",
-      title: "Fix Leaking Faucet",
-      property: "Maple Heights",
-      unit: "101",
-      status: "pending",
-      priority: "medium",
-      description: "Kitchen faucet is leaking",
-      vendor: "Plumbing Pro",
-      cost: 150,
-      photos: [],
-      createdAt: "2024-03-20",
-    },
-  ]);
-
-  const [vendors, setVendors] = useState([
-    {
-      id: "1",
-      name: "Plumbing Pro",
-      specialty: "Plumbing",
-      phone: "555-0123",
-      email: "contact@plumbingpro.com",
-      rating: 4.5,
-    },
-  ]);
-
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: fetchMaintenanceRequests,
@@ -69,59 +29,32 @@ const Maintenance = () => {
   const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
   const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
 
-  const handleCreateWorkOrder = () => {
-    console.log("Creating new work order");
-    // Implement work order creation logic
-  };
-
-  const handleAddVendor = () => {
-    console.log("Adding new vendor");
-    // Implement vendor addition logic
-  };
-
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
 
-      {/* Dashboard Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <DashboardMetric
-          title="Total Requests"
-          value={totalRequests.toString()}
-          icon={<Wrench className="h-4 w-4 text-blue-500" />}
-          description="All maintenance requests"
-        />
-        <DashboardMetric
-          title="Pending Requests"
-          value={pendingRequests.toString()}
-          icon={<HourglassIcon className="h-4 w-4 text-yellow-500" />}
-          description="Awaiting resolution"
-        />
-        <DashboardMetric
-          title="Resolved Requests"
-          value={resolvedRequests.toString()}
-          icon={<CheckCircle2 className="h-4 w-4 text-green-500" />}
-          description="Completed maintenance tasks"
-        />
-        <DashboardMetric
-          title="Urgent Issues"
-          value={urgentRequests.toString()}
-          icon={<AlertTriangle className="h-4 w-4 text-red-500" />}
-          description="High priority requests"
-        />
-      </div>
+      <MaintenanceMetrics
+        totalRequests={totalRequests}
+        pendingRequests={pendingRequests}
+        resolvedRequests={resolvedRequests}
+        urgentRequests={urgentRequests}
+      />
 
-      <Tabs defaultValue="work-orders" className="space-y-4">
+      <Tabs defaultValue="preventive" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="work-orders">Work Orders</TabsTrigger>
-          <TabsTrigger value="vendors">Vendors</TabsTrigger>
-          <TabsTrigger value="scheduled">Scheduled Maintenance</TabsTrigger>
+          <TabsTrigger value="preventive">Maintenance Préventive</TabsTrigger>
+          <TabsTrigger value="work-orders">Ordres de Travail</TabsTrigger>
+          <TabsTrigger value="vendors">Prestataires</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="work-orders" className="space-y-4">
+        <TabsContent value="preventive">
+          <PreventiveMaintenance />
+        </TabsContent>
+
+        <TabsContent value="work-orders">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">Work Orders</h2>
-            <Button onClick={handleCreateWorkOrder} className="flex items-center gap-2">
+            <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Create Work Order
             </Button>
@@ -160,10 +93,10 @@ const Maintenance = () => {
           </div>
         </TabsContent>
 
-        <TabsContent value="vendors" className="space-y-4">
+        <TabsContent value="vendors">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">Vendors</h2>
-            <Button onClick={handleAddVendor} className="flex items-center gap-2">
+            <Button className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
               Add Vendor
             </Button>
@@ -189,27 +122,6 @@ const Maintenance = () => {
               </Card>
             ))}
           </div>
-        </TabsContent>
-
-        <TabsContent value="scheduled" className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Scheduled Maintenance</h2>
-            <Button className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Schedule Maintenance
-            </Button>
-          </div>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Upcoming Maintenance Tasks</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <p className="text-muted-foreground">No scheduled maintenance tasks.</p>
-              </div>
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
