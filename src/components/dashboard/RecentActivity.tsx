@@ -4,6 +4,7 @@ import { TenantActivity } from "./activity/TenantActivity";
 import { PaymentActivity } from "./activity/PaymentActivity";
 import { MaintenanceActivity } from "./activity/MaintenanceActivity";
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase"; // Add this import
 
 interface Activity {
   id: string;
