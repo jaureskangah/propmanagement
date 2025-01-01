@@ -71,10 +71,6 @@ export const VendorList = () => {
     setDialogOpen(true);
   };
 
-  const handleDelete = async (vendor: Vendor) => {
-    // Handle delete logic here
-  };
-
   return (
     <div className="space-y-6">
       <VendorListHeader onAddVendor={() => setDialogOpen(true)} />
@@ -107,7 +103,6 @@ export const VendorList = () => {
             <VendorMainList
               vendors={filteredVendors}
               onEdit={handleEdit}
-              onDelete={handleDelete}
             />
           </div>
         </TabsContent>
@@ -116,7 +111,6 @@ export const VendorList = () => {
           <EmergencyContactList
             vendors={emergencyContacts}
             onEdit={handleEdit}
-            onDelete={handleDelete}
           />
         </TabsContent>
 
