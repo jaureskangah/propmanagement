@@ -1,9 +1,11 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Phone, Image } from "lucide-react";
+import { Users, Phone, Image, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/types/vendor";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface VendorCardProps {
   vendor: Vendor;
@@ -13,6 +15,20 @@ interface VendorCardProps {
 }
 
 export const VendorCard = ({ vendor, isEmergencyView, onEdit, onDelete }: VendorCardProps) => {
+  // Fetch vendor documents
+  const { data: documents = [] } = useQuery({
+    queryKey: ['vendor_documents', vendor.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vendor_documents')
+        .select('*')
+        .eq('vendor_id', vendor.id);
+      
+      if (error) throw error;
+      return data;
+    },
+  });
+
   return (
     <Card>
       <CardHeader>
@@ -50,6 +66,29 @@ export const VendorCard = ({ vendor, isEmergencyView, onEdit, onDelete }: Vendor
                       className="rounded-md object-cover w-full h-full"
                     />
                   </AspectRatio>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {documents.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm font-medium mb-2 flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                Documents
+              </p>
+              <div className="space-y-2">
+                {documents.map((doc) => (
+                  <a
+                    key={doc.id}
+                    href={doc.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800"
+                  >
+                    <FileText className="h-4 w-4" />
+                    {doc.name}
+                  </a>
                 ))}
               </div>
             </div>
