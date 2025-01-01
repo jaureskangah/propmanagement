@@ -1,7 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
@@ -28,26 +26,6 @@ const workOrders = [
     status: "Planifié",
     vendor: "ClimaPro",
     cost: 350,
-  },
-];
-
-// Mock data for vendors
-const vendors = [
-  {
-    id: 1,
-    name: "Plomberie Express",
-    specialty: "Plomberie",
-    phone: "514-555-0123",
-    email: "contact@plomberieexpress.com",
-    rating: 4.5,
-  },
-  {
-    id: 2,
-    name: "ClimaPro",
-    specialty: "HVAC",
-    phone: "514-555-0124",
-    email: "service@climapro.com",
-    rating: 4.8,
   },
 ];
 
@@ -113,10 +91,7 @@ const Maintenance = () => {
         </TabsContent>
 
         <TabsContent value="vendors">
-          <VendorList 
-            vendors={vendors} 
-            onAddVendor={handleAddVendor} 
-          />
+          <VendorList onAddVendor={handleAddVendor} />
         </TabsContent>
       </Tabs>
     </div>
