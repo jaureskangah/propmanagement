@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Users, Star, History, Phone } from "lucide-react";
@@ -76,7 +76,7 @@ export const VendorList = () => {
     },
   });
 
-  const { data: reviews = [] } = useQuery({
+  const { data: reviews = [], refetch: refetchReviews } = useQuery({
     queryKey: ['vendor_reviews'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -124,6 +124,28 @@ export const VendorList = () => {
   const handleDelete = async (vendor: Vendor) => {
     // Handle delete logic here
   };
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('vendor-reviews-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'vendor_reviews'
+        },
+        () => {
+          console.log('Vendor reviews updated, refreshing...');
+          refetchReviews();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetchReviews]);
 
   return (
     <div className="space-y-6">
@@ -212,7 +234,14 @@ export const VendorList = () => {
               </Select>
             </div>
 
-            <VendorReviewList reviews={reviews} />
+            <VendorReviewList 
+              reviews={reviews} 
+              onEdit={(review) => {
+                // Implement edit functionality
+                console.log('Edit review:', review);
+              }}
+              onRefresh={refetchReviews}
+            />
 
             {selectedVendorForReview && (
               <VendorReviewDialog
@@ -221,7 +250,7 @@ export const VendorList = () => {
                 vendorId={selectedVendorForReview.id}
                 vendorName={selectedVendorForReview.name}
                 onSuccess={() => {
-                  refetch();
+                  refetchReviews();
                   setSelectedVendorForReview(null);
                 }}
               />
