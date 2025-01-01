@@ -6,12 +6,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { VendorReviewForm } from "./VendorReviewForm";
+import { VendorReview } from "@/types/vendor";
 
 interface VendorReviewDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   vendorId: string;
-  vendorName: string;
+  vendorName?: string;
+  initialData?: VendorReview;
   onSuccess: () => void;
 }
 
@@ -20,20 +22,22 @@ export const VendorReviewDialog = ({
   onOpenChange,
   vendorId,
   vendorName,
+  initialData,
   onSuccess,
 }: VendorReviewDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>Évaluer {vendorName}</DialogTitle>
+          <DialogTitle>
+            {initialData ? "Modifier l'évaluation" : "Nouvelle évaluation"}
+            {vendorName && ` pour ${vendorName}`}
+          </DialogTitle>
         </DialogHeader>
         <VendorReviewForm
           vendorId={vendorId}
-          onSuccess={() => {
-            onSuccess();
-            onOpenChange(false);
-          }}
+          initialData={initialData}
+          onSuccess={onSuccess}
           onCancel={() => onOpenChange(false)}
         />
       </DialogContent>

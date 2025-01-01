@@ -14,9 +14,11 @@ import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
+import { VendorReview } from "@/types/vendor";
 
 interface VendorReviewFormProps {
   vendorId: string;
+  initialData?: VendorReview;
   onSuccess: () => void;
   onCancel: () => void;
 }
@@ -28,16 +30,21 @@ interface ReviewFormValues {
   punctualityRating: number;
 }
 
-export const VendorReviewForm = ({ vendorId, onSuccess, onCancel }: VendorReviewFormProps) => {
+export const VendorReviewForm = ({ 
+  vendorId, 
+  initialData, 
+  onSuccess, 
+  onCancel 
+}: VendorReviewFormProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
   
   const form = useForm<ReviewFormValues>({
     defaultValues: {
-      comment: "",
-      qualityRating: 3,
-      priceRating: 3,
-      punctualityRating: 3,
+      comment: initialData?.comment || "",
+      qualityRating: initialData?.quality_rating || 3,
+      priceRating: initialData?.price_rating || 3,
+      punctualityRating: initialData?.punctuality_rating || 3,
     },
   });
 
@@ -47,7 +54,7 @@ export const VendorReviewForm = ({ vendorId, onSuccess, onCancel }: VendorReview
         throw new Error("User not authenticated");
       }
 
-      const { error } = await supabase.from("vendor_reviews").insert({
+      const reviewData = {
         vendor_id: vendorId,
         comment: data.comment,
         quality_rating: data.qualityRating,
@@ -55,14 +62,35 @@ export const VendorReviewForm = ({ vendorId, onSuccess, onCancel }: VendorReview
         punctuality_rating: data.punctualityRating,
         user_id: user.id,
         rating: 0, // This will be calculated by the database trigger
-      });
+      };
 
-      if (error) throw error;
+      if (initialData) {
+        // Update existing review
+        const { error } = await supabase
+          .from("vendor_reviews")
+          .update(reviewData)
+          .eq("id", initialData.id);
 
-      toast({
-        title: "Évaluation ajoutée",
-        description: "Votre évaluation a été enregistrée avec succès.",
-      });
+        if (error) throw error;
+
+        toast({
+          title: "Évaluation mise à jour",
+          description: "Votre évaluation a été mise à jour avec succès.",
+        });
+      } else {
+        // Insert new review
+        const { error } = await supabase
+          .from("vendor_reviews")
+          .insert(reviewData);
+
+        if (error) throw error;
+
+        toast({
+          title: "Évaluation ajoutée",
+          description: "Votre évaluation a été enregistrée avec succès.",
+        });
+      }
+      
       onSuccess();
     } catch (error) {
       console.error("Error submitting review:", error);
@@ -168,7 +196,7 @@ export const VendorReviewForm = ({ vendorId, onSuccess, onCancel }: VendorReview
             Annuler
           </Button>
           <Button type="submit">
-            Envoyer l'évaluation
+            {initialData ? "Mettre à jour" : "Envoyer"} l'évaluation
           </Button>
         </div>
       </form>

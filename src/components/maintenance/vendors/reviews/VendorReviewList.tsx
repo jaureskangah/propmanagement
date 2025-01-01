@@ -7,18 +7,9 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
-
-interface VendorReview {
-  id: string;
-  vendor_id: string;
-  comment: string;
-  rating: number;
-  quality_rating: number;
-  price_rating: number;
-  punctuality_rating: number;
-  created_at: string;
-  user_id: string;
-}
+import { VendorReview } from "@/types/vendor";
+import { VendorReviewDialog } from "./VendorReviewDialog";
+import { useState } from "react";
 
 interface VendorReviewListProps {
   reviews: VendorReview[];
@@ -26,9 +17,11 @@ interface VendorReviewListProps {
   onRefresh: () => void;
 }
 
-export const VendorReviewList = ({ reviews, onEdit, onRefresh }: VendorReviewListProps) => {
+export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const [editingReview, setEditingReview] = useState<VendorReview | null>(null);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
 
   const handleDelete = async (review: VendorReview) => {
     try {
@@ -55,64 +48,85 @@ export const VendorReviewList = ({ reviews, onEdit, onRefresh }: VendorReviewLis
     }
   };
 
+  const handleEdit = (review: VendorReview) => {
+    setEditingReview(review);
+    setReviewDialogOpen(true);
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      {reviews.map((review) => (
-        <Card key={review.id}>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Star className="h-5 w-5 text-yellow-500" />
-                {review.rating}/5
-              </CardTitle>
-              <span className="text-sm text-gray-500">
-                {format(new Date(review.created_at), "d MMMM yyyy", { locale: fr })}
-              </span>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-2 text-sm">
-                <div>
-                  <p className="font-medium">Qualité</p>
-                  <p>{review.quality_rating}/5</p>
-                </div>
-                <div>
-                  <p className="font-medium">Prix</p>
-                  <p>{review.price_rating}/5</p>
-                </div>
-                <div>
-                  <p className="font-medium">Ponctualité</p>
-                  <p>{review.punctuality_rating}/5</p>
-                </div>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {reviews.map((review) => (
+          <Card key={review.id}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  {review.rating}/5
+                </CardTitle>
+                <span className="text-sm text-gray-500">
+                  {format(new Date(review.created_at), "d MMMM yyyy", { locale: fr })}
+                </span>
               </div>
-              <div>
-                <p className="text-gray-700">{review.comment}</p>
-              </div>
-              {user?.id === review.user_id && (
-                <div className="flex justify-end gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onEdit(review)}
-                  >
-                    <Pencil className="h-4 w-4 mr-1" />
-                    Modifier
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(review)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-1" />
-                    Supprimer
-                  </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-3 gap-2 text-sm">
+                  <div>
+                    <p className="font-medium">Qualité</p>
+                    <p>{review.quality_rating}/5</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Prix</p>
+                    <p>{review.price_rating}/5</p>
+                  </div>
+                  <div>
+                    <p className="font-medium">Ponctualité</p>
+                    <p>{review.punctuality_rating}/5</p>
+                  </div>
                 </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+                <div>
+                  <p className="text-gray-700">{review.comment}</p>
+                </div>
+                {user?.id === review.user_id && (
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEdit(review)}
+                    >
+                      <Pencil className="h-4 w-4 mr-1" />
+                      Modifier
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(review)}
+                    >
+                      <Trash2 className="h-4 w-4 mr-1" />
+                      Supprimer
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {editingReview && (
+        <VendorReviewDialog
+          open={reviewDialogOpen}
+          onOpenChange={setReviewDialogOpen}
+          vendorId={editingReview.vendor_id}
+          initialData={editingReview}
+          onSuccess={() => {
+            setReviewDialogOpen(false);
+            setEditingReview(null);
+            onRefresh();
+          }}
+        />
+      )}
+    </>
   );
 };
