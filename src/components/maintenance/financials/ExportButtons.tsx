@@ -1,9 +1,9 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FileSpreadsheet, FileText, Download } from "lucide-react";
+import { FileSpreadsheet, FileText } from "lucide-react";
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 
 interface ExportButtonsProps {
   expenses: {
@@ -76,7 +76,7 @@ export const ExportButtons = ({ expenses, maintenance }: ExportButtonsProps) => 
     ]);
 
     doc.text("Détail des Dépenses", 14, 80);
-    (doc as any).autoTable({
+    autoTable(doc, {
       startY: 85,
       head: [["Catégorie", "Montant", "Date"]],
       body: expensesTableData,
@@ -91,7 +91,7 @@ export const ExportButtons = ({ expenses, maintenance }: ExportButtonsProps) => 
 
     doc.addPage();
     doc.text("Détail de la Maintenance", 14, 20);
-    (doc as any).autoTable({
+    autoTable(doc, {
       startY: 25,
       head: [["Description", "Coût", "Date"]],
       body: maintenanceTableData,
