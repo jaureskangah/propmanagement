@@ -38,21 +38,21 @@ export const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Plus className="h-4 w-4 mr-2" />
-          Ajouter
+          Add
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ajouter une nouvelle tâche</DialogTitle>
+          <DialogTitle>Add a new task</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Titre de la tâche</Label>
+            <Label htmlFor="title">Task title</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Entrez le titre de la tâche"
+              placeholder="Enter task title"
               required
             />
           </div>
@@ -67,19 +67,19 @@ export const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
             />
           </div>
           <div className="space-y-2">
-            <Label>Type de tâche</Label>
+            <Label>Task type</Label>
             <Select value={type} onValueChange={(value: "regular" | "inspection" | "seasonal") => setType(value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionnez un type" />
+                <SelectValue placeholder="Select a type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="regular">Tâche régulière</SelectItem>
+                <SelectItem value="regular">Regular task</SelectItem>
                 <SelectItem value="inspection">Inspection</SelectItem>
-                <SelectItem value="seasonal">Tâche saisonnière</SelectItem>
+                <SelectItem value="seasonal">Seasonal task</SelectItem>
               </SelectContent>
             </Select>
           </div>
-          <Button type="submit" className="w-full">Ajouter la tâche</Button>
+          <Button type="submit" className="w-full">Add task</Button>
         </form>
       </DialogContent>
     </Dialog>
