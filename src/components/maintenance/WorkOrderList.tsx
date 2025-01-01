@@ -14,7 +14,6 @@ import {
   CheckCircle2, 
   AlertCircle,
   Calendar,
-  Tool,
   Building,
   Home,
   DollarSign 
@@ -60,7 +59,7 @@ const getStatusConfig = (status: string) => {
     default:
       return {
         variant: "default" as const,
-        icon: <Tool className="h-4 w-4 mr-1" />,
+        icon: <Wrench className="h-4 w-4 mr-1" />,
         className: ""
       };
   }
@@ -150,7 +149,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg">{order.title}</CardTitle>
-                  <Tool className="h-5 w-5 text-blue-500" />
+                  <Wrench className="h-5 w-5 text-blue-500" />
                 </div>
               </CardHeader>
               <CardContent>
