@@ -1,33 +1,19 @@
-import React from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Slider } from "@/components/ui/slider";
+import { Form } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { VendorReview } from "@/types/vendor";
+import { RatingFields } from "./form/RatingFields";
+import { CommentField } from "./form/CommentField";
+import { FormActions } from "./form/FormActions";
 
 interface VendorReviewFormProps {
   vendorId: string;
   initialData?: VendorReview;
   onSuccess: () => void;
   onCancel: () => void;
-}
-
-interface ReviewFormValues {
-  comment: string;
-  qualityRating: number;
-  priceRating: number;
-  punctualityRating: number;
 }
 
 export const VendorReviewForm = ({ 
@@ -38,8 +24,9 @@ export const VendorReviewForm = ({
 }: VendorReviewFormProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const form = useForm<ReviewFormValues>({
+  const form = useForm({
     defaultValues: {
       comment: initialData?.comment || "",
       qualityRating: initialData?.quality_rating || 3,
@@ -48,12 +35,13 @@ export const VendorReviewForm = ({
     },
   });
 
-  const onSubmit = async (data: ReviewFormValues) => {
+  const onSubmit = async (data: any) => {
     try {
       if (!user?.id) {
         throw new Error("User not authenticated");
       }
 
+      setIsSubmitting(true);
       const reviewData = {
         vendor_id: vendorId,
         comment: data.comment,
@@ -65,7 +53,6 @@ export const VendorReviewForm = ({
       };
 
       if (initialData) {
-        // Update existing review
         const { error } = await supabase
           .from("vendor_reviews")
           .update(reviewData)
@@ -78,7 +65,6 @@ export const VendorReviewForm = ({
           description: "Your review has been updated successfully.",
         });
       } else {
-        // Insert new review
         const { error } = await supabase
           .from("vendor_reviews")
           .insert(reviewData);
@@ -99,106 +85,21 @@ export const VendorReviewForm = ({
         description: "An error occurred while saving the review.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="qualityRating"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Work Quality</FormLabel>
-              <FormControl>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    min={1}
-                    max={5}
-                    step={1}
-                    value={[field.value]}
-                    onValueChange={(value) => field.onChange(value[0])}
-                    className="w-48"
-                  />
-                  <span className="w-8 text-center">{field.value}/5</span>
-                </div>
-              </FormControl>
-            </FormItem>
-          )}
+        <RatingFields form={form} />
+        <CommentField form={form} />
+        <FormActions 
+          onCancel={onCancel}
+          isSubmitting={isSubmitting}
+          isEditing={!!initialData}
         />
-
-        <FormField
-          control={form.control}
-          name="priceRating"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Value for Money</FormLabel>
-              <FormControl>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    min={1}
-                    max={5}
-                    step={1}
-                    value={[field.value]}
-                    onValueChange={(value) => field.onChange(value[0])}
-                    className="w-48"
-                  />
-                  <span className="w-8 text-center">{field.value}/5</span>
-                </div>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="punctualityRating"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Punctuality</FormLabel>
-              <FormControl>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    min={1}
-                    max={5}
-                    step={1}
-                    value={[field.value]}
-                    onValueChange={(value) => field.onChange(value[0])}
-                    className="w-48"
-                  />
-                  <span className="w-8 text-center">{field.value}/5</span>
-                </div>
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="comment"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Detailed Comment</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Share your experience with this vendor..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel}>
-            Cancel
-          </Button>
-          <Button type="submit">
-            {initialData ? "Update" : "Submit"} Review
-          </Button>
-        </div>
       </form>
     </Form>
   );
