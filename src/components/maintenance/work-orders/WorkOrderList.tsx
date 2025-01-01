@@ -47,8 +47,8 @@ export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) =>
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
   const handleCreateSuccess = () => {
-    // Refresh work orders list
     console.log("Work order created successfully");
+    // Refresh work orders list - this will be handled by the parent component
   };
 
   return (
@@ -56,7 +56,7 @@ export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) =>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Ordres de Travail</h2>
         <Button 
-          onClick={() => setIsCreateDialogOpen(true)} 
+          onClick={() => setIsCreateDialogOpen(true)}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
