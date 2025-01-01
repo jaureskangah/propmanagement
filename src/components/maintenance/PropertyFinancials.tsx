@@ -29,7 +29,7 @@ interface PropertyFinancialsProps {
   }[];
 }
 
-const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: PropertyFinancialsProps) => {
+export const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: PropertyFinancialsProps) => {
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
   // Calculate ROI
@@ -184,5 +184,3 @@ const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: Pro
     </div>
   );
 };
-
-export default PropertyFinancials;

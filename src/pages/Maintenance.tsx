@@ -57,6 +57,28 @@ const Maintenance = () => {
     ],
   };
 
+  // Mock work orders data
+  const mockWorkOrders = [
+    {
+      id: 1,
+      title: "Plumbing Issue",
+      property: "Property A",
+      unit: "101",
+      status: "En cours",
+      vendor: "John's Plumbing",
+      cost: 250,
+    },
+    {
+      id: 2,
+      title: "HVAC Maintenance",
+      property: "Property B",
+      unit: "202",
+      status: "Planifié",
+      vendor: "Cool Air Services",
+      cost: 400,
+    },
+  ];
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
@@ -82,7 +104,7 @@ const Maintenance = () => {
 
         <TabsContent value="work-orders">
           <WorkOrderList 
-            workOrders={workOrders} 
+            workOrders={mockWorkOrders} 
             onCreateWorkOrder={handleCreateWorkOrder} 
           />
         </TabsContent>
