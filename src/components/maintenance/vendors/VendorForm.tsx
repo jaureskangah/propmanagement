@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@supabase/auth-helpers-react";
 
 const vendorFormSchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
@@ -34,6 +35,8 @@ interface VendorFormProps {
 
 export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormProps) => {
   const { toast } = useToast();
+  const auth = useAuth();
+  
   const form = useForm<VendorFormValues>({
     resolver: zodResolver(vendorFormSchema),
     defaultValues: defaultValues || {
@@ -46,12 +49,21 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
   });
 
   const onSubmit = async (data: VendorFormValues) => {
+    if (!auth?.user?.id) {
+      toast({ 
+        title: "Erreur",
+        description: "Vous devez être connecté pour effectuer cette action",
+        variant: "destructive"
+      });
+      return;
+    }
+
     try {
       if (defaultValues?.name) {
         // Update
         const { error } = await supabase
           .from("vendors")
-          .update(data)
+          .update({ ...data, user_id: auth.user.id })
           .eq("name", defaultValues.name);
         
         if (error) throw error;
@@ -60,7 +72,7 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
         // Create
         const { error } = await supabase
           .from("vendors")
-          .insert([data]);
+          .insert([{ ...data, user_id: auth.user.id }]);
         
         if (error) throw error;
         toast({ title: "Prestataire ajouté avec succès" });

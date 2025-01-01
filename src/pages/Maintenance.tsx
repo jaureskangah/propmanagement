@@ -31,10 +31,6 @@ const Maintenance = () => {
   const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
   const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
 
-  const handleAddVendor = () => {
-    console.log("Adding new vendor");
-  };
-
   // Mock data for demonstration
   const mockFinancialData = {
     propertyId: "123e4567-e89b-12d3-a456-426614174000",
@@ -89,7 +85,7 @@ const Maintenance = () => {
         </TabsContent>
 
         <TabsContent value="vendors">
-          <VendorList onAddVendor={handleAddVendor} />
+          <VendorList />
         </TabsContent>
 
         <TabsContent value="financials">
