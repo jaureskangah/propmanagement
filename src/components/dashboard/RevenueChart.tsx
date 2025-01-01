@@ -61,7 +61,7 @@ export const RevenueChart = () => {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `${value}€`}
+                tickFormatter={(value) => `$${value}`}
               />
               <Tooltip 
                 contentStyle={{ 
@@ -70,7 +70,7 @@ export const RevenueChart = () => {
                   borderRadius: '8px',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
                 }}
-                formatter={(value) => [`${value}€`]}
+                formatter={(value) => [`$${value}`]}
               />
               <Area
                 type="monotone"
