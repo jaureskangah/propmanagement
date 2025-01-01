@@ -20,7 +20,7 @@ export const InterventionStats = ({ interventions }: InterventionStatsProps) => 
     });
 
     const pendingInterventions = interventions.filter(int => 
-      int.status === "pending" || int.status === "scheduled"
+      int.status === "pending" || int.status === "in_progress"
     );
 
     const avgCostPerIntervention = interventions.length > 0 
@@ -38,28 +38,28 @@ export const InterventionStats = ({ interventions }: InterventionStatsProps) => 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <DashboardMetric
-        title="Coût Total"
-        value={`${stats.totalCost.toLocaleString()}€`}
+        title="Total Cost"
+        value={`$${stats.totalCost.toLocaleString()}`}
         icon={<DollarSign className="h-4 w-4 text-blue-500" />}
-        description="Total des dépenses"
+        description="Total expenses"
       />
       <DashboardMetric
-        title="Interventions ce Mois"
+        title="Monthly Interventions"
         value={stats.monthlyCount.toString()}
         icon={<Calendar className="h-4 w-4 text-green-500" />}
-        description="Activité mensuelle"
+        description="This month's activity"
       />
       <DashboardMetric
-        title="Interventions en Attente"
+        title="Pending Interventions"
         value={stats.pendingCount.toString()}
         icon={<Clock className="h-4 w-4 text-yellow-500" />}
-        description="À traiter"
+        description="To be processed"
       />
       <DashboardMetric
-        title="Coût Moyen"
-        value={`${stats.avgCost.toLocaleString()}€`}
+        title="Average Cost"
+        value={`$${stats.avgCost.toLocaleString()}`}
         icon={<Activity className="h-4 w-4 text-purple-500" />}
-        description="Par intervention"
+        description="Per intervention"
       />
     </div>
   );

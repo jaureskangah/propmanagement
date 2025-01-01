@@ -34,14 +34,14 @@ export const InterventionHistory = () => {
       
       <Tabs defaultValue="calendar" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="calendar">Calendrier</TabsTrigger>
-          <TabsTrigger value="timeline">Chronologie</TabsTrigger>
+          <TabsTrigger value="calendar">Calendar</TabsTrigger>
+          <TabsTrigger value="timeline">Timeline</TabsTrigger>
         </TabsList>
 
         <TabsContent value="calendar">
           <Card>
             <CardHeader>
-              <CardTitle>Calendrier des Interventions</CardTitle>
+              <CardTitle>Intervention Calendar</CardTitle>
             </CardHeader>
             <CardContent>
               <InterventionCalendar interventions={interventions} />
@@ -52,7 +52,7 @@ export const InterventionHistory = () => {
         <TabsContent value="timeline">
           <Card>
             <CardHeader>
-              <CardTitle>Historique des Interventions</CardTitle>
+              <CardTitle>Intervention History</CardTitle>
             </CardHeader>
             <CardContent>
               <InterventionTimeline interventions={interventions} />
