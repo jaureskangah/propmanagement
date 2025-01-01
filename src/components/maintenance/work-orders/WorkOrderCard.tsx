@@ -13,17 +13,7 @@ import {
   Clock,
   CheckCircle2
 } from "lucide-react";
-
-interface WorkOrder {
-  id: number;
-  title: string;
-  property: string;
-  unit: string;
-  status: string;
-  vendor: string;
-  cost: number;
-  date?: string;
-}
+import { WorkOrder } from "@/types/workOrder";
 
 const getStatusConfig = (status: string) => {
   switch (status) {
