@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 
 interface Notification {
   id: string;
@@ -48,13 +49,15 @@ export const MaintenanceNotifications = () => {
           schema: 'public',
           table: 'maintenance_requests'
         },
-        (payload) => {
+        (payload: RealtimePostgresChangesPayload<Notification>) => {
           console.log('Real-time update:', payload);
-          toast({
-            title: "Nouvelle demande de maintenance",
-            description: `${payload.new.title}`,
-          });
-          fetchNotifications();
+          if (payload.new) {
+            toast({
+              title: "Nouvelle demande de maintenance",
+              description: `${payload.new.title}`,
+            });
+            fetchNotifications();
+          }
         }
       )
       .subscribe();
