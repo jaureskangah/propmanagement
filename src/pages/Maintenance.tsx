@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
 import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
 import { WorkOrderList } from "@/components/maintenance/work-orders/WorkOrderList";
-import { VendorList } from "@/components/maintenance/VendorList";
+import { VendorList } from "@/components/maintenance/vendors/VendorList";
 import { PropertyFinancials } from "@/components/maintenance/PropertyFinancials";
 import { MaintenanceNotifications } from "@/components/maintenance/MaintenanceNotifications";
 
