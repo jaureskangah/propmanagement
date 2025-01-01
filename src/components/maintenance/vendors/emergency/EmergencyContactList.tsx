@@ -11,7 +11,7 @@ interface EmergencyContactListProps {
   onDelete: (vendor: Vendor) => void;
 }
 
-export const EmergencyContactList = ({ vendors }: EmergencyContactListProps) => {
+export const EmergencyContactList = ({ vendors, onEdit, onDelete }: EmergencyContactListProps) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { toast } = useToast();
 
@@ -22,15 +22,13 @@ export const EmergencyContactList = ({ vendors }: EmergencyContactListProps) => 
   );
 
   const handleCall = (phone: string) => {
-    // Sur mobile, on peut utiliser le protocole tel:
     if (/Android|iPhone/i.test(navigator.userAgent)) {
       window.location.href = `tel:${phone}`;
     } else {
-      // Sur desktop, on copie le numéro dans le presse-papier
       navigator.clipboard.writeText(phone);
       toast({
-        title: "Numéro copié !",
-        description: `Le numéro ${phone} a été copié dans le presse-papier.`,
+        title: "Phone number copied!",
+        description: `The number ${phone} has been copied to your clipboard.`,
       });
     }
   };
@@ -40,7 +38,7 @@ export const EmergencyContactList = ({ vendors }: EmergencyContactListProps) => 
       <div className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
         <Input
-          placeholder="Rechercher un contact d'urgence..."
+          placeholder="Search emergency contacts..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10"
@@ -53,6 +51,8 @@ export const EmergencyContactList = ({ vendors }: EmergencyContactListProps) => 
             key={vendor.id}
             vendor={vendor}
             onCall={handleCall}
+            onEdit={onEdit}
+            onDelete={onDelete}
           />
         ))}
       </div>
