@@ -74,8 +74,8 @@ export const VendorReviewForm = ({
         if (error) throw error;
 
         toast({
-          title: "Évaluation mise à jour",
-          description: "Votre évaluation a été mise à jour avec succès.",
+          title: "Review updated",
+          description: "Your review has been updated successfully.",
         });
       } else {
         // Insert new review
@@ -86,8 +86,8 @@ export const VendorReviewForm = ({
         if (error) throw error;
 
         toast({
-          title: "Évaluation ajoutée",
-          description: "Votre évaluation a été enregistrée avec succès.",
+          title: "Review added",
+          description: "Your review has been submitted successfully.",
         });
       }
       
@@ -95,8 +95,8 @@ export const VendorReviewForm = ({
     } catch (error) {
       console.error("Error submitting review:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'enregistrement de l'évaluation.",
+        title: "Error",
+        description: "An error occurred while saving the review.",
         variant: "destructive",
       });
     }
@@ -110,7 +110,7 @@ export const VendorReviewForm = ({
           name="qualityRating"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Qualité du travail</FormLabel>
+              <FormLabel>Work Quality</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-4">
                   <Slider
@@ -133,7 +133,7 @@ export const VendorReviewForm = ({
           name="priceRating"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Rapport qualité/prix</FormLabel>
+              <FormLabel>Value for Money</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-4">
                   <Slider
@@ -156,7 +156,7 @@ export const VendorReviewForm = ({
           name="punctualityRating"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Ponctualité</FormLabel>
+              <FormLabel>Punctuality</FormLabel>
               <FormControl>
                 <div className="flex items-center gap-4">
                   <Slider
@@ -179,10 +179,10 @@ export const VendorReviewForm = ({
           name="comment"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Commentaire détaillé</FormLabel>
+              <FormLabel>Detailed Comment</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Partagez votre expérience avec ce prestataire..."
+                  placeholder="Share your experience with this vendor..."
                   {...field}
                 />
               </FormControl>
@@ -193,10 +193,10 @@ export const VendorReviewForm = ({
 
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={onCancel}>
-            Annuler
+            Cancel
           </Button>
           <Button type="submit">
-            {initialData ? "Mettre à jour" : "Envoyer"} l'évaluation
+            {initialData ? "Update" : "Submit"} Review
           </Button>
         </div>
       </form>

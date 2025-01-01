@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, Pencil, Trash2 } from "lucide-react";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
@@ -33,16 +33,16 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
       if (error) throw error;
 
       toast({
-        title: "Évaluation supprimée",
-        description: "L'évaluation a été supprimée avec succès.",
+        title: "Review deleted",
+        description: "The review has been deleted successfully.",
       });
       
       onRefresh();
     } catch (error) {
       console.error("Error deleting review:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la suppression de l'évaluation.",
+        title: "Error",
+        description: "An error occurred while deleting the review.",
         variant: "destructive",
       });
     }
@@ -65,7 +65,7 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
                   {review.rating}/5
                 </CardTitle>
                 <span className="text-sm text-gray-500">
-                  {format(new Date(review.created_at), "d MMMM yyyy", { locale: fr })}
+                  {format(new Date(review.created_at), "MMMM d, yyyy", { locale: enUS })}
                 </span>
               </div>
             </CardHeader>
@@ -73,15 +73,15 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-2 text-sm">
                   <div>
-                    <p className="font-medium">Qualité</p>
+                    <p className="font-medium">Quality</p>
                     <p>{review.quality_rating}/5</p>
                   </div>
                   <div>
-                    <p className="font-medium">Prix</p>
+                    <p className="font-medium">Price</p>
                     <p>{review.price_rating}/5</p>
                   </div>
                   <div>
-                    <p className="font-medium">Ponctualité</p>
+                    <p className="font-medium">Punctuality</p>
                     <p>{review.punctuality_rating}/5</p>
                   </div>
                 </div>
@@ -96,7 +96,7 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
                       onClick={() => handleEdit(review)}
                     >
                       <Pencil className="h-4 w-4 mr-1" />
-                      Modifier
+                      Edit
                     </Button>
                     <Button
                       variant="destructive"
@@ -104,7 +104,7 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
                       onClick={() => handleDelete(review)}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Supprimer
+                      Delete
                     </Button>
                   </div>
                 )}

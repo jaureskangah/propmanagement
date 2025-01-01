@@ -30,8 +30,8 @@ export const VendorReviewDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {initialData ? "Modifier l'évaluation" : "Nouvelle évaluation"}
-            {vendorName && ` pour ${vendorName}`}
+            {initialData ? "Edit Review" : "New Review"}
+            {vendorName && ` for ${vendorName}`}
           </DialogTitle>
         </DialogHeader>
         <VendorReviewForm
