@@ -391,6 +391,51 @@ export type Database = {
           },
         ]
       }
+      vendor_documents: {
+        Row: {
+          created_at: string
+          file_url: string
+          id: string
+          name: string
+          type: string
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          file_url: string
+          id?: string
+          name: string
+          type: string
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          file_url?: string
+          id?: string
+          name?: string
+          type?: string
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_documents_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_documents_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       vendor_interventions: {
         Row: {
           cost: number | null
@@ -495,6 +540,7 @@ export type Database = {
           id: string
           name: string
           phone: string
+          photos: string[] | null
           rating: number | null
           specialty: string
           updated_at: string
@@ -507,6 +553,7 @@ export type Database = {
           id?: string
           name: string
           phone: string
+          photos?: string[] | null
           rating?: number | null
           specialty: string
           updated_at?: string
@@ -519,6 +566,7 @@ export type Database = {
           id?: string
           name?: string
           phone?: string
+          photos?: string[] | null
           rating?: number | null
           specialty?: string
           updated_at?: string

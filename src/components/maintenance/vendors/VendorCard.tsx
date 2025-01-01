@@ -1,8 +1,9 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Phone } from "lucide-react";
+import { Users, Phone, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/types/vendor";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 interface VendorCardProps {
   vendor: Vendor;
@@ -33,6 +34,27 @@ export const VendorCard = ({ vendor, isEmergencyView, onEdit, onDelete }: Vendor
           {vendor.emergency_contact && (
             <p className="text-red-500 font-semibold">Contact d'urgence</p>
           )}
+          
+          {vendor.photos && vendor.photos.length > 0 && (
+            <div className="mt-4">
+              <p className="text-sm font-medium mb-2 flex items-center gap-2">
+                <Image className="h-4 w-4" />
+                Photos
+              </p>
+              <div className="grid grid-cols-2 gap-2">
+                {vendor.photos.map((photo, index) => (
+                  <AspectRatio key={index} ratio={16 / 9}>
+                    <img
+                      src={photo}
+                      alt={`${vendor.name} - Photo ${index + 1}`}
+                      className="rounded-md object-cover w-full h-full"
+                    />
+                  </AspectRatio>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="flex gap-2 mt-4">
             <Button variant="outline" size="sm" onClick={() => onEdit(vendor)}>
               Modifier

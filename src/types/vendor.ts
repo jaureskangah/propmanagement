@@ -6,4 +6,5 @@ export interface Vendor {
   email: string;
   emergency_contact: boolean;
   rating: number;
+  photos?: string[];
 }
