@@ -28,7 +28,7 @@ export const ExpensesByCategoryChart = ({ expenses }: ExpensesByCategoryChartPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Répartition par Catégorie</CardTitle>
+        <CardTitle>Expenses by Category</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
@@ -54,7 +54,7 @@ export const ExpensesByCategoryChart = ({ expenses }: ExpensesByCategoryChartPro
                 ))}
               </Pie>
               <Tooltip 
-                formatter={(value: number) => `${value.toLocaleString()}€`}
+                formatter={(value: number) => `$${value.toLocaleString()}`}
               />
               <Legend />
             </PieChart>

@@ -29,7 +29,7 @@ export const MonthlyExpensesChart = ({ expenses }: MonthlyExpensesChartProps) =>
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dépenses Mensuelles</CardTitle>
+        <CardTitle>Monthly Expenses</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
@@ -39,7 +39,7 @@ export const MonthlyExpensesChart = ({ expenses }: MonthlyExpensesChartProps) =>
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip 
-                formatter={(value: number) => [`${value.toLocaleString()}€`, "Total"]}
+                formatter={(value: number) => [`$${value.toLocaleString()}`, "Total"]}
               />
               <Bar dataKey="total" fill="#ea384c" />
             </BarChart>

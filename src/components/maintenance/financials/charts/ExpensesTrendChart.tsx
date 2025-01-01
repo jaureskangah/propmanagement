@@ -29,7 +29,7 @@ export const ExpensesTrendChart = ({ expenses }: ExpensesTrendChartProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Tendance des Dépenses</CardTitle>
+        <CardTitle>Expense Trend</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
@@ -43,7 +43,7 @@ export const ExpensesTrendChart = ({ expenses }: ExpensesTrendChartProps) => {
               />
               <YAxis />
               <Tooltip 
-                formatter={(value: number) => [`${value.toLocaleString()}€`, "Total"]}
+                formatter={(value: number) => [`$${value.toLocaleString()}`, "Total"]}
               />
               <Line 
                 type="monotone" 
