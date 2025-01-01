@@ -59,14 +59,14 @@ export const VendorFilters = ({
 
       <div className="flex gap-4">
         <Select
-          value={selectedRating ?? ""}
-          onValueChange={(value) => onRatingChange(value || null)}
+          value={selectedRating ?? "all"}
+          onValueChange={(value) => onRatingChange(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="Filtrer par note" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Toutes les notes</SelectItem>
+            <SelectItem value="all">Toutes les notes</SelectItem>
             <SelectItem value="4">4+ étoiles</SelectItem>
             <SelectItem value="3">3+ étoiles</SelectItem>
             <SelectItem value="2">2+ étoiles</SelectItem>
