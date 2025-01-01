@@ -10,6 +10,17 @@ export interface Vendor {
   user_id: string;
 }
 
+export interface VendorFormValues {
+  name: string;
+  specialty: string;
+  phone: string;
+  email: string;
+  emergency_contact: boolean;
+  documents?: File[];
+  photos?: File[];
+  existingPhotos?: string[];
+}
+
 export interface VendorReview {
   id: string;
   vendor_id: string;
