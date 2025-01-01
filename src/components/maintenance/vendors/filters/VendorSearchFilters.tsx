@@ -37,14 +37,14 @@ export const VendorSearchFilters = ({
       </div>
 
       <Select
-        value={selectedRating || ""}
-        onValueChange={(value) => setSelectedRating(value === "" ? null : value)}
+        value={selectedRating || "all"}
+        onValueChange={(value) => setSelectedRating(value === "all" ? null : value)}
       >
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Filter by rating" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">All ratings</SelectItem>
+          <SelectItem value="all">All ratings</SelectItem>
           <SelectItem value="4">4+ stars</SelectItem>
           <SelectItem value="3">3+ stars</SelectItem>
           <SelectItem value="2">2+ stars</SelectItem>
