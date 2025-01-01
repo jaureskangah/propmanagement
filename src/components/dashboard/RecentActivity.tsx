@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 export const RecentActivity = () => {
   const { data: tenants, isLoading: isLoadingTenants } = useQuery({
@@ -70,7 +70,7 @@ export const RecentActivity = () => {
   return (
     <Card className="font-sans">
       <CardHeader>
-        <CardTitle>Activités Récentes</CardTitle>
+        <CardTitle>Recent Activities</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -80,15 +80,15 @@ export const RecentActivity = () => {
                 <Users className="h-4 w-4 text-blue-600" />
               </div>
               <div className="flex-1">
-                <p className="font-medium">Nouveau Locataire</p>
+                <p className="font-medium">New Tenant</p>
                 <p className="text-sm text-muted-foreground">
-                  {tenant.name} - Appartement {tenant.unit_number}
+                  {tenant.name} - Apartment {tenant.unit_number}
                 </p>
               </div>
               <p className="text-sm text-muted-foreground">
                 {formatDistanceToNow(new Date(tenant.created_at), { 
                   addSuffix: true,
-                  locale: fr 
+                  locale: enUS 
                 })}
               </p>
             </div>
@@ -100,7 +100,7 @@ export const RecentActivity = () => {
                 <DollarSign className="h-4 w-4 text-emerald-600" />
               </div>
               <div className="flex-1">
-                <p className="font-medium">Paiement Reçu</p>
+                <p className="font-medium">Payment Received</p>
                 <p className="text-sm text-muted-foreground">
                   ${payment.amount.toLocaleString()} - Studio {payment.tenants?.unit_number}
                 </p>
@@ -108,7 +108,7 @@ export const RecentActivity = () => {
               <p className="text-sm text-muted-foreground">
                 {formatDistanceToNow(new Date(payment.created_at), { 
                   addSuffix: true,
-                  locale: fr 
+                  locale: enUS 
                 })}
               </p>
             </div>
@@ -120,7 +120,7 @@ export const RecentActivity = () => {
                 <Wrench className="h-4 w-4 text-amber-600" />
               </div>
               <div className="flex-1">
-                <p className="font-medium">Maintenance Terminée</p>
+                <p className="font-medium">Maintenance Completed</p>
                 <p className="text-sm text-muted-foreground">
                   {request.issue}
                 </p>
@@ -128,7 +128,7 @@ export const RecentActivity = () => {
               <p className="text-sm text-muted-foreground">
                 {formatDistanceToNow(new Date(request.created_at), { 
                   addSuffix: true,
-                  locale: fr 
+                  locale: enUS 
                 })}
               </p>
             </div>
