@@ -21,7 +21,7 @@ export const WorkOrderActions = ({
   const { toast } = useToast();
 
   const handleStatusChange = async () => {
-    const newStatus = status === "En cours" ? "Terminé" : "En cours";
+    const newStatus = status === "In Progress" ? "Completed" : "In Progress";
     
     const { error } = await supabase
       .from('vendor_interventions')
@@ -31,16 +31,16 @@ export const WorkOrderActions = ({
     if (error) {
       console.error("Error updating status:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le statut",
+        title: "Error",
+        description: "Unable to update status",
         variant: "destructive",
       });
       return;
     }
 
     toast({
-      title: "Succès",
-      description: `Statut mis à jour : ${newStatus}`,
+      title: "Success",
+      description: `Status updated: ${newStatus}`,
     });
     onStatusChange();
   };
@@ -54,16 +54,16 @@ export const WorkOrderActions = ({
     if (error) {
       console.error("Error deleting work order:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de supprimer l'ordre de travail",
+        title: "Error",
+        description: "Unable to delete work order",
         variant: "destructive",
       });
       return;
     }
 
     toast({
-      title: "Succès",
-      description: "Ordre de travail supprimé",
+      title: "Success",
+      description: "Work order deleted",
     });
     onDelete();
   };
@@ -79,8 +79,8 @@ export const WorkOrderActions = ({
     if (fetchError) {
       console.error("Error fetching work order:", fetchError);
       toast({
-        title: "Erreur",
-        description: "Impossible de dupliquer l'ordre de travail",
+        title: "Error",
+        description: "Unable to duplicate work order",
         variant: "destructive",
       });
       return;
@@ -92,24 +92,24 @@ export const WorkOrderActions = ({
       .insert({
         ...currentOrder,
         id: undefined, // Let Supabase generate a new ID
-        title: `${currentOrder.title} (copie)`,
-        status: 'Planifié',
+        title: `${currentOrder.title} (copy)`,
+        status: 'Scheduled',
         created_at: undefined, // Let Supabase set the timestamp
       });
 
     if (createError) {
       console.error("Error duplicating work order:", createError);
       toast({
-        title: "Erreur",
-        description: "Impossible de dupliquer l'ordre de travail",
+        title: "Error",
+        description: "Unable to duplicate work order",
         variant: "destructive",
       });
       return;
     }
 
     toast({
-      title: "Succès",
-      description: "Ordre de travail dupliqué",
+      title: "Success",
+      description: "Work order duplicated",
     });
     onDuplicate();
   };
@@ -118,15 +118,15 @@ export const WorkOrderActions = ({
     <div className="flex gap-2 mt-4">
       <Button variant="outline" size="sm" onClick={handleStatusChange}>
         <RefreshCw className="h-4 w-4 mr-2" />
-        Changer statut
+        Change Status
       </Button>
       <Button variant="outline" size="sm" onClick={handleDuplicate}>
         <Copy className="h-4 w-4 mr-2" />
-        Dupliquer
+        Duplicate
       </Button>
       <Button variant="outline" size="sm" className="text-red-500 hover:text-red-700" onClick={handleDelete}>
         <Trash2 className="h-4 w-4 mr-2" />
-        Supprimer
+        Delete
       </Button>
     </div>
   );

@@ -12,19 +12,19 @@ export const WorkOrderDetails = ({ property, unit, vendor, cost }: WorkOrderDeta
     <div className="space-y-2">
       <div className="flex items-center gap-2">
         <Building className="h-4 w-4 text-gray-500" />
-        <p><strong>Propriété:</strong> {property}</p>
+        <p><strong>Property:</strong> {property}</p>
       </div>
       <div className="flex items-center gap-2">
         <Home className="h-4 w-4 text-gray-500" />
-        <p><strong>Unité:</strong> {unit}</p>
+        <p><strong>Unit:</strong> {unit}</p>
       </div>
       <div className="flex items-center gap-2">
         <Wrench className="h-4 w-4 text-gray-500" />
-        <p><strong>Prestataire:</strong> {vendor}</p>
+        <p><strong>Vendor:</strong> {vendor}</p>
       </div>
       <div className="flex items-center gap-2">
         <DollarSign className="h-4 w-4 text-gray-500" />
-        <p><strong>Coût:</strong> {cost}€</p>
+        <p><strong>Cost:</strong> ${cost}</p>
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export const WorkOrderFilters = ({
           <div className="relative">
             <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500" />
             <Input
-              placeholder="Rechercher par titre ou propriété..."
+              placeholder="Search by title or property..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"
@@ -39,24 +39,24 @@ export const WorkOrderFilters = ({
         {/* Status filter */}
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filtrer par statut" />
+            <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Tous les statuts</SelectItem>
-            <SelectItem value="En cours">En cours</SelectItem>
-            <SelectItem value="Planifié">Planifié</SelectItem>
-            <SelectItem value="Terminé">Terminé</SelectItem>
+            <SelectItem value="all">All statuses</SelectItem>
+            <SelectItem value="In Progress">In Progress</SelectItem>
+            <SelectItem value="Scheduled">Scheduled</SelectItem>
+            <SelectItem value="Completed">Completed</SelectItem>
           </SelectContent>
         </Select>
 
         {/* Sort selection */}
         <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Trier par" />
+            <SelectValue placeholder="Sort by" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="date">Date</SelectItem>
-            <SelectItem value="cost">Coût</SelectItem>
+            <SelectItem value="cost">Cost</SelectItem>
           </SelectContent>
         </Select>
       </div>

@@ -68,8 +68,8 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
     refetch();
     setIsCreateDialogOpen(false);
     toast({
-      title: "Ordre de travail créé",
-      description: "L'ordre de travail a été créé avec succès",
+      title: "Work order created",
+      description: "The work order has been created successfully",
     });
   };
 
@@ -86,19 +86,19 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
   };
 
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Ordres de Travail</h2>
+        <h2 className="text-xl font-semibold">Work Orders</h2>
         <Button 
           onClick={() => setIsCreateDialogOpen(true)}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
-          Créer un Ordre
+          Create Order
         </Button>
       </div>
 
