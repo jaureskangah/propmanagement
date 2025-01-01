@@ -37,7 +37,7 @@ const Maintenance = () => {
 
   // Mock data for demonstration
   const mockFinancialData = {
-    propertyId: "123e4567-e89b-12d3-a456-426614174000", // Using UUID format
+    propertyId: "123e4567-e89b-12d3-a456-426614174000",
     rentRoll: [
       { unit: "101", tenant: "John Doe", rent: 1200, status: "Current" },
       { unit: "102", tenant: "Jane Smith", rent: 1300, status: "Current" },
@@ -60,8 +60,9 @@ const Maintenance = () => {
       property: "Property A",
       unit: "101",
       status: "En cours",
-      vendor: "123e4567-e89b-12d3-a456-426614174010", // UUID format for vendor_id
+      vendor: "123e4567-e89b-12d3-a456-426614174010",
       cost: 250,
+      date: "2024-03-01",
     },
     {
       id: "123e4567-e89b-12d3-a456-426614174002",
@@ -69,8 +70,9 @@ const Maintenance = () => {
       property: "Property B",
       unit: "202",
       status: "Planifié",
-      vendor: "123e4567-e89b-12d3-a456-426614174011", // UUID format for vendor_id
+      vendor: "123e4567-e89b-12d3-a456-426614174011",
       cost: 400,
+      date: "2024-03-02",
     },
   ];
 

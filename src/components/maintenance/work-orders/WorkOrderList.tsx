@@ -5,21 +5,11 @@ import { WorkOrderCard } from "./WorkOrderCard";
 import { WorkOrderFilters } from "./WorkOrderFilters";
 import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
 import { useToast } from "@/hooks/use-toast";
-
-interface WorkOrder {
-  id: string; // Changed to string for UUID
-  title: string;
-  property: string;
-  unit: string;
-  status: string;
-  vendor: string; // This is now a UUID string
-  cost: number;
-  date?: string;
-}
+import { WorkOrder } from "@/types/workOrder";
 
 interface WorkOrderListProps {
   workOrders: WorkOrder[];
-  propertyId: string; // This is now a UUID string
+  propertyId: string;
   onWorkOrderCreated?: () => void;
 }
 
