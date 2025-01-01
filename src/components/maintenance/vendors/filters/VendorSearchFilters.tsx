@@ -2,6 +2,7 @@ import React from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface VendorSearchFiltersProps {
   searchQuery: string;
@@ -47,6 +48,13 @@ export const VendorSearchFilters = ({
             <SelectItem value="2">2+ stars</SelectItem>
           </SelectContent>
         </Select>
+
+        <Button
+          variant={showEmergencyOnly ? "default" : "outline"}
+          onClick={() => setShowEmergencyOnly(!showEmergencyOnly)}
+        >
+          {showEmergencyOnly ? "Show all vendors" : "Emergency only"}
+        </Button>
       </div>
     </div>
   );

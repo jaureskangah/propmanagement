@@ -75,17 +75,6 @@ export const VendorList = () => {
     // Handle delete logic here
   };
 
-  const handleEditReview = (review: VendorReview) => {
-    const vendor = vendors.find(v => v.id === review.vendor_id);
-    if (vendor) {
-      setSelectedVendorForReview({
-        id: vendor.id,
-        name: vendor.name,
-      });
-      setReviewDialogOpen(true);
-    }
-  };
-
   return (
     <div className="space-y-6">
       <VendorListHeader onAddVendor={() => setDialogOpen(true)} />
@@ -102,11 +91,11 @@ export const VendorList = () => {
           <div className="space-y-4">
             <VendorSearchFilters
               searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
+              setSearchQuery={setSearchQuery}
               selectedRating={selectedRating}
-              onRatingChange={setSelectedRating}
+              setSelectedRating={setSelectedRating}
               showEmergencyOnly={showEmergencyOnly}
-              onEmergencyChange={setShowEmergencyOnly}
+              setShowEmergencyOnly={setShowEmergencyOnly}
             />
 
             <VendorSpecialtyFilters
@@ -134,7 +123,16 @@ export const VendorList = () => {
         <TabsContent value="reviews">
           <VendorReviewList
             reviews={reviews}
-            onEdit={handleEditReview}
+            onEdit={(review) => {
+              const vendor = vendors.find(v => v.id === review.vendor_id);
+              if (vendor) {
+                setSelectedVendorForReview({
+                  id: vendor.id,
+                  name: vendor.name,
+                });
+                setReviewDialogOpen(true);
+              }
+            }}
             onRefresh={refetchReviews}
           />
         </TabsContent>
