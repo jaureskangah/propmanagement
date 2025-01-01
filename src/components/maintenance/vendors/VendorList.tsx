@@ -83,7 +83,7 @@ export const VendorList = () => {
         <TabsList>
           <TabsTrigger value="all">All Vendors</TabsTrigger>
           <TabsTrigger value="emergency">Emergency Contacts</TabsTrigger>
-          <TabsTrigger value="reviews">Évaluations</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews</TabsTrigger>
           <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
 
