@@ -6,28 +6,7 @@ import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics"
 import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
 import { WorkOrderList } from "@/components/maintenance/WorkOrderList";
 import { VendorList } from "@/components/maintenance/VendorList";
-
-// Mock data for work orders
-const workOrders = [
-  {
-    id: 1,
-    title: "Réparation Plomberie",
-    property: "Résidence A",
-    unit: "101",
-    status: "En cours",
-    vendor: "Plomberie Express",
-    cost: 250,
-  },
-  {
-    id: 2,
-    title: "Maintenance HVAC",
-    property: "Résidence B",
-    unit: "202",
-    status: "Planifié",
-    vendor: "ClimaPro",
-    cost: 350,
-  },
-];
+import { PropertyFinancials } from "@/components/maintenance/PropertyFinancials";
 
 // Fetch maintenance requests
 const fetchMaintenanceRequests = async () => {
@@ -61,6 +40,23 @@ const Maintenance = () => {
     // Implement vendor addition logic
   };
 
+  // Mock data for demonstration
+  const mockFinancialData = {
+    propertyId: "1",
+    rentRoll: [
+      { unit: "101", tenant: "John Doe", rent: 1200, status: "Current" },
+      { unit: "102", tenant: "Jane Smith", rent: 1300, status: "Current" },
+    ],
+    expenses: [
+      { category: "Utilities", amount: 500, date: "2024-03-01" },
+      { category: "Insurance", amount: 300, date: "2024-03-05" },
+    ],
+    maintenance: [
+      { description: "Plumbing repair", cost: 250, date: "2024-03-02" },
+      { description: "HVAC maintenance", cost: 400, date: "2024-03-10" },
+    ],
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
@@ -77,6 +73,7 @@ const Maintenance = () => {
           <TabsTrigger value="preventive">Maintenance Préventive</TabsTrigger>
           <TabsTrigger value="work-orders">Ordres de Travail</TabsTrigger>
           <TabsTrigger value="vendors">Prestataires</TabsTrigger>
+          <TabsTrigger value="financials">Coûts</TabsTrigger>
         </TabsList>
 
         <TabsContent value="preventive">
@@ -92,6 +89,10 @@ const Maintenance = () => {
 
         <TabsContent value="vendors">
           <VendorList onAddVendor={handleAddVendor} />
+        </TabsContent>
+
+        <TabsContent value="financials">
+          <PropertyFinancials {...mockFinancialData} />
         </TabsContent>
       </Tabs>
     </div>
