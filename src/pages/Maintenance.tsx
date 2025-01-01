@@ -7,6 +7,7 @@ import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMainte
 import { WorkOrderList } from "@/components/maintenance/WorkOrderList";
 import { VendorList } from "@/components/maintenance/VendorList";
 import { PropertyFinancials } from "@/components/maintenance/PropertyFinancials";
+import { MaintenanceNotifications } from "@/components/maintenance/MaintenanceNotifications";
 
 // Fetch maintenance requests
 const fetchMaintenanceRequests = async () => {
@@ -32,12 +33,10 @@ const Maintenance = () => {
 
   const handleCreateWorkOrder = () => {
     console.log("Creating new work order");
-    // Implement work order creation logic
   };
 
   const handleAddVendor = () => {
     console.log("Adding new vendor");
-    // Implement vendor addition logic
   };
 
   // Mock data for demonstration
@@ -83,12 +82,19 @@ const Maintenance = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
 
-      <MaintenanceMetrics
-        totalRequests={totalRequests}
-        pendingRequests={pendingRequests}
-        resolvedRequests={resolvedRequests}
-        urgentRequests={urgentRequests}
-      />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <div className="lg:col-span-2">
+          <MaintenanceMetrics
+            totalRequests={totalRequests}
+            pendingRequests={pendingRequests}
+            resolvedRequests={resolvedRequests}
+            urgentRequests={urgentRequests}
+          />
+        </div>
+        <div className="lg:col-span-1">
+          <MaintenanceNotifications />
+        </div>
+      </div>
 
       <Tabs defaultValue="preventive" className="space-y-4">
         <TabsList>
