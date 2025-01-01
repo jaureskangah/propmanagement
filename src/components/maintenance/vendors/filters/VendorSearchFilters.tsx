@@ -1,62 +1,52 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface VendorSearchFiltersProps {
   searchQuery: string;
-  onSearchChange: (query: string) => void;
+  setSearchQuery: (value: string) => void;
   selectedRating: string | null;
-  onRatingChange: (rating: string | null) => void;
+  setSelectedRating: (value: string | null) => void;
   showEmergencyOnly: boolean;
-  onEmergencyChange: (show: boolean) => void;
+  setShowEmergencyOnly: (value: boolean) => void;
 }
 
 export const VendorSearchFilters = ({
   searchQuery,
-  onSearchChange,
+  setSearchQuery,
   selectedRating,
-  onRatingChange,
+  setSelectedRating,
   showEmergencyOnly,
-  onEmergencyChange,
+  setShowEmergencyOnly,
 }: VendorSearchFiltersProps) => {
   return (
     <div className="space-y-4">
-      <Input
-        placeholder="Search vendors..."
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
-      />
-      
-      <div className="flex gap-4 items-center">
-        <div className="flex-1">
-          <Select
-            value={selectedRating?.toString() || ""}
-            onValueChange={(value) => onRatingChange(value ? value : null)}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Filter by rating" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="">All ratings</SelectItem>
-              {[5, 4, 3, 2, 1].map((rating) => (
-                <SelectItem key={rating} value={rating.toString()}>
-                  {rating}+ stars
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="relative">
+        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search vendors..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-8"
+        />
+      </div>
 
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="emergency-only"
-            checked={showEmergencyOnly}
-            onCheckedChange={onEmergencyChange}
-          />
-          <Label htmlFor="emergency-only">Emergency contacts only</Label>
-        </div>
+      <div className="flex gap-4">
+        <Select
+          value={selectedRating || "all"}
+          onValueChange={(value) => setSelectedRating(value === "all" ? null : value)}
+        >
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Filter by rating" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All ratings</SelectItem>
+            <SelectItem value="4">4+ stars</SelectItem>
+            <SelectItem value="3">3+ stars</SelectItem>
+            <SelectItem value="2">2+ stars</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
