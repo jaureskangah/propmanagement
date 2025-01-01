@@ -26,13 +26,22 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) throw new Error("Not authenticated");
 
-      const { data, error } = await supabase
+      const { data: orders, error } = await supabase
         .from('vendor_interventions')
-        .select('*')
+        .select(`
+          *,
+          vendors (
+            name
+          )
+        `)
         .eq('user_id', userData.user.id);
 
       if (error) throw error;
-      return data;
+
+      return orders.map(order => ({
+        ...order,
+        vendor: order.vendors?.name || 'Unknown Vendor'
+      }));
     },
   });
 

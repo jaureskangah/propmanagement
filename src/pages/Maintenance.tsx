@@ -52,30 +52,6 @@ const Maintenance = () => {
     ],
   };
 
-  // Mock work orders data with UUID format
-  const mockWorkOrders = [
-    {
-      id: "123e4567-e89b-12d3-a456-426614174001",
-      title: "Plumbing Issue",
-      property: "Property A",
-      unit: "101",
-      status: "En cours",
-      vendor: "123e4567-e89b-12d3-a456-426614174010",
-      cost: 250,
-      date: "2024-03-01",
-    },
-    {
-      id: "123e4567-e89b-12d3-a456-426614174002",
-      title: "HVAC Maintenance",
-      property: "Property B",
-      unit: "202",
-      status: "Planifié",
-      vendor: "123e4567-e89b-12d3-a456-426614174011",
-      cost: 400,
-      date: "2024-03-02",
-    },
-  ];
-
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
@@ -108,9 +84,7 @@ const Maintenance = () => {
 
         <TabsContent value="work-orders">
           <WorkOrderList 
-            workOrders={mockWorkOrders} 
             propertyId={mockFinancialData.propertyId}
-            onWorkOrderCreated={() => refetch()}
           />
         </TabsContent>
 

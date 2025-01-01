@@ -1,10 +1,16 @@
 export interface WorkOrder {
   id: string;
   title: string;
-  property: string;
-  unit: string;
+  description: string;
+  property?: string;
+  unit?: string;
   status: string;
-  vendor: string;
+  vendor_id: string;
+  vendor?: string;
   cost: number;
-  date?: string;
+  date: string;
+  photos?: string[];
+  created_at?: string;
+  updated_at?: string;
+  user_id?: string;
 }
