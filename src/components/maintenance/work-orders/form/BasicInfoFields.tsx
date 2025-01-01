@@ -22,12 +22,12 @@ export const BasicInfoFields = ({
   return (
     <>
       <div className="space-y-2">
-        <Label htmlFor="title">Titre</Label>
+        <Label htmlFor="title">Title</Label>
         <Input
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Ex: Réparation plomberie salle de bain"
+          placeholder="Ex: Bathroom plumbing repair"
           required
         />
       </div>
@@ -38,14 +38,14 @@ export const BasicInfoFields = ({
           id="description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
-          placeholder="Décrivez le travail à effectuer..."
+          placeholder="Describe the work to be done..."
           className="min-h-[100px]"
           required
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="unit">Numéro d'unité</Label>
+        <Label htmlFor="unit">Unit Number</Label>
         <Input
           id="unit"
           value={unit}

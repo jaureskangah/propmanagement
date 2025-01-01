@@ -26,7 +26,7 @@ export const CreateWorkOrderDialog = ({
   const [unit, setUnit] = useState("");
   const [cost, setCost] = useState("");
   const [date, setDate] = useState<Date>();
-  const [status, setStatus] = useState("Planifié");
+  const [status, setStatus] = useState("Scheduled");
   const [vendor, setVendor] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,7 +40,7 @@ export const CreateWorkOrderDialog = ({
     setDate(undefined);
     setVendor("");
     setPhotos([]);
-    setStatus("Planifié");
+    setStatus("Scheduled");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,8 +49,8 @@ export const CreateWorkOrderDialog = ({
 
     if (!title || !description || !unit || !cost || !date || !vendor) {
       toast({
-        title: "Erreur",
-        description: "Veuillez remplir tous les champs requis",
+        title: "Error",
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
       return;
@@ -89,7 +89,7 @@ export const CreateWorkOrderDialog = ({
           date: date?.toISOString(),
           cost: parseFloat(cost),
           status,
-          vendor_id: vendor, // vendor est déjà un UUID valide
+          vendor_id: vendor,
           photos: photoUrls,
           user_id: (await supabase.auth.getUser()).data.user?.id
         });
@@ -101,8 +101,8 @@ export const CreateWorkOrderDialog = ({
 
       console.log("Work order created successfully");
       toast({
-        title: "Succès",
-        description: "L'ordre de travail a été créé avec succès",
+        title: "Success",
+        description: "Work order created successfully",
       });
       
       resetForm();
@@ -112,8 +112,8 @@ export const CreateWorkOrderDialog = ({
     } catch (error: any) {
       console.error("Error creating work order:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de créer l'ordre de travail",
+        title: "Error",
+        description: "Unable to create work order",
         variant: "destructive",
       });
     } finally {
@@ -136,7 +136,7 @@ export const CreateWorkOrderDialog = ({
     }}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Créer un nouvel ordre de travail</DialogTitle>
+          <DialogTitle>Create New Work Order</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <BasicInfoFields
@@ -169,14 +169,14 @@ export const CreateWorkOrderDialog = ({
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
-              Annuler
+              Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
               className="bg-blue-500 hover:bg-blue-600"
             >
-              {isSubmitting ? "Création..." : "Créer l'ordre"}
+              {isSubmitting ? "Creating..." : "Create Order"}
             </Button>
           </div>
         </form>

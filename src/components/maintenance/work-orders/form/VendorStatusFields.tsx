@@ -44,10 +44,10 @@ export const VendorStatusFields = ({
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
-        <Label>Prestataire</Label>
+        <Label>Vendor</Label>
         <Select value={vendor} onValueChange={setVendor}>
           <SelectTrigger>
-            <SelectValue placeholder={isLoading ? "Chargement..." : "Sélectionner un prestataire"} />
+            <SelectValue placeholder={isLoading ? "Loading..." : "Select a vendor"} />
           </SelectTrigger>
           <SelectContent>
             {vendors.map((vendor) => (
@@ -60,15 +60,15 @@ export const VendorStatusFields = ({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="status">Statut</Label>
+        <Label htmlFor="status">Status</Label>
         <Select value={status} onValueChange={setStatus}>
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Planifié">Planifié</SelectItem>
-            <SelectItem value="En cours">En cours</SelectItem>
-            <SelectItem value="Terminé">Terminé</SelectItem>
+            <SelectItem value="Scheduled">Scheduled</SelectItem>
+            <SelectItem value="In Progress">In Progress</SelectItem>
+            <SelectItem value="Completed">Completed</SelectItem>
           </SelectContent>
         </Select>
       </div>

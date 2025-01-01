@@ -24,7 +24,7 @@ export const PhotoUpload = ({ handlePhotoChange, photos }: PhotoUploadProps) => 
       </div>
       {photos.length > 0 && (
         <p className="text-sm text-muted-foreground">
-          {photos.length} photo(s) sélectionnée(s)
+          {photos.length} photo(s) selected
         </p>
       )}
     </div>
