@@ -283,6 +283,146 @@ export type Database = {
           },
         ]
       }
+      vendor_interventions: {
+        Row: {
+          cost: number | null
+          created_at: string
+          date: string
+          description: string
+          id: string
+          status: string
+          title: string
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          cost?: number | null
+          created_at?: string
+          date: string
+          description: string
+          id?: string
+          status?: string
+          title: string
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          cost?: number | null
+          created_at?: string
+          date?: string
+          description?: string
+          id?: string
+          status?: string
+          title?: string
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_interventions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_interventions_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendor_reviews: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          rating: number
+          user_id: string
+          vendor_id: string | null
+        }
+        Insert: {
+          comment: string
+          created_at?: string
+          id?: string
+          rating: number
+          user_id: string
+          vendor_id?: string | null
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          user_id?: string
+          vendor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendor_reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vendor_reviews_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vendors: {
+        Row: {
+          created_at: string
+          email: string
+          emergency_contact: boolean | null
+          id: string
+          name: string
+          phone: string
+          rating: number | null
+          specialty: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          emergency_contact?: boolean | null
+          id?: string
+          name: string
+          phone: string
+          rating?: number | null
+          specialty: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          emergency_contact?: boolean | null
+          id?: string
+          name?: string
+          phone?: string
+          rating?: number | null
+          specialty?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vendors_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
