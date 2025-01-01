@@ -11,7 +11,7 @@ import { VendorReviewDialog } from "./reviews/VendorReviewDialog";
 import { VendorListHeader } from "./header/VendorListHeader";
 import { VendorSearchFilters } from "./filters/VendorSearchFilters";
 import { VendorSpecialtyFilters } from "./filters/VendorSpecialtyFilters";
-import { Vendor } from "@/types/vendor";
+import { Vendor, VendorReview } from "@/types/vendor";
 
 export const VendorList = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
@@ -38,6 +38,18 @@ export const VendorList = () => {
     },
   });
 
+  const { data: reviews = [], refetch: refetchReviews } = useQuery({
+    queryKey: ['vendor_reviews'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vendor_reviews')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data as VendorReview[];
+    },
+  });
+
   const specialties = [...new Set(vendors.map(vendor => vendor.specialty))];
 
   const filteredVendors = vendors.filter(vendor => {
@@ -61,6 +73,17 @@ export const VendorList = () => {
 
   const handleDelete = async (vendor: Vendor) => {
     // Handle delete logic here
+  };
+
+  const handleEditReview = (review: VendorReview) => {
+    const vendor = vendors.find(v => v.id === review.vendor_id);
+    if (vendor) {
+      setSelectedVendorForReview({
+        id: vendor.id,
+        name: vendor.name,
+      });
+      setReviewDialogOpen(true);
+    }
   };
 
   return (
@@ -110,14 +133,9 @@ export const VendorList = () => {
 
         <TabsContent value="reviews">
           <VendorReviewList
-            vendors={vendors}
-            onSelectVendor={(vendor) => {
-              setSelectedVendorForReview({
-                id: vendor.id,
-                name: vendor.name,
-              });
-              setReviewDialogOpen(true);
-            }}
+            reviews={reviews}
+            onEdit={handleEditReview}
+            onRefresh={refetchReviews}
           />
         </TabsContent>
 
@@ -145,6 +163,7 @@ export const VendorList = () => {
           onSuccess={() => {
             setReviewDialogOpen(false);
             setSelectedVendorForReview(null);
+            refetchReviews();
           }}
         />
       )}
