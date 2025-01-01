@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 
@@ -15,15 +17,16 @@ interface Task {
 interface TaskListProps {
   tasks: Task[];
   onTaskComplete: (taskId: string) => void;
+  onTaskDelete: (taskId: string) => void;
 }
 
-export const TaskList = ({ tasks, onTaskComplete }: TaskListProps) => {
+export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   return (
     <ScrollArea className="h-[200px]">
       {tasks.map((task) => (
         <div
           key={task.id}
-          className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg"
+          className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg group"
         >
           <div className="flex items-center gap-2">
             <Checkbox
@@ -48,6 +51,14 @@ export const TaskList = ({ tasks, onTaskComplete }: TaskListProps) => {
               {format(task.date, "dd/MM/yyyy", { locale: fr })}
             </Badge>
             <Badge variant="outline">{task.type}</Badge>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={() => onTaskDelete(task.id)}
+            >
+              <Trash2 className="h-4 w-4 text-red-500" />
+            </Button>
           </div>
         </div>
       ))}

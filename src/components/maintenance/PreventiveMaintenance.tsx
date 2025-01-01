@@ -50,6 +50,10 @@ export const PreventiveMaintenance = () => {
     );
   };
 
+  const handleDeleteTask = (taskId: string) => {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  };
+
   const handleAddTask = (newTask: {
     title: string;
     date: Date;
@@ -124,7 +128,11 @@ export const PreventiveMaintenance = () => {
               <h3 className="font-medium">Tâches prévues</h3>
               <AddTaskDialog onAddTask={handleAddTask} />
             </div>
-            <TaskList tasks={filteredTasks} onTaskComplete={handleTaskCompletion} />
+            <TaskList 
+              tasks={filteredTasks} 
+              onTaskComplete={handleTaskCompletion} 
+              onTaskDelete={handleDeleteTask}
+            />
           </div>
         </CardContent>
       </Card>
