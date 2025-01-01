@@ -21,7 +21,7 @@ import {
 
 // Types
 interface WorkOrder {
-  id: number;
+  id: string; // Changed to string to match UUID format
   title: string;
   property: string;
   unit: string;
