@@ -8,6 +8,9 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DollarSign, FileText, TrendingUp, Wrench } from "lucide-react";
+import { MonthlyExpensesChart } from "./maintenance/financials/charts/MonthlyExpensesChart";
+import { ExpensesByCategoryChart } from "./maintenance/financials/charts/ExpensesByCategoryChart";
+import { ExpensesTrendChart } from "./maintenance/financials/charts/ExpensesTrendChart";
 
 interface PropertyFinancialsProps {
   propertyId: string;
@@ -32,7 +35,6 @@ interface PropertyFinancialsProps {
 const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: PropertyFinancialsProps) => {
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
-  // Calculate ROI
   const calculateROI = () => {
     const totalRent = rentRoll.reduce((acc, curr) => acc + curr.rent, 0) * 12;
     const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
@@ -44,8 +46,8 @@ const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: Pro
   };
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {/* Financial Overview Cards */}
+    <div className="space-y-6">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Rent Roll</CardTitle>
@@ -95,8 +97,15 @@ const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: Pro
           <p className="text-xs text-muted-foreground">Annual return</p>
         </CardContent>
       </Card>
+      </div>
 
-      {/* Rent Roll Table */}
+      {/* Graphiques */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <MonthlyExpensesChart expenses={expenses} />
+        <ExpensesByCategoryChart expenses={expenses} />
+        <ExpensesTrendChart expenses={expenses} />
+      </div>
+
       <Card className="col-span-full">
         <CardHeader>
           <CardTitle>Rent Roll</CardTitle>
