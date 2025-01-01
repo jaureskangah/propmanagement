@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { WorkOrderCard } from "./WorkOrderCard";
 import { WorkOrderFilters } from "./WorkOrderFilters";
 import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface WorkOrder {
   id: number;
@@ -19,13 +20,15 @@ interface WorkOrder {
 interface WorkOrderListProps {
   workOrders: WorkOrder[];
   propertyId: string;
+  onWorkOrderCreated?: () => void;
 }
 
-export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) => {
+export const WorkOrderList = ({ workOrders, propertyId, onWorkOrderCreated }: WorkOrderListProps) => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "cost">("date");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   // Filter and sort work orders
   const filteredAndSortedOrders = useMemo(() => {
@@ -48,7 +51,14 @@ export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) =>
 
   const handleCreateSuccess = () => {
     console.log("Work order created successfully");
-    // Refresh work orders list - this will be handled by the parent component
+    toast({
+      title: "Ordre de travail créé",
+      description: "L'ordre de travail a été créé avec succès",
+    });
+    setIsCreateDialogOpen(false);
+    if (onWorkOrderCreated) {
+      onWorkOrderCreated();
+    }
   };
 
   return (
@@ -56,7 +66,10 @@ export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) =>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Ordres de Travail</h2>
         <Button 
-          onClick={() => setIsCreateDialogOpen(true)}
+          onClick={() => {
+            console.log("Opening create dialog");
+            setIsCreateDialogOpen(true);
+          }}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
@@ -81,7 +94,10 @@ export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) =>
 
       <CreateWorkOrderDialog
         isOpen={isCreateDialogOpen}
-        onClose={() => setIsCreateDialogOpen(false)}
+        onClose={() => {
+          console.log("Closing create dialog");
+          setIsCreateDialogOpen(false);
+        }}
         onSuccess={handleCreateSuccess}
         propertyId={propertyId}
       />

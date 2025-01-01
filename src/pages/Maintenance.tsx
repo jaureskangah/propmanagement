@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
 import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
-import { WorkOrderList } from "@/components/maintenance/WorkOrderList";
+import { WorkOrderList } from "@/components/maintenance/work-orders/WorkOrderList";
 import { VendorList } from "@/components/maintenance/VendorList";
 import { PropertyFinancials } from "@/components/maintenance/PropertyFinancials";
 import { MaintenanceNotifications } from "@/components/maintenance/MaintenanceNotifications";
@@ -20,7 +20,7 @@ const fetchMaintenanceRequests = async () => {
 };
 
 const Maintenance = () => {
-  const { data: requests = [], isLoading } = useQuery({
+  const { data: requests = [], isLoading, refetch } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: fetchMaintenanceRequests,
   });
@@ -30,10 +30,6 @@ const Maintenance = () => {
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
   const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
   const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
-
-  const handleCreateWorkOrder = () => {
-    console.log("Creating new work order");
-  };
 
   const handleAddVendor = () => {
     console.log("Adding new vendor");
@@ -111,7 +107,8 @@ const Maintenance = () => {
         <TabsContent value="work-orders">
           <WorkOrderList 
             workOrders={mockWorkOrders} 
-            onCreateWorkOrder={handleCreateWorkOrder} 
+            propertyId={mockFinancialData.propertyId}
+            onWorkOrderCreated={() => refetch()}
           />
         </TabsContent>
 
