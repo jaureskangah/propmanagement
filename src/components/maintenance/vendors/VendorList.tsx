@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Plus, Users, Star, History, Phone } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -18,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Vendor, VendorReview, VendorIntervention } from "@/types/vendor";
+import { InterventionHistory } from "./interventions/InterventionHistory";
 
 export const VendorList = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
@@ -90,28 +92,6 @@ export const VendorList = () => {
   const handleDelete = async (vendor: Vendor) => {
     // Handle delete logic here
   };
-
-  useEffect(() => {
-    const channel = supabase
-      .channel('vendor-reviews-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'vendor_reviews'
-        },
-        () => {
-          console.log('Vendor reviews updated, refreshing...');
-          refetchReviews();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [refetchReviews]);
 
   return (
     <div className="space-y-6">
@@ -193,27 +173,11 @@ export const VendorList = () => {
               }}
               onRefresh={refetchReviews}
             />
-
-            {selectedVendorForReview && (
-              <VendorReviewDialog
-                open={reviewDialogOpen}
-                onOpenChange={setReviewDialogOpen}
-                vendorId={selectedVendorForReview.id}
-                vendorName={selectedVendorForReview.name}
-                onSuccess={() => {
-                  refetchReviews();
-                  setSelectedVendorForReview(null);
-                }}
-              />
-            )}
           </div>
         </TabsContent>
 
         <TabsContent value="history">
-          <VendorInterventionList 
-            interventions={interventions}
-            vendors={vendors}
-          />
+          <InterventionHistory />
         </TabsContent>
       </Tabs>
 
@@ -226,6 +190,19 @@ export const VendorList = () => {
           refetch();
         }}
       />
+
+      {selectedVendorForReview && (
+        <VendorReviewDialog
+          open={reviewDialogOpen}
+          onOpenChange={setReviewDialogOpen}
+          vendorId={selectedVendorForReview.id}
+          vendorName={selectedVendorForReview.name}
+          onSuccess={() => {
+            refetchReviews();
+            setSelectedVendorForReview(null);
+          }}
+        />
+      )}
     </div>
   );
 };
