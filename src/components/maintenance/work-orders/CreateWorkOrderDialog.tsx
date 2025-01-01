@@ -32,8 +32,21 @@ export const CreateWorkOrderDialog = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setUnit("");
+    setCost("");
+    setDate(undefined);
+    setVendor("");
+    setPhotos([]);
+    setStatus("Planifié");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submitting work order form...");
+
     if (!title || !description || !unit || !cost || !date || !vendor) {
       toast({
         title: "Erreur",
@@ -45,6 +58,7 @@ export const CreateWorkOrderDialog = ({
 
     setIsSubmitting(true);
     try {
+      console.log("Uploading photos...");
       const photoUrls: string[] = [];
       if (photos.length > 0) {
         for (const photo of photos) {
@@ -66,6 +80,7 @@ export const CreateWorkOrderDialog = ({
         }
       }
 
+      console.log("Creating work order in database...");
       const { error } = await supabase
         .from('vendor_interventions')
         .insert({
@@ -74,29 +89,25 @@ export const CreateWorkOrderDialog = ({
           date: date?.toISOString(),
           cost: parseFloat(cost),
           status,
-          vendor_id: vendor,
+          vendor_id: vendor, // vendor est déjà un UUID valide
           photos: photoUrls,
           user_id: (await supabase.auth.getUser()).data.user?.id
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error creating work order:", error);
+        throw error;
+      }
 
+      console.log("Work order created successfully");
       toast({
         title: "Succès",
         description: "L'ordre de travail a été créé avec succès",
       });
       
+      resetForm();
       onSuccess();
       onClose();
-      
-      // Reset form
-      setTitle("");
-      setDescription("");
-      setUnit("");
-      setCost("");
-      setDate(undefined);
-      setVendor("");
-      setPhotos([]);
       
     } catch (error: any) {
       console.error("Error creating work order:", error);
@@ -117,7 +128,12 @@ export const CreateWorkOrderDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) {
+        resetForm();
+        onClose();
+      }
+    }}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Créer un nouvel ordre de travail</DialogTitle>
