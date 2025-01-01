@@ -1,12 +1,13 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Wrench, FileImage, CheckSquare, Users } from "lucide-react";
+import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
 import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { WorkOrderList } from "@/components/maintenance/WorkOrderList";
+import { VendorList } from "@/components/maintenance/VendorList";
 
 // Mock data for work orders
 const workOrders = [
@@ -105,76 +106,17 @@ const Maintenance = () => {
         </TabsContent>
 
         <TabsContent value="work-orders">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Ordres de Travail</h2>
-            <Button onClick={handleCreateWorkOrder} className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Créer un Ordre
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {workOrders.map((order) => (
-              <Card key={order.id}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{order.title}</CardTitle>
-                    <Wrench className="h-5 w-5 text-blue-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p><strong>Propriété:</strong> {order.property}</p>
-                    <p><strong>Unité:</strong> {order.unit}</p>
-                    <p><strong>Statut:</strong> {order.status}</p>
-                    <p><strong>Prestataire:</strong> {order.vendor}</p>
-                    <p><strong>Coût:</strong> {order.cost}€</p>
-                    <div className="flex gap-2 mt-4">
-                      <Button variant="outline" size="sm">
-                        <FileImage className="h-4 w-4 mr-2" />
-                        Photos
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <CheckSquare className="h-4 w-4 mr-2" />
-                        Mettre à jour
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <WorkOrderList 
+            workOrders={workOrders} 
+            onCreateWorkOrder={handleCreateWorkOrder} 
+          />
         </TabsContent>
 
         <TabsContent value="vendors">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Prestataires</h2>
-            <Button onClick={handleAddVendor} className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Ajouter un Prestataire
-            </Button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {vendors.map((vendor) => (
-              <Card key={vendor.id}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{vendor.name}</CardTitle>
-                    <Users className="h-5 w-5 text-blue-500" />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p><strong>Spécialité:</strong> {vendor.specialty}</p>
-                    <p><strong>Téléphone:</strong> {vendor.phone}</p>
-                    <p><strong>Email:</strong> {vendor.email}</p>
-                    <p><strong>Note:</strong> {vendor.rating}/5</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <VendorList 
+            vendors={vendors} 
+            onAddVendor={handleAddVendor} 
+          />
         </TabsContent>
       </Tabs>
     </div>
