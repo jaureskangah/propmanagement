@@ -79,11 +79,6 @@ const Properties = () => {
 
   // Mock financial data
   const mockFinancials = {
-    rentRoll: [
-      { unit: "1A", tenant: "John Doe", rent: 1200, status: "Active" },
-      { unit: "1B", tenant: "Jane Smith", rent: 1300, status: "Active" },
-      { unit: "2A", tenant: "", rent: 1100, status: "Vacant" }
-    ],
     expenses: [
       { category: "Maintenance", amount: 500, date: "2024-01-15" },
       { category: "Utilities", amount: 300, date: "2024-01-20" },
@@ -166,7 +161,6 @@ const Properties = () => {
           </h2>
           <PropertyFinancials
             propertyId={selectedPropertyId}
-            rentRoll={mockFinancials.rentRoll}
             expenses={mockFinancials.expenses}
             maintenance={mockFinancials.maintenance}
           />
