@@ -7,19 +7,19 @@ import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
 import { useToast } from "@/hooks/use-toast";
 
 interface WorkOrder {
-  id: number;
+  id: string; // Changed to string for UUID
   title: string;
   property: string;
   unit: string;
   status: string;
-  vendor: string;
+  vendor: string; // This is now a UUID string
   cost: number;
   date?: string;
 }
 
 interface WorkOrderListProps {
   workOrders: WorkOrder[];
-  propertyId: string;
+  propertyId: string; // This is now a UUID string
   onWorkOrderCreated?: () => void;
 }
 

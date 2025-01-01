@@ -37,7 +37,7 @@ const Maintenance = () => {
 
   // Mock data for demonstration
   const mockFinancialData = {
-    propertyId: "1",
+    propertyId: "123e4567-e89b-12d3-a456-426614174000", // Using UUID format
     rentRoll: [
       { unit: "101", tenant: "John Doe", rent: 1200, status: "Current" },
       { unit: "102", tenant: "Jane Smith", rent: 1300, status: "Current" },
@@ -52,24 +52,24 @@ const Maintenance = () => {
     ],
   };
 
-  // Mock work orders data
+  // Mock work orders data with UUID format
   const mockWorkOrders = [
     {
-      id: 1,
+      id: "123e4567-e89b-12d3-a456-426614174001",
       title: "Plumbing Issue",
       property: "Property A",
       unit: "101",
       status: "En cours",
-      vendor: "John's Plumbing",
+      vendor: "123e4567-e89b-12d3-a456-426614174010", // UUID format for vendor_id
       cost: 250,
     },
     {
-      id: 2,
+      id: "123e4567-e89b-12d3-a456-426614174002",
       title: "HVAC Maintenance",
       property: "Property B",
       unit: "202",
       status: "Planifié",
-      vendor: "Cool Air Services",
+      vendor: "123e4567-e89b-12d3-a456-426614174011", // UUID format for vendor_id
       cost: 400,
     },
   ];
