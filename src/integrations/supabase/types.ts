@@ -398,6 +398,7 @@ export type Database = {
           date: string
           description: string
           id: string
+          photos: string[] | null
           status: string
           title: string
           user_id: string
@@ -409,6 +410,7 @@ export type Database = {
           date: string
           description: string
           id?: string
+          photos?: string[] | null
           status?: string
           title: string
           user_id: string
@@ -420,6 +422,7 @@ export type Database = {
           date?: string
           description?: string
           id?: string
+          photos?: string[] | null
           status?: string
           title?: string
           user_id?: string

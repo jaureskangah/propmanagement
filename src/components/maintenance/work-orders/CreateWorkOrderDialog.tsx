@@ -1,15 +1,12 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { fr } from "date-fns/locale";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { Image, DollarSign, Calendar as CalendarIcon } from "lucide-react";
+import { BasicInfoFields } from "./form/BasicInfoFields";
+import { CostDateFields } from "./form/CostDateFields";
+import { VendorStatusFields } from "./form/VendorStatusFields";
+import { PhotoUpload } from "./form/PhotoUpload";
 
 interface CreateWorkOrderDialogProps {
   isOpen: boolean;
@@ -48,7 +45,6 @@ export const CreateWorkOrderDialog = ({
 
     setIsSubmitting(true);
     try {
-      // Upload photos if any
       const photoUrls: string[] = [];
       if (photos.length > 0) {
         for (const photo of photos) {
@@ -70,7 +66,6 @@ export const CreateWorkOrderDialog = ({
         }
       }
 
-      // Create work order
       const { error } = await supabase
         .from('vendor_interventions')
         .insert({
@@ -81,6 +76,7 @@ export const CreateWorkOrderDialog = ({
           status,
           vendor_id: vendor,
           photos: photoUrls,
+          user_id: (await supabase.auth.getUser()).data.user?.id
         });
 
       if (error) throw error;
@@ -127,122 +123,33 @@ export const CreateWorkOrderDialog = ({
           <DialogTitle>Créer un nouvel ordre de travail</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Titre</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Ex: Réparation plomberie salle de bain"
-              required
-            />
-          </div>
+          <BasicInfoFields
+            title={title}
+            setTitle={setTitle}
+            description={description}
+            setDescription={setDescription}
+            unit={unit}
+            setUnit={setUnit}
+          />
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Décrivez le travail à effectuer..."
-              className="min-h-[100px]"
-              required
-            />
-          </div>
+          <CostDateFields
+            cost={cost}
+            setCost={setCost}
+            date={date}
+            setDate={setDate}
+          />
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="unit">Numéro d'unité</Label>
-              <Input
-                id="unit"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-                placeholder="Ex: A101"
-                required
-              />
-            </div>
+          <VendorStatusFields
+            vendor={vendor}
+            setVendor={setVendor}
+            status={status}
+            setStatus={setStatus}
+          />
 
-            <div className="space-y-2">
-              <Label htmlFor="cost">Coût estimé (€)</Label>
-              <div className="relative">
-                <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  id="cost"
-                  type="number"
-                  value={cost}
-                  onChange={(e) => setCost(e.target.value)}
-                  className="pl-10"
-                  placeholder="0.00"
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Date prévue</Label>
-              <div className="relative">
-                <CalendarIcon className="absolute left-3 top-2.5 h-4 w-4 text-gray-500" />
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  locale={fr}
-                  className="rounded-md border"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Prestataire</Label>
-              <Select value={vendor} onValueChange={setVendor}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Sélectionner un prestataire" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">John's Plumbing</SelectItem>
-                  <SelectItem value="2">Cool Air Services</SelectItem>
-                  <SelectItem value="3">Electric Pro</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="status">Statut</Label>
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Planifié">Planifié</SelectItem>
-                <SelectItem value="En cours">En cours</SelectItem>
-                <SelectItem value="Terminé">Terminé</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="photos">Photos</Label>
-            <div className="flex items-center gap-2">
-              <Input
-                id="photos"
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handlePhotoChange}
-                className="cursor-pointer"
-              />
-              <Image className="h-5 w-5 text-gray-500" />
-            </div>
-            {photos.length > 0 && (
-              <p className="text-sm text-muted-foreground">
-                {photos.length} photo(s) sélectionnée(s)
-              </p>
-            )}
-          </div>
+          <PhotoUpload
+            handlePhotoChange={handlePhotoChange}
+            photos={photos}
+          />
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
