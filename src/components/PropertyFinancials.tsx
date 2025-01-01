@@ -1,9 +1,7 @@
 import React from "react";
 import { MetricsCards } from "./maintenance/financials/MetricsCards";
 import { DataTables } from "./maintenance/financials/DataTables";
-import { MonthlyExpensesChart } from "./maintenance/financials/charts/MonthlyExpensesChart";
-import { ExpensesByCategoryChart } from "./maintenance/financials/charts/ExpensesByCategoryChart";
-import { ExpensesTrendChart } from "./maintenance/financials/charts/ExpensesTrendChart";
+import { ChartsSection } from "./maintenance/financials/ChartsSection";
 
 interface PropertyFinancialsProps {
   propertyId: string;
@@ -33,7 +31,6 @@ const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: Pro
     const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const totalMaintenance = maintenance.reduce((acc, curr) => acc + curr.cost, 0);
     const netIncome = totalRent - totalExpenses - totalMaintenance;
-    // Assuming a property value for demonstration
     const propertyValue = 500000;
     return ((netIncome / propertyValue) * 100).toFixed(2);
   };
@@ -46,13 +43,7 @@ const PropertyFinancials = ({ propertyId, rentRoll, expenses, maintenance }: Pro
         maintenance={maintenance}
         calculateROI={calculateROI}
       />
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <MonthlyExpensesChart expenses={expenses} />
-        <ExpensesByCategoryChart expenses={expenses} />
-        <ExpensesTrendChart expenses={expenses} />
-      </div>
-
+      <ChartsSection expenses={expenses} />
       <DataTables
         rentRoll={rentRoll}
         expenses={expenses}
