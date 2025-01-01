@@ -69,31 +69,6 @@ export const useMaintenanceAlerts = () => {
     return alerts;
   };
 
-  const generatePaymentAlerts = () => {
-    const alerts: BudgetAlert[] = [];
-    const today = new Date();
-    const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
-    
-    const recurringPayments = [
-      { title: "Assurance", amount: 1200, dueDate: nextMonth },
-      { title: "Maintenance HVAC", amount: 500, dueDate: nextMonth }
-    ];
-
-    recurringPayments.forEach(payment => {
-      if (payment.dueDate.getTime() - today.getTime() < 15 * 24 * 60 * 60 * 1000) {
-        alerts.push({
-          id: `payment-${payment.title}`,
-          title: "Paiement Récurrent à Venir",
-          issue: `${payment.title} - ${payment.amount}€ à payer avant le ${payment.dueDate.toLocaleDateString()}`,
-          priority: "medium",
-          type: 'payment'
-        });
-      }
-    });
-
-    return alerts;
-  };
-
   const fetchNotifications = async () => {
     const { data: maintenanceData, error: maintenanceError } = await supabase
       .from('maintenance_requests')
@@ -125,10 +100,9 @@ export const useMaintenanceAlerts = () => {
     }
 
     const budgetAlerts = generateBudgetAlerts(budgetData || [], expensesData || []);
-    const paymentAlerts = generatePaymentAlerts();
 
     setNotifications(maintenanceData || []);
-    setBudgetAlerts([...budgetAlerts, ...paymentAlerts]);
+    setBudgetAlerts(budgetAlerts);
   };
 
   useEffect(() => {
