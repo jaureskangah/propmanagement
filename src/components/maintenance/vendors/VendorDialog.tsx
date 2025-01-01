@@ -21,6 +21,18 @@ export const VendorDialog = ({
   vendor,
   onSuccess,
 }: VendorDialogProps) => {
+  // Convert the vendor data to match VendorForm's expected format
+  const formDefaultValues = vendor ? {
+    name: vendor.name,
+    specialty: vendor.specialty,
+    phone: vendor.phone,
+    email: vendor.email,
+    emergency_contact: vendor.emergency_contact,
+    // We don't pass the photos as Files since they're already uploaded
+    // They'll be handled separately in the form
+    existingPhotos: vendor.photos,
+  } : undefined;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -30,7 +42,7 @@ export const VendorDialog = ({
           </DialogTitle>
         </DialogHeader>
         <VendorForm
-          defaultValues={vendor}
+          defaultValues={formDefaultValues}
           onSuccess={() => {
             onSuccess();
             onOpenChange(false);

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { BasicInfoFields } from "./form/BasicInfoFields";
 import { FileUploadField } from "./form/FileUploadField";
+import { VendorFormValues } from "@/types/vendor";
 
 const vendorFormSchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
@@ -19,9 +19,8 @@ const vendorFormSchema = z.object({
   emergency_contact: z.boolean().default(false),
   documents: z.array(z.instanceof(File)).optional(),
   photos: z.array(z.instanceof(File)).optional(),
+  existingPhotos: z.array(z.string()).optional(),
 });
-
-type VendorFormValues = z.infer<typeof vendorFormSchema>;
 
 interface VendorFormProps {
   onSuccess: () => void;
@@ -44,6 +43,7 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
       emergency_contact: defaultValues?.emergency_contact || false,
       documents: [],
       photos: [],
+      existingPhotos: defaultValues?.existingPhotos || [],
     },
   });
 
@@ -86,9 +86,10 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
     setIsSubmitting(true);
 
     try {
-      let photoUrls: string[] = [];
+      let photoUrls: string[] = data.existingPhotos || [];
       if (data.photos?.length) {
-        photoUrls = await uploadFiles(data.photos, 'photos');
+        const newPhotoUrls = await uploadFiles(data.photos, 'photos');
+        photoUrls = [...photoUrls, ...newPhotoUrls];
       }
 
       const vendorData = {
@@ -158,23 +159,6 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <BasicInfoFields form={form} />
 
-        <FormField
-          control={form.control}
-          name="emergency_contact"
-          render={({ field }) => (
-            <FormItem className="flex items-center gap-2">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Contact d'urgence</FormLabel>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <FileUploadField
           form={form}
           name="documents"
@@ -189,6 +173,7 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
           label="Photos"
           accept="image/*"
           multiple
+          existingFiles={defaultValues?.existingPhotos}
         />
 
         <div className="flex justify-end gap-2">
