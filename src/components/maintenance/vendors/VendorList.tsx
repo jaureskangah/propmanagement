@@ -11,6 +11,13 @@ import { VendorDialog } from "./VendorDialog";
 import { useToast } from "@/hooks/use-toast";
 import { VendorReviewList } from "./reviews/VendorReviewList";
 import { VendorReviewDialog } from "./reviews/VendorReviewDialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Vendor {
   id: string;

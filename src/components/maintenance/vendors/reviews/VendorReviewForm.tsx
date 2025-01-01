@@ -13,6 +13,7 @@ import {
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/hooks/useAuth";
 
 interface VendorReviewFormProps {
   vendorId: string;
@@ -29,6 +30,8 @@ interface ReviewFormValues {
 
 export const VendorReviewForm = ({ vendorId, onSuccess, onCancel }: VendorReviewFormProps) => {
   const { toast } = useToast();
+  const { user } = useAuth();
+  
   const form = useForm<ReviewFormValues>({
     defaultValues: {
       comment: "",
@@ -40,12 +43,18 @@ export const VendorReviewForm = ({ vendorId, onSuccess, onCancel }: VendorReview
 
   const onSubmit = async (data: ReviewFormValues) => {
     try {
+      if (!user?.id) {
+        throw new Error("User not authenticated");
+      }
+
       const { error } = await supabase.from("vendor_reviews").insert({
         vendor_id: vendorId,
         comment: data.comment,
         quality_rating: data.qualityRating,
         price_rating: data.priceRating,
         punctuality_rating: data.punctualityRating,
+        user_id: user.id,
+        rating: 0, // This will be calculated by the database trigger
       });
 
       if (error) throw error;
