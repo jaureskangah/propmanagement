@@ -4,14 +4,14 @@ interface DashboardMetricProps {
   title: string;
   value: string;
   icon: React.ReactNode;
-  description?: string;
+  description?: React.ReactNode;
 }
 
 export function DashboardMetric({ title, value, icon, description }: DashboardMetricProps) {
   return (
     <Card className="group transition-all duration-300 hover:scale-[1.02] hover:shadow-lg">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
         <div className="transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
           {icon}
         </div>
@@ -21,9 +21,9 @@ export function DashboardMetric({ title, value, icon, description }: DashboardMe
           {value}
         </div>
         {description && (
-          <p className="text-xs text-muted-foreground opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+          <div className="mt-2 text-xs opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
             {description}
-          </p>
+          </div>
         )}
       </CardContent>
     </Card>
