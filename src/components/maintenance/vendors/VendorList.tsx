@@ -12,6 +12,7 @@ import { VendorListHeader } from "./header/VendorListHeader";
 import { VendorSearchFilters } from "./filters/VendorSearchFilters";
 import { VendorSpecialtyFilters } from "./filters/VendorSpecialtyFilters";
 import { Vendor, VendorReview } from "@/types/vendor";
+import { useToast } from "@/hooks/use-toast";
 
 export const VendorList = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
@@ -25,6 +26,7 @@ export const VendorList = () => {
     id: string;
     name: string;
   } | null>(null);
+  const { toast } = useToast();
 
   const { data: vendors = [], refetch } = useQuery({
     queryKey: ['vendors'],
@@ -71,6 +73,31 @@ export const VendorList = () => {
     setDialogOpen(true);
   };
 
+  const handleDelete = async (vendor: Vendor) => {
+    try {
+      const { error } = await supabase
+        .from('vendors')
+        .delete()
+        .eq('id', vendor.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Vendor deleted",
+        description: `${vendor.name} has been removed successfully.`,
+      });
+
+      refetch();
+    } catch (error) {
+      console.error('Error deleting vendor:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete vendor. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <VendorListHeader onAddVendor={() => setDialogOpen(true)} />
@@ -103,6 +130,7 @@ export const VendorList = () => {
             <VendorMainList
               vendors={filteredVendors}
               onEdit={handleEdit}
+              onDelete={handleDelete}
             />
           </div>
         </TabsContent>
@@ -111,6 +139,7 @@ export const VendorList = () => {
           <EmergencyContactList
             vendors={emergencyContacts}
             onEdit={handleEdit}
+            onDelete={handleDelete}
           />
         </TabsContent>
 
