@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Plus } from "lucide-react";
-import { fr } from "date-fns/locale";
 
 interface AddTaskDialogProps {
   onAddTask: (task: {
@@ -62,7 +61,6 @@ export const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
               mode="single"
               selected={date}
               onSelect={setDate}
-              locale={fr}
               required
             />
           </div>

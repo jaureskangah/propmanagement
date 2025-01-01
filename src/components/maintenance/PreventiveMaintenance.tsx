@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { fr } from "date-fns/locale";
 import { format } from "date-fns";
 import { AddTaskDialog } from "./AddTaskDialog";
 import { TaskList } from "./TaskList";
@@ -108,7 +107,6 @@ export const PreventiveMaintenance = () => {
             selected={selectedDate}
             onSelect={setSelectedDate}
             className="rounded-md border"
-            locale={fr}
             modifiers={{
               hasTasks: (date) => getTasksForDate(date) > 0,
             }}

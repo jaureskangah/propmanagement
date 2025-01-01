@@ -1,6 +1,5 @@
 import React from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { fr } from "date-fns/locale";
 import { VendorIntervention } from "@/types/vendor";
 import { Badge } from "@/components/ui/badge";
 
@@ -24,14 +23,13 @@ export const InterventionCalendar = ({ interventions }: InterventionCalendarProp
   return (
     <div className="space-y-4">
       <div className="flex gap-2">
-        <Badge variant="default">Intervention planifiée</Badge>
+        <Badge variant="default">Scheduled intervention</Badge>
       </div>
       <Calendar
         mode="multiple"
         selected={modifiers.intervention}
         modifiers={modifiers}
         modifiersStyles={modifiersStyles}
-        locale={fr}
         className="rounded-md border"
       />
     </div>
