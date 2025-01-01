@@ -1,5 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/lib/supabase";
 
 interface VendorStatusFieldsProps {
   vendor: string;
@@ -14,6 +16,25 @@ export const VendorStatusFields = ({
   status,
   setStatus,
 }: VendorStatusFieldsProps) => {
+  const { data: vendors = [] } = useQuery({
+    queryKey: ['vendors'],
+    queryFn: async () => {
+      console.log("Fetching vendors...");
+      const { data, error } = await supabase
+        .from('vendors')
+        .select('id, name')
+        .order('name');
+      
+      if (error) {
+        console.error("Error fetching vendors:", error);
+        throw error;
+      }
+      
+      console.log("Fetched vendors:", data);
+      return data;
+    },
+  });
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
@@ -23,9 +44,11 @@ export const VendorStatusFields = ({
             <SelectValue placeholder="Sélectionner un prestataire" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="1">John's Plumbing</SelectItem>
-            <SelectItem value="2">Cool Air Services</SelectItem>
-            <SelectItem value="3">Electric Pro</SelectItem>
+            {vendors.map((vendor) => (
+              <SelectItem key={vendor.id} value={vendor.id}>
+                {vendor.name}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
