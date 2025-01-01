@@ -96,19 +96,19 @@ export const VendorList = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Prestataires</h2>
+        <h2 className="text-xl font-semibold">Vendors</h2>
         <Button onClick={() => setDialogOpen(true)} className="flex items-center gap-2">
           <Plus className="h-4 w-4" />
-          Ajouter un Prestataire
+          Add Vendor
         </Button>
       </div>
 
       <Tabs defaultValue="all" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="all">Tous les Prestataires</TabsTrigger>
-          <TabsTrigger value="emergency">Contacts d'Urgence</TabsTrigger>
-          <TabsTrigger value="reviews">Évaluations</TabsTrigger>
-          <TabsTrigger value="history">Historique</TabsTrigger>
+          <TabsTrigger value="all">All Vendors</TabsTrigger>
+          <TabsTrigger value="emergency">Emergency Contacts</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          <TabsTrigger value="history">History</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">
@@ -138,7 +138,7 @@ export const VendorList = () => {
         <TabsContent value="reviews">
           <div className="space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold">Évaluations des prestataires</h3>
+              <h3 className="text-lg font-semibold">Vendor Reviews</h3>
               <Select
                 value={selectedVendorForReview?.id || ""}
                 onValueChange={(value) => {
@@ -153,7 +153,7 @@ export const VendorList = () => {
                 }}
               >
                 <SelectTrigger className="w-[250px]">
-                  <SelectValue placeholder="Sélectionner un prestataire" />
+                  <SelectValue placeholder="Select a vendor" />
                 </SelectTrigger>
                 <SelectContent>
                   {vendors.map((vendor) => (
@@ -168,7 +168,6 @@ export const VendorList = () => {
             <VendorReviewList 
               reviews={reviews} 
               onEdit={(review) => {
-                // Implement edit functionality
                 console.log('Edit review:', review);
               }}
               onRefresh={refetchReviews}

@@ -43,12 +43,12 @@ export const VendorCard = ({ vendor, isEmergencyView, onEdit, onDelete }: Vendor
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p><strong>Spécialité:</strong> {vendor.specialty}</p>
-          <p><strong>Téléphone:</strong> {vendor.phone}</p>
+          <p><strong>Specialty:</strong> {vendor.specialty}</p>
+          <p><strong>Phone:</strong> {vendor.phone}</p>
           <p><strong>Email:</strong> {vendor.email}</p>
-          <p><strong>Note:</strong> {vendor.rating}/5</p>
+          <p><strong>Rating:</strong> {vendor.rating}/5</p>
           {vendor.emergency_contact && (
-            <p className="text-red-500 font-semibold">Contact d'urgence</p>
+            <p className="text-red-500 font-semibold">Emergency contact</p>
           )}
           
           {vendor.photos && vendor.photos.length > 0 && (
@@ -96,10 +96,10 @@ export const VendorCard = ({ vendor, isEmergencyView, onEdit, onDelete }: Vendor
 
           <div className="flex gap-2 mt-4">
             <Button variant="outline" size="sm" onClick={() => onEdit(vendor)}>
-              Modifier
+              Edit
             </Button>
             <Button variant="destructive" size="sm" onClick={() => onDelete(vendor)}>
-              Supprimer
+              Delete
             </Button>
           </div>
         </div>

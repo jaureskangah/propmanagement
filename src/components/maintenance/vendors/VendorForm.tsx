@@ -12,10 +12,10 @@ import { FileUploadField } from "./form/FileUploadField";
 import { VendorFormValues } from "@/types/vendor";
 
 const vendorFormSchema = z.object({
-  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
-  specialty: z.string().min(2, "La spécialité doit contenir au moins 2 caractères"),
-  phone: z.string().min(10, "Le numéro de téléphone doit contenir au moins 10 caractères"),
-  email: z.string().email("Email invalide"),
+  name: z.string().min(2, "The name must be at least 2 characters long"),
+  specialty: z.string().min(2, "The specialty must be at least 2 characters long"),
+  phone: z.string().min(10, "The phone number must be at least 10 characters long"),
+  email: z.string().email("Invalid email"),
   emergency_contact: z.boolean().default(false),
   documents: z.array(z.instanceof(File)).optional(),
   photos: z.array(z.instanceof(File)).optional(),
@@ -76,8 +76,8 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
   const onSubmit = async (data: VendorFormValues) => {
     if (!user?.id) {
       toast({
-        title: "Erreur",
-        description: "Vous devez être connecté pour effectuer cette action",
+        title: "Error",
+        description: "You must be logged in to perform this action",
         variant: "destructive",
       });
       return;
@@ -140,13 +140,13 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
         }
       }
 
-      toast({ title: defaultValues ? "Prestataire mis à jour" : "Prestataire ajouté" });
+      toast({ title: defaultValues ? "Vendor updated" : "Vendor added" });
       onSuccess();
     } catch (error) {
       console.error("Error saving vendor:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'enregistrement",
+        title: "Error",
+        description: "An error occurred while saving",
         variant: "destructive",
       });
     } finally {
@@ -183,10 +183,10 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
             onClick={onCancel}
             disabled={isSubmitting}
           >
-            Annuler
+            Cancel
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Enregistrement..." : defaultValues ? "Mettre à jour" : "Ajouter"}
+            {isSubmitting ? "Saving..." : defaultValues ? "Update" : "Add"}
           </Button>
         </div>
       </form>

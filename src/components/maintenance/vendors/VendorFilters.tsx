@@ -32,7 +32,7 @@ export const VendorFilters = ({
       <div className="relative">
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Rechercher un prestataire..."
+          placeholder="Search vendors..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-8"
@@ -44,7 +44,7 @@ export const VendorFilters = ({
           variant={selectedSpecialty === null ? "default" : "outline"}
           onClick={() => onSpecialtyChange(null)}
         >
-          Toutes les spécialités
+          All specialties
         </Button>
         {specialties.map(specialty => (
           <Button
@@ -63,13 +63,13 @@ export const VendorFilters = ({
           onValueChange={(value) => onRatingChange(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Filtrer par note" />
+            <SelectValue placeholder="Filter by rating" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes les notes</SelectItem>
-            <SelectItem value="4">4+ étoiles</SelectItem>
-            <SelectItem value="3">3+ étoiles</SelectItem>
-            <SelectItem value="2">2+ étoiles</SelectItem>
+            <SelectItem value="all">All ratings</SelectItem>
+            <SelectItem value="4">4+ stars</SelectItem>
+            <SelectItem value="3">3+ stars</SelectItem>
+            <SelectItem value="2">2+ stars</SelectItem>
           </SelectContent>
         </Select>
 
@@ -78,7 +78,7 @@ export const VendorFilters = ({
           onClick={() => onEmergencyChange(!showEmergencyOnly)}
           className="gap-2"
         >
-          {showEmergencyOnly ? "Tous les prestataires" : "Contacts d'urgence uniquement"}
+          {showEmergencyOnly ? "All vendors" : "Emergency contacts only"}
         </Button>
       </div>
     </div>

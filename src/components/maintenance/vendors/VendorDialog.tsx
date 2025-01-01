@@ -36,7 +36,7 @@ export const VendorDialog = ({
       <DialogContent className="sm:max-w-[425px] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>
-            {vendor ? "Modifier le prestataire" : "Ajouter un prestataire"}
+            {vendor ? "Edit Vendor" : "Add Vendor"}
           </DialogTitle>
         </DialogHeader>
         <ScrollArea className="h-full max-h-[calc(90vh-120px)] pr-4">
