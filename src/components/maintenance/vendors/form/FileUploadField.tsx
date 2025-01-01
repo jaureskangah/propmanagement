@@ -42,13 +42,13 @@ export const FileUploadField = ({
           </FormControl>
           {existingFiles && existingFiles.length > 0 && (
             <div className="mt-2">
-              <p className="text-sm text-gray-500 mb-2">Fichiers existants:</p>
+              <p className="text-sm text-gray-500 mb-2">Existing files:</p>
               <div className="grid grid-cols-2 gap-2">
                 {existingFiles.map((file, index) => (
                   <AspectRatio key={index} ratio={16 / 9}>
                     <img
                       src={file}
-                      alt={`Fichier ${index + 1}`}
+                      alt={`File ${index + 1}`}
                       className="rounded-md object-cover w-full h-full"
                     />
                   </AspectRatio>

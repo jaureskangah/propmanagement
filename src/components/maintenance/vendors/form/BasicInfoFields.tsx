@@ -16,9 +16,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Nom</FormLabel>
+            <FormLabel>Name</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input placeholder="Enter vendor name" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -30,9 +30,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="specialty"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Spécialité</FormLabel>
+            <FormLabel>Specialty</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input placeholder="Enter vendor specialty" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -44,9 +44,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Téléphone</FormLabel>
+            <FormLabel>Phone</FormLabel>
             <FormControl>
-              <Input {...field} type="tel" />
+              <Input type="tel" placeholder="Enter phone number" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -60,7 +60,7 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
           <FormItem>
             <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input {...field} type="email" />
+              <Input type="email" placeholder="Enter email address" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -78,7 +78,7 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
                 onPressedChange={field.onChange}
                 className="data-[state=on]:bg-red-500"
               >
-                Contact urgent
+                Emergency Contact
               </Toggle>
             </div>
             <FormMessage />
