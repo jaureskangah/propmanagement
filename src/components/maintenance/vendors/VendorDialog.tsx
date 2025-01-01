@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { VendorForm } from "./VendorForm";
@@ -36,8 +37,13 @@ export const VendorDialog = ({
       <DialogContent className="sm:max-w-[425px] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>
-            {vendor ? "Edit Vendor" : "Add Vendor"}
+            {vendor ? "Edit Vendor" : "Add New Vendor"}
           </DialogTitle>
+          <DialogDescription>
+            {vendor 
+              ? "Update the vendor's information below." 
+              : "Fill in the vendor's information below."}
+          </DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-full max-h-[calc(90vh-120px)] pr-4">
           <VendorForm
