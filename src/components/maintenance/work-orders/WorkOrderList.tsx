@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { WorkOrderCard } from "./WorkOrderCard";
 import { WorkOrderFilters } from "./WorkOrderFilters";
+import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
 
 interface WorkOrder {
   id: number;
@@ -17,13 +18,14 @@ interface WorkOrder {
 
 interface WorkOrderListProps {
   workOrders: WorkOrder[];
-  onCreateWorkOrder: () => void;
+  propertyId: string;
 }
 
-export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListProps) => {
+export const WorkOrderList = ({ workOrders, propertyId }: WorkOrderListProps) => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "cost">("date");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   // Filter and sort work orders
   const filteredAndSortedOrders = useMemo(() => {
@@ -44,11 +46,19 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
       });
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
+  const handleCreateSuccess = () => {
+    // Refresh work orders list
+    console.log("Work order created successfully");
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Ordres de Travail</h2>
-        <Button onClick={onCreateWorkOrder} className="flex items-center gap-2">
+        <Button 
+          onClick={() => setIsCreateDialogOpen(true)} 
+          className="flex items-center gap-2"
+        >
           <Plus className="h-4 w-4" />
           Créer un Ordre
         </Button>
@@ -68,6 +78,13 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
           <WorkOrderCard key={order.id} order={order} />
         ))}
       </div>
+
+      <CreateWorkOrderDialog
+        isOpen={isCreateDialogOpen}
+        onClose={() => setIsCreateDialogOpen(false)}
+        onSuccess={handleCreateSuccess}
+        propertyId={propertyId}
+      />
     </>
   );
 };
