@@ -13,7 +13,7 @@ interface MonthlyExpensesChartProps {
 export const MonthlyExpensesChart = ({ expenses }: MonthlyExpensesChartProps) => {
   const monthlyData = useMemo(() => {
     const data = new Array(12).fill(0).map((_, index) => ({
-      month: new Date(2024, index).toLocaleString('default', { month: 'short' }),
+      month: new Date(2024, index).toLocaleString('en-US', { month: 'short' }),
       total: 0,
     }));
 

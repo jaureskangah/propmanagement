@@ -20,7 +20,7 @@ export const ExpensesTrendChart = ({ expenses }: ExpensesTrendChartProps) => {
     return sortedExpenses.map(expense => {
       cumulative += expense.amount;
       return {
-        date: new Date(expense.date).toLocaleDateString(),
+        date: new Date(expense.date).toLocaleDateString('en-US'),
         total: cumulative,
       };
     });
