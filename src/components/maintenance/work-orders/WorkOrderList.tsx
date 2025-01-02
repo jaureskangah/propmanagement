@@ -1,13 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { WorkOrderCard } from "./WorkOrderCard";
 import { WorkOrderFilters } from "./WorkOrderFilters";
 import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
 import { useToast } from "@/hooks/use-toast";
-import { WorkOrder } from "@/types/workOrder";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { useWorkOrders } from "./hooks/useWorkOrders";
 
 interface WorkOrderListProps {
   propertyId: string;
@@ -20,49 +18,16 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const { data: workOrders = [], isLoading, refetch } = useQuery({
-    queryKey: ['work-orders'],
-    queryFn: async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("Not authenticated");
-
-      const { data: orders, error } = await supabase
-        .from('vendor_interventions')
-        .select(`
-          *,
-          vendors (
-            name
-          )
-        `)
-        .eq('user_id', userData.user.id);
-
-      if (error) throw error;
-
-      return orders.map(order => ({
-        ...order,
-        vendor: order.vendors?.name || 'Unknown Vendor'
-      }));
-    },
+  const { 
+    workOrders, 
+    isLoading, 
+    refetch,
+    filteredAndSortedOrders 
+  } = useWorkOrders({
+    statusFilter,
+    searchQuery,
+    sortBy
   });
-
-  // Filter and sort work orders
-  const filteredAndSortedOrders = useMemo(() => {
-    return workOrders
-      .filter((order) => {
-        const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-        const matchesSearch = 
-          order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.description.toLowerCase().includes(searchQuery.toLowerCase());
-        return matchesStatus && matchesSearch;
-      })
-      .sort((a, b) => {
-        if (sortBy === "date") {
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        } else {
-          return (b.cost || 0) - (a.cost || 0);
-        }
-      });
-  }, [workOrders, statusFilter, searchQuery, sortBy]);
 
   const handleCreateSuccess = () => {
     refetch();
