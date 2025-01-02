@@ -59,6 +59,9 @@ const Tenants = () => {
   };
 
   const filteredTenants = tenants?.map(mapTenantData).filter(filterTenants);
+  const selectedTenantData = selectedTenant 
+    ? filteredTenants?.find(tenant => tenant.id === selectedTenant) 
+    : null;
 
   const handleAddTenant = async (data: any) => {
     if (!user) {
