@@ -51,7 +51,7 @@ export function DashboardMetric({
           {chartData.length > 0 && (
             <div className="h-16 mt-3">
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData} baseValue="dataMin">
+                <AreaChart data={chartData} baseValue={0}>
                   <defs>
                     <linearGradient id={`gradient-${title}`} x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor={chartColor} stopOpacity={0.3} />
@@ -66,7 +66,6 @@ export function DashboardMetric({
                     strokeWidth={2}
                     dot={false}
                     animationDuration={1000}
-                    baseLine={0}
                   />
                 </AreaChart>
               </ResponsiveContainer>
