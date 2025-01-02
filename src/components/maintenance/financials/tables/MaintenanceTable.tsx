@@ -13,6 +13,10 @@ interface MaintenanceTableProps {
     description: string;
     cost: number;
     date: string;
+    property?: {
+      name: string;
+    };
+    unit_number?: string;
   }[];
 }
 
@@ -28,6 +32,8 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
           <TableHeader>
             <TableRow>
               <TableHead>Description</TableHead>
+              <TableHead>Property</TableHead>
+              <TableHead>Unit</TableHead>
               <TableHead>Cost</TableHead>
               <TableHead>Date</TableHead>
             </TableRow>
@@ -36,6 +42,8 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
             {maintenance.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{item.description}</TableCell>
+                <TableCell>{item.property?.name || 'N/A'}</TableCell>
+                <TableCell>{item.unit_number || 'N/A'}</TableCell>
                 <TableCell>${item.cost.toLocaleString()}</TableCell>
                 <TableCell>{item.date}</TableCell>
               </TableRow>
