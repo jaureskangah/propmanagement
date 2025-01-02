@@ -51,11 +51,12 @@ export function DashboardMetric({
                   <Info className="h-4 w-4 text-muted-foreground/70 hover:text-muted-foreground cursor-help" />
                 </TooltipTrigger>
                 <TooltipContent 
-                  className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700"
-                  side="top"
+                  className="bg-white dark:bg-gray-800 p-4 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 w-64"
+                  side="bottom"
                   sideOffset={5}
+                  align="start"
                 >
-                  <p className="text-sm text-gray-700 dark:text-gray-300 max-w-[200px] leading-relaxed">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
                     {tooltip}
                   </p>
                 </TooltipContent>
