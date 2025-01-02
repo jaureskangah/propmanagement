@@ -1,13 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Info } from "lucide-react";
 
 interface DashboardMetricProps {
   title: string;
@@ -19,7 +12,6 @@ interface DashboardMetricProps {
   trendValue?: string;
   chartData?: Array<{ value: number }>;
   chartColor?: string;
-  tooltip?: string;
 }
 
 export function DashboardMetric({ 
@@ -32,7 +24,6 @@ export function DashboardMetric({
   trendValue,
   chartData = [],
   chartColor = "#1E40AF",
-  tooltip
 }: DashboardMetricProps) {
   return (
     <Card className={cn(
@@ -40,30 +31,9 @@ export function DashboardMetric({
       className
     )}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <div className="flex items-center gap-2">
-          <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
-            {title}
-          </CardTitle>
-          {tooltip && (
-            <TooltipProvider>
-              <Tooltip delayDuration={300}>
-                <TooltipTrigger asChild>
-                  <Info className="h-4 w-4 text-muted-foreground/70 hover:text-muted-foreground cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent 
-                  className="bg-white dark:bg-gray-800 p-4 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700 w-64"
-                  side="bottom"
-                  sideOffset={5}
-                  align="start"
-                >
-                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                    {tooltip}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
+        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+          {title}
+        </CardTitle>
         <div className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 text-primary">
           {icon}
         </div>
