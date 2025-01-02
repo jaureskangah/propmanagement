@@ -3,7 +3,7 @@ import { Calendar, ClipboardList, Users, DollarSign } from "lucide-react";
 import { PreventiveMaintenance } from "../PreventiveMaintenance";
 import { WorkOrderList } from "../work-orders/WorkOrderList";
 import { VendorList } from "../vendors/VendorList";
-import { PropertyFinancials } from "../PropertyFinancials";
+import PropertyFinancials from "@/components/PropertyFinancials";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -15,6 +15,9 @@ interface MaintenanceTabsProps {
 }
 
 export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTabsProps) => {
+  console.log("MaintenanceTabs - propertyId:", propertyId);
+  console.log("MaintenanceTabs - mockFinancialData:", mockFinancialData);
+
   return (
     <Tabs defaultValue="preventive" className="space-y-4">
       <TabsList className="w-full justify-start bg-background border-b p-0 h-auto overflow-x-auto flex-nowrap">
@@ -61,7 +64,11 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
       </TabsContent>
 
       <TabsContent value="financials" className="animate-fade-in">
-        <PropertyFinancials {...mockFinancialData} />
+        <PropertyFinancials 
+          propertyId={mockFinancialData.propertyId}
+          expenses={mockFinancialData.expenses}
+          maintenance={mockFinancialData.maintenance}
+        />
       </TabsContent>
     </Tabs>
   );
