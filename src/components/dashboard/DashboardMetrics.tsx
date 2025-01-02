@@ -1,7 +1,7 @@
 import { DashboardMetric } from "@/components/DashboardMetric";
 import { Building2, Users, Wrench, DollarSign, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { DateRange } from "./DashboardDateFilter";
-import { isWithinInterval } from "date-fns";
+import { isWithinInterval, subMonths } from "date-fns";
 
 interface DashboardMetricsProps {
   propertiesData: any[];
@@ -31,6 +31,30 @@ export const DashboardMetrics = ({
     })
   ) || [];
 
+  // Generate chart data for the last 6 months
+  const generateMonthlyData = (data: any[], valueKey: string = 'amount') => {
+    const last6Months = Array.from({ length: 6 }, (_, i) => {
+      const date = subMonths(new Date(), i);
+      return {
+        month: date.getMonth(),
+        year: date.getFullYear(),
+        value: 0
+      };
+    }).reverse();
+
+    data.forEach(item => {
+      const date = new Date(item.created_at);
+      const monthIndex = last6Months.findIndex(m => 
+        m.month === date.getMonth() && m.year === date.getFullYear()
+      );
+      if (monthIndex !== -1) {
+        last6Months[monthIndex].value += Number(item[valueKey] || 0);
+      }
+    });
+
+    return last6Months;
+  };
+
   const totalProperties = propertiesData?.length || 0;
   const totalTenants = filteredTenantsData.length;
   const pendingMaintenance = filteredMaintenanceData.filter(req => req.status === "Pending").length;
@@ -48,6 +72,12 @@ export const DashboardMetrics = ({
     })
   ).length || 0;
 
+  // Generate chart data
+  const revenueChartData = generateMonthlyData(tenantsData, 'rent_amount');
+  const maintenanceChartData = generateMonthlyData(maintenanceData);
+  const tenantsChartData = generateMonthlyData(tenantsData).map(m => ({ value: m.value || 0 }));
+  const propertiesChartData = generateMonthlyData(propertiesData).map(m => ({ value: m.value || 1 }));
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <DashboardMetric
@@ -60,6 +90,8 @@ export const DashboardMetrics = ({
             <span>{newPropertiesThisMonth} new this month</span>
           </div>
         }
+        chartData={propertiesChartData}
+        chartColor="#1E40AF"
       />
       <DashboardMetric
         title="Tenants"
@@ -71,6 +103,8 @@ export const DashboardMetrics = ({
             <span>{occupancyRate}% occupancy rate</span>
           </div>
         }
+        chartData={tenantsChartData}
+        chartColor="#4F46E5"
       />
       <DashboardMetric
         title="Maintenance"
@@ -82,6 +116,8 @@ export const DashboardMetrics = ({
             <span>{pendingMaintenance} pending requests</span>
           </div>
         }
+        chartData={maintenanceChartData}
+        chartColor="#D97706"
       />
       <DashboardMetric
         title="Monthly Revenue"
@@ -93,6 +129,8 @@ export const DashboardMetrics = ({
             <span>Based on current leases</span>
           </div>
         }
+        chartData={revenueChartData}
+        chartColor="#059669"
       />
     </div>
   );

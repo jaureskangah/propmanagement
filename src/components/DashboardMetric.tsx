@@ -1,12 +1,17 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
 interface DashboardMetricProps {
   title: string;
   value: string;
   icon: React.ReactNode;
   description?: React.ReactNode;
-  className?: string; // Added className prop to the interface
+  className?: string;
+  trend?: "up" | "down";
+  trendValue?: string;
+  chartData?: Array<{ value: number }>;
+  chartColor?: string;
 }
 
 export function DashboardMetric({ 
@@ -14,7 +19,11 @@ export function DashboardMetric({
   value, 
   icon, 
   description,
-  className 
+  className,
+  trend,
+  trendValue,
+  chartData = [],
+  chartColor = "#1E40AF"
 }: DashboardMetricProps) {
   return (
     <Card className={cn(
@@ -30,14 +39,39 @@ export function DashboardMetric({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1">
-          {value}
-        </div>
-        {description && (
-          <div className="mt-2 text-xs opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
-            {description}
+        <div className="flex flex-col space-y-2">
+          <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1">
+            {value}
           </div>
-        )}
+          {description && (
+            <div className="text-xs text-muted-foreground">
+              {description}
+            </div>
+          )}
+          {chartData.length > 0 && (
+            <div className="h-16 mt-3">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={chartData}>
+                  <defs>
+                    <linearGradient id={`gradient-${title}`} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor={chartColor} stopOpacity={0.3} />
+                      <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <Area
+                    type="monotone"
+                    dataKey="value"
+                    stroke={chartColor}
+                    fill={`url(#gradient-${title})`}
+                    strokeWidth={2}
+                    dot={false}
+                    animationDuration={1000}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          )}
+        </div>
       </CardContent>
     </Card>
   );
