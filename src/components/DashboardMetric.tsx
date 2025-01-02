@@ -46,12 +46,18 @@ export function DashboardMetric({
           </CardTitle>
           {tooltip && (
             <TooltipProvider>
-              <Tooltip>
+              <Tooltip delayDuration={300}>
                 <TooltipTrigger asChild>
                   <Info className="h-4 w-4 text-muted-foreground/70 hover:text-muted-foreground cursor-help" />
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p className="max-w-xs">{tooltip}</p>
+                <TooltipContent 
+                  className="bg-white dark:bg-gray-800 p-3 shadow-lg rounded-lg border border-gray-200 dark:border-gray-700"
+                  side="top"
+                  sideOffset={5}
+                >
+                  <p className="text-sm text-gray-700 dark:text-gray-300 max-w-[200px] leading-relaxed">
+                    {tooltip}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
