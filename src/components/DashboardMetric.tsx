@@ -44,7 +44,7 @@ export function DashboardMetric({
             {value}
           </div>
           {description && (
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-muted-foreground dark:text-gray-300">
               {description}
             </div>
           )}
