@@ -29,9 +29,9 @@ export const CommunicationDetailsDialog = ({
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'read':
-        return <Badge variant="secondary">Lu</Badge>;
+        return <Badge variant="secondary">Read</Badge>;
       case 'unread':
-        return <Badge variant="default">Non lu</Badge>;
+        return <Badge variant="default">Unread</Badge>;
       default:
         return null;
     }
@@ -57,7 +57,7 @@ export const CommunicationDetailsDialog = ({
                 <span>{formatDate(communication.created_at)}</span>
                 {getStatusBadge(communication.status)}
               </div>
-              <p className="text-sm">{communication.content || "Aucun contenu"}</p>
+              <p className="text-sm">{communication.content || "No content"}</p>
             </>
           )}
         </div>

@@ -70,8 +70,8 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
   const handleCreateCommunication = async () => {
     if (!tenantId) {
       toast({
-        title: "Erreur",
-        description: "ID du locataire manquant",
+        title: "Error",
+        description: "Missing tenant ID",
         variant: "destructive",
       });
       return;
@@ -91,8 +91,8 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
       if (error) throw error;
 
       toast({
-        title: "Succès",
-        description: "Communication créée avec succès",
+        title: "Success",
+        description: "Communication created successfully",
       });
 
       setIsNewCommDialogOpen(false);
@@ -100,8 +100,8 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
     } catch (error) {
       console.error("Error creating communication:", error);
       toast({
-        title: "Erreur",
-        description: "Erreur lors de la création de la communication",
+        title: "Error",
+        description: "Error creating communication",
         variant: "destructive",
       });
     }
@@ -118,14 +118,14 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
       if (error) throw error;
 
       toast({
-        title: "Succès",
-        description: `Communication marquée comme ${newStatus === 'read' ? 'lue' : 'non lue'}`,
+        title: "Success",
+        description: `Communication marked as ${newStatus === 'read' ? 'read' : 'unread'}`,
       });
     } catch (error) {
       console.error("Error updating communication status:", error);
       toast({
-        title: "Erreur",
-        description: "Erreur lors de la mise à jour du statut",
+        title: "Error",
+        description: "Error updating status",
         variant: "destructive",
       });
     }
@@ -136,14 +136,14 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CardTitle className="text-lg">Historique des Communications</CardTitle>
+            <CardTitle className="text-lg">Communications History</CardTitle>
           </div>
           <Button 
             onClick={() => setIsNewCommDialogOpen(true)}
             className="flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            Nouvelle communication
+            New Communication
           </Button>
         </div>
       </CardHeader>

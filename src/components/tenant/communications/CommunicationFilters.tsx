@@ -26,7 +26,7 @@ export const CommunicationFilters = ({
       <div className="relative flex-1">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Rechercher dans les communications..."
+          placeholder="Search communications..."
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-9"
@@ -38,7 +38,7 @@ export const CommunicationFilters = ({
           size="sm"
           onClick={() => onTypeChange(null)}
         >
-          Tous
+          All
         </Button>
         {communicationTypes.map((type) => (
           <Button

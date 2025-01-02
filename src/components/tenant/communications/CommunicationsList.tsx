@@ -1,5 +1,5 @@
 import { Communication } from "@/types/tenant";
-import { MessageSquare, Search, Calendar, Mail, MessageCircle, Bell } from "lucide-react";
+import { MessageSquare, Mail, MessageCircle, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatDate } from "@/lib/utils";
@@ -33,9 +33,9 @@ export const CommunicationsList = ({
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'read':
-        return <Badge variant="secondary">Lu</Badge>;
+        return <Badge variant="secondary">Read</Badge>;
       case 'unread':
-        return <Badge variant="default">Non lu</Badge>;
+        return <Badge variant="default">Unread</Badge>;
       default:
         return null;
     }
@@ -46,7 +46,7 @@ export const CommunicationsList = ({
       <div className="text-center py-8 border-2 border-dashed rounded-lg">
         <MessageSquare className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
         <p className="text-sm text-muted-foreground">
-          Aucune communication trouvée
+          No communications found
         </p>
       </div>
     );

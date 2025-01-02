@@ -27,7 +27,7 @@ export const NewCommunicationDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nouvelle Communication</DialogTitle>
+          <DialogTitle>New Communication</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-4">
           <Select
@@ -35,7 +35,7 @@ export const NewCommunicationDialog = ({
             onValueChange={(value) => onDataChange({ ...newCommData, type: value })}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Type de communication" />
+              <SelectValue placeholder="Communication type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="email">Email</SelectItem>
@@ -44,18 +44,18 @@ export const NewCommunicationDialog = ({
             </SelectContent>
           </Select>
           <Input
-            placeholder="Sujet"
+            placeholder="Subject"
             value={newCommData.subject}
             onChange={(e) => onDataChange({ ...newCommData, subject: e.target.value })}
           />
           <Textarea
-            placeholder="Contenu"
+            placeholder="Content"
             value={newCommData.content}
             onChange={(e) => onDataChange({ ...newCommData, content: e.target.value })}
             rows={4}
           />
           <Button onClick={onSubmit} className="w-full">
-            Créer
+            Create
           </Button>
         </div>
       </DialogContent>
