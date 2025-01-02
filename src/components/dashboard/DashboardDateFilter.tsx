@@ -72,15 +72,15 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
     <div className="mb-6">
       <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
         <SelectTrigger className="w-[200px]">
-          <SelectValue placeholder="Sélectionner une période" />
+          <SelectValue placeholder="Select a period" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="this_month">Ce mois</SelectItem>
-          <SelectItem value="last_month">Mois dernier</SelectItem>
-          <SelectItem value="last_3_months">3 derniers mois</SelectItem>
-          <SelectItem value="last_6_months">6 derniers mois</SelectItem>
-          <SelectItem value="this_year">Cette année</SelectItem>
-          <SelectItem value="last_year">Année dernière</SelectItem>
+          <SelectItem value="this_month">This month</SelectItem>
+          <SelectItem value="last_month">Last month</SelectItem>
+          <SelectItem value="last_3_months">Last 3 months</SelectItem>
+          <SelectItem value="last_6_months">Last 6 months</SelectItem>
+          <SelectItem value="this_year">This year</SelectItem>
+          <SelectItem value="last_year">Last year</SelectItem>
         </SelectContent>
       </Select>
     </div>
