@@ -28,7 +28,7 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
           name,
           rent_amount,
           lease_end,
-          tenant_payments (
+          tenant_payments!inner (
             amount,
             status,
             payment_date
@@ -44,7 +44,7 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
 
       console.log("Rent roll data fetched:", tenants);
       
-      return tenants.map(tenant => {
+      return tenants?.map(tenant => {
         // Get the most recent payment
         const latestPayment = tenant.tenant_payments
           ?.sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime())[0];
@@ -60,7 +60,7 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
             status: latestPayment.status
           } : null
         };
-      });
+      }) || [];
     },
   });
 
