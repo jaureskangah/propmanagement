@@ -5,7 +5,7 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useProperties, Property } from "@/hooks/useProperties";
-import { Loader2, Search, Building2, Info } from "lucide-react";
+import { Loader2, Search, Info } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -106,8 +106,7 @@ const Properties = () => {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Building2 className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold">
               Properties Management
             </h1>
             <p className="text-muted-foreground mt-1">
