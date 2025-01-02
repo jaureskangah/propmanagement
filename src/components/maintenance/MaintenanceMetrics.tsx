@@ -21,18 +21,17 @@ export const MaintenanceMetrics = ({
   resolvedRequests,
   urgentRequests,
 }: MaintenanceMetricsProps) => {
-  // Calculate trends (example values - you might want to calculate these based on historical data)
   const pendingTrend = pendingRequests > 5 ? "up" : "down";
   const resolutionRate = totalRequests > 0 ? (resolvedRequests / totalRequests) * 100 : 0;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 animate-fade-in">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 animate-fade-in">
       <DashboardMetric
         title="Total Requests"
         value={totalRequests.toString()}
         icon={<Wrench className="h-4 w-4 text-blue-500 animate-pulse" />}
         description={
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 text-sm">
             <span>{resolutionRate.toFixed(1)}% resolution rate</span>
           </div>
         }
@@ -45,16 +44,16 @@ export const MaintenanceMetrics = ({
         value={pendingRequests.toString()}
         icon={<HourglassIcon className="h-4 w-4 text-yellow-500 animate-spin-slow" />}
         description={
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 text-sm">
             {pendingTrend === "up" ? (
               <>
                 <TrendingUp className="h-3 w-3 text-red-500" />
-                <span className="text-red-500">Increasing trend</span>
+                <span className="text-red-500">Increasing</span>
               </>
             ) : (
               <>
                 <TrendingDown className="h-3 w-3 text-green-500" />
-                <span className="text-green-500">Decreasing trend</span>
+                <span className="text-green-500">Decreasing</span>
               </>
             )}
           </div>
@@ -68,7 +67,7 @@ export const MaintenanceMetrics = ({
         value={resolvedRequests.toString()}
         icon={<CheckCircle2 className="h-4 w-4 text-green-500 animate-bounce" />}
         description={
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 text-sm">
             <TrendingUp className="h-3 w-3 text-green-500" />
             <span className="text-green-500">Well managed</span>
           </div>
@@ -82,7 +81,7 @@ export const MaintenanceMetrics = ({
         value={urgentRequests.toString()}
         icon={<AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />}
         description={
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 text-sm">
             {urgentRequests > 0 ? (
               <>
                 <AlertTriangle className="h-3 w-3 text-red-500" />

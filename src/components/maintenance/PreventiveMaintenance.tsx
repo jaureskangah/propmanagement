@@ -79,9 +79,9 @@ export const PreventiveMaintenance = () => {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+      <Card className="lg:col-span-1">
+        <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
           <CardTitle className="flex items-center gap-2">
             <CalendarIcon className="h-5 w-5" />
             Maintenance Calendar
@@ -90,7 +90,7 @@ export const PreventiveMaintenance = () => {
             value={selectedType}
             onValueChange={(value) => setSelectedType(value)}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[140px] sm:w-[180px]">
               <SelectValue placeholder="Task type" />
             </SelectTrigger>
             <SelectContent>
@@ -106,7 +106,7 @@ export const PreventiveMaintenance = () => {
             mode="single"
             selected={selectedDate}
             onSelect={setSelectedDate}
-            className="rounded-md border"
+            className="rounded-md border w-full max-w-[400px] mx-auto"
             modifiers={{
               hasTasks: (date) => getTasksForDate(date) > 0,
             }}

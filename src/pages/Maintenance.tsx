@@ -50,11 +50,11 @@ const Maintenance = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Maintenance Management</h1>
+    <div className="container mx-auto p-3 sm:p-4 md:p-6">
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Maintenance Management</h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-        <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="lg:col-span-2 order-2 lg:order-1">
           <MaintenanceMetrics
             totalRequests={totalRequests}
             pendingRequests={pendingRequests}
@@ -62,39 +62,39 @@ const Maintenance = () => {
             urgentRequests={urgentRequests}
           />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 order-1 lg:order-2">
           <MaintenanceNotifications />
         </div>
       </div>
 
       <Tabs defaultValue="preventive" className="space-y-4">
-        <TabsList className="w-full justify-start bg-background border-b p-0 h-auto">
+        <TabsList className="w-full justify-start bg-background border-b p-0 h-auto overflow-x-auto flex-nowrap">
           <TabsTrigger 
             value="preventive"
-            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
           >
-            <Calendar className="h-4 w-4" />
-            <span>Preventive Maintenance</span>
+            <Calendar className="h-4 w-4 hidden sm:block" />
+            <span>Preventive</span>
           </TabsTrigger>
           <TabsTrigger 
             value="work-orders"
-            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
           >
-            <ClipboardList className="h-4 w-4" />
+            <ClipboardList className="h-4 w-4 hidden sm:block" />
             <span>Work Orders</span>
           </TabsTrigger>
           <TabsTrigger 
             value="vendors"
-            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
           >
-            <Users className="h-4 w-4" />
+            <Users className="h-4 w-4 hidden sm:block" />
             <span>Vendors</span>
           </TabsTrigger>
           <TabsTrigger 
             value="financials"
-            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
           >
-            <DollarSign className="h-4 w-4" />
+            <DollarSign className="h-4 w-4 hidden sm:block" />
             <span>Costs</span>
           </TabsTrigger>
         </TabsList>
