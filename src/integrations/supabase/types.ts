@@ -236,6 +236,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          status: string
           subject: string
           tenant_id: string | null
           type: string
@@ -243,6 +244,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          status?: string
           subject: string
           tenant_id?: string | null
           type: string
@@ -250,6 +252,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          status?: string
           subject?: string
           tenant_id?: string | null
           type?: string
