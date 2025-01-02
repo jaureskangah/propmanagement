@@ -14,7 +14,7 @@ interface WorkOrderCardProps {
 
 export const WorkOrderCard = ({ order, onUpdate, onDelete, onDuplicate }: WorkOrderCardProps) => {
   return (
-    <Card>
+    <Card className="group transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
       <WorkOrderHeader title={order.title} />
       <CardContent>
         <div className="space-y-2">

@@ -10,26 +10,26 @@ export const getStatusConfig = (status: string) => {
     case "In Progress":
       return {
         variant: "default" as const,
-        icon: <AlertCircle className="h-4 w-4 mr-1" />,
-        className: "bg-blue-500"
+        icon: <AlertCircle className="h-4 w-4 mr-1 animate-pulse" />,
+        className: "bg-blue-600 text-white font-medium shadow-sm"
       };
     case "Scheduled":
       return {
         variant: "secondary" as const,
-        icon: <Clock className="h-4 w-4 mr-1" />,
-        className: "bg-orange-500"
+        icon: <Clock className="h-4 w-4 mr-1 animate-spin-slow" />,
+        className: "bg-orange-500 text-white font-medium shadow-sm"
       };
     case "Completed":
       return {
         variant: "outline" as const,
         icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
-        className: "bg-green-500 text-white"
+        className: "bg-green-600 text-white font-medium shadow-sm"
       };
     default:
       return {
         variant: "default" as const,
         icon: <Wrench className="h-4 w-4 mr-1" />,
-        className: ""
+        className: "bg-gray-600 text-white font-medium shadow-sm"
       };
   }
 };
@@ -38,7 +38,7 @@ export const WorkOrderStatus = ({ status }: WorkOrderStatusProps) => {
   const statusConfig = getStatusConfig(status);
   
   return (
-    <Badge className={statusConfig.className}>
+    <Badge className={`${statusConfig.className} transition-all duration-200 hover:scale-105`}>
       <div className="flex items-center">
         {statusConfig.icon}
         {status}
