@@ -39,15 +39,23 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {maintenance.map((item, index) => (
-              <TableRow key={index}>
-                <TableCell>{item.description}</TableCell>
-                <TableCell>{item.property?.name || 'N/A'}</TableCell>
-                <TableCell>{item.unit_number || 'N/A'}</TableCell>
-                <TableCell>${item.cost.toLocaleString()}</TableCell>
-                <TableCell>{item.date}</TableCell>
+            {maintenance.length > 0 ? (
+              maintenance.map((item, index) => (
+                <TableRow key={index}>
+                  <TableCell>{item.description}</TableCell>
+                  <TableCell>{item.property?.name || 'N/A'}</TableCell>
+                  <TableCell>{item.unit_number || 'N/A'}</TableCell>
+                  <TableCell>${item.cost?.toLocaleString() || '0'}</TableCell>
+                  <TableCell>{item.date}</TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4 text-gray-500">
+                  No maintenance records found
+                </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </CardContent>
