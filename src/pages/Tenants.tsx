@@ -1,18 +1,13 @@
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Plus } from "lucide-react";
-import TenantProfile from "@/components/TenantProfile";
 import { useTenants } from "@/hooks/useTenants";
 import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
-import { AddTenantModal } from "@/components/tenant/AddTenantModal";
-import { EditTenantModal } from "@/components/tenant/EditTenantModal";
-import { DeleteTenantDialog } from "@/components/tenant/DeleteTenantDialog";
-import { TenantList } from "@/components/tenant/TenantList";
-import { TenantSearch, SearchFilters } from "@/components/tenant/TenantSearch";
+import { SearchFilters } from "@/components/tenant/TenantSearch";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
+import { TenantActions } from "@/components/tenant/TenantActions";
+import { TenantLayout } from "@/components/tenant/TenantLayout";
+import { TenantModals } from "@/components/tenant/TenantModals";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -104,72 +99,38 @@ const Tenants = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Tenants Management</h1>
-        <Button 
-          className="flex items-center gap-2 bg-[#ea384c] hover:bg-[#ea384c]/90"
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          <Plus className="h-4 w-4" />
-          Add Tenant
-        </Button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-1">
-          <div className="mb-4">
-            <TenantSearch 
-              value={searchQuery}
-              onChange={setSearchQuery}
-              onFilterChange={setSearchFilters}
-            />
-          </div>
-
-          <TenantList
-            tenants={filteredTenants || []}
-            selectedTenant={selectedTenant}
-            onTenantSelect={setSelectedTenant}
-            onEditClick={(id) => {
-              setSelectedTenant(id);
-              setIsEditModalOpen(true);
-            }}
-            onDeleteClick={(id) => {
-              setSelectedTenant(id);
-              setIsDeleteDialogOpen(true);
-            }}
-          />
-        </div>
-
-        <div className="lg:col-span-2">
-          {selectedTenantData ? (
-            <TenantProfile tenant={selectedTenantData} />
-          ) : (
-            <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-muted-foreground">Select a tenant to view details</p>
-            </Card>
-          )}
-        </div>
-      </div>
-
-      <AddTenantModal 
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleAddTenant}
+      <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
+      
+      <TenantLayout
+        filteredTenants={filteredTenants || []}
+        selectedTenant={selectedTenant}
+        searchQuery={searchQuery}
+        searchFilters={searchFilters}
+        onSearchChange={setSearchQuery}
+        onFilterChange={setSearchFilters}
+        onTenantSelect={setSelectedTenant}
+        onEditClick={(id) => {
+          setSelectedTenant(id);
+          setIsEditModalOpen(true);
+        }}
+        onDeleteClick={(id) => {
+          setSelectedTenant(id);
+          setIsDeleteDialogOpen(true);
+        }}
+        selectedTenantData={selectedTenantData}
       />
 
-      {selectedTenantData && (
-        <EditTenantModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          tenant={selectedTenantData}
-          onSubmit={handleUpdateTenant}
-        />
-      )}
-
-      <DeleteTenantDialog
-        isOpen={isDeleteDialogOpen}
-        onClose={() => setIsDeleteDialogOpen(false)}
-        onConfirm={handleDeleteTenant}
+      <TenantModals
+        isAddModalOpen={isAddModalOpen}
+        isEditModalOpen={isEditModalOpen}
+        isDeleteDialogOpen={isDeleteDialogOpen}
+        selectedTenantData={selectedTenantData}
+        onAddClose={() => setIsAddModalOpen(false)}
+        onEditClose={() => setIsEditModalOpen(false)}
+        onDeleteClose={() => setIsDeleteDialogOpen(false)}
+        onAddSubmit={handleAddTenant}
+        onEditSubmit={handleUpdateTenant}
+        onDeleteConfirm={handleDeleteTenant}
       />
     </div>
   );
