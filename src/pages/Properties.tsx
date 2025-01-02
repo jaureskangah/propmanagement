@@ -5,12 +5,12 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useProperties, Property } from "@/hooks/useProperties";
-import { Loader2, Search, Info } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Loader2, Info } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
+import EmptyState from "@/components/properties/EmptyState";
+import PropertyFilters from "@/components/properties/PropertyFilters";
 
 const PROPERTY_TYPES = [
   "All",
@@ -30,7 +30,6 @@ const Properties = () => {
   const { properties, isLoadingProperties } = useProperties();
   const { toast } = useToast();
 
-  // Mock financial data
   const mockFinancials = {
     expenses: [
       { category: "Maintenance", amount: 500, date: "2024-01-15" },
@@ -106,9 +105,7 @@ const Properties = () => {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">
-              Properties Management
-            </h1>
+            <h1 className="text-3xl font-bold">Properties Management</h1>
             <p className="text-muted-foreground mt-1">
               Manage and track all your real estate properties in one place
             </p>
@@ -123,54 +120,17 @@ const Properties = () => {
         </div>
         <Separator className="my-6" />
         
-        {/* Improved filters section */}
-        <div className="bg-slate-50 p-6 rounded-xl shadow-sm mb-8 animate-fade-in">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="w-full sm:w-64">
-              <Select 
-                value={selectedType} 
-                onValueChange={setSelectedType}
-              >
-                <SelectTrigger className="w-full bg-white border-slate-200 hover:bg-slate-50 transition-colors">
-                  <SelectValue placeholder="Filter by type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {PROPERTY_TYPES.map((type) => (
-                    <SelectItem 
-                      key={type} 
-                      value={type}
-                      className="hover:bg-slate-100 cursor-pointer"
-                    >
-                      {type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex-1 relative">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-                <Input
-                  type="text"
-                  placeholder="Search by name or address..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full bg-white border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:border-slate-300"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        <PropertyFilters
+          selectedType={selectedType}
+          setSelectedType={setSelectedType}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          propertyTypes={PROPERTY_TYPES}
+        />
       </div>
       
       {filteredProperties.length === 0 ? (
-        <div className="text-center py-12 bg-slate-50 rounded-xl animate-fade-in">
-          <p className="text-muted-foreground">
-            {properties.length === 0 
-              ? "Start by adding your first property!"
-              : "No properties match the selected filters."}
-          </p>
-        </div>
+        <EmptyState isFiltering={properties.length > 0} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProperties.map((property) => (
