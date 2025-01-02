@@ -83,7 +83,7 @@ const Tenants = () => {
   return (
     <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Tenant Management</h1>
+        <h1 className="text-2xl font-bold">Tenants Management</h1>
         <Button 
           className="flex items-center gap-2 bg-[#ea384c] hover:bg-[#ea384c]/90"
           onClick={() => setIsAddModalOpen(true)}
