@@ -7,8 +7,6 @@ interface BasicInfoFieldsProps {
   setTitle: (value: string) => void;
   description: string;
   setDescription: (value: string) => void;
-  unit: string;
-  setUnit: (value: string) => void;
 }
 
 export const BasicInfoFields = ({
@@ -16,8 +14,6 @@ export const BasicInfoFields = ({
   setTitle,
   description,
   setDescription,
-  unit,
-  setUnit,
 }: BasicInfoFieldsProps) => {
   return (
     <>
@@ -40,17 +36,6 @@ export const BasicInfoFields = ({
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Describe the work to be done..."
           className="min-h-[100px]"
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="unit">Unit Number</Label>
-        <Input
-          id="unit"
-          value={unit}
-          onChange={(e) => setUnit(e.target.value)}
-          placeholder="Ex: A101"
           required
         />
       </div>
