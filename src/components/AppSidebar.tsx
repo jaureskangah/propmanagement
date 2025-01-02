@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Building2, Home, Users, Wrench, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import { ThemeToggle } from "./ThemeToggle";
 
 const AppSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -11,7 +12,7 @@ const AppSidebar = () => {
     <div className={cn(
       "relative min-h-screen border-r px-4 py-8 transition-all duration-300",
       isCollapsed ? "w-20" : "w-64",
-      "bg-gray-100/40"
+      "bg-background"
     )}>
       <Button
         variant="ghost"
@@ -98,6 +99,13 @@ const AppSidebar = () => {
           {!isCollapsed && "Maintenance"}
         </NavLink>
       </nav>
+
+      <div className={cn(
+        "absolute bottom-4",
+        isCollapsed ? "left-1/2 -translate-x-1/2" : "left-4"
+      )}>
+        <ThemeToggle />
+      </div>
     </div>
   );
 };
