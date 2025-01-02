@@ -21,7 +21,7 @@ import {
 
 // Types
 interface WorkOrder {
-  id: string; // Changed to string to match UUID format
+  id: string;
   title: string;
   property: string;
   unit: string;
@@ -78,7 +78,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         const matchesStatus = statusFilter === "all" || order.status === statusFilter;
         const matchesSearch = 
           order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.property.toLowerCase().includes(searchQuery.toLowerCase());
+          order.property?.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesStatus && matchesSearch;
       })
       .sort((a, b) => {
@@ -154,14 +154,18 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Building className="h-4 w-4 text-gray-500" />
-                    <p><strong>Propriété:</strong> {order.property}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Home className="h-4 w-4 text-gray-500" />
-                    <p><strong>Unité:</strong> {order.unit}</p>
-                  </div>
+                  {order.property && (
+                    <div className="flex items-center gap-2">
+                      <Building className="h-4 w-4 text-gray-500" />
+                      <p><strong>Propriété:</strong> {order.property}</p>
+                    </div>
+                  )}
+                  {order.unit && (
+                    <div className="flex items-center gap-2">
+                      <Home className="h-4 w-4 text-gray-500" />
+                      <p><strong>Unité:</strong> {order.unit}</p>
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 mt-2">
                     <Badge className={statusConfig.className}>
                       <div className="flex items-center">
