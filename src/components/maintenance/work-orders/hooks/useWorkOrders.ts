@@ -34,7 +34,8 @@ export const useWorkOrders = ({ statusFilter, searchQuery, sortBy }: UseWorkOrde
       return orders.map(order => ({
         ...order,
         vendor: order.vendors?.name || 'Unknown Vendor',
-        property: order.properties?.name || undefined
+        property: order.properties?.name || undefined,
+        unit: order.unit_number || undefined // Assurez-vous que unit_number est correctement mappé
       }));
     },
   });
