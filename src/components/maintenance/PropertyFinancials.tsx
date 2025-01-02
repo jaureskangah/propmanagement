@@ -27,7 +27,7 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
       }
 
       console.log("Fetched expenses:", data);
-      return data;
+      return data || [];
     },
   });
 
@@ -56,7 +56,7 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
       }
 
       console.log("Fetched maintenance interventions:", data);
-      return data;
+      return data || [];
     },
   });
 
