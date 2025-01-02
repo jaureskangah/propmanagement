@@ -1,6 +1,6 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TenantHeader } from "./tenant/TenantHeader";
+import { TenantInfoCard } from "./tenant/profile/TenantInfoCard";
 import { TenantDocuments } from "./tenant/TenantDocuments";
 import { TenantPayments } from "./tenant/TenantPayments";
 import { TenantMaintenance } from "./tenant/TenantMaintenance";
@@ -32,7 +32,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
 
   return (
     <div className="space-y-6">
-      <TenantHeader tenant={tenant} />
+      <TenantInfoCard tenant={tenant} />
 
       <Tabs defaultValue="documents" className="w-full">
         <TabsList className="grid grid-cols-4 w-full">
