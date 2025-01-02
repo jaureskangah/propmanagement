@@ -1,4 +1,4 @@
-import { MessageSquare, Search, Calendar } from "lucide-react";
+import { MessageSquare, Search, Calendar, Mail, MessageCircle, Bell } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -58,13 +58,24 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
   const getTypeIcon = (type: string) => {
     switch (type.toLowerCase()) {
       case 'email':
-        return '📧';
+        return <Mail className="h-5 w-5 text-blue-500" />;
       case 'sms':
-        return '📱';
+        return <MessageCircle className="h-5 w-5 text-green-500" />;
       case 'notification':
-        return '🔔';
+        return <Bell className="h-5 w-5 text-yellow-500" />;
       default:
-        return '📝';
+        return <MessageSquare className="h-5 w-5 text-purple-500" />;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'read':
+        return <Badge variant="secondary">Lu</Badge>;
+      case 'unread':
+        return <Badge variant="default">Non lu</Badge>;
+      default:
+        return null;
     }
   };
 
@@ -74,7 +85,7 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5 text-purple-600" />
-            <CardTitle className="text-lg">Communication History</CardTitle>
+            <CardTitle className="text-lg">Historique des Communications</CardTitle>
           </div>
         </div>
       </CardHeader>
@@ -85,7 +96,7 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search communications..."
+                placeholder="Rechercher dans les communications..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-9"
@@ -97,7 +108,7 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
                 size="sm"
                 onClick={() => setSelectedType(null)}
               >
-                All
+                Tous
               </Button>
               {communicationTypes.map((type) => (
                 <Button
@@ -105,7 +116,9 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
                   variant={selectedType === type ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedType(type)}
+                  className="flex items-center gap-2"
                 >
+                  {getTypeIcon(type)}
                   {type}
                 </Button>
               ))}
@@ -121,12 +134,12 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
             </div>
           </div>
 
-          {/* Communications List */}
+          {/* Communications Timeline */}
           {filteredCommunications.length === 0 ? (
             <div className="text-center py-8 border-2 border-dashed rounded-lg">
               <MessageSquare className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">
-                No communications found
+                Aucune communication trouvée
               </p>
             </div>
           ) : (
@@ -139,28 +152,28 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
                       {comms.length}
                     </Badge>
                   </h3>
-                  <div className="space-y-2">
+                  <div className="space-y-2 relative before:absolute before:left-5 before:top-0 before:bottom-0 before:w-px before:bg-border">
                     {comms
                       .filter(comm => 
                         (!searchQuery || comm.subject.toLowerCase().includes(searchQuery.toLowerCase())) &&
                         (!startDate || new Date(comm.created_at) >= new Date(startDate))
                       )
-                      .map((comm) => (
+                      .map((comm, index) => (
                         <div
                           key={comm.id}
-                          className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                          className={`flex items-start gap-4 pl-10 relative animate-fade-in`}
+                          style={{ animationDelay: `${index * 50}ms` }}
                         >
-                          <div className="flex items-center gap-3">
-                            <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-purple-100 text-purple-700">
-                              <MessageSquare className="h-5 w-5" />
+                          <div className="absolute left-0 top-2 w-10 h-10 flex items-center justify-center bg-background rounded-full border z-10">
+                            {getTypeIcon(comm.type)}
+                          </div>
+                          <div className="flex-1 bg-accent/50 p-4 rounded-lg hover:bg-accent transition-colors">
+                            <div className="flex items-center justify-between mb-1">
+                              <h4 className="font-medium">{comm.subject}</h4>
+                              {getStatusBadge(comm.status || 'unread')}
                             </div>
-                            <div>
-                              <p className="font-medium">{comm.subject}</p>
-                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                <span className="capitalize">{comm.type}</span>
-                                <span>•</span>
-                                <span>{formatDate(comm.created_at)}</span>
-                              </div>
+                            <div className="text-sm text-muted-foreground">
+                              {formatDate(comm.created_at)}
                             </div>
                           </div>
                         </div>
