@@ -6,16 +6,8 @@ import { supabase } from "@/lib/supabase";
 
 interface MetricsCardsProps {
   propertyId: string;
-  expenses: {
-    category: string;
-    amount: number;
-    date: string;
-  }[];
-  maintenance: {
-    description: string;
-    cost: number;
-    date: string;
-  }[];
+  expenses: any[];
+  maintenance: any[];
   calculateROI: () => string;
 }
 
@@ -40,6 +32,16 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
     },
   });
 
+  // Calculate year-to-date totals
+  const currentYear = new Date().getFullYear();
+  const ytdExpenses = expenses
+    .filter(exp => new Date(exp.date).getFullYear() === currentYear)
+    .reduce((acc, curr) => acc + curr.amount, 0);
+
+  const ytdMaintenance = maintenance
+    .filter(m => new Date(m.date).getFullYear() === currentYear)
+    .reduce((acc, curr) => acc + (curr.cost || 0), 0);
+
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card>
@@ -62,7 +64,7 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            ${expenses.reduce((acc, curr) => acc + curr.amount, 0).toLocaleString()}
+            ${ytdExpenses.toLocaleString()}
           </div>
           <p className="text-xs text-muted-foreground">Year to date</p>
         </CardContent>
@@ -75,7 +77,7 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            ${maintenance.reduce((acc, curr) => acc + curr.cost, 0).toLocaleString()}
+            ${ytdMaintenance.toLocaleString()}
           </div>
           <p className="text-xs text-muted-foreground">Year to date</p>
         </CardContent>
