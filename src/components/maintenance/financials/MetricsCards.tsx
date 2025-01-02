@@ -12,7 +12,7 @@ interface MetricsCardsProps {
 }
 
 export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }: MetricsCardsProps) => {
-  // Fetch total rent data
+  // Fetch total rent data and payments
   const { data: rentData } = useQuery({
     queryKey: ["property_rent_data", propertyId],
     queryFn: async () => {
@@ -21,7 +21,12 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
         .from("tenants")
         .select(`
           id,
-          rent_amount
+          rent_amount,
+          tenant_payments (
+            amount,
+            status,
+            payment_date
+          )
         `)
         .eq("property_id", propertyId);
 
@@ -36,7 +41,11 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
   });
 
   // Calculate metrics
-  const totalRentRoll = rentData?.reduce((acc, tenant) => acc + (tenant.rent_amount || 0), 0) || 0;
+  const totalRentPaid = rentData?.reduce((acc, tenant) => {
+    const paidPayments = tenant.tenant_payments?.filter(p => p.status === 'paid') || [];
+    return acc + paidPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
+  }, 0) || 0;
+
   const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
 
@@ -48,8 +57,8 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">${totalRentRoll.toLocaleString()}</div>
-          <p className="text-xs text-muted-foreground">Monthly total</p>
+          <div className="text-2xl font-bold">${totalRentPaid.toLocaleString()}</div>
+          <p className="text-xs text-muted-foreground">Total paid</p>
         </CardContent>
       </Card>
 
