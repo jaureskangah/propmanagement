@@ -76,7 +76,11 @@ export const DashboardMetrics = ({
   const revenueChartData = generateMonthlyData(tenantsData, 'rent_amount');
   const maintenanceChartData = generateMonthlyData(maintenanceData);
   const tenantsChartData = generateMonthlyData(tenantsData).map(m => ({ value: m.value || 0 }));
-  const propertiesChartData = generateMonthlyData(propertiesData).map(m => ({ value: m.value || 1 }));
+  
+  // Modification ici pour normaliser les données des propriétés
+  const propertiesChartData = generateMonthlyData(propertiesData).map(m => ({ 
+    value: m.value > 0 ? 1 : 0  // On normalise à 1 si il y a des propriétés, 0 sinon
+  }));
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
