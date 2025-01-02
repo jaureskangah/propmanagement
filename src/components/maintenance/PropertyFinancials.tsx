@@ -1,6 +1,5 @@
 import React from "react";
 import { MetricsCards } from "./financials/MetricsCards";
-import { ChartsSection } from "./financials/ChartsSection";
 import { DataTables } from "./financials/DataTables";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -74,7 +73,6 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
         maintenance={maintenance}
         calculateROI={calculateROI}
       />
-      <ChartsSection expenses={expenses} />
       <DataTables
         propertyId={propertyId}
         expenses={expenses}

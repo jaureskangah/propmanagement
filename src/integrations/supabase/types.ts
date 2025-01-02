@@ -480,8 +480,10 @@ export type Database = {
           description: string
           id: string
           photos: string[] | null
+          property_id: string | null
           status: string
           title: string
+          unit_number: string | null
           user_id: string
           vendor_id: string | null
         }
@@ -492,8 +494,10 @@ export type Database = {
           description: string
           id?: string
           photos?: string[] | null
+          property_id?: string | null
           status?: string
           title: string
+          unit_number?: string | null
           user_id: string
           vendor_id?: string | null
         }
@@ -504,12 +508,21 @@ export type Database = {
           description?: string
           id?: string
           photos?: string[] | null
+          property_id?: string | null
           status?: string
           title?: string
+          unit_number?: string | null
           user_id?: string
           vendor_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "vendor_interventions_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vendor_interventions_user_id_fkey"
             columns: ["user_id"]
