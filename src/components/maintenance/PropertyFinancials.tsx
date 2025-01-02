@@ -15,11 +15,11 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
   const { data: expenses = [] } = useQuery({
     queryKey: ["maintenance_expenses", propertyId],
     queryFn: async () => {
+      console.log("Fetching expenses for property:", propertyId);
       const { data, error } = await supabase
         .from("maintenance_expenses")
         .select("*")
-        .eq("property_id", propertyId)
-        .order("date", { ascending: false });
+        .eq("property_id", propertyId);
 
       if (error) {
         console.error("Error fetching expenses:", error);
@@ -35,6 +35,7 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
   const { data: maintenance = [] } = useQuery({
     queryKey: ["vendor_interventions", propertyId],
     queryFn: async () => {
+      console.log("Fetching maintenance interventions for property:", propertyId);
       const { data, error } = await supabase
         .from("vendor_interventions")
         .select(`
@@ -47,8 +48,7 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
             name
           )
         `)
-        .eq("property_id", propertyId)
-        .order("date", { ascending: false });
+        .eq("property_id", propertyId);
 
       if (error) {
         console.error("Error fetching maintenance interventions:", error);
