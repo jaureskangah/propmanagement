@@ -10,13 +10,17 @@ import { AddTenantModal } from "@/components/tenant/AddTenantModal";
 import { EditTenantModal } from "@/components/tenant/EditTenantModal";
 import { DeleteTenantDialog } from "@/components/tenant/DeleteTenantDialog";
 import { TenantList } from "@/components/tenant/TenantList";
-import { TenantSearch } from "@/components/tenant/TenantSearch";
+import { TenantSearch, SearchFilters } from "@/components/tenant/TenantSearch";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [searchFilters, setSearchFilters] = useState<SearchFilters>({
+    propertyId: null,
+    leaseStatus: "all",
+  });
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -32,14 +36,29 @@ const Tenants = () => {
     communications: tenant.tenant_communications || [],
   });
 
-  const filteredTenants = tenants?.map(mapTenantData).filter(tenant =>
-    tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    tenant.properties?.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filterTenants = (tenant: Tenant) => {
+    const matchesSearch = tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tenant.properties?.name.toLowerCase().includes(searchQuery.toLowerCase());
 
-  const selectedTenantData = selectedTenant 
-    ? filteredTenants?.find(t => t.id === selectedTenant)
-    : null;
+    if (!matchesSearch) return false;
+
+    const today = new Date();
+    const leaseEnd = new Date(tenant.lease_end);
+    const monthsUntilEnd = (leaseEnd.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 30);
+
+    switch (searchFilters.leaseStatus) {
+      case "active":
+        return leaseEnd > today && monthsUntilEnd > 2;
+      case "expiring":
+        return leaseEnd > today && monthsUntilEnd <= 2;
+      case "expired":
+        return leaseEnd < today;
+      default:
+        return true;
+    }
+  };
+
+  const filteredTenants = tenants?.map(mapTenantData).filter(filterTenants);
 
   const handleAddTenant = async (data: any) => {
     if (!user) {
@@ -99,6 +118,7 @@ const Tenants = () => {
             <TenantSearch 
               value={searchQuery}
               onChange={setSearchQuery}
+              onFilterChange={setSearchFilters}
             />
           </div>
 
