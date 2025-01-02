@@ -15,7 +15,7 @@ interface NotificationsListProps {
 
 export const NotificationsList = ({ notifications }: NotificationsListProps) => {
   return (
-    <ScrollArea className="h-[300px]">
+    <ScrollArea className="h-[200px]">
       <div className="space-y-4">
         {notifications.map((notification) => (
           <NotificationItem
