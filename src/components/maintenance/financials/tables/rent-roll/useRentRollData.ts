@@ -2,24 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { RentRollData, TenantWithPayments } from "./types";
 
-export const useRentRollData = () => {
+export const useRentRollData = (propertyId: string) => {
   return useQuery({
-    queryKey: ["rent-roll"],
+    queryKey: ["rent-roll", propertyId],
     queryFn: async () => {
-      console.log("Fetching rent roll data...");
+      console.log("Fetching rent roll data for property:", propertyId);
       
       const { data: tenants, error } = await supabase
         .from("tenants")
         .select(`
-          name,
-          rent_amount,
-          lease_end,
-          tenant_payments!inner (
+          *,
+          tenant_payments (
             amount,
             status,
             payment_date
           )
-        `);
+        `)
+        .eq("property_id", propertyId)
+        .order("unit_number");
 
       if (error) {
         console.error("Error fetching rent roll:", error);
@@ -35,6 +35,7 @@ export const useRentRollData = () => {
 
         return {
           name: tenant.name,
+          unit: tenant.unit_number,
           rent_amount: tenant.rent_amount,
           lease_end: tenant.lease_end,
           lastPayment: latestPayment ? {

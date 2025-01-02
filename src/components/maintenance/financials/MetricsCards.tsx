@@ -12,35 +12,44 @@ interface MetricsCardsProps {
 }
 
 export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }: MetricsCardsProps) => {
-  const { data: totalRent = 0 } = useQuery({
-    queryKey: ["totalRent", propertyId],
+  // Fetch total rent and payments data
+  const { data: rentData } = useQuery({
+    queryKey: ["property_rent_data", propertyId],
     queryFn: async () => {
-      console.log("Fetching total rent for property:", propertyId);
-      const { data, error } = await supabase
+      console.log("Fetching rent data for property:", propertyId);
+      const { data: tenants, error } = await supabase
         .from("tenants")
-        .select("rent_amount")
+        .select(`
+          id,
+          rent_amount,
+          tenant_payments (
+            amount,
+            status,
+            payment_date
+          )
+        `)
         .eq("property_id", propertyId);
 
       if (error) {
-        console.error("Error fetching total rent:", error);
+        console.error("Error fetching rent data:", error);
         throw error;
       }
 
-      const total = data.reduce((acc, tenant) => acc + tenant.rent_amount, 0);
-      console.log("Total rent calculated:", total);
-      return total;
+      console.log("Rent data fetched:", tenants);
+      return tenants;
     },
   });
 
-  // Calculate year-to-date totals
-  const currentYear = new Date().getFullYear();
-  const ytdExpenses = expenses
-    .filter(exp => new Date(exp.date).getFullYear() === currentYear)
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  // Calculate metrics
+  const totalRentRoll = rentData?.reduce((acc, tenant) => acc + (tenant.rent_amount || 0), 0) || 0;
+  
+  const totalCollected = rentData?.reduce((acc, tenant) => {
+    const paidPayments = tenant.tenant_payments?.filter(p => p.status === 'paid') || [];
+    return acc + paidPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
+  }, 0) || 0;
 
-  const ytdMaintenance = maintenance
-    .filter(m => new Date(m.date).getFullYear() === currentYear)
-    .reduce((acc, curr) => acc + (curr.cost || 0), 0);
+  const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+  const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -50,35 +59,29 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            ${totalRent.toLocaleString()}
-          </div>
+          <div className="text-2xl font-bold">${totalRentRoll.toLocaleString()}</div>
           <p className="text-xs text-muted-foreground">Monthly total</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
+          <CardTitle className="text-sm font-medium">Total Collected</CardTitle>
           <FileText className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            ${ytdExpenses.toLocaleString()}
-          </div>
+          <div className="text-2xl font-bold">${totalCollected.toLocaleString()}</div>
           <p className="text-xs text-muted-foreground">Year to date</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Maintenance Costs</CardTitle>
+          <CardTitle className="text-sm font-medium">Total Expenses</CardTitle>
           <Wrench className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            ${ytdMaintenance.toLocaleString()}
-          </div>
+          <div className="text-2xl font-bold">${(totalExpenses + totalMaintenance).toLocaleString()}</div>
           <p className="text-xs text-muted-foreground">Year to date</p>
         </CardContent>
       </Card>
