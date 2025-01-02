@@ -18,19 +18,19 @@ const EmptyState = ({ isFiltering }: EmptyStateProps) => {
         {isFiltering ? (
           <>
             <h3 className="text-lg font-semibold text-slate-700">
-              Aucune propriété ne correspond à vos critères
+              No properties match your criteria
             </h3>
             <p className="text-slate-500">
-              Essayez d'ajuster vos filtres ou votre recherche pour voir plus de résultats.
+              Try adjusting your filters or search to see more results.
             </p>
           </>
         ) : (
           <>
             <h3 className="text-lg font-semibold text-slate-700">
-              Commencez à gérer vos propriétés
+              Start Managing Your Properties
             </h3>
             <p className="text-slate-500">
-              Ajoutez votre première propriété pour commencer à suivre vos biens immobiliers.
+              Add your first property to begin tracking your real estate assets.
             </p>
             <div className="pt-4">
               <AddPropertyModal />
