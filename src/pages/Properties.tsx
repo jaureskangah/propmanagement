@@ -121,37 +121,50 @@ const Properties = () => {
             <AddPropertyModal />
           </div>
         </div>
-        <Separator className="my-4" />
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="w-full sm:w-64">
-            <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Filter by type" />
-              </SelectTrigger>
-              <SelectContent>
-                {PROPERTY_TYPES.map((type) => (
-                  <SelectItem key={type} value={type}>
-                    {type}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search by name or address..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-full"
-            />
+        <Separator className="my-6" />
+        
+        {/* Improved filters section */}
+        <div className="bg-slate-50 p-6 rounded-xl shadow-sm mb-8 animate-fade-in">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="w-full sm:w-64">
+              <Select 
+                value={selectedType} 
+                onValueChange={setSelectedType}
+              >
+                <SelectTrigger className="w-full bg-white border-slate-200 hover:bg-slate-50 transition-colors">
+                  <SelectValue placeholder="Filter by type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {PROPERTY_TYPES.map((type) => (
+                    <SelectItem 
+                      key={type} 
+                      value={type}
+                      className="hover:bg-slate-100 cursor-pointer"
+                    >
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex-1 relative">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                <Input
+                  type="text"
+                  placeholder="Search by name or address..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 w-full bg-white border-slate-200 focus:ring-2 focus:ring-blue-500 transition-all duration-300 hover:border-slate-300"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
       
       {filteredProperties.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-12 bg-slate-50 rounded-xl animate-fade-in">
           <p className="text-muted-foreground">
             {properties.length === 0 
               ? "Start by adding your first property!"
@@ -173,7 +186,7 @@ const Properties = () => {
       )}
 
       {selectedPropertyId && (
-        <div className="mt-8">
+        <div className="mt-8 animate-fade-in">
           <h2 className="text-xl font-bold mb-4">
             Financial Overview - {selectedProperty?.name}
           </h2>
