@@ -15,6 +15,7 @@ import { TaskList } from "./TaskList";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@supabase/auth-helpers-react";
 
 interface MaintenanceTask {
   id: string;
@@ -22,6 +23,9 @@ interface MaintenanceTask {
   date: Date;
   completed: boolean;
   type: "regular" | "inspection" | "seasonal";
+  user_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export const PreventiveMaintenance = () => {
@@ -29,6 +33,7 @@ export const PreventiveMaintenance = () => {
   const [selectedType, setSelectedType] = useState<string>("all");
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const auth = useAuth();
 
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['maintenance_tasks'],
@@ -47,6 +52,7 @@ export const PreventiveMaintenance = () => {
       return data.map(task => ({
         ...task,
         date: new Date(task.date),
+        type: task.type as "regular" | "inspection" | "seasonal"
       }));
     },
   });
@@ -107,15 +113,25 @@ export const PreventiveMaintenance = () => {
     date: Date;
     type: "regular" | "inspection" | "seasonal";
   }) => {
+    if (!auth?.user?.id) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to add tasks",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('maintenance_tasks')
-        .insert([{
+        .insert({
           title: newTask.title,
           date: format(newTask.date, 'yyyy-MM-dd'),
           type: newTask.type,
           completed: false,
-        }]);
+          user_id: auth.user.id
+        });
 
       if (error) throw error;
 

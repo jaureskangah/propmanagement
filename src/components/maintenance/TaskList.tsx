@@ -12,6 +12,7 @@ interface Task {
   date: Date;
   completed: boolean;
   type: "regular" | "inspection" | "seasonal";
+  user_id: string;
 }
 
 interface TaskListProps {
