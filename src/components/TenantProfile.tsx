@@ -6,6 +6,7 @@ import { TenantPayments } from "./tenant/TenantPayments";
 import { TenantMaintenance } from "./tenant/TenantMaintenance";
 import { TenantCommunications } from "./tenant/TenantCommunications";
 import { Card } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { Tenant } from "@/types/tenant";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -15,6 +16,7 @@ interface TenantProfileProps {
 
 const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
 
   if (!tenant) {
     return (
@@ -35,11 +37,15 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       <TenantInfoCard tenant={tenant} />
 
       <Tabs defaultValue="documents" className="w-full">
-        <TabsList className="grid grid-cols-4 w-full">
+        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} w-full`}>
           <TabsTrigger value="documents">Documents</TabsTrigger>
           <TabsTrigger value="payments">Payments</TabsTrigger>
-          <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-          <TabsTrigger value="communications">Communications</TabsTrigger>
+          {!isMobile && (
+            <>
+              <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+              <TabsTrigger value="communications">Communications</TabsTrigger>
+            </>
+          )}
         </TabsList>
 
         <TabsContent value="documents" className="mt-4">
@@ -58,17 +64,21 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
           />
         </TabsContent>
 
-        <TabsContent value="maintenance" className="mt-4">
-          <TenantMaintenance 
-            requests={tenant.maintenanceRequests} 
-            tenantId={tenant.id}
-            onMaintenanceUpdate={handleDataUpdate}
-          />
-        </TabsContent>
+        {!isMobile && (
+          <>
+            <TabsContent value="maintenance" className="mt-4">
+              <TenantMaintenance 
+                requests={tenant.maintenanceRequests} 
+                tenantId={tenant.id}
+                onMaintenanceUpdate={handleDataUpdate}
+              />
+            </TabsContent>
 
-        <TabsContent value="communications" className="mt-4">
-          <TenantCommunications communications={tenant.communications} />
-        </TabsContent>
+            <TabsContent value="communications" className="mt-4">
+              <TenantCommunications communications={tenant.communications} />
+            </TabsContent>
+          </>
+        )}
       </Tabs>
     </div>
   );

@@ -1,8 +1,9 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Home, Pencil, Trash2, Phone, Mail, Calendar } from "lucide-react";
+import { ChevronRight, Pencil, Trash2, Phone, Mail, Calendar } from "lucide-react";
 import type { Tenant } from "@/types/tenant";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TenantCardProps {
   tenant: Tenant;
@@ -47,6 +48,8 @@ export const TenantCard = ({
   onEdit,
   onDelete,
 }: TenantCardProps) => {
+  const isMobile = useIsMobile();
+
   return (
     <Card
       className={`cursor-pointer hover:bg-accent transition-colors ${
@@ -64,48 +67,54 @@ export const TenantCard = ({
               </Badge>
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1">
-              <Home className="h-4 w-4" />
               {tenant.properties?.name} - Unit {tenant.unit_number}
             </p>
           </div>
-          <div className="flex gap-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(tenant.id);
-              }}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-destructive hover:text-destructive/90"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(tenant.id);
-              }}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+          <div className="flex gap-2 items-center">
+            {!isMobile && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEdit(tenant.id);
+                  }}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-destructive hover:text-destructive/90"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete(tenant.id);
+                  }}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </>
+            )}
+            {isMobile && <ChevronRight className="h-5 w-5 text-muted-foreground" />}
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 pt-2 border-t">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Mail className="h-4 w-4" />
-            <span className="truncate">{tenant.email}</span>
+        {!isMobile && (
+          <div className="grid grid-cols-3 gap-4 pt-2 border-t">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              <span className="truncate">{tenant.email}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Phone className="h-4 w-4" />
+              <span>{tenant.phone || "N/A"}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4" />
+              <span>${tenant.rent_amount}/month</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Phone className="h-4 w-4" />
-            <span>{tenant.phone || "N/A"}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4" />
-            <span>${tenant.rent_amount}/month</span>
-          </div>
-        </div>
+        )}
       </div>
     </Card>
   );
