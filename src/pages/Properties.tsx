@@ -5,10 +5,11 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useProperties, Property } from "@/hooks/useProperties";
-import { Loader2, Search } from "lucide-react";
-import { supabase } from "@/lib/supabase";
+import { Loader2, Search, Building2, Info } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 
 const PROPERTY_TYPES = [
   "All",
@@ -77,20 +78,6 @@ const Properties = () => {
 
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
 
-  // Mock financial data
-  const mockFinancials = {
-    expenses: [
-      { category: "Maintenance", amount: 500, date: "2024-01-15" },
-      { category: "Utilities", amount: 300, date: "2024-01-20" },
-      { category: "Insurance", amount: 800, date: "2024-01-01" }
-    ],
-    maintenance: [
-      { description: "Plumbing repair", cost: 300, date: "2024-01-10" },
-      { description: "HVAC maintenance", cost: 200, date: "2024-01-05" },
-      { description: "Paint touch-up", cost: 150, date: "2024-01-18" }
-    ]
-  };
-
   if (isLoadingProperties) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -100,13 +87,31 @@ const Properties = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Properties Management</h1>
-      <div className="flex flex-col gap-4 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-64">
+    <div className="container mx-auto p-6 space-y-8">
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-2">
+              <Building2 className="h-8 w-8 text-primary" />
+              Properties Management
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              Manage and track all your real estate properties in one place
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary" className="text-sm">
+              <Info className="h-4 w-4 mr-1" />
+              {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
+            </Badge>
+            <AddPropertyModal />
+          </div>
+        </div>
+        <Separator className="my-4" />
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="w-full sm:w-64">
             <Select value={selectedType} onValueChange={setSelectedType}>
-              <SelectTrigger>
+              <SelectTrigger className="w-full">
                 <SelectValue placeholder="Filter by type" />
               </SelectTrigger>
               <SelectContent>
@@ -119,7 +124,7 @@ const Properties = () => {
             </Select>
           </div>
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
               type="text"
               placeholder="Search by name or address..."
@@ -128,7 +133,6 @@ const Properties = () => {
               className="pl-10 w-full"
             />
           </div>
-          <AddPropertyModal />
         </div>
       </div>
       
