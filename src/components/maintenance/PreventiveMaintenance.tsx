@@ -12,6 +12,9 @@ import {
 import { format } from "date-fns";
 import { AddTaskDialog } from "./AddTaskDialog";
 import { TaskList } from "./TaskList";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface MaintenanceTask {
   id: string;
@@ -24,46 +27,111 @@ interface MaintenanceTask {
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedType, setSelectedType] = useState<string>("all");
-  const [tasks, setTasks] = useState<MaintenanceTask[]>([
-    {
-      id: "1",
-      title: "Monthly smoke detector inspection",
-      date: new Date(),
-      completed: false,
-      type: "regular",
-    },
-    {
-      id: "2",
-      title: "Quarterly plumbing check",
-      date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      completed: false,
-      type: "inspection",
-    },
-  ]);
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const handleTaskCompletion = (taskId: string) => {
-    setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === taskId ? { ...task, completed: !task.completed } : task
-      )
-    );
+  const { data: tasks = [], isLoading } = useQuery({
+    queryKey: ['maintenance_tasks'],
+    queryFn: async () => {
+      console.log("Fetching maintenance tasks...");
+      const { data, error } = await supabase
+        .from('maintenance_tasks')
+        .select('*')
+        .order('date', { ascending: true });
+      
+      if (error) {
+        console.error("Error fetching tasks:", error);
+        throw error;
+      }
+      
+      return data.map(task => ({
+        ...task,
+        date: new Date(task.date),
+      }));
+    },
+  });
+
+  const handleTaskCompletion = async (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (!task) return;
+
+    try {
+      const { error } = await supabase
+        .from('maintenance_tasks')
+        .update({ completed: !task.completed })
+        .eq('id', taskId);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      toast({
+        title: "Success",
+        description: `Task marked as ${!task.completed ? 'completed' : 'incomplete'}`,
+      });
+    } catch (error) {
+      console.error("Error updating task:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update task status",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleDeleteTask = (taskId: string) => {
-    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      const { error } = await supabase
+        .from('maintenance_tasks')
+        .delete()
+        .eq('id', taskId);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      toast({
+        title: "Success",
+        description: "Task deleted successfully",
+      });
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete task",
+        variant: "destructive",
+      });
+    }
   };
 
-  const handleAddTask = (newTask: {
+  const handleAddTask = async (newTask: {
     title: string;
     date: Date;
     type: "regular" | "inspection" | "seasonal";
   }) => {
-    const task: MaintenanceTask = {
-      id: (tasks.length + 1).toString(),
-      ...newTask,
-      completed: false,
-    };
-    setTasks((prevTasks) => [...prevTasks, task]);
+    try {
+      const { error } = await supabase
+        .from('maintenance_tasks')
+        .insert([{
+          title: newTask.title,
+          date: format(newTask.date, 'yyyy-MM-dd'),
+          type: newTask.type,
+          completed: false,
+        }]);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      toast({
+        title: "Success",
+        description: "Task added successfully",
+      });
+    } catch (error) {
+      console.error("Error adding task:", error);
+      toast({
+        title: "Error",
+        description: "Failed to add task",
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredTasks = tasks.filter((task) =>
@@ -77,6 +145,10 @@ export const PreventiveMaintenance = () => {
         (selectedType === "all" || task.type === selectedType)
     ).length;
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">

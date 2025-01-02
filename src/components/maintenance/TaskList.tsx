@@ -23,45 +23,49 @@ interface TaskListProps {
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   return (
     <ScrollArea className="h-[200px]">
-      {tasks.map((task) => (
-        <div
-          key={task.id}
-          className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg group"
-        >
-          <div className="flex items-center gap-2">
-            <Checkbox
-              id={task.id}
-              checked={task.completed}
-              onCheckedChange={() => onTaskComplete(task.id)}
-            />
-            <label
-              htmlFor={task.id}
-              className={`text-sm ${
-                task.completed ? "line-through text-gray-500" : ""
-              }`}
-            >
-              {task.title}
-            </label>
+      {tasks.length === 0 ? (
+        <p className="text-center text-muted-foreground py-4">No tasks found</p>
+      ) : (
+        tasks.map((task) => (
+          <div
+            key={task.id}
+            className="flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg group"
+          >
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id={task.id}
+                checked={task.completed}
+                onCheckedChange={() => onTaskComplete(task.id)}
+              />
+              <label
+                htmlFor={task.id}
+                className={`text-sm ${
+                  task.completed ? "line-through text-gray-500" : ""
+                }`}
+              >
+                {task.title}
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge
+                variant={task.completed ? "default" : "secondary"}
+                className={task.completed ? "bg-green-500" : ""}
+              >
+                {format(task.date, "dd/MM/yyyy", { locale: fr })}
+              </Badge>
+              <Badge variant="outline">{task.type}</Badge>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => onTaskDelete(task.id)}
+              >
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge
-              variant={task.completed ? "default" : "secondary"}
-              className={task.completed ? "bg-green-500" : ""}
-            >
-              {format(task.date, "dd/MM/yyyy", { locale: fr })}
-            </Badge>
-            <Badge variant="outline">{task.type}</Badge>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="opacity-0 group-hover:opacity-100 transition-opacity"
-              onClick={() => onTaskDelete(task.id)}
-            >
-              <Trash2 className="h-4 w-4 text-red-500" />
-            </Button>
-          </div>
-        </div>
-      ))}
+        ))
+      )}
     </ScrollArea>
   );
 };
