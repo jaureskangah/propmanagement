@@ -4,19 +4,61 @@ import { PreventiveMaintenance } from "../PreventiveMaintenance";
 import { WorkOrderList } from "../work-orders/WorkOrderList";
 import { VendorList } from "../vendors/VendorList";
 import PropertyFinancials from "@/components/PropertyFinancials";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface MaintenanceTabsProps {
   propertyId: string;
-  mockFinancialData: {
-    propertyId: string;
-    expenses: Array<{ category: string; amount: number; date: string }>;
-    maintenance: Array<{ description: string; cost: number; date: string }>;
-  };
 }
 
-export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTabsProps) => {
+export const MaintenanceTabs = ({ propertyId }: MaintenanceTabsProps) => {
   console.log("MaintenanceTabs - propertyId:", propertyId);
-  console.log("MaintenanceTabs - mockFinancialData:", mockFinancialData);
+
+  // Récupérer les dépenses
+  const { data: expenses = [] } = useQuery({
+    queryKey: ["maintenance_expenses", propertyId],
+    queryFn: async () => {
+      console.log("Fetching expenses for property:", propertyId);
+      const { data, error } = await supabase
+        .from("maintenance_expenses")
+        .select("*")
+        .eq("property_id", propertyId);
+
+      if (error) {
+        console.error("Error fetching expenses:", error);
+        throw error;
+      }
+
+      console.log("Fetched expenses:", data);
+      return data || [];
+    },
+  });
+
+  // Récupérer les interventions de maintenance
+  const { data: maintenance = [] } = useQuery({
+    queryKey: ["vendor_interventions", propertyId],
+    queryFn: async () => {
+      console.log("Fetching maintenance interventions for property:", propertyId);
+      const { data, error } = await supabase
+        .from("vendor_interventions")
+        .select(`
+          *,
+          vendors (
+            name,
+            specialty
+          )
+        `)
+        .eq("property_id", propertyId);
+
+      if (error) {
+        console.error("Error fetching maintenance interventions:", error);
+        throw error;
+      }
+
+      console.log("Fetched maintenance interventions:", data);
+      return data || [];
+    },
+  });
 
   return (
     <Tabs defaultValue="preventive" className="space-y-4">
@@ -65,9 +107,9 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
 
       <TabsContent value="financials" className="animate-fade-in">
         <PropertyFinancials 
-          propertyId={mockFinancialData.propertyId}
-          expenses={mockFinancialData.expenses}
-          maintenance={mockFinancialData.maintenance}
+          propertyId={propertyId}
+          expenses={expenses}
+          maintenance={maintenance}
         />
       </TabsContent>
     </Tabs>
