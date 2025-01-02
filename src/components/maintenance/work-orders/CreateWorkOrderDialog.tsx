@@ -7,22 +7,24 @@ import { BasicInfoFields } from "./form/BasicInfoFields";
 import { CostDateFields } from "./form/CostDateFields";
 import { VendorStatusFields } from "./form/VendorStatusFields";
 import { PhotoUpload } from "./form/PhotoUpload";
+import { PropertyUnitFields } from "./form/PropertyUnitFields";
 
 interface CreateWorkOrderDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
-  propertyId: string;
+  propertyId?: string;
 }
 
 export const CreateWorkOrderDialog = ({
   isOpen,
   onClose,
   onSuccess,
-  propertyId,
+  propertyId: initialPropertyId,
 }: CreateWorkOrderDialogProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [propertyId, setPropertyId] = useState<string | null>(initialPropertyId || null);
   const [unit, setUnit] = useState("");
   const [cost, setCost] = useState("");
   const [date, setDate] = useState<Date>();
@@ -35,6 +37,7 @@ export const CreateWorkOrderDialog = ({
   const resetForm = () => {
     setTitle("");
     setDescription("");
+    setPropertyId(initialPropertyId || null);
     setUnit("");
     setCost("");
     setDate(undefined);
@@ -47,7 +50,7 @@ export const CreateWorkOrderDialog = ({
     e.preventDefault();
     console.log("Submitting work order form...");
 
-    if (!title || !description || !unit || !cost || !date || !vendor) {
+    if (!title || !description || !propertyId || !unit || !cost || !date || !vendor) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -91,6 +94,8 @@ export const CreateWorkOrderDialog = ({
           status,
           vendor_id: vendor,
           photos: photoUrls,
+          property_id: propertyId,
+          unit_number: unit,
           user_id: (await supabase.auth.getUser()).data.user?.id
         });
 
@@ -144,6 +149,11 @@ export const CreateWorkOrderDialog = ({
             setTitle={setTitle}
             description={description}
             setDescription={setDescription}
+          />
+
+          <PropertyUnitFields
+            propertyId={propertyId}
+            setPropertyId={setPropertyId}
             unit={unit}
             setUnit={setUnit}
           />
