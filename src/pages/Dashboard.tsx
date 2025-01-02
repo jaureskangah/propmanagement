@@ -7,13 +7,20 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { Loader2 } from "lucide-react";
+import { DashboardDateFilter, DateRange } from "@/components/dashboard/DashboardDateFilter";
+import { useState } from "react";
+import { isWithinInterval } from "date-fns";
 
 const Dashboard = () => {
   console.log("Rendering Dashboard");
   const { user } = useAuth();
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
+  });
 
   const { data: propertiesData, isLoading: isLoadingProperties } = useQuery({
-    queryKey: ["properties", user?.id],
+    queryKey: ["properties", user?.id, dateRange],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("properties")
@@ -26,7 +33,7 @@ const Dashboard = () => {
   });
 
   const { data: maintenanceData, isLoading: isLoadingMaintenance } = useQuery({
-    queryKey: ["maintenance_requests", user?.id],
+    queryKey: ["maintenance_requests", user?.id, dateRange],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("maintenance_requests")
@@ -39,7 +46,7 @@ const Dashboard = () => {
   });
 
   const { data: tenantsData, isLoading: isLoadingTenants } = useQuery({
-    queryKey: ["tenants", user?.id],
+    queryKey: ["tenants", user?.id, dateRange],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tenants")
@@ -59,25 +66,43 @@ const Dashboard = () => {
     );
   }
 
+  // Filter data based on date range
+  const filteredMaintenanceData = maintenanceData?.filter(req => 
+    isWithinInterval(new Date(req.created_at), {
+      start: dateRange.startDate,
+      end: dateRange.endDate
+    })
+  ) || [];
+
+  const filteredTenantsData = tenantsData?.filter(tenant =>
+    isWithinInterval(new Date(tenant.created_at), {
+      start: dateRange.startDate,
+      end: dateRange.endDate
+    })
+  ) || [];
+
   const totalProperties = propertiesData?.length || 0;
-  const totalTenants = tenantsData?.length || 0;
-  const pendingMaintenance = maintenanceData?.filter(req => req.status === "Pending").length || 0;
-  const totalMonthlyRevenue = tenantsData?.reduce((acc, tenant) => acc + (tenant.rent_amount || 0), 0) || 0;
+  const totalTenants = filteredTenantsData.length;
+  const pendingMaintenance = filteredMaintenanceData.filter(req => req.status === "Pending").length;
+  const totalMonthlyRevenue = filteredTenantsData.reduce((acc, tenant) => acc + (tenant.rent_amount || 0), 0);
 
   // Calculate occupancy rate
   const totalUnits = propertiesData?.reduce((acc, property) => acc + (property.units || 0), 0) || 0;
   const occupancyRate = totalUnits > 0 ? Math.round((totalTenants / totalUnits) * 100) : 0;
 
   // Get new properties this month
-  const currentMonth = new Date().getMonth();
-  const newPropertiesThisMonth = propertiesData?.filter(property => {
-    const propertyMonth = new Date(property.created_at).getMonth();
-    return propertyMonth === currentMonth;
-  }).length || 0;
+  const newPropertiesThisMonth = propertiesData?.filter(property => 
+    isWithinInterval(new Date(property.created_at), {
+      start: dateRange.startDate,
+      end: dateRange.endDate
+    })
+  ).length || 0;
 
   return (
     <div className="space-y-6 p-8 font-sans">
       <DashboardHeader />
+      
+      <DashboardDateFilter onDateRangeChange={setDateRange} />
 
       {/* Metrics Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
