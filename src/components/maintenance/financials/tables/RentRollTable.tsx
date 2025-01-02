@@ -9,6 +9,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { format } from "date-fns";
 
 interface RentRollTableProps {
   propertyId: string;
@@ -19,24 +20,47 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
     queryKey: ["rentRoll", propertyId],
     queryFn: async () => {
       console.log("Fetching rent roll data for property:", propertyId);
-      const { data, error } = await supabase
+      const { data: tenants, error: tenantsError } = await supabase
         .from("tenants")
-        .select("unit_number, name, rent_amount, lease_end")
+        .select(`
+          id,
+          unit_number,
+          name,
+          rent_amount,
+          lease_end,
+          tenant_payments (
+            amount,
+            status,
+            payment_date
+          )
+        `)
         .eq("property_id", propertyId)
         .order("unit_number");
 
-      if (error) {
-        console.error("Error fetching rent roll:", error);
-        throw error;
+      if (tenantsError) {
+        console.error("Error fetching rent roll:", tenantsError);
+        throw tenantsError;
       }
 
-      console.log("Rent roll data fetched:", data);
-      return data.map(tenant => ({
-        unit: tenant.unit_number,
-        tenant: tenant.name,
-        rent: tenant.rent_amount,
-        status: new Date(tenant.lease_end) > new Date() ? "Active" : "Expired"
-      }));
+      console.log("Rent roll data fetched:", tenants);
+      
+      return tenants.map(tenant => {
+        // Get the most recent payment
+        const latestPayment = tenant.tenant_payments
+          ?.sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime())[0];
+
+        return {
+          unit: tenant.unit_number,
+          tenant: tenant.name,
+          rent: tenant.rent_amount,
+          status: new Date(tenant.lease_end) > new Date() ? "Active" : "Expired",
+          lastPayment: latestPayment ? {
+            amount: latestPayment.amount,
+            date: latestPayment.payment_date,
+            status: latestPayment.status
+          } : null
+        };
+      });
     },
   });
 
@@ -48,7 +72,7 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
     <Card>
       <CardHeader>
         <CardTitle>Rent Roll</CardTitle>
-        <CardDescription>Current tenant and rent information</CardDescription>
+        <CardDescription>Current tenant and payment information</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
@@ -56,8 +80,10 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
             <TableRow>
               <TableHead>Unit</TableHead>
               <TableHead>Tenant</TableHead>
-              <TableHead>Rent</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Monthly Rent</TableHead>
+              <TableHead>Last Payment</TableHead>
+              <TableHead>Payment Status</TableHead>
+              <TableHead>Lease Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -66,7 +92,39 @@ export const RentRollTable = ({ propertyId }: RentRollTableProps) => {
                 <TableCell>{item.unit}</TableCell>
                 <TableCell>{item.tenant}</TableCell>
                 <TableCell>${item.rent.toLocaleString()}</TableCell>
-                <TableCell>{item.status}</TableCell>
+                <TableCell>
+                  {item.lastPayment ? (
+                    <>
+                      ${item.lastPayment.amount.toLocaleString()}
+                      <br />
+                      <span className="text-sm text-muted-foreground">
+                        {format(new Date(item.lastPayment.date), 'MMM d, yyyy')}
+                      </span>
+                    </>
+                  ) : (
+                    "No payments"
+                  )}
+                </TableCell>
+                <TableCell>
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    item.lastPayment?.status === 'paid' 
+                      ? 'bg-green-100 text-green-800'
+                      : item.lastPayment?.status === 'pending'
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {item.lastPayment?.status || 'No payment'}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                    item.status === 'Active' 
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {item.status}
+                  </span>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
