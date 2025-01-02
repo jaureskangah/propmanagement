@@ -1,6 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Info } from "lucide-react";
 
 interface DashboardMetricProps {
   title: string;
@@ -12,6 +19,7 @@ interface DashboardMetricProps {
   trendValue?: string;
   chartData?: Array<{ value: number }>;
   chartColor?: string;
+  tooltip?: string;
 }
 
 export function DashboardMetric({ 
@@ -23,7 +31,8 @@ export function DashboardMetric({
   trend,
   trendValue,
   chartData = [],
-  chartColor = "#1E40AF"
+  chartColor = "#1E40AF",
+  tooltip
 }: DashboardMetricProps) {
   return (
     <Card className={cn(
@@ -31,9 +40,23 @@ export function DashboardMetric({
       className
     )}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
-          {title}
-        </CardTitle>
+        <div className="flex items-center gap-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+            {title}
+          </CardTitle>
+          {tooltip && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Info className="h-4 w-4 text-muted-foreground/70 hover:text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p className="max-w-xs">{tooltip}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
         <div className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 text-primary">
           {icon}
         </div>

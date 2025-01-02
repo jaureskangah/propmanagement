@@ -92,6 +92,7 @@ export const DashboardMetrics = ({
         }
         chartData={propertiesChartData}
         chartColor="#1E40AF"
+        tooltip="Total number of properties in your portfolio. The chart shows the growth trend over the last 6 months."
       />
       <DashboardMetric
         title="Tenants"
@@ -105,6 +106,7 @@ export const DashboardMetrics = ({
         }
         chartData={tenantsChartData}
         chartColor="#4F46E5"
+        tooltip="Total number of active tenants. The occupancy rate shows the percentage of occupied units across all properties."
       />
       <DashboardMetric
         title="Maintenance"
@@ -118,6 +120,7 @@ export const DashboardMetrics = ({
         }
         chartData={maintenanceChartData}
         chartColor="#D97706"
+        tooltip="Number of pending maintenance requests that require attention. The chart shows the maintenance request trend over time."
       />
       <DashboardMetric
         title="Monthly Revenue"
@@ -131,6 +134,7 @@ export const DashboardMetrics = ({
         }
         chartData={revenueChartData}
         chartColor="#059669"
+        tooltip="Total monthly revenue based on current active leases. The chart shows revenue trends over the last 6 months."
       />
     </div>
   );
