@@ -1,20 +1,34 @@
-import { MessageSquare, Search, Calendar, Mail, MessageCircle, Bell } from "lucide-react";
+import { MessageSquare, Search, Calendar, Mail, MessageCircle, Bell, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { Communication } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 import { useState, useMemo } from "react";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
+  tenantId?: string;
 }
 
-export const TenantCommunications = ({ communications }: TenantCommunicationsProps) => {
+export const TenantCommunications = ({ communications, tenantId }: TenantCommunicationsProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
+  const [isNewCommDialogOpen, setIsNewCommDialogOpen] = useState(false);
+  const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
+  const [newCommData, setNewCommData] = useState({
+    type: "",
+    subject: "",
+    content: ""
+  });
+  const { toast } = useToast();
 
   // Group communications by type
   const groupedCommunications = useMemo(() => {
@@ -79,6 +93,70 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
     }
   };
 
+  const handleCreateCommunication = async () => {
+    if (!tenantId) {
+      toast({
+        title: "Erreur",
+        description: "ID du locataire manquant",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('tenant_communications')
+        .insert({
+          tenant_id: tenantId,
+          type: newCommData.type,
+          subject: newCommData.subject,
+          content: newCommData.content,
+          status: 'unread'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Succès",
+        description: "Communication créée avec succès",
+      });
+
+      setIsNewCommDialogOpen(false);
+      setNewCommData({ type: "", subject: "", content: "" });
+    } catch (error) {
+      console.error("Error creating communication:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la création de la communication",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleStatus = async (comm: Communication) => {
+    try {
+      const newStatus = comm.status === 'read' ? 'unread' : 'read';
+      const { error } = await supabase
+        .from('tenant_communications')
+        .update({ status: newStatus })
+        .eq('id', comm.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Succès",
+        description: `Communication marquée comme ${newStatus === 'read' ? 'lue' : 'non lue'}`,
+      });
+    } catch (error) {
+      console.error("Error updating communication status:", error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour du statut",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -87,6 +165,13 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
             <MessageSquare className="h-5 w-5 text-purple-600" />
             <CardTitle className="text-lg">Historique des Communications</CardTitle>
           </div>
+          <Button 
+            onClick={() => setIsNewCommDialogOpen(true)}
+            className="flex items-center gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Nouvelle communication
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -161,16 +246,28 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
                       .map((comm, index) => (
                         <div
                           key={comm.id}
-                          className={`flex items-start gap-4 pl-10 relative animate-fade-in`}
+                          className="flex items-start gap-4 pl-10 relative animate-fade-in cursor-pointer hover:bg-accent/50 rounded-lg p-2 transition-colors"
                           style={{ animationDelay: `${index * 50}ms` }}
+                          onClick={() => setSelectedComm(comm)}
                         >
                           <div className="absolute left-0 top-2 w-10 h-10 flex items-center justify-center bg-background rounded-full border z-10">
                             {getTypeIcon(comm.type)}
                           </div>
-                          <div className="flex-1 bg-accent/50 p-4 rounded-lg hover:bg-accent transition-colors">
+                          <div className="flex-1">
                             <div className="flex items-center justify-between mb-1">
                               <h4 className="font-medium">{comm.subject}</h4>
-                              {getStatusBadge(comm.status || 'unread')}
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleToggleStatus(comm);
+                                  }}
+                                >
+                                  {getStatusBadge(comm.status)}
+                                </Button>
+                              </div>
                             </div>
                             <div className="text-sm text-muted-foreground">
                               {formatDate(comm.created_at)}
@@ -185,6 +282,71 @@ export const TenantCommunications = ({ communications }: TenantCommunicationsPro
           )}
         </div>
       </CardContent>
+
+      {/* New Communication Dialog */}
+      <Dialog open={isNewCommDialogOpen} onOpenChange={setIsNewCommDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Nouvelle Communication</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            <Select
+              value={newCommData.type}
+              onValueChange={(value) => setNewCommData(prev => ({ ...prev, type: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Type de communication" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="email">Email</SelectItem>
+                <SelectItem value="sms">SMS</SelectItem>
+                <SelectItem value="notification">Notification</SelectItem>
+              </SelectContent>
+            </Select>
+            <Input
+              placeholder="Sujet"
+              value={newCommData.subject}
+              onChange={(e) => setNewCommData(prev => ({ ...prev, subject: e.target.value }))}
+            />
+            <Textarea
+              placeholder="Contenu"
+              value={newCommData.content}
+              onChange={(e) => setNewCommData(prev => ({ ...prev, content: e.target.value }))}
+              rows={4}
+            />
+            <Button onClick={handleCreateCommunication} className="w-full">
+              Créer
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Communication Details Dialog */}
+      <Dialog open={!!selectedComm} onOpenChange={() => setSelectedComm(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {selectedComm && (
+                <>
+                  {getTypeIcon(selectedComm.type)}
+                  {selectedComm.subject}
+                </>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-4">
+            {selectedComm && (
+              <>
+                <div className="flex justify-between items-center text-sm text-muted-foreground">
+                  <span>{formatDate(selectedComm.created_at)}</span>
+                  {getStatusBadge(selectedComm.status)}
+                </div>
+                <p className="text-sm">{selectedComm.content || "Aucun contenu"}</p>
+              </>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 };

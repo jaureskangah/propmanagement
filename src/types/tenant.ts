@@ -47,5 +47,6 @@ export interface Communication {
   type: string;
   subject: string;
   created_at: string;
-  status: string; // Added this field to match the database schema
+  status: string;
+  content?: string;
 }
