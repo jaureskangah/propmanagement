@@ -1,6 +1,5 @@
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { Task } from "../types";
 
 interface MaintenanceCalendarProps {
@@ -30,7 +29,6 @@ export const MaintenanceCalendar = ({
       selected={selectedDate}
       onSelect={onSelectDate}
       className="rounded-md border w-full max-w-[400px] mx-auto"
-      locale={fr}
       modifiers={{
         hasTasks: (date) => getTasksForDate(date) > 0,
       }}
