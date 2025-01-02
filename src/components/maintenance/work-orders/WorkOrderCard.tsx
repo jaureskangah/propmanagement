@@ -28,11 +28,11 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete, onDuplicate }: WorkOr
             <WorkOrderStatus status={order.status} />
           </div>
           <WorkOrderActions 
-            orderId={order.id}
-            status={order.status}
+            order={order}
             onStatusChange={onUpdate}
             onDelete={onDelete}
             onDuplicate={onDuplicate}
+            onUpdate={onUpdate}
           />
         </div>
       </CardContent>

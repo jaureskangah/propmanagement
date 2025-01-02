@@ -1,32 +1,36 @@
 import { Button } from "@/components/ui/button";
-import { FileImage, CheckSquare, Trash2, Copy, RefreshCw } from "lucide-react";
+import { FileImage, CheckSquare, Trash2, Copy, RefreshCw, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useState } from "react";
+import { EditWorkOrderDialog } from "../EditWorkOrderDialog";
+import { WorkOrder } from "@/types/workOrder";
 
 interface WorkOrderActionsProps {
-  orderId: string;
-  status: string;
+  order: WorkOrder;
   onStatusChange: () => void;
   onDelete: () => void;
   onDuplicate: () => void;
+  onUpdate: () => void;
 }
 
 export const WorkOrderActions = ({ 
-  orderId, 
-  status, 
+  order,
   onStatusChange,
   onDelete,
-  onDuplicate 
+  onDuplicate,
+  onUpdate
 }: WorkOrderActionsProps) => {
   const { toast } = useToast();
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const handleStatusChange = async () => {
-    const newStatus = status === "In Progress" ? "Completed" : "In Progress";
+    const newStatus = order.status === "In Progress" ? "Completed" : "In Progress";
     
     const { error } = await supabase
       .from('vendor_interventions')
       .update({ status: newStatus })
-      .eq('id', orderId);
+      .eq('id', order.id);
 
     if (error) {
       console.error("Error updating status:", error);
@@ -49,7 +53,7 @@ export const WorkOrderActions = ({
     const { error } = await supabase
       .from('vendor_interventions')
       .delete()
-      .eq('id', orderId);
+      .eq('id', order.id);
 
     if (error) {
       console.error("Error deleting work order:", error);
@@ -73,7 +77,7 @@ export const WorkOrderActions = ({
     const { data: currentOrder, error: fetchError } = await supabase
       .from('vendor_interventions')
       .select('*')
-      .eq('id', orderId)
+      .eq('id', order.id)
       .single();
 
     if (fetchError) {
@@ -91,10 +95,10 @@ export const WorkOrderActions = ({
       .from('vendor_interventions')
       .insert({
         ...currentOrder,
-        id: undefined, // Let Supabase generate a new ID
+        id: undefined,
         title: `${currentOrder.title} (copy)`,
         status: 'Scheduled',
-        created_at: undefined, // Let Supabase set the timestamp
+        created_at: undefined,
       });
 
     if (createError) {
@@ -115,19 +119,32 @@ export const WorkOrderActions = ({
   };
 
   return (
-    <div className="flex gap-2 mt-4">
-      <Button variant="outline" size="sm" onClick={handleStatusChange}>
-        <RefreshCw className="h-4 w-4 mr-2" />
-        Change Status
-      </Button>
-      <Button variant="outline" size="sm" onClick={handleDuplicate}>
-        <Copy className="h-4 w-4 mr-2" />
-        Duplicate
-      </Button>
-      <Button variant="outline" size="sm" className="text-red-500 hover:text-red-700" onClick={handleDelete}>
-        <Trash2 className="h-4 w-4 mr-2" />
-        Delete
-      </Button>
-    </div>
+    <>
+      <div className="flex gap-2 mt-4">
+        <Button variant="outline" size="sm" onClick={handleStatusChange}>
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Change Status
+        </Button>
+        <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
+          <Edit className="h-4 w-4 mr-2" />
+          Edit
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleDuplicate}>
+          <Copy className="h-4 w-4 mr-2" />
+          Duplicate
+        </Button>
+        <Button variant="outline" size="sm" className="text-red-500 hover:text-red-700" onClick={handleDelete}>
+          <Trash2 className="h-4 w-4 mr-2" />
+          Delete
+        </Button>
+      </div>
+
+      <EditWorkOrderDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        onSuccess={onUpdate}
+        workOrder={order}
+      />
+    </>
   );
 };
