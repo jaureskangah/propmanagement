@@ -8,6 +8,7 @@ import { WorkOrderList } from "@/components/maintenance/work-orders/WorkOrderLis
 import { VendorList } from "@/components/maintenance/vendors/VendorList";
 import { PropertyFinancials } from "@/components/maintenance/PropertyFinancials";
 import { MaintenanceNotifications } from "@/components/maintenance/MaintenanceNotifications";
+import { Calendar, ClipboardList, Users, DollarSign } from "lucide-react";
 
 // Fetch maintenance requests
 const fetchMaintenanceRequests = async () => {
@@ -67,28 +68,52 @@ const Maintenance = () => {
       </div>
 
       <Tabs defaultValue="preventive" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="preventive">Preventive Maintenance</TabsTrigger>
-          <TabsTrigger value="work-orders">Work Orders</TabsTrigger>
-          <TabsTrigger value="vendors">Vendors</TabsTrigger>
-          <TabsTrigger value="financials">Costs</TabsTrigger>
+        <TabsList className="w-full justify-start bg-background border-b p-0 h-auto">
+          <TabsTrigger 
+            value="preventive"
+            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+          >
+            <Calendar className="h-4 w-4" />
+            <span>Preventive Maintenance</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="work-orders"
+            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+          >
+            <ClipboardList className="h-4 w-4" />
+            <span>Work Orders</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="vendors"
+            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+          >
+            <Users className="h-4 w-4" />
+            <span>Vendors</span>
+          </TabsTrigger>
+          <TabsTrigger 
+            value="financials"
+            className="flex items-center gap-2 px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200"
+          >
+            <DollarSign className="h-4 w-4" />
+            <span>Costs</span>
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="preventive">
+        <TabsContent value="preventive" className="animate-fade-in">
           <PreventiveMaintenance />
         </TabsContent>
 
-        <TabsContent value="work-orders">
+        <TabsContent value="work-orders" className="animate-fade-in">
           <WorkOrderList 
             propertyId={mockFinancialData.propertyId}
           />
         </TabsContent>
 
-        <TabsContent value="vendors">
+        <TabsContent value="vendors" className="animate-fade-in">
           <VendorList />
         </TabsContent>
 
-        <TabsContent value="financials">
+        <TabsContent value="financials" className="animate-fade-in">
           <PropertyFinancials {...mockFinancialData} />
         </TabsContent>
       </Tabs>
