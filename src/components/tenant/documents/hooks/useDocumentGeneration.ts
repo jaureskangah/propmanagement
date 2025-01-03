@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { generateLeaseAgreement } from "../templates/leaseAgreement";
+import { generateRentalReceipt } from "../templates/rentalReceipt";
 import { generateCustomPdf } from "../templates/customPdf";
 import type { Tenant } from "@/types/tenant";
 
@@ -38,167 +40,12 @@ export const useDocumentGeneration = ({
 
     setIsGenerating(true);
     try {
-      const initialContent = getInitialContent(tenant, selectedTemplate);
-      console.log("Generating PDF with content:", initialContent);
-      
-      const pdfDoc = await generateCustomPdf(initialContent);
-      console.log("PDF generated successfully");
+      let pdfDoc;
+      let initialContent = "";
 
-      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      setGeneratedPdfUrl(pdfUrl);
-      setEditedContent(initialContent);
-      setShowPreview(true);
-    } catch (error) {
-      console.error('Document generation error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to generate document",
-        variant: "destructive",
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const handleDownload = async () => {
-    if (!generatedPdfUrl || !selectedTemplate) return;
-
-    try {
-      const timestamp = new Date().getTime();
-      const fileName = getFileName(tenant.name, selectedTemplate, timestamp);
-      const filePath = `${tenant.id}/${fileName}`;
-      
-      console.log("Starting file upload process for:", fileName);
-      const { publicUrl } = await uploadFile(generatedPdfUrl, filePath, fileName);
-      
-      await saveDocumentReference(tenant.id, fileName, publicUrl);
-
-      toast({
-        title: "Success",
-        description: "Document saved successfully",
-      });
-
-      cleanup();
-      onDocumentGenerated();
-    } catch (error) {
-      console.error('Error saving document:', error);
-      toast({
-        title: "Error",
-        description: "Failed to save document",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleSaveEdit = async () => {
-    try {
-      const pdfDoc = await generateCustomPdf(editedContent);
-      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      
-      setGeneratedPdfUrl(pdfUrl);
-      setIsEditing(false);
-      
-      toast({
-        title: "Success",
-        description: "Document updated successfully",
-      });
-    } catch (error) {
-      console.error('Error updating document:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update document",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const cleanup = () => {
-    if (generatedPdfUrl) {
-      URL.revokeObjectURL(generatedPdfUrl);
-    }
-    setGeneratedPdfUrl(null);
-    setShowPreview(false);
-    setSelectedTemplate("");
-    setIsEditing(false);
-    setEditedContent("");
-  };
-
-  return {
-    selectedTemplate,
-    setSelectedTemplate,
-    isGenerating,
-    generatedPdfUrl,
-    generateDocument,
-    handleDownload,
-    handleEdit,
-    handleSaveEdit,
-  };
-};
-
-// Helper functions
-const getFileName = (tenantName: string, template: string, timestamp: number): string => {
-  const sanitizedName = tenantName.toLowerCase().replace(/\s+/g, '_');
-  return template === 'lease'
-    ? `contrat_location_${sanitizedName}_${timestamp}.pdf`
-    : `recu_loyer_${sanitizedName}_${timestamp}.pdf`;
-};
-
-const uploadFile = async (fileUrl: string, filePath: string, fileName: string) => {
-  const response = await fetch(fileUrl);
-  const blob = await response.blob();
-  const file = new File([blob], fileName, { type: 'application/pdf' });
-
-  console.log("Uploading file to path:", filePath);
-  const { error: uploadError } = await supabase.storage
-    .from('tenant_documents')
-    .upload(filePath, file, {
-      cacheControl: '3600',
-      upsert: true
-    });
-
-  if (uploadError) {
-    console.error('Upload error:', uploadError);
-    throw uploadError;
-  }
-
-  console.log("File uploaded successfully, getting public URL");
-  const { data: { publicUrl } } = supabase.storage
-    .from('tenant_documents')
-    .getPublicUrl(filePath);
-
-  if (!publicUrl) {
-    throw new Error("Failed to generate public URL");
-  }
-
-  console.log("Generated public URL:", publicUrl);
-  return { publicUrl };
-};
-
-const saveDocumentReference = async (tenantId: string, fileName: string, publicUrl: string) => {
-  const { error: dbError } = await supabase
-    .from('tenant_documents')
-    .insert({
-      tenant_id: tenantId,
-      name: fileName,
-      file_url: publicUrl
-    });
-
-  if (dbError) {
-    console.error('Database error:', dbError);
-    throw dbError;
-  }
-};
-
-const getInitialContent = (tenant: Tenant, template: string): string => {
-  switch (template) {
-    case "lease":
-      return `LEASE AGREEMENT
+      switch (selectedTemplate) {
+        case "lease":
+          initialContent = `LEASE AGREEMENT
 
 Tenant: ${tenant.name}
 Email: ${tenant.email}
@@ -210,9 +57,10 @@ End Date: ${tenant.lease_end}
 Monthly Rent: $${tenant.rent_amount}
 
 [The rest of the contract can be edited here]`;
-
-    case "receipt":
-      return `RENT RECEIPT
+          pdfDoc = await generateCustomPdf(initialContent);
+          break;
+        case "receipt":
+          initialContent = `RENT RECEIPT
 
 Tenant: ${tenant.name}
 Property: ${tenant.properties?.name || 'Not specified'}
@@ -221,9 +69,10 @@ Amount: $${tenant.rent_amount}
 Date: ${new Date().toLocaleDateString()}
 
 [Payment details can be edited here]`;
-
-    case "notice":
-      return `NOTICE TO VACATE
+          pdfDoc = await generateCustomPdf(initialContent);
+          break;
+        case "notice":
+          initialContent = `NOTICE TO VACATE
 
 Date: ${new Date().toLocaleDateString()}
 
@@ -250,8 +99,126 @@ Please ensure that:
 
 Sincerely,
 Property Management`;
+          pdfDoc = await generateCustomPdf(initialContent);
+          break;
+        default:
+          throw new Error("Template not implemented");
+      }
 
-    default:
-      throw new Error("Template not implemented");
-  }
+      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      setGeneratedPdfUrl(pdfUrl);
+      setEditedContent(initialContent);
+      setShowPreview(true);
+
+    } catch (error) {
+      console.error('Document generation error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate document",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!generatedPdfUrl || !selectedTemplate) return;
+
+    try {
+      const fileName = selectedTemplate === 'lease' 
+        ? `contrat_location_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`
+        : `recu_loyer_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+
+      const response = await fetch(generatedPdfUrl);
+      const blob = await response.blob();
+      const file = new File([blob], fileName, { type: 'application/pdf' });
+
+      const filePath = `${tenant.id}/${fileName}`;
+      const { error: uploadError } = await supabase.storage
+        .from('tenant_documents')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('tenant_documents')
+        .getPublicUrl(filePath);
+
+      const { error: dbError } = await supabase
+        .from('tenant_documents')
+        .insert({
+          tenant_id: tenant.id,
+          name: fileName,
+          file_url: publicUrl
+        });
+
+      if (dbError) throw dbError;
+
+      toast({
+        title: "Succès",
+        description: "Document enregistré avec succès",
+      });
+
+      cleanup();
+      onDocumentGenerated();
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde du document:', error);
+      toast({
+        title: "Erreur",
+        description: "Échec de la sauvegarde du document",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      const pdfDoc = await generateCustomPdf(editedContent);
+      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      
+      setGeneratedPdfUrl(pdfUrl);
+      setIsEditing(false);
+      
+      toast({
+        title: "Succès",
+        description: "Document mis à jour avec succès",
+      });
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour du document:', error);
+      toast({
+        title: "Erreur",
+        description: "Échec de la mise à jour du document",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const cleanup = () => {
+    if (generatedPdfUrl) {
+      URL.revokeObjectURL(generatedPdfUrl);
+    }
+    setGeneratedPdfUrl(null);
+    setShowPreview(false);
+    setSelectedTemplate("");
+    setIsEditing(false);
+    setEditedContent("");
+  };
+
+  return {
+    selectedTemplate,
+    setSelectedTemplate,
+    isGenerating,
+    generatedPdfUrl,
+    generateDocument,
+    handleDownload,
+    handleEdit,
+    handleSaveEdit,
+  };
 };
