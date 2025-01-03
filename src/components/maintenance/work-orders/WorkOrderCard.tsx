@@ -9,10 +9,9 @@ interface WorkOrderCardProps {
   order: WorkOrder;
   onUpdate: () => void;
   onDelete: () => void;
-  onDuplicate: () => void;
 }
 
-export const WorkOrderCard = ({ order, onUpdate, onDelete, onDuplicate }: WorkOrderCardProps) => {
+export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps) => {
   return (
     <Card className="group transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
       <WorkOrderHeader title={order.title} />
@@ -31,7 +30,6 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete, onDuplicate }: WorkOr
             order={order}
             onStatusChange={onUpdate}
             onDelete={onDelete}
-            onDuplicate={onDuplicate}
             onUpdate={onUpdate}
           />
         </div>

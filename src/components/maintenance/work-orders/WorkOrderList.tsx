@@ -46,10 +46,6 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
     refetch();
   };
 
-  const handleDuplicate = () => {
-    refetch();
-  };
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -83,7 +79,6 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
             order={order}
             onUpdate={handleUpdate}
             onDelete={handleDelete}
-            onDuplicate={handleDuplicate}
           />
         ))}
       </div>
