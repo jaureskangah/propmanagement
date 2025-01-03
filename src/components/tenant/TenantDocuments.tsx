@@ -7,6 +7,7 @@ import { TenantDocument } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import type { Tenant } from "@/types/tenant";
 
 interface TenantDocumentsProps {
   documents: TenantDocument[];
