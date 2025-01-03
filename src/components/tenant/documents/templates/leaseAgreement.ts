@@ -5,7 +5,7 @@ import type { Tenant } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 
 // Initialize pdfMake with the fonts
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = pdfFonts.default.pdfMake.vfs;
 
 export const generateLeaseAgreement = async (tenant: Tenant) => {
   const documentDefinition: TDocumentDefinitions = {
