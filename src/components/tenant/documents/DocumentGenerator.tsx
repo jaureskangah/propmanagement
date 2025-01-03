@@ -4,6 +4,7 @@ import { FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateLeaseAgreement } from "./templates/leaseAgreement";
 import { generateRentalReceipt } from "./templates/rentalReceipt";
+import { generateCustomPdf } from "./templates/customPdf";
 import type { Tenant } from "@/types/tenant";
 import { supabase } from "@/lib/supabase";
 import { DocumentPreview } from "./DocumentPreview";
