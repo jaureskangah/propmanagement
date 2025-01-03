@@ -1,4 +1,5 @@
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 export const useDocumentActions = () => {
   const { toast } = useToast();
@@ -15,9 +16,18 @@ export const useDocumentActions = () => {
     }
 
     try {
-      console.log("Downloading document:", filename, "from URL:", url);
+      console.log("Getting public URL for download:", url);
+      const { data } = supabase.storage
+        .from('tenant_documents')
+        .getPublicUrl(url);
+
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL");
+      }
+
+      console.log("Downloading document:", filename, "from URL:", data.publicUrl);
       const link = document.createElement('a');
-      link.href = url;
+      link.href = data.publicUrl;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
@@ -32,7 +42,7 @@ export const useDocumentActions = () => {
     }
   };
 
-  const handleOpenInNewTab = (url: string, filename: string) => {
+  const handleOpenInNewTab = async (url: string, filename: string) => {
     if (!url) {
       console.error("Cannot open document - No URL for:", filename);
       toast({
@@ -44,8 +54,17 @@ export const useDocumentActions = () => {
     }
     
     try {
-      console.log("Opening document in new tab:", url);
-      window.open(url, '_blank', 'noopener,noreferrer');
+      console.log("Getting public URL for opening:", url);
+      const { data } = supabase.storage
+        .from('tenant_documents')
+        .getPublicUrl(url);
+
+      if (!data.publicUrl) {
+        throw new Error("Failed to get public URL");
+      }
+
+      console.log("Opening document in new tab:", data.publicUrl);
+      window.open(data.publicUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error("Error opening document:", error);
       toast({

@@ -17,7 +17,7 @@ export const DocumentList = ({ documents, onDelete }: DocumentListProps) => {
         console.log("Document data:", {
           id: doc.id,
           name: doc.name,
-          fileUrl: doc.file_url
+          file_url: doc.file_url
         });
 
         return (
@@ -37,7 +37,7 @@ export const DocumentList = ({ documents, onDelete }: DocumentListProps) => {
               </div>
             </div>
             <DocumentActions
-              fileUrl={doc.file_url || ''}
+              fileUrl={doc.file_url}
               fileName={doc.name}
               onDelete={() => onDelete(doc.id, doc.name)}
             />
