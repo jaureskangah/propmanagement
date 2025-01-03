@@ -42,11 +42,9 @@ export const useDocumentGeneration = ({
       const initialContent = generateTemplateContent(selectedTemplate, tenant);
       console.log("Generating PDF with content:", initialContent);
       
-      // Générer le PDF et obtenir l'ArrayBuffer
       const pdfBuffer = await generateCustomPdf(initialContent);
       console.log("PDF buffer generated successfully");
 
-      // Créer un Blob à partir de l'ArrayBuffer
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       const fileName = generateFileName(selectedTemplate, tenant);
       const pdfUrl = URL.createObjectURL(pdfBlob);

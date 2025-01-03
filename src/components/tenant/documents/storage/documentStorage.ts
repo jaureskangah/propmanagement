@@ -10,11 +10,8 @@ export const uploadDocumentToStorage = async (
   console.log("File type:", file.type);
   console.log("File size:", file.size);
 
-  // Convertir le fichier en ArrayBuffer
-  const buffer = await file.arrayBuffer();
-  
-  // Créer un nouveau Blob avec le type MIME correct
-  const pdfBlob = new Blob([buffer], { 
+  // Si le fichier est déjà un Blob PDF, l'utiliser directement
+  const pdfBlob = file instanceof Blob ? file : new Blob([file], { 
     type: 'application/pdf'
   });
 
@@ -56,7 +53,7 @@ export const uploadDocumentToStorage = async (
 
 export const generateFileName = (template: string, tenant: Tenant): string => {
   const timestamp = new Date().getTime();
-  const sanitizedName = tenant.name.toLowerCase().replace(/\s+/g, '_');
+  const sanitizedName = tenant.name.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
   
   switch (template) {
     case 'lease':

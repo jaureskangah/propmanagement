@@ -28,12 +28,11 @@ export const generateCustomPdf = async (content: string) => {
     }
   };
 
-  return new Promise<ArrayBuffer>((resolve, reject) => {
+  return new Promise<Uint8Array>((resolve, reject) => {
     try {
       const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
       
-      // On utilise directement getBuffer pour obtenir l'ArrayBuffer
-      pdfDocGenerator.getBuffer((buffer: ArrayBuffer) => {
+      pdfDocGenerator.getBuffer((buffer: Uint8Array) => {
         console.log("PDF buffer generated successfully, size:", buffer.byteLength);
         resolve(buffer);
       });
