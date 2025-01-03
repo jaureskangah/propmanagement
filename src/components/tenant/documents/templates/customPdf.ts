@@ -28,22 +28,14 @@ export const generateCustomPdf = async (content: string) => {
     }
   };
 
-  return new Promise<Blob>((resolve, reject) => {
+  return new Promise<ArrayBuffer>((resolve, reject) => {
     try {
       const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
       
-      // Utiliser getBuffer au lieu de getBlob pour un meilleur contrôle
+      // On utilise directement getBuffer pour obtenir l'ArrayBuffer
       pdfDocGenerator.getBuffer((buffer: ArrayBuffer) => {
-        // Créer un Blob à partir du buffer avec le type MIME correct
-        const pdfBlob = new Blob([buffer], { 
-          type: 'application/pdf'
-        });
-        
-        console.log("PDF generated successfully");
-        console.log("PDF blob size:", pdfBlob.size);
-        console.log("PDF blob type:", pdfBlob.type);
-        
-        resolve(pdfBlob);
+        console.log("PDF buffer generated successfully, size:", buffer.byteLength);
+        resolve(buffer);
       });
     } catch (error) {
       console.error("Error generating PDF:", error);

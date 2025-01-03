@@ -10,16 +10,17 @@ export const uploadDocumentToStorage = async (
   console.log("File type:", file.type);
   console.log("File size:", file.size);
 
-  // S'assurer que nous avons un fichier PDF valide
+  // Convertir le fichier en ArrayBuffer
   const buffer = await file.arrayBuffer();
-  const pdfFile = new File([buffer], filePath, { 
-    type: 'application/pdf',
-    lastModified: new Date().getTime()
+  
+  // Créer un nouveau Blob avec le type MIME correct
+  const pdfBlob = new Blob([buffer], { 
+    type: 'application/pdf'
   });
 
   const { error: uploadError, data } = await supabase.storage
     .from('tenant_documents')
-    .upload(filePath, pdfFile, {
+    .upload(filePath, pdfBlob, {
       contentType: 'application/pdf',
       cacheControl: '3600',
       upsert: true

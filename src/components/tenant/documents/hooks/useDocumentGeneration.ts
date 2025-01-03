@@ -41,12 +41,14 @@ export const useDocumentGeneration = ({
     try {
       const initialContent = generateTemplateContent(selectedTemplate, tenant);
       console.log("Generating PDF with content:", initialContent);
-      const pdfDoc = await generateCustomPdf(initialContent);
-      console.log("PDF generated successfully");
+      
+      // Générer le PDF et obtenir l'ArrayBuffer
+      const pdfBuffer = await generateCustomPdf(initialContent);
+      console.log("PDF buffer generated successfully");
 
-      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      // Créer un Blob à partir de l'ArrayBuffer
+      const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       const fileName = generateFileName(selectedTemplate, tenant);
-      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       
       setGeneratedPdfUrl(pdfUrl);
@@ -71,23 +73,21 @@ export const useDocumentGeneration = ({
       const fileName = generateFileName(selectedTemplate, tenant);
       const response = await fetch(generatedPdfUrl);
       const blob = await response.blob();
-      const file = new File([blob], fileName, { type: 'application/pdf' });
-      const filePath = `${tenant.id}/${fileName}`;
-
-      await uploadDocumentToStorage(file, tenant, filePath);
+      
+      await uploadDocumentToStorage(blob, tenant, `${tenant.id}/${fileName}`);
 
       toast({
-        title: "Succès",
-        description: "Document enregistré avec succès",
+        title: "Success",
+        description: "Document saved successfully",
       });
 
       cleanup();
       onDocumentGenerated();
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde du document:', error);
+      console.error('Error saving document:', error);
       toast({
-        title: "Erreur",
-        description: "Échec de la sauvegarde du document",
+        title: "Error",
+        description: "Failed to save document",
         variant: "destructive",
       });
     }
@@ -99,22 +99,22 @@ export const useDocumentGeneration = ({
 
   const handleSaveEdit = async () => {
     try {
-      const pdfDoc = await generateCustomPdf(editedContent);
-      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      const pdfBuffer = await generateCustomPdf(editedContent);
+      const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       
       setGeneratedPdfUrl(pdfUrl);
       setIsEditing(false);
       
       toast({
-        title: "Succès",
-        description: "Document mis à jour avec succès",
+        title: "Success",
+        description: "Document updated successfully",
       });
     } catch (error) {
-      console.error('Erreur lors de la mise à jour du document:', error);
+      console.error('Error updating document:', error);
       toast({
-        title: "Erreur",
-        description: "Échec de la mise à jour du document",
+        title: "Error",
+        description: "Failed to update document",
         variant: "destructive",
       });
     }
