@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Download } from "lucide-react";
+import { FileText, Download, Eye, Edit, Check, X } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { generateLeaseAgreement } from "./templates/leaseAgreement";
 import { generateRentalReceipt } from "./templates/rentalReceipt";
 import type { Tenant } from "@/types/tenant";
 import { supabase } from "@/lib/supabase";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface DocumentGeneratorProps {
   tenant: Tenant;
@@ -17,6 +18,8 @@ interface DocumentGeneratorProps {
 export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGeneratorProps) => {
   const [selectedTemplate, setSelectedTemplate] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedPdfUrl, setGeneratedPdfUrl] = useState<string | null>(null);
+  const [showPreview, setShowPreview] = useState(false);
   const { toast } = useToast();
 
   const templates = [
@@ -53,11 +56,37 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
           throw new Error("Template not implemented");
       }
 
-      // Generate PDF blob
-      const pdfBlob = await pdfDoc.getBlob();
-      const file = new File([pdfBlob], fileName, { type: 'application/pdf' });
+      // Create object URL for preview
+      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      setGeneratedPdfUrl(pdfUrl);
+      setShowPreview(true);
+
+    } catch (error) {
+      console.error('Document generation error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate document",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!generatedPdfUrl || !selectedTemplate) return;
+
+    try {
+      const fileName = selectedTemplate === 'lease' 
+        ? `lease_agreement_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`
+        : `rental_receipt_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
 
       // Upload to Supabase Storage
+      const response = await fetch(generatedPdfUrl);
+      const blob = await response.blob();
+      const file = new File([blob], fileName, { type: 'application/pdf' });
+
       const filePath = `${tenant.id}/${fileName}`;
       const { error: uploadError } = await supabase.storage
         .from('tenant_documents')
@@ -83,20 +112,23 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
 
       toast({
         title: "Success",
-        description: "Document generated and saved successfully",
+        description: "Document saved successfully",
       });
 
+      // Clean up
+      URL.revokeObjectURL(generatedPdfUrl);
+      setGeneratedPdfUrl(null);
+      setShowPreview(false);
+      setSelectedTemplate("");
+      
       onDocumentGenerated();
     } catch (error) {
-      console.error('Document generation error:', error);
+      console.error('Error saving document:', error);
       toast({
         title: "Error",
-        description: "Failed to generate document",
+        description: "Failed to save document",
         variant: "destructive",
       });
-    } finally {
-      setIsGenerating(false);
-      setSelectedTemplate("");
     }
   };
 
@@ -130,9 +162,38 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
           disabled={!selectedTemplate || isGenerating}
           className="w-full"
         >
-          <Download className="mr-2 h-4 w-4" />
+          <FileText className="mr-2 h-4 w-4" />
           {isGenerating ? "Generating..." : "Generate Document"}
         </Button>
+
+        <Dialog open={showPreview} onOpenChange={setShowPreview}>
+          <DialogContent className="max-w-4xl h-[80vh]">
+            <DialogHeader>
+              <DialogTitle>Document Preview</DialogTitle>
+            </DialogHeader>
+            <div className="flex flex-col h-full space-y-4">
+              <div className="flex-1 min-h-0">
+                {generatedPdfUrl && (
+                  <iframe
+                    src={generatedPdfUrl}
+                    className="w-full h-full rounded-md border"
+                    title="PDF Preview"
+                  />
+                )}
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setShowPreview(false)}>
+                  <X className="mr-2 h-4 w-4" />
+                  Cancel
+                </Button>
+                <Button onClick={handleDownload}>
+                  <Check className="mr-2 h-4 w-4" />
+                  Save & Download
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );
