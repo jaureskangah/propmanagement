@@ -7,13 +7,34 @@ import { PaymentSummary } from "./PaymentSummary";
 import { PaymentHistory } from "./PaymentHistory";
 import { ExportOptions } from "./ExportOptions";
 import { PerformanceCharts } from "./PerformanceCharts";
+import { RevenueForecast } from "./RevenueForecast";
 
 interface TenantFinancialReportProps {
   tenantId: string;
 }
 
 export const TenantFinancialReport = ({ tenantId }: TenantFinancialReportProps) => {
-  const { data: payments, isLoading } = useQuery({
+  const { data: tenant, isLoading: isLoadingTenant } = useQuery({
+    queryKey: ["tenant", tenantId],
+    queryFn: async () => {
+      console.log("Fetching tenant data for financial report:", tenantId);
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("*")
+        .eq("id", tenantId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching tenant data:", error);
+        throw error;
+      }
+
+      console.log("Tenant data fetched:", data);
+      return data;
+    },
+  });
+
+  const { data: payments, isLoading: isLoadingPayments } = useQuery({
     queryKey: ["tenant_payments", tenantId],
     queryFn: async () => {
       console.log("Fetching tenant payments for tenant:", tenantId);
@@ -33,7 +54,7 @@ export const TenantFinancialReport = ({ tenantId }: TenantFinancialReportProps) 
     },
   });
 
-  if (isLoading) {
+  if (isLoadingTenant || isLoadingPayments) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center h-[200px]">
@@ -51,6 +72,13 @@ export const TenantFinancialReport = ({ tenantId }: TenantFinancialReportProps) 
         </CardHeader>
         <CardContent className="space-y-6">
           <PaymentSummary payments={payments || []} />
+          {tenant && (
+            <RevenueForecast
+              rentAmount={tenant.rent_amount}
+              leaseStart={tenant.lease_start}
+              leaseEnd={tenant.lease_end}
+            />
+          )}
           <PerformanceCharts tenantId={tenantId} />
           <PaymentHistory payments={payments || []} />
           <ExportOptions payments={payments || []} />
