@@ -9,23 +9,40 @@ export const generateCustomPdf = async (content: string) => {
   
   const documentDefinition: TDocumentDefinitions = {
     content: [
-      { text: content, lineHeight: 1.5 }
+      {
+        text: content,
+        lineHeight: 1.5,
+        preserveLeadingSpaces: true
+      }
     ],
     defaultStyle: {
       font: 'Roboto',
       fontSize: 12
     },
     pageSize: 'A4',
-    pageMargins: [40, 40, 40, 40]
+    pageMargins: [ 40, 60, 40, 60 ],
+    info: {
+      title: 'Generated Document',
+      author: 'Property Management System',
+      creator: 'PDFMake'
+    }
   };
 
   return new Promise<Blob>((resolve, reject) => {
     try {
       const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
-      pdfDocGenerator.getBlob((blob: Blob) => {
-        // Ensure we're creating a PDF blob with the correct MIME type
-        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
-        console.log("PDF generated successfully, blob size:", pdfBlob.size);
+      
+      // Utiliser getBuffer au lieu de getBlob pour un meilleur contrôle
+      pdfDocGenerator.getBuffer((buffer: ArrayBuffer) => {
+        // Créer un Blob à partir du buffer avec le type MIME correct
+        const pdfBlob = new Blob([buffer], { 
+          type: 'application/pdf'
+        });
+        
+        console.log("PDF generated successfully");
+        console.log("PDF blob size:", pdfBlob.size);
+        console.log("PDF blob type:", pdfBlob.type);
+        
         resolve(pdfBlob);
       });
     } catch (error) {

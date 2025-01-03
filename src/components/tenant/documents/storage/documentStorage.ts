@@ -10,8 +10,12 @@ export const uploadDocumentToStorage = async (
   console.log("File type:", file.type);
   console.log("File size:", file.size);
 
-  // Ensure we're handling the file as a proper PDF
-  const pdfFile = file instanceof File ? file : new File([file], filePath, { type: 'application/pdf' });
+  // S'assurer que nous avons un fichier PDF valide
+  const buffer = await file.arrayBuffer();
+  const pdfFile = new File([buffer], filePath, { 
+    type: 'application/pdf',
+    lastModified: new Date().getTime()
+  });
 
   const { error: uploadError, data } = await supabase.storage
     .from('tenant_documents')
