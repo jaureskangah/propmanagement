@@ -31,7 +31,7 @@ const plans = [
       "Priority support",
     ],
     buttonText: "Start Now",
-    priceId: "price_1QcxBFA44huL2zb1fQfojYxe",
+    priceId: "price_1OgGDpA44huL2zb1Gy6Hs8Hs", // Updated to test mode Price ID
   },
   {
     name: "Enterprise",
@@ -45,7 +45,7 @@ const plans = [
       "24/7 Priority support",
     ],
     buttonText: "Start Now",
-    priceId: "price_1QcxKGA44huL2zb1F9UWnsxF",
+    priceId: "price_1OgGELA44huL2zb1sPxhzUWx", // Updated to test mode Price ID
   },
 ];
 
