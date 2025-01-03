@@ -1,5 +1,6 @@
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SearchInput } from "./filters/SearchInput";
+import { TypeFilter } from "./filters/TypeFilter";
+import { DateFilter } from "./filters/DateFilter";
 
 interface CommunicationFiltersProps {
   searchQuery: string;
@@ -22,32 +23,13 @@ export const CommunicationFilters = ({
 }: CommunicationFiltersProps) => {
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <Input
-        placeholder="Search communications..."
-        value={searchQuery}
-        onChange={(e) => onSearchChange(e.target.value)}
+      <SearchInput value={searchQuery} onChange={onSearchChange} />
+      <TypeFilter 
+        value={selectedType} 
+        types={communicationTypes} 
+        onChange={onTypeChange} 
       />
-      <Select
-        value={selectedType || ""}
-        onValueChange={(value) => onTypeChange(value || null)}
-      >
-        <SelectTrigger>
-          <SelectValue placeholder="Filter by type" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="">All types</SelectItem>
-          {communicationTypes.map((type) => (
-            <SelectItem key={type} value={type}>
-              {type}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Input
-        type="date"
-        value={startDate}
-        onChange={(e) => onDateChange(e.target.value)}
-      />
+      <DateFilter value={startDate} onChange={onDateChange} />
     </div>
   );
 };
