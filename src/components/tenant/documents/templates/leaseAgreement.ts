@@ -62,5 +62,12 @@ export const generateLeaseAgreement = async (tenant: Tenant) => {
     }
   };
 
-  return pdfMake.createPdf(documentDefinition);
+  return new Promise<Blob>((resolve, reject) => {
+    const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      resolve(blob);
+    }, (error: any) => {
+      reject(error);
+    });
+  });
 };
