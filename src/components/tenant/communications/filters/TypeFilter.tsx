@@ -9,14 +9,14 @@ interface TypeFilterProps {
 export const TypeFilter = ({ value, types, onChange }: TypeFilterProps) => {
   return (
     <Select
-      value={value || ""}
-      onValueChange={(value) => onChange(value || null)}
+      value={value || "all"}
+      onValueChange={(value) => onChange(value === "all" ? null : value)}
     >
       <SelectTrigger>
         <SelectValue placeholder="Filter by type" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="">All types</SelectItem>
+        <SelectItem value="all">All types</SelectItem>
         {types.map((type) => (
           <SelectItem key={type} value={type}>
             {type}
