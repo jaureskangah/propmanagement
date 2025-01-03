@@ -14,6 +14,7 @@ serve(async (req) => {
 
   try {
     const { priceId } = await req.json();
+    console.log('Received request for price:', priceId);
     
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -33,6 +34,7 @@ serve(async (req) => {
       apiVersion: '2023-10-16',
     });
 
+    console.log('Looking up customer for email:', user.email);
     const customers = await stripe.customers.list({
       email: user.email,
       limit: 1,
@@ -77,7 +79,7 @@ serve(async (req) => {
       }
     );
   } catch (error) {
-    console.error('Error creating checkout session:', error);
+    console.error('Error in create-checkout-session:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
