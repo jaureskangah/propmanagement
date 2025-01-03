@@ -1,15 +1,13 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { FileText, Download, Eye, Edit, Check, X } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateLeaseAgreement } from "./templates/leaseAgreement";
 import { generateRentalReceipt } from "./templates/rentalReceipt";
 import type { Tenant } from "@/types/tenant";
 import { supabase } from "@/lib/supabase";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
+import { DocumentPreview } from "./DocumentPreview";
+import { TemplateSelector } from "./TemplateSelector";
 
 interface DocumentGeneratorProps {
   tenant: Tenant;
@@ -24,12 +22,6 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState("");
   const { toast } = useToast();
-
-  const templates = [
-    { id: "lease", name: "Lease Agreement" },
-    { id: "receipt", name: "Rental Receipt" },
-    { id: "notice", name: "Notice to Vacate" },
-  ];
 
   const generateDocument = async () => {
     if (!selectedTemplate) {
@@ -59,11 +51,17 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
           throw new Error("Template not implemented");
       }
 
-      // Create object URL for preview
       const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setGeneratedPdfUrl(pdfUrl);
       setShowPreview(true);
+
+      // Convertir le PDF en texte pour l'édition
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        setEditedContent(e.target?.result as string);
+      };
+      reader.readAsText(pdfBlob);
 
     } catch (error) {
       console.error('Document generation error:', error);
@@ -85,7 +83,6 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
         ? `lease_agreement_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`
         : `rental_receipt_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
 
-      // Upload to Supabase Storage
       const response = await fetch(generatedPdfUrl);
       const blob = await response.blob();
       const file = new File([blob], fileName, { type: 'application/pdf' });
@@ -97,12 +94,10 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('tenant_documents')
         .getPublicUrl(filePath);
 
-      // Save document reference in database
       const { error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
@@ -118,14 +113,7 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
         description: "Document saved successfully",
       });
 
-      // Clean up
-      URL.revokeObjectURL(generatedPdfUrl);
-      setGeneratedPdfUrl(null);
-      setShowPreview(false);
-      setSelectedTemplate("");
-      setIsEditing(false);
-      setEditedContent("");
-      
+      cleanup();
       onDocumentGenerated();
     } catch (error) {
       console.error('Error saving document:', error);
@@ -139,19 +127,41 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
 
   const handleEdit = () => {
     setIsEditing(true);
-    // Ici on pourrait charger le contenu du PDF dans le textarea
-    // Pour l'instant on met un contenu par défaut
-    setEditedContent("Edit your document content here...");
   };
 
   const handleSaveEdit = async () => {
-    // Ici on devrait implémenter la logique pour sauvegarder les modifications
-    // et régénérer le PDF avec le contenu modifié
+    try {
+      // Créer un nouveau PDF avec le contenu édité
+      const pdfDoc = await generateCustomPdf(editedContent);
+      const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      
+      setGeneratedPdfUrl(pdfUrl);
+      setIsEditing(false);
+      
+      toast({
+        title: "Success",
+        description: "Document updated successfully",
+      });
+    } catch (error) {
+      console.error('Error updating document:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update document",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const cleanup = () => {
+    if (generatedPdfUrl) {
+      URL.revokeObjectURL(generatedPdfUrl);
+    }
+    setGeneratedPdfUrl(null);
+    setShowPreview(false);
+    setSelectedTemplate("");
     setIsEditing(false);
-    toast({
-      title: "Success",
-      description: "Document updated successfully",
-    });
+    setEditedContent("");
   };
 
   return (
@@ -163,82 +173,24 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Select
-          value={selectedTemplate}
-          onValueChange={setSelectedTemplate}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select document template" />
-          </SelectTrigger>
-          <SelectContent>
-            {templates.map((template) => (
-              <SelectItem key={template.id} value={template.id}>
-                {template.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <TemplateSelector
+          selectedTemplate={selectedTemplate}
+          onTemplateChange={setSelectedTemplate}
+          onGenerate={generateDocument}
+          isGenerating={isGenerating}
+        />
 
-        <Button
-          onClick={generateDocument}
-          disabled={!selectedTemplate || isGenerating}
-          className="w-full"
-        >
-          <FileText className="mr-2 h-4 w-4" />
-          {isGenerating ? "Generating..." : "Generate Document"}
-        </Button>
-
-        <Dialog open={showPreview} onOpenChange={setShowPreview}>
-          <DialogContent className="max-w-4xl h-[80vh]">
-            <DialogHeader>
-              <DialogTitle>Document Preview</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col h-full space-y-4">
-              {isEditing ? (
-                <div className="flex-1 min-h-0">
-                  <Textarea
-                    value={editedContent}
-                    onChange={(e) => setEditedContent(e.target.value)}
-                    className="h-full"
-                  />
-                </div>
-              ) : (
-                <div className="flex-1 min-h-0">
-                  {generatedPdfUrl && (
-                    <iframe
-                      src={generatedPdfUrl}
-                      className="w-full h-full rounded-md border"
-                      title="PDF Preview"
-                    />
-                  )}
-                </div>
-              )}
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setShowPreview(false)}>
-                  <X className="mr-2 h-4 w-4" />
-                  Cancel
-                </Button>
-                {isEditing ? (
-                  <Button onClick={handleSaveEdit}>
-                    <Check className="mr-2 h-4 w-4" />
-                    Save Changes
-                  </Button>
-                ) : (
-                  <>
-                    <Button variant="outline" onClick={handleEdit}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </Button>
-                    <Button onClick={handleDownload}>
-                      <Check className="mr-2 h-4 w-4" />
-                      Save & Download
-                    </Button>
-                  </>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <DocumentPreview
+          showPreview={showPreview}
+          setShowPreview={setShowPreview}
+          generatedPdfUrl={generatedPdfUrl}
+          isEditing={isEditing}
+          editedContent={editedContent}
+          onEditContent={setEditedContent}
+          onEdit={handleEdit}
+          onSaveEdit={handleSaveEdit}
+          onDownload={handleDownload}
+        />
       </CardContent>
     </Card>
   );
