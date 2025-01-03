@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FileImage, CheckSquare, Trash2, Copy, RefreshCw, Edit } from "lucide-react";
+import { FileImage, CheckSquare, Trash2, RefreshCw, Edit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useState } from "react";
@@ -10,7 +10,6 @@ interface WorkOrderActionsProps {
   order: WorkOrder;
   onStatusChange: () => void;
   onDelete: () => void;
-  onDuplicate: () => void;
   onUpdate: () => void;
 }
 
@@ -18,7 +17,6 @@ export const WorkOrderActions = ({
   order,
   onStatusChange,
   onDelete,
-  onDuplicate,
   onUpdate
 }: WorkOrderActionsProps) => {
   const { toast } = useToast();
@@ -72,52 +70,6 @@ export const WorkOrderActions = ({
     onDelete();
   };
 
-  const handleDuplicate = async () => {
-    // Fetch the current work order data
-    const { data: currentOrder, error: fetchError } = await supabase
-      .from('vendor_interventions')
-      .select('*')
-      .eq('id', order.id)
-      .single();
-
-    if (fetchError) {
-      console.error("Error fetching work order:", fetchError);
-      toast({
-        title: "Error",
-        description: "Unable to duplicate work order",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Create a new work order with the same data
-    const { error: createError } = await supabase
-      .from('vendor_interventions')
-      .insert({
-        ...currentOrder,
-        id: undefined,
-        title: `${currentOrder.title} (copy)`,
-        status: 'Scheduled',
-        created_at: undefined,
-      });
-
-    if (createError) {
-      console.error("Error duplicating work order:", createError);
-      toast({
-        title: "Error",
-        description: "Unable to duplicate work order",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Success",
-      description: "Work order duplicated",
-    });
-    onDuplicate();
-  };
-
   return (
     <>
       <div className="flex gap-2 mt-4">
@@ -128,10 +80,6 @@ export const WorkOrderActions = ({
         <Button variant="outline" size="sm" onClick={() => setIsEditDialogOpen(true)}>
           <Edit className="h-4 w-4 mr-2" />
           Edit
-        </Button>
-        <Button variant="outline" size="sm" onClick={handleDuplicate}>
-          <Copy className="h-4 w-4 mr-2" />
-          Duplicate
         </Button>
         <Button variant="outline" size="sm" className="text-red-500 hover:text-red-700" onClick={handleDelete}>
           <Trash2 className="h-4 w-4 mr-2" />
