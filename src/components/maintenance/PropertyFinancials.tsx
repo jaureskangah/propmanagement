@@ -31,7 +31,7 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
     },
   });
 
-  // Fetch maintenance interventions data
+  // Fetch maintenance interventions data with property information
   const { data: maintenance = [] } = useQuery({
     queryKey: ["vendor_interventions", propertyId],
     queryFn: async () => {
@@ -42,8 +42,12 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
           vendors (
             name,
             specialty
+          ),
+          properties (
+            name
           )
         `)
+        .eq("property_id", propertyId)
         .order("date", { ascending: false });
 
       if (error) {
