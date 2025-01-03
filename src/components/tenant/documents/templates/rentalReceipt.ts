@@ -1,13 +1,14 @@
 import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
+import type { TDocumentDefinitions } from "pdfmake/interfaces";
 import type { Tenant } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 
-// Initialize pdfMake with the fonts
-pdfMake.vfs = (pdfFonts as any).vfs;
+// Import fonts
+const pdfFonts = require("pdfmake/build/vfs_fonts");
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 export const generateRentalReceipt = async (tenant: Tenant) => {
-  const documentDefinition = {
+  const documentDefinition: TDocumentDefinitions = {
     content: [
       { text: 'RENTAL RECEIPT', style: 'header' },
       { text: '\n' },
