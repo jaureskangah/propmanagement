@@ -47,7 +47,6 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
             name
           )
         `)
-        .eq("property_id", propertyId)
         .order("date", { ascending: false });
 
       if (error) {
