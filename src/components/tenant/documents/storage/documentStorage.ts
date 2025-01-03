@@ -50,11 +50,11 @@ export const generateFileName = (template: string, tenant: Tenant): string => {
   
   switch (template) {
     case 'lease':
-      return `contrat_location_${sanitizedName}_${timestamp}.pdf`;
+      return `lease_agreement_${sanitizedName}_${timestamp}.pdf`;
     case 'receipt':
-      return `recu_loyer_${sanitizedName}_${timestamp}.pdf`;
+      return `rent_receipt_${sanitizedName}_${timestamp}.pdf`;
     case 'notice':
-      return `avis_${sanitizedName}_${timestamp}.pdf`;
+      return `notice_${sanitizedName}_${timestamp}.pdf`;
     default:
       return `document_${sanitizedName}_${timestamp}.pdf`;
   }
