@@ -1,6 +1,5 @@
-import { Search, Calendar } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface CommunicationFiltersProps {
   searchQuery: string;
@@ -9,7 +8,7 @@ interface CommunicationFiltersProps {
   communicationTypes: string[];
   onSearchChange: (value: string) => void;
   onDateChange: (value: string) => void;
-  onTypeChange: (type: string | null) => void;
+  onTypeChange: (value: string | null) => void;
 }
 
 export const CommunicationFilters = ({
@@ -22,44 +21,33 @@ export const CommunicationFilters = ({
   onTypeChange,
 }: CommunicationFiltersProps) => {
   return (
-    <div className="flex flex-col sm:flex-row gap-4">
-      <div className="relative flex-1">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search communications..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-9"
-        />
-      </div>
-      <div className="flex gap-2 flex-wrap">
-        <Button
-          variant={selectedType === null ? "default" : "outline"}
-          size="sm"
-          onClick={() => onTypeChange(null)}
-        >
-          All
-        </Button>
-        {communicationTypes.map((type) => (
-          <Button
-            key={type}
-            variant={selectedType === type ? "default" : "outline"}
-            size="sm"
-            onClick={() => onTypeChange(type)}
-          >
-            {type}
-          </Button>
-        ))}
-      </div>
-      <div className="relative w-full sm:w-auto">
-        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="date"
-          value={startDate}
-          onChange={(e) => onDateChange(e.target.value)}
-          className="pl-9"
-        />
-      </div>
+    <div className="grid gap-4 md:grid-cols-3">
+      <Input
+        placeholder="Search communications..."
+        value={searchQuery}
+        onChange={(e) => onSearchChange(e.target.value)}
+      />
+      <Select
+        value={selectedType || ""}
+        onValueChange={(value) => onTypeChange(value || null)}
+      >
+        <SelectTrigger>
+          <SelectValue placeholder="Filter by type" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="">All types</SelectItem>
+          {communicationTypes.map((type) => (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <Input
+        type="date"
+        value={startDate}
+        onChange={(e) => onDateChange(e.target.value)}
+      />
     </div>
   );
 };

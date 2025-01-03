@@ -267,6 +267,7 @@ export type Database = {
       }
       tenant_communications: {
         Row: {
+          content: string | null
           created_at: string
           id: string
           status: string
@@ -275,6 +276,7 @@ export type Database = {
           type: string
         }
         Insert: {
+          content?: string | null
           created_at?: string
           id?: string
           status?: string
@@ -283,6 +285,7 @@ export type Database = {
           type: string
         }
         Update: {
+          content?: string | null
           created_at?: string
           id?: string
           status?: string
