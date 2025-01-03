@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useDocumentActions } from "./hooks/useDocumentActions";
 
 interface DocumentActionsProps {
-  fileUrl: string | null;
+  fileUrl: string;
   fileName: string;
   onDelete: () => void;
 }
@@ -22,7 +22,7 @@ export const DocumentActions: React.FC<DocumentActionsProps> = ({
         variant="ghost"
         size="icon"
         onClick={() => handleDownload(fileUrl, fileName)}
-        title="Download document"
+        title="Télécharger le document"
         className="hover:text-blue-600 hover:bg-blue-50"
       >
         <Download className="h-4 w-4" />
@@ -31,7 +31,7 @@ export const DocumentActions: React.FC<DocumentActionsProps> = ({
         variant="ghost"
         size="icon"
         onClick={() => handleOpenInNewTab(fileUrl, fileName)}
-        title="Open in new tab"
+        title="Ouvrir dans un nouvel onglet"
         className="hover:text-blue-600 hover:bg-blue-50"
       >
         <ExternalLink className="h-4 w-4" />
@@ -41,7 +41,7 @@ export const DocumentActions: React.FC<DocumentActionsProps> = ({
         size="icon"
         onClick={onDelete}
         className="hover:text-red-600 hover:bg-red-50"
-        title="Delete document"
+        title="Supprimer le document"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
