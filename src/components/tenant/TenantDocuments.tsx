@@ -1,13 +1,11 @@
-import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { DocumentUpload } from "./DocumentUpload";
 import { DocumentGenerator } from "./documents/DocumentGenerator";
-import { TenantDocument } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
+import { DocumentList } from "./documents/DocumentList";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import type { Tenant } from "@/types/tenant";
+import type { Tenant, TenantDocument } from "@/types/tenant";
 
 interface TenantDocumentsProps {
   documents: TenantDocument[];
@@ -23,31 +21,6 @@ export const TenantDocuments = ({
   tenant 
 }: TenantDocumentsProps) => {
   const { toast } = useToast();
-
-  const handleDownload = (url: string, filename: string) => {
-    console.log("Downloading document:", filename, "from URL:", url);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const handleOpenInNewTab = (url: string | null) => {
-    if (!url) {
-      console.error("No URL provided for document");
-      toast({
-        title: "Error",
-        description: "Cannot open document - URL is missing",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    console.log("Opening document in new tab:", url);
-    window.open(url, '_blank', 'noopener,noreferrer');
-  };
 
   const handleDelete = async (documentId: string, filename: string) => {
     try {
@@ -86,70 +59,24 @@ export const TenantDocuments = ({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-blue-600" />
             <CardTitle className="text-lg">Uploaded Documents</CardTitle>
           </div>
           <DocumentUpload tenantId={tenantId} onUploadComplete={onDocumentUpdate} />
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {documents.length === 0 ? (
-              <div className="text-center py-8 border-2 border-dashed rounded-lg">
-                <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground">
-                  No documents available. Upload your first document.
-                </p>
-              </div>
-            ) : (
-              documents.map((doc) => (
-                <div
-                  key={doc.id}
-                  className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 text-blue-700">
-                      <FileText className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="font-medium">{doc.name}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDate(doc.created_at)}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDownload(doc.file_url!, doc.name)}
-                      title="Download document"
-                      className="hover:text-blue-600 hover:bg-blue-50"
-                    >
-                      <Download className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleOpenInNewTab(doc.file_url)}
-                      title="Open in new tab"
-                      className="hover:text-blue-600 hover:bg-blue-50"
-                    >
-                      <ExternalLink className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(doc.id, doc.name)}
-                      className="hover:text-red-600 hover:bg-red-50"
-                      title="Delete document"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
+          {documents.length === 0 ? (
+            <div className="text-center py-8 border-2 border-dashed rounded-lg">
+              <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+              <p className="text-sm text-muted-foreground">
+                No documents available. Upload your first document.
+              </p>
+            </div>
+          ) : (
+            <DocumentList 
+              documents={documents}
+              onDelete={handleDelete}
+            />
+          )}
         </CardContent>
       </Card>
     </div>
