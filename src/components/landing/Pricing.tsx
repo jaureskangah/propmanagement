@@ -70,16 +70,24 @@ export default function Pricing() {
     }
 
     try {
+      console.log('Creating checkout session for price:', priceId);
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: { priceId },
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
       if (data?.url) {
+        console.log('Redirecting to checkout URL:', data.url);
         window.location.href = data.url;
+      } else {
+        console.error('No checkout URL received');
+        throw new Error('Failed to create checkout session');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
       toast({
         title: "Error",
