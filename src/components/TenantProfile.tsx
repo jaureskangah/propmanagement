@@ -5,6 +5,7 @@ import { TenantDocuments } from "./tenant/TenantDocuments";
 import { TenantPayments } from "./tenant/TenantPayments";
 import { TenantMaintenance } from "./tenant/TenantMaintenance";
 import { TenantCommunications } from "./tenant/TenantCommunications";
+import { TenantFinancialReport } from "./tenant/reports/TenantFinancialReport";
 import { Card } from "@/components/ui/card";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { Tenant } from "@/types/tenant";
@@ -37,13 +38,14 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       <TenantInfoCard tenant={tenant} />
 
       <Tabs defaultValue="documents" className="w-full">
-        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-4'} w-full`}>
+        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-5'} w-full`}>
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
+          <TabsTrigger value="payments">Paiements</TabsTrigger>
           {!isMobile && (
             <>
               <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
               <TabsTrigger value="communications">Communications</TabsTrigger>
+              <TabsTrigger value="reports">Rapports</TabsTrigger>
             </>
           )}
         </TabsList>
@@ -76,6 +78,10 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
 
             <TabsContent value="communications" className="mt-4">
               <TenantCommunications communications={tenant.communications} />
+            </TabsContent>
+
+            <TabsContent value="reports" className="mt-4">
+              <TenantFinancialReport tenantId={tenant.id} />
             </TabsContent>
           </>
         )}
