@@ -71,6 +71,36 @@ Date: ${new Date().toLocaleDateString()}
 [Payment details can be edited here]`;
           pdfDoc = await generateCustomPdf(initialContent);
           break;
+        case "notice":
+          initialContent = `NOTICE TO VACATE
+
+Date: ${new Date().toLocaleDateString()}
+
+To: ${tenant.name}
+${tenant.properties?.name || 'Property Address'}
+Unit ${tenant.unit_number}
+
+Dear ${tenant.name},
+
+This letter serves as formal notice that you are required to vacate the premises described above. 
+
+Current Lease Details:
+- Lease Start Date: ${tenant.lease_start}
+- Lease End Date: ${tenant.lease_end}
+- Monthly Rent: $${tenant.rent_amount}
+
+Please ensure that:
+1. All personal belongings are removed
+2. The unit is cleaned thoroughly
+3. All keys are returned
+4. A forwarding address is provided
+
+[Additional terms and conditions can be edited here]
+
+Sincerely,
+Property Management`;
+          pdfDoc = await generateCustomPdf(initialContent);
+          break;
         default:
           throw new Error("Template not implemented");
       }
