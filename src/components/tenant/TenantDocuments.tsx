@@ -34,6 +34,11 @@ export const TenantDocuments = ({
     document.body.removeChild(link);
   };
 
+  const handleOpenInNewTab = (url: string) => {
+    console.log("Opening document in new tab:", url);
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
   const handleDelete = async (documentId: string, filename: string) => {
     try {
       console.log("Deleting document:", filename);
@@ -115,17 +120,11 @@ export const TenantDocuments = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      asChild
+                      onClick={() => handleOpenInNewTab(doc.file_url!)}
                       title="Open in new tab"
                       className="hover:text-blue-600 hover:bg-blue-50"
                     >
-                      <a 
-                        href={doc.file_url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </a>
+                      <ExternalLink className="h-4 w-4" />
                     </Button>
                     <Button
                       variant="ghost"
