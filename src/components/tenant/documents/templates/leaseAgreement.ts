@@ -1,10 +1,10 @@
 import pdfMake from "pdfmake/build/pdfmake";
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import pdfFonts from "pdfmake/build/vfs_fonts";
 import type { Tenant } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 
 // Initialize pdfMake with the fonts
-(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+pdfMake.vfs = (pdfFonts as any).vfs;
 
 export const generateLeaseAgreement = async (tenant: Tenant) => {
   const documentDefinition = {
