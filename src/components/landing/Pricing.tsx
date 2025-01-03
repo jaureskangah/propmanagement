@@ -31,7 +31,7 @@ const plans = [
       "Priority support",
     ],
     buttonText: "Start Now",
-    priceId: "price_1QdEX1A44huL2zb1OfGwbzzn", // Mise à jour avec le Price ID de test Pro
+    priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
   },
   {
     name: "Enterprise",
@@ -45,7 +45,7 @@ const plans = [
       "24/7 Priority support",
     ],
     buttonText: "Start Now",
-    priceId: "price_1QdEXVA44huL2zb1cvLhmUtK", // Mise à jour avec le Price ID de test Enterprise
+    priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
   },
 ];
 
@@ -70,6 +70,11 @@ export default function Pricing() {
     }
 
     try {
+      toast({
+        title: "Processing",
+        description: "Preparing your checkout session...",
+      });
+
       console.log('Creating checkout session for price:', priceId);
       const { data, error } = await supabase.functions.invoke('create-checkout-session', {
         body: { priceId },
@@ -77,7 +82,12 @@ export default function Pricing() {
 
       if (error) {
         console.error('Supabase function error:', error);
-        throw error;
+        toast({
+          title: "Error",
+          description: error.message || "Failed to create checkout session",
+          variant: "destructive",
+        });
+        return;
       }
 
       if (data?.url) {
@@ -85,7 +95,11 @@ export default function Pricing() {
         window.location.href = data.url;
       } else {
         console.error('No checkout URL received');
-        throw new Error('Failed to create checkout session');
+        toast({
+          title: "Error",
+          description: "Failed to create checkout session - no URL received",
+          variant: "destructive",
+        });
       }
     } catch (error: any) {
       console.error('Error:', error);
