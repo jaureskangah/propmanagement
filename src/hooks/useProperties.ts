@@ -9,6 +9,7 @@ export interface PropertyFormData {
   address: string;
   units: number;
   type: string;
+  image?: string;
 }
 
 export interface Property {
@@ -92,6 +93,7 @@ export function useProperties() {
         .from("properties")
         .insert([{
           ...data,
+          image_url: data.image,
           user_id: user.id,
         }]);
 
@@ -132,7 +134,10 @@ export function useProperties() {
     try {
       const { error } = await supabase
         .from("properties")
-        .update(data)
+        .update({
+          ...data,
+          image_url: data.image,
+        })
         .eq("id", id)
         .eq("user_id", user.id);
 
