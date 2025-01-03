@@ -40,12 +40,12 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       <Tabs defaultValue="documents" className="w-full">
         <TabsList className={`grid ${isMobile ? 'grid-cols-2' : 'grid-cols-5'} w-full`}>
           <TabsTrigger value="documents">Documents</TabsTrigger>
-          <TabsTrigger value="payments">Paiements</TabsTrigger>
+          <TabsTrigger value="payments">Payments</TabsTrigger>
           {!isMobile && (
             <>
               <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
               <TabsTrigger value="communications">Communications</TabsTrigger>
-              <TabsTrigger value="reports">Rapports</TabsTrigger>
+              <TabsTrigger value="reports">Reports</TabsTrigger>
             </>
           )}
         </TabsList>
@@ -55,6 +55,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
             documents={tenant.documents} 
             tenantId={tenant.id}
             onDocumentUpdate={handleDataUpdate}
+            tenant={tenant}
           />
         </TabsContent>
 
