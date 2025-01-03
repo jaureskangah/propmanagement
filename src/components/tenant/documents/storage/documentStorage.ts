@@ -2,16 +2,21 @@ import { supabase } from "@/lib/supabase";
 import type { Tenant } from "@/types/tenant";
 
 export const uploadDocumentToStorage = async (
-  file: File,
+  file: File | Blob,
   tenant: Tenant,
   filePath: string
 ) => {
   console.log("Uploading file to path:", filePath);
-  console.log("File name:", file.name);
+  console.log("File type:", file.type);
+  console.log("File size:", file.size);
+
+  // Ensure we're handling the file as a proper PDF
+  const pdfFile = file instanceof File ? file : new File([file], filePath, { type: 'application/pdf' });
 
   const { error: uploadError, data } = await supabase.storage
     .from('tenant_documents')
-    .upload(filePath, file, {
+    .upload(filePath, pdfFile, {
+      contentType: 'application/pdf',
       cacheControl: '3600',
       upsert: true
     });
@@ -32,7 +37,7 @@ export const uploadDocumentToStorage = async (
     .from('tenant_documents')
     .insert({
       tenant_id: tenant.id,
-      name: file.name.split('/').pop(), // Ensure we only get the filename without path
+      name: filePath.split('/').pop() || 'document.pdf',
       file_url: publicUrl
     });
 

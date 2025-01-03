@@ -5,39 +5,28 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
 
 export const generateCustomPdf = async (content: string) => {
+  console.log("Generating PDF with content:", content);
+  
   const documentDefinition: TDocumentDefinitions = {
     content: [
-      { text: content }
+      { text: content, lineHeight: 1.5 }
     ],
     defaultStyle: {
       font: 'Roboto',
-      fontSize: 12,
-      lineHeight: 1.5
+      fontSize: 12
     },
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        margin: [0, 0, 0, 10]
-      }
-    },
-    fonts: {
-      Roboto: {
-        normal: 'Roboto-Regular',
-        bold: 'Roboto-Medium',
-        italics: 'Roboto-Italic',
-        bolditalics: 'Roboto-MediumItalic'
-      }
-    }
+    pageSize: 'A4',
+    pageMargins: [40, 40, 40, 40]
   };
 
   return new Promise<Blob>((resolve, reject) => {
     try {
-      console.log("Generating PDF with content:", content);
       const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
       pdfDocGenerator.getBlob((blob: Blob) => {
-        console.log("PDF generated successfully");
-        resolve(blob);
+        // Ensure we're creating a PDF blob with the correct MIME type
+        const pdfBlob = new Blob([blob], { type: 'application/pdf' });
+        console.log("PDF generated successfully, blob size:", pdfBlob.size);
+        resolve(pdfBlob);
       });
     } catch (error) {
       console.error("Error generating PDF:", error);
