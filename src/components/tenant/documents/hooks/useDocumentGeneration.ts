@@ -45,7 +45,10 @@ export const useDocumentGeneration = ({
       console.log("PDF generated successfully");
 
       const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
+      const fileName = generateFileName(selectedTemplate, tenant);
+      const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
+      
       setGeneratedPdfUrl(pdfUrl);
       setEditedContent(initialContent);
       setShowPreview(true);
