@@ -9,22 +9,20 @@ export const generateCustomPdf = async (content: string) => {
     content: [
       { text: content }
     ],
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 10]
-      }
+    defaultStyle: {
+      font: 'Helvetica',
+      fontSize: 12
     }
   };
 
   return new Promise<Blob>((resolve, reject) => {
-    const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
-    pdfDocGenerator.getBlob((blob: Blob) => {
-      resolve(blob);
-    }, (error: any) => {
+    try {
+      const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
+      pdfDocGenerator.getBlob((blob: Blob) => {
+        resolve(blob);
+      });
+    } catch (error) {
       reject(error);
-    });
+    }
   });
 };

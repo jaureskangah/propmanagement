@@ -31,8 +31,8 @@ export const useDocumentGeneration = ({
   const generateDocument = async () => {
     if (!selectedTemplate) {
       toast({
-        title: "Error",
-        description: "Please select a document template",
+        title: "Erreur",
+        description: "Veuillez sélectionner un modèle de document",
         variant: "destructive",
       });
       return;
@@ -46,14 +46,14 @@ export const useDocumentGeneration = ({
       switch (selectedTemplate) {
         case "lease":
           pdfDoc = await generateLeaseAgreement(tenant);
-          fileName = `lease_agreement_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+          fileName = `contrat_location_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
           break;
         case "receipt":
           pdfDoc = await generateRentalReceipt(tenant);
-          fileName = `rental_receipt_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+          fileName = `recu_loyer_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
           break;
         default:
-          throw new Error("Template not implemented");
+          throw new Error("Modèle non implémenté");
       }
 
       const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
@@ -61,22 +61,34 @@ export const useDocumentGeneration = ({
       setGeneratedPdfUrl(pdfUrl);
       setShowPreview(true);
 
-      // Convert PDF to text for editing
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        setEditedContent(e.target?.result as string);
-      };
-      reader.readAsText(pdfBlob);
+      // Convertir le PDF en texte pour l'édition
+      const textContent = await extractTextFromPdf(pdfBlob);
+      setEditedContent(textContent);
 
     } catch (error) {
-      console.error('Document generation error:', error);
+      console.error('Erreur de génération du document:', error);
       toast({
-        title: "Error",
-        description: "Failed to generate document",
+        title: "Erreur",
+        description: "Échec de la génération du document",
         variant: "destructive",
       });
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const extractTextFromPdf = async (pdfBlob: Blob): Promise<string> => {
+    try {
+      // Convertir le Blob en texte en utilisant l'encodage UTF-8
+      const arrayBuffer = await pdfBlob.arrayBuffer();
+      const decoder = new TextDecoder('utf-8');
+      const text = decoder.decode(arrayBuffer);
+      
+      // Nettoyer le texte des caractères non imprimables
+      return text.replace(/[^\x20-\x7E\xA0-\xFF]/g, ' ').trim();
+    } catch (error) {
+      console.error('Erreur lors de l\'extraction du texte:', error);
+      return '';
     }
   };
 
@@ -85,8 +97,8 @@ export const useDocumentGeneration = ({
 
     try {
       const fileName = selectedTemplate === 'lease' 
-        ? `lease_agreement_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`
-        : `rental_receipt_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+        ? `contrat_location_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`
+        : `recu_loyer_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
 
       const response = await fetch(generatedPdfUrl);
       const blob = await response.blob();
@@ -114,17 +126,17 @@ export const useDocumentGeneration = ({
       if (dbError) throw dbError;
 
       toast({
-        title: "Success",
-        description: "Document saved successfully",
+        title: "Succès",
+        description: "Document enregistré avec succès",
       });
 
       cleanup();
       onDocumentGenerated();
     } catch (error) {
-      console.error('Error saving document:', error);
+      console.error('Erreur lors de la sauvegarde du document:', error);
       toast({
-        title: "Error",
-        description: "Failed to save document",
+        title: "Erreur",
+        description: "Échec de la sauvegarde du document",
         variant: "destructive",
       });
     }
@@ -144,14 +156,14 @@ export const useDocumentGeneration = ({
       setIsEditing(false);
       
       toast({
-        title: "Success",
-        description: "Document updated successfully",
+        title: "Succès",
+        description: "Document mis à jour avec succès",
       });
     } catch (error) {
-      console.error('Error updating document:', error);
+      console.error('Erreur lors de la mise à jour du document:', error);
       toast({
-        title: "Error",
-        description: "Failed to update document",
+        title: "Erreur",
+        description: "Échec de la mise à jour du document",
         variant: "destructive",
       });
     }
