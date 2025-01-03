@@ -18,7 +18,7 @@ export const TemplateSelector = ({
 }: TemplateSelectorProps) => {
   const templates = [
     { id: "lease", name: "Lease Agreement" },
-    { id: "receipt", name: "Rental Receipt" },
+    { id: "receipt", name: "Rent Receipt" },
     { id: "notice", name: "Notice to Vacate" },
   ];
 

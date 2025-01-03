@@ -31,8 +31,8 @@ export const useDocumentGeneration = ({
   const generateDocument = async () => {
     if (!selectedTemplate) {
       toast({
-        title: "Erreur",
-        description: "Veuillez sélectionner un modèle de document",
+        title: "Error",
+        description: "Please select a document template",
         variant: "destructive",
       });
       return;
@@ -45,34 +45,34 @@ export const useDocumentGeneration = ({
 
       switch (selectedTemplate) {
         case "lease":
-          initialContent = `CONTRAT DE LOCATION
+          initialContent = `LEASE AGREEMENT
 
-Locataire: ${tenant.name}
+Tenant: ${tenant.name}
 Email: ${tenant.email}
-Téléphone: ${tenant.phone || 'Non renseigné'}
-Propriété: ${tenant.properties?.name || 'Non spécifiée'}
-Numéro d'unité: ${tenant.unit_number}
-Date de début: ${tenant.lease_start}
-Date de fin: ${tenant.lease_end}
-Montant du loyer: ${tenant.rent_amount}€
+Phone: ${tenant.phone || 'Not provided'}
+Property: ${tenant.properties?.name || 'Not specified'}
+Unit Number: ${tenant.unit_number}
+Start Date: ${tenant.lease_start}
+End Date: ${tenant.lease_end}
+Monthly Rent: $${tenant.rent_amount}
 
-[Le reste du contrat peut être édité ici]`;
+[The rest of the contract can be edited here]`;
           pdfDoc = await generateCustomPdf(initialContent);
           break;
         case "receipt":
-          initialContent = `REÇU DE LOYER
+          initialContent = `RENT RECEIPT
 
-Locataire: ${tenant.name}
-Propriété: ${tenant.properties?.name || 'Non spécifiée'}
-Numéro d'unité: ${tenant.unit_number}
-Montant: ${tenant.rent_amount}€
+Tenant: ${tenant.name}
+Property: ${tenant.properties?.name || 'Not specified'}
+Unit Number: ${tenant.unit_number}
+Amount: $${tenant.rent_amount}
 Date: ${new Date().toLocaleDateString()}
 
-[Les détails du paiement peuvent être édités ici]`;
+[Payment details can be edited here]`;
           pdfDoc = await generateCustomPdf(initialContent);
           break;
         default:
-          throw new Error("Modèle non implémenté");
+          throw new Error("Template not implemented");
       }
 
       const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
@@ -82,10 +82,10 @@ Date: ${new Date().toLocaleDateString()}
       setShowPreview(true);
 
     } catch (error) {
-      console.error('Erreur de génération du document:', error);
+      console.error('Document generation error:', error);
       toast({
-        title: "Erreur",
-        description: "Échec de la génération du document",
+        title: "Error",
+        description: "Failed to generate document",
         variant: "destructive",
       });
     } finally {
