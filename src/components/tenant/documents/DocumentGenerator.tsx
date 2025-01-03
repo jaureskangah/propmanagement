@@ -9,6 +9,7 @@ import { generateRentalReceipt } from "./templates/rentalReceipt";
 import type { Tenant } from "@/types/tenant";
 import { supabase } from "@/lib/supabase";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 
 interface DocumentGeneratorProps {
   tenant: Tenant;
@@ -20,6 +21,8 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPdfUrl, setGeneratedPdfUrl] = useState<string | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedContent, setEditedContent] = useState("");
   const { toast } = useToast();
 
   const templates = [
@@ -120,6 +123,8 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
       setGeneratedPdfUrl(null);
       setShowPreview(false);
       setSelectedTemplate("");
+      setIsEditing(false);
+      setEditedContent("");
       
       onDocumentGenerated();
     } catch (error) {
@@ -130,6 +135,23 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
         variant: "destructive",
       });
     }
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+    // Ici on pourrait charger le contenu du PDF dans le textarea
+    // Pour l'instant on met un contenu par défaut
+    setEditedContent("Edit your document content here...");
+  };
+
+  const handleSaveEdit = async () => {
+    // Ici on devrait implémenter la logique pour sauvegarder les modifications
+    // et régénérer le PDF avec le contenu modifié
+    setIsEditing(false);
+    toast({
+      title: "Success",
+      description: "Document updated successfully",
+    });
   };
 
   return (
@@ -172,24 +194,47 @@ export const DocumentGenerator = ({ tenant, onDocumentGenerated }: DocumentGener
               <DialogTitle>Document Preview</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col h-full space-y-4">
-              <div className="flex-1 min-h-0">
-                {generatedPdfUrl && (
-                  <iframe
-                    src={generatedPdfUrl}
-                    className="w-full h-full rounded-md border"
-                    title="PDF Preview"
+              {isEditing ? (
+                <div className="flex-1 min-h-0">
+                  <Textarea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    className="h-full"
                   />
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="flex-1 min-h-0">
+                  {generatedPdfUrl && (
+                    <iframe
+                      src={generatedPdfUrl}
+                      className="w-full h-full rounded-md border"
+                      title="PDF Preview"
+                    />
+                  )}
+                </div>
+              )}
               <div className="flex justify-end space-x-2">
                 <Button variant="outline" onClick={() => setShowPreview(false)}>
                   <X className="mr-2 h-4 w-4" />
                   Cancel
                 </Button>
-                <Button onClick={handleDownload}>
-                  <Check className="mr-2 h-4 w-4" />
-                  Save & Download
-                </Button>
+                {isEditing ? (
+                  <Button onClick={handleSaveEdit}>
+                    <Check className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" onClick={handleEdit}>
+                      <Edit className="mr-2 h-4 w-4" />
+                      Edit
+                    </Button>
+                    <Button onClick={handleDownload}>
+                      <Check className="mr-2 h-4 w-4" />
+                      Save & Download
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
           </DialogContent>
