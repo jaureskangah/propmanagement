@@ -46,7 +46,7 @@ export const TenantFinancialReport = ({ tenantId }: TenantFinancialReportProps) 
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">Rapport Financier</CardTitle>
+          <CardTitle className="text-2xl font-bold">Financial Report</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <PaymentSummary payments={payments || []} />

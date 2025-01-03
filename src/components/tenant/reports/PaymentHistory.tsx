@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 interface Payment {
   amount: number;
@@ -27,15 +27,15 @@ export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>Date</TableHead>
-            <TableHead>Montant</TableHead>
-            <TableHead>Statut</TableHead>
+            <TableHead>Amount</TableHead>
+            <TableHead>Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {payments.map((payment, index) => (
             <TableRow key={index}>
               <TableCell>
-                {format(new Date(payment.payment_date), 'PPP', { locale: fr })}
+                {format(new Date(payment.payment_date), 'PPP', { locale: enUS })}
               </TableCell>
               <TableCell>${payment.amount.toLocaleString()}</TableCell>
               <TableCell>
@@ -48,7 +48,7 @@ export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
                       : 'bg-yellow-100 text-yellow-800'
                   }`}
                 >
-                  {payment.status === 'paid' ? 'Payé' : payment.status === 'late' ? 'En retard' : 'En attente'}
+                  {payment.status === 'paid' ? 'Paid' : payment.status === 'late' ? 'Late' : 'Pending'}
                 </span>
               </TableCell>
             </TableRow>

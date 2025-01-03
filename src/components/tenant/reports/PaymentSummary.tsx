@@ -23,7 +23,7 @@ export const PaymentSummary = ({ payments }: PaymentSummaryProps) => {
         <CardContent className="flex items-center p-6">
           <DollarSign className="h-8 w-8 text-green-500" />
           <div className="ml-4">
-            <p className="text-sm font-medium text-muted-foreground">Total des Paiements</p>
+            <p className="text-sm font-medium text-muted-foreground">Total Payments</p>
             <h3 className="text-2xl font-bold">${totalPayments.toLocaleString()}</h3>
           </div>
         </CardContent>
@@ -33,7 +33,7 @@ export const PaymentSummary = ({ payments }: PaymentSummaryProps) => {
         <CardContent className="flex items-center p-6">
           <TrendingUp className="h-8 w-8 text-blue-500" />
           <div className="ml-4">
-            <p className="text-sm font-medium text-muted-foreground">Paiements à Temps</p>
+            <p className="text-sm font-medium text-muted-foreground">On-Time Payments</p>
             <h3 className="text-2xl font-bold">{onTimePayments}</h3>
           </div>
         </CardContent>
@@ -43,7 +43,7 @@ export const PaymentSummary = ({ payments }: PaymentSummaryProps) => {
         <CardContent className="flex items-center p-6">
           <AlertCircle className="h-8 w-8 text-red-500" />
           <div className="ml-4">
-            <p className="text-sm font-medium text-muted-foreground">Paiements en Retard</p>
+            <p className="text-sm font-medium text-muted-foreground">Late Payments</p>
             <h3 className="text-2xl font-bold">{latePayments}</h3>
           </div>
         </CardContent>

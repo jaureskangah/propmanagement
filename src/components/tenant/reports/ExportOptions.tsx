@@ -5,7 +5,7 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 interface Payment {
   amount: number;
@@ -23,14 +23,14 @@ export const ExportOptions = ({ payments }: ExportOptionsProps) => {
     const workbook = XLSX.utils.book_new();
     
     const data = payments.map(payment => ({
-      Date: format(new Date(payment.payment_date), 'PPP', { locale: fr }),
-      Montant: payment.amount,
-      Statut: payment.status === 'paid' ? 'Payé' : payment.status === 'late' ? 'En retard' : 'En attente'
+      Date: format(new Date(payment.payment_date), 'PPP', { locale: enUS }),
+      Amount: payment.amount,
+      Status: payment.status === 'paid' ? 'Paid' : payment.status === 'late' ? 'Late' : 'Pending'
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Paiements");
-    XLSX.writeFile(workbook, "historique_paiements.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Payments");
+    XLSX.writeFile(workbook, "payment_history.xlsx");
   };
 
   const handlePDFExport = () => {
@@ -38,20 +38,20 @@ export const ExportOptions = ({ payments }: ExportOptionsProps) => {
     const doc = new jsPDF();
 
     const tableData = payments.map(payment => [
-      format(new Date(payment.payment_date), 'PPP', { locale: fr }),
+      format(new Date(payment.payment_date), 'PPP', { locale: enUS }),
       `$${payment.amount.toLocaleString()}`,
-      payment.status === 'paid' ? 'Payé' : payment.status === 'late' ? 'En retard' : 'En attente'
+      payment.status === 'paid' ? 'Paid' : payment.status === 'late' ? 'Late' : 'Pending'
     ]);
 
-    doc.text("Historique des Paiements", 14, 15);
+    doc.text("Payment History", 14, 15);
     
     autoTable(doc, {
-      head: [["Date", "Montant", "Statut"]],
+      head: [["Date", "Amount", "Status"]],
       body: tableData,
       startY: 20,
     });
 
-    doc.save("historique_paiements.pdf");
+    doc.save("payment_history.pdf");
   };
 
   return (
@@ -62,7 +62,7 @@ export const ExportOptions = ({ payments }: ExportOptionsProps) => {
         className="flex items-center gap-2"
       >
         <FileSpreadsheet className="h-4 w-4" />
-        Exporter Excel
+        Export Excel
       </Button>
       <Button
         variant="outline"
@@ -70,7 +70,7 @@ export const ExportOptions = ({ payments }: ExportOptionsProps) => {
         className="flex items-center gap-2"
       >
         <FileText className="h-4 w-4" />
-        Exporter PDF
+        Export PDF
       </Button>
     </div>
   );
