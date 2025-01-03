@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { PaymentSummary } from "./PaymentSummary";
 import { PaymentHistory } from "./PaymentHistory";
 import { ExportOptions } from "./ExportOptions";
+import { PerformanceCharts } from "./PerformanceCharts";
 
 interface TenantFinancialReportProps {
   tenantId: string;
@@ -50,6 +51,7 @@ export const TenantFinancialReport = ({ tenantId }: TenantFinancialReportProps) 
         </CardHeader>
         <CardContent className="space-y-6">
           <PaymentSummary payments={payments || []} />
+          <PerformanceCharts tenantId={tenantId} />
           <PaymentHistory payments={payments || []} />
           <ExportOptions payments={payments || []} />
         </CardContent>
