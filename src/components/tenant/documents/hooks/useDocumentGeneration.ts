@@ -41,16 +41,35 @@ export const useDocumentGeneration = ({
     setIsGenerating(true);
     try {
       let pdfDoc;
-      let fileName;
+      let initialContent = "";
 
       switch (selectedTemplate) {
         case "lease":
-          pdfDoc = await generateLeaseAgreement(tenant);
-          fileName = `contrat_location_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+          initialContent = `CONTRAT DE LOCATION
+
+Locataire: ${tenant.name}
+Email: ${tenant.email}
+Téléphone: ${tenant.phone || 'Non renseigné'}
+Propriété: ${tenant.properties?.name || 'Non spécifiée'}
+Numéro d'unité: ${tenant.unit_number}
+Date de début: ${tenant.lease_start}
+Date de fin: ${tenant.lease_end}
+Montant du loyer: ${tenant.rent_amount}€
+
+[Le reste du contrat peut être édité ici]`;
+          pdfDoc = await generateCustomPdf(initialContent);
           break;
         case "receipt":
-          pdfDoc = await generateRentalReceipt(tenant);
-          fileName = `recu_loyer_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+          initialContent = `REÇU DE LOYER
+
+Locataire: ${tenant.name}
+Propriété: ${tenant.properties?.name || 'Non spécifiée'}
+Numéro d'unité: ${tenant.unit_number}
+Montant: ${tenant.rent_amount}€
+Date: ${new Date().toLocaleDateString()}
+
+[Les détails du paiement peuvent être édités ici]`;
+          pdfDoc = await generateCustomPdf(initialContent);
           break;
         default:
           throw new Error("Modèle non implémenté");
@@ -59,11 +78,8 @@ export const useDocumentGeneration = ({
       const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
       setGeneratedPdfUrl(pdfUrl);
+      setEditedContent(initialContent);
       setShowPreview(true);
-
-      // Convertir le PDF en texte pour l'édition
-      const textContent = await extractTextFromPdf(pdfBlob);
-      setEditedContent(textContent);
 
     } catch (error) {
       console.error('Erreur de génération du document:', error);
@@ -74,21 +90,6 @@ export const useDocumentGeneration = ({
       });
     } finally {
       setIsGenerating(false);
-    }
-  };
-
-  const extractTextFromPdf = async (pdfBlob: Blob): Promise<string> => {
-    try {
-      // Convertir le Blob en texte en utilisant l'encodage UTF-8
-      const arrayBuffer = await pdfBlob.arrayBuffer();
-      const decoder = new TextDecoder('utf-8');
-      const text = decoder.decode(arrayBuffer);
-      
-      // Nettoyer le texte des caractères non imprimables
-      return text.replace(/[^\x20-\x7E\xA0-\xFF]/g, ' ').trim();
-    } catch (error) {
-      console.error('Erreur lors de l\'extraction du texte:', error);
-      return '';
     }
   };
 
