@@ -34,7 +34,17 @@ export const TenantDocuments = ({
     document.body.removeChild(link);
   };
 
-  const handleOpenInNewTab = (url: string) => {
+  const handleOpenInNewTab = (url: string | null) => {
+    if (!url) {
+      console.error("No URL provided for document");
+      toast({
+        title: "Error",
+        description: "Cannot open document - URL is missing",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     console.log("Opening document in new tab:", url);
     window.open(url, '_blank', 'noopener,noreferrer');
   };
@@ -120,7 +130,7 @@ export const TenantDocuments = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleOpenInNewTab(doc.file_url!)}
+                      onClick={() => handleOpenInNewTab(doc.file_url)}
                       title="Open in new tab"
                       className="hover:text-blue-600 hover:bg-blue-50"
                     >
