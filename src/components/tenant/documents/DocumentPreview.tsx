@@ -13,7 +13,7 @@ interface DocumentPreviewProps {
   onEditContent: (content: string) => void;
   onEdit: () => void;
   onSaveEdit: () => void;
-  onDownload: () => void;
+  onDownload: () => Promise<void>;
 }
 
 export const DocumentPreview = ({
@@ -27,6 +27,16 @@ export const DocumentPreview = ({
   onSaveEdit,
   onDownload,
 }: DocumentPreviewProps) => {
+  const handleDownload = async () => {
+    await onDownload();
+    setShowPreview(false);
+  };
+
+  const handleSaveEdit = () => {
+    onSaveEdit();
+    setShowPreview(false);
+  };
+
   return (
     <Dialog open={showPreview} onOpenChange={setShowPreview}>
       <DialogContent className="max-w-4xl h-[80vh]">
@@ -59,7 +69,7 @@ export const DocumentPreview = ({
               Cancel
             </Button>
             {isEditing ? (
-              <Button onClick={onSaveEdit}>
+              <Button onClick={handleSaveEdit}>
                 <Check className="mr-2 h-4 w-4" />
                 Save Changes
               </Button>
@@ -69,7 +79,7 @@ export const DocumentPreview = ({
                   <Edit className="mr-2 h-4 w-4" />
                   Edit
                 </Button>
-                <Button onClick={onDownload}>
+                <Button onClick={handleDownload}>
                   <Check className="mr-2 h-4 w-4" />
                   Save & Download
                 </Button>
