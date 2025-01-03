@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 
 interface MaintenanceTableProps {
   maintenance: {
+    title: string;
     description: string;
     cost: number;
     date: string;
@@ -31,6 +32,7 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Title</TableHead>
               <TableHead>Description</TableHead>
               <TableHead>Property</TableHead>
               <TableHead>Unit</TableHead>
@@ -41,6 +43,7 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
           <TableBody>
             {maintenance.map((item, index) => (
               <TableRow key={index}>
+                <TableCell>{item.title}</TableCell>
                 <TableCell>{item.description}</TableCell>
                 <TableCell>{item.property?.name || 'N/A'}</TableCell>
                 <TableCell>{item.unit_number || 'N/A'}</TableCell>
