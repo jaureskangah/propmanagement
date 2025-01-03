@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { generateLeaseAgreement } from "../templates/leaseAgreement";
-import { generateRentalReceipt } from "../templates/rentalReceipt";
 import { generateCustomPdf } from "../templates/customPdf";
 import type { Tenant } from "@/types/tenant";
 
@@ -57,7 +55,6 @@ End Date: ${tenant.lease_end}
 Monthly Rent: $${tenant.rent_amount}
 
 [The rest of the contract can be edited here]`;
-          pdfDoc = await generateCustomPdf(initialContent);
           break;
         case "receipt":
           initialContent = `RENT RECEIPT
@@ -69,7 +66,6 @@ Amount: $${tenant.rent_amount}
 Date: ${new Date().toLocaleDateString()}
 
 [Payment details can be edited here]`;
-          pdfDoc = await generateCustomPdf(initialContent);
           break;
         case "notice":
           initialContent = `NOTICE TO VACATE
@@ -99,11 +95,14 @@ Please ensure that:
 
 Sincerely,
 Property Management`;
-          pdfDoc = await generateCustomPdf(initialContent);
           break;
         default:
           throw new Error("Template not implemented");
       }
+
+      console.log("Generating PDF with content:", initialContent);
+      pdfDoc = await generateCustomPdf(initialContent);
+      console.log("PDF generated successfully");
 
       const pdfBlob = new Blob([pdfDoc], { type: 'application/pdf' });
       const pdfUrl = URL.createObjectURL(pdfBlob);
@@ -127,24 +126,36 @@ Property Management`;
     if (!generatedPdfUrl || !selectedTemplate) return;
 
     try {
+      const timestamp = new Date().getTime();
       const fileName = selectedTemplate === 'lease' 
-        ? `contrat_location_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`
-        : `recu_loyer_${tenant.name.toLowerCase().replace(/\s+/g, '_')}.pdf`;
+        ? `contrat_location_${tenant.name.toLowerCase().replace(/\s+/g, '_')}_${timestamp}.pdf`
+        : `recu_loyer_${tenant.name.toLowerCase().replace(/\s+/g, '_')}_${timestamp}.pdf`;
 
       const response = await fetch(generatedPdfUrl);
       const blob = await response.blob();
       const file = new File([blob], fileName, { type: 'application/pdf' });
 
       const filePath = `${tenant.id}/${fileName}`;
-      const { error: uploadError } = await supabase.storage
+      console.log("Uploading file to path:", filePath);
+
+      const { error: uploadError, data } = await supabase.storage
         .from('tenant_documents')
-        .upload(filePath, file);
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true // Changed to true to handle duplicate files
+        });
 
-      if (uploadError) throw uploadError;
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
 
+      console.log("File uploaded successfully, getting public URL");
       const { data: { publicUrl } } = supabase.storage
         .from('tenant_documents')
         .getPublicUrl(filePath);
+
+      console.log("Public URL generated:", publicUrl);
 
       const { error: dbError } = await supabase
         .from('tenant_documents')
@@ -154,7 +165,10 @@ Property Management`;
           file_url: publicUrl
         });
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        console.error('Database error:', dbError);
+        throw dbError;
+      }
 
       toast({
         title: "Succès",
