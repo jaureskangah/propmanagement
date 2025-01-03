@@ -1,6 +1,10 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuth } from "@/components/AuthProvider";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const plans = [
   {
@@ -12,6 +16,7 @@ const plans = [
       "Digital documents",
     ],
     buttonText: "Get Started Free",
+    priceId: null,
   },
   {
     name: "Pro",
@@ -26,6 +31,7 @@ const plans = [
       "Priority support",
     ],
     buttonText: "Start Now",
+    priceId: "price_1QcxBFA44huL2zb1fQfojYxe",
   },
   {
     name: "Enterprise",
@@ -39,10 +45,50 @@ const plans = [
       "24/7 Priority support",
     ],
     buttonText: "Start Now",
+    priceId: "price_1QcxKGA44huL2zb1F9UWnsxF",
   },
 ];
 
 export default function Pricing() {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSubscribe = async (priceId: string | null) => {
+    if (!priceId) {
+      navigate("/dashboard");
+      return;
+    }
+
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to subscribe to a plan",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: { priceId },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: "Error",
+        description: error.message || "An error occurred while processing your request",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <section className="py-24 bg-gray-50" id="pricing">
       <div className="container px-4 md:px-6">
@@ -95,6 +141,7 @@ export default function Pricing() {
               <CardFooter>
                 <Button 
                   className="w-full bg-[#ea384c] hover:bg-[#d41f32] text-white"
+                  onClick={() => handleSubscribe(plan.priceId)}
                 >
                   {plan.buttonText}
                 </Button>
