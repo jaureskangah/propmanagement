@@ -50,8 +50,8 @@ export const DashboardHeader = () => {
         <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
           Dashboard
         </h1>
-        <div className="flex items-center gap-2 rounded-lg bg-gray-50/50 backdrop-blur-sm px-3 py-1 shadow-sm">
-          <span className="text-sm font-medium text-gray-600">Calculating...</span>
+        <div className="flex items-center gap-2 rounded-lg bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm px-3 py-1 shadow-sm">
+          <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Calculating...</span>
         </div>
       </div>
     );
@@ -66,15 +66,19 @@ export const DashboardHeader = () => {
         Dashboard
       </h1>
       <div className={`flex items-center gap-2 rounded-lg px-3 py-1.5 shadow-sm transition-all duration-300 hover:scale-105 ${
-        isPositive ? 'bg-green-50/50 backdrop-blur-sm' : 'bg-red-50/50 backdrop-blur-sm'
+        isPositive 
+          ? 'bg-green-50/50 dark:bg-green-950/50 backdrop-blur-sm' 
+          : 'bg-red-50/50 dark:bg-red-950/50 backdrop-blur-sm'
       }`}>
         {isPositive ? (
-          <TrendingUp className="h-4 w-4 text-green-600" />
+          <TrendingUp className={`h-4 w-4 ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`} />
         ) : (
-          <TrendingDown className="h-4 w-4 text-red-600" />
+          <TrendingDown className={`h-4 w-4 ${isPositive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`} />
         )}
         <span className={`text-sm font-medium ${
-          isPositive ? 'text-green-600' : 'text-red-600'
+          isPositive 
+            ? 'text-green-600 dark:text-green-400' 
+            : 'text-red-600 dark:text-red-400'
         }`}>
           {isPositive ? '+' : '-'}{formattedChange}% this month
         </span>
