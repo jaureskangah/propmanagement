@@ -46,7 +46,12 @@ export interface Communication {
   id: string;
   type: string;
   subject: string;
+  content?: string;
   created_at: string;
   status: string;
-  content?: string;
+  category: string;
+  attachments?: string[];
+  parent_id?: string;
+  is_from_tenant?: boolean;
+  resolved_at?: string;
 }

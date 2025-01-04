@@ -267,33 +267,55 @@ export type Database = {
       }
       tenant_communications: {
         Row: {
+          attachments: string[] | null
+          category: string
           content: string | null
           created_at: string
           id: string
+          is_from_tenant: boolean | null
+          parent_id: string | null
+          resolved_at: string | null
           status: string
           subject: string
           tenant_id: string | null
           type: string
         }
         Insert: {
+          attachments?: string[] | null
+          category?: string
           content?: string | null
           created_at?: string
           id?: string
+          is_from_tenant?: boolean | null
+          parent_id?: string | null
+          resolved_at?: string | null
           status?: string
           subject: string
           tenant_id?: string | null
           type: string
         }
         Update: {
+          attachments?: string[] | null
+          category?: string
           content?: string | null
           created_at?: string
           id?: string
+          is_from_tenant?: boolean | null
+          parent_id?: string | null
+          resolved_at?: string | null
           status?: string
           subject?: string
           tenant_id?: string | null
           type?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "tenant_communications_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "tenant_communications"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "tenant_communications_tenant_id_fkey"
             columns: ["tenant_id"]

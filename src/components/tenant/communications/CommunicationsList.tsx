@@ -1,7 +1,8 @@
 import { Communication } from "@/types/tenant";
-import { MessageSquare } from "lucide-react";
+import { MessageSquare, Mail, AlertTriangle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CommunicationItem } from "./items/CommunicationItem";
+import { format } from "date-fns";
 
 interface CommunicationsListProps {
   filteredCommunications: Communication[];
@@ -9,6 +10,32 @@ interface CommunicationsListProps {
   onCommunicationClick: (comm: Communication) => void;
   onToggleStatus: (comm: Communication) => void;
 }
+
+const getCategoryIcon = (category: string) => {
+  switch (category.toLowerCase()) {
+    case 'urgent':
+      return <AlertTriangle className="h-4 w-4 text-red-500" />;
+    case 'maintenance':
+      return <Clock className="h-4 w-4 text-yellow-500" />;
+    case 'payment':
+      return <Mail className="h-4 w-4 text-green-500" />;
+    default:
+      return <MessageSquare className="h-4 w-4 text-blue-500" />;
+  }
+};
+
+const getCategoryColor = (category: string) => {
+  switch (category.toLowerCase()) {
+    case 'urgent':
+      return 'bg-red-100 text-red-800';
+    case 'maintenance':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'payment':
+      return 'bg-green-100 text-green-800';
+    default:
+      return 'bg-blue-100 text-blue-800';
+  }
+};
 
 export const CommunicationsList = ({
   filteredCommunications,
@@ -27,6 +54,42 @@ export const CommunicationsList = ({
     );
   }
 
+  const renderThreadedCommunications = (communications: Communication[]) => {
+    // Group by parent_id
+    const threads = communications.reduce((acc, comm) => {
+      if (!comm.parent_id) {
+        if (!acc[comm.id]) {
+          acc[comm.id] = [comm];
+        }
+      } else {
+        if (!acc[comm.parent_id]) {
+          acc[comm.parent_id] = [];
+        }
+        acc[comm.parent_id].push(comm);
+      }
+      return acc;
+    }, {} as Record<string, Communication[]>);
+
+    return Object.entries(threads).map(([parentId, thread]) => (
+      <div key={parentId} className="space-y-2">
+        {thread.map((comm, index) => (
+          <div
+            key={comm.id}
+            className={`${index > 0 ? 'ml-8 border-l-2 pl-4' : ''}`}
+          >
+            <CommunicationItem
+              communication={comm}
+              onClick={() => onCommunicationClick(comm)}
+              onToggleStatus={() => onToggleStatus(comm)}
+              icon={getCategoryIcon(comm.category)}
+              categoryColor={getCategoryColor(comm.category)}
+            />
+          </div>
+        ))}
+      </div>
+    ));
+  };
+
   return (
     <div className="space-y-4">
       {Object.entries(groupedCommunications).map(([type, comms]) => {
@@ -44,15 +107,8 @@ export const CommunicationsList = ({
                 {filteredComms.length}
               </Badge>
             </h3>
-            <div className="space-y-2 relative before:absolute before:left-5 before:top-0 before:bottom-0 before:w-px before:bg-border">
-              {filteredComms.map((comm, index) => (
-                <CommunicationItem
-                  key={comm.id}
-                  communication={comm}
-                  onClick={() => onCommunicationClick(comm)}
-                  onToggleStatus={() => onToggleStatus(comm)}
-                />
-              ))}
+            <div className="space-y-2">
+              {renderThreadedCommunications(filteredComms)}
             </div>
           </div>
         );
