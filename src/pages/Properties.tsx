@@ -30,19 +30,6 @@ const Properties = () => {
   const { properties, isLoadingProperties } = useProperties();
   const { toast } = useToast();
 
-  const mockFinancials = {
-    expenses: [
-      { category: "Maintenance", amount: 500, date: "2024-01-15" },
-      { category: "Utilities", amount: 300, date: "2024-01-20" },
-      { category: "Insurance", amount: 800, date: "2024-01-01" }
-    ],
-    maintenance: [
-      { description: "Plumbing repair", cost: 300, date: "2024-01-10" },
-      { description: "HVAC maintenance", cost: 200, date: "2024-01-05" },
-      { description: "Paint touch-up", cost: 150, date: "2024-01-18" }
-    ]
-  };
-
   const handleEdit = (id: string) => {
     const property = properties.find(p => p.id === id);
     if (property) {
@@ -150,11 +137,7 @@ const Properties = () => {
           <h2 className="text-xl font-bold mb-4">
             Financial Overview - {selectedProperty?.name}
           </h2>
-          <PropertyFinancials
-            propertyId={selectedPropertyId}
-            expenses={mockFinancials.expenses}
-            maintenance={mockFinancials.maintenance}
-          />
+          <PropertyFinancials propertyId={selectedPropertyId} />
         </div>
       )}
 
