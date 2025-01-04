@@ -76,7 +76,7 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
         maintenance={maintenance}
         calculateROI={calculateROI}
       />
-      <ChartsSection expenses={expenses} />
+      <ChartsSection propertyId={propertyId} />
       <DataTables
         propertyId={propertyId}
         expenses={expenses}
