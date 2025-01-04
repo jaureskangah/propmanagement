@@ -26,18 +26,18 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
           <span>Preventive</span>
         </TabsTrigger>
         <TabsTrigger 
-          value="work-orders"
-          className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
-        >
-          <ClipboardList className="h-4 w-4 hidden sm:block" />
-          <span>Work Orders</span>
-        </TabsTrigger>
-        <TabsTrigger 
           value="vendors"
           className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
         >
           <Users className="h-4 w-4 hidden sm:block" />
           <span>Vendors</span>
+        </TabsTrigger>
+        <TabsTrigger 
+          value="work-orders"
+          className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
+        >
+          <ClipboardList className="h-4 w-4 hidden sm:block" />
+          <span>Work Orders</span>
         </TabsTrigger>
         <TabsTrigger 
           value="financials"
@@ -52,12 +52,12 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
         <PreventiveMaintenance />
       </TabsContent>
 
-      <TabsContent value="work-orders" className="animate-fade-in">
-        <WorkOrderList propertyId={propertyId} />
-      </TabsContent>
-
       <TabsContent value="vendors" className="animate-fade-in">
         <VendorList />
+      </TabsContent>
+
+      <TabsContent value="work-orders" className="animate-fade-in">
+        <WorkOrderList propertyId={propertyId} />
       </TabsContent>
 
       <TabsContent value="financials" className="animate-fade-in">
