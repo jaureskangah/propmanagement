@@ -28,8 +28,8 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   const placeholderImage = "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&auto=format&fit=crop&q=60";
   
   return (
-    <Card className="w-full min-w-[300px] h-full group hover:shadow-lg transition-all duration-300 animate-fade-in">
-      <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
+    <Card className="w-full h-full group hover:shadow-lg transition-all duration-300 animate-fade-in">
+      <div className="relative w-full h-40 sm:h-48 overflow-hidden rounded-t-lg">
         <img
           src={property.image || placeholderImage}
           alt={property.name}
@@ -41,15 +41,15 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
         />
       </div>
       
-      <CardHeader>
-        <div className="flex items-center justify-between">
+      <CardHeader className="space-y-2 p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="space-y-2">
-            <CardTitle className="text-xl font-bold">{property.name}</CardTitle>
+            <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2">{property.name}</CardTitle>
             <Badge variant="secondary" className="text-sm">
               {property.type}
             </Badge>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex sm:flex-col gap-2">
             <Button
               variant="ghost"
               size="icon"
@@ -76,20 +76,20 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
             </Button>
           </div>
         </div>
-        <CardDescription className="mt-2 text-sm break-words line-clamp-2">
+        <CardDescription className="text-sm break-words line-clamp-2">
           {property.address}
         </CardDescription>
       </CardHeader>
       
-      <CardContent>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-            <p className="text-sm font-medium text-muted-foreground">Units</p>
-            <p className="text-lg font-semibold">{property.units}</p>
+      <CardContent className="p-4 sm:p-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">Units</p>
+            <p className="text-base sm:text-lg font-semibold">{property.units}</p>
           </div>
-          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
-            <p className="text-sm font-medium text-muted-foreground">Type</p>
-            <p className="text-lg font-semibold capitalize">{property.type}</p>
+          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">Type</p>
+            <p className="text-base sm:text-lg font-semibold capitalize">{property.type}</p>
           </div>
         </div>
       </CardContent>

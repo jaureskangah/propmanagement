@@ -16,9 +16,9 @@ function AppRoutes() {
   const showSidebar = isAuthenticated && !isLandingPage;
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen flex-col lg:flex-row">
       {showSidebar && <AppSidebar />}
-      <main className={`flex-1 ${!showSidebar ? 'p-0' : 'p-8'}`}>
+      <main className={`flex-1 ${!showSidebar ? 'p-0' : 'p-4 lg:p-8'} overflow-x-hidden`}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/dashboard" element={<Dashboard />} />

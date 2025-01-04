@@ -88,11 +88,13 @@ const Properties = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
+    <div className="container mx-auto px-4 lg:px-6 space-y-6 lg:space-y-8 max-w-[1400px]">
       <div className="space-y-2">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Properties Management</h1>
+            <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Properties Management
+            </h1>
             <p className="text-muted-foreground mt-1">
               Manage and track all your real estate properties in one place
             </p>
@@ -119,7 +121,7 @@ const Properties = () => {
       {filteredProperties.length === 0 ? (
         <EmptyState isFiltering={properties.length > 0} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
           {filteredProperties.map((property) => (
             <PropertyCard
               key={property.id}
