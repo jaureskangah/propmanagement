@@ -6,6 +6,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -54,26 +55,49 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
       const monthlyPayments = payments?.reduce((acc: any, payment) => {
         const date = format(parseISO(payment.payment_date), 'MMM yyyy');
         if (!acc[date]) {
-          acc[date] = { total: 0, paid: 0, pending: 0 };
+          acc[date] = { total: 0, paid: 0, pending: 0, late: 0 };
         }
         acc[date].total += payment.amount;
+        
+        // Categorize payments
         if (payment.status === 'paid') {
           acc[date].paid += payment.amount;
         } else if (payment.status === 'pending') {
           acc[date].pending += payment.amount;
+        } else if (payment.status === 'late') {
+          acc[date].late += payment.amount;
         }
         return acc;
       }, {});
 
-      // Convert to array format for Recharts
-      return Object.entries(monthlyPayments || {}).map(([date, data]: [string, any]) => ({
-        date,
-        total: data.total,
-        paid: data.paid,
-        pending: data.pending
-      }));
+      // Convert to array format for Recharts and calculate cumulative totals
+      let cumulativeTotal = 0;
+      return Object.entries(monthlyPayments || {}).map(([date, data]: [string, any]) => {
+        cumulativeTotal += data.paid;
+        return {
+          date,
+          ...data,
+          cumulative: cumulativeTotal
+        };
+      });
     },
   });
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
+          <p className="font-semibold mb-2">{label}</p>
+          {payload.map((entry: any, index: number) => (
+            <p key={index} className="text-sm" style={{ color: entry.color }}>
+              {entry.name}: ${entry.value.toLocaleString()}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <Card>
@@ -83,7 +107,10 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
       <CardContent>
         <div className="h-[400px]">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={paymentData}>
+            <AreaChart 
+              data={paymentData}
+              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id="colorPaid" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#22C55E" stopOpacity={0.3} />
@@ -93,14 +120,28 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
                   <stop offset="5%" stopColor="#EAB308" stopOpacity={0.3} />
                   <stop offset="95%" stopColor="#EAB308" stopOpacity={0} />
                 </linearGradient>
+                <linearGradient id="colorLate" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#EF4444" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#EF4444" stopOpacity={0} />
+                </linearGradient>
+                <linearGradient id="colorCumulative" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
+                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+              <CartesianGrid 
+                strokeDasharray="3 3" 
+                className="stroke-muted/50" 
+                horizontal={true}
+                vertical={false}
+              />
               <XAxis 
                 dataKey="date" 
                 stroke="#888888"
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
+                padding={{ left: 20, right: 20 }}
               />
               <YAxis
                 stroke="#888888"
@@ -108,31 +149,47 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value.toLocaleString()}`}
+                padding={{ top: 20, bottom: 20 }}
               />
-              <Tooltip 
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                }}
-                formatter={(value: number) => [`$${value.toLocaleString()}`]}
+              <Tooltip content={<CustomTooltip />} />
+              <Legend 
+                verticalAlign="top" 
+                height={36}
+                iconType="circle"
+                iconSize={8}
               />
               <Area
                 type="monotone"
                 dataKey="paid"
+                stackId="1"
                 stroke="#22C55E"
-                fillOpacity={1}
                 fill="url(#colorPaid)"
                 name="Paid"
               />
               <Area
                 type="monotone"
                 dataKey="pending"
+                stackId="1"
                 stroke="#EAB308"
-                fillOpacity={1}
                 fill="url(#colorPending)"
                 name="Pending"
+              />
+              <Area
+                type="monotone"
+                dataKey="late"
+                stackId="1"
+                stroke="#EF4444"
+                fill="url(#colorLate)"
+                name="Late"
+              />
+              <Area
+                type="monotone"
+                dataKey="cumulative"
+                stroke="#3B82F6"
+                strokeWidth={2}
+                fill="none"
+                name="Cumulative Total"
+                dot={true}
               />
             </AreaChart>
           </ResponsiveContainer>
