@@ -54,7 +54,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               variant="ghost"
               size="icon"
               onClick={() => onViewFinancials(property.id)}
-              className="hover:bg-blue-100 hover:text-blue-600 transition-colors"
+              className="hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               <DollarSign className="h-4 w-4" />
             </Button>
@@ -62,7 +62,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               variant="ghost"
               size="icon"
               onClick={() => onEdit(property.id)}
-              className="hover:bg-green-100 hover:text-green-600 transition-colors"
+              className="hover:bg-green-100 dark:hover:bg-green-900 hover:text-green-600 dark:hover:text-green-400 transition-colors"
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -70,7 +70,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               variant="ghost"
               size="icon"
               onClick={() => onDelete(property.id)}
-              className="hover:bg-red-100 hover:text-red-600 transition-colors"
+              className="hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -83,11 +83,11 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
       
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-slate-50 p-3 rounded-lg">
+          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
             <p className="text-sm font-medium text-muted-foreground">Units</p>
             <p className="text-lg font-semibold">{property.units}</p>
           </div>
-          <div className="bg-slate-50 p-3 rounded-lg">
+          <div className="bg-slate-50 dark:bg-slate-800 p-3 rounded-lg">
             <p className="text-sm font-medium text-muted-foreground">Type</p>
             <p className="text-lg font-semibold capitalize">{property.type}</p>
           </div>
