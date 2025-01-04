@@ -8,7 +8,11 @@ interface TenantActionsProps {
 export const TenantActions = ({ onAddClick }: TenantActionsProps) => {
   return (
     <div className="flex justify-between items-center mb-6">
-      <h1 className="text-2xl font-bold">Tenants Management</h1>
+      <div>
+        <p className="text-muted-foreground">
+          Manage your tenants, track payments, and handle maintenance requests
+        </p>
+      </div>
       <Button 
         className="flex items-center gap-2 transition-transform hover:scale-105 animate-fade-in"
         onClick={onAddClick}
