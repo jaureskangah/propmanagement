@@ -42,9 +42,14 @@ const Maintenance = () => {
 
   return (
     <div className="container mx-auto p-3 sm:p-4 md:p-6">
-      <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-6">
-        Maintenance Management
-      </h1>
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          Maintenance Management
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Track maintenance requests, schedule tasks, and manage vendor relationships
+        </p>
+      </div>
       
       <MaintenanceMetricsSection
         totalRequests={totalRequests}
