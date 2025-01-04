@@ -1,110 +1,62 @@
 import type { Tenant } from "@/types/tenant";
 
 export const generateTemplateContent = (template: string, tenant: Tenant): string => {
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('fr-FR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
-
   switch (template) {
     case "lease":
-      return `CONTRAT DE LOCATION
+      return `LEASE AGREEMENT
 
-Date: ${new Date().toLocaleDateString('fr-FR')}
-
-INFORMATIONS DU LOCATAIRE
-------------------------
-Nom: ${tenant.name}
+Tenant: ${tenant.name}
 Email: ${tenant.email}
-Téléphone: ${tenant.phone || 'Non renseigné'}
+Phone: ${tenant.phone || 'Not provided'}
+Property: ${tenant.properties?.name || 'Not specified'}
+Unit Number: ${tenant.unit_number}
+Start Date: ${tenant.lease_start}
+End Date: ${tenant.lease_end}
+Monthly Rent: $${tenant.rent_amount}
 
-INFORMATIONS DE LA PROPRIÉTÉ
----------------------------
-Propriété: ${tenant.properties?.name || 'Non spécifié'}
-Numéro d'unité: ${tenant.unit_number}
-
-DÉTAILS DU BAIL
---------------
-Date de début: ${formatDate(tenant.lease_start)}
-Date de fin: ${formatDate(tenant.lease_end)}
-Loyer mensuel: ${tenant.rent_amount}€
-
-CONDITIONS GÉNÉRALES
-------------------
-1. Durée du bail
-   Le présent bail est conclu pour une durée déterminée, commençant le ${formatDate(tenant.lease_start)} et se terminant le ${formatDate(tenant.lease_end)}.
-
-2. Loyer et Paiement
-   Le loyer mensuel est fixé à ${tenant.rent_amount}€, payable d'avance le premier jour de chaque mois.
-
-3. Dépôt de garantie
-   Un dépôt de garantie équivalent à un mois de loyer sera versé à la signature du bail.
-
-4. Entretien et Réparations
-   Le locataire s'engage à maintenir le logement en bon état et à signaler toute réparation nécessaire.
-
-5. Résiliation
-   Le préavis de départ est de 3 mois, à notifier par lettre recommandée avec accusé de réception.`;
+[The rest of the contract can be edited here]`;
 
     case "receipt":
-      return `REÇU DE LOYER
+      return `RENT RECEIPT
 
-Date d'émission: ${new Date().toLocaleDateString('fr-FR')}
+Tenant: ${tenant.name}
+Property: ${tenant.properties?.name || 'Not specified'}
+Unit Number: ${tenant.unit_number}
+Amount: $${tenant.rent_amount}
+Date: ${new Date().toLocaleDateString()}
 
-BAILLEUR
---------
-Property Management System
-
-LOCATAIRE
----------
-Nom: ${tenant.name}
-Adresse: ${tenant.properties?.name || 'Non spécifié'}
-Unité: ${tenant.unit_number}
-
-PAIEMENT
---------
-Montant: ${tenant.rent_amount}€
-Période: ${new Date().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })}
-
-Ce document certifie le paiement du loyer pour la période mentionnée ci-dessus.`;
+[Payment details can be edited here]`;
 
     case "notice":
-      return `AVIS DE DÉPART
+      return `NOTICE TO VACATE
 
-Date: ${new Date().toLocaleDateString('fr-FR')}
+Date: ${new Date().toLocaleDateString()}
 
-DESTINATAIRE
------------
-${tenant.name}
-${tenant.properties?.name || 'Adresse de la propriété'}
-Unité ${tenant.unit_number}
+To: ${tenant.name}
+${tenant.properties?.name || 'Property Address'}
+Unit ${tenant.unit_number}
 
-Cher/Chère ${tenant.name},
+Dear ${tenant.name},
 
-Par la présente, nous vous informons de la fin prochaine de votre bail.
+This letter serves as formal notice that you are required to vacate the premises described above. 
 
-INFORMATIONS DU BAIL
--------------------
-Date de début: ${formatDate(tenant.lease_start)}
-Date de fin: ${formatDate(tenant.lease_end)}
-Loyer mensuel: ${tenant.rent_amount}€
+Current Lease Details:
+- Lease Start Date: ${tenant.lease_start}
+- Lease End Date: ${tenant.lease_end}
+- Monthly Rent: $${tenant.rent_amount}
 
-INSTRUCTIONS DE DÉPART
---------------------
-1. Retrait des effets personnels
-2. Nettoyage complet de l'unité
-3. Remise des clés
-4. Fourniture d'une adresse de réexpédition
+Please ensure that:
+1. All personal belongings are removed
+2. The unit is cleaned thoroughly
+3. All keys are returned
+4. A forwarding address is provided
 
-Nous vous remercions de votre location et vous souhaitons le meilleur pour la suite.
+[Additional terms and conditions can be edited here]
 
-Cordialement,
-Property Management System`;
+Sincerely,
+Property Management`;
 
     default:
-      throw new Error("Template non implémenté");
+      throw new Error("Template not implemented");
   }
 };

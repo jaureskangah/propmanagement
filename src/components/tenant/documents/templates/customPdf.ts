@@ -10,29 +10,17 @@ export const generateCustomPdf = async (content: string) => {
   const documentDefinition: TDocumentDefinitions = {
     content: [
       {
-        text: content.split('\n').map(line => line.trim()),
+        text: content,
         lineHeight: 1.5,
-        preserveLeadingSpaces: true,
-        style: 'default'
+        preserveLeadingSpaces: true
       }
     ],
-    styles: {
-      default: {
-        fontSize: 12,
-        lineHeight: 1.5,
-        margin: [0, 5, 0, 5]
-      },
-      header: {
-        fontSize: 18,
-        bold: true,
-        margin: [0, 0, 0, 10]
-      }
-    },
     defaultStyle: {
-      font: 'Roboto'
+      font: 'Roboto',
+      fontSize: 12
     },
     pageSize: 'A4',
-    pageMargins: [40, 60, 40, 60],
+    pageMargins: [ 40, 60, 40, 60 ],
     info: {
       title: 'Generated Document',
       author: 'Property Management System',
