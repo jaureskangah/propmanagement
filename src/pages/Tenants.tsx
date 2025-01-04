@@ -99,9 +99,14 @@ const Tenants = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent mb-6">
-        Tenants Management
-      </h1>
+      <div className="mb-4">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          Tenants
+        </h1>
+        <p className="text-muted-foreground mt-1">
+          Manage your tenants, track payments, and handle maintenance requests
+        </p>
+      </div>
       
       <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
       
