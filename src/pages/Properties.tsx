@@ -92,7 +92,7 @@ const Properties = () => {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Properties Management</h1>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">Properties Management</h1>
             <p className="text-muted-foreground mt-1">
               Manage and track all your real estate properties in one place
             </p>
