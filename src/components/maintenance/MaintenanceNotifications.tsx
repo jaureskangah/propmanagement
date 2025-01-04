@@ -20,7 +20,7 @@ export const MaintenanceNotifications = () => {
   ];
 
   return (
-    <Card>
+    <Card className="font-sans">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
           <Bell className="h-4 w-4" />
