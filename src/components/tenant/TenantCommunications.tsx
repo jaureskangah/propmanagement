@@ -11,10 +11,15 @@ import { useMemo } from "react";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
-  tenantId?: string;
+  tenantId: string;
+  onCommunicationUpdate?: () => void;
 }
 
-export const TenantCommunications = ({ communications, tenantId }: TenantCommunicationsProps) => {
+export const TenantCommunications = ({ 
+  communications, 
+  tenantId,
+  onCommunicationUpdate 
+}: TenantCommunicationsProps) => {
   const {
     searchQuery,
     setSearchQuery,
@@ -72,10 +77,12 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
   }, [communications, searchQuery, selectedType, startDate]);
 
   const handleCreateSubmit = async () => {
+    console.log("Attempting to create communication with tenantId:", tenantId);
     const success = await handleCreateCommunication(newCommData);
     if (success) {
       setIsNewCommDialogOpen(false);
       setNewCommData({ type: "", subject: "", content: "", category: "general" });
+      onCommunicationUpdate?.();
     }
   };
 
