@@ -24,6 +24,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
+      console.error("Missing RESEND_API_KEY");
       throw new Error("Missing RESEND_API_KEY");
     }
 
@@ -68,10 +69,12 @@ const handler = async (req: Request): Promise<Response> => {
       }),
     });
 
+    const resendResponse = await res.json();
+    console.log("Resend API response:", resendResponse);
+
     if (!res.ok) {
-      const error = await res.text();
-      console.error("Error sending email:", error);
-      throw new Error("Failed to send email");
+      console.error("Error from Resend API:", resendResponse);
+      throw new Error(`Failed to send email: ${JSON.stringify(resendResponse)}`);
     }
 
     console.log("Email sent successfully");
