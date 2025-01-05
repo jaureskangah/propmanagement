@@ -1,14 +1,13 @@
-import { Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Communication } from "@/types/tenant";
-import { useState, useMemo } from "react";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
 import { CommunicationsList } from "./communications/CommunicationsList";
 import { CommunicationFilters } from "./communications/CommunicationFilters";
 import { NewCommunicationDialog } from "./communications/NewCommunicationDialog";
 import { CommunicationDetailsDialog } from "./communications/CommunicationDetailsDialog";
+import { CommunicationsHeader } from "./communications/header/CommunicationsHeader";
+import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
+import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
+import { useMemo } from "react";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -16,18 +15,22 @@ interface TenantCommunicationsProps {
 }
 
 export const TenantCommunications = ({ communications, tenantId }: TenantCommunicationsProps) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [startDate, setStartDate] = useState<string>("");
-  const [isNewCommDialogOpen, setIsNewCommDialogOpen] = useState(false);
-  const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
-  const [newCommData, setNewCommData] = useState({
-    type: "",
-    subject: "",
-    content: "",
-    category: "general"
-  });
-  const { toast } = useToast();
+  const {
+    searchQuery,
+    setSearchQuery,
+    selectedType,
+    setSelectedType,
+    startDate,
+    setStartDate,
+    isNewCommDialogOpen,
+    setIsNewCommDialogOpen,
+    selectedComm,
+    setSelectedComm,
+    newCommData,
+    setNewCommData
+  } = useCommunicationState();
+
+  const { handleCreateCommunication, handleToggleStatus } = useCommunicationActions(tenantId);
 
   // Group communications by type
   const groupedCommunications = useMemo(() => {
@@ -68,117 +71,20 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
     return filtered;
   }, [communications, searchQuery, selectedType, startDate]);
 
-  const handleCreateCommunication = async () => {
-    if (!tenantId) {
-      toast({
-        title: "Erreur",
-        description: "ID du locataire manquant",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      console.log("Creating new communication:", { ...newCommData, tenantId });
-
-      if (newCommData.type === "email") {
-        console.log("Sending email via Edge function");
-        const response = await supabase.functions.invoke('send-tenant-email', {
-          body: {
-            tenantId,
-            subject: newCommData.subject,
-            content: newCommData.content,
-            category: newCommData.category
-          }
-        });
-
-        console.log("Edge function response:", response);
-
-        if (response.error) {
-          console.error("Edge function error:", response.error);
-          throw new Error(response.error.message);
-        }
-
-        toast({
-          title: "Succès",
-          description: "Email envoyé avec succès",
-        });
-      } else {
-        // Pour les autres types de communications
-        console.log("Creating non-email communication");
-        const { error } = await supabase
-          .from('tenant_communications')
-          .insert({
-            tenant_id: tenantId,
-            type: newCommData.type,
-            subject: newCommData.subject,
-            content: newCommData.content,
-            category: newCommData.category,
-            status: 'unread'
-          });
-
-        if (error) {
-          console.error("Database error:", error);
-          throw error;
-        }
-
-        toast({
-          title: "Succès",
-          description: "Communication créée avec succès",
-        });
-      }
-
+  const handleCreateSubmit = async () => {
+    const success = await handleCreateCommunication(newCommData);
+    if (success) {
       setIsNewCommDialogOpen(false);
       setNewCommData({ type: "", subject: "", content: "", category: "general" });
-    } catch (error) {
-      console.error("Error creating communication:", error);
-      toast({
-        title: "Erreur",
-        description: "Erreur lors de la création de la communication: " + (error as Error).message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleToggleStatus = async (comm: Communication) => {
-    try {
-      const newStatus = comm.status === 'read' ? 'unread' : 'read';
-      const { error } = await supabase
-        .from('tenant_communications')
-        .update({ status: newStatus })
-        .eq('id', comm.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: `Communication marked as ${newStatus === 'read' ? 'read' : 'unread'}`,
-      });
-    } catch (error) {
-      console.error("Error updating communication status:", error);
-      toast({
-        title: "Error",
-        description: "Error updating status",
-        variant: "destructive",
-      });
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-lg">Communications History</CardTitle>
-          </div>
-          <Button 
-            onClick={() => setIsNewCommDialogOpen(true)}
-            className="flex items-center gap-2"
-          >
-            <Plus className="h-4 w-4" />
-            New Communication
-          </Button>
-        </div>
+        <CommunicationsHeader 
+          onNewClick={() => setIsNewCommDialogOpen(true)}
+        />
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
@@ -206,7 +112,7 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
         onClose={() => setIsNewCommDialogOpen(false)}
         newCommData={newCommData}
         onDataChange={setNewCommData}
-        onSubmit={handleCreateCommunication}
+        onSubmit={handleCreateSubmit}
       />
 
       <CommunicationDetailsDialog
