@@ -71,16 +71,18 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
   const handleCreateCommunication = async () => {
     if (!tenantId) {
       toast({
-        title: "Error",
-        description: "Missing tenant ID",
+        title: "Erreur",
+        description: "ID du locataire manquant",
         variant: "destructive",
       });
       return;
     }
 
     try {
+      console.log("Creating new communication:", { ...newCommData, tenantId });
+
       if (newCommData.type === "email") {
-        // Send email using the Edge function
+        console.log("Sending email via Edge function");
         const response = await supabase.functions.invoke('send-tenant-email', {
           body: {
             tenantId,
@@ -90,16 +92,20 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
           }
         });
 
+        console.log("Edge function response:", response);
+
         if (response.error) {
+          console.error("Edge function error:", response.error);
           throw new Error(response.error.message);
         }
 
         toast({
-          title: "Success",
-          description: "Email sent successfully",
+          title: "Succès",
+          description: "Email envoyé avec succès",
         });
       } else {
-        // For other types of communications
+        // Pour les autres types de communications
+        console.log("Creating non-email communication");
         const { error } = await supabase
           .from('tenant_communications')
           .insert({
@@ -111,11 +117,14 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
             status: 'unread'
           });
 
-        if (error) throw error;
+        if (error) {
+          console.error("Database error:", error);
+          throw error;
+        }
 
         toast({
-          title: "Success",
-          description: "Communication created successfully",
+          title: "Succès",
+          description: "Communication créée avec succès",
         });
       }
 
@@ -124,8 +133,8 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
     } catch (error) {
       console.error("Error creating communication:", error);
       toast({
-        title: "Error",
-        description: "Error creating communication",
+        title: "Erreur",
+        description: "Erreur lors de la création de la communication: " + (error as Error).message,
         variant: "destructive",
       });
     }
