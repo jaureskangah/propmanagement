@@ -2,9 +2,8 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
 interface EmailRequest {
@@ -77,29 +76,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Email sent successfully");
 
-    // Store communication in database
-    const { error: commError } = await supabase
-      .from("tenant_communications")
-      .insert({
-        tenant_id: emailRequest.tenantId,
-        type: "email",
-        subject: emailRequest.subject,
-        content: emailRequest.content,
-        category: emailRequest.category,
-        status: "sent"
-      });
-
-    if (commError) {
-      console.error("Error storing communication:", commError);
-      throw new Error("Failed to store communication");
-    }
-
-    console.log("Communication stored successfully");
-
-    return new Response(
-      JSON.stringify({ message: "Email sent successfully" }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
 
   } catch (error) {
     console.error("Error in send-tenant-email function:", error);

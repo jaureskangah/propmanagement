@@ -12,19 +12,20 @@ export const useCommunicationActions = (tenantId?: string) => {
     category: string;
   }) => {
     if (!tenantId) {
+      console.error("Missing tenantId in handleCreateCommunication");
       toast({
         title: "Erreur",
         description: "ID du locataire manquant",
         variant: "destructive",
       });
-      return;
+      return false;
     }
 
     try {
-      console.log("Creating new communication:", { ...newCommData, tenantId });
+      console.log("Starting communication creation with data:", { ...newCommData, tenantId });
 
       if (newCommData.type === "email") {
-        console.log("Sending email via Edge function");
+        console.log("Attempting to send email via Edge function");
         const response = await supabase.functions.invoke('send-tenant-email', {
           body: {
             tenantId,
@@ -38,7 +39,24 @@ export const useCommunicationActions = (tenantId?: string) => {
 
         if (response.error) {
           console.error("Edge function error:", response.error);
-          throw new Error(response.error.message);
+          throw new Error(response.error.message || "Erreur lors de l'envoi de l'email");
+        }
+
+        // Create communication record after successful email send
+        const { error: dbError } = await supabase
+          .from('tenant_communications')
+          .insert({
+            tenant_id: tenantId,
+            type: 'email',
+            subject: newCommData.subject,
+            content: newCommData.content,
+            category: newCommData.category,
+            status: 'sent'
+          });
+
+        if (dbError) {
+          console.error("Database error after email send:", dbError);
+          throw dbError;
         }
 
         toast({
@@ -71,7 +89,7 @@ export const useCommunicationActions = (tenantId?: string) => {
 
       return true;
     } catch (error) {
-      console.error("Error creating communication:", error);
+      console.error("Error in handleCreateCommunication:", error);
       toast({
         title: "Erreur",
         description: "Erreur lors de la création de la communication: " + (error as Error).message,
@@ -92,16 +110,16 @@ export const useCommunicationActions = (tenantId?: string) => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: `Communication marked as ${newStatus === 'read' ? 'read' : 'unread'}`,
+        title: "Succès",
+        description: `Communication marquée comme ${newStatus === 'read' ? 'lue' : 'non lue'}`,
       });
 
       return true;
     } catch (error) {
-      console.error("Error updating communication status:", error);
+      console.error("Error in handleToggleStatus:", error);
       toast({
-        title: "Error",
-        description: "Error updating status",
+        title: "Erreur",
+        description: "Erreur lors de la mise à jour du statut",
         variant: "destructive",
       });
       return false;
