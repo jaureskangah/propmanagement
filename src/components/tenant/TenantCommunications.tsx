@@ -24,7 +24,8 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
   const [newCommData, setNewCommData] = useState({
     type: "",
     subject: "",
-    content: ""
+    content: "",
+    category: "general"
   });
   const { toast } = useToast();
 
@@ -78,25 +79,48 @@ export const TenantCommunications = ({ communications, tenantId }: TenantCommuni
     }
 
     try {
-      const { error } = await supabase
-        .from('tenant_communications')
-        .insert({
-          tenant_id: tenantId,
-          type: newCommData.type,
-          subject: newCommData.subject,
-          content: newCommData.content,
-          status: 'unread'
+      if (newCommData.type === "email") {
+        // Send email using the Edge function
+        const response = await supabase.functions.invoke('send-tenant-email', {
+          body: {
+            tenantId,
+            subject: newCommData.subject,
+            content: newCommData.content,
+            category: newCommData.category
+          }
         });
 
-      if (error) throw error;
+        if (response.error) {
+          throw new Error(response.error.message);
+        }
 
-      toast({
-        title: "Success",
-        description: "Communication created successfully",
-      });
+        toast({
+          title: "Success",
+          description: "Email sent successfully",
+        });
+      } else {
+        // For other types of communications
+        const { error } = await supabase
+          .from('tenant_communications')
+          .insert({
+            tenant_id: tenantId,
+            type: newCommData.type,
+            subject: newCommData.subject,
+            content: newCommData.content,
+            category: newCommData.category,
+            status: 'unread'
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Success",
+          description: "Communication created successfully",
+        });
+      }
 
       setIsNewCommDialogOpen(false);
-      setNewCommData({ type: "", subject: "", content: "" });
+      setNewCommData({ type: "", subject: "", content: "", category: "general" });
     } catch (error) {
       console.error("Error creating communication:", error);
       toast({

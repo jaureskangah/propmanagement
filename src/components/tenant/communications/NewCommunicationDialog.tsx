@@ -11,6 +11,7 @@ interface NewCommunicationDialogProps {
     type: string;
     subject: string;
     content: string;
+    category: string;
   };
   onDataChange: (data: any) => void;
   onSubmit: () => void;
@@ -43,6 +44,22 @@ export const NewCommunicationDialog = ({
               <SelectItem value="notification">Notification</SelectItem>
             </SelectContent>
           </Select>
+
+          <Select
+            value={newCommData.category}
+            onValueChange={(value) => onDataChange({ ...newCommData, category: value })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="general">General</SelectItem>
+              <SelectItem value="maintenance">Maintenance</SelectItem>
+              <SelectItem value="payment">Payment</SelectItem>
+              <SelectItem value="urgent">Urgent</SelectItem>
+            </SelectContent>
+          </Select>
+
           <Input
             placeholder="Subject"
             value={newCommData.subject}
