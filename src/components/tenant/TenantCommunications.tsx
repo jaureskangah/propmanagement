@@ -90,6 +90,8 @@ export const TenantCommunications = ({
     }
   };
 
+  console.log("Tenant email for invitation:", tenant?.email); // Ajout d'un log pour déboguer
+
   return (
     <Card>
       <CardHeader>

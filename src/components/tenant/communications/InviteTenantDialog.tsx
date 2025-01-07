@@ -20,7 +20,8 @@ export const InviteTenantDialog = ({
   const { isLoading, sendInvitation } = useInvitationService(tenantId, onClose);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && defaultEmail) {
+      console.log("Setting default email in dialog:", defaultEmail); // Ajout d'un log pour déboguer
       setEmail(defaultEmail);
     }
   }, [isOpen, defaultEmail]);

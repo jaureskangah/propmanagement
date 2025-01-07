@@ -82,6 +82,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
                 communications={tenant.communications} 
                 tenantId={tenant.id}
                 onCommunicationUpdate={handleDataUpdate}
+                tenant={tenant}
               />
             </TabsContent>
 
