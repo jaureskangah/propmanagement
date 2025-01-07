@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthProvider";
 
 interface InviteTenantDialogProps {
   isOpen: boolean;
@@ -20,9 +21,20 @@ export const InviteTenantDialog = ({
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to send invitations",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -40,6 +52,7 @@ export const InviteTenantDialog = ({
           email,
           token,
           expires_at: expiresAt.toISOString(),
+          user_id: user.id // Ajout de l'ID de l'utilisateur connecté
         });
 
       if (error) throw error;
