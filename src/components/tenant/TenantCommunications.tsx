@@ -1,14 +1,13 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardHeader } from "@/components/ui/card";
 import { Communication } from "@/types/tenant";
-import { CommunicationsList } from "./communications/CommunicationsList";
-import { CommunicationFilters } from "./communications/CommunicationFilters";
 import { NewCommunicationDialog } from "./communications/NewCommunicationDialog";
 import { CommunicationDetailsDialog } from "./communications/CommunicationDetailsDialog";
 import { CommunicationsHeader } from "./communications/header/CommunicationsHeader";
 import { InviteTenantDialog } from "./communications/InviteTenantDialog";
 import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { CommunicationsContent } from "./communications/CommunicationsContent";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -25,12 +24,6 @@ export const TenantCommunications = ({
 }: TenantCommunicationsProps) => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const {
-    searchQuery,
-    setSearchQuery,
-    selectedType,
-    setSelectedType,
-    startDate,
-    setStartDate,
     isNewCommDialogOpen,
     setIsNewCommDialogOpen,
     selectedComm,
@@ -40,45 +33,6 @@ export const TenantCommunications = ({
   } = useCommunicationState();
 
   const { handleCreateCommunication, handleToggleStatus } = useCommunicationActions(tenantId);
-
-  // Group communications by type
-  const groupedCommunications = useMemo(() => {
-    return communications.reduce((acc, comm) => {
-      if (!acc[comm.type]) {
-        acc[comm.type] = [];
-      }
-      acc[comm.type].push(comm);
-      return acc;
-    }, {} as Record<string, Communication[]>);
-  }, [communications]);
-
-  // Get unique communication types
-  const communicationTypes = useMemo(() => {
-    return Array.from(new Set(communications.map(comm => comm.type)));
-  }, [communications]);
-
-  // Filter communications based on search, type, and date
-  const filteredCommunications = useMemo(() => {
-    let filtered = communications;
-
-    if (searchQuery) {
-      filtered = filtered.filter(comm => 
-        comm.subject.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    if (selectedType) {
-      filtered = filtered.filter(comm => comm.type === selectedType);
-    }
-
-    if (startDate) {
-      filtered = filtered.filter(comm => 
-        new Date(comm.created_at) >= new Date(startDate)
-      );
-    }
-
-    return filtered;
-  }, [communications, searchQuery, selectedType, startDate]);
 
   const handleCreateSubmit = async () => {
     console.log("Attempting to create communication with tenantId:", tenantId);
@@ -90,7 +44,7 @@ export const TenantCommunications = ({
     }
   };
 
-  console.log("Tenant email for invitation:", tenant?.email); // Ajout d'un log pour déboguer
+  console.log("Tenant email for invitation:", tenant?.email);
 
   return (
     <Card>
@@ -100,26 +54,12 @@ export const TenantCommunications = ({
           onInviteTenantClick={() => setIsInviteDialogOpen(true)}
         />
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <CommunicationFilters
-            searchQuery={searchQuery}
-            startDate={startDate}
-            selectedType={selectedType}
-            communicationTypes={communicationTypes}
-            onSearchChange={setSearchQuery}
-            onDateChange={setStartDate}
-            onTypeChange={setSelectedType}
-          />
 
-          <CommunicationsList
-            filteredCommunications={filteredCommunications}
-            groupedCommunications={groupedCommunications}
-            onCommunicationClick={setSelectedComm}
-            onToggleStatus={handleToggleStatus}
-          />
-        </div>
-      </CardContent>
+      <CommunicationsContent
+        communications={communications}
+        onToggleStatus={handleToggleStatus}
+        onCommunicationSelect={setSelectedComm}
+      />
 
       <NewCommunicationDialog
         isOpen={isNewCommDialogOpen}
