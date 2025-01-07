@@ -14,12 +14,14 @@ interface TenantCommunicationsProps {
   communications: Communication[];
   tenantId: string;
   onCommunicationUpdate?: () => void;
+  tenant?: { email: string };
 }
 
 export const TenantCommunications = ({ 
   communications, 
   tenantId,
-  onCommunicationUpdate 
+  onCommunicationUpdate,
+  tenant 
 }: TenantCommunicationsProps) => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const {
@@ -134,6 +136,7 @@ export const TenantCommunications = ({
         isOpen={isInviteDialogOpen}
         onClose={() => setIsInviteDialogOpen(false)}
         tenantId={tenantId}
+        defaultEmail={tenant?.email}
       />
     </Card>
   );

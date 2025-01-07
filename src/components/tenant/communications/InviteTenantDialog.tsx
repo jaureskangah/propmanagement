@@ -11,17 +11,26 @@ interface InviteTenantDialogProps {
   isOpen: boolean;
   onClose: () => void;
   tenantId: string;
+  defaultEmail?: string;
 }
 
 export const InviteTenantDialog = ({
   isOpen,
   onClose,
-  tenantId
+  tenantId,
+  defaultEmail = ""
 }: InviteTenantDialogProps) => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(defaultEmail);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
+
+  // Reset email when dialog opens with new defaultEmail
+  React.useEffect(() => {
+    if (isOpen) {
+      setEmail(defaultEmail);
+    }
+  }, [isOpen, defaultEmail]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +61,7 @@ export const InviteTenantDialog = ({
           email,
           token,
           expires_at: expiresAt.toISOString(),
-          user_id: user.id // Ajout de l'ID de l'utilisateur connecté
+          user_id: user.id
         });
 
       if (error) throw error;
