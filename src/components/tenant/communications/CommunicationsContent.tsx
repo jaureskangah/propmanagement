@@ -30,7 +30,12 @@ export const CommunicationsContent = ({
     groupedCommunications,
     communicationTypes,
     filteredCommunications
-  } = useCommunicationsData(communications, searchQuery, selectedType, startDate);
+  } = useCommunicationsData(
+    communications, 
+    searchQuery, 
+    selectedType, 
+    startDate ? new Date(startDate) : null
+  );
 
   return (
     <CardContent>
