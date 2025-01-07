@@ -5,9 +5,10 @@ import { CommunicationFilters } from "./communications/CommunicationFilters";
 import { NewCommunicationDialog } from "./communications/NewCommunicationDialog";
 import { CommunicationDetailsDialog } from "./communications/CommunicationDetailsDialog";
 import { CommunicationsHeader } from "./communications/header/CommunicationsHeader";
+import { InviteTenantDialog } from "./communications/InviteTenantDialog";
 import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -20,6 +21,7 @@ export const TenantCommunications = ({
   tenantId,
   onCommunicationUpdate 
 }: TenantCommunicationsProps) => {
+  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const {
     searchQuery,
     setSearchQuery,
@@ -91,6 +93,7 @@ export const TenantCommunications = ({
       <CardHeader>
         <CommunicationsHeader 
           onNewClick={() => setIsNewCommDialogOpen(true)}
+          onInviteTenantClick={() => setIsInviteDialogOpen(true)}
         />
       </CardHeader>
       <CardContent>
@@ -125,6 +128,12 @@ export const TenantCommunications = ({
       <CommunicationDetailsDialog
         communication={selectedComm}
         onClose={() => setSelectedComm(null)}
+      />
+
+      <InviteTenantDialog
+        isOpen={isInviteDialogOpen}
+        onClose={() => setIsInviteDialogOpen(false)}
+        tenantId={tenantId}
       />
     </Card>
   );
