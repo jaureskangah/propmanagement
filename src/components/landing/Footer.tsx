@@ -8,7 +8,7 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Building2 className="h-8 w-8 text-[#ea384c]" />
-              <span className="text-xl font-bold text-white">PropManager</span>
+              <span className="text-xl font-bold text-white">PropManagement</span>
             </div>
             <p className="text-sm">
               Simplifying property management for landlords and property managers.
@@ -44,7 +44,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center text-sm">
-          <p>&copy; {new Date().getFullYear()} PropManager. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} PropManagement. All rights reserved.</p>
         </div>
       </div>
     </footer>

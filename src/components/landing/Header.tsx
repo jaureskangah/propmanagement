@@ -31,7 +31,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <Building2 className="h-8 w-8 text-[#ea384c]" />
-            <span className="text-xl font-bold text-black">PropManager</span>
+            <span className="text-xl font-bold text-black">PropManagement</span>
           </div>
 
           <nav className="hidden md:flex items-center gap-8">

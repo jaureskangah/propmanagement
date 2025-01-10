@@ -36,7 +36,7 @@ const AppSidebar = () => {
             isCollapsed ? "justify-center" : "justify-center"
           )}>
             <Building2 className="h-8 w-8 text-[#ea384c]" />
-            {!isCollapsed && <span>PropManager</span>}
+            {!isCollapsed && <span>PropManagement</span>}
           </div>
         </NavLink>
       </div>
