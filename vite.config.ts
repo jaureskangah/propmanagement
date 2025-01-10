@@ -18,11 +18,6 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    chunkSizeWarningLimit: 1000,
-    commonjsOptions: {
-      include: [/node_modules/],
-      transformMixedEsModules: true
-    }
   },
   plugins: [
     react(),
@@ -34,8 +29,4 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    include: ['react', 'react-dom'],
-    exclude: ['lovable-tagger']
-  }
 }));
