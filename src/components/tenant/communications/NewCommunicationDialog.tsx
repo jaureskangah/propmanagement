@@ -13,9 +13,11 @@ interface NewCommunicationDialogProps {
     subject: string;
     content: string;
     category: string;
+    is_from_tenant?: boolean;
   };
   onDataChange: (data: any) => void;
   onSubmit: () => void;
+  isTenantReply?: boolean;
 }
 
 export const NewCommunicationDialog = ({
@@ -24,6 +26,7 @@ export const NewCommunicationDialog = ({
   newCommData,
   onDataChange,
   onSubmit,
+  isTenantReply = false,
 }: NewCommunicationDialogProps) => {
   console.log("Current newCommData:", newCommData);
 
@@ -36,7 +39,9 @@ export const NewCommunicationDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Communication</DialogTitle>
+          <DialogTitle>
+            {isTenantReply ? "Reply to Property Manager" : "New Communication"}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">

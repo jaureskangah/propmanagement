@@ -1,7 +1,7 @@
 import { Communication } from "@/types/tenant";
 import { MessageSquare, Mail, AlertTriangle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { CommunicationItem } from "./items/CommunicationItem";
+import { CommunicationItem } from "./CommunicationItem";
 
 interface CommunicationsListProps {
   filteredCommunications: Communication[];
@@ -9,6 +9,7 @@ interface CommunicationsListProps {
   onCommunicationClick: (comm: Communication) => void;
   onToggleStatus: (comm: Communication) => void;
   onDeleteCommunication: (comm: Communication) => void;
+  onReply?: (comm: Communication) => void;
 }
 
 const getCategoryIcon = (category: string | undefined) => {
@@ -47,6 +48,7 @@ export const CommunicationsList = ({
   onCommunicationClick,
   onToggleStatus,
   onDeleteCommunication,
+  onReply
 }: CommunicationsListProps) => {
   if (!filteredCommunications?.length) {
     return (
@@ -89,6 +91,7 @@ export const CommunicationsList = ({
               onClick={() => onCommunicationClick(comm)}
               onToggleStatus={() => onToggleStatus(comm)}
               onDelete={() => onDeleteCommunication(comm)}
+              onReply={onReply ? () => onReply(comm) : undefined}
               icon={getCategoryIcon(comm.category)}
               categoryColor={getCategoryColor(comm.category)}
             />

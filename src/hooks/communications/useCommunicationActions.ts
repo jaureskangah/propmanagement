@@ -10,6 +10,7 @@ export const useCommunicationActions = (tenantId?: string) => {
     subject: string;
     content: string;
     category: string;
+    is_from_tenant?: boolean;
   }) => {
     if (!tenantId) {
       console.error("Missing tenantId in handleCreateCommunication");
@@ -35,7 +36,8 @@ export const useCommunicationActions = (tenantId?: string) => {
             tenantId,
             subject: newCommData.subject,
             content: newCommData.content,
-            category
+            category,
+            is_from_tenant: newCommData.is_from_tenant || false
           }
         });
 
@@ -55,7 +57,8 @@ export const useCommunicationActions = (tenantId?: string) => {
             subject: newCommData.subject,
             content: newCommData.content,
             category,
-            status: 'sent'
+            status: 'sent',
+            is_from_tenant: newCommData.is_from_tenant || false
           });
 
         if (dbError) {
@@ -66,7 +69,7 @@ export const useCommunicationActions = (tenantId?: string) => {
         // Add notification for email sent
         toast({
           title: "Email Sent",
-          description: `Email "${newCommData.subject}" has been sent to the tenant`,
+          description: `Email "${newCommData.subject}" has been sent`,
           variant: "default",
         });
       } else {
@@ -79,7 +82,8 @@ export const useCommunicationActions = (tenantId?: string) => {
             subject: newCommData.subject,
             content: newCommData.content,
             category,
-            status: 'unread'
+            status: 'unread',
+            is_from_tenant: newCommData.is_from_tenant || false
           });
 
         if (error) {

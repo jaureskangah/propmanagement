@@ -28,7 +28,8 @@ export const TenantCommunications = ({
     newCommData,
     handleCreateSubmit,
     handleCommunicationSelect,
-    handleToggleStatusAndUpdate
+    handleToggleStatusAndUpdate,
+    handleReply
   } = useTenantCommunications(tenantId, onCommunicationUpdate);
 
   console.log("Tenant email for invitation:", tenant?.email);
@@ -47,6 +48,7 @@ export const TenantCommunications = ({
         onToggleStatus={handleToggleStatusAndUpdate}
         onCommunicationSelect={handleCommunicationSelect}
         onCommunicationUpdate={onCommunicationUpdate}
+        onReply={handleReply}
       />
 
       <CommunicationDialogs

@@ -1,6 +1,6 @@
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Mail, MessageCircle, Bell, MessageSquare, Paperclip } from "lucide-react";
+import { Mail, MessageCircle, Bell, MessageSquare, Paperclip, Reply, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Communication } from "@/types/tenant";
 import { format } from "date-fns";
@@ -10,6 +10,8 @@ interface CommunicationItemProps {
   communication: Communication;
   onClick: () => void;
   onToggleStatus: () => void;
+  onDelete: () => void;
+  onReply?: () => void;
   icon?: React.ReactNode;
   categoryColor?: string;
 }
@@ -18,6 +20,8 @@ export const CommunicationItem = ({
   communication,
   onClick,
   onToggleStatus,
+  onDelete,
+  onReply,
   icon,
   categoryColor = "bg-blue-100 text-blue-800"
 }: CommunicationItemProps) => {
@@ -39,7 +43,7 @@ export const CommunicationItem = ({
               variant="secondary" 
               className={`${categoryColor} inline-flex items-center`}
             >
-              general
+              {communication.category}
             </Badge>
             {hasAttachments && (
               <Badge variant="outline" className="inline-flex items-center gap-1">
@@ -49,6 +53,18 @@ export const CommunicationItem = ({
             )}
           </div>
           <div className="flex items-center gap-2">
+            {onReply && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onReply();
+                }}
+              >
+                <Reply className="h-4 w-4" />
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -60,6 +76,17 @@ export const CommunicationItem = ({
               <Badge variant={communication.status === "read" ? "secondary" : "default"}>
                 {communication.status}
               </Badge>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>
