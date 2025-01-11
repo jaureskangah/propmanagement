@@ -25,27 +25,41 @@ export const useCommunicationsData = (
 
   // Filter communications based on search, category, and date
   const filteredCommunications = useMemo(() => {
-    console.log("Filtering communications with category:", selectedCategory);
+    console.log("Starting filtering with:", {
+      total: communications.length,
+      searchQuery,
+      selectedCategory,
+      startDate
+    });
+
     let filtered = [...communications];
 
     if (searchQuery) {
       filtered = filtered.filter(comm => 
         comm.subject?.toLowerCase().includes(searchQuery.toLowerCase())
       );
+      console.log("After search filter:", filtered.length);
     }
 
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
-        console.log("Comparing:", comm.category, selectedCategory);
-        return comm.category?.toLowerCase() === selectedCategory.toLowerCase();
+        const commCategory = comm.category?.toLowerCase() || '';
+        const selectedCat = selectedCategory.toLowerCase();
+        console.log(`Comparing categories: ${commCategory} === ${selectedCat}`);
+        return commCategory === selectedCat;
       });
-      console.log("Filtered by category:", filtered);
+      console.log("After category filter:", filtered.length);
     }
 
     if (startDate) {
-      filtered = filtered.filter(comm => 
-        new Date(comm.created_at) >= startDate
-      );
+      filtered = filtered.filter(comm => {
+        const commDate = new Date(comm.created_at);
+        const filterDate = new Date(startDate);
+        filterDate.setHours(0, 0, 0, 0); // Reset time to start of day
+        console.log(`Comparing dates: ${commDate} >= ${filterDate}`);
+        return commDate >= filterDate;
+      });
+      console.log("After date filter:", filtered.length);
     }
 
     return filtered;

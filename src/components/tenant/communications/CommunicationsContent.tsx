@@ -37,8 +37,14 @@ export const CommunicationsContent = ({
     startDate ? new Date(startDate) : null
   );
 
-  console.log("Filtered communications:", filteredCommunications);
-  console.log("Selected category:", selectedType);
+  console.log("CommunicationsContent render:", {
+    totalCommunications: communications.length,
+    filteredCount: filteredCommunications.length,
+    selectedType,
+    startDate
+  });
+
+  const categories = ["general", "urgent", "maintenance", "payment"];
 
   return (
     <CardContent>
@@ -47,7 +53,7 @@ export const CommunicationsContent = ({
           searchQuery={searchQuery}
           startDate={startDate}
           selectedType={selectedType}
-          communicationTypes={["general", "urgent", "maintenance", "payment"]}
+          communicationTypes={categories}
           onSearchChange={setSearchQuery}
           onDateChange={setStartDate}
           onTypeChange={setSelectedType}
