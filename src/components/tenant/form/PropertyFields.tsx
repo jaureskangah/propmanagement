@@ -34,7 +34,6 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <Select 
               onValueChange={field.onChange} 
               value={field.value || undefined}
-              defaultValue={undefined}
             >
               <FormControl>
                 <SelectTrigger>
@@ -43,14 +42,12 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
               </FormControl>
               <SelectContent>
                 {validProperties.map((property) => (
-                  property.id && (
-                    <SelectItem 
-                      key={property.id} 
-                      value={property.id}
-                    >
-                      {property.name}
-                    </SelectItem>
-                  )
+                  <SelectItem 
+                    key={property.id} 
+                    value={property.id}
+                  >
+                    {property.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
