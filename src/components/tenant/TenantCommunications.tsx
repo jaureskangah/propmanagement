@@ -29,7 +29,8 @@ export const TenantCommunications = ({
     handleCreateSubmit,
     handleCommunicationSelect,
     handleToggleStatusAndUpdate,
-    handleReply
+    handleReply,
+    handleDataChange
   } = useTenantCommunications(tenantId, onCommunicationUpdate);
 
   console.log("Tenant email for invitation:", tenant?.email);
@@ -55,7 +56,7 @@ export const TenantCommunications = ({
         isNewCommDialogOpen={isNewCommDialogOpen}
         onNewCommClose={() => setIsNewCommDialogOpen(false)}
         newCommData={newCommData}
-        onDataChange={() => {}}
+        onDataChange={handleDataChange}
         onSubmit={handleCreateSubmit}
         selectedComm={selectedComm}
         onDetailsClose={() => setSelectedComm(null)}
