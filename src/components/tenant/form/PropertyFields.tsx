@@ -12,13 +12,14 @@ interface PropertyFieldsProps {
 export function PropertyFields({ form }: PropertyFieldsProps) {
   const { properties } = useProperties();
 
-  // Filter out any invalid properties and ensure IDs are valid strings
-  const validProperties = properties?.filter(property => 
+  // Ensure we only work with valid properties that have both id and name
+  const validProperties = (properties ?? []).filter(property => 
     property && 
     typeof property.id === 'string' && 
-    property.id.trim() !== '' && 
-    property.name
-  ) || [];
+    property.id.trim() !== '' &&
+    typeof property.name === 'string' &&
+    property.name.trim() !== ''
+  );
 
   console.log("Valid properties:", validProperties);
   console.log("Current property_id value:", form.watch("property_id"));
