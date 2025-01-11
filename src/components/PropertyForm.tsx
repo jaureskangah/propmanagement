@@ -31,7 +31,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
       name: "",
       address: "",
       units: 0,
-      type: "",
+      type: "Apartment", // Set a default value instead of empty string
     },
   });
 
@@ -119,7 +119,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
           render={({ field }) => (
             <FormItem>
               <FormLabel>Property Type</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select onValueChange={field.onChange} value={field.value || "Apartment"}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a property type" />
