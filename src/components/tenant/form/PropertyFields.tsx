@@ -15,6 +15,8 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
   console.log("Properties available:", properties);
   console.log("Current form value for property_id:", form.watch("property_id"));
 
+  const validProperties = properties?.filter(property => property && property.id) || [];
+
   return (
     <>
       <FormField
@@ -25,6 +27,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <FormLabel>Property *</FormLabel>
             <Select 
               onValueChange={field.onChange} 
+              defaultValue="select-property"
               value={field.value || "select-property"}
             >
               <FormControl>
@@ -36,15 +39,13 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
                 <SelectItem value="select-property" disabled>
                   Select a property
                 </SelectItem>
-                {properties?.map((property) => (
-                  property?.id ? (
-                    <SelectItem 
-                      key={property.id} 
-                      value={property.id}
-                    >
-                      {property.name}
-                    </SelectItem>
-                  ) : null
+                {validProperties.map((property) => (
+                  <SelectItem 
+                    key={property.id} 
+                    value={property.id}
+                  >
+                    {property.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
