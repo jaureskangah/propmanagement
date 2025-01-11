@@ -18,16 +18,22 @@ const PropertyFilters = ({
   setSearchQuery,
   propertyTypes,
 }: PropertyFiltersProps) => {
+  console.log("Selected type:", selectedType);
+  console.log("Property types:", propertyTypes);
+
   return (
     <div className="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl shadow-sm mb-8 animate-fade-in">
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="w-full sm:w-64">
-          <Select value={selectedType} onValueChange={setSelectedType}>
+          <Select value={selectedType || "all"} onValueChange={setSelectedType}>
             <SelectTrigger className="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
               <SelectValue placeholder="Filter by type" />
             </SelectTrigger>
             <SelectContent>
-              {propertyTypes.map((type) => (
+              <SelectItem value="all" className="hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer">
+                All Types
+              </SelectItem>
+              {propertyTypes.filter(type => type && type.trim() !== "").map((type) => (
                 <SelectItem
                   key={type}
                   value={type}
