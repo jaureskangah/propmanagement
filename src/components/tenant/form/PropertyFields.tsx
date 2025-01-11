@@ -20,11 +20,8 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
     property.name
   ) || [];
 
-  // Get current property_id value
-  const currentPropertyId = form.watch("property_id");
-  
   console.log("Valid properties:", validProperties);
-  console.log("Current property ID:", currentPropertyId);
+  console.log("Current property_id value:", form.watch("property_id"));
 
   return (
     <>
@@ -37,6 +34,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <Select 
               onValueChange={field.onChange} 
               value={field.value || undefined}
+              defaultValue={undefined}
             >
               <FormControl>
                 <SelectTrigger>
@@ -45,12 +43,14 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
               </FormControl>
               <SelectContent>
                 {validProperties.map((property) => (
-                  <SelectItem 
-                    key={property.id} 
-                    value={property.id}
-                  >
-                    {property.name}
-                  </SelectItem>
+                  property.id && (
+                    <SelectItem 
+                      key={property.id} 
+                      value={property.id}
+                    >
+                      {property.name}
+                    </SelectItem>
+                  )
                 ))}
               </SelectContent>
             </Select>
