@@ -36,7 +36,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <FormLabel>Property *</FormLabel>
             <Select 
               onValueChange={field.onChange} 
-              defaultValue={field.value}
+              value={field.value || undefined}
             >
               <FormControl>
                 <SelectTrigger>
