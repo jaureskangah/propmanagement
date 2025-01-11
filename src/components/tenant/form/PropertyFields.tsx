@@ -12,6 +12,9 @@ interface PropertyFieldsProps {
 export function PropertyFields({ form }: PropertyFieldsProps) {
   const { properties } = useProperties();
 
+  console.log("Properties available:", properties);
+  console.log("Current form value for property_id:", form.watch("property_id"));
+
   return (
     <>
       <FormField
@@ -22,7 +25,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <FormLabel>Property *</FormLabel>
             <Select 
               onValueChange={field.onChange} 
-              value={field.value || "select-property"}
+              value={field.value || "no-selection"}
             >
               <FormControl>
                 <SelectTrigger>
@@ -30,14 +33,16 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {/* Add a default option */}
-                <SelectItem value="select-property" disabled>Select a property</SelectItem>
-                {properties?.map((property) => (
-                  property.id ? ( // Only render if property.id exists
-                    <SelectItem key={property.id} value={property.id}>
-                      {property.name}
-                    </SelectItem>
-                  ) : null
+                <SelectItem value="no-selection" disabled>
+                  Select a property
+                </SelectItem>
+                {properties?.filter(property => property?.id).map((property) => (
+                  <SelectItem 
+                    key={property.id} 
+                    value={property.id}
+                  >
+                    {property.name}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
