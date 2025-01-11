@@ -26,7 +26,9 @@ export const CommunicationDetailsDialog = ({
     }
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string | undefined) => {
+    if (!status) return null;
+    
     switch (status.toLowerCase()) {
       case 'read':
         return <Badge variant="secondary">Read</Badge>;
@@ -44,7 +46,7 @@ export const CommunicationDetailsDialog = ({
           <DialogTitle className="flex items-center gap-2">
             {communication && (
               <>
-                {getTypeIcon(communication.type)}
+                {getTypeIcon(communication.type || '')}
                 {communication.subject}
               </>
             )}
