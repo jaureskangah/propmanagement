@@ -12,18 +12,6 @@ interface PropertyFieldsProps {
 export function PropertyFields({ form }: PropertyFieldsProps) {
   const { properties } = useProperties();
 
-  // Ensure we only work with valid properties that have both id and name
-  const validProperties = (properties ?? []).filter(property => 
-    property && 
-    typeof property.id === 'string' && 
-    property.id.trim() !== '' &&
-    typeof property.name === 'string' &&
-    property.name.trim() !== ''
-  );
-
-  console.log("Valid properties:", validProperties);
-  console.log("Current property_id value:", form.watch("property_id"));
-
   return (
     <>
       <FormField
@@ -32,21 +20,15 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Property *</FormLabel>
-            <Select 
-              onValueChange={field.onChange} 
-              value={field.value || undefined}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a property" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {validProperties.map((property) => (
-                  <SelectItem 
-                    key={property.id} 
-                    value={property.id}
-                  >
+                {properties?.map((property) => (
+                  <SelectItem key={property.id} value={property.id}>
                     {property.name}
                   </SelectItem>
                 ))}
