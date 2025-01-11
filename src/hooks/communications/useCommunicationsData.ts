@@ -10,7 +10,12 @@ export const useCommunicationsData = (
 ) => {
   // Group communications by type
   const groupedCommunications = useMemo(() => {
-    return communications.reduce((acc, comm) => {
+    // Trier d'abord les communications par date de création (du plus récent au moins récent)
+    const sortedCommunications = [...communications].sort((a, b) => {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
+
+    return sortedCommunications.reduce((acc, comm) => {
       const type = comm.type || 'other';
       if (!acc[type]) {
         acc[type] = [];
@@ -34,7 +39,9 @@ export const useCommunicationsData = (
       startDate: startDate?.toISOString()
     });
 
-    let filtered = [...communications];
+    let filtered = [...communications].sort((a, b) => {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    });
 
     // Search filter
     if (searchQuery) {

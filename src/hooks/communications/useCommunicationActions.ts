@@ -63,12 +63,13 @@ export const useCommunicationActions = (tenantId?: string) => {
           throw dbError;
         }
 
+        // Add notification for email sent
         toast({
           title: "Success",
           description: "Email sent successfully",
         });
 
-        // Add notification for email sent
+        // Add specific notification for email sent
         toast({
           title: "Email Sent",
           description: `Email "${newCommData.subject}" has been sent to the tenant`,
