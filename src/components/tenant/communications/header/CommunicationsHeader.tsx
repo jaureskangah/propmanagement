@@ -30,7 +30,7 @@ export const CommunicationsHeader = ({
             className="flex items-center gap-2"
           >
             <Plus className="h-4 w-4" />
-            New Communication
+            New Email
           </Button>
         </div>
       </div>

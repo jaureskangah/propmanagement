@@ -26,7 +26,7 @@ export const CommunicationFilters = ({
   console.log("CommunicationFilters - Types:", communicationTypes);
   console.log("CommunicationFilters - Selected type:", selectedType);
 
-  const validTypes = communicationTypes.filter(type => type && type.trim() !== "");
+  const categories = ["general", "urgent", "maintenance", "payment"];
 
   return (
     <div className="flex flex-col md:flex-row gap-4">
@@ -34,7 +34,8 @@ export const CommunicationFilters = ({
       <TypeFilter 
         value={selectedType} 
         onChange={onTypeChange}
-        types={validTypes}
+        types={categories}
+        placeholder="Filter by category"
       />
       <DateFilter value={startDate} onChange={onDateChange} />
     </div>
