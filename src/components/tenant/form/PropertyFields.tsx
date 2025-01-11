@@ -25,7 +25,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <FormLabel>Property *</FormLabel>
             <Select 
               onValueChange={field.onChange} 
-              value={field.value || "no-selection"}
+              value={field.value || "select-property"}
             >
               <FormControl>
                 <SelectTrigger>
@@ -33,16 +33,18 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="no-selection" disabled>
+                <SelectItem value="select-property" disabled>
                   Select a property
                 </SelectItem>
-                {properties?.filter(property => property?.id).map((property) => (
-                  <SelectItem 
-                    key={property.id} 
-                    value={property.id}
-                  >
-                    {property.name}
-                  </SelectItem>
+                {properties?.map((property) => (
+                  property?.id ? (
+                    <SelectItem 
+                      key={property.id} 
+                      value={property.id}
+                    >
+                      {property.name}
+                    </SelectItem>
+                  ) : null
                 ))}
               </SelectContent>
             </Select>
