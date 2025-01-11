@@ -2,7 +2,6 @@ import { Communication } from "@/types/tenant";
 import { MessageSquare, Mail, AlertTriangle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CommunicationItem } from "./items/CommunicationItem";
-import { format } from "date-fns";
 
 interface CommunicationsListProps {
   filteredCommunications: Communication[];
@@ -11,7 +10,9 @@ interface CommunicationsListProps {
   onToggleStatus: (comm: Communication) => void;
 }
 
-const getCategoryIcon = (category: string) => {
+const getCategoryIcon = (category: string | undefined) => {
+  if (!category) return <MessageSquare className="h-4 w-4 text-blue-500" />;
+  
   switch (category.toLowerCase()) {
     case 'urgent':
       return <AlertTriangle className="h-4 w-4 text-red-500" />;
@@ -24,7 +25,9 @@ const getCategoryIcon = (category: string) => {
   }
 };
 
-const getCategoryColor = (category: string) => {
+const getCategoryColor = (category: string | undefined) => {
+  if (!category) return 'bg-blue-100 text-blue-800';
+  
   switch (category.toLowerCase()) {
     case 'urgent':
       return 'bg-red-100 text-red-800';
@@ -43,7 +46,7 @@ export const CommunicationsList = ({
   onCommunicationClick,
   onToggleStatus,
 }: CommunicationsListProps) => {
-  if (filteredCommunications.length === 0) {
+  if (!filteredCommunications?.length) {
     return (
       <div className="text-center py-8 border-2 border-dashed rounded-lg">
         <MessageSquare className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
@@ -57,6 +60,8 @@ export const CommunicationsList = ({
   const renderThreadedCommunications = (communications: Communication[]) => {
     // Group by parent_id
     const threads = communications.reduce((acc, comm) => {
+      if (!comm) return acc;
+      
       if (!comm.parent_id) {
         if (!acc[comm.id]) {
           acc[comm.id] = [comm];
@@ -93,8 +98,10 @@ export const CommunicationsList = ({
   return (
     <div className="space-y-4">
       {Object.entries(groupedCommunications).map(([type, comms]) => {
+        if (!type || !comms) return null;
+        
         const filteredComms = comms.filter(comm => 
-          filteredCommunications.includes(comm)
+          comm && filteredCommunications.includes(comm)
         );
 
         if (filteredComms.length === 0) return null;
