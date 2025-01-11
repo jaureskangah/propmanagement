@@ -12,10 +12,11 @@ interface PropertyFieldsProps {
 export function PropertyFields({ form }: PropertyFieldsProps) {
   const { properties } = useProperties();
 
-  // Filter out any invalid properties
+  // Filter out any invalid properties and ensure IDs are valid strings
   const validProperties = properties?.filter(property => 
     property && 
-    property.id && 
+    typeof property.id === 'string' && 
+    property.id.trim() !== '' && 
     property.name
   ) || [];
 
@@ -35,7 +36,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <FormLabel>Property *</FormLabel>
             <Select 
               onValueChange={field.onChange} 
-              value={field.value || undefined}
+              defaultValue={field.value}
             >
               <FormControl>
                 <SelectTrigger>
