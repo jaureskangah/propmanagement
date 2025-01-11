@@ -32,11 +32,19 @@ export const NewCommunicationDialog = ({
     onDataChange({ ...newCommData, type: value });
   };
 
+  const handleSubjectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onDataChange({ ...newCommData, subject: e.target.value });
+  };
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onDataChange({ ...newCommData, content: e.target.value });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Communication</DialogTitle>
+          <DialogTitle>Nouveau message</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
@@ -46,7 +54,7 @@ export const NewCommunicationDialog = ({
               onValueChange={handleTypeChange}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select type" />
+                <SelectValue placeholder="Sélectionner le type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="email">Email</SelectItem>
@@ -55,20 +63,20 @@ export const NewCommunicationDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Subject</Label>
+            <Label>Sujet</Label>
             <Input
               value={newCommData.subject}
-              onChange={(e) => onDataChange({ ...newCommData, subject: e.target.value })}
-              placeholder="Enter subject"
+              onChange={handleSubjectChange}
+              placeholder="Entrez le sujet"
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Content</Label>
+            <Label>Message</Label>
             <Textarea
               value={newCommData.content}
-              onChange={(e) => onDataChange({ ...newCommData, content: e.target.value })}
-              placeholder="Enter message content"
+              onChange={handleContentChange}
+              placeholder="Entrez votre message"
               rows={4}
             />
           </div>
@@ -76,10 +84,10 @@ export const NewCommunicationDialog = ({
 
         <div className="flex justify-end space-x-2">
           <Button variant="outline" onClick={onClose}>
-            Cancel
+            Annuler
           </Button>
           <Button onClick={onSubmit}>
-            Send
+            Envoyer
           </Button>
         </div>
       </DialogContent>

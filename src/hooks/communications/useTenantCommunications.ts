@@ -1,33 +1,48 @@
 import { useState } from "react";
 import { Communication } from "@/types/tenant";
 import { supabase } from "@/lib/supabase";
-import { useCommunicationState } from "./useCommunicationState";
-import { useCommunicationActions } from "./useCommunicationActions";
 
 export const useTenantCommunications = (
   tenantId: string,
   onCommunicationUpdate?: () => void
 ) => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
-  
-  const {
-    isNewCommDialogOpen,
-    setIsNewCommDialogOpen,
-    selectedComm,
-    setSelectedComm,
-    newCommData,
-    setNewCommData
-  } = useCommunicationState();
-
-  const { handleCreateCommunication, handleToggleStatus } = useCommunicationActions(tenantId);
+  const [isNewCommDialogOpen, setIsNewCommDialogOpen] = useState(false);
+  const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
+  const [newCommData, setNewCommData] = useState({
+    type: "email",
+    subject: "",
+    content: "",
+    category: "general"
+  });
 
   const handleCreateSubmit = async () => {
-    console.log("Attempting to create communication with tenantId:", tenantId);
-    const success = await handleCreateCommunication(newCommData);
-    if (success) {
+    try {
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .insert([
+          {
+            tenant_id: tenantId,
+            type: newCommData.type,
+            subject: newCommData.subject,
+            content: newCommData.content,
+            category: newCommData.category
+          }
+        ]);
+
+      if (error) throw error;
+
       setIsNewCommDialogOpen(false);
-      setNewCommData({ type: "", subject: "", content: "", category: "general" });
+      setNewCommData({
+        type: "email",
+        subject: "",
+        content: "",
+        category: "general"
+      });
       onCommunicationUpdate?.();
+
+    } catch (error) {
+      console.error('Error creating communication:', error);
     }
   };
 
@@ -51,11 +66,25 @@ export const useTenantCommunications = (
     }
   };
 
-  const handleToggleStatusAndUpdate = async (comm: Communication) => {
-    const success = await handleToggleStatus(comm);
-    if (success) {
-      onCommunicationUpdate?.();
+  const handleToggleStatus = async (comm: Communication) => {
+    try {
+      const newStatus = comm.status === 'read' ? 'unread' : 'read';
+      const { error } = await supabase
+        .from('tenant_communications')
+        .update({ status: newStatus })
+        .eq('id', comm.id);
+
+      if (error) throw error;
+      return true;
+    } catch (error) {
+      console.error('Error toggling status:', error);
+      return false;
     }
+  };
+
+  const handleDataChange = (newData: any) => {
+    console.log('Updating form data:', newData);
+    setNewCommData(newData);
   };
 
   return {
@@ -68,6 +97,7 @@ export const useTenantCommunications = (
     newCommData,
     handleCreateSubmit,
     handleCommunicationSelect,
-    handleToggleStatusAndUpdate
+    handleToggleStatus,
+    handleDataChange
   };
 };
