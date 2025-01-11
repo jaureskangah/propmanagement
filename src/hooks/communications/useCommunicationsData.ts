@@ -46,14 +46,23 @@ export const useCommunicationsData = (
     // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
-        // Ensure category is a valid string and lowercase for comparison
-        const commCategory = (comm.category || 'general').toLowerCase();
+        // Get the raw category value
+        const rawCategory = comm.category;
+        
+        // Convert to string and lowercase, defaulting to 'general' if undefined
+        const commCategory = typeof rawCategory === 'string' 
+          ? rawCategory.toLowerCase() 
+          : typeof rawCategory === 'object' && rawCategory !== null
+          ? (rawCategory as any).value?.toLowerCase() || 'general'
+          : 'general';
+
         const selectedCategoryLower = selectedCategory.toLowerCase();
         
-        console.log("Communication:", {
+        console.log("Category comparison:", {
           id: comm.id,
           subject: comm.subject,
-          actualCategory: commCategory,
+          rawCategory,
+          commCategory,
           selectedCategory: selectedCategoryLower,
           matches: commCategory === selectedCategoryLower
         });

@@ -25,7 +25,7 @@ export const useCommunicationActions = (tenantId?: string) => {
       console.log("Starting communication creation with data:", { ...newCommData, tenantId });
 
       // Ensure category is a valid string and lowercase
-      const category = newCommData.category?.toLowerCase() || 'general';
+      const category = String(newCommData.category || 'general').toLowerCase();
       console.log("Normalized category:", category);
 
       if (newCommData.type === "email") {
