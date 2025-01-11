@@ -39,6 +39,8 @@ export const CommunicationDetailsDialog = ({
     }
   };
 
+  console.log("Communication details:", communication);
+
   return (
     <Dialog open={!!communication} onOpenChange={onClose}>
       <DialogContent>
@@ -59,7 +61,23 @@ export const CommunicationDetailsDialog = ({
                 <span>{formatDate(communication.created_at)}</span>
                 {getStatusBadge(communication.status)}
               </div>
-              <p className="text-sm">{communication.content || "No content"}</p>
+              <div className="bg-muted/50 p-4 rounded-lg">
+                <p className="text-sm whitespace-pre-wrap">
+                  {communication.content || "No content available"}
+                </p>
+              </div>
+              {communication.attachments && communication.attachments.length > 0 && (
+                <div className="mt-4">
+                  <h4 className="text-sm font-medium mb-2">Attachments</h4>
+                  <div className="flex gap-2">
+                    {communication.attachments.map((attachment, index) => (
+                      <Badge key={index} variant="secondary">
+                        {attachment}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
