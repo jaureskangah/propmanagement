@@ -46,12 +46,14 @@ export const useCommunicationsData = (
     // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
+        const commCategory = comm.category || 'general';
         console.log("Communication:", {
           id: comm.id,
-          category: comm.category,
-          selectedCategory
+          category: commCategory,
+          selectedCategory,
+          matches: commCategory === selectedCategory
         });
-        return comm.category === selectedCategory;
+        return commCategory === selectedCategory;
       });
       console.log("After category filter:", filtered.length);
     }

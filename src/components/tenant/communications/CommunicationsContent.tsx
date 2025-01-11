@@ -42,7 +42,12 @@ export const CommunicationsContent = ({
     filteredCount: filteredCommunications.length,
     selectedType,
     startDate,
-    communications
+    communications: communications.map(c => ({
+      id: c.id,
+      subject: c.subject,
+      category: c.category,
+      created_at: c.created_at
+    }))
   });
 
   const categories = ["general", "urgent", "maintenance", "payment"];
