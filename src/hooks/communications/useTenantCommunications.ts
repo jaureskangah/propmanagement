@@ -58,17 +58,6 @@ export const useTenantCommunications = (
     }
   };
 
-  const handleReply = (comm: Communication) => {
-    setNewCommData({
-      type: "email",
-      subject: `Re: ${comm.subject}`,
-      content: "",
-      category: "general",
-      is_from_tenant: true
-    });
-    setIsNewCommDialogOpen(true);
-  };
-
   return {
     isInviteDialogOpen,
     setIsInviteDialogOpen,
@@ -79,7 +68,6 @@ export const useTenantCommunications = (
     newCommData,
     handleCreateSubmit,
     handleCommunicationSelect,
-    handleToggleStatusAndUpdate,
-    handleReply
+    handleToggleStatusAndUpdate
   };
 };

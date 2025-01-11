@@ -11,15 +11,13 @@ interface CommunicationsContentProps {
   onToggleStatus: (comm: Communication) => void;
   onCommunicationSelect: (comm: Communication | null) => void;
   onCommunicationUpdate?: () => void;
-  onReply?: (comm: Communication) => void;
 }
 
 export const CommunicationsContent = ({
   communications,
   onToggleStatus,
   onCommunicationSelect,
-  onCommunicationUpdate,
-  onReply
+  onCommunicationUpdate
 }: CommunicationsContentProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -77,7 +75,6 @@ export const CommunicationsContent = ({
           onCommunicationClick={onCommunicationSelect}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={handleDelete}
-          onReply={onReply}
         />
       </div>
     </CardContent>
