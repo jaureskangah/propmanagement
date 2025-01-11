@@ -37,6 +37,9 @@ export const CommunicationsContent = ({
     startDate ? new Date(startDate) : null
   );
 
+  console.log("Filtered communications:", filteredCommunications);
+  console.log("Selected category:", selectedType);
+
   return (
     <CardContent>
       <div className="space-y-4">

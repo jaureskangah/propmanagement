@@ -4,16 +4,16 @@ import { Communication } from "@/types/tenant";
 export const useCommunicationsData = (
   communications: Communication[],
   searchQuery: string,
-  selectedType: string | null,
+  selectedCategory: string | null,
   startDate: Date | null
 ) => {
   // Group communications by type
   const groupedCommunications = useMemo(() => {
     return communications.reduce((acc, comm) => {
-      if (!acc[comm.type]) {
-        acc[comm.type] = [];
+      if (!acc[comm.type || 'other']) {
+        acc[comm.type || 'other'] = [];
       }
-      acc[comm.type].push(comm);
+      acc[comm.type || 'other'].push(comm);
       return acc;
     }, {} as Record<string, Communication[]>);
   }, [communications]);
@@ -23,18 +23,20 @@ export const useCommunicationsData = (
     return Array.from(new Set(communications.map(comm => comm.type)));
   }, [communications]);
 
-  // Filter communications based on search, type, and date
+  // Filter communications based on search, category, and date
   const filteredCommunications = useMemo(() => {
+    console.log("Filtering communications with category:", selectedCategory);
     let filtered = communications;
 
     if (searchQuery) {
       filtered = filtered.filter(comm => 
-        comm.subject.toLowerCase().includes(searchQuery.toLowerCase())
+        comm.subject?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    if (selectedType) {
-      filtered = filtered.filter(comm => comm.type === selectedType);
+    if (selectedCategory) {
+      filtered = filtered.filter(comm => comm.category === selectedCategory);
+      console.log("Filtered by category:", filtered);
     }
 
     if (startDate) {
@@ -44,7 +46,7 @@ export const useCommunicationsData = (
     }
 
     return filtered;
-  }, [communications, searchQuery, selectedType, startDate]);
+  }, [communications, searchQuery, selectedCategory, startDate]);
 
   return {
     groupedCommunications,
