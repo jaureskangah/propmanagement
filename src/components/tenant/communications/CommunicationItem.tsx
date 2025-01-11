@@ -39,7 +39,7 @@ export const CommunicationItem = ({
               variant="secondary" 
               className={`${categoryColor} inline-flex items-center`}
             >
-              {communication.category}
+              general
             </Badge>
             {hasAttachments && (
               <Badge variant="outline" className="inline-flex items-center gap-1">
