@@ -21,12 +21,17 @@ export const useTenantCommunications = (
 
   const { handleCreateCommunication, handleToggleStatus } = useCommunicationActions(tenantId);
 
+  const handleDataChange = (data: any) => {
+    console.log("Handling data change:", data);
+    setNewCommData(data);
+  };
+
   const handleCreateSubmit = async () => {
     console.log("Attempting to create communication with tenantId:", tenantId);
     const success = await handleCreateCommunication(newCommData);
     if (success) {
       setIsNewCommDialogOpen(false);
-      setNewCommData({ type: "", subject: "", content: "", category: "general" });
+      setNewCommData({ type: "email", subject: "", content: "", category: "general" });
       onCommunicationUpdate?.();
     }
   };
@@ -68,6 +73,7 @@ export const useTenantCommunications = (
     newCommData,
     handleCreateSubmit,
     handleCommunicationSelect,
-    handleToggleStatusAndUpdate
+    handleToggleStatusAndUpdate,
+    handleDataChange
   };
 };
