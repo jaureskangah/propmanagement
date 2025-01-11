@@ -46,10 +46,7 @@ export const useCommunicationsData = (
     // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
-        // Get the raw category value
         const rawCategory = comm.category;
-        
-        // Convert to string and lowercase, defaulting to 'general' if undefined
         const commCategory = typeof rawCategory === 'string' 
           ? rawCategory.toLowerCase() 
           : typeof rawCategory === 'object' && rawCategory !== null
@@ -79,12 +76,15 @@ export const useCommunicationsData = (
 
       filtered = filtered.filter(comm => {
         const commDate = new Date(comm.created_at);
+        const isAfter = commDate >= startOfDay;
+
         console.log("Date comparison:", {
           commDate: commDate.toISOString(),
           startDate: startOfDay.toISOString(),
-          isAfter: commDate >= startOfDay
+          isAfter
         });
-        return commDate >= startOfDay;
+
+        return isAfter;
       });
       console.log("After date filter:", filtered.length);
     }
