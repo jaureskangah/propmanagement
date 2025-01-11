@@ -20,17 +20,24 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Property *</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select 
+              onValueChange={field.onChange} 
+              value={field.value || "select-property"}
+            >
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a property" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
+                {/* Add a default option */}
+                <SelectItem value="select-property" disabled>Select a property</SelectItem>
                 {properties?.map((property) => (
-                  <SelectItem key={property.id} value={property.id}>
-                    {property.name}
-                  </SelectItem>
+                  property.id ? ( // Only render if property.id exists
+                    <SelectItem key={property.id} value={property.id}>
+                      {property.name}
+                    </SelectItem>
+                  ) : null
                 ))}
               </SelectContent>
             </Select>
