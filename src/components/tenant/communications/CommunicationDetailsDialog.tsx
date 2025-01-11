@@ -1,8 +1,9 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { formatDate } from "@/lib/utils";
-import { Communication } from "@/types/tenant";
 import { Mail, MessageCircle, Bell, MessageSquare } from "lucide-react";
+import { Communication } from "@/types/tenant";
+import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 interface CommunicationDetailsDialogProps {
   communication: Communication | null;
@@ -58,7 +59,7 @@ export const CommunicationDetailsDialog = ({
           {communication && (
             <>
               <div className="flex justify-between items-center text-sm text-muted-foreground">
-                <span>{formatDate(communication.created_at)}</span>
+                <span>{format(new Date(communication.created_at), "PPp", { locale: enUS })}</span>
                 {getStatusBadge(communication.status)}
               </div>
               <div className="bg-muted/50 p-4 rounded-lg">
