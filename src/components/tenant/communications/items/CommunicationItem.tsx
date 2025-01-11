@@ -1,6 +1,6 @@
 import { formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Mail, MessageCircle, Bell, MessageSquare, Paperclip } from "lucide-react";
+import { Mail, MessageCircle, Bell, MessageSquare, Paperclip, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Communication } from "@/types/tenant";
 
@@ -8,6 +8,7 @@ interface CommunicationItemProps {
   communication: Communication;
   onClick: () => void;
   onToggleStatus: () => void;
+  onDelete: () => void;
   icon?: React.ReactNode;
   categoryColor?: string;
 }
@@ -16,6 +17,7 @@ export const CommunicationItem = ({
   communication,
   onClick,
   onToggleStatus,
+  onDelete,
   icon,
   categoryColor = "bg-blue-100 text-blue-800"
 }: CommunicationItemProps) => {
@@ -37,7 +39,7 @@ export const CommunicationItem = ({
               variant="secondary" 
               className={`${categoryColor} inline-flex items-center`}
             >
-              {communication.category}
+              general
             </Badge>
             {hasAttachments && (
               <Badge variant="outline" className="inline-flex items-center gap-1">
@@ -58,6 +60,17 @@ export const CommunicationItem = ({
               <Badge variant={communication.status === "read" ? "secondary" : "default"}>
                 {communication.status}
               </Badge>
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-red-500 hover:text-red-700"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
             </Button>
           </div>
         </div>

@@ -8,6 +8,7 @@ interface CommunicationsListProps {
   groupedCommunications: Record<string, Communication[]>;
   onCommunicationClick: (comm: Communication) => void;
   onToggleStatus: (comm: Communication) => void;
+  onDeleteCommunication: (comm: Communication) => void;
 }
 
 const getCategoryIcon = (category: string | undefined) => {
@@ -45,6 +46,7 @@ export const CommunicationsList = ({
   groupedCommunications,
   onCommunicationClick,
   onToggleStatus,
+  onDeleteCommunication,
 }: CommunicationsListProps) => {
   if (!filteredCommunications?.length) {
     return (
@@ -86,6 +88,7 @@ export const CommunicationsList = ({
               communication={comm}
               onClick={() => onCommunicationClick(comm)}
               onToggleStatus={() => onToggleStatus(comm)}
+              onDelete={() => onDeleteCommunication(comm)}
               icon={getCategoryIcon(comm.category)}
               categoryColor={getCategoryColor(comm.category)}
             />

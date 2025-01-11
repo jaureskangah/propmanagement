@@ -132,8 +132,37 @@ export const useCommunicationActions = (tenantId?: string) => {
     }
   };
 
+  const handleDeleteCommunication = async (commId: string) => {
+    try {
+      console.log("Attempting to delete communication:", commId);
+      
+      const { error } = await supabase
+        .from('tenant_communications')
+        .delete()
+        .eq('id', commId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Communication deleted successfully",
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error in handleDeleteCommunication:", error);
+      toast({
+        title: "Error",
+        description: "Error deleting communication",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   return {
     handleCreateCommunication,
-    handleToggleStatus
+    handleToggleStatus,
+    handleDeleteCommunication
   };
 };

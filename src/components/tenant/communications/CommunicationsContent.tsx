@@ -4,6 +4,7 @@ import { CardContent } from "@/components/ui/card";
 import { CommunicationFilters } from "./CommunicationFilters";
 import { CommunicationsList } from "./CommunicationsList";
 import { useCommunicationsData } from "@/hooks/communications/useCommunicationsData";
+import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
 
 interface CommunicationsContentProps {
   communications: Communication[];
@@ -16,10 +17,11 @@ export const CommunicationsContent = ({
   onToggleStatus,
   onCommunicationSelect
 }: CommunicationsContentProps) => {
-  // Déplacer les états ici au lieu d'utiliser useCommunicationState
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
+
+  const { handleDeleteCommunication } = useCommunicationActions();
 
   const {
     groupedCommunications,
@@ -31,6 +33,14 @@ export const CommunicationsContent = ({
     null, 
     startDate ? new Date(startDate) : null
   );
+
+  const handleDelete = async (comm: Communication) => {
+    const success = await handleDeleteCommunication(comm.id);
+    if (success) {
+      // Refresh the communications list
+      window.location.reload();
+    }
+  };
 
   console.log("CommunicationsContent render:", {
     totalCommunications: communications.length,
@@ -63,6 +73,7 @@ export const CommunicationsContent = ({
           groupedCommunications={groupedCommunications}
           onCommunicationClick={onCommunicationSelect}
           onToggleStatus={onToggleStatus}
+          onDeleteCommunication={handleDelete}
         />
       </div>
     </CardContent>
