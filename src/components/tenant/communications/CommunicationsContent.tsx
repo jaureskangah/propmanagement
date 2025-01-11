@@ -4,7 +4,6 @@ import { CardContent } from "@/components/ui/card";
 import { CommunicationFilters } from "./CommunicationFilters";
 import { CommunicationsList } from "./CommunicationsList";
 import { useCommunicationsData } from "@/hooks/communications/useCommunicationsData";
-import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
 
 interface CommunicationsContentProps {
   communications: Communication[];
@@ -17,14 +16,10 @@ export const CommunicationsContent = ({
   onToggleStatus,
   onCommunicationSelect
 }: CommunicationsContentProps) => {
-  const {
-    searchQuery,
-    setSearchQuery,
-    selectedType,
-    setSelectedType,
-    startDate,
-    setStartDate,
-  } = useCommunicationState();
+  // Déplacer les états ici au lieu d'utiliser useCommunicationState
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string>("");
 
   const {
     groupedCommunications,
