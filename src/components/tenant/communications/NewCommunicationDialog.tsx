@@ -55,8 +55,6 @@ export const NewCommunicationDialog = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="email">Email</SelectItem>
-                <SelectItem value="sms">SMS</SelectItem>
-                <SelectItem value="notification">Notification</SelectItem>
               </SelectContent>
             </Select>
           </div>
