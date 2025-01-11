@@ -41,7 +41,8 @@ export const CommunicationsContent = ({
     totalCommunications: communications.length,
     filteredCount: filteredCommunications.length,
     selectedType,
-    startDate
+    startDate,
+    communications
   });
 
   const categories = ["general", "urgent", "maintenance", "payment"];

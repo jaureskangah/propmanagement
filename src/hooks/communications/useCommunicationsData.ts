@@ -10,10 +10,11 @@ export const useCommunicationsData = (
   // Group communications by type
   const groupedCommunications = useMemo(() => {
     return communications.reduce((acc, comm) => {
-      if (!acc[comm.type || 'other']) {
-        acc[comm.type || 'other'] = [];
+      const type = comm.type || 'other';
+      if (!acc[type]) {
+        acc[type] = [];
       }
-      acc[comm.type || 'other'].push(comm);
+      acc[type].push(comm);
       return acc;
     }, {} as Record<string, Communication[]>);
   }, [communications]);
@@ -29,11 +30,12 @@ export const useCommunicationsData = (
       total: communications.length,
       searchQuery,
       selectedCategory,
-      startDate
+      startDate: startDate?.toISOString()
     });
 
     let filtered = [...communications];
 
+    // Search filter
     if (searchQuery) {
       filtered = filtered.filter(comm => 
         comm.subject?.toLowerCase().includes(searchQuery.toLowerCase())
@@ -41,23 +43,32 @@ export const useCommunicationsData = (
       console.log("After search filter:", filtered.length);
     }
 
+    // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
-        const commCategory = comm.category?.toLowerCase() || '';
-        const selectedCat = selectedCategory.toLowerCase();
-        console.log(`Comparing categories: ${commCategory} === ${selectedCat}`);
-        return commCategory === selectedCat;
+        console.log("Communication:", {
+          id: comm.id,
+          category: comm.category,
+          selectedCategory
+        });
+        return comm.category === selectedCategory;
       });
       console.log("After category filter:", filtered.length);
     }
 
+    // Date filter
     if (startDate) {
+      const startOfDay = new Date(startDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
       filtered = filtered.filter(comm => {
         const commDate = new Date(comm.created_at);
-        const filterDate = new Date(startDate);
-        filterDate.setHours(0, 0, 0, 0); // Reset time to start of day
-        console.log(`Comparing dates: ${commDate} >= ${filterDate}`);
-        return commDate >= filterDate;
+        console.log("Date comparison:", {
+          commDate: commDate.toISOString(),
+          startDate: startOfDay.toISOString(),
+          isAfter: commDate >= startOfDay
+        });
+        return commDate >= startOfDay;
       });
       console.log("After date filter:", filtered.length);
     }
