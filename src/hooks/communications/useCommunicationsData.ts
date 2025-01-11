@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { Communication } from "@/types/tenant";
+import { startOfDay, parseISO } from "date-fns";
 
 export const useCommunicationsData = (
   communications: Communication[],
@@ -52,7 +53,7 @@ export const useCommunicationsData = (
           : typeof rawCategory === 'object' && rawCategory !== null
           ? (rawCategory as any).value?.toLowerCase() || 'general'
           : 'general';
-
+        
         const selectedCategoryLower = selectedCategory.toLowerCase();
         
         console.log("Category comparison:", {
@@ -71,16 +72,17 @@ export const useCommunicationsData = (
 
     // Date filter
     if (startDate) {
-      const startOfDay = new Date(startDate);
-      startOfDay.setHours(0, 0, 0, 0);
+      const filterStartOfDay = startOfDay(startDate);
 
       filtered = filtered.filter(comm => {
-        const commDate = new Date(comm.created_at);
-        const isAfter = commDate >= startOfDay;
+        const commDate = parseISO(comm.created_at);
+        const commStartOfDay = startOfDay(commDate);
+        const isAfter = commStartOfDay >= filterStartOfDay;
 
         console.log("Date comparison:", {
           commDate: commDate.toISOString(),
-          startDate: startOfDay.toISOString(),
+          commStartOfDay: commStartOfDay.toISOString(),
+          filterStartOfDay: filterStartOfDay.toISOString(),
           isAfter
         });
 
