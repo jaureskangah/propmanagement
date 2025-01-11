@@ -11,11 +11,6 @@ interface PropertyFieldsProps {
 
 export function PropertyFields({ form }: PropertyFieldsProps) {
   const { properties } = useProperties();
-  
-  console.log("Properties available:", properties);
-
-  // Filter out any properties that don't have valid IDs
-  const validProperties = properties?.filter(property => property.id && property.name) || [];
 
   return (
     <>
@@ -25,18 +20,14 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
         render={({ field }) => (
           <FormItem>
             <FormLabel>Property *</FormLabel>
-            <Select 
-              onValueChange={field.onChange} 
-              value={field.value || undefined}
-              defaultValue={undefined}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a property" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {validProperties.map((property) => (
+                {properties?.map((property) => (
                   <SelectItem key={property.id} value={property.id}>
                     {property.name}
                   </SelectItem>
