@@ -24,6 +24,10 @@ export const useCommunicationActions = (tenantId?: string) => {
     try {
       console.log("Starting communication creation with data:", { ...newCommData, tenantId });
 
+      // Ensure category is a valid string and lowercase
+      const category = newCommData.category?.toLowerCase() || 'general';
+      console.log("Normalized category:", category);
+
       if (newCommData.type === "email") {
         console.log("Attempting to send email via Edge function");
         const response = await supabase.functions.invoke('send-tenant-email', {
@@ -31,7 +35,7 @@ export const useCommunicationActions = (tenantId?: string) => {
             tenantId,
             subject: newCommData.subject,
             content: newCommData.content,
-            category: newCommData.category
+            category
           }
         });
 
@@ -50,7 +54,7 @@ export const useCommunicationActions = (tenantId?: string) => {
             type: 'email',
             subject: newCommData.subject,
             content: newCommData.content,
-            category: newCommData.category,
+            category,
             status: 'sent'
           });
 
@@ -72,7 +76,7 @@ export const useCommunicationActions = (tenantId?: string) => {
             type: newCommData.type,
             subject: newCommData.subject,
             content: newCommData.content,
-            category: newCommData.category,
+            category,
             status: 'unread'
           });
 

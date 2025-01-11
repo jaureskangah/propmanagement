@@ -46,8 +46,8 @@ export const useCommunicationsData = (
     // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
-        // Assurez-vous que la catégorie est une chaîne valide
-        const commCategory = (typeof comm.category === 'string' ? comm.category : 'general').toLowerCase();
+        // Ensure category is a valid string and lowercase for comparison
+        const commCategory = (comm.category || 'general').toLowerCase();
         const selectedCategoryLower = selectedCategory.toLowerCase();
         
         console.log("Communication:", {
