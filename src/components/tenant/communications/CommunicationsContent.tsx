@@ -33,7 +33,7 @@ export const CommunicationsContent = ({
   } = useCommunicationsData(
     communications, 
     searchQuery, 
-    selectedType, 
+    null, 
     startDate ? new Date(startDate) : null
   );
 
@@ -50,8 +50,6 @@ export const CommunicationsContent = ({
     }))
   });
 
-  const categories = ["general", "urgent", "maintenance", "payment"];
-
   return (
     <CardContent>
       <div className="space-y-4">
@@ -59,7 +57,7 @@ export const CommunicationsContent = ({
           searchQuery={searchQuery}
           startDate={startDate}
           selectedType={selectedType}
-          communicationTypes={categories}
+          communicationTypes={communicationTypes}
           onSearchChange={setSearchQuery}
           onDateChange={setStartDate}
           onTypeChange={setSelectedType}

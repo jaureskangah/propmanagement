@@ -32,11 +32,6 @@ export const NewCommunicationDialog = ({
     onDataChange({ ...newCommData, type: value });
   };
 
-  const handleCategoryChange = (value: string) => {
-    console.log("Selected category:", value);
-    onDataChange({ ...newCommData, category: value });
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
@@ -55,24 +50,6 @@ export const NewCommunicationDialog = ({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="email">Email</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Category</Label>
-            <Select 
-              value={newCommData.category || "general"} 
-              onValueChange={handleCategoryChange}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="general">General</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-                <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="payment">Payment</SelectItem>
               </SelectContent>
             </Select>
           </div>

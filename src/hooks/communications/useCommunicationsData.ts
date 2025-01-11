@@ -30,12 +30,11 @@ export const useCommunicationsData = (
     return Array.from(new Set(communications.map(comm => comm.type)));
   }, [communications]);
 
-  // Filter communications based on search, category, and date
+  // Filter communications based on search and date
   const filteredCommunications = useMemo(() => {
     console.log("Starting filtering with:", {
       total: communications.length,
       searchQuery,
-      selectedCategory,
       startDate: startDate?.toISOString()
     });
 
@@ -49,32 +48,6 @@ export const useCommunicationsData = (
         comm.subject?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       console.log("After search filter:", filtered.length);
-    }
-
-    // Category filter
-    if (selectedCategory) {
-      filtered = filtered.filter(comm => {
-        const rawCategory = comm.category;
-        const commCategory = typeof rawCategory === 'string' 
-          ? rawCategory.toLowerCase() 
-          : typeof rawCategory === 'object' && rawCategory !== null
-          ? (rawCategory as any).value?.toLowerCase() || 'general'
-          : 'general';
-        
-        const selectedCategoryLower = selectedCategory.toLowerCase();
-        
-        console.log("Category comparison:", {
-          id: comm.id,
-          subject: comm.subject,
-          rawCategory,
-          commCategory,
-          selectedCategory: selectedCategoryLower,
-          matches: commCategory === selectedCategoryLower
-        });
-        
-        return commCategory === selectedCategoryLower;
-      });
-      console.log("After category filter:", filtered.length);
     }
 
     // Date filter
@@ -99,7 +72,7 @@ export const useCommunicationsData = (
     }
 
     return filtered;
-  }, [communications, searchQuery, selectedCategory, startDate]);
+  }, [communications, searchQuery, startDate]);
 
   return {
     groupedCommunications,
