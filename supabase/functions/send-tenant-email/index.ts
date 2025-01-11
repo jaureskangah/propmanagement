@@ -58,13 +58,13 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Property Manager <onboarding@resend.dev>",
+        from: "Property Management <onboarding@resend.dev>",
         to: [tenant.email],
         subject: emailRequest.subject,
         html: `<div>
           <p>Hello ${tenant.name},</p>
           <p>${emailRequest.content}</p>
-          <p>Best regards,<br/>Your Property Manager</p>
+          <p>Best regards,<br/>Your Property Management Team</p>
         </div>`,
       }),
     });
