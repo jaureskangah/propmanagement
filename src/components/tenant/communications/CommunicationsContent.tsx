@@ -10,12 +10,14 @@ interface CommunicationsContentProps {
   communications: Communication[];
   onToggleStatus: (comm: Communication) => void;
   onCommunicationSelect: (comm: Communication | null) => void;
+  onCommunicationUpdate?: () => void;
 }
 
 export const CommunicationsContent = ({
   communications,
   onToggleStatus,
-  onCommunicationSelect
+  onCommunicationSelect,
+  onCommunicationUpdate
 }: CommunicationsContentProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -37,8 +39,7 @@ export const CommunicationsContent = ({
   const handleDelete = async (comm: Communication) => {
     const success = await handleDeleteCommunication(comm.id);
     if (success) {
-      // Refresh the communications list
-      window.location.reload();
+      onCommunicationUpdate?.();
     }
   };
 

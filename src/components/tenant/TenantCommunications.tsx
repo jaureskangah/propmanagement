@@ -65,6 +65,13 @@ export const TenantCommunications = ({
     }
   };
 
+  const handleToggleStatusAndUpdate = async (comm: Communication) => {
+    const success = await handleToggleStatus(comm);
+    if (success) {
+      onCommunicationUpdate?.();
+    }
+  };
+
   console.log("Tenant email for invitation:", tenant?.email);
 
   return (
@@ -78,8 +85,9 @@ export const TenantCommunications = ({
 
       <CommunicationsContent
         communications={communications}
-        onToggleStatus={handleToggleStatus}
+        onToggleStatus={handleToggleStatusAndUpdate}
         onCommunicationSelect={handleCommunicationSelect}
+        onCommunicationUpdate={onCommunicationUpdate}
       />
 
       <NewCommunicationDialog
