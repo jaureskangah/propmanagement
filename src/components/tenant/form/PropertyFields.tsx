@@ -15,7 +15,24 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
   console.log("Properties available:", properties);
   console.log("Current form value for property_id:", form.watch("property_id"));
 
-  const validProperties = properties?.filter(property => property && property.id) || [];
+  // Filter out any invalid properties and ensure they have an id
+  const validProperties = properties?.filter(property => 
+    property && 
+    property.id && 
+    property.name
+  ) || [];
+
+  // Get current property_id value
+  const currentPropertyId = form.watch("property_id");
+  
+  // Determine if current value is valid
+  const isValidPropertyId = validProperties.some(p => p.id === currentPropertyId);
+  
+  // Use placeholder value if current value is invalid
+  const selectValue = isValidPropertyId ? currentPropertyId : "placeholder";
+
+  console.log("Valid properties:", validProperties);
+  console.log("Current select value:", selectValue);
 
   return (
     <>
@@ -27,8 +44,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             <FormLabel>Property *</FormLabel>
             <Select 
               onValueChange={field.onChange} 
-              defaultValue="select-property"
-              value={field.value || "select-property"}
+              value={selectValue}
             >
               <FormControl>
                 <SelectTrigger>
@@ -36,7 +52,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                <SelectItem value="select-property" disabled>
+                <SelectItem value="placeholder" disabled>
                   Select a property
                 </SelectItem>
                 {validProperties.map((property) => (
