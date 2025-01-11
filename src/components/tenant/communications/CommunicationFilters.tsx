@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import { DatePicker } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/calendar";
 import { SearchInput } from "./filters/SearchInput";
 import { TypeFilter } from "./filters/TypeFilter";
 import { DateFilter } from "./filters/DateFilter";
