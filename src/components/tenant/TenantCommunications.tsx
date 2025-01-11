@@ -8,6 +8,7 @@ import { useCommunicationState } from "@/hooks/communications/useCommunicationSt
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
 import { useState } from "react";
 import { CommunicationsContent } from "./communications/CommunicationsContent";
+import { supabase } from "@/lib/supabase";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -44,6 +45,26 @@ export const TenantCommunications = ({
     }
   };
 
+  const handleCommunicationSelect = async (comm: Communication) => {
+    try {
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .select('*')
+        .eq('id', comm.id)
+        .single();
+
+      if (error) {
+        console.error('Error fetching communication details:', error);
+        return;
+      }
+
+      console.log('Fetched communication details:', data);
+      setSelectedComm(data);
+    } catch (error) {
+      console.error('Error in handleCommunicationSelect:', error);
+    }
+  };
+
   console.log("Tenant email for invitation:", tenant?.email);
 
   return (
@@ -58,7 +79,7 @@ export const TenantCommunications = ({
       <CommunicationsContent
         communications={communications}
         onToggleStatus={handleToggleStatus}
-        onCommunicationSelect={setSelectedComm}
+        onCommunicationSelect={handleCommunicationSelect}
       />
 
       <NewCommunicationDialog
