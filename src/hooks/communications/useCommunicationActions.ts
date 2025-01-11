@@ -24,9 +24,9 @@ export const useCommunicationActions = (tenantId?: string) => {
     try {
       console.log("Starting communication creation with data:", { ...newCommData, tenantId });
 
-      // Ensure category is a valid string and lowercase
-      const category = String(newCommData.category || 'general').toLowerCase();
-      console.log("Normalized category:", category);
+      // Always use 'general' category for email sending
+      const category = 'general';
+      console.log("Using category:", category);
 
       if (newCommData.type === "email") {
         console.log("Attempting to send email via Edge function");
@@ -64,12 +64,6 @@ export const useCommunicationActions = (tenantId?: string) => {
         }
 
         // Add notification for email sent
-        toast({
-          title: "Success",
-          description: "Email sent successfully",
-        });
-
-        // Add specific notification for email sent
         toast({
           title: "Email Sent",
           description: `Email "${newCommData.subject}" has been sent to the tenant`,
