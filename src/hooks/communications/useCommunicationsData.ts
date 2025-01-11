@@ -26,7 +26,7 @@ export const useCommunicationsData = (
   // Filter communications based on search, category, and date
   const filteredCommunications = useMemo(() => {
     console.log("Filtering communications with category:", selectedCategory);
-    let filtered = communications;
+    let filtered = [...communications];
 
     if (searchQuery) {
       filtered = filtered.filter(comm => 
@@ -35,13 +35,16 @@ export const useCommunicationsData = (
     }
 
     if (selectedCategory) {
-      filtered = filtered.filter(comm => comm.category === selectedCategory);
+      filtered = filtered.filter(comm => {
+        console.log("Comparing:", comm.category, selectedCategory);
+        return comm.category?.toLowerCase() === selectedCategory.toLowerCase();
+      });
       console.log("Filtered by category:", filtered);
     }
 
     if (startDate) {
       filtered = filtered.filter(comm => 
-        new Date(comm.created_at) >= new Date(startDate)
+        new Date(comm.created_at) >= startDate
       );
     }
 
