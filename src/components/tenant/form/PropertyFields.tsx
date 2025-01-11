@@ -14,8 +14,15 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
   
   console.log("Properties data:", properties);
 
-  // Filter out properties without valid IDs
-  const validProperties = properties?.filter(property => property.id && property.name) || [];
+  // Ensure we have valid properties with both id and name
+  const validProperties = properties?.filter(property => 
+    property.id && 
+    property.name && 
+    typeof property.id === 'string' && 
+    property.id.trim() !== ''
+  ) || [];
+
+  console.log("Valid properties:", validProperties);
 
   return (
     <>
@@ -26,8 +33,10 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
           <FormItem>
             <FormLabel>Property *</FormLabel>
             <Select 
-              onValueChange={field.onChange} 
-              defaultValue={undefined}
+              onValueChange={(value) => {
+                console.log("Selected value:", value);
+                field.onChange(value);
+              }}
               value={field.value || undefined}
             >
               <FormControl>
@@ -37,7 +46,10 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
               </FormControl>
               <SelectContent>
                 {validProperties.map((property) => (
-                  <SelectItem key={property.id} value={property.id}>
+                  <SelectItem 
+                    key={property.id} 
+                    value={property.id}
+                  >
                     {property.name}
                   </SelectItem>
                 ))}
