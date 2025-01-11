@@ -46,14 +46,19 @@ export const useCommunicationsData = (
     // Category filter
     if (selectedCategory) {
       filtered = filtered.filter(comm => {
-        const commCategory = comm.category || 'general';
+        // Assurez-vous que la catégorie est une chaîne valide
+        const commCategory = (typeof comm.category === 'string' ? comm.category : 'general').toLowerCase();
+        const selectedCategoryLower = selectedCategory.toLowerCase();
+        
         console.log("Communication:", {
           id: comm.id,
-          category: commCategory,
-          selectedCategory,
-          matches: commCategory === selectedCategory
+          subject: comm.subject,
+          actualCategory: commCategory,
+          selectedCategory: selectedCategoryLower,
+          matches: commCategory === selectedCategoryLower
         });
-        return commCategory === selectedCategory;
+        
+        return commCategory === selectedCategoryLower;
       });
       console.log("After category filter:", filtered.length);
     }
