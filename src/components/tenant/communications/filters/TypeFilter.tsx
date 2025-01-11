@@ -2,25 +2,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 
 interface TypeFilterProps {
   value: string | null;
+  onChange: (value: string) => void;
   types: string[];
-  onChange: (value: string | null) => void;
 }
 
-export const TypeFilter = ({ value, types, onChange }: TypeFilterProps) => {
+export const TypeFilter = ({ value, onChange, types }: TypeFilterProps) => {
+  console.log("TypeFilter - Current value:", value);
+  console.log("TypeFilter - Available types:", types);
+
   return (
-    <Select
-      value={value || "all"}
-      onValueChange={(value) => onChange(value === "all" ? null : value)}
+    <Select 
+      value={value || undefined} 
+      onValueChange={onChange}
     >
-      <SelectTrigger>
+      <SelectTrigger className="w-[180px]">
         <SelectValue placeholder="Filter by type" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="all">All types</SelectItem>
         {types.map((type) => (
-          <SelectItem key={type} value={type}>
-            {type}
-          </SelectItem>
+          type && (
+            <SelectItem key={type} value={type}>
+              {type}
+            </SelectItem>
+          )
         ))}
       </SelectContent>
     </Select>

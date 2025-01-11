@@ -8,7 +8,7 @@ export const useCommunicationState = () => {
   const [isNewCommDialogOpen, setIsNewCommDialogOpen] = useState(false);
   const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
   const [newCommData, setNewCommData] = useState({
-    type: "",
+    type: "email",  // Set a default type
     subject: "",
     content: "",
     category: "general"
