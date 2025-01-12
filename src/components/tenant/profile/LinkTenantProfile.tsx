@@ -8,7 +8,7 @@ interface LinkTenantProfileProps {
 }
 
 export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfileProps) {
-  const { isLinking, linkProfile } = useTenantProfileLink();
+  const { isLoading, linkProfile } = useTenantProfileLink();
 
   const handleLinkProfile = async () => {
     await linkProfile(tenant);
@@ -19,12 +19,12 @@ export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfile
     <div className="flex items-center gap-4">
       <Button 
         onClick={handleLinkProfile} 
-        disabled={isLinking || !!tenant.tenant_profile_id}
+        disabled={isLoading || !!tenant.tenant_profile_id}
         variant={tenant.tenant_profile_id ? "secondary" : "default"}
       >
         {tenant.tenant_profile_id 
           ? "Profile Linked" 
-          : isLinking 
+          : isLoading 
             ? "Linking..." 
             : "Link Tenant Profile"}
       </Button>

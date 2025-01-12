@@ -1,51 +1,39 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { PropertyForm } from "./PropertyForm";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { PropertyForm } from "@/components/PropertyForm";
 import { useProperties, PropertyFormData } from "@/hooks/useProperties";
-import { useToast } from "./ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 
-export function AddPropertyModal() {
-  const [open, setOpen] = useState(false);
-  const { addProperty, isLoading } = useProperties();
-  const { toast } = useToast();
+interface AddPropertyModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
+  const { addProperty } = useProperties();
 
   const handleSubmit = async (data: PropertyFormData) => {
     try {
       await addProperty(data);
-      setOpen(false);
-      toast({
-        title: "Success",
-        description: "Property added successfully",
-      });
+      onClose();
     } catch (error) {
       toast({
-        variant: "destructive",
         title: "Error",
         description: "Failed to add property",
+        variant: "destructive",
       });
     }
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button 
-          className="flex items-center gap-2 bg-[#ea384c] hover:bg-[#ea384c]/90"
-        >
-          <Plus className="h-4 w-4" />
-          Add Property
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Property</DialogTitle>
+          <DialogTitle>Add Property</DialogTitle>
         </DialogHeader>
-        <PropertyForm 
+        <PropertyForm
           onSubmit={handleSubmit}
-          onCancel={() => setOpen(false)}
-          isSubmitting={isLoading}
+          onCancel={onClose}
+          isSubmitting={false}
         />
       </DialogContent>
     </Dialog>

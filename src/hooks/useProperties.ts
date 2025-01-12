@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import type { User } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
+import { toast } from "@/hooks/use-toast";
 
 export interface Property {
   id: string;
@@ -23,88 +23,108 @@ export interface PropertyFormData {
   image?: string;
 }
 
-async function addProperty(data: PropertyFormData): Promise<Property> {
-  const { data: user, error: userError } = await supabase.auth.getUser();
-  if (userError) throw userError;
+const fetchProperties = async () => {
+  const { data, error } = await supabase
+    .from("properties")
+    .select("*");
 
-  console.log("Adding property with user_id:", user.user.id);
+  if (error) {
+    throw error;
+  }
+
+  return data as Property[];
+};
+
+const createProperty = async (data: PropertyFormData): Promise<Property> => {
   const { data: property, error } = await supabase
     .from("properties")
-    .insert({ 
-      ...data, 
-      user_id: user.user.id,
-      image_url: data.image 
-    })
+    .insert([{
+      name: data.name,
+      address: data.address,
+      units: data.units,
+      type: data.type,
+      image_url: data.image,
+    }])
     .select()
     .single();
 
   if (error) {
-    console.error("Error adding property:", error);
     throw error;
   }
 
   return property;
-}
+};
 
-async function updateProperty(id: string, data: PropertyFormData): Promise<Property> {
+const updateProperty = async ({ id, data }: { id: string; data: PropertyFormData }): Promise<Property> => {
   const { data: property, error } = await supabase
     .from("properties")
-    .update({ 
-      ...data,
-      image_url: data.image 
+    .update({
+      name: data.name,
+      address: data.address,
+      units: data.units,
+      type: data.type,
+      image_url: data.image,
     })
-    .eq('id', id)
+    .eq("id", id)
     .select()
     .single();
 
   if (error) {
-    console.error("Error updating property:", error);
     throw error;
   }
 
   return property;
-}
+};
 
 export function useProperties() {
   const queryClient = useQueryClient();
-  const [error, setError] = useState<string | null>(null);
 
-  const propertiesQuery = useQuery({
+  const { data: properties = [], isLoading, error } = useQuery({
     queryKey: ["properties"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("properties")
-        .select("*");
-      if (error) throw error;
-      return data as Property[];
-    }
+    queryFn: fetchProperties,
   });
 
-  const addPropertyMutation = useMutation({
-    mutationFn: (data: PropertyFormData) => addProperty(data),
+  const addProperty = useMutation({
+    mutationFn: createProperty,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
+      toast({
+        title: "Success",
+        description: "Property added successfully",
+      });
     },
-    onError: (error: any) => {
-      setError(error.message);
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 
   const updatePropertyMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: PropertyFormData }) => updateProperty(id, data),
+    mutationFn: updateProperty,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
+      toast({
+        title: "Success",
+        description: "Property updated successfully",
+      });
     },
-    onError: (error: any) => {
-      setError(error.message);
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 
   return {
-    properties: propertiesQuery.data || [],
-    isLoading: propertiesQuery.isLoading,
-    error,
-    addProperty: addPropertyMutation.mutateAsync,
-    updateProperty: updatePropertyMutation.mutateAsync,
+    properties,
+    isLoading,
+    error: error?.message || "",
+    addProperty: addProperty.mutate,
+    updateProperty: updatePropertyMutation.mutate,
   };
 }

@@ -1,43 +1,36 @@
-import { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PropertyForm } from "@/components/PropertyForm";
-import { Property, PropertyFormData, useProperties } from "@/hooks/useProperties";
-import { useToast } from "./ui/use-toast";
+import { useProperties, Property, PropertyFormData } from "@/hooks/useProperties";
+import { toast } from "@/hooks/use-toast";
 
 interface EditPropertyModalProps {
-  property: Property;
   isOpen: boolean;
   onClose: () => void;
+  property: Property;
 }
 
-export function EditPropertyModal({ property, isOpen, onClose }: EditPropertyModalProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyModalProps) {
   const { updateProperty } = useProperties();
-  const { toast } = useToast();
 
   const handleSubmit = async (data: PropertyFormData) => {
-    setIsSubmitting(true);
     try {
       await updateProperty({ id: property.id, data });
-      toast({
-        title: "Success",
-        description: "Property updated successfully",
-      });
       onClose();
     } catch (error) {
       toast({
-        variant: "destructive",
         title: "Error",
         description: "Failed to update property",
+        variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
+  };
+
+  const initialData: PropertyFormData = {
+    name: property.name,
+    address: property.address,
+    units: property.units,
+    type: property.type,
+    image: property.image_url,
   };
 
   return (
@@ -49,14 +42,8 @@ export function EditPropertyModal({ property, isOpen, onClose }: EditPropertyMod
         <PropertyForm
           onSubmit={handleSubmit}
           onCancel={onClose}
-          isSubmitting={isSubmitting}
-          initialData={{
-            name: property.name,
-            address: property.address,
-            units: property.units,
-            type: property.type,
-            image: property.image_url,
-          }}
+          isSubmitting={false}
+          initialData={initialData}
         />
       </DialogContent>
     </Dialog>
