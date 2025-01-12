@@ -15,13 +15,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-[425px] max-h-[90vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">
             Welcome to PropManagement
           </DialogTitle>
         </DialogHeader>
-        <ScrollArea className="flex-grow pr-4">
+        <ScrollArea className="flex-grow pr-4 h-[60vh]">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'signin' | 'signup')} className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-4">
               <TabsTrigger value="signin">Sign In</TabsTrigger>
