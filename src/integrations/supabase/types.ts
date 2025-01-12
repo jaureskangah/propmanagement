@@ -117,6 +117,7 @@ export type Database = {
           deadline: string | null
           description: string
           id: string
+          is_from_tenant: boolean | null
           issue: string
           notification_sent: boolean | null
           photos: string[] | null
@@ -131,6 +132,7 @@ export type Database = {
           deadline?: string | null
           description?: string
           id?: string
+          is_from_tenant?: boolean | null
           issue: string
           notification_sent?: boolean | null
           photos?: string[] | null
@@ -145,6 +147,7 @@ export type Database = {
           deadline?: string | null
           description?: string
           id?: string
+          is_from_tenant?: boolean | null
           issue?: string
           notification_sent?: boolean | null
           photos?: string[] | null
@@ -202,6 +205,7 @@ export type Database = {
           created_at: string
           first_name: string | null
           id: string
+          is_tenant_user: boolean | null
           last_name: string | null
           updated_at: string
         }
@@ -209,6 +213,7 @@ export type Database = {
           created_at?: string
           first_name?: string | null
           id: string
+          is_tenant_user?: boolean | null
           last_name?: string | null
           updated_at?: string
         }
@@ -216,6 +221,7 @@ export type Database = {
           created_at?: string
           first_name?: string | null
           id?: string
+          is_tenant_user?: boolean | null
           last_name?: string | null
           updated_at?: string
         }
@@ -451,6 +457,7 @@ export type Database = {
           phone: string | null
           property_id: string | null
           rent_amount: number
+          tenant_profile_id: string | null
           unit_number: string
           updated_at: string
           user_id: string
@@ -465,6 +472,7 @@ export type Database = {
           phone?: string | null
           property_id?: string | null
           rent_amount: number
+          tenant_profile_id?: string | null
           unit_number: string
           updated_at?: string
           user_id: string
@@ -479,6 +487,7 @@ export type Database = {
           phone?: string | null
           property_id?: string | null
           rent_amount?: number
+          tenant_profile_id?: string | null
           unit_number?: string
           updated_at?: string
           user_id?: string
@@ -489,6 +498,13 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenants_tenant_profile_id_fkey"
+            columns: ["tenant_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
           {

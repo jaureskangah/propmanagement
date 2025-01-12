@@ -37,8 +37,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     checkSession();
 
     // Listen for changes on auth state (sign in, sign out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       console.log('AuthProvider: Auth state changed:', _event, session?.user ?? 'No user');
+      
+      if (_event === 'SIGNED_IN' && session?.user) {
+        // Update the profile with is_tenant_user if it's a new signup
+        const isTenantUser = session.user.user_metadata.is_tenant_user;
+        if (isTenantUser !== undefined) {
+          const { error } = await supabase
+            .from('profiles')
+            .update({ is_tenant_user: isTenantUser })
+            .eq('id', session.user.id);
+          
+          if (error) {
+            console.error('Error updating profile:', error);
+          }
+        }
+      }
+      
       setUser(session?.user ?? null);
       setLoading(false);
     });

@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const formSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -14,6 +15,7 @@ const formSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
   confirmPassword: z.string(),
+  isTenant: z.boolean().default(false),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -35,6 +37,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       email: '',
       password: '',
       confirmPassword: '',
+      isTenant: false,
     },
   });
 
@@ -48,6 +51,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
           data: {
             first_name: values.firstName,
             last_name: values.lastName,
+            is_tenant_user: values.isTenant,
           },
         },
       });
@@ -135,6 +139,25 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
                 <Input type="password" placeholder="Confirm your password" {...field} />
               </FormControl>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="isTenant"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <div className="space-y-1 leading-none">
+                <FormLabel>
+                  I am a tenant
+                </FormLabel>
+              </div>
             </FormItem>
           )}
         />
