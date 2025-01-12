@@ -8,6 +8,7 @@ import { useProperties, Property } from "@/hooks/useProperties";
 import { Loader2, Info } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import EmptyState from "@/components/properties/EmptyState";
 import PropertyFilters from "@/components/properties/PropertyFilters";
