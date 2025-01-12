@@ -8,6 +8,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
 import { Checkbox } from '@/components/ui/checkbox';
+import { User, Mail, Lock, UserCheck } from 'lucide-react';
 
 const formSchema = z.object({
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
@@ -76,33 +77,41 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>First Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your first name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Last Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your last name" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+        <div className="grid grid-cols-2 gap-3">
+          <FormField
+            control={form.control}
+            name="firstName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First Name</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <User className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                    <Input placeholder="John" className="pl-8" {...field} />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="lastName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last Name</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <UserCheck className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                    <Input placeholder="Doe" className="pl-8" {...field} />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="email"
@@ -110,7 +119,10 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <div className="relative">
+                  <Mail className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input type="email" placeholder="john@example.com" className="pl-8" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -123,7 +135,10 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Enter your password" {...field} />
+                <div className="relative">
+                  <Lock className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input type="password" placeholder="••••••" className="pl-8" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -136,7 +151,10 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Confirm your password" {...field} />
+                <div className="relative">
+                  <Lock className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                  <Input type="password" placeholder="••••••" className="pl-8" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -146,7 +164,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
           control={form.control}
           name="isTenant"
           render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
               <FormControl>
                 <Checkbox
                   checked={field.value}
