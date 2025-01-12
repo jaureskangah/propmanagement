@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import type { Tenant } from "@/types/tenant";
 
@@ -18,27 +18,32 @@ export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfile
       setIsLinking(true);
       console.log("Attempting to link tenant profile:", tenant.email);
 
-      // First check if there's a profile with matching email
-      const { data: profiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, is_tenant_user')
-        .eq('email', tenant.email)
-        .single();
+      // First get the user ID from auth.users using the email
+      const { data: authUser, error: authError } = await supabase.auth.admin.getUserByEmail(tenant.email);
 
-      if (profileError) {
-        throw profileError;
-      }
-
-      if (!profiles) {
+      if (authError || !authUser) {
+        console.error("Error finding auth user:", authError);
         toast({
-          title: "Profile not found",
+          title: "User not found",
           description: "No tenant account found with this email. Please ask the tenant to create an account first.",
           variant: "destructive",
         });
         return;
       }
 
-      if (!profiles.is_tenant_user) {
+      // Then get the profile to check if it's a tenant user
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, is_tenant_user')
+        .eq('id', authUser.id)
+        .single();
+
+      if (profileError) {
+        console.error("Error finding profile:", profileError);
+        throw profileError;
+      }
+
+      if (!profile?.is_tenant_user) {
         toast({
           title: "Invalid account type",
           description: "This account is not registered as a tenant account.",
@@ -50,10 +55,11 @@ export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfile
       // Update the tenant record with the profile ID
       const { error: updateError } = await supabase
         .from('tenants')
-        .update({ tenant_profile_id: profiles.id })
+        .update({ tenant_profile_id: profile.id })
         .eq('id', tenant.id);
 
       if (updateError) {
+        console.error("Error updating tenant:", updateError);
         throw updateError;
       }
 
