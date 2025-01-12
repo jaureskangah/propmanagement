@@ -1,49 +1,38 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import type { Property, PropertyFormData } from "@/types/property";
 import type { User } from "@supabase/supabase-js";
 
-async function createProfile(user: User) {
-  const { error: insertError } = await supabase
-    .from("profiles")
-    .insert({
-      id: user.id,
-      email: user.email,
-      first_name: user.user_metadata?.first_name || '',
-      last_name: user.user_metadata?.last_name || '',
-    });
-
-  if (insertError) {
-    console.error("Error creating profile:", insertError);
-    throw insertError;
-  }
+export interface Property {
+  id: string;
+  name: string;
+  address: string;
+  units: number;
+  type: string;
+  image_url?: string;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
 }
 
-async function addProperty(data: PropertyFormData, user: User): Promise<Property> {
-  // First check if profile exists
-  const { data: existingProfile, error: profileError } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("id", user.id)
-    .single();
+export interface PropertyFormData {
+  name: string;
+  address: string;
+  units: number;
+  type: string;
+  image?: string;
+}
 
-  if (profileError && profileError.code !== "PGRST116") {
-    console.error("Error checking profile:", profileError);
-    throw profileError;
-  }
+async function addProperty(data: PropertyFormData): Promise<Property> {
+  const { data: user, error: userError } = await supabase.auth.getUser();
+  if (userError) throw userError;
 
-  if (!existingProfile) {
-    console.log("Profile not found, creating one...");
-    await createProfile(user);
-  }
-
-  console.log("Adding property with user_id:", user.id);
+  console.log("Adding property with user_id:", user.user.id);
   const { data: property, error } = await supabase
     .from("properties")
     .insert({ 
       ...data, 
-      user_id: user.id,
+      user_id: user.user.id,
       image_url: data.image 
     })
     .select()
@@ -92,7 +81,7 @@ export function useProperties() {
   });
 
   const addPropertyMutation = useMutation({
-    mutationFn: addProperty,
+    mutationFn: (data: PropertyFormData) => addProperty(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
     },
@@ -102,7 +91,7 @@ export function useProperties() {
   });
 
   const updatePropertyMutation = useMutation({
-    mutationFn: updateProperty,
+    mutationFn: ({ id, data }: { id: string; data: PropertyFormData }) => updateProperty(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
     },
@@ -115,9 +104,7 @@ export function useProperties() {
     properties: propertiesQuery.data || [],
     isLoading: propertiesQuery.isLoading,
     error,
-    addProperty: addPropertyMutation.mutate,
-    updateProperty: updatePropertyMutation.mutate,
+    addProperty: addPropertyMutation.mutateAsync,
+    updateProperty: updatePropertyMutation.mutateAsync,
   };
 }
-
-export type { Property, PropertyFormData };

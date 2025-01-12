@@ -27,7 +27,7 @@ const Properties = () => {
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [selectedType, setSelectedType] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
-  const { properties, isLoadingProperties } = useProperties();
+  const { properties, isLoading, error } = useProperties();
   const { toast } = useToast();
 
   const handleEdit = (id: string) => {
@@ -79,7 +79,7 @@ const Properties = () => {
 
   const selectedProperty = properties.find(p => p.id === selectedPropertyId);
 
-  if (isLoadingProperties) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader2 className="h-8 w-8 animate-spin" />

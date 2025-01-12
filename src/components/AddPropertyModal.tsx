@@ -4,15 +4,27 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { PropertyForm } from "./PropertyForm";
 import { useProperties, PropertyFormData } from "@/hooks/useProperties";
+import { useToast } from "./ui/use-toast";
 
 export function AddPropertyModal() {
   const [open, setOpen] = useState(false);
   const { addProperty, isLoading } = useProperties();
+  const { toast } = useToast();
 
   const handleSubmit = async (data: PropertyFormData) => {
-    const success = await addProperty(data);
-    if (success) {
+    try {
+      await addProperty(data);
       setOpen(false);
+      toast({
+        title: "Success",
+        description: "Property added successfully",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add property",
+      });
     }
   };
 
