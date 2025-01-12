@@ -1,177 +1,81 @@
 import { useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import type { Property } from "@/types/property";
+import type { User } from "@supabase/supabase-js";
 
-export interface PropertyFormData {
-  name: string;
-  address: string;
-  units: number;
-  type: string;
-  image?: string;
+async function createProfile(user: User) {
+  const { error: insertError } = await supabase
+    .from("profiles")
+    .insert({
+      id: user.id,
+      email: user.email,
+      first_name: user.user_metadata?.first_name || '',
+      last_name: user.user_metadata?.last_name || '',
+    });
+
+  if (insertError) {
+    console.error("Error creating profile:", insertError);
+    throw insertError;
+  }
 }
 
-export interface Property {
-  id: string;
-  name: string;
-  address: string;
-  units: number;
-  type: string;
-  image_url?: string;
-  user_id: string;
-  created_at: string;
-  updated_at: string;
+async function addProperty(data: Partial<Property>, user: User) {
+  // First check if profile exists
+  const { data: existingProfile, error: profileError } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError && profileError.code !== "PGRST116") {
+    console.error("Error checking profile:", profileError);
+    throw profileError;
+  }
+
+  if (!existingProfile) {
+    console.log("Profile not found, creating one...");
+    await createProfile(user);
+  }
+
+  console.log("Adding property with user_id:", user.id);
+  const { data: property, error } = await supabase
+    .from("properties")
+    .insert({ ...data, user_id: user.id })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error adding property:", error);
+    throw error;
+  }
+
+  return property;
 }
 
 export function useProperties() {
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-  const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchProperties = async (): Promise<Property[]> => {
-    console.log("Fetching properties for user:", user?.id);
-    if (!user) return [];
-
-    const { data, error } = await supabase
-      .from("properties")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Error fetching properties:", error);
-      throw error;
-    }
-
-    console.log("Fetched properties:", data);
+  const propertiesQuery = useQuery(["properties"], async () => {
+    const { data, error } = await supabase.from("properties").select("*");
+    if (error) throw error;
     return data;
-  };
-
-  const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
-    queryKey: ["properties", user?.id],
-    queryFn: fetchProperties,
-    enabled: !!user,
   });
 
-  const addProperty = async (data: PropertyFormData) => {
-    if (!user) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "You must be logged in to add a property.",
-      });
-      return false;
-    }
-
-    setIsLoading(true);
-    try {
-      // First check if profile exists
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("id", user.id)
-        .single();
-
-      if (!existingProfile) {
-        console.log("Profile not found, creating one...");
-        const { error: insertError } = await supabase
-          .from("profiles")
-          .insert([{ 
-            id: user.id,
-            email: user.email,
-            first_name: user.user_metadata?.first_name,
-            last_name: user.user_metadata?.last_name
-          }]);
-
-        if (insertError) {
-          console.error("Error creating profile:", insertError);
-          throw insertError;
-        }
-      }
-
-      console.log("Adding property with user_id:", user.id);
-      
-      const { error } = await supabase
-        .from("properties")
-        .insert([{
-          ...data,
-          image_url: data.image,
-          user_id: user.id,
-        }]);
-
-      if (error) throw error;
-
-      queryClient.invalidateQueries({ queryKey: ["properties", user.id] });
-
-      toast({
-        title: "Success",
-        description: `${data.name} has been added to your portfolio.`,
-      });
-
-      return true;
-    } catch (error) {
-      console.error("Error adding property:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "An error occurred while adding the property.",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateProperty = async (id: string, data: PropertyFormData) => {
-    if (!user) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "You must be logged in to update a property.",
-      });
-      return false;
-    }
-
-    setIsLoading(true);
-    try {
-      const { error } = await supabase
-        .from("properties")
-        .update({
-          ...data,
-          image_url: data.image,
-        })
-        .eq("id", id)
-        .eq("user_id", user.id);
-
-      if (error) throw error;
-
-      queryClient.invalidateQueries({ queryKey: ["properties", user.id] });
-
-      toast({
-        title: "Success",
-        description: `${data.name} has been updated.`,
-      });
-
-      return true;
-    } catch (error) {
-      console.error("Error updating property:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "An error occurred while updating the property.",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const addPropertyMutation = useMutation(addProperty, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["properties"]);
+    },
+    onError: (error: any) => {
+      setError(error.message);
+    },
+  });
 
   return {
-    properties,
-    isLoadingProperties,
-    addProperty,
-    updateProperty,
-    isLoading
+    properties: propertiesQuery.data,
+    isLoading: propertiesQuery.isLoading,
+    error,
+    addProperty: addPropertyMutation.mutate,
   };
 }
