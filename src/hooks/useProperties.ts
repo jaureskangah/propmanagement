@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { User } from "@supabase/supabase-js";
 import { toast } from "@/hooks/use-toast";
 
 export interface Property {
@@ -36,6 +35,9 @@ const fetchProperties = async () => {
 };
 
 const createProperty = async (data: PropertyFormData): Promise<Property> => {
+  const { data: userData, error: userError } = await supabase.auth.getUser();
+  if (userError) throw userError;
+
   const { data: property, error } = await supabase
     .from("properties")
     .insert([{
@@ -44,6 +46,7 @@ const createProperty = async (data: PropertyFormData): Promise<Property> => {
       units: data.units,
       type: data.type,
       image_url: data.image,
+      user_id: userData.user.id
     }])
     .select()
     .single();

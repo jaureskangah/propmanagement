@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddPropertyModal } from "@/components/AddPropertyModal";
@@ -8,6 +8,8 @@ interface EmptyStateProps {
 }
 
 const EmptyState = ({ isFiltering }: EmptyStateProps) => {
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
   return (
     <div className="text-center py-16 bg-slate-50 rounded-xl animate-fade-in">
       <div className="max-w-md mx-auto space-y-6">
@@ -33,7 +35,13 @@ const EmptyState = ({ isFiltering }: EmptyStateProps) => {
               Add your first property to begin tracking your real estate assets.
             </p>
             <div className="pt-4">
-              <AddPropertyModal />
+              <Button onClick={() => setIsAddModalOpen(true)}>
+                Add Property
+              </Button>
+              <AddPropertyModal 
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+              />
             </div>
           </>
         )}

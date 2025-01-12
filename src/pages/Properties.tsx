@@ -27,6 +27,7 @@ const Properties = () => {
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [selectedType, setSelectedType] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { properties, isLoading, error } = useProperties();
   const { toast } = useToast();
 
@@ -104,7 +105,9 @@ const Properties = () => {
               <Info className="h-4 w-4 mr-1" />
               {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
             </Badge>
-            <AddPropertyModal />
+            <Button onClick={() => setIsAddModalOpen(true)}>
+              Add Property
+            </Button>
           </div>
         </div>
         <Separator className="my-6" />
@@ -142,6 +145,11 @@ const Properties = () => {
           <PropertyFinancials propertyId={selectedPropertyId} />
         </div>
       )}
+
+      <AddPropertyModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
 
       {editingProperty && (
         <EditPropertyModal
