@@ -14,6 +14,7 @@ export interface Tenant {
   user_id: string;
   created_at: string;
   updated_at: string;
+  tenant_profile_id: string | null;
   documents: TenantDocument[];
   paymentHistory: TenantPayment[];
   maintenanceRequests: MaintenanceRequest[];
