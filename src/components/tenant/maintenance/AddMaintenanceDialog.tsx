@@ -12,12 +12,14 @@ interface AddMaintenanceDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  tenantId: string;
 }
 
 export const AddMaintenanceDialog = ({
   isOpen,
   onClose,
   onSuccess,
+  tenantId
 }: AddMaintenanceDialogProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
