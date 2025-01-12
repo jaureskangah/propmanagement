@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import type { Property } from "@/types/property";
+import type { Property, PropertyFormData } from "@/types/property";
 import type { User } from "@supabase/supabase-js";
 
 async function createProfile(user: User) {
@@ -20,7 +20,7 @@ async function createProfile(user: User) {
   }
 }
 
-async function addProperty(data: Partial<Property>, user: User) {
+async function addProperty(data: PropertyFormData, user: User): Promise<Property> {
   // First check if profile exists
   const { data: existingProfile, error: profileError } = await supabase
     .from("profiles")
@@ -41,7 +41,11 @@ async function addProperty(data: Partial<Property>, user: User) {
   console.log("Adding property with user_id:", user.id);
   const { data: property, error } = await supabase
     .from("properties")
-    .insert({ ...data, user_id: user.id })
+    .insert({ 
+      ...data, 
+      user_id: user.id,
+      image_url: data.image 
+    })
     .select()
     .single();
 
@@ -53,19 +57,54 @@ async function addProperty(data: Partial<Property>, user: User) {
   return property;
 }
 
+async function updateProperty(id: string, data: PropertyFormData): Promise<Property> {
+  const { data: property, error } = await supabase
+    .from("properties")
+    .update({ 
+      ...data,
+      image_url: data.image 
+    })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Error updating property:", error);
+    throw error;
+  }
+
+  return property;
+}
+
 export function useProperties() {
   const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
 
-  const propertiesQuery = useQuery(["properties"], async () => {
-    const { data, error } = await supabase.from("properties").select("*");
-    if (error) throw error;
-    return data;
+  const propertiesQuery = useQuery({
+    queryKey: ["properties"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("properties")
+        .select("*");
+      if (error) throw error;
+      return data as Property[];
+    }
   });
 
-  const addPropertyMutation = useMutation(addProperty, {
+  const addPropertyMutation = useMutation({
+    mutationFn: addProperty,
     onSuccess: () => {
-      queryClient.invalidateQueries(["properties"]);
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
+    },
+    onError: (error: any) => {
+      setError(error.message);
+    },
+  });
+
+  const updatePropertyMutation = useMutation({
+    mutationFn: updateProperty,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
     },
     onError: (error: any) => {
       setError(error.message);
@@ -73,9 +112,12 @@ export function useProperties() {
   });
 
   return {
-    properties: propertiesQuery.data,
+    properties: propertiesQuery.data || [],
     isLoading: propertiesQuery.isLoading,
     error,
     addProperty: addPropertyMutation.mutate,
+    updateProperty: updatePropertyMutation.mutate,
   };
 }
+
+export type { Property, PropertyFormData };
