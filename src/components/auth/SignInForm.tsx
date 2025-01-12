@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
+import { Mail, Lock } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -65,7 +66,10 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  <Input placeholder="Enter your email" className="pl-10" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,7 +82,10 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type="password" placeholder="Enter your password" {...field} />
+                <div className="relative">
+                  <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  <Input type="password" placeholder="Enter your password" className="pl-10" {...field} />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
