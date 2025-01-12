@@ -19,9 +19,13 @@ export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfile
       console.log("Attempting to link tenant profile:", tenant.email);
 
       // First get the user ID from auth.users using the email
-      const { data: authUser, error: authError } = await supabase.auth.admin.getUserByEmail(tenant.email);
+      const { data: { users }, error: authError } = await supabase.auth.admin.listUsers({
+        filters: {
+          email: tenant.email
+        }
+      });
 
-      if (authError || !authUser) {
+      if (authError || !users || users.length === 0) {
         console.error("Error finding auth user:", authError);
         toast({
           title: "User not found",
@@ -30,6 +34,8 @@ export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfile
         });
         return;
       }
+
+      const authUser = users[0];
 
       // Then get the profile to check if it's a tenant user
       const { data: profile, error: profileError } = await supabase
