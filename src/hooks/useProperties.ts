@@ -66,25 +66,28 @@ export function useProperties() {
 
     setIsLoading(true);
     try {
-      const { data: profile, error: profileError } = await supabase
+      // First check if profile exists
+      const { data: existingProfile } = await supabase
         .from("profiles")
         .select("id")
         .eq("id", user.id)
-        .maybeSingle();
+        .single();
 
-      if (!profile) {
+      if (!existingProfile) {
         console.log("Profile not found, creating one...");
         const { error: insertError } = await supabase
           .from("profiles")
-          .insert([{ id: user.id }]);
+          .insert([{ 
+            id: user.id,
+            email: user.email,
+            first_name: user.user_metadata?.first_name,
+            last_name: user.user_metadata?.last_name
+          }]);
 
         if (insertError) {
           console.error("Error creating profile:", insertError);
           throw insertError;
         }
-      } else if (profileError) {
-        console.error("Error checking profile:", profileError);
-        throw profileError;
       }
 
       console.log("Adding property with user_id:", user.id);
