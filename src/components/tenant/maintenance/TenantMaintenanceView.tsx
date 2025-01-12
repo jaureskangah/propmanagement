@@ -12,6 +12,7 @@ import { formatDate } from "@/lib/utils";
 export const TenantMaintenanceView = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
+  const [tenantId, setTenantId] = useState<string>("");
   const { toast } = useToast();
 
   const fetchRequests = async () => {
@@ -28,6 +29,8 @@ export const TenantMaintenanceView = () => {
       console.error("Error fetching tenant:", tenantError);
       return;
     }
+
+    setTenantId(tenantData.id);
 
     const { data, error } = await supabase
       .from("maintenance_requests")
@@ -114,6 +117,7 @@ export const TenantMaintenanceView = () => {
         isOpen={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         onSuccess={handleRequestCreated}
+        tenantId={tenantId}
       />
     </Card>
   );
