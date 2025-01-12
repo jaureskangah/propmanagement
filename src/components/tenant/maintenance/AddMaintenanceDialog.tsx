@@ -11,14 +11,12 @@ import { useToast } from "@/hooks/use-toast";
 interface AddMaintenanceDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  tenantId: string;
   onSuccess: () => void;
 }
 
 export const AddMaintenanceDialog = ({
   isOpen,
   onClose,
-  tenantId,
   onSuccess,
 }: AddMaintenanceDialogProps) => {
   const [title, setTitle] = useState("");
@@ -42,6 +40,18 @@ export const AddMaintenanceDialog = ({
     setIsSubmitting(true);
     
     try {
+      // Get current user's tenant ID
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Not authenticated");
+
+      const { data: tenantData, error: tenantError } = await supabase
+        .from("tenants")
+        .select("id")
+        .eq("tenant_profile_id", userData.user.id)
+        .single();
+
+      if (tenantError || !tenantData) throw new Error("Tenant not found");
+
       // Upload photos if any
       const photoUrls: string[] = [];
       
@@ -49,7 +59,7 @@ export const AddMaintenanceDialog = ({
         for (const photo of photos) {
           const fileExt = photo.name.split('.').pop();
           const fileName = `${Math.random()}.${fileExt}`;
-          const filePath = `${tenantId}/${fileName}`;
+          const filePath = `${tenantData.id}/${fileName}`;
           
           const { error: uploadError } = await supabase.storage
             .from('tenant_documents')
@@ -68,23 +78,19 @@ export const AddMaintenanceDialog = ({
       const { error } = await supabase
         .from("maintenance_requests")
         .insert({
-          tenant_id: tenantId,
+          tenant_id: tenantData.id,
           title: title.trim(),
           description: description.trim(),
-          issue: title.trim(), // Keep issue field for backward compatibility
+          issue: title.trim(),
           priority,
           photos: photoUrls,
           status: "Pending",
+          is_from_tenant: true
         });
 
       if (error) throw error;
 
-      toast({
-        title: "Success",
-        description: "Maintenance request created successfully",
-      });
       onSuccess();
-      onClose();
       setTitle("");
       setDescription("");
       setPriority("Medium");
@@ -178,7 +184,7 @@ export const AddMaintenanceDialog = ({
               disabled={isSubmitting}
               className="bg-[#ea384c] hover:bg-[#ea384c]/90"
             >
-              {isSubmitting ? "Creating..." : "Create Request"}
+              {isSubmitting ? "Submitting..." : "Submit Request"}
             </Button>
           </div>
         </form>
