@@ -6,16 +6,41 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { Loader2 } from "lucide-react";
 import { DashboardDateFilter, DateRange } from "@/components/dashboard/DashboardDateFilter";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DashboardMetrics } from "@/components/dashboard/DashboardMetrics";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   console.log("Rendering Dashboard");
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
+
+  // Query to check if user is a tenant
+  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user?.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  // Redirect tenant users to maintenance page
+  useEffect(() => {
+    if (profileData?.is_tenant_user) {
+      navigate("/maintenance");
+    }
+  }, [profileData, navigate]);
 
   const { data: propertiesData, isLoading: isLoadingProperties } = useQuery({
     queryKey: ["properties", user?.id, dateRange],
@@ -27,7 +52,7 @@ const Dashboard = () => {
       console.log("Properties data:", data);
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && !profileData?.is_tenant_user,
   });
 
   const { data: maintenanceData, isLoading: isLoadingMaintenance } = useQuery({
@@ -40,7 +65,7 @@ const Dashboard = () => {
       console.log("Maintenance data:", data);
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && !profileData?.is_tenant_user,
   });
 
   const { data: tenantsData, isLoading: isLoadingTenants } = useQuery({
@@ -53,15 +78,20 @@ const Dashboard = () => {
       console.log("Tenants data:", data);
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && !profileData?.is_tenant_user,
   });
 
-  if (isLoadingProperties || isLoadingMaintenance || isLoadingTenants) {
+  if (isLoadingProfile || isLoadingProperties || isLoadingMaintenance || isLoadingTenants) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
+  }
+
+  // If user is a tenant, they shouldn't see this page
+  if (profileData?.is_tenant_user) {
+    return null;
   }
 
   return (
@@ -77,10 +107,8 @@ const Dashboard = () => {
         dateRange={dateRange}
       />
 
-      {/* Revenue Chart */}
       <RevenueChart />
 
-      {/* Recent Activity */}
       <RecentActivity />
     </div>
   );

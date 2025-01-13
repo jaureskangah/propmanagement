@@ -5,7 +5,11 @@ import { useState } from "react";
 import { Button } from "./ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 
-const AppSidebar = () => {
+interface AppSidebarProps {
+  isTenant?: boolean;
+}
+
+const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -42,54 +46,58 @@ const AppSidebar = () => {
       </div>
 
       <nav className="space-y-2">
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-              isActive 
-                ? "bg-[#ea384c] text-white" 
-                : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-              isCollapsed && "justify-center px-2"
-            )
-          }
-          title="Dashboard"
-        >
-          <Home className="h-5 w-5" />
-          {!isCollapsed && "Dashboard"}
-        </NavLink>
-        <NavLink
-          to="/properties"
-          className={({ isActive }) =>
-            cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-              isActive 
-                ? "bg-[#ea384c] text-white" 
-                : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-              isCollapsed && "justify-center px-2"
-            )
-          }
-          title="Properties"
-        >
-          <Building2 className="h-5 w-5" />
-          {!isCollapsed && "Properties"}
-        </NavLink>
-        <NavLink
-          to="/tenants"
-          className={({ isActive }) =>
-            cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-              isActive 
-                ? "bg-[#ea384c] text-white" 
-                : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-              isCollapsed && "justify-center px-2"
-            )
-          }
-          title="Tenants"
-        >
-          <Users className="h-5 w-5" />
-          {!isCollapsed && "Tenants"}
-        </NavLink>
+        {!isTenant && (
+          <>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
+                  isActive 
+                    ? "bg-[#ea384c] text-white" 
+                    : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
+                  isCollapsed && "justify-center px-2"
+                )
+              }
+              title="Dashboard"
+            >
+              <Home className="h-5 w-5" />
+              {!isCollapsed && "Dashboard"}
+            </NavLink>
+            <NavLink
+              to="/properties"
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
+                  isActive 
+                    ? "bg-[#ea384c] text-white" 
+                    : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
+                  isCollapsed && "justify-center px-2"
+                )
+              }
+              title="Properties"
+            >
+              <Building2 className="h-5 w-5" />
+              {!isCollapsed && "Properties"}
+            </NavLink>
+            <NavLink
+              to="/tenants"
+              className={({ isActive }) =>
+                cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
+                  isActive 
+                    ? "bg-[#ea384c] text-white" 
+                    : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
+                  isCollapsed && "justify-center px-2"
+                )
+              }
+              title="Tenants"
+            >
+              <Users className="h-5 w-5" />
+              {!isCollapsed && "Tenants"}
+            </NavLink>
+          </>
+        )}
         <NavLink
           to="/maintenance"
           className={({ isActive }) =>
