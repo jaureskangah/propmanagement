@@ -23,6 +23,26 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const { session } = useAuthSession();
   const isTenantUser = session?.user?.id === tenant.tenant_profile_id;
 
+  // Préchargement des données
+  React.useEffect(() => {
+    console.log("Préchargement des données du tenant:", tenant.id);
+    // Précharger les documents
+    queryClient.prefetchQuery({
+      queryKey: ["tenant_documents", tenant.id],
+      queryFn: async () => tenant.documents
+    });
+    // Précharger les paiements
+    queryClient.prefetchQuery({
+      queryKey: ["tenant_payments", tenant.id],
+      queryFn: async () => tenant.paymentHistory
+    });
+    // Précharger les demandes de maintenance
+    queryClient.prefetchQuery({
+      queryKey: ["tenant_maintenance", tenant.id],
+      queryFn: async () => tenant.maintenanceRequests
+    });
+  }, [tenant.id, queryClient]);
+
   if (!tenant) {
     return (
       <Card className="h-[300px] flex items-center justify-center">
@@ -32,10 +52,9 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   }
 
   const handleDataUpdate = () => {
+    console.log("Invalidating tenant queries");
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
   };
-
-  console.log("Rendering TenantProfile for:", tenant.name);
 
   return (
     <div className="space-y-6">
