@@ -44,6 +44,8 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         title: 'Success',
         description: 'You have been signed in successfully.',
       });
+      
+      // Appeler onSuccess immédiatement après une connexion réussie
       onSuccess();
     } catch (error) {
       toast({
