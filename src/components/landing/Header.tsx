@@ -16,12 +16,15 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      // First check if we have a valid session
-      const { data: { session } } = await supabase.auth.getSession();
+      console.log("Starting sign out process");
       
-      if (!session) {
-        // If no session exists, just clear local state and redirect
-        console.log("No active session found, clearing local state");
+      // First check if we have a valid session
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      console.log("Current session status:", session ? "Active" : "No session", sessionError || '');
+      
+      // If there's no session or session error, just clear local state and redirect
+      if (!session || sessionError) {
+        console.log("No active session found, proceeding with navigation");
         navigate("/");
         return;
       }
@@ -30,9 +33,10 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       const { error } = await supabase.auth.signOut();
       
       if (error) {
-        console.error("Error signing out:", error);
+        console.error("Error during sign out:", error);
         // If the error is session_not_found, we can safely ignore it
         if (error.message.includes("session_not_found")) {
+          console.log("Session not found during logout, proceeding with navigation");
           navigate("/");
           return;
         }
@@ -40,10 +44,11 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
         return;
       }
 
+      console.log("Sign out successful");
       toast.success("Successfully signed out");
       navigate("/");
     } catch (error) {
-      console.error("Error in sign out process:", error);
+      console.error("Unexpected error during sign out:", error);
       toast.error("An unexpected error occurred. Please try again.");
     }
   };
