@@ -16,12 +16,35 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      await supabase.auth.signOut();
+      // First check if we have a valid session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!session) {
+        // If no session exists, just clear local state and redirect
+        console.log("No active session found, clearing local state");
+        navigate("/");
+        return;
+      }
+
+      // Proceed with logout if we have a session
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error("Error signing out:", error);
+        // If the error is session_not_found, we can safely ignore it
+        if (error.message.includes("session_not_found")) {
+          navigate("/");
+          return;
+        }
+        toast.error("Error signing out. Please try again.");
+        return;
+      }
+
       toast.success("Successfully signed out");
       navigate("/");
     } catch (error) {
-      console.error("Error signing out:", error);
-      toast.error("Error signing out");
+      console.error("Error in sign out process:", error);
+      toast.error("An unexpected error occurred. Please try again.");
     }
   };
 
