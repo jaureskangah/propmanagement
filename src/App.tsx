@@ -34,12 +34,23 @@ function AppRoutes() {
     enabled: !!user,
   });
 
+  // Si l'utilisateur est un tenant et essaie d'accéder à une route non autorisée,
+  // redirigez-le vers la page de maintenance
+  const isTenantAccessingRestrictedRoute = 
+    profileData?.is_tenant_user && 
+    !["/maintenance", "/communications", "/"].includes(location.pathname);
+
+  if (isTenantAccessingRestrictedRoute) {
+    return <Navigate to="/maintenance" replace />;
+  }
+
   // Protected route component
   const ProtectedRoute = ({ children, allowTenant = false }) => {
     if (!isAuthenticated) {
       return <Navigate to="/" />;
     }
 
+    // Si c'est un tenant et que la route n'autorise pas les tenants
     if (profileData?.is_tenant_user && !allowTenant) {
       return <Navigate to="/maintenance" />;
     }
