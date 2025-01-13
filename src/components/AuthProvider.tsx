@@ -21,47 +21,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useRealtimeNotifications();
 
   useEffect(() => {
+    let mounted = true;
+
     // Initial session check
     const checkSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Error getting session:', sessionError);
+          return;
+        }
+
+        if (session?.user && mounted) {
+          console.log('AuthProvider: Valid session found:', session.user.email);
           await updateTenantProfile(session.user);
           setUser(session.user);
+        } else {
+          console.log('AuthProvider: No valid session found');
+          setUser(null);
         }
       } catch (error) {
         console.error('Error checking session:', error);
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     checkSession();
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      console.log('AuthProvider: Auth state changed:', _event, session?.user ?? 'No user');
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      console.log('AuthProvider: Auth state changed:', event, session?.user?.email ?? 'No user');
       
-      if (_event === 'SIGNED_IN' && session?.user) {
-        try {
+      if (!mounted) return;
+
+      try {
+        if (event === 'SIGNED_IN' && session?.user) {
           await updateTenantProfile(session.user);
           setUser(session.user);
-        } catch (error) {
-          console.error('Error updating tenant profile:', error);
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          setUser(null);
+          console.log('AuthProvider: User signed out or deleted');
+        } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+          console.log('AuthProvider: Token refreshed for user:', session.user.email);
+          setUser(session.user);
         }
-      } else if (_event === 'SIGNED_OUT') {
-        setUser(null);
+      } catch (error) {
+        console.error('Error in auth state change handler:', error);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
-      
-      setLoading(false);
     });
 
+    // Cleanup function
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [setUser, setLoading]);
 
-  console.log('AuthProvider: Current user state:', user);
+  console.log('AuthProvider: Current user state:', user?.email ?? 'No user');
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
