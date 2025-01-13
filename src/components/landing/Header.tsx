@@ -30,7 +30,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       }
 
       // Proceed with logout if we have a session
-      const { error } = await supabase.auth.signOut({ scope: 'local' });
+      const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Error during sign out:", error);
