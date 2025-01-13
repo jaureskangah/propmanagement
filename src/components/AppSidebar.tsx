@@ -1,9 +1,10 @@
-import { NavLink } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { Building2, Home, Users, Wrench, ChevronLeft } from "lucide-react";
 import { useState } from "react";
-import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { Building2, Home, Users, Wrench, MessageSquare } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
+import { SidebarLogo } from "./sidebar/SidebarLogo";
+import { SidebarToggle } from "./sidebar/SidebarToggle";
+import { SidebarNavLink } from "./sidebar/SidebarNavLink";
 
 interface AppSidebarProps {
   isTenant?: boolean;
@@ -18,102 +19,49 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
       isCollapsed ? "w-20" : "w-64",
       "bg-background"
     )}>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="absolute -right-3 top-9 z-50 rounded-full border bg-background"
-        onClick={() => setIsCollapsed(!isCollapsed)}
-      >
-        <ChevronLeft className={cn(
-          "h-4 w-4 transition-transform",
-          isCollapsed ? "rotate-180" : ""
-        )} />
-      </Button>
-
-      <div className="mb-8">
-        <NavLink
-          to="/"
-          className="text-xl font-bold text-center block hover:text-[#ea384c] transition-colors"
-        >
-          <div className={cn(
-            "flex items-center gap-2",
-            isCollapsed ? "justify-center" : "justify-center"
-          )}>
-            <Building2 className="h-8 w-8 text-[#ea384c]" />
-            {!isCollapsed && <span>PropManagement</span>}
-          </div>
-        </NavLink>
-      </div>
+      <SidebarToggle 
+        isCollapsed={isCollapsed} 
+        onToggle={() => setIsCollapsed(!isCollapsed)} 
+      />
+      <SidebarLogo isCollapsed={isCollapsed} />
 
       <nav className="space-y-2">
         {!isTenant && (
           <>
-            <NavLink
-              to="/dashboard"
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-                  isActive 
-                    ? "bg-[#ea384c] text-white" 
-                    : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-                  isCollapsed && "justify-center px-2"
-                )
-              }
-              title="Dashboard"
-            >
-              <Home className="h-5 w-5" />
-              {!isCollapsed && "Dashboard"}
-            </NavLink>
-            <NavLink
-              to="/properties"
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-                  isActive 
-                    ? "bg-[#ea384c] text-white" 
-                    : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-                  isCollapsed && "justify-center px-2"
-                )
-              }
-              title="Properties"
-            >
-              <Building2 className="h-5 w-5" />
-              {!isCollapsed && "Properties"}
-            </NavLink>
-            <NavLink
-              to="/tenants"
-              className={({ isActive }) =>
-                cn(
-                  "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-                  isActive 
-                    ? "bg-[#ea384c] text-white" 
-                    : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-                  isCollapsed && "justify-center px-2"
-                )
-              }
-              title="Tenants"
-            >
-              <Users className="h-5 w-5" />
-              {!isCollapsed && "Tenants"}
-            </NavLink>
+            <SidebarNavLink 
+              to="/dashboard" 
+              icon={Home} 
+              label="Dashboard" 
+              isCollapsed={isCollapsed} 
+            />
+            <SidebarNavLink 
+              to="/properties" 
+              icon={Building2} 
+              label="Properties" 
+              isCollapsed={isCollapsed} 
+            />
+            <SidebarNavLink 
+              to="/tenants" 
+              icon={Users} 
+              label="Tenants" 
+              isCollapsed={isCollapsed} 
+            />
           </>
         )}
-        <NavLink
-          to="/maintenance"
-          className={({ isActive }) =>
-            cn(
-              "flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200",
-              isActive 
-                ? "bg-[#ea384c] text-white" 
-                : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-              isCollapsed && "justify-center px-2"
-            )
-          }
-          title="Maintenance"
-        >
-          <Wrench className="h-5 w-5" />
-          {!isCollapsed && "Maintenance"}
-        </NavLink>
+        <SidebarNavLink 
+          to="/maintenance" 
+          icon={Wrench} 
+          label="Maintenance" 
+          isCollapsed={isCollapsed} 
+        />
+        {isTenant && (
+          <SidebarNavLink 
+            to="/communications" 
+            icon={MessageSquare} 
+            label="Communications" 
+            isCollapsed={isCollapsed} 
+          />
+        )}
       </nav>
 
       <div className={cn(
