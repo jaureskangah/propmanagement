@@ -1,4 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 import { AuthProvider } from "./components/AuthProvider";
 import AppSidebar from "./components/AppSidebar";
 import LandingPage from "./pages/LandingPage";
