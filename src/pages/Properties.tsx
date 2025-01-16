@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/lib/supabase";
 import EmptyState from "@/components/properties/EmptyState";
 import PropertyFilters from "@/components/properties/PropertyFilters";
+import AppSidebar from "@/components/AppSidebar";
 
 const PROPERTY_TYPES = [
   "All",
@@ -83,82 +84,85 @@ const Properties = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 lg:px-6 space-y-6 lg:space-y-8 max-w-[1400px]">
-      <div className="space-y-2">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Properties Management
-            </h1>
-            <p className="text-muted-foreground mt-1">
-              Manage and track all your real estate properties in one place
-            </p>
+    <div className="flex h-screen">
+      <AppSidebar />
+      <div className="flex-1 container mx-auto px-4 lg:px-6 space-y-6 lg:space-y-8 max-w-[1400px]">
+        <div className="space-y-2">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Properties Management
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Manage and track all your real estate properties in one place
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="text-sm">
+                <Info className="h-4 w-4 mr-1" />
+                {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
+              </Badge>
+              <Button onClick={() => setIsAddModalOpen(true)}>
+                Add Property
+              </Button>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="text-sm">
-              <Info className="h-4 w-4 mr-1" />
-              {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
-            </Badge>
-            <Button onClick={() => setIsAddModalOpen(true)}>
-              Add Property
-            </Button>
-          </div>
+          <Separator className="my-6" />
+          
+          <PropertyFilters
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            propertyTypes={PROPERTY_TYPES}
+          />
         </div>
-        <Separator className="my-6" />
         
-        <PropertyFilters
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          propertyTypes={PROPERTY_TYPES}
+        {filteredProperties.length === 0 ? (
+          <EmptyState isFiltering={properties.length > 0} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
+            {filteredProperties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                onViewFinancials={handleViewFinancials}
+              />
+            ))}
+          </div>
+        )}
+
+        {selectedPropertyId && (
+          <div className="mt-8 animate-fade-in">
+            <h2 className="text-xl font-bold mb-4">
+              Financial Overview - {selectedProperty?.name}
+            </h2>
+            <PropertyFinancials propertyId={selectedPropertyId} />
+          </div>
+        )}
+
+        <AddPropertyModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
         />
+
+        {editingProperty && (
+          <EditPropertyModal
+            property={editingProperty}
+            isOpen={true}
+            onClose={() => setEditingProperty(null)}
+          />
+        )}
       </div>
-      
-      {filteredProperties.length === 0 ? (
-        <EmptyState isFiltering={properties.length > 0} />
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-6">
-          {filteredProperties.map((property) => (
-            <PropertyCard
-              key={property.id}
-              property={property}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-              onViewFinancials={handleViewFinancials}
-            />
-          ))}
-        </div>
-      )}
-
-      {selectedPropertyId && (
-        <div className="mt-8 animate-fade-in">
-          <h2 className="text-xl font-bold mb-4">
-            Financial Overview - {selectedProperty?.name}
-          </h2>
-          <PropertyFinancials propertyId={selectedPropertyId} />
-        </div>
-      )}
-
-      <AddPropertyModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-      />
-
-      {editingProperty && (
-        <EditPropertyModal
-          property={editingProperty}
-          isOpen={true}
-          onClose={() => setEditingProperty(null)}
-        />
-      )}
     </div>
   );
 };

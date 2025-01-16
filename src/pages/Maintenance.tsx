@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { MaintenanceHeader } from "@/components/maintenance/header/MaintenanceHeader";
 import { MaintenanceMetricsSection } from "@/components/maintenance/metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "@/components/maintenance/tabs/MaintenanceTabs";
+import AppSidebar from "@/components/AppSidebar";
 
-// Fetch maintenance requests
 const fetchMaintenanceRequests = async () => {
   const { data, error } = await supabase
     .from('maintenance_requests')
@@ -41,27 +41,30 @@ const Maintenance = () => {
   };
 
   return (
-    <div className="container mx-auto p-3 sm:p-4 md:p-6 font-sans">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          Maintenance Management
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Track maintenance requests, schedule tasks, and manage vendor relationships
-        </p>
-      </div>
-      
-      <MaintenanceMetricsSection
-        totalRequests={totalRequests}
-        pendingRequests={pendingRequests}
-        resolvedRequests={resolvedRequests}
-        urgentRequests={urgentRequests}
-      />
+    <div className="flex h-screen">
+      <AppSidebar />
+      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 font-sans">
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            Maintenance Management
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Track maintenance requests, schedule tasks, and manage vendor relationships
+          </p>
+        </div>
+        
+        <MaintenanceMetricsSection
+          totalRequests={totalRequests}
+          pendingRequests={pendingRequests}
+          resolvedRequests={resolvedRequests}
+          urgentRequests={urgentRequests}
+        />
 
-      <MaintenanceTabs 
-        propertyId={mockFinancialData.propertyId}
-        mockFinancialData={mockFinancialData}
-      />
+        <MaintenanceTabs 
+          propertyId={mockFinancialData.propertyId}
+          mockFinancialData={mockFinancialData}
+        />
+      </div>
     </div>
   );
 };

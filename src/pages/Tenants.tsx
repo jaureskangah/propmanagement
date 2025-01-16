@@ -8,6 +8,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { TenantActions } from "@/components/tenant/TenantActions";
 import { TenantLayout } from "@/components/tenant/TenantLayout";
 import { TenantModals } from "@/components/tenant/TenantModals";
+import AppSidebar from "@/components/AppSidebar";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -98,49 +99,52 @@ const Tenants = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="mb-4">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          Tenants
-        </h1>
-        <p className="text-muted-foreground mt-1">
-          Manage your tenants, track payments, and handle maintenance requests
-        </p>
-      </div>
-      
-      <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
-      
-      <TenantLayout
-        filteredTenants={filteredTenants || []}
-        selectedTenant={selectedTenant}
-        searchQuery={searchQuery}
-        searchFilters={searchFilters}
-        onSearchChange={setSearchQuery}
-        onFilterChange={setSearchFilters}
-        onTenantSelect={setSelectedTenant}
-        onEditClick={(id) => {
-          setSelectedTenant(id);
-          setIsEditModalOpen(true);
-        }}
-        onDeleteClick={(id) => {
-          setSelectedTenant(id);
-          setIsDeleteDialogOpen(true);
-        }}
-        selectedTenantData={selectedTenantData}
-      />
+    <div className="flex h-screen">
+      <AppSidebar />
+      <div className="flex-1 container mx-auto p-6">
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            Tenants
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Manage your tenants, track payments, and handle maintenance requests
+          </p>
+        </div>
+        
+        <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
+        
+        <TenantLayout
+          filteredTenants={filteredTenants || []}
+          selectedTenant={selectedTenant}
+          searchQuery={searchQuery}
+          searchFilters={searchFilters}
+          onSearchChange={setSearchQuery}
+          onFilterChange={setSearchFilters}
+          onTenantSelect={setSelectedTenant}
+          onEditClick={(id) => {
+            setSelectedTenant(id);
+            setIsEditModalOpen(true);
+          }}
+          onDeleteClick={(id) => {
+            setSelectedTenant(id);
+            setIsDeleteDialogOpen(true);
+          }}
+          selectedTenantData={selectedTenantData}
+        />
 
-      <TenantModals
-        isAddModalOpen={isAddModalOpen}
-        isEditModalOpen={isEditModalOpen}
-        isDeleteDialogOpen={isDeleteDialogOpen}
-        selectedTenantData={selectedTenantData}
-        onAddClose={() => setIsAddModalOpen(false)}
-        onEditClose={() => setIsEditModalOpen(false)}
-        onDeleteClose={() => setIsDeleteDialogOpen(false)}
-        onAddSubmit={handleAddTenant}
-        onEditSubmit={handleUpdateTenant}
-        onDeleteConfirm={handleDeleteTenant}
-      />
+        <TenantModals
+          isAddModalOpen={isAddModalOpen}
+          isEditModalOpen={isEditModalOpen}
+          isDeleteDialogOpen={isDeleteDialogOpen}
+          selectedTenantData={selectedTenantData}
+          onAddClose={() => setIsAddModalOpen(false)}
+          onEditClose={() => setIsEditModalOpen(false)}
+          onDeleteClose={() => setIsDeleteDialogOpen(false)}
+          onAddSubmit={handleAddTenant}
+          onEditSubmit={handleUpdateTenant}
+          onDeleteConfirm={handleDeleteTenant}
+        />
+      </div>
     </div>
   );
 };
