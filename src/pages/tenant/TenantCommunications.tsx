@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Communication } from "@/types/tenant";
 import { NewCommunicationDialog } from "@/components/tenant/communications/NewCommunicationDialog";
 import { CommunicationsContent } from "@/components/tenant/communications/CommunicationsContent";
+import AppSidebar from "@/components/AppSidebar";
 
 const TenantCommunications = () => {
   const [communications, setCommunications] = useState<Communication[]>([]);
@@ -34,7 +35,7 @@ const TenantCommunications = () => {
         .from('tenants')
         .select('id')
         .eq('tenant_profile_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (tenant) {
         setTenantId(tenant.id);
@@ -93,39 +94,42 @@ const TenantCommunications = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Communications</h1>
-        <Button 
-          onClick={() => setIsNewMessageOpen(true)}
-          className="bg-[#ea384c] hover:bg-[#ea384c]/90"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Message
-        </Button>
+    <div className="flex">
+      <AppSidebar isTenant={true} />
+      <div className="flex-1 container mx-auto p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Communications</h1>
+          <Button 
+            onClick={() => setIsNewMessageOpen(true)}
+            className="bg-[#ea384c] hover:bg-[#ea384c]/90"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Message
+          </Button>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Message History</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CommunicationsContent
+              communications={communications}
+              onToggleStatus={() => {}}
+              onCommunicationSelect={() => {}}
+              onCommunicationUpdate={handleCommunicationUpdate}
+            />
+          </CardContent>
+        </Card>
+
+        <NewCommunicationDialog
+          isOpen={isNewMessageOpen}
+          onClose={() => setIsNewMessageOpen(false)}
+          newCommData={{ type: "email", subject: "", content: "", category: "general" }}
+          onDataChange={() => {}}
+          onSubmit={handleCommunicationUpdate}
+        />
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Message History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CommunicationsContent
-            communications={communications}
-            onToggleStatus={() => {}}
-            onCommunicationSelect={() => {}}
-            onCommunicationUpdate={handleCommunicationUpdate}
-          />
-        </CardContent>
-      </Card>
-
-      <NewCommunicationDialog
-        isOpen={isNewMessageOpen}
-        onClose={() => setIsNewMessageOpen(false)}
-        newCommData={{ type: "email", subject: "", content: "", category: "general" }}
-        onDataChange={() => {}}
-        onSubmit={handleCommunicationUpdate}
-      />
     </div>
   );
 };
