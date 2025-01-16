@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
-import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
-import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
-import { TenantCommunications } from "@/components/tenant/TenantCommunications";
 import { AddMaintenanceDialog } from "@/components/tenant/maintenance/AddMaintenanceDialog";
+import { MaintenanceMetricsSection } from "@/components/tenant/maintenance/components/MaintenanceMetricsSection";
+import { MaintenanceContent } from "@/components/tenant/maintenance/components/MaintenanceContent";
 
 const TenantMaintenance = () => {
   const [metrics, setMetrics] = useState({
@@ -20,19 +19,15 @@ const TenantMaintenance = () => {
   const [communications, setCommunications] = useState([]);
   const { toast } = useToast();
 
-  useEffect(() => {
-    fetchTenantData();
-  }, []);
-
   const fetchTenantData = async () => {
     try {
+      console.log("Fetching tenant data...");
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) {
         console.log("No user found");
         return;
       }
 
-      // Use maybeSingle() instead of single() to handle the case where no tenant is found
       const { data: tenantData, error } = await supabase
         .from('tenants')
         .select('id')
@@ -54,7 +49,7 @@ const TenantMaintenance = () => {
         toast({
           title: "No tenant profile found",
           description: "Please contact your property manager to set up your tenant profile",
-          variant: "default", // Changed from "warning" to "default"
+          variant: "default",
         });
         return;
       }
@@ -129,7 +124,6 @@ const TenantMaintenance = () => {
     }
   };
 
-  // If no tenant ID is set, show a message
   if (!tenantId) {
     return (
       <div className="container mx-auto p-6">
@@ -157,36 +151,12 @@ const TenantMaintenance = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <MaintenanceMetrics
-          total={metrics.total}
-          pending={metrics.pending}
-          resolved={metrics.resolved}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Maintenance Requests</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TenantMaintenanceView />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Communications with Owner</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <TenantCommunications 
-              communications={communications}
-              tenantId={tenantId}
-            />
-          </CardContent>
-        </Card>
-      </div>
+      <MaintenanceMetricsSection metrics={metrics} />
+      
+      <MaintenanceContent 
+        tenantId={tenantId}
+        communications={communications}
+      />
 
       <AddMaintenanceDialog
         isOpen={isAddDialogOpen}
