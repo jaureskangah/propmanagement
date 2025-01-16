@@ -124,6 +124,7 @@ export type Database = {
           priority: string
           status: string
           tenant_id: string | null
+          tenant_notified: boolean | null
           title: string
           updated_at: string
         }
@@ -139,6 +140,7 @@ export type Database = {
           priority?: string
           status?: string
           tenant_id?: string | null
+          tenant_notified?: boolean | null
           title?: string
           updated_at?: string
         }
@@ -154,6 +156,7 @@ export type Database = {
           priority?: string
           status?: string
           tenant_id?: string | null
+          tenant_notified?: boolean | null
           title?: string
           updated_at?: string
         }
@@ -287,6 +290,7 @@ export type Database = {
           status: string
           subject: string
           tenant_id: string | null
+          tenant_notified: boolean | null
           type: string
         }
         Insert: {
@@ -301,6 +305,7 @@ export type Database = {
           status?: string
           subject: string
           tenant_id?: string | null
+          tenant_notified?: boolean | null
           type: string
         }
         Update: {
@@ -315,6 +320,7 @@ export type Database = {
           status?: string
           subject?: string
           tenant_id?: string | null
+          tenant_notified?: boolean | null
           type?: string
         }
         Relationships: [

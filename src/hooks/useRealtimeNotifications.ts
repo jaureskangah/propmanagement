@@ -16,7 +16,7 @@ export function useRealtimeNotifications() {
           table: 'maintenance_requests'
         },
         (payload) => {
-          console.log('Real-time notification:', payload);
+          console.log('Real-time maintenance notification:', payload);
           
           if (payload.eventType === 'INSERT') {
             toast({
@@ -24,10 +24,12 @@ export function useRealtimeNotifications() {
               description: payload.new.title,
             });
           } else if (payload.eventType === 'UPDATE') {
-            toast({
-              title: "Mise à jour de maintenance",
-              description: `La demande "${payload.new.title}" a été mise à jour`,
-            });
+            if (payload.new.tenant_notified && !payload.old.tenant_notified) {
+              toast({
+                title: "Mise à jour de maintenance",
+                description: `La demande "${payload.new.title}" a été mise à jour`,
+              });
+            }
           }
         }
       )
@@ -46,29 +48,13 @@ export function useRealtimeNotifications() {
               title: "Nouvelle communication",
               description: payload.new.subject,
             });
-          }
-        }
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'tenant_payments'
-        },
-        (payload) => {
-          console.log('Real-time payment:', payload);
-          
-          if (payload.eventType === 'INSERT') {
-            toast({
-              title: "Nouveau paiement",
-              description: `Nouveau paiement de ${payload.new.amount}€ reçu`,
-            });
-          } else if (payload.eventType === 'UPDATE' && payload.new.status === 'completed') {
-            toast({
-              title: "Paiement confirmé",
-              description: `Paiement de ${payload.new.amount}€ confirmé`,
-            });
+          } else if (payload.eventType === 'UPDATE') {
+            if (payload.new.tenant_notified && !payload.old.tenant_notified) {
+              toast({
+                title: "Mise à jour de communication",
+                description: `La communication "${payload.new.subject}" a été mise à jour`,
+              });
+            }
           }
         }
       )

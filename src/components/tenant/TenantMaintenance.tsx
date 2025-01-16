@@ -8,6 +8,7 @@ import { AddMaintenanceDialog } from "./maintenance/AddMaintenanceDialog";
 import { EditMaintenanceDialog } from "./maintenance/EditMaintenanceDialog";
 import { DeleteMaintenanceDialog } from "./maintenance/DeleteMaintenanceDialog";
 import { formatDate } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
 
 interface TenantMaintenanceProps {
   requests: MaintenanceRequest[];
@@ -25,7 +26,14 @@ export const TenantMaintenance = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
 
-  const handleEditClick = (request: MaintenanceRequest) => {
+  const handleEditClick = async (request: MaintenanceRequest) => {
+    // Marquer la notification comme vue
+    if (!request.tenant_notified) {
+      await supabase
+        .from('maintenance_requests')
+        .update({ tenant_notified: true })
+        .eq('id', request.id);
+    }
     setSelectedRequest(request);
     setIsEditDialogOpen(true);
   };
@@ -57,7 +65,9 @@ export const TenantMaintenance = ({
             requests.map((request) => (
               <div
                 key={request.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50"
+                className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 ${
+                  !request.tenant_notified ? 'bg-yellow-50' : ''
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <Wrench className="h-5 w-5 text-[#ea384c]" />

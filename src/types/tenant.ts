@@ -41,6 +41,7 @@ export interface MaintenanceRequest {
   issue: string;
   status: string;
   created_at: string;
+  tenant_notified?: boolean;
 }
 
 export interface Communication {
@@ -55,4 +56,5 @@ export interface Communication {
   parent_id?: string;
   is_from_tenant?: boolean;
   resolved_at?: string;
+  tenant_notified?: boolean;
 }
