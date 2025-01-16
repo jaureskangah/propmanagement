@@ -26,7 +26,22 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
       <SidebarLogo isCollapsed={isCollapsed} />
 
       <nav className="space-y-2">
-        {!isTenant && (
+        {isTenant ? (
+          <>
+            <SidebarNavLink 
+              to="/tenant/maintenance" 
+              icon={Wrench} 
+              label="Maintenance" 
+              isCollapsed={isCollapsed} 
+            />
+            <SidebarNavLink 
+              to="/tenant/communications" 
+              icon={MessageSquare} 
+              label="Communications" 
+              isCollapsed={isCollapsed} 
+            />
+          </>
+        ) : (
           <>
             <SidebarNavLink 
               to="/dashboard" 
@@ -46,21 +61,13 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
               label="Tenants" 
               isCollapsed={isCollapsed} 
             />
+            <SidebarNavLink 
+              to="/maintenance" 
+              icon={Wrench} 
+              label="Maintenance" 
+              isCollapsed={isCollapsed} 
+            />
           </>
-        )}
-        <SidebarNavLink 
-          to="/maintenance" 
-          icon={Wrench} 
-          label="Maintenance" 
-          isCollapsed={isCollapsed} 
-        />
-        {isTenant && (
-          <SidebarNavLink 
-            to="/communications" 
-            icon={MessageSquare} 
-            label="Communications" 
-            isCollapsed={isCollapsed} 
-          />
         )}
       </nav>
 
