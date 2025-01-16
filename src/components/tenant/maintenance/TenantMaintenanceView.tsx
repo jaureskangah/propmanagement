@@ -1,29 +1,36 @@
-import React, { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { AddMaintenanceDialog } from "./AddMaintenanceDialog";
-import { MaintenanceHeader } from "./components/MaintenanceHeader";
-import { MaintenanceList } from "./components/MaintenanceList";
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMaintenanceRequests } from "./hooks/useMaintenanceRequests";
 
 export const TenantMaintenanceView = () => {
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const { requests, tenantId, fetchRequests, handleRequestCreated } = useMaintenanceRequests();
-
-  useEffect(() => {
-    fetchRequests();
-  }, []);
+  const { requests } = useMaintenanceRequests();
 
   return (
     <Card>
-      <MaintenanceHeader onAddClick={() => setIsAddDialogOpen(true)} />
-      <MaintenanceList requests={requests} />
-
-      <AddMaintenanceDialog
-        isOpen={isAddDialogOpen}
-        onClose={() => setIsAddDialogOpen(false)}
-        onSuccess={handleRequestCreated}
-        tenantId={tenantId}
-      />
+      <CardHeader>
+        <CardTitle>Maintenance Requests</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {requests.length === 0 ? (
+          <p className="text-muted-foreground text-center">
+            No maintenance requests found
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {requests.map((request) => (
+              <div
+                key={request.id}
+                className="p-4 border rounded-lg hover:bg-gray-50"
+              >
+                <h3 className="font-medium">{request.title || request.issue}</h3>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Status: {request.status}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </CardContent>
     </Card>
   );
 };
