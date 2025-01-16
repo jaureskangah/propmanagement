@@ -109,9 +109,11 @@ const Properties = () => {
                 <Info className="h-4 w-4 mr-1.5" />
                 {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
               </Badge>
-              <Button size="sm" onClick={() => setIsAddModalOpen(true)}>
-                Add Property
-              </Button>
+              <div className="animate-fade-in">
+                <Button size="sm" onClick={() => setIsAddModalOpen(true)}>
+                  Add Property
+                </Button>
+              </div>
             </div>
           </div>
           <Separator className="my-6" />
