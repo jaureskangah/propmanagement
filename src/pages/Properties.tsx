@@ -93,7 +93,7 @@ const Properties = () => {
   return (
     <div className="flex h-screen">
       <AppSidebar />
-      <div className="flex-1 container mx-auto px-4 lg:px-6 space-y-6 lg:space-y-8 max-w-[1400px]">
+      <div className="flex-1 container mx-auto px-4 lg:px-6 py-8 space-y-6 lg:space-y-8 max-w-[1400px]">
         <div className="space-y-2">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
