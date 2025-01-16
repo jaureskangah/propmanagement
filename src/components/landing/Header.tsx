@@ -5,6 +5,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
@@ -14,27 +15,48 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // Query to check if user is a tenant
+  const { data: profile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
+
+  const handleDashboardClick = () => {
+    if (profile?.is_tenant_user) {
+      navigate("/tenant/maintenance");
+    } else {
+      navigate("/dashboard");
+    }
+  };
+
   const handleSignOut = async () => {
     try {
       console.log("Starting sign out process");
       
-      // First check if we have a valid session
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       console.log("Current session status:", session ? "Active" : "No session", sessionError || '');
       
-      // If there's no session or session error, just clear local state and redirect
       if (!session || sessionError) {
         console.log("No active session found, proceeding with navigation");
         navigate("/");
         return;
       }
 
-      // Proceed with logout if we have a session
       const { error } = await supabase.auth.signOut();
       
       if (error) {
         console.error("Error during sign out:", error);
-        // If the error is session_not_found, we can safely ignore it
         if (error.message.includes("session_not_found")) {
           console.log("Session not found during logout, proceeding with navigation");
           navigate("/");
@@ -77,10 +99,12 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
             </div>
             {user ? (
               <div className="flex items-center gap-4">
-                <Button asChild variant="default" size="sm">
-                  <Link to="/dashboard">
-                    Dashboard
-                  </Link>
+                <Button 
+                  variant="default" 
+                  size="sm"
+                  onClick={handleDashboardClick}
+                >
+                  Dashboard
                 </Button>
                 <Button
                   variant="ghost"
