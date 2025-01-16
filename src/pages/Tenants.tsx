@@ -9,6 +9,8 @@ import { TenantActions } from "@/components/tenant/TenantActions";
 import { TenantLayout } from "@/components/tenant/TenantLayout";
 import { TenantModals } from "@/components/tenant/TenantModals";
 import AppSidebar from "@/components/AppSidebar";
+import { Badge } from "@/components/ui/badge";
+import { Info } from "lucide-react";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -103,15 +105,24 @@ const Tenants = () => {
       <AppSidebar />
       <div className="flex-1 container mx-auto p-6">
         <div className="mb-4">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-            Tenants
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Manage your tenants, track payments, and handle maintenance requests
-          </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Tenants
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                Manage your tenants, track payments, and handle maintenance requests
+              </p>
+            </div>
+            <div className="flex items-center justify-end gap-4">
+              <Badge variant="secondary" className="text-sm px-3 py-1.5">
+                <Info className="h-4 w-4 mr-1.5" />
+                {tenants?.length} {tenants?.length === 1 ? 'Tenant' : 'Tenants'}
+              </Badge>
+              <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
+            </div>
+          </div>
         </div>
-        
-        <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
         
         <TenantLayout
           filteredTenants={filteredTenants || []}
