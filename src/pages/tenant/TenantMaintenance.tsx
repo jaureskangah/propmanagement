@@ -5,10 +5,9 @@ import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
-import { AddMaintenanceDialog } from "@/components/tenant/maintenance/AddMaintenanceDialog";
 import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
 import { TenantCommunications } from "@/components/tenant/TenantCommunications";
-import type { MaintenanceRequest } from "@/types/tenant";
+import { AddMaintenanceDialog } from "@/components/tenant/maintenance/AddMaintenanceDialog";
 
 const TenantMaintenance = () => {
   const [metrics, setMetrics] = useState({
@@ -55,7 +54,7 @@ const TenantMaintenance = () => {
         toast({
           title: "No tenant profile found",
           description: "Please contact your property manager to set up your tenant profile",
-          variant: "warning",
+          variant: "default", // Changed from "warning" to "default"
         });
         return;
       }
