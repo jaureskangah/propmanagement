@@ -9,6 +9,7 @@ import { DashboardDateFilter, DateRange } from "@/components/dashboard/Dashboard
 import { useState, useEffect } from "react";
 import { DashboardMetrics } from "@/components/dashboard/DashboardMetrics";
 import { useNavigate } from "react-router-dom";
+import AppSidebar from "@/components/AppSidebar";
 
 const Dashboard = () => {
   console.log("Rendering Dashboard");
@@ -95,21 +96,24 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-6 p-8 font-sans">
-      <DashboardHeader />
-      
-      <DashboardDateFilter onDateRangeChange={setDateRange} />
+    <div className="flex h-screen">
+      <AppSidebar />
+      <div className="flex-1 space-y-6 p-8 font-sans">
+        <DashboardHeader />
+        
+        <DashboardDateFilter onDateRangeChange={setDateRange} />
 
-      <DashboardMetrics 
-        propertiesData={propertiesData || []}
-        maintenanceData={maintenanceData || []}
-        tenantsData={tenantsData || []}
-        dateRange={dateRange}
-      />
+        <DashboardMetrics 
+          propertiesData={propertiesData || []}
+          maintenanceData={maintenanceData || []}
+          tenantsData={tenantsData || []}
+          dateRange={dateRange}
+        />
 
-      <RevenueChart />
+        <RevenueChart />
 
-      <RecentActivity />
+        <RecentActivity />
+      </div>
     </div>
   );
 };
