@@ -1,77 +1,83 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { MaintenanceRequest } from "@/types/tenant";
 
 export const useMaintenanceRequests = () => {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
-  const [tenantId, setTenantId] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  useEffect(() => {
+    fetchRequests();
+  }, []);
+
   const fetchRequests = async () => {
-    console.log("Fetching maintenance requests...");
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) {
-      console.log("No user found");
-      return;
-    }
+    try {
+      console.log("Fetching maintenance requests...");
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      
+      if (userError) {
+        throw userError;
+      }
 
-    const { data: tenantData, error: tenantError } = await supabase
-      .from("tenants")
-      .select("id")
-      .eq("tenant_profile_id", userData.user.id)
-      .maybeSingle();
+      if (!userData.user) {
+        console.log("No user found");
+        setRequests([]);
+        setIsLoading(false);
+        return;
+      }
 
-    if (tenantError) {
-      console.error("Error fetching tenant:", tenantError);
-      toast({
-        title: "Error",
-        description: "Failed to load tenant information",
-        variant: "destructive",
-      });
-      return;
-    }
+      console.log("Fetching tenant data for user:", userData.user.id);
+      const { data: tenantData, error: tenantError } = await supabase
+        .from("tenants")
+        .select("id")
+        .eq("tenant_profile_id", userData.user.id)
+        .maybeSingle();
 
-    if (!tenantData) {
-      console.log("No tenant found for user:", userData.user.id);
-      toast({
-        title: "No Access",
-        description: "No tenant profile found for your account",
-        variant: "destructive",
-      });
-      return;
-    }
+      if (tenantError) {
+        console.error("Error fetching tenant:", tenantError);
+        throw tenantError;
+      }
 
-    setTenantId(tenantData.id);
+      if (!tenantData) {
+        console.log("No tenant found for user:", userData.user.id);
+        setRequests([]);
+        setIsLoading(false);
+        return;
+      }
 
-    const { data, error } = await supabase
-      .from("maintenance_requests")
-      .select("*")
-      .eq("tenant_id", tenantData.id)
-      .order("created_at", { ascending: false });
+      console.log("Fetching maintenance requests for tenant:", tenantData.id);
+      const { data: maintenanceData, error: maintenanceError } = await supabase
+        .from("maintenance_requests")
+        .select("*")
+        .eq("tenant_id", tenantData.id)
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("Error fetching maintenance requests:", error);
+      if (maintenanceError) {
+        throw maintenanceError;
+      }
+
+      console.log("Maintenance requests loaded:", maintenanceData?.length || 0);
+      setRequests(maintenanceData || []);
+    } catch (err) {
+      console.error("Error in fetchRequests:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
       toast({
         title: "Error",
         description: "Failed to load maintenance requests",
         variant: "destructive",
       });
-      return;
+    } finally {
+      setIsLoading(false);
     }
-
-    console.log("Maintenance requests loaded:", data?.length || 0, "requests");
-    setRequests(data || []);
-  };
-
-  const handleRequestCreated = () => {
-    fetchRequests();
   };
 
   return {
     requests,
-    tenantId,
-    fetchRequests,
-    handleRequestCreated
+    isLoading,
+    error,
+    fetchRequests
   };
 };
