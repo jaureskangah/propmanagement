@@ -9,6 +9,7 @@ import { useCommunicationActions } from "@/hooks/communications/useCommunication
 import { useState } from "react";
 import { CommunicationsContent } from "./communications/CommunicationsContent";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -24,6 +25,7 @@ export const TenantCommunications = ({
   tenant 
 }: TenantCommunicationsProps) => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+  const { toast } = useToast();
   const {
     isNewCommDialogOpen,
     setIsNewCommDialogOpen,
@@ -51,10 +53,25 @@ export const TenantCommunications = ({
         .from('tenant_communications')
         .select('*')
         .eq('id', comm.id)
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching communication details:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load communication details. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!data) {
+        console.log('No communication found with ID:', comm.id);
+        toast({
+          title: "Not Found",
+          description: "The selected communication could not be found.",
+          variant: "destructive",
+        });
         return;
       }
 
@@ -62,6 +79,11 @@ export const TenantCommunications = ({
       setSelectedComm(data);
     } catch (error) {
       console.error('Error in handleCommunicationSelect:', error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
