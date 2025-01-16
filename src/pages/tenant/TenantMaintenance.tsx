@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { Communication } from "@/types/tenant";
 import { useNavigate } from "react-router-dom";
 import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
 import AppSidebar from "@/components/AppSidebar";
@@ -20,6 +19,7 @@ const TenantMaintenance = () => {
     try {
       console.log("Fetching tenant ID...");
       const { data: { user } } = await supabase.auth.getUser();
+      
       if (!user) {
         console.log("No authenticated user found");
         toast({
@@ -31,15 +31,43 @@ const TenantMaintenance = () => {
         return;
       }
 
+      console.log("Checking if user is a tenant...");
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('is_tenant_user')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError || !profile) {
+        console.error('Error fetching profile:', profileError);
+        toast({
+          title: "Error",
+          description: "Failed to verify tenant status",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!profile.is_tenant_user) {
+        console.log("User is not a tenant");
+        toast({
+          title: "Access Denied",
+          description: "This page is only accessible to tenants",
+          variant: "destructive",
+        });
+        navigate("/");
+        return;
+      }
+
       console.log("Fetching tenant data for user:", user.id);
-      const { data: tenant, error } = await supabase
+      const { data: tenant, error: tenantError } = await supabase
         .from('tenants')
         .select('id')
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
 
-      if (error) {
-        console.error('Error fetching tenant:', error);
+      if (tenantError) {
+        console.error('Error fetching tenant:', tenantError);
         toast({
           title: "Error",
           description: "Failed to load tenant information",
@@ -51,11 +79,10 @@ const TenantMaintenance = () => {
       if (!tenant) {
         console.log("No tenant profile found for user:", user.id);
         toast({
-          title: "Access Denied",
+          title: "Profile Not Found",
           description: "No tenant profile found for your account",
           variant: "destructive",
         });
-        navigate("/");
         return;
       }
 
@@ -84,11 +111,11 @@ const TenantMaintenance = () => {
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle>No Access</CardTitle>
+              <CardTitle>Loading...</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                You don't have access to maintenance features. Please contact your property manager.
+                Please wait while we load your maintenance information...
               </p>
             </CardContent>
           </Card>
