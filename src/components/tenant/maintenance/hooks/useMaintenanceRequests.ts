@@ -9,17 +9,36 @@ export const useMaintenanceRequests = () => {
   const { toast } = useToast();
 
   const fetchRequests = async () => {
+    console.log("Fetching maintenance requests...");
     const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) return;
+    if (!userData.user) {
+      console.log("No user found");
+      return;
+    }
 
     const { data: tenantData, error: tenantError } = await supabase
       .from("tenants")
       .select("id")
       .eq("tenant_profile_id", userData.user.id)
-      .single();
+      .maybeSingle();
 
-    if (tenantError || !tenantData) {
+    if (tenantError) {
       console.error("Error fetching tenant:", tenantError);
+      toast({
+        title: "Error",
+        description: "Failed to load tenant information",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!tenantData) {
+      console.log("No tenant found for user:", userData.user.id);
+      toast({
+        title: "No Access",
+        description: "No tenant profile found for your account",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -41,6 +60,7 @@ export const useMaintenanceRequests = () => {
       return;
     }
 
+    console.log("Maintenance requests loaded:", data?.length || 0, "requests");
     setRequests(data || []);
   };
 
