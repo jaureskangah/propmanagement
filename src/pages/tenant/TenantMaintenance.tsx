@@ -6,7 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
 import { AddMaintenanceDialog } from "@/components/tenant/maintenance/AddMaintenanceDialog";
+import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
 import { TenantCommunications } from "@/components/tenant/TenantCommunications";
+import type { MaintenanceRequest } from "@/types/tenant";
 
 const TenantMaintenance = () => {
   const [metrics, setMetrics] = useState({
@@ -15,14 +17,15 @@ const TenantMaintenance = () => {
     resolved: 0
   });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [tenantId, setTenantId] = useState<string>("");
+  const [communications, setCommunications] = useState([]);
   const { toast } = useToast();
 
   useEffect(() => {
-    fetchMetrics();
-    setupRealtimeSubscription();
+    fetchTenantData();
   }, []);
 
-  const fetchMetrics = async () => {
+  const fetchTenantData = async () => {
     try {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
@@ -35,10 +38,27 @@ const TenantMaintenance = () => {
 
       if (!tenantData) return;
 
+      setTenantId(tenantData.id);
+      await Promise.all([
+        fetchMetrics(tenantData.id),
+        fetchCommunications(tenantData.id)
+      ]);
+    } catch (error) {
+      console.error('Error fetching tenant data:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load tenant data",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const fetchMetrics = async (tid: string) => {
+    try {
       const { data: requests } = await supabase
         .from('maintenance_requests')
         .select('*')
-        .eq('tenant_id', tenantData.id);
+        .eq('tenant_id', tid);
 
       if (requests) {
         setMetrics({
@@ -49,33 +69,27 @@ const TenantMaintenance = () => {
       }
     } catch (error) {
       console.error('Error fetching metrics:', error);
-      toast({
-        title: "Error",
-        description: "Failed to load maintenance metrics",
-        variant: "destructive",
-      });
     }
   };
 
-  const setupRealtimeSubscription = () => {
-    const channel = supabase
-      .channel('maintenance-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'maintenance_requests'
-        },
-        () => {
-          fetchMetrics();
-        }
-      )
-      .subscribe();
+  const fetchCommunications = async (tid: string) => {
+    try {
+      const { data } = await supabase
+        .from('tenant_communications')
+        .select('*')
+        .eq('tenant_id', tid)
+        .order('created_at', { ascending: false });
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
+      setCommunications(data || []);
+    } catch (error) {
+      console.error('Error fetching communications:', error);
+    }
+  };
+
+  const handleMaintenanceUpdate = async () => {
+    if (tenantId) {
+      await fetchMetrics(tenantId);
+    }
   };
 
   return (
@@ -114,7 +128,10 @@ const TenantMaintenance = () => {
             <CardTitle>Communications with Owner</CardTitle>
           </CardHeader>
           <CardContent>
-            <TenantCommunications />
+            <TenantCommunications 
+              communications={communications}
+              tenantId={tenantId}
+            />
           </CardContent>
         </Card>
       </div>
@@ -122,7 +139,8 @@ const TenantMaintenance = () => {
       <AddMaintenanceDialog
         isOpen={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
-        onSuccess={fetchMetrics}
+        onSuccess={handleMaintenanceUpdate}
+        tenantId={tenantId}
       />
     </div>
   );
