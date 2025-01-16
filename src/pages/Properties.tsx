@@ -104,12 +104,12 @@ const Properties = () => {
                 Manage and track all your real estate properties in one place
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <Badge variant="secondary" className="text-sm">
-                <Info className="h-4 w-4 mr-1" />
+            <div className="flex items-center gap-4">
+              <Badge variant="secondary" className="text-sm px-3 py-1.5">
+                <Info className="h-4 w-4 mr-1.5" />
                 {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
               </Badge>
-              <Button onClick={() => setIsAddModalOpen(true)}>
+              <Button size="sm" onClick={() => setIsAddModalOpen(true)}>
                 Add Property
               </Button>
             </div>
