@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
-import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
+import { AddMaintenanceDialog } from "@/components/tenant/maintenance/AddMaintenanceDialog";
+import { TenantCommunications } from "@/components/tenant/TenantCommunications";
 
 const TenantMaintenance = () => {
   const [metrics, setMetrics] = useState({
@@ -11,6 +14,7 @@ const TenantMaintenance = () => {
     pending: 0,
     resolved: 0
   });
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -76,8 +80,17 @@ const TenantMaintenance = () => {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Maintenance Requests</h1>
-      
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Maintenance Portal</h1>
+        <Button 
+          onClick={() => setIsAddDialogOpen(true)}
+          className="bg-[#ea384c] hover:bg-[#ea384c]/90"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          New Request
+        </Button>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <MaintenanceMetrics
           total={metrics.total}
@@ -86,7 +99,31 @@ const TenantMaintenance = () => {
         />
       </div>
 
-      <TenantMaintenanceView />
+      <div className="grid grid-cols-1 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Recent Maintenance Requests</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TenantMaintenanceView />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Communications with Owner</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <TenantCommunications />
+          </CardContent>
+        </Card>
+      </div>
+
+      <AddMaintenanceDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        onSuccess={fetchMetrics}
+      />
     </div>
   );
 };
