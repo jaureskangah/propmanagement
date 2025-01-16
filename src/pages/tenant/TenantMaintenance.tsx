@@ -36,9 +36,9 @@ const TenantMaintenance = () => {
         .from('profiles')
         .select('is_tenant_user')
         .eq('id', user.id)
-        .single();
+        .maybeSingle();
 
-      if (profileError || !profile) {
+      if (profileError) {
         console.error('Error fetching profile:', profileError);
         toast({
           title: "Error",
@@ -48,7 +48,7 @@ const TenantMaintenance = () => {
         return;
       }
 
-      if (!profile.is_tenant_user) {
+      if (!profile?.is_tenant_user) {
         console.log("User is not a tenant");
         toast({
           title: "Access Denied",
