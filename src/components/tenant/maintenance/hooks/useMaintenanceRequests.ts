@@ -10,40 +10,20 @@ export const useMaintenanceRequests = () => {
 
   const fetchRequests = async () => {
     const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) {
-      console.log("No user found");
-      return;
-    }
+    if (!userData.user) return;
 
-    console.log("Fetching tenant data for user:", userData.user.id);
     const { data: tenantData, error: tenantError } = await supabase
       .from("tenants")
       .select("id")
       .eq("tenant_profile_id", userData.user.id)
-      .maybeSingle();
+      .single();
 
-    if (tenantError) {
+    if (tenantError || !tenantData) {
       console.error("Error fetching tenant:", tenantError);
-      toast({
-        title: "Error",
-        description: "Failed to load tenant information",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!tenantData) {
-      console.log("No tenant found for user:", userData.user.id);
-      toast({
-        title: "No tenant profile found",
-        description: "Please ensure your tenant profile is properly linked",
-        variant: "default",
-      });
       return;
     }
 
     setTenantId(tenantData.id);
-    console.log("Found tenant ID:", tenantData.id);
 
     const { data, error } = await supabase
       .from("maintenance_requests")
@@ -61,7 +41,6 @@ export const useMaintenanceRequests = () => {
       return;
     }
 
-    console.log("Fetched maintenance requests:", data?.length || 0, "requests");
     setRequests(data || []);
   };
 
