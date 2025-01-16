@@ -36,7 +36,7 @@ const TenantMaintenance = () => {
         .from('tenants')
         .select('id')
         .eq('tenant_profile_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (tenantError) {
         console.error('Error fetching tenant:', tenantError);
