@@ -72,8 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('AuthProvider: User signed in:', session.user.email);
           await updateTenantProfile(session.user);
           setUser(session.user);
-        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
-          console.log('AuthProvider: User signed out or deleted');
+        } else if (event === 'SIGNED_OUT') {
+          console.log('AuthProvider: User signed out');
           setUser(null);
         } else if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('AuthProvider: Token refreshed for user:', session.user.email);
