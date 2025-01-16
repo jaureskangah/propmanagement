@@ -36,7 +36,7 @@ const TenantMaintenance = () => {
         .from('tenants')
         .select('id')
         .eq('tenant_profile_id', user.id)
-        .maybeSingle();
+        .single();
 
       if (tenantError) {
         console.error('Error fetching tenant:', tenantError);
@@ -51,8 +51,8 @@ const TenantMaintenance = () => {
       if (!tenant) {
         console.log("No tenant profile found for user:", user.id);
         toast({
-          title: "Profile Not Found",
-          description: "No tenant profile found for your account",
+          title: "Access Denied",
+          description: "You must be a registered tenant to access this page",
           variant: "destructive",
         });
         return;
