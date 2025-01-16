@@ -28,23 +28,46 @@ const TenantMaintenance = () => {
   const fetchTenantData = async () => {
     try {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+      if (!userData.user) {
+        console.log("No user found");
+        return;
+      }
 
-      const { data: tenantData } = await supabase
+      // Use maybeSingle() instead of single() to handle the case where no tenant is found
+      const { data: tenantData, error } = await supabase
         .from('tenants')
         .select('id')
         .eq('tenant_profile_id', userData.user.id)
-        .single();
+        .maybeSingle();
 
-      if (!tenantData) return;
+      if (error) {
+        console.error('Error fetching tenant:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load tenant data",
+          variant: "destructive",
+        });
+        return;
+      }
 
+      if (!tenantData) {
+        console.log("No tenant found for this user");
+        toast({
+          title: "No tenant profile found",
+          description: "Please contact your property manager to set up your tenant profile",
+          variant: "warning",
+        });
+        return;
+      }
+
+      console.log("Tenant found:", tenantData);
       setTenantId(tenantData.id);
       await Promise.all([
         fetchMetrics(tenantData.id),
         fetchCommunications(tenantData.id)
       ]);
     } catch (error) {
-      console.error('Error fetching tenant data:', error);
+      console.error('Error in fetchTenantData:', error);
       toast({
         title: "Error",
         description: "Failed to load tenant data",
@@ -55,34 +78,49 @@ const TenantMaintenance = () => {
 
   const fetchMetrics = async (tid: string) => {
     try {
-      const { data: requests } = await supabase
+      console.log("Fetching metrics for tenant:", tid);
+      const { data: requests, error } = await supabase
         .from('maintenance_requests')
         .select('*')
         .eq('tenant_id', tid);
 
+      if (error) {
+        console.error('Error fetching maintenance requests:', error);
+        return;
+      }
+
       if (requests) {
-        setMetrics({
+        const metrics = {
           total: requests.length,
           pending: requests.filter(r => r.status === 'Pending').length,
           resolved: requests.filter(r => r.status === 'Resolved').length
-        });
+        };
+        console.log("Updated metrics:", metrics);
+        setMetrics(metrics);
       }
     } catch (error) {
-      console.error('Error fetching metrics:', error);
+      console.error('Error in fetchMetrics:', error);
     }
   };
 
   const fetchCommunications = async (tid: string) => {
     try {
-      const { data } = await supabase
+      console.log("Fetching communications for tenant:", tid);
+      const { data, error } = await supabase
         .from('tenant_communications')
         .select('*')
         .eq('tenant_id', tid)
         .order('created_at', { ascending: false });
 
+      if (error) {
+        console.error('Error fetching communications:', error);
+        return;
+      }
+
+      console.log("Fetched communications:", data?.length ?? 0, "items");
       setCommunications(data || []);
     } catch (error) {
-      console.error('Error fetching communications:', error);
+      console.error('Error in fetchCommunications:', error);
     }
   };
 
@@ -91,6 +129,21 @@ const TenantMaintenance = () => {
       await fetchMetrics(tenantId);
     }
   };
+
+  // If no tenant ID is set, show a message
+  if (!tenantId) {
+    return (
+      <div className="container mx-auto p-6">
+        <Card>
+          <CardContent className="p-6">
+            <p className="text-center text-muted-foreground">
+              No tenant profile found. Please contact your property manager to set up your profile.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
