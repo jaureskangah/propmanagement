@@ -31,34 +31,6 @@ const TenantMaintenance = () => {
         return;
       }
 
-      console.log("Checking if user is a tenant...");
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('is_tenant_user')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-        toast({
-          title: "Error",
-          description: "Failed to verify tenant status",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (!profile?.is_tenant_user) {
-        console.log("User is not a tenant");
-        toast({
-          title: "Access Denied",
-          description: "This page is only accessible to tenants",
-          variant: "destructive",
-        });
-        navigate("/");
-        return;
-      }
-
       console.log("Fetching tenant data for user:", user.id);
       const { data: tenant, error: tenantError } = await supabase
         .from('tenants')
