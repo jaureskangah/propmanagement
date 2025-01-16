@@ -1,70 +1,84 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { MaintenanceMetrics } from "@/components/maintenance/MaintenanceMetrics";
-import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
+import { useToast } from "@/hooks/use-toast";
+import { Communication } from "@/types/tenant";
+import { NewCommunicationDialog } from "@/components/tenant/communications/NewCommunicationDialog";
+import { CommunicationsContent } from "@/components/tenant/communications/CommunicationsContent";
+import { useNavigate } from "react-router-dom";
 
 const TenantMaintenance = () => {
-  const [metrics, setMetrics] = useState({
-    total: 0,
-    pending: 0,
-    resolved: 0
-  });
+  const [communications, setCommunications] = useState<Communication[]>([]);
+  const [tenantId, setTenantId] = useState<string | null>(null);
+  const [isNewMessageOpen, setIsNewMessageOpen] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchMetrics();
-    setupRealtimeSubscription();
+    fetchTenantId();
   }, []);
 
-  const fetchMetrics = async () => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+  useEffect(() => {
+    if (tenantId) {
+      fetchCommunications(tenantId);
+      setupRealtimeSubscription(tenantId);
+    }
+  }, [tenantId]);
 
-      const { data: tenantData } = await supabase
+  const fetchTenantId = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: tenant } = await supabase
         .from('tenants')
         .select('id')
-        .eq('tenant_profile_id', userData.user.id)
+        .eq('tenant_profile_id', user.id)
         .single();
 
-      if (!tenantData) return;
-
-      const { data: requests } = await supabase
-        .from('maintenance_requests')
-        .select('*')
-        .eq('tenant_id', tenantData.id);
-
-      if (requests) {
-        setMetrics({
-          total: requests.length,
-          pending: requests.filter(r => r.status === 'Pending').length,
-          resolved: requests.filter(r => r.status === 'Resolved').length
-        });
+      if (tenant) {
+        setTenantId(tenant.id);
       }
     } catch (error) {
-      console.error('Error fetching metrics:', error);
+      console.error('Error fetching tenant ID:', error);
+    }
+  };
+
+  const fetchCommunications = async (tid: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .select('*')
+        .eq('tenant_id', tid)
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setCommunications(data || []);
+    } catch (error) {
+      console.error('Error fetching communications:', error);
       toast({
         title: "Error",
-        description: "Failed to load maintenance metrics",
+        description: "Failed to load communications",
         variant: "destructive",
       });
     }
   };
 
-  const setupRealtimeSubscription = () => {
+  const setupRealtimeSubscription = (tid: string) => {
     const channel = supabase
-      .channel('maintenance-updates')
+      .channel('communications')
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'maintenance_requests'
+          table: 'tenant_communications',
+          filter: `tenant_id=eq.${tid}`
         },
         () => {
-          fetchMetrics();
+          fetchCommunications(tid);
         }
       )
       .subscribe();
@@ -74,19 +88,52 @@ const TenantMaintenance = () => {
     };
   };
 
+  const handleCommunicationUpdate = async () => {
+    if (tenantId) {
+      await fetchCommunications(tenantId);
+    }
+  };
+
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Maintenance Requests</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <MaintenanceMetrics
-          total={metrics.total}
-          pending={metrics.pending}
-          resolved={metrics.resolved}
-        />
+    <div className="flex">
+      {/* Main content */}
+      <div className="flex-1 container mx-auto p-6 space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Maintenance</h1>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Maintenance Requests</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CommunicationsContent
+              communications={communications}
+              onToggleStatus={() => {}}
+              onCommunicationSelect={() => {}}
+              onCommunicationUpdate={handleCommunicationUpdate}
+            />
+          </CardContent>
+        </Card>
       </div>
 
-      <TenantMaintenanceView />
+      {/* Right Sidebar */}
+      <div className="w-64 border-l bg-background p-4 space-y-4">
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start"
+          onClick={() => navigate('/tenant/maintenance')}
+        >
+          Maintenance
+        </Button>
+        <Button 
+          variant="ghost" 
+          className="w-full justify-start"
+          onClick={() => navigate('/tenant/communications')}
+        >
+          Communications
+        </Button>
+      </div>
     </div>
   );
 };
