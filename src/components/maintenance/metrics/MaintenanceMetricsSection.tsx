@@ -86,10 +86,9 @@ export const MaintenanceMetricsSection = ({
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-4 sm:mb-6">
       <div className="lg:col-span-2 order-2 lg:order-1">
         <MaintenanceMetrics
-          totalRequests={metrics.totalRequests}
-          pendingRequests={metrics.pendingRequests}
-          resolvedRequests={metrics.resolvedRequests}
-          urgentRequests={metrics.urgentRequests}
+          total={metrics.totalRequests}
+          pending={metrics.pendingRequests}
+          resolved={metrics.resolvedRequests}
         />
       </div>
       <div className="lg:col-span-1 order-1 lg:order-2">
