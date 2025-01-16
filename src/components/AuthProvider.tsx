@@ -23,26 +23,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    // Initial session check
     const checkSession = async () => {
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        setLoading(true);
+        const { data: { session }, error } = await supabase.auth.getSession();
         
-        if (sessionError) {
-          console.error('Error getting session:', sessionError);
+        if (error) {
+          console.error('Error checking session:', error);
+          if (mounted) {
+            setUser(null);
+          }
           return;
         }
 
         if (session?.user && mounted) {
-          console.log('AuthProvider: Valid session found:', session.user.email);
+          console.log('AuthProvider: Valid session found for user:', session.user.email);
           await updateTenantProfile(session.user);
           setUser(session.user);
         } else {
           console.log('AuthProvider: No valid session found');
-          setUser(null);
+          if (mounted) {
+            setUser(null);
+          }
         }
       } catch (error) {
-        console.error('Error checking session:', error);
+        console.error('Error in checkSession:', error);
+        if (mounted) {
+          setUser(null);
+        }
       } finally {
         if (mounted) {
           setLoading(false);
@@ -50,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
+    // Initial session check
     checkSession();
 
     // Listen for auth state changes
@@ -60,32 +69,32 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       try {
         if (event === 'SIGNED_IN' && session?.user) {
+          console.log('AuthProvider: User signed in:', session.user.email);
           await updateTenantProfile(session.user);
           setUser(session.user);
-        } else if (event === 'SIGNED_OUT') {
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          console.log('AuthProvider: User signed out or deleted');
           setUser(null);
-          console.log('AuthProvider: User signed out');
         } else if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('AuthProvider: Token refreshed for user:', session.user.email);
+          setUser(session.user);
+        } else if (event === 'USER_UPDATED' && session?.user) {
+          console.log('AuthProvider: User updated:', session.user.email);
           setUser(session.user);
         }
       } catch (error) {
         console.error('Error in auth state change handler:', error);
+        setUser(null);
       } finally {
-        if (mounted) {
-          setLoading(false);
-        }
+        setLoading(false);
       }
     });
 
-    // Cleanup function
     return () => {
       mounted = false;
       subscription.unsubscribe();
     };
   }, [setUser, setLoading]);
-
-  console.log('AuthProvider: Current user state:', user?.email ?? 'No user');
 
   return (
     <AuthContext.Provider value={{ user, loading }}>
