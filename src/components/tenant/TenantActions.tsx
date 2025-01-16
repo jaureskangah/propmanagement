@@ -7,8 +7,9 @@ interface TenantActionsProps {
 
 export const TenantActions = ({ onAddClick }: TenantActionsProps) => {
   return (
-    <div className="flex justify-end mb-6">
+    <div className="flex justify-end">
       <Button 
+        size="sm"
         className="flex items-center gap-2 transition-transform hover:scale-105 animate-fade-in"
         onClick={onAddClick}
       >
