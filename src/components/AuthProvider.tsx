@@ -32,6 +32,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error('Error checking session:', error);
           if (mounted) {
             setUser(null);
+            // Force sign out on session error to clear any invalid tokens
+            await supabase.auth.signOut();
           }
           return;
         }
@@ -50,6 +52,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error in checkSession:', error);
         if (mounted) {
           setUser(null);
+          // Force sign out on any error to ensure clean state
+          await supabase.auth.signOut();
         }
       } finally {
         if (mounted) {
@@ -72,8 +76,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('AuthProvider: User signed in:', session.user.email);
           await updateTenantProfile(session.user);
           setUser(session.user);
-        } else if (event === 'SIGNED_OUT') {
-          console.log('AuthProvider: User signed out');
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          console.log('AuthProvider: User signed out or deleted');
           setUser(null);
         } else if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('AuthProvider: Token refreshed for user:', session.user.email);
@@ -85,6 +89,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error('Error in auth state change handler:', error);
         setUser(null);
+        // Force sign out on any error
+        await supabase.auth.signOut();
       } finally {
         setLoading(false);
       }
