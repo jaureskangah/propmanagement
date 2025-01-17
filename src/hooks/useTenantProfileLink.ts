@@ -24,7 +24,7 @@ export function useTenantProfileLink() {
           title: "Information",
           description: `Une invitation a déjà été envoyée à ${tenant.email}`,
         });
-        return;
+        return true;
       }
 
       const { error: inviteError } = await supabase
@@ -49,6 +49,7 @@ export function useTenantProfileLink() {
         description: `Une invitation a été envoyée à ${tenant.email}`,
       });
 
+      return true;
     } catch (err) {
       console.error('Erreur lors de l\'envoi de l\'invitation:', err);
       toast({
@@ -67,7 +68,6 @@ export function useTenantProfileLink() {
     try {
       console.log('Tentative de liaison du profil locataire pour:', tenant.email);
       
-      // Vérifier si un profil existe pour cet email
       const { data: profile, error: profileError } = await supabase
         .from("profiles")
         .select("id")
@@ -81,33 +81,42 @@ export function useTenantProfileLink() {
 
       if (!profile) {
         console.log('Aucun profil trouvé, envoi d\'une invitation');
-        await sendInvitation(tenant);
-        throw new Error("Aucun compte trouvé pour cet email. Une invitation a été envoyée au locataire pour créer un compte.");
+        const invitationSent = await sendInvitation(tenant);
+        if (invitationSent) {
+          toast({
+            title: "Information",
+            description: "Une invitation a été envoyée au locataire pour créer un compte.",
+          });
+          return false;
+        }
       }
 
-      console.log('Profil trouvé:', profile);
+      if (profile) {
+        console.log('Profil trouvé:', profile);
 
-      // Mettre à jour le tenant avec l'ID du profil
-      const { error: updateError } = await supabase
-        .from("tenants")
-        .update({ 
-          tenant_profile_id: profile.id,
-          updated_at: new Date().toISOString()
-        })
-        .eq("id", tenant.id);
+        const { error: updateError } = await supabase
+          .from("tenants")
+          .update({ 
+            tenant_profile_id: profile.id,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", tenant.id);
 
-      if (updateError) {
-        console.error('Erreur lors de la mise à jour du tenant:', updateError);
-        throw updateError;
+        if (updateError) {
+          console.error('Erreur lors de la mise à jour du tenant:', updateError);
+          throw updateError;
+        }
+
+        console.log('Profil locataire lié avec succès');
+        toast({
+          title: "Succès",
+          description: "Le profil locataire a été lié avec succès",
+        });
+
+        return true;
       }
 
-      console.log('Profil locataire lié avec succès');
-      toast({
-        title: "Succès",
-        description: "Le profil locataire a été lié avec succès",
-      });
-
-      return true;
+      return false;
     } catch (err: any) {
       console.error('Erreur dans linkProfile:', err);
       setError(err.message);
