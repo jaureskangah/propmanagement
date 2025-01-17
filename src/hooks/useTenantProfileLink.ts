@@ -7,14 +7,45 @@ export function useTenantProfileLink() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const sendInvitation = async (tenant: Tenant) => {
+    try {
+      // Créer une invitation dans la table tenant_invitations
+      const { error: inviteError } = await supabase
+        .from("tenant_invitations")
+        .insert({
+          tenant_id: tenant.id,
+          email: tenant.email,
+          token: crypto.randomUUID(),
+          status: 'pending',
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 jours
+          user_id: (await supabase.auth.getUser()).data.user?.id
+        });
+
+      if (inviteError) throw inviteError;
+
+      toast({
+        title: "Invitation Envoyée",
+        description: `Une invitation a été envoyée à ${tenant.email}`,
+      });
+
+    } catch (err) {
+      console.error('Error sending invitation:', err);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer l'invitation",
+        variant: "destructive",
+      });
+    }
+  };
+
   const linkProfile = async (tenant: Tenant) => {
     setIsLoading(true);
     setError("");
 
     try {
-      console.log('Attempting to link tenant profile for:', tenant.email);
+      console.log('Tentative de liaison du profil locataire pour:', tenant.email);
       
-      // First check if a profile exists for this email
+      // Vérifier si un profil existe pour cet email
       const { data: profiles, error: profileError } = await supabase
         .from("profiles")
         .select("id, email")
@@ -22,24 +53,21 @@ export function useTenantProfileLink() {
         .maybeSingle();
 
       if (profileError) {
-        console.error('Error fetching profile:', profileError);
+        console.error('Erreur lors de la recherche du profil:', profileError);
         throw profileError;
       }
 
       if (!profiles) {
-        const errorMsg = "No profile found for this email. Please make sure the tenant has created an account.";
+        // Si aucun profil n'existe, envoyer une invitation
+        await sendInvitation(tenant);
+        const errorMsg = "Aucun compte trouvé pour cet email. Une invitation a été envoyée au locataire pour créer un compte.";
         console.error(errorMsg);
-        toast({
-          title: "Profile Not Found",
-          description: errorMsg,
-          variant: "destructive",
-        });
         throw new Error(errorMsg);
       }
 
-      console.log('Found profile:', profiles);
+      console.log('Profil trouvé:', profiles);
 
-      // Update the tenant record with the profile ID
+      // Mettre à jour le tenant avec l'ID du profil
       const { error: updateError } = await supabase
         .from("tenants")
         .update({ 
@@ -49,22 +77,22 @@ export function useTenantProfileLink() {
         .eq("id", tenant.id);
 
       if (updateError) {
-        console.error('Error updating tenant:', updateError);
+        console.error('Erreur lors de la mise à jour du tenant:', updateError);
         throw updateError;
       }
 
-      console.log('Successfully linked tenant profile');
+      console.log('Profil locataire lié avec succès');
       toast({
-        title: "Success",
-        description: "Tenant profile has been linked successfully",
+        title: "Succès",
+        description: "Le profil locataire a été lié avec succès",
       });
 
       return true;
     } catch (err: any) {
-      console.error('Error in linkProfile:', err);
+      console.error('Erreur dans linkProfile:', err);
       setError(err.message);
       toast({
-        title: "Error",
+        title: "Erreur",
         description: err.message,
         variant: "destructive",
       });
