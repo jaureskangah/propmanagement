@@ -9,7 +9,24 @@ export function useTenantProfileLink() {
 
   const sendInvitation = async (tenant: Tenant) => {
     try {
-      // Créer une invitation dans la table tenant_invitations
+      console.log('Envoi d\'une invitation à:', tenant.email);
+      
+      const { data: existingInvite } = await supabase
+        .from("tenant_invitations")
+        .select("*")
+        .eq("email", tenant.email)
+        .eq("status", "pending")
+        .maybeSingle();
+
+      if (existingInvite) {
+        console.log('Une invitation existe déjà pour cet email');
+        toast({
+          title: "Information",
+          description: `Une invitation a déjà été envoyée à ${tenant.email}`,
+        });
+        return;
+      }
+
       const { error: inviteError } = await supabase
         .from("tenant_invitations")
         .insert({
@@ -17,24 +34,29 @@ export function useTenantProfileLink() {
           email: tenant.email,
           token: crypto.randomUUID(),
           status: 'pending',
-          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 jours
+          expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
           user_id: (await supabase.auth.getUser()).data.user?.id
         });
 
-      if (inviteError) throw inviteError;
+      if (inviteError) {
+        console.error('Erreur lors de la création de l\'invitation:', inviteError);
+        throw inviteError;
+      }
 
+      console.log('Invitation créée avec succès');
       toast({
         title: "Invitation Envoyée",
         description: `Une invitation a été envoyée à ${tenant.email}`,
       });
 
     } catch (err) {
-      console.error('Error sending invitation:', err);
+      console.error('Erreur lors de l\'envoi de l\'invitation:', err);
       toast({
         title: "Erreur",
         description: "Impossible d'envoyer l'invitation",
         variant: "destructive",
       });
+      throw err;
     }
   };
 
@@ -46,9 +68,9 @@ export function useTenantProfileLink() {
       console.log('Tentative de liaison du profil locataire pour:', tenant.email);
       
       // Vérifier si un profil existe pour cet email
-      const { data: profiles, error: profileError } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from("profiles")
-        .select("id, email")
+        .select("id")
         .eq("email", tenant.email)
         .maybeSingle();
 
@@ -57,21 +79,19 @@ export function useTenantProfileLink() {
         throw profileError;
       }
 
-      if (!profiles) {
-        // Si aucun profil n'existe, envoyer une invitation
+      if (!profile) {
+        console.log('Aucun profil trouvé, envoi d\'une invitation');
         await sendInvitation(tenant);
-        const errorMsg = "Aucun compte trouvé pour cet email. Une invitation a été envoyée au locataire pour créer un compte.";
-        console.error(errorMsg);
-        throw new Error(errorMsg);
+        throw new Error("Aucun compte trouvé pour cet email. Une invitation a été envoyée au locataire pour créer un compte.");
       }
 
-      console.log('Profil trouvé:', profiles);
+      console.log('Profil trouvé:', profile);
 
       // Mettre à jour le tenant avec l'ID du profil
       const { error: updateError } = await supabase
         .from("tenants")
         .update({ 
-          tenant_profile_id: profiles.id,
+          tenant_profile_id: profile.id,
           updated_at: new Date().toISOString()
         })
         .eq("id", tenant.id);
