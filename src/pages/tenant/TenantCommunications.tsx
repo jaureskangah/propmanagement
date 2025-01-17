@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { Communication } from "@/types/tenant";
+import { useAuthSession } from "@/hooks/useAuthSession";
 import { NewCommunicationDialog } from "@/components/tenant/communications/NewCommunicationDialog";
 import { CommunicationsContent } from "@/components/tenant/communications/CommunicationsContent";
 import AppSidebar from "@/components/AppSidebar";
@@ -13,47 +14,70 @@ const TenantCommunications = () => {
   const [communications, setCommunications] = useState<Communication[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [isNewMessageOpen, setIsNewMessageOpen] = useState(false);
+  const { session } = useAuthSession();
   const { toast } = useToast();
+  const [newCommData, setNewCommData] = useState({
+    type: "email",
+    subject: "",
+    content: "",
+    category: "general"
+  });
 
   useEffect(() => {
-    fetchTenantId();
-  }, []);
+    if (session?.user) {
+      fetchTenantId();
+    }
+  }, [session?.user]);
 
   useEffect(() => {
     if (tenantId) {
-      fetchCommunications(tenantId);
-      setupRealtimeSubscription(tenantId);
+      fetchCommunications();
+      setupRealtimeSubscription();
     }
   }, [tenantId]);
 
   const fetchTenantId = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: tenant } = await supabase
+      const { data: tenant, error } = await supabase
         .from('tenants')
         .select('id')
-        .eq('tenant_profile_id', user.id)
+        .eq('tenant_profile_id', session?.user?.id)
         .maybeSingle();
 
+      if (error) throw error;
+
       if (tenant) {
+        console.log("Found tenant ID:", tenant.id);
         setTenantId(tenant.id);
+      } else {
+        console.log("No tenant found for user:", session?.user?.id);
+        toast({
+          title: "Not linked to a tenant profile",
+          description: "Please contact your property manager to link your account.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error('Error fetching tenant ID:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load tenant information",
+        variant: "destructive",
+      });
     }
   };
 
-  const fetchCommunications = async (tid: string) => {
+  const fetchCommunications = async () => {
     try {
       const { data, error } = await supabase
         .from('tenant_communications')
         .select('*')
-        .eq('tenant_id', tid)
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+      
+      console.log("Fetched communications:", data);
       setCommunications(data || []);
     } catch (error) {
       console.error('Error fetching communications:', error);
@@ -65,7 +89,7 @@ const TenantCommunications = () => {
     }
   };
 
-  const setupRealtimeSubscription = (tid: string) => {
+  const setupRealtimeSubscription = () => {
     const channel = supabase
       .channel('communications')
       .on(
@@ -74,10 +98,10 @@ const TenantCommunications = () => {
           event: '*',
           schema: 'public',
           table: 'tenant_communications',
-          filter: `tenant_id=eq.${tid}`
+          filter: `tenant_id=eq.${tenantId}`
         },
         () => {
-          fetchCommunications(tid);
+          fetchCommunications();
         }
       )
       .subscribe();
@@ -87,11 +111,58 @@ const TenantCommunications = () => {
     };
   };
 
-  const handleCommunicationUpdate = async () => {
-    if (tenantId) {
-      await fetchCommunications(tenantId);
+  const handleCreateCommunication = async () => {
+    if (!tenantId) return;
+
+    try {
+      const { error } = await supabase
+        .from('tenant_communications')
+        .insert({
+          tenant_id: tenantId,
+          type: newCommData.type,
+          subject: newCommData.subject,
+          content: newCommData.content,
+          category: newCommData.category,
+          is_from_tenant: true
+        });
+
+      if (error) throw error;
+
+      setIsNewMessageOpen(false);
+      setNewCommData({ type: "email", subject: "", content: "", category: "general" });
+      await fetchCommunications();
+      
+      toast({
+        title: "Success",
+        description: "Message sent successfully",
+      });
+    } catch (error) {
+      console.error('Error creating communication:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send message",
+        variant: "destructive",
+      });
     }
   };
+
+  if (!tenantId) {
+    return (
+      <div className="flex">
+        <AppSidebar isTenant={true} />
+        <div className="flex-1 container mx-auto p-6">
+          <Card>
+            <CardContent className="pt-6">
+              <p className="text-center text-muted-foreground">
+                Your account needs to be linked to a tenant profile.
+                Please contact your property manager.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex">
@@ -117,7 +188,7 @@ const TenantCommunications = () => {
               communications={communications}
               onToggleStatus={() => {}}
               onCommunicationSelect={() => {}}
-              onCommunicationUpdate={handleCommunicationUpdate}
+              onCommunicationUpdate={fetchCommunications}
             />
           </CardContent>
         </Card>
@@ -125,9 +196,9 @@ const TenantCommunications = () => {
         <NewCommunicationDialog
           isOpen={isNewMessageOpen}
           onClose={() => setIsNewMessageOpen(false)}
-          newCommData={{ type: "email", subject: "", content: "", category: "general" }}
-          onDataChange={() => {}}
-          onSubmit={handleCommunicationUpdate}
+          newCommData={newCommData}
+          onDataChange={setNewCommData}
+          onSubmit={handleCreateCommunication}
         />
       </div>
     </div>
