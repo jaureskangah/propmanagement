@@ -3,30 +3,33 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
 
+interface InvitationResult {
+  success: boolean;
+  message: string;
+}
+
 export function useTenantProfileLink() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const sendInvitation = async (tenant: Tenant) => {
+  const checkExistingInvitation = async (email: string): Promise<boolean> => {
+    const { data: existingInvite, error } = await supabase
+      .from("tenant_invitations")
+      .select("*")
+      .eq("email", email)
+      .eq("status", "pending")
+      .maybeSingle();
+
+    if (error) {
+      console.error('Erreur lors de la vérification des invitations:', error);
+      return false;
+    }
+
+    return !!existingInvite;
+  };
+
+  const createInvitation = async (tenant: Tenant): Promise<InvitationResult> => {
     try {
-      console.log('Envoi d\'une invitation à:', tenant.email);
-      
-      const { data: existingInvite } = await supabase
-        .from("tenant_invitations")
-        .select("*")
-        .eq("email", tenant.email)
-        .eq("status", "pending")
-        .maybeSingle();
-
-      if (existingInvite) {
-        console.log('Une invitation existe déjà pour cet email');
-        toast({
-          title: "Information",
-          description: `Une invitation a déjà été envoyée à ${tenant.email}`,
-        });
-        return true;
-      }
-
       const { error: inviteError } = await supabase
         .from("tenant_invitations")
         .insert({
@@ -40,7 +43,47 @@ export function useTenantProfileLink() {
 
       if (inviteError) {
         console.error('Erreur lors de la création de l\'invitation:', inviteError);
-        throw inviteError;
+        return {
+          success: false,
+          message: "Impossible de créer l'invitation"
+        };
+      }
+
+      return {
+        success: true,
+        message: "Invitation créée avec succès"
+      };
+    } catch (err) {
+      console.error('Erreur lors de la création de l\'invitation:', err);
+      return {
+        success: false,
+        message: "Erreur lors de la création de l'invitation"
+      };
+    }
+  };
+
+  const sendInvitation = async (tenant: Tenant): Promise<boolean> => {
+    try {
+      console.log('Envoi d\'une invitation à:', tenant.email);
+      
+      const hasExistingInvite = await checkExistingInvitation(tenant.email);
+      if (hasExistingInvite) {
+        console.log('Une invitation existe déjà pour cet email');
+        toast({
+          title: "Information",
+          description: `Une invitation a déjà été envoyée à ${tenant.email}`,
+        });
+        return true;
+      }
+
+      const invitationResult = await createInvitation(tenant);
+      if (!invitationResult.success) {
+        toast({
+          title: "Erreur",
+          description: invitationResult.message,
+          variant: "destructive",
+        });
+        return false;
       }
 
       console.log('Invitation créée avec succès');
@@ -57,27 +100,48 @@ export function useTenantProfileLink() {
         description: "Impossible d'envoyer l'invitation",
         variant: "destructive",
       });
-      throw err;
+      return false;
     }
   };
 
-  const linkProfile = async (tenant: Tenant) => {
+  const findTenantProfile = async (email: string) => {
+    const { data: profile, error } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (error) {
+      console.error('Erreur lors de la recherche du profil:', error);
+      throw error;
+    }
+
+    return profile;
+  };
+
+  const updateTenantProfile = async (tenantId: string, profileId: string) => {
+    const { error } = await supabase
+      .from("tenants")
+      .update({ 
+        tenant_profile_id: profileId,
+        updated_at: new Date().toISOString()
+      })
+      .eq("id", tenantId);
+
+    if (error) {
+      console.error('Erreur lors de la mise à jour du tenant:', error);
+      throw error;
+    }
+  };
+
+  const linkProfile = async (tenant: Tenant): Promise<boolean> => {
     setIsLoading(true);
     setError("");
 
     try {
       console.log('Tentative de liaison du profil locataire pour:', tenant.email);
       
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("email", tenant.email)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error('Erreur lors de la recherche du profil:', profileError);
-        throw profileError;
-      }
+      const profile = await findTenantProfile(tenant.email);
 
       if (!profile) {
         console.log('Aucun profil trouvé, envoi d\'une invitation');
@@ -87,42 +151,26 @@ export function useTenantProfileLink() {
             title: "Information",
             description: "Une invitation a été envoyée au locataire pour créer un compte.",
           });
-          return false;
         }
+        return false;
       }
 
-      if (profile) {
-        console.log('Profil trouvé:', profile);
+      console.log('Profil trouvé, mise à jour du tenant');
+      await updateTenantProfile(tenant.id, profile.id);
+      
+      console.log('Profil locataire lié avec succès');
+      toast({
+        title: "Succès",
+        description: "Le profil locataire a été lié avec succès",
+      });
 
-        const { error: updateError } = await supabase
-          .from("tenants")
-          .update({ 
-            tenant_profile_id: profile.id,
-            updated_at: new Date().toISOString()
-          })
-          .eq("id", tenant.id);
-
-        if (updateError) {
-          console.error('Erreur lors de la mise à jour du tenant:', updateError);
-          throw updateError;
-        }
-
-        console.log('Profil locataire lié avec succès');
-        toast({
-          title: "Succès",
-          description: "Le profil locataire a été lié avec succès",
-        });
-
-        return true;
-      }
-
-      return false;
+      return true;
     } catch (err: any) {
       console.error('Erreur dans linkProfile:', err);
       setError(err.message);
       toast({
         title: "Erreur",
-        description: err.message,
+        description: "Une erreur est survenue lors de la liaison du profil",
         variant: "destructive",
       });
       return false;
