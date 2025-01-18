@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
+
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -7,10 +8,9 @@ const corsHeaders = {
 };
 
 interface EmailRequest {
-  tenantId: string;
+  to: string[];
   subject: string;
   content: string;
-  category: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -22,35 +22,17 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
     if (!RESEND_API_KEY) {
       console.error("Missing RESEND_API_KEY");
-      throw new Error("Missing RESEND_API_KEY");
+      throw new Error("Configuration de l'API d'envoi d'email manquante");
     }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
 
     const emailRequest: EmailRequest = await req.json();
-    console.log("Email request received:", emailRequest);
+    console.log("Email request received:", {
+      to: emailRequest.to,
+      subject: emailRequest.subject
+    });
 
-    // Get tenant email
-    const { data: tenant, error: tenantError } = await supabase
-      .from("tenants")
-      .select("email, name")
-      .eq("id", emailRequest.tenantId)
-      .single();
-
-    if (tenantError || !tenant) {
-      console.error("Error fetching tenant:", tenantError);
-      throw new Error("Tenant not found");
-    }
-
-    console.log("Sending email to tenant:", tenant.email);
-
-    // Send email using Resend
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -59,13 +41,9 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: "Property Management <onboarding@resend.dev>",
-        to: [tenant.email],
+        to: emailRequest.to,
         subject: emailRequest.subject,
-        html: `<div>
-          <p>Hello ${tenant.name},</p>
-          <p>${emailRequest.content}</p>
-          <p>Best regards,<br/>Your Property Management Team</p>
-        </div>`,
+        html: emailRequest.content,
       }),
     });
 
@@ -74,11 +52,10 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (!res.ok) {
       console.error("Error from Resend API:", resendResponse);
-      throw new Error(`Failed to send email: ${JSON.stringify(resendResponse)}`);
+      throw new Error(`Échec de l'envoi d'email: ${JSON.stringify(resendResponse)}`);
     }
 
     console.log("Email sent successfully");
-
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
