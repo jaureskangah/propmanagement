@@ -37,7 +37,7 @@ const handler = async (req: Request): Promise<Response> => {
     const isTestMode = true; // À changer une fois le domaine vérifié
     const fromEmail = isTestMode ? 
       "onboarding@resend.dev" : 
-      "notifications@your-verified-domain.com"; // Remplacer par votre domaine vérifié
+      "notifications@propmanagement.app"; // Votre domaine en attente de vérification
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
