@@ -14,57 +14,58 @@ export function useTenantProfileLink() {
 
   const checkExistingInvitation = async (email: string): Promise<boolean> => {
     try {
-      console.log('Vérification des invitations existantes pour:', email);
+      console.log('Checking existing invitations for:', email);
       const { data: existingInvites, error } = await supabase
         .from("tenant_invitations")
         .select("*")
         .eq("email", email)
-        .eq("status", "pending");
+        .eq("status", "pending")
+        .maybeSingle();
 
       if (error) {
-        console.error('Erreur lors de la vérification des invitations:', error);
+        console.error('Error checking invitations:', error);
         return false;
       }
 
-      return existingInvites && existingInvites.length > 0;
+      return !!existingInvites;
     } catch (err) {
-      console.error('Erreur lors de la vérification des invitations:', err);
+      console.error('Error in checkExistingInvitation:', err);
       return false;
     }
   };
 
-  const sendInvitationEmail = async (tenant: Tenant) => {
+  const sendInvitationEmail = async (tenant: Tenant): Promise<boolean> => {
     try {
-      console.log('Envoi de l\'email d\'invitation à:', tenant.email);
+      console.log('Sending invitation email to:', tenant.email);
       const response = await supabase.functions.invoke('send-tenant-email', {
         body: {
           to: [tenant.email],
-          subject: "Invitation à rejoindre le portail locataire",
+          subject: "Invitation to join tenant portal",
           content: `
-            <p>Bonjour ${tenant.name},</p>
-            <p>Vous avez été invité(e) à rejoindre le portail locataire. Pour créer votre compte, veuillez cliquer sur le lien ci-dessous :</p>
-            <p><a href="${window.location.origin}/signup">Créer mon compte</a></p>
-            <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités du portail locataire.</p>
+            <p>Hello ${tenant.name},</p>
+            <p>You have been invited to join the tenant portal. To create your account, please click the link below:</p>
+            <p><a href="${window.location.origin}/signup">Create my account</a></p>
+            <p>Once your account is created, you will be able to access all tenant portal features.</p>
           `
         }
       });
 
       if (response.error) {
-        console.error('Erreur lors de l\'envoi de l\'email:', response.error);
+        console.error('Error sending invitation email:', response.error);
         throw new Error(response.error.message);
       }
 
-      console.log('Email d\'invitation envoyé avec succès');
+      console.log('Invitation email sent successfully');
       return true;
     } catch (err) {
-      console.error('Erreur lors de l\'envoi de l\'email:', err);
+      console.error('Error in sendInvitationEmail:', err);
       return false;
     }
   };
 
   const createInvitation = async (tenant: Tenant): Promise<InvitationResult> => {
     try {
-      console.log('Création d\'une invitation pour:', tenant.email);
+      console.log('Creating invitation for:', tenant.email);
       const { error: inviteError } = await supabase
         .from("tenant_invitations")
         .insert({
@@ -77,38 +78,38 @@ export function useTenantProfileLink() {
         });
 
       if (inviteError) {
-        console.error('Erreur lors de la création de l\'invitation:', inviteError);
+        console.error('Error creating invitation:', inviteError);
         return {
           success: false,
-          message: "Impossible de créer l'invitation"
+          message: "Unable to create invitation"
         };
       }
 
-      // Envoyer l'email d'invitation
+      // Send invitation email
       const emailSent = await sendInvitationEmail(tenant);
       if (!emailSent) {
         return {
           success: false,
-          message: "L'invitation a été créée mais l'email n'a pas pu être envoyé"
+          message: "Invitation created but email could not be sent"
         };
       }
 
       return {
         success: true,
-        message: "Invitation créée et email envoyé avec succès"
+        message: "Invitation created and email sent successfully"
       };
     } catch (err) {
-      console.error('Erreur lors de la création de l\'invitation:', err);
+      console.error('Error in createInvitation:', err);
       return {
         success: false,
-        message: "Erreur lors de la création de l'invitation"
+        message: "Error creating invitation"
       };
     }
   };
 
   const findTenantProfile = async (email: string) => {
     try {
-      console.log('Recherche du profil pour:', email);
+      console.log('Looking up profile for:', email);
       const { data: profile, error } = await supabase
         .from("profiles")
         .select("id")
@@ -116,20 +117,20 @@ export function useTenantProfileLink() {
         .maybeSingle();
 
       if (error) {
-        console.error('Erreur lors de la recherche du profil:', error);
+        console.error('Error looking up profile:', error);
         return null;
       }
 
       return profile;
     } catch (err) {
-      console.error('Erreur lors de la recherche du profil:', err);
+      console.error('Error in findTenantProfile:', err);
       return null;
     }
   };
 
   const updateTenantProfile = async (tenantId: string, profileId: string) => {
     try {
-      console.log('Mise à jour du profil tenant:', { tenantId, profileId });
+      console.log('Updating tenant profile:', { tenantId, profileId });
       const { error } = await supabase
         .from("tenants")
         .update({ 
@@ -139,11 +140,11 @@ export function useTenantProfileLink() {
         .eq("id", tenantId);
 
       if (error) {
-        console.error('Erreur lors de la mise à jour du tenant:', error);
+        console.error('Error updating tenant:', error);
         throw error;
       }
 
-      // Envoyer un email de confirmation
+      // Send confirmation email
       const { data: tenant } = await supabase
         .from("tenants")
         .select("*")
@@ -154,11 +155,11 @@ export function useTenantProfileLink() {
         await supabase.functions.invoke('send-tenant-email', {
           body: {
             to: [tenant.email],
-            subject: "Profil locataire lié avec succès",
+            subject: "Tenant profile linked successfully",
             content: `
-              <p>Bonjour ${tenant.name},</p>
-              <p>Votre profil a été lié avec succès au portail locataire. Vous pouvez maintenant accéder à toutes les fonctionnalités.</p>
-              <p>Connectez-vous à votre compte pour commencer.</p>
+              <p>Hello ${tenant.name},</p>
+              <p>Your profile has been successfully linked to the tenant portal. You can now access all features.</p>
+              <p>Log in to your account to get started.</p>
             `
           }
         });
@@ -166,62 +167,66 @@ export function useTenantProfileLink() {
 
       return true;
     } catch (err) {
-      console.error('Erreur lors de la mise à jour du profil tenant:', err);
+      console.error('Error in updateTenantProfile:', err);
       throw err;
     }
   };
 
   const linkProfile = async (tenant: Tenant): Promise<boolean> => {
+    if (isLoading) return false;
+    
     setIsLoading(true);
     setError("");
 
     try {
-      console.log('Tentative de liaison du profil locataire pour:', tenant.email);
+      console.log('Attempting to link tenant profile for:', tenant.email);
       
       const profile = await findTenantProfile(tenant.email);
 
       if (!profile) {
-        console.log('Aucun profil trouvé, envoi d\'une invitation');
+        console.log('No profile found, sending invitation');
         const hasExistingInvite = await checkExistingInvitation(tenant.email);
         
         if (hasExistingInvite) {
           toast({
             title: "Information",
-            description: "Une invitation a déjà été envoyée à cet email. Le locataire doit créer son compte pour finaliser la liaison.",
+            description: "An invitation has already been sent to this email. The tenant needs to create their account to complete the linking process.",
           });
+          setIsLoading(false);
           return false;
         }
 
         const invitationResult = await createInvitation(tenant);
         toast({
-          title: invitationResult.success ? "Invitation envoyée" : "Erreur",
+          title: invitationResult.success ? "Invitation Sent" : "Error",
           description: invitationResult.message,
           variant: invitationResult.success ? "default" : "destructive",
         });
+        setIsLoading(false);
         return invitationResult.success;
       }
 
-      console.log('Profil trouvé, mise à jour du tenant');
+      console.log('Profile found, updating tenant');
       await updateTenantProfile(tenant.id, profile.id);
       
-      console.log('Profil locataire lié avec succès');
+      console.log('Tenant profile linked successfully');
       toast({
-        title: "Succès",
-        description: "Le profil locataire a été lié avec succès",
+        title: "Success",
+        description: "Tenant profile has been linked successfully",
       });
 
+      setIsLoading(false);
       return true;
     } catch (err: any) {
-      console.error('Erreur dans linkProfile:', err);
+      console.error('Error in linkProfile:', err);
       setError(err.message);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la liaison du profil",
+        title: "Error",
+        description: "An error occurred while linking the profile",
         variant: "destructive",
       });
-      return false;
-    } finally {
       setIsLoading(false);
+      return false;
     }
   };
 

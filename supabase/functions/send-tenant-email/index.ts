@@ -14,7 +14,7 @@ interface EmailRequest {
 }
 
 const handler = async (req: Request): Promise<Response> => {
-  console.log("Handling email request");
+  console.log('Handling email request');
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -24,7 +24,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     if (!RESEND_API_KEY) {
       console.error("Missing RESEND_API_KEY");
-      throw new Error("Configuration de l'API d'envoi d'email manquante");
+      throw new Error("Email sending configuration missing");
     }
 
     const emailRequest: EmailRequest = await req.json();
@@ -52,7 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (!res.ok) {
       console.error("Error from Resend API:", resendResponse);
-      throw new Error(`Échec de l'envoi d'email: ${JSON.stringify(resendResponse)}`);
+      throw new Error(`Failed to send email: ${JSON.stringify(resendResponse)}`);
     }
 
     console.log("Email sent successfully");
