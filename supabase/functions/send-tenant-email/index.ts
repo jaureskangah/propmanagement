@@ -33,6 +33,12 @@ const handler = async (req: Request): Promise<Response> => {
       subject: emailRequest.subject
     });
 
+    // Vérifier si nous sommes en mode test (pas de domaine vérifié)
+    const isTestMode = true; // À changer une fois le domaine vérifié
+    const fromEmail = isTestMode ? 
+      "onboarding@resend.dev" : 
+      "notifications@your-verified-domain.com"; // Remplacer par votre domaine vérifié
+
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -40,8 +46,8 @@ const handler = async (req: Request): Promise<Response> => {
         Authorization: `Bearer ${RESEND_API_KEY}`,
       },
       body: JSON.stringify({
-        from: "Property Management <onboarding@resend.dev>",
-        to: emailRequest.to,
+        from: `Property Management <${fromEmail}>`,
+        to: isTestMode ? ["jaureskangah2016@gmail.com"] : emailRequest.to, // En mode test, envoyer uniquement à votre email
         subject: emailRequest.subject,
         html: emailRequest.content,
       }),
