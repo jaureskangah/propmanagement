@@ -20,6 +20,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { user, setUser, loading, setLoading } = useAuthSession();
   useRealtimeNotifications();
 
+  const linkTenantProfile = async (user: User) => {
+    try {
+      console.log('Checking for existing tenant with email:', user.email);
+      const { data: tenant, error: tenantError } = await supabase
+        .from('tenants')
+        .select('*')
+        .eq('email', user.email)
+        .maybeSingle();
+
+      if (tenantError) {
+        console.error('Error checking tenant:', tenantError);
+        return;
+      }
+
+      if (tenant && !tenant.tenant_profile_id) {
+        console.log('Found tenant without profile link, updating...', tenant.id);
+        const { error: updateError } = await supabase
+          .from('tenants')
+          .update({ tenant_profile_id: user.id })
+          .eq('id', tenant.id);
+
+        if (updateError) {
+          console.error('Error updating tenant:', updateError);
+        } else {
+          console.log('Successfully linked tenant profile');
+        }
+      }
+    } catch (error) {
+      console.error('Error in linkTenantProfile:', error);
+    }
+  };
+
   useEffect(() => {
     let mounted = true;
 
@@ -32,7 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error('Error checking session:', error);
           if (mounted) {
             setUser(null);
-            // Clear local storage and force sign out on session error
             localStorage.removeItem('supabase.auth.token');
             await supabase.auth.signOut();
           }
@@ -42,6 +73,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (session?.user && mounted) {
           console.log('AuthProvider: Valid session found for user:', session.user.email);
           await updateTenantProfile(session.user);
+          
+          // Ajout de la vérification et liaison automatique
+          if (session.user.user_metadata.is_tenant_user) {
+            await linkTenantProfile(session.user);
+          }
+          
           setUser(session.user);
         } else {
           console.log('AuthProvider: No valid session found');
@@ -53,7 +90,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error in checkSession:', error);
         if (mounted) {
           setUser(null);
-          // Clear local storage and force sign out on any error
           localStorage.removeItem('supabase.auth.token');
           await supabase.auth.signOut();
         }
@@ -64,10 +100,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     };
 
-    // Initial session check
     checkSession();
 
-    // Listen for auth state changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('AuthProvider: Auth state changed:', event, session?.user?.email ?? 'No user');
       
@@ -77,11 +111,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_IN' && session?.user) {
           console.log('AuthProvider: User signed in:', session.user.email);
           await updateTenantProfile(session.user);
+          
+          // Ajout de la vérification et liaison automatique lors de la connexion
+          if (session.user.user_metadata.is_tenant_user) {
+            await linkTenantProfile(session.user);
+          }
+          
           setUser(session.user);
         } else if (event === 'SIGNED_OUT') {
           console.log('AuthProvider: User signed out');
           setUser(null);
-          // Clear local storage on sign out
           localStorage.removeItem('supabase.auth.token');
         } else if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('AuthProvider: Token refreshed for user:', session.user.email);
@@ -93,7 +132,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error('Error in auth state change handler:', error);
         setUser(null);
-        // Clear local storage and force sign out on any error
         localStorage.removeItem('supabase.auth.token');
         await supabase.auth.signOut();
       } finally {
