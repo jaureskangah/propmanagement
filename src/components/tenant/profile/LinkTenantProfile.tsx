@@ -1,38 +1,44 @@
-import { Button } from "@/components/ui/button";
-import { useTenantProfileLink } from "@/hooks/useTenantProfileLink";
-import type { Tenant } from "@/types/tenant";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { useTenantProfileLink } from '@/hooks/useTenantProfileLink';
+import { useAuth } from '@/components/AuthProvider';
+import type { Tenant } from '@/types/tenant';
 
-interface LinkTenantProfileProps {
-  tenant: Tenant;
-  onProfileLinked: (success: boolean, message: string) => void;
-}
-
-export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfileProps) {
-  const { isLoading, linkProfile } = useTenantProfileLink();
+export const LinkTenantProfile = ({ tenant }: { tenant: Tenant }) => {
+  const [isLinking, setIsLinking] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { linkTenantProfile } = useTenantProfileLink();
 
   const handleLinkProfile = async () => {
-    const result = await linkProfile(tenant);
-    onProfileLinked(result.success, result.message);
+    if (!user) return;
     
-    if (result.success) {
-      // Force a page reload after successful linking
-      window.location.reload();
+    setIsLinking(true);
+    try {
+      await linkTenantProfile(user);
+      toast({
+        title: "Success",
+        description: "Profile linked successfully",
+      });
+    } catch (error) {
+      console.error('Error linking profile:', error);
+      toast({
+        title: "Error",
+        description: "Failed to link profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLinking(false);
     }
   };
 
   return (
-    <div className="flex items-center gap-4">
-      <Button 
-        onClick={handleLinkProfile} 
-        disabled={isLoading || !!tenant.tenant_profile_id}
-        variant={tenant.tenant_profile_id ? "secondary" : "default"}
-      >
-        {tenant.tenant_profile_id 
-          ? "Profile Linked" 
-          : isLoading 
-            ? "Linking..." 
-            : "Link Tenant Profile"}
-      </Button>
-    </div>
+    <Button 
+      onClick={handleLinkProfile} 
+      disabled={isLinking}
+    >
+      {isLinking ? 'Linking...' : 'Link Profile'}
+    </Button>
   );
-}
+};
