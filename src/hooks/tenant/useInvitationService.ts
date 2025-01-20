@@ -18,7 +18,7 @@ export function useInvitationService() {
           content: `
             <p>Hello ${tenant.name},</p>
             <p>You have been invited to join the tenant portal. To create your account, please click the link below:</p>
-            <p><a href="${window.location.origin}/signup">Create my account</a></p>
+            <p><a href="https://propmanagement.app/signup">Create my account</a></p>
             <p>Once your account is created, you will be able to access all tenant portal features.</p>
           `
         }
@@ -40,6 +40,47 @@ export function useInvitationService() {
   const createInvitation = async (tenant: Tenant): Promise<InvitationResult> => {
     try {
       console.log('Creating invitation for:', tenant.email);
+      
+      // Vérifier si le profil existe déjà
+      const { data: existingProfile, error: profileError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("email", tenant.email)
+        .single();
+
+      if (profileError && profileError.code !== 'PGRST116') {
+        console.error('Error checking existing profile:', profileError);
+        return {
+          success: false,
+          message: "Error checking profile status"
+        };
+      }
+
+      if (existingProfile) {
+        console.log('Profile found, updating tenant directly');
+        const { error: updateError } = await supabase
+          .from("tenants")
+          .update({ 
+            tenant_profile_id: existingProfile.id,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", tenant.id);
+
+        if (updateError) {
+          console.error('Error updating tenant:', updateError);
+          return {
+            success: false,
+            message: "Failed to link existing profile"
+          };
+        }
+
+        return {
+          success: true,
+          message: "Profile successfully linked"
+        };
+      }
+
+      // Si pas de profil existant, créer une invitation
       const { error: inviteError } = await supabase
         .from("tenant_invitations")
         .insert({

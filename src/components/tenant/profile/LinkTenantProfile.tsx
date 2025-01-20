@@ -4,15 +4,20 @@ import type { Tenant } from "@/types/tenant";
 
 interface LinkTenantProfileProps {
   tenant: Tenant;
-  onProfileLinked: () => void;
+  onProfileLinked: (success: boolean, message: string) => void;
 }
 
 export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfileProps) {
   const { isLoading, linkProfile } = useTenantProfileLink();
 
   const handleLinkProfile = async () => {
-    await linkProfile(tenant);
-    onProfileLinked();
+    const result = await linkProfile(tenant);
+    onProfileLinked(result.success, result.message);
+    
+    if (result.success) {
+      // Forcer un rechargement de la page après une liaison réussie
+      window.location.reload();
+    }
   };
 
   return (
