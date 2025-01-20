@@ -33,11 +33,8 @@ const handler = async (req: Request): Promise<Response> => {
       subject: emailRequest.subject
     });
 
-    // Vérifier si nous sommes en mode test (pas de domaine vérifié)
-    const isTestMode = true; // À changer une fois le domaine vérifié
-    const fromEmail = isTestMode ? 
-      "onboarding@resend.dev" : 
-      "notifications@propmanagement.app"; // Votre domaine en attente de vérification
+    // Le domaine est maintenant vérifié, nous pouvons envoyer à tous les destinataires
+    const fromEmail = "notifications@propmanagement.app";
 
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -47,7 +44,7 @@ const handler = async (req: Request): Promise<Response> => {
       },
       body: JSON.stringify({
         from: `Property Management <${fromEmail}>`,
-        to: isTestMode ? ["jaureskangah2016@gmail.com"] : emailRequest.to, // En mode test, envoyer uniquement à votre email
+        to: emailRequest.to,
         subject: emailRequest.subject,
         html: emailRequest.content,
       }),
