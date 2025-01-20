@@ -32,7 +32,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error('Error checking session:', error);
           if (mounted) {
             setUser(null);
-            // Force sign out on session error to clear any invalid tokens
+            // Clear local storage and force sign out on session error
+            localStorage.removeItem('supabase.auth.token');
             await supabase.auth.signOut();
           }
           return;
@@ -52,7 +53,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error in checkSession:', error);
         if (mounted) {
           setUser(null);
-          // Force sign out on any error to ensure clean state
+          // Clear local storage and force sign out on any error
+          localStorage.removeItem('supabase.auth.token');
           await supabase.auth.signOut();
         }
       } finally {
@@ -76,9 +78,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.log('AuthProvider: User signed in:', session.user.email);
           await updateTenantProfile(session.user);
           setUser(session.user);
-        } else if (event === 'SIGNED_OUT') {
-          console.log('AuthProvider: User signed out');
+        } else if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          console.log('AuthProvider: User signed out or deleted');
           setUser(null);
+          // Clear local storage on sign out
+          localStorage.removeItem('supabase.auth.token');
         } else if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('AuthProvider: Token refreshed for user:', session.user.email);
           setUser(session.user);
@@ -89,7 +93,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error('Error in auth state change handler:', error);
         setUser(null);
-        // Force sign out on any error
+        // Clear local storage and force sign out on any error
+        localStorage.removeItem('supabase.auth.token');
         await supabase.auth.signOut();
       } finally {
         setLoading(false);
