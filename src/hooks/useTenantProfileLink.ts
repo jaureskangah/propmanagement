@@ -6,7 +6,7 @@ import { useProfileLookup } from "./tenant/useProfileLookup";
 import { useInvitationService } from "./tenant/useInvitationService";
 import { useProfileUpdate } from "./tenant/useProfileUpdate";
 
-interface LinkProfileResult {
+export interface LinkProfileResult {
   success: boolean;
   message: string;
 }

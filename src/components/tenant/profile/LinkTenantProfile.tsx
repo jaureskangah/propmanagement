@@ -15,7 +15,7 @@ export function LinkTenantProfile({ tenant, onProfileLinked }: LinkTenantProfile
     onProfileLinked(result.success, result.message);
     
     if (result.success) {
-      // Forcer un rechargement de la page après une liaison réussie
+      // Force a page reload after successful linking
       window.location.reload();
     }
   };
