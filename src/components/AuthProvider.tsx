@@ -39,13 +39,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { error: updateError } = await supabase
           .from('tenants')
           .update({ tenant_profile_id: user.id })
-          .eq('id', tenant.id);
+          .eq('id', tenant.id)
+          .eq('email', user.email); // Added email check for RLS policy
 
         if (updateError) {
           console.error('Error updating tenant:', updateError);
         } else {
           console.log('Successfully linked tenant profile');
         }
+      } else if (!tenant) {
+        console.log('No tenant found for email:', user.email);
+      } else {
+        console.log('Tenant already linked to profile:', tenant.tenant_profile_id);
       }
     } catch (error) {
       console.error('Error in linkTenantProfile:', error);
