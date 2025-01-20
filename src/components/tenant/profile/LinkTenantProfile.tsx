@@ -5,7 +5,12 @@ import { useTenantProfileLink } from '@/hooks/useTenantProfileLink';
 import { useAuth } from '@/components/AuthProvider';
 import type { Tenant } from '@/types/tenant';
 
-export const LinkTenantProfile = ({ tenant }: { tenant: Tenant }) => {
+interface LinkTenantProfileProps {
+  tenant: Tenant;
+  onProfileLinked?: (success: boolean, message: string) => void;
+}
+
+export const LinkTenantProfile = ({ tenant, onProfileLinked }: LinkTenantProfileProps) => {
   const [isLinking, setIsLinking] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -21,6 +26,7 @@ export const LinkTenantProfile = ({ tenant }: { tenant: Tenant }) => {
         title: "Success",
         description: "Profile linked successfully",
       });
+      onProfileLinked?.(true, "Profile linked successfully");
     } catch (error) {
       console.error('Error linking profile:', error);
       toast({
@@ -28,6 +34,7 @@ export const LinkTenantProfile = ({ tenant }: { tenant: Tenant }) => {
         description: "Failed to link profile. Please try again.",
         variant: "destructive",
       });
+      onProfileLinked?.(false, "Failed to link profile. Please try again.");
     } finally {
       setIsLinking(false);
     }
