@@ -14,7 +14,7 @@ function App() {
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
       <AuthProvider>
-        <Router>
+        <Router basename="/">
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/dashboard" element={<Dashboard />} />
