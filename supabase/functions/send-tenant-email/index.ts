@@ -14,7 +14,6 @@ const corsHeaders = {
 const handler = async (req: Request): Promise<Response> => {
   console.log("Starting send-tenant-email function");
   
-  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -62,6 +61,23 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
       `,
     });
+
+    // Create communication record with status 'unread'
+    const { error: dbError } = await supabase
+      .from('tenant_communications')
+      .insert({
+        tenant_id: tenantId,
+        type: 'email',
+        subject: subject,
+        content: content,
+        category: category,
+        status: 'unread' // Changed from 'sent' to 'unread'
+      });
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+      throw dbError;
+    }
 
     console.log("Email sent successfully:", emailResponse);
 

@@ -4,6 +4,9 @@ import { Mail, MessageCircle, Bell, MessageSquare } from "lucide-react";
 import { Communication } from "@/types/tenant";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
+import { useAuthSession } from "@/hooks/useAuthSession";
+import { useEffect } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface CommunicationDetailsDialogProps {
   communication: Communication | null;
@@ -14,6 +17,29 @@ export const CommunicationDetailsDialog = ({
   communication,
   onClose,
 }: CommunicationDetailsDialogProps) => {
+  const { session } = useAuthSession();
+
+  useEffect(() => {
+    const updateMessageStatus = async () => {
+      if (communication && session?.user && !communication.is_from_tenant) {
+        try {
+          const { error } = await supabase
+            .from('tenant_communications')
+            .update({ status: 'read' })
+            .eq('id', communication.id);
+
+          if (error) {
+            console.error('Error updating message status:', error);
+          }
+        } catch (error) {
+          console.error('Error in updateMessageStatus:', error);
+        }
+      }
+    };
+
+    updateMessageStatus();
+  }, [communication, session?.user]);
+
   const getTypeIcon = (type: string) => {
     switch (type.toLowerCase()) {
       case 'email':
@@ -32,9 +58,11 @@ export const CommunicationDetailsDialog = ({
     
     switch (status.toLowerCase()) {
       case 'read':
-        return <Badge variant="secondary">Read</Badge>;
+        return <Badge variant="secondary">Lu</Badge>;
       case 'unread':
-        return <Badge variant="default">Unread</Badge>;
+        return <Badge variant="default">Non lu</Badge>;
+      case 'sent':
+        return <Badge variant="default">Envoyé</Badge>;
       default:
         return null;
     }
@@ -64,12 +92,12 @@ export const CommunicationDetailsDialog = ({
               </div>
               <div className="bg-muted/50 p-4 rounded-lg">
                 <p className="text-sm whitespace-pre-wrap">
-                  {communication.content || "No content available"}
+                  {communication.content || "Aucun contenu disponible"}
                 </p>
               </div>
               {communication.attachments && communication.attachments.length > 0 && (
                 <div className="mt-4">
-                  <h4 className="text-sm font-medium mb-2">Attachments</h4>
+                  <h4 className="text-sm font-medium mb-2">Pièces jointes</h4>
                   <div className="flex gap-2">
                     {communication.attachments.map((attachment, index) => (
                       <Badge key={index} variant="secondary">
