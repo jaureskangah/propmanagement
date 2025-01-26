@@ -21,7 +21,7 @@ export const CommunicationDetailsDialog = ({
 
   useEffect(() => {
     const updateMessageStatus = async () => {
-      if (communication && session?.user && !communication.is_from_tenant) {
+      if (communication && session?.user) {
         try {
           const { error } = await supabase
             .from('tenant_communications')

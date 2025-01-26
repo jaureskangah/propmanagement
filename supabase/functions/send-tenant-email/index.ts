@@ -46,6 +46,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Found tenant:", tenant);
 
+    // Send email
     const emailResponse = await resend.emails.send({
       from: "Property Management <onboarding@resend.dev>",
       to: [tenant.email],
@@ -56,14 +57,16 @@ const handler = async (req: Request): Promise<Response> => {
           <p style="color: #666; line-height: 1.6;">${content}</p>
           <hr style="border: 1px solid #eee; margin: 20px 0;" />
           <p style="color: #888; font-size: 0.9em;">
-            Ce message vous a été envoyé via notre système de gestion immobilière.
+            This message was sent via our property management system.
           </p>
         </div>
       `,
     });
 
-    // Create communication record with status 'unread'
-    const { error: dbError } = await supabase
+    console.log("Email sent successfully:", emailResponse);
+
+    // Create only one communication record with status 'unread'
+    const { data: commData, error: commError } = await supabase
       .from('tenant_communications')
       .insert({
         tenant_id: tenantId,
@@ -71,17 +74,20 @@ const handler = async (req: Request): Promise<Response> => {
         subject: subject,
         content: content,
         category: category,
-        status: 'unread' // Changed from 'sent' to 'unread'
-      });
+        status: 'unread',
+        is_from_tenant: false
+      })
+      .select()
+      .single();
 
-    if (dbError) {
-      console.error("Database error:", dbError);
-      throw dbError;
+    if (commError) {
+      console.error("Database error:", commError);
+      throw commError;
     }
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("Communication record created:", commData);
 
-    return new Response(JSON.stringify(emailResponse), {
+    return new Response(JSON.stringify({ emailResponse, commData }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
