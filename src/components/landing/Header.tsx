@@ -42,46 +42,37 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      // First check if we have a valid session
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      console.log("Starting sign out process");
       
-      if (sessionError) {
-        console.error("Error checking session:", sessionError);
-        toast.error("Error during sign out. Please try again.");
-        return;
-      }
-
-      // If no session exists, just navigate to home
-      if (!session) {
-        console.log("No active session found, proceeding with navigation");
-        navigate("/");
-        return;
-      }
-
-      // Attempt to sign out
-      const { error } = await supabase.auth.signOut({
-        scope: 'local'  // Changed from 'global' to 'local'
-      });
+      // First clear any existing auth data from localStorage
+      localStorage.removeItem('supabase.auth.token');
+      localStorage.removeItem('sb-jhjhzwbvmkurwfohjxlu-auth-token');
       
-      if (error) {
-        console.error("Error during sign out:", error);
-        if (error.message.includes("session_not_found")) {
-          // If session not found, just clear local storage and navigate
-          localStorage.removeItem('supabase.auth.token');
-          navigate("/");
-          return;
+      // Try to get the current session
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session) {
+        console.log("Active session found, attempting to sign out");
+        const { error } = await supabase.auth.signOut();
+        
+        if (error) {
+          console.error("Error during sign out:", error);
+          // Even if there's an error, we'll proceed with navigation
+          // since we've already cleared localStorage
         }
-        toast.error("Error signing out. Please try again.");
-        return;
+      } else {
+        console.log("No active session found");
       }
 
-      console.log("Sign out successful");
+      // Always navigate home and show success message
+      console.log("Sign out process complete, navigating home");
       toast.success("Successfully signed out");
       navigate("/");
       
     } catch (error) {
       console.error("Unexpected error during sign out:", error);
-      toast.error("An unexpected error occurred. Please try again.");
+      // Even if there's an error, navigate home since we've cleared localStorage
+      navigate("/");
     }
   };
 
