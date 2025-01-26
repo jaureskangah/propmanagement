@@ -1,20 +1,18 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import { Resend } from "npm:resend@2.0.0";
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
+const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const supabaseUrl = Deno.env.get("SUPABASE_URL");
+const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface EmailRequest {
-  to: string[];
-  subject: string;
-  content: string;
-}
-
 const handler = async (req: Request): Promise<Response> => {
-  console.log('Handling email request');
+  console.log("Starting send-tenant-email function");
   
   // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
@@ -22,54 +20,63 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    if (!RESEND_API_KEY) {
-      console.error("Missing RESEND_API_KEY");
-      throw new Error("Email sending configuration missing");
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Missing Supabase configuration");
     }
 
-    const emailRequest: EmailRequest = await req.json();
-    console.log("Email request received:", {
-      to: emailRequest.to,
-      subject: emailRequest.subject
-    });
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const { tenantId, subject, content, category } = await req.json();
+    
+    console.log("Request data:", { tenantId, subject, content, category });
 
-    // Le domaine est maintenant vérifié, nous pouvons envoyer à tous les destinataires
-    const fromEmail = "notifications@propmanagement.app";
-
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: `Property Management <${fromEmail}>`,
-        to: emailRequest.to,
-        subject: emailRequest.subject,
-        html: emailRequest.content,
-      }),
-    });
-
-    const resendResponse = await res.json();
-    console.log("Resend API response:", resendResponse);
-
-    if (!res.ok) {
-      console.error("Error from Resend API:", resendResponse);
-      throw new Error(`Failed to send email: ${JSON.stringify(resendResponse)}`);
+    if (!tenantId) {
+      throw new Error("Missing tenant ID");
     }
 
-    console.log("Email sent successfully");
-    return new Response(JSON.stringify({ success: true }), {
+    // Fetch tenant email
+    const { data: tenant, error: tenantError } = await supabase
+      .from("tenants")
+      .select("email, name")
+      .eq("id", tenantId)
+      .single();
+
+    if (tenantError || !tenant) {
+      console.error("Error fetching tenant:", tenantError);
+      throw new Error("Tenant not found");
+    }
+
+    console.log("Found tenant:", tenant);
+
+    const emailResponse = await resend.emails.send({
+      from: "Property Management <onboarding@resend.dev>",
+      to: [tenant.email],
+      subject: subject,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">${subject}</h2>
+          <p style="color: #666; line-height: 1.6;">${content}</p>
+          <hr style="border: 1px solid #eee; margin: 20px 0;" />
+          <p style="color: #888; font-size: 0.9em;">
+            Ce message vous a été envoyé via notre système de gestion immobilière.
+          </p>
+        </div>
+      `,
+    });
+
+    console.log("Email sent successfully:", emailResponse);
+
+    return new Response(JSON.stringify(emailResponse), {
+      status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
 
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in send-tenant-email function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        status: 500, 
-        headers: { ...corsHeaders, "Content-Type": "application/json" } 
+      JSON.stringify({ error: `Failed to send email: ${JSON.stringify(error)}` }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }
