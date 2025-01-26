@@ -42,37 +42,21 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      console.log("Starting sign out process");
-      
-      // First clear any existing auth data from localStorage
+      // Clear local storage first for immediate UI feedback
       localStorage.removeItem('supabase.auth.token');
       localStorage.removeItem('sb-jhjhzwbvmkurwfohjxlu-auth-token');
       
-      // Try to get the current session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session) {
-        console.log("Active session found, attempting to sign out");
-        const { error } = await supabase.auth.signOut();
-        
-        if (error) {
-          console.error("Error during sign out:", error);
-          // Even if there's an error, we'll proceed with navigation
-          // since we've already cleared localStorage
-        }
-      } else {
-        console.log("No active session found");
-      }
-
-      // Always navigate home and show success message
-      console.log("Sign out process complete, navigating home");
-      toast.success("Successfully signed out");
+      // Navigate home immediately
       navigate("/");
+      
+      // Then perform the actual sign out
+      await supabase.auth.signOut();
+      
+      toast.success("Successfully signed out");
       
     } catch (error) {
-      console.error("Unexpected error during sign out:", error);
-      // Even if there's an error, navigate home since we've cleared localStorage
-      navigate("/");
+      console.error("Error during sign out:", error);
+      toast.error("Error signing out");
     }
   };
 
