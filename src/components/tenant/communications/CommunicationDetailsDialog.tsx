@@ -58,11 +58,11 @@ export const CommunicationDetailsDialog = ({
     
     switch (status.toLowerCase()) {
       case 'read':
-        return <Badge variant="secondary">Lu</Badge>;
+        return <Badge variant="secondary">Read</Badge>;
       case 'unread':
-        return <Badge variant="default">Non lu</Badge>;
+        return <Badge variant="default">Unread</Badge>;
       case 'sent':
-        return <Badge variant="default">Envoyé</Badge>;
+        return <Badge variant="default">Sent</Badge>;
       default:
         return null;
     }
@@ -92,12 +92,12 @@ export const CommunicationDetailsDialog = ({
               </div>
               <div className="bg-muted/50 p-4 rounded-lg">
                 <p className="text-sm whitespace-pre-wrap">
-                  {communication.content || "Aucun contenu disponible"}
+                  {communication.content || "No content available"}
                 </p>
               </div>
               {communication.attachments && communication.attachments.length > 0 && (
                 <div className="mt-4">
-                  <h4 className="text-sm font-medium mb-2">Pièces jointes</h4>
+                  <h4 className="text-sm font-medium mb-2">Attachments</h4>
                   <div className="flex gap-2">
                     {communication.attachments.map((attachment, index) => (
                       <Badge key={index} variant="secondary">
