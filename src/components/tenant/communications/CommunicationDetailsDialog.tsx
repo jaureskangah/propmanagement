@@ -23,6 +23,13 @@ export const CommunicationDetailsDialog = ({
     const updateMessageStatus = async () => {
       if (communication && session?.user) {
         try {
+          console.log("Updating message status for:", {
+            communicationId: communication.id,
+            currentStatus: communication.status,
+            isFromTenant: communication.is_from_tenant,
+            userId: session?.user?.id
+          });
+
           const { error } = await supabase
             .from('tenant_communications')
             .update({ status: 'read' })
