@@ -39,11 +39,47 @@ export const TenantCommunications = ({
 
   const handleCreateSubmit = async () => {
     console.log("Attempting to create communication with tenantId:", tenantId);
-    const success = await handleCreateCommunication(newCommData);
-    if (success) {
+    
+    try {
+      if (newCommData.type === "message") {
+        // Pour les messages directs (non-email)
+        const { data, error } = await supabase
+          .from('tenant_communications')
+          .insert({
+            tenant_id: tenantId,
+            type: newCommData.type,
+            subject: newCommData.subject,
+            content: newCommData.content,
+            category: newCommData.category,
+            status: 'unread',
+            is_from_tenant: true
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        
+        console.log("Message created successfully:", data);
+        toast({
+          title: "Success",
+          description: "Message sent successfully",
+        });
+      } else {
+        // Pour les emails, utiliser la fonction existante
+        const success = await handleCreateCommunication(newCommData);
+        if (!success) throw new Error("Failed to send email");
+      }
+
       setIsNewCommDialogOpen(false);
-      setNewCommData({ type: "", subject: "", content: "", category: "general" });
+      setNewCommData({ type: "message", subject: "", content: "", category: "general" });
       onCommunicationUpdate?.();
+    } catch (error) {
+      console.error("Error creating communication:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 

@@ -32,24 +32,48 @@ export const NewCommunicationDialog = ({
     onDataChange({ ...newCommData, type: value });
   };
 
+  const handleCategoryChange = (value: string) => {
+    console.log("Selected category:", value);
+    onDataChange({ ...newCommData, category: value });
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Communication</DialogTitle>
+          <DialogTitle>New Message</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label>Type</Label>
             <Select 
-              value={newCommData.type || "email"} 
+              value={newCommData.type || "message"} 
               onValueChange={handleTypeChange}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent>
+                <SelectItem value="message">Message</SelectItem>
                 <SelectItem value="email">Email</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Category</Label>
+            <Select 
+              value={newCommData.category} 
+              onValueChange={handleCategoryChange}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="general">General</SelectItem>
+                <SelectItem value="maintenance">Maintenance</SelectItem>
+                <SelectItem value="payment">Payment</SelectItem>
+                <SelectItem value="urgent">Urgent</SelectItem>
               </SelectContent>
             </Select>
           </div>
