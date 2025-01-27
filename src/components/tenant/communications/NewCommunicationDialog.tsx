@@ -27,11 +27,6 @@ export const NewCommunicationDialog = ({
 }: NewCommunicationDialogProps) => {
   console.log("Current newCommData:", newCommData);
 
-  const handleTypeChange = (value: string) => {
-    console.log("Selected type:", value);
-    onDataChange({ ...newCommData, type: value });
-  };
-
   const handleCategoryChange = (value: string) => {
     console.log("Selected category:", value);
     onDataChange({ ...newCommData, category: value });
@@ -44,22 +39,6 @@ export const NewCommunicationDialog = ({
           <DialogTitle>New Message</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label>Type</Label>
-            <Select 
-              value={newCommData.type || "message"} 
-              onValueChange={handleTypeChange}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="message">Message</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
           <div className="space-y-2">
             <Label>Category</Label>
             <Select 

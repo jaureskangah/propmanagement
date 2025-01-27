@@ -41,34 +41,44 @@ export const TenantCommunications = ({
     console.log("Attempting to create communication with tenantId:", tenantId);
     
     try {
-      if (newCommData.type === "message") {
-        // Pour les messages directs (non-email)
-        const { data, error } = await supabase
-          .from('tenant_communications')
-          .insert({
-            tenant_id: tenantId,
-            type: newCommData.type,
-            subject: newCommData.subject,
-            content: newCommData.content,
-            category: newCommData.category,
-            status: 'unread',
-            is_from_tenant: true
-          })
-          .select()
-          .single();
+      // Create the communication record
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .insert({
+          tenant_id: tenantId,
+          type: 'message',
+          subject: newCommData.subject,
+          content: newCommData.content,
+          category: newCommData.category,
+          status: 'unread',
+          is_from_tenant: true
+        })
+        .select()
+        .single();
 
-        if (error) throw error;
-        
-        console.log("Message created successfully:", data);
-        toast({
-          title: "Success",
-          description: "Message sent successfully",
-        });
-      } else {
-        // Pour les emails, utiliser la fonction existante
-        const success = await handleCreateCommunication(newCommData);
-        if (!success) throw new Error("Failed to send email");
+      if (error) throw error;
+      
+      console.log("Message created successfully:", data);
+
+      // Send email notification
+      const { error: notificationError } = await supabase.functions.invoke('notify-communication', {
+        body: {
+          tenantId,
+          subject: newCommData.subject,
+          content: newCommData.content,
+          isFromTenant: true
+        }
+      });
+
+      if (notificationError) {
+        console.error("Error sending notification:", notificationError);
+        // Don't throw error here, as the message was already created
       }
+
+      toast({
+        title: "Success",
+        description: "Message sent successfully",
+      });
 
       setIsNewCommDialogOpen(false);
       setNewCommData({ type: "message", subject: "", content: "", category: "general" });
