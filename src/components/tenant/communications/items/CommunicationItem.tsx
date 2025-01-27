@@ -39,7 +39,7 @@ export const CommunicationItem = ({
               variant="secondary" 
               className={`${categoryColor} inline-flex items-center`}
             >
-              general
+              {communication.category}
             </Badge>
             {hasAttachments && (
               <Badge variant="outline" className="inline-flex items-center gap-1">
@@ -76,9 +76,9 @@ export const CommunicationItem = ({
         </div>
         <div className="text-sm text-muted-foreground">
           {formatDate(communication.created_at)}
-          {communication.is_from_tenant && (
-            <Badge variant="outline" className="ml-2">From tenant</Badge>
-          )}
+          <Badge variant="outline" className="ml-2">
+            {communication.is_from_tenant ? "From tenant" : "From owner"}
+          </Badge>
         </div>
       </div>
     </div>
