@@ -114,11 +114,6 @@ export const CommunicationDetailsDialog = ({
                   </div>
                 </div>
               )}
-              <div className="mt-2">
-                <Badge variant="outline">
-                  {communication.is_from_tenant ? "From tenant" : "From owner"}
-                </Badge>
-              </div>
             </>
           )}
         </div>

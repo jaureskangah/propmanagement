@@ -41,6 +41,8 @@ export const TenantCommunications = ({
     console.log("Attempting to create communication with tenantId:", tenantId);
     
     try {
+      const formattedContent = `Hello,\n\n${newCommData.content}\n\nKind regards`;
+      
       // Create the communication record
       const { data, error } = await supabase
         .from('tenant_communications')
@@ -48,7 +50,7 @@ export const TenantCommunications = ({
           tenant_id: tenantId,
           type: 'message',
           subject: newCommData.subject,
-          content: newCommData.content,
+          content: formattedContent,
           category: newCommData.category,
           status: 'unread',
           is_from_tenant: true
@@ -65,14 +67,13 @@ export const TenantCommunications = ({
         body: {
           tenantId,
           subject: newCommData.subject,
-          content: newCommData.content,
+          content: formattedContent,
           isFromTenant: true
         }
       });
 
       if (notificationError) {
         console.error("Error sending notification:", notificationError);
-        // Don't throw error here, as the message was already created
       }
 
       toast({
@@ -123,6 +124,20 @@ export const TenantCommunications = ({
 
       console.log('Fetched communication details:', data);
       setSelectedComm(data);
+
+      // Update status to read if it's unread
+      if (data.status === 'unread') {
+        const { error: updateError } = await supabase
+          .from('tenant_communications')
+          .update({ status: 'read' })
+          .eq('id', comm.id);
+
+        if (updateError) {
+          console.error('Error updating message status:', updateError);
+        } else {
+          onCommunicationUpdate?.();
+        }
+      }
     } catch (error) {
       console.error('Error in handleCommunicationSelect:', error);
       toast({
