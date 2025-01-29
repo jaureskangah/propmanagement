@@ -19,6 +19,7 @@ export const TenantCommunicationsContent = ({
 }: TenantCommunicationsContentProps) => {
   const [isNewMessageOpen, setIsNewMessageOpen] = useState(false);
   const [newCommData, setNewCommData] = useState({
+    type: "message", // Added the type property with default value "message"
     subject: "",
     content: "",
     category: "general"
@@ -28,7 +29,12 @@ export const TenantCommunicationsContent = ({
     const success = await onCreateCommunication(newCommData.subject, newCommData.content);
     if (success) {
       setIsNewMessageOpen(false);
-      setNewCommData({ subject: "", content: "", category: "general" });
+      setNewCommData({ 
+        type: "message",
+        subject: "", 
+        content: "", 
+        category: "general" 
+      });
     }
   };
 
