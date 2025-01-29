@@ -6,10 +6,10 @@ import { CommunicationsHeader } from "./communications/header/CommunicationsHead
 import { InviteTenantDialog } from "./communications/InviteTenantDialog";
 import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
-import { useState } from "react";
 import { CommunicationsContent } from "./communications/CommunicationsContent";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
+import { useInviteDialog } from "@/hooks/communications/useInviteDialog";
+import { useCreateCommunication } from "@/hooks/communications/useCreateCommunication";
+import { useSelectCommunication } from "@/hooks/communications/useSelectCommunication";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -24,127 +24,23 @@ export const TenantCommunications = ({
   onCommunicationUpdate,
   tenant 
 }: TenantCommunicationsProps) => {
-  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
-  const { toast } = useToast();
+  const { isInviteDialogOpen, openInviteDialog, closeInviteDialog } = useInviteDialog();
   const {
     isNewCommDialogOpen,
     setIsNewCommDialogOpen,
-    selectedComm,
-    setSelectedComm,
     newCommData,
     setNewCommData
   } = useCommunicationState();
 
-  const { handleCreateCommunication, handleToggleStatus } = useCommunicationActions(tenantId);
+  const { handleToggleStatus } = useCommunicationActions(tenantId);
+  const { handleCreateCommunication } = useCreateCommunication(tenantId, onCommunicationUpdate);
+  const { selectedComm, setSelectedComm, handleCommunicationSelect } = useSelectCommunication(onCommunicationUpdate);
 
   const handleCreateSubmit = async () => {
-    console.log("Attempting to create communication with tenantId:", tenantId);
-    
-    try {
-      const formattedContent = `Hello,\n\n${newCommData.content}\n\nKind regards`;
-      
-      // Create the communication record
-      const { data, error } = await supabase
-        .from('tenant_communications')
-        .insert({
-          tenant_id: tenantId,
-          type: 'message',
-          subject: newCommData.subject,
-          content: formattedContent,
-          category: newCommData.category,
-          status: 'unread',
-          is_from_tenant: true
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      
-      console.log("Message created successfully:", data);
-
-      // Send email notification
-      const { error: notificationError } = await supabase.functions.invoke('notify-communication', {
-        body: {
-          tenantId,
-          subject: newCommData.subject,
-          content: formattedContent,
-          isFromTenant: true
-        }
-      });
-
-      if (notificationError) {
-        console.error("Error sending notification:", notificationError);
-      }
-
-      toast({
-        title: "Success",
-        description: "Message sent successfully",
-      });
-
+    const success = await handleCreateCommunication(newCommData);
+    if (success) {
       setIsNewCommDialogOpen(false);
       setNewCommData({ type: "message", subject: "", content: "", category: "general" });
-      onCommunicationUpdate?.();
-    } catch (error) {
-      console.error("Error creating communication:", error);
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleCommunicationSelect = async (comm: Communication) => {
-    try {
-      const { data, error } = await supabase
-        .from('tenant_communications')
-        .select('*')
-        .eq('id', comm.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error fetching communication details:', error);
-        toast({
-          title: "Error",
-          description: "Failed to load communication details. Please try again.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (!data) {
-        console.log('No communication found with ID:', comm.id);
-        toast({
-          title: "Not Found",
-          description: "The selected communication could not be found.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      console.log('Fetched communication details:', data);
-      setSelectedComm(data);
-
-      // Update status to read if it's unread
-      if (data.status === 'unread') {
-        const { error: updateError } = await supabase
-          .from('tenant_communications')
-          .update({ status: 'read' })
-          .eq('id', comm.id);
-
-        if (updateError) {
-          console.error('Error updating message status:', updateError);
-        } else {
-          onCommunicationUpdate?.();
-        }
-      }
-    } catch (error) {
-      console.error('Error in handleCommunicationSelect:', error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
-      });
     }
   };
 
@@ -162,7 +58,7 @@ export const TenantCommunications = ({
       <CardHeader>
         <CommunicationsHeader 
           onNewClick={() => setIsNewCommDialogOpen(true)}
-          onInviteTenantClick={() => setIsInviteDialogOpen(true)}
+          onInviteTenantClick={openInviteDialog}
         />
       </CardHeader>
 
@@ -188,7 +84,7 @@ export const TenantCommunications = ({
 
       <InviteTenantDialog
         isOpen={isInviteDialogOpen}
-        onClose={() => setIsInviteDialogOpen(false)}
+        onClose={closeInviteDialog}
         tenantId={tenantId}
         defaultEmail={tenant?.email}
       />
