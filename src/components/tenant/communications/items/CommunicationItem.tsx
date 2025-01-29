@@ -76,9 +76,6 @@ export const CommunicationItem = ({
         </div>
         <div className="text-sm text-muted-foreground">
           {formatDate(communication.created_at)}
-          <Badge variant="outline" className="ml-2">
-            {communication.is_from_tenant ? "From tenant" : "From owner"}
-          </Badge>
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { CommunicationFilters } from "./CommunicationFilters";
 import { CommunicationsList } from "./CommunicationsList";
 import { useCommunicationsData } from "@/hooks/communications/useCommunicationsData";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
+import { CommunicationDetailsDialog } from "./CommunicationDetailsDialog";
 
 interface CommunicationsContentProps {
   communications: Communication[];
@@ -22,6 +23,7 @@ export const CommunicationsContent = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
+  const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
 
   const { handleDeleteCommunication } = useCommunicationActions();
 
@@ -41,6 +43,12 @@ export const CommunicationsContent = ({
     if (success) {
       onCommunicationUpdate?.();
     }
+  };
+
+  const handleCommunicationClick = (comm: Communication) => {
+    console.log("Communication clicked:", comm);
+    setSelectedComm(comm);
+    onCommunicationSelect(comm);
   };
 
   console.log("CommunicationsContent render:", {
@@ -72,9 +80,14 @@ export const CommunicationsContent = ({
         <CommunicationsList
           filteredCommunications={filteredCommunications}
           groupedCommunications={groupedCommunications}
-          onCommunicationClick={onCommunicationSelect}
+          onCommunicationClick={handleCommunicationClick}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={handleDelete}
+        />
+
+        <CommunicationDetailsDialog
+          communication={selectedComm}
+          onClose={() => setSelectedComm(null)}
         />
       </div>
     </CardContent>
