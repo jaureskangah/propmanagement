@@ -16,6 +16,7 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [showNewMessageDialog, setShowNewMessageDialog] = useState(false);
   const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
+  const [hasShownDialog, setHasShownDialog] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
@@ -50,7 +51,7 @@ const Dashboard = () => {
           )
         `)
         .eq("status", "unread")
-        .eq("is_from_tenant", true) // Only get messages from tenants
+        .eq("is_from_tenant", true)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -100,11 +101,12 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    if (messagesData && messagesData.length > 0) {
+    if (messagesData && messagesData.length > 0 && !hasShownDialog) {
       setUnreadMessages(messagesData);
       setShowNewMessageDialog(true);
+      setHasShownDialog(true);
     }
-  }, [messagesData]);
+  }, [messagesData, hasShownDialog]);
 
   useEffect(() => {
     if (profileData?.is_tenant_user) {
@@ -112,7 +114,7 @@ const Dashboard = () => {
     }
   }, [profileData, navigate]);
 
-  if (isLoadingProfile || isLoadingProperties) {
+  if (isLoadingProfile) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
