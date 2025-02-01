@@ -136,6 +136,18 @@ export const useCommunicationActions = (tenantId?: string) => {
     try {
       console.log("Attempting to delete communication:", commId);
       
+      // First delete all replies to this communication
+      const { error: repliesError } = await supabase
+        .from('tenant_communications')
+        .delete()
+        .eq('parent_id', commId);
+
+      if (repliesError) {
+        console.error("Error deleting replies:", repliesError);
+        throw repliesError;
+      }
+
+      // Then delete the original communication
       const { error } = await supabase
         .from('tenant_communications')
         .delete()
@@ -145,7 +157,7 @@ export const useCommunicationActions = (tenantId?: string) => {
 
       toast({
         title: "Success",
-        description: "Communication deleted successfully",
+        description: "Communication and all replies deleted successfully",
       });
 
       return true;
