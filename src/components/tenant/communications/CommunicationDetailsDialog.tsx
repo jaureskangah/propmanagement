@@ -23,7 +23,11 @@ export const CommunicationDetailsDialog = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  console.log("CommunicationDetailsDialog render:", { communication, isOpen });
+  console.log("CommunicationDetailsDialog render:", { 
+    communicationId: communication?.id, 
+    isOpen,
+    subject: communication?.subject
+  });
 
   const handleSubmitReply = async () => {
     if (!communication?.tenant_id) {
@@ -83,7 +87,7 @@ export const CommunicationDetailsDialog = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{communication.subject}</DialogTitle>
