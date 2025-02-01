@@ -23,7 +23,13 @@ export const UnreadMessagesDialog = ({
   const navigate = useNavigate();
 
   // Only show messages from tenants
-  const tenantMessages = unreadMessages.filter(message => message.is_from_tenant);
+  const tenantMessages = unreadMessages.filter(message => {
+    console.log("Checking message:", message);
+    console.log("is_from_tenant value:", message.is_from_tenant);
+    return message.is_from_tenant === true;
+  });
+
+  console.log("Filtered tenant messages:", tenantMessages);
 
   const handleViewMessages = () => {
     onOpenChange(false);
@@ -37,6 +43,7 @@ export const UnreadMessagesDialog = ({
 
   // Don't show dialog if there are no messages from tenants
   if (tenantMessages.length === 0) {
+    console.log("No tenant messages to display, hiding dialog");
     return null;
   }
 
