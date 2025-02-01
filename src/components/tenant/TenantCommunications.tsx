@@ -79,6 +79,7 @@ export const TenantCommunications = ({
 
       <CommunicationDetailsDialog
         communication={selectedComm}
+        isOpen={!!selectedComm}
         onClose={() => setSelectedComm(null)}
       />
 
