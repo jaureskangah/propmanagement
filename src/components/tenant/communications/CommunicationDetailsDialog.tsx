@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Communication } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { useAuthSession } from "@/hooks/useAuthSession";
+import { supabase } from "@/lib/supabase";
+import { Communication } from "@/types/tenant";
+import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
 
 interface CommunicationDetailsDialogProps {
   communication: Communication | null;
@@ -20,7 +20,6 @@ export const CommunicationDetailsDialog = ({
   const [replyContent, setReplyContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { session } = useAuthSession();
 
   if (!communication) return null;
 
@@ -44,18 +43,16 @@ export const CommunicationDetailsDialog = ({
     }
 
     setIsSubmitting(true);
+
     try {
-      const { error } = await supabase
-        .from('tenant_communications')
-        .insert({
-          tenant_id: communication.tenant_id,
-          type: 'message',
-          subject: `Re: ${communication.subject}`,
-          content: replyContent,
-          category: communication.category,
-          parent_id: communication.id,
-          is_from_tenant: session?.user?.id === communication.tenant_id
-        });
+      const { error } = await supabase.from("tenant_communications").insert({
+        tenant_id: communication.tenant_id,
+        type: "message",
+        subject: `Re: ${communication.subject}`,
+        content: replyContent,
+        parent_id: communication.id,
+        category: communication.category || "general",
+      });
 
       if (error) throw error;
 
@@ -83,12 +80,15 @@ export const CommunicationDetailsDialog = ({
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{communication.subject}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
           <div className="text-sm text-muted-foreground">
-            {formatDate(communication.created_at)}
+            {format(new Date(communication.created_at), "PPp", { locale: enUS })}
           </div>
-          <div className="text-sm whitespace-pre-wrap">{communication.content}</div>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="text-sm whitespace-pre-wrap">
+            {communication.content || "No content available"}
+          </div>
 
           <div className="pt-4 border-t">
             <h4 className="font-medium mb-2">Reply</h4>
