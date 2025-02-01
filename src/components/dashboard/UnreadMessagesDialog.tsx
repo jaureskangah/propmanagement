@@ -22,14 +22,14 @@ export const UnreadMessagesDialog = ({
 }: UnreadMessagesDialogProps) => {
   const navigate = useNavigate();
 
-  // Only show messages from tenants
+  // Only show messages from tenants with explicit check for true
   const tenantMessages = unreadMessages.filter(message => {
-    console.log("Checking message:", message);
+    console.log("Filtering message:", message);
     console.log("is_from_tenant value:", message.is_from_tenant);
-    return message.is_from_tenant === true;
+    return message.is_from_tenant === true && message.status === "unread";
   });
 
-  console.log("Filtered tenant messages:", tenantMessages);
+  console.log("Final filtered tenant messages:", tenantMessages);
 
   const handleViewMessages = () => {
     onOpenChange(false);
@@ -51,15 +51,14 @@ export const UnreadMessagesDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Messages</DialogTitle>
+          <DialogTitle>Nouveaux Messages</DialogTitle>
           <DialogDescription>
-            You have {tenantMessages.length} new unread message
-            {tenantMessages.length > 1 ? 's' : ''} from your tenants:
+            Vous avez {tenantMessages.length} nouveau{tenantMessages.length > 1 ? 'x' : ''} message{tenantMessages.length > 1 ? 's' : ''} non lu{tenantMessages.length > 1 ? 's' : ''} de vos locataires :
             <ul className="mt-2 space-y-2">
               {tenantMessages.map((message) => (
                 <li key={message.id} className="text-sm">
                   <span className="font-semibold">
-                    {message.tenants?.name} (Unit {message.tenants?.unit_number}):
+                    {message.tenants?.name} (Unité {message.tenants?.unit_number}):
                   </span>{' '}
                   {message.subject}
                 </li>
@@ -69,10 +68,10 @@ export const UnreadMessagesDialog = ({
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
+            Fermer
           </Button>
           <Button onClick={handleViewMessages}>
-            View Messages
+            Voir les Messages
           </Button>
         </DialogFooter>
       </DialogContent>
