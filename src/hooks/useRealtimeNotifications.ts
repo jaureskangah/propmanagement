@@ -22,16 +22,15 @@ export function useRealtimeNotifications() {
   }, [toast]);
 
   const handleCommunication = useCallback((payload: any) => {
+    console.log("Communication payload:", payload);
+    
     if (payload.eventType === 'INSERT') {
-      toast({
-        title: "Nouvelle communication",
-        description: payload.new.subject,
-      });
-    } else if (payload.eventType === 'UPDATE') {
-      if (payload.new.tenant_notified && !payload.old.tenant_notified) {
+      // Vérifier si le message vient d'un locataire
+      if (payload.new.is_from_tenant) {
         toast({
-          title: "Mise à jour de communication",
-          description: `La communication "${payload.new.subject}" a été mise à jour`,
+          title: "Nouveau message d'un locataire",
+          description: `Sujet: ${payload.new.subject}`,
+          variant: "default",
         });
       }
     }
@@ -60,7 +59,10 @@ export function useRealtimeNotifications() {
       )
       .subscribe();
 
+    console.log("Realtime notifications channel subscribed");
+
     return () => {
+      console.log("Cleaning up realtime notifications subscription");
       supabase.removeChannel(channel);
     };
   }, [handleNotification, handleCommunication]);
