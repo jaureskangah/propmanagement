@@ -31,6 +31,7 @@ export function useRealtimeNotifications() {
           title: "Nouveau message d'un locataire",
           description: `Sujet: ${payload.new.subject}`,
           variant: "default",
+          duration: 5000,
         });
       }
     }

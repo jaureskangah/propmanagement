@@ -32,7 +32,7 @@ export const CommunicationsContent = ({
     communicationTypes,
     filteredCommunications
   } = useCommunicationsData(
-    communications.filter(comm => comm.content !== null), // Filter out communications without content
+    communications, 
     searchQuery, 
     selectedType, 
     startDate ? new Date(startDate) : null
@@ -46,12 +46,9 @@ export const CommunicationsContent = ({
   };
 
   const handleCommunicationClick = (comm: Communication) => {
-    // Only select communications that have content
-    if (comm.content) {
-      console.log("Communication clicked:", comm);
-      setSelectedComm(comm);
-      onCommunicationSelect(comm);
-    }
+    console.log("Communication clicked:", comm);
+    setSelectedComm(comm);
+    onCommunicationSelect(comm);
   };
 
   console.log("CommunicationsContent render:", {
@@ -64,7 +61,7 @@ export const CommunicationsContent = ({
       subject: c.subject,
       category: c.category,
       created_at: c.created_at,
-      content: c.content ? 'Has content' : 'No content'
+      content: c.content || 'No content'
     }))
   });
 
