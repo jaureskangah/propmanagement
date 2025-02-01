@@ -57,4 +57,5 @@ export interface Communication {
   is_from_tenant?: boolean;
   resolved_at?: string;
   tenant_notified?: boolean;
+  tenant_id?: string;
 }
