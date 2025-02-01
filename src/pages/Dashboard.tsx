@@ -50,7 +50,7 @@ const Dashboard = () => {
           )
         `)
         .eq("status", "unread")
-        .eq("is_from_tenant", true)
+        .eq("is_from_tenant", true) // Only get messages from tenants
         .order("created_at", { ascending: false });
 
       if (error) throw error;
