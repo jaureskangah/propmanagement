@@ -5,7 +5,6 @@ import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
-import { UnreadMessagesDialog } from "@/components/dashboard/UnreadMessagesDialog";
 import { useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
 import type { DateRange } from "@/components/dashboard/DashboardDateFilter";
@@ -14,9 +13,6 @@ const Dashboard = () => {
   console.log("Rendering Dashboard");
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [showNewMessageDialog, setShowNewMessageDialog] = useState(false);
-  const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
-  const [hasShownDialog, setHasShownDialog] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
@@ -35,30 +31,6 @@ const Dashboard = () => {
       return data;
     },
     enabled: !!user,
-  });
-
-  const { data: messagesData } = useQuery({
-    queryKey: ["unread_messages", user?.id],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("tenant_communications")
-        .select(`
-          *,
-          tenants (
-            id,
-            name,
-            unit_number
-          )
-        `)
-        .eq("status", "unread")
-        .eq("is_from_tenant", true)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      console.log("Unread messages:", data);
-      return data;
-    },
-    enabled: !!user && !profileData?.is_tenant_user,
   });
 
   const { data: propertiesData, isLoading: isLoadingProperties } = useQuery({
@@ -92,21 +64,34 @@ const Dashboard = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tenants")
-        .select("*");
+        .select(`
+          *,
+          properties (
+            name
+          ),
+          tenant_documents (*),
+          tenant_payments (*),
+          maintenance_requests (
+            id,
+            issue,
+            status,
+            created_at
+          ),
+          tenant_communications (
+            id,
+            type,
+            subject,
+            created_at,
+            status,
+            is_from_tenant
+          )
+        `);
       if (error) throw error;
       console.log("Tenants data:", data);
       return data;
     },
     enabled: !!user && !profileData?.is_tenant_user,
   });
-
-  useEffect(() => {
-    if (messagesData && messagesData.length > 0 && !hasShownDialog) {
-      setUnreadMessages(messagesData);
-      setShowNewMessageDialog(true);
-      setHasShownDialog(true);
-    }
-  }, [messagesData, hasShownDialog]);
 
   useEffect(() => {
     if (profileData?.is_tenant_user) {
@@ -128,28 +113,20 @@ const Dashboard = () => {
   }
 
   return (
-    <>
-      <div className="flex h-screen">
-        <AppSidebar />
-        <div className="flex-1 space-y-6 p-8 font-sans">
-          <DashboardHeader />
-          
-          <DashboardContent
-            dateRange={dateRange}
-            onDateRangeChange={setDateRange}
-            propertiesData={propertiesData || []}
-            maintenanceData={maintenanceData || []}
-            tenantsData={tenantsData || []}
-          />
-        </div>
+    <div className="flex h-screen">
+      <AppSidebar />
+      <div className="flex-1 space-y-6 p-8 font-sans">
+        <DashboardHeader />
+        
+        <DashboardContent
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          propertiesData={propertiesData || []}
+          maintenanceData={maintenanceData || []}
+          tenantsData={tenantsData || []}
+        />
       </div>
-
-      <UnreadMessagesDialog
-        open={showNewMessageDialog}
-        onOpenChange={setShowNewMessageDialog}
-        unreadMessages={unreadMessages}
-      />
-    </>
+    </div>
   );
 };
 
