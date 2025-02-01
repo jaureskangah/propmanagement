@@ -1,12 +1,12 @@
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { RevenueChart } from "@/components/dashboard/RevenueChart";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
 import { Loader2 } from "lucide-react";
-import { DashboardDateFilter, DateRange } from "@/components/dashboard/DashboardDateFilter";
-import { useState, useEffect } from "react";
+import type { DateRange } from "@/types/tenant";
+import { RevenueChart } from "@/components/dashboard/RevenueChart";
+import { RecentActivity } from "@/components/dashboard/RecentActivity";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardMetrics } from "@/components/dashboard/DashboardMetrics";
 import { useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
@@ -56,6 +56,7 @@ const Dashboard = () => {
         .select(`
           *,
           tenants (
+            id,
             name,
             unit_number
           )
@@ -87,7 +88,13 @@ const Dashboard = () => {
 
   const handleViewMessages = () => {
     setShowNewMessageDialog(false);
-    navigate("/tenants");
+    // Navigate to the tenant's page with the communications tab selected
+    if (unreadMessages.length > 0 && unreadMessages[0].tenants?.id) {
+      console.log("Navigating to tenant communications:", unreadMessages[0].tenants.id);
+      navigate(`/tenants?selected=${unreadMessages[0].tenants.id}&tab=communications`);
+    } else {
+      navigate("/tenants");
+    }
   };
 
   const { data: propertiesData, isLoading: isLoadingProperties } = useQuery({
@@ -137,8 +144,8 @@ const Dashboard = () => {
     );
   }
 
-  // If user is a tenant, they shouldn't see this page
-  if (profileData?.is_tenant_user) {
+  if (!user) {
+    navigate("/");
     return null;
   }
 
