@@ -3,22 +3,12 @@ import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
-import { RevenueChart } from "@/components/dashboard/RevenueChart";
-import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { DashboardMetrics } from "@/components/dashboard/DashboardMetrics";
+import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import { UnreadMessagesDialog } from "@/components/dashboard/UnreadMessagesDialog";
 import { useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { DashboardDateFilter, type DateRange } from "@/components/dashboard/DashboardDateFilter";
+import type { DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
   console.log("Rendering Dashboard");
@@ -31,7 +21,6 @@ const Dashboard = () => {
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
 
-  // Query to check if user is a tenant
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
@@ -47,7 +36,6 @@ const Dashboard = () => {
     enabled: !!user,
   });
 
-  // Query to fetch unread messages
   const { data: messagesData } = useQuery({
     queryKey: ["unread_messages", user?.id],
     queryFn: async () => {
@@ -71,31 +59,6 @@ const Dashboard = () => {
     },
     enabled: !!user && !profileData?.is_tenant_user,
   });
-
-  useEffect(() => {
-    if (messagesData && messagesData.length > 0) {
-      setUnreadMessages(messagesData);
-      setShowNewMessageDialog(true);
-    }
-  }, [messagesData]);
-
-  // Redirect tenant users to maintenance page
-  useEffect(() => {
-    if (profileData?.is_tenant_user) {
-      navigate("/maintenance");
-    }
-  }, [profileData, navigate]);
-
-  const handleViewMessages = () => {
-    setShowNewMessageDialog(false);
-    // Navigate to the tenant's page with the communications tab selected
-    if (unreadMessages.length > 0 && unreadMessages[0].tenants?.id) {
-      console.log("Navigating to tenant communications:", unreadMessages[0].tenants.id);
-      navigate(`/tenants?selected=${unreadMessages[0].tenants.id}&tab=communications`);
-    } else {
-      navigate("/tenants");
-    }
-  };
 
   const { data: propertiesData, isLoading: isLoadingProperties } = useQuery({
     queryKey: ["properties", user?.id, dateRange],
@@ -136,6 +99,19 @@ const Dashboard = () => {
     enabled: !!user && !profileData?.is_tenant_user,
   });
 
+  useEffect(() => {
+    if (messagesData && messagesData.length > 0) {
+      setUnreadMessages(messagesData);
+      setShowNewMessageDialog(true);
+    }
+  }, [messagesData]);
+
+  useEffect(() => {
+    if (profileData?.is_tenant_user) {
+      navigate("/maintenance");
+    }
+  }, [profileData, navigate]);
+
   if (isLoadingProfile || isLoadingProperties) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -156,49 +132,21 @@ const Dashboard = () => {
         <div className="flex-1 space-y-6 p-8 font-sans">
           <DashboardHeader />
           
-          <DashboardDateFilter onDateRangeChange={setDateRange} />
-
-          <DashboardMetrics 
+          <DashboardContent
+            dateRange={dateRange}
+            onDateRangeChange={setDateRange}
             propertiesData={propertiesData || []}
             maintenanceData={maintenanceData || []}
             tenantsData={tenantsData || []}
-            dateRange={dateRange}
           />
-
-          <RevenueChart />
-
-          <RecentActivity />
         </div>
       </div>
 
-      <Dialog open={showNewMessageDialog} onOpenChange={setShowNewMessageDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>New Messages</DialogTitle>
-            <DialogDescription>
-              You have {unreadMessages.length} new unread message{unreadMessages.length > 1 ? 's' : ''} from your tenants:
-              <ul className="mt-2 space-y-2">
-                {unreadMessages.map((message) => (
-                  <li key={message.id} className="text-sm">
-                    <span className="font-semibold">
-                      {message.tenants?.name} (Unit {message.tenants?.unit_number}):
-                    </span>{' '}
-                    {message.subject}
-                  </li>
-                ))}
-              </ul>
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setShowNewMessageDialog(false)}>
-              Close
-            </Button>
-            <Button onClick={handleViewMessages}>
-              View Messages
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <UnreadMessagesDialog
+        open={showNewMessageDialog}
+        onOpenChange={setShowNewMessageDialog}
+        unreadMessages={unreadMessages}
+      />
     </>
   );
 };
