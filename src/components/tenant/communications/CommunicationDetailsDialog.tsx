@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Mail, MessageCircle, Bell, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Communication } from "@/types/tenant";
-import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
-import { useAuthSession } from "@/hooks/useAuthSession";
-import { useEffect } from "react";
+import { formatDate } from "@/lib/utils";
+import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
+import { useAuthSession } from "@/hooks/useAuthSession";
 
 interface CommunicationDetailsDialogProps {
   communication: Communication | null;
@@ -17,105 +17,90 @@ export const CommunicationDetailsDialog = ({
   communication,
   onClose,
 }: CommunicationDetailsDialogProps) => {
+  const [replyContent, setReplyContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const { session } = useAuthSession();
 
-  useEffect(() => {
-    const updateMessageStatus = async () => {
-      if (communication && session?.user) {
-        try {
-          console.log("Updating message status for:", {
-            communicationId: communication.id,
-            currentStatus: communication.status,
-            isFromTenant: communication.is_from_tenant,
-            userId: session?.user?.id
-          });
+  if (!communication) return null;
 
-          const { error } = await supabase
-            .from('tenant_communications')
-            .update({ status: 'read' })
-            .eq('id', communication.id);
+  const handleSubmitReply = async () => {
+    if (!replyContent.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Le message ne peut pas être vide",
+        variant: "destructive",
+      });
+      return;
+    }
 
-          if (error) {
-            console.error('Error updating message status:', error);
-          }
-        } catch (error) {
-          console.error('Error in updateMessageStatus:', error);
-        }
-      }
-    };
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase
+        .from('tenant_communications')
+        .insert({
+          tenant_id: communication.tenant_id,
+          type: 'message',
+          subject: `Re: ${communication.subject}`,
+          content: replyContent,
+          category: communication.category,
+          parent_id: communication.id,
+          is_from_tenant: session?.user?.id === communication.tenant_id
+        });
 
-    updateMessageStatus();
-  }, [communication, session?.user]);
+      if (error) throw error;
 
-  const getTypeIcon = (type: string) => {
-    switch (type.toLowerCase()) {
-      case 'email':
-        return <Mail className="h-5 w-5 text-blue-500" />;
-      case 'sms':
-        return <MessageCircle className="h-5 w-5 text-green-500" />;
-      case 'notification':
-        return <Bell className="h-5 w-5 text-yellow-500" />;
-      default:
-        return <MessageSquare className="h-5 w-5 text-purple-500" />;
+      toast({
+        title: "Succès",
+        description: "Votre réponse a été envoyée",
+      });
+
+      setReplyContent("");
+      onClose();
+    } catch (error) {
+      console.error("Error sending reply:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer la réponse",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
-
-  const getStatusBadge = (status: string | undefined) => {
-    if (!status) return null;
-    
-    switch (status.toLowerCase()) {
-      case 'read':
-        return <Badge variant="secondary">Read</Badge>;
-      case 'unread':
-        return <Badge variant="default">Unread</Badge>;
-      case 'sent':
-        return <Badge variant="default">Sent</Badge>;
-      default:
-        return null;
-    }
-  };
-
-  console.log("Communication details:", communication);
 
   return (
-    <Dialog open={!!communication} onOpenChange={onClose}>
-      <DialogContent>
+    <Dialog open={!!communication} onOpenChange={() => onClose()}>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            {communication && (
-              <>
-                {getTypeIcon(communication.type || '')}
-                {communication.subject}
-              </>
-            )}
-          </DialogTitle>
+          <DialogTitle>{communication.subject}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4 pt-4">
-          {communication && (
-            <>
-              <div className="flex justify-between items-center text-sm text-muted-foreground">
-                <span>{format(new Date(communication.created_at), "PPp", { locale: enUS })}</span>
-                {getStatusBadge(communication.status)}
-              </div>
-              <div className="bg-muted/50 p-4 rounded-lg">
-                <p className="text-sm whitespace-pre-wrap">
-                  {communication.content || "No content available"}
-                </p>
-              </div>
-              {communication.attachments && communication.attachments.length > 0 && (
-                <div className="mt-4">
-                  <h4 className="text-sm font-medium mb-2">Attachments</h4>
-                  <div className="flex gap-2">
-                    {communication.attachments.map((attachment, index) => (
-                      <Badge key={index} variant="secondary">
-                        {attachment}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </>
-          )}
+        <div className="space-y-4">
+          <div className="text-sm text-muted-foreground">
+            {formatDate(communication.created_at)}
+          </div>
+          <div className="text-sm whitespace-pre-wrap">{communication.content}</div>
+
+          <div className="pt-4 border-t">
+            <h4 className="font-medium mb-2">Répondre</h4>
+            <Textarea
+              value={replyContent}
+              onChange={(e) => setReplyContent(e.target.value)}
+              placeholder="Écrivez votre réponse ici..."
+              rows={4}
+            />
+            <div className="flex justify-end gap-2 mt-2">
+              <Button variant="outline" onClick={onClose}>
+                Annuler
+              </Button>
+              <Button 
+                onClick={handleSubmitReply} 
+                disabled={isSubmitting || !replyContent.trim()}
+              >
+                {isSubmitting ? "Envoi..." : "Envoyer"}
+              </Button>
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

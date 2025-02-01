@@ -53,7 +53,7 @@ export const CommunicationsList = ({
       <div className="text-center py-8 border-2 border-dashed rounded-lg">
         <MessageSquare className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
         <p className="text-sm text-muted-foreground">
-          No communications found
+          Aucune communication trouvée
         </p>
       </div>
     );
