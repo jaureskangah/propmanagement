@@ -51,7 +51,13 @@ export const TenantCommunications = ({
     }
   };
 
-  console.log("Tenant email for invitation:", tenant?.email);
+  const handleOpenCommunication = async (comm: Communication) => {
+    console.log("Opening communication:", comm.id);
+    await handleCommunicationSelect(comm);
+  };
+
+  console.log("Current selected communication:", selectedComm?.id);
+  console.log("Dialog open state:", !!selectedComm);
 
   return (
     <Card>
@@ -65,7 +71,7 @@ export const TenantCommunications = ({
       <CommunicationsContent
         communications={communications}
         onToggleStatus={handleToggleStatusAndUpdate}
-        onCommunicationSelect={handleCommunicationSelect}
+        onCommunicationSelect={handleOpenCommunication}
         onCommunicationUpdate={onCommunicationUpdate}
       />
 
@@ -77,11 +83,13 @@ export const TenantCommunications = ({
         onSubmit={handleCreateSubmit}
       />
 
-      <CommunicationDetailsDialog
-        communication={selectedComm}
-        isOpen={!!selectedComm}
-        onClose={() => setSelectedComm(null)}
-      />
+      {selectedComm && (
+        <CommunicationDetailsDialog
+          communication={selectedComm}
+          isOpen={true}
+          onClose={() => setSelectedComm(null)}
+        />
+      )}
 
       <InviteTenantDialog
         isOpen={isInviteDialogOpen}
