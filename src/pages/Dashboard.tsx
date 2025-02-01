@@ -3,7 +3,6 @@ import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
-import type { DateRange } from "@/types/tenant";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { RecentActivity } from "@/components/dashboard/RecentActivity";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
@@ -19,6 +18,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { DashboardDateFilter, type DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
   console.log("Rendering Dashboard");
