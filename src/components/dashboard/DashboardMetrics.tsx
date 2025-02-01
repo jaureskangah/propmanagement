@@ -1,5 +1,5 @@
 import { DashboardMetric } from "@/components/DashboardMetric";
-import { Building2, Users, Wrench, DollarSign, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Building2, Users, Wrench, DollarSign, ArrowUpRight, ArrowDownRight, Bell } from "lucide-react";
 import { DateRange } from "./DashboardDateFilter";
 import { isWithinInterval, subMonths } from "date-fns";
 
@@ -16,7 +16,6 @@ export const DashboardMetrics = ({
   tenantsData,
   dateRange 
 }: DashboardMetricsProps) => {
-  // Filter data based on date range
   const filteredMaintenanceData = maintenanceData?.filter(req => 
     isWithinInterval(new Date(req.created_at), {
       start: dateRange.startDate,
@@ -82,8 +81,30 @@ export const DashboardMetrics = ({
     value: m.value > 0 ? 1 : 0  // On normalise à 1 si il y a des propriétés, 0 sinon
   }));
 
+  // Ajout du calcul des messages non lus
+  const unreadMessages = tenantsData.reduce((acc, tenant) => {
+    const unreadCount = tenant.tenant_communications?.filter(
+      (comm: any) => comm.status === 'unread' && comm.is_from_tenant
+    ).length || 0;
+    return acc + unreadCount;
+  }, 0);
+
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <DashboardMetric
+        title="Messages non lus"
+        value={unreadMessages.toString()}
+        icon={<Bell className="h-4 w-4 text-purple-600" />}
+        description={
+          <div className="flex items-center gap-1 text-purple-600">
+            <ArrowUpRight className="h-3 w-3" />
+            <span>{unreadMessages} messages à lire</span>
+          </div>
+        }
+        chartData={[]}
+        chartColor="#9333EA"
+      />
+      
       <DashboardMetric
         title="Properties"
         value={totalProperties.toString()}
