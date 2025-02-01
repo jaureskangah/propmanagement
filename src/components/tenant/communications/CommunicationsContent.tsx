@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Communication } from "@/types/tenant";
 import { CardContent } from "@/components/ui/card";
-import { CommunicationFilters } from "./CommunicationFilters";
-import { CommunicationsList } from "./CommunicationsList";
 import { useCommunicationsData } from "@/hooks/communications/useCommunicationsData";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
-import { CommunicationDetailsDialog } from "./CommunicationDetailsDialog";
+import { CommunicationsFilterBar } from "./filters/CommunicationsFilterBar";
+import { CommunicationsListContainer } from "./list/CommunicationsListContainer";
 
 interface CommunicationsContentProps {
   communications: Communication[];
@@ -23,7 +22,6 @@ export const CommunicationsContent = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
-  const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
 
   const { handleDeleteCommunication } = useCommunicationActions();
 
@@ -39,14 +37,16 @@ export const CommunicationsContent = ({
   );
 
   const handleDelete = async (comm: Communication) => {
+    console.log("Attempting to delete communication:", comm.id);
     const success = await handleDeleteCommunication(comm.id);
     if (success) {
+      console.log("Communication deleted successfully");
       onCommunicationUpdate?.();
     }
   };
 
   const handleCommunicationClick = (comm: Communication) => {
-    console.log("Communication clicked:", comm);
+    console.log("Communication clicked:", comm.id);
     onCommunicationSelect(comm);
   };
 
@@ -54,14 +54,13 @@ export const CommunicationsContent = ({
     totalCommunications: communications.length,
     filteredCount: filteredCommunications.length,
     selectedType,
-    startDate,
-    selectedComm: selectedComm?.id
+    startDate
   });
 
   return (
     <CardContent>
       <div className="space-y-4">
-        <CommunicationFilters
+        <CommunicationsFilterBar
           searchQuery={searchQuery}
           startDate={startDate}
           selectedType={selectedType}
@@ -71,7 +70,7 @@ export const CommunicationsContent = ({
           onTypeChange={setSelectedType}
         />
 
-        <CommunicationsList
+        <CommunicationsListContainer
           filteredCommunications={filteredCommunications}
           groupedCommunications={groupedCommunications}
           onCommunicationClick={handleCommunicationClick}
