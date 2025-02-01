@@ -25,6 +25,15 @@ export const CommunicationDetailsDialog = ({
   if (!communication) return null;
 
   const handleSubmitReply = async () => {
+    if (!communication.tenant_id) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de répondre à ce message : ID du locataire manquant",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (!replyContent.trim()) {
       toast({
         title: "Erreur",
