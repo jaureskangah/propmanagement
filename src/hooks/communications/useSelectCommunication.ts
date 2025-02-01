@@ -7,8 +7,15 @@ export const useSelectCommunication = (onCommunicationUpdate?: () => void) => {
   const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
   const { toast } = useToast();
 
-  const handleCommunicationSelect = async (comm: Communication) => {
+  const handleCommunicationSelect = async (comm: Communication | null) => {
+    // Si comm est null, on réinitialise juste la sélection
+    if (!comm) {
+      setSelectedComm(null);
+      return;
+    }
+
     try {
+      console.log("Fetching communication details for ID:", comm.id);
       const { data, error } = await supabase
         .from('tenant_communications')
         .select('*')
@@ -18,8 +25,8 @@ export const useSelectCommunication = (onCommunicationUpdate?: () => void) => {
       if (error) {
         console.error('Error fetching communication details:', error);
         toast({
-          title: "Error",
-          description: "Failed to load communication details. Please try again.",
+          title: "Erreur",
+          description: "Impossible de charger les détails du message. Veuillez réessayer.",
           variant: "destructive",
         });
         return;
@@ -28,8 +35,8 @@ export const useSelectCommunication = (onCommunicationUpdate?: () => void) => {
       if (!data) {
         console.log('No communication found with ID:', comm.id);
         toast({
-          title: "Not Found",
-          description: "The selected communication could not be found.",
+          title: "Non trouvé",
+          description: "Le message sélectionné n'a pas été trouvé.",
           variant: "destructive",
         });
         return;
@@ -38,7 +45,9 @@ export const useSelectCommunication = (onCommunicationUpdate?: () => void) => {
       console.log('Fetched communication details:', data);
       setSelectedComm(data);
 
+      // Marquer comme lu si nécessaire
       if (data.status === 'unread') {
+        console.log("Marking communication as read:", comm.id);
         const { error: updateError } = await supabase
           .from('tenant_communications')
           .update({ status: 'read' })
@@ -47,14 +56,15 @@ export const useSelectCommunication = (onCommunicationUpdate?: () => void) => {
         if (updateError) {
           console.error('Error updating message status:', updateError);
         } else {
+          console.log("Communication marked as read successfully");
           onCommunicationUpdate?.();
         }
       }
     } catch (error) {
       console.error('Error in handleCommunicationSelect:', error);
       toast({
-        title: "Error",
-        description: "An unexpected error occurred. Please try again.",
+        title: "Erreur",
+        description: "Une erreur inattendue s'est produite. Veuillez réessayer.",
         variant: "destructive",
       });
     }

@@ -50,12 +50,14 @@ export const CommunicationsContent = ({
     console.log("Communication clicked:", comm);
     setSelectedComm(comm);
     setIsDialogOpen(true);
+    // On n'appelle onCommunicationSelect qu'une seule fois ici
     onCommunicationSelect(comm);
   };
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
     setSelectedComm(null);
+    // On passe null pour réinitialiser la sélection
     onCommunicationSelect(null);
   };
 
