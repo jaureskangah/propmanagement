@@ -10,11 +10,13 @@ import { enUS } from "date-fns/locale";
 
 interface CommunicationDetailsDialogProps {
   communication: Communication | null;
+  isOpen: boolean;
   onClose: () => void;
 }
 
 export const CommunicationDetailsDialog = ({
   communication,
+  isOpen,
   onClose,
 }: CommunicationDetailsDialogProps) => {
   const [replyContent, setReplyContent] = useState("");
@@ -76,7 +78,7 @@ export const CommunicationDetailsDialog = ({
   };
 
   return (
-    <Dialog open={!!communication} onOpenChange={() => onClose()}>
+    <Dialog open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{communication.subject}</DialogTitle>

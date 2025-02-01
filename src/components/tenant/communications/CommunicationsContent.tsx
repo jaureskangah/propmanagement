@@ -24,6 +24,7 @@ export const CommunicationsContent = ({
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
   const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { handleDeleteCommunication } = useCommunicationActions();
 
@@ -48,7 +49,14 @@ export const CommunicationsContent = ({
   const handleCommunicationClick = (comm: Communication) => {
     console.log("Communication clicked:", comm);
     setSelectedComm(comm);
+    setIsDialogOpen(true);
     onCommunicationSelect(comm);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    setSelectedComm(null);
+    onCommunicationSelect(null);
   };
 
   console.log("CommunicationsContent render:", {
@@ -56,13 +64,8 @@ export const CommunicationsContent = ({
     filteredCount: filteredCommunications.length,
     selectedType,
     startDate,
-    communications: communications.map(c => ({
-      id: c.id,
-      subject: c.subject,
-      category: c.category,
-      created_at: c.created_at,
-      content: c.content || 'No content'
-    }))
+    selectedComm: selectedComm?.id,
+    isDialogOpen
   });
 
   return (
@@ -88,7 +91,8 @@ export const CommunicationsContent = ({
 
         <CommunicationDetailsDialog
           communication={selectedComm}
-          onClose={() => setSelectedComm(null)}
+          isOpen={isDialogOpen}
+          onClose={handleCloseDialog}
         />
       </div>
     </CardContent>
