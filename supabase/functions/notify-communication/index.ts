@@ -55,7 +55,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Get owner's email from profiles using user_id
     const { data: owner, error: ownerError } = await supabase
       .from("profiles")
-      .select("email")
+      .select("email, first_name, last_name")
       .eq("id", tenant.user_id)
       .single();
 
@@ -68,7 +68,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email to the recipient (owner if from tenant, tenant if from owner)
     const recipientEmail = isFromTenant ? owner.email : tenant.email;
-    const senderType = isFromTenant ? "Tenant" : "Owner";
+    const senderName = isFromTenant 
+      ? tenant.name 
+      : `${owner.first_name} ${owner.last_name}`;
+    const recipientName = isFromTenant 
+      ? `${owner.first_name} ${owner.last_name}`
+      : tenant.name;
     
     const emailResponse = await resend.emails.send({
       from: "Property Management <onboarding@resend.dev>",
@@ -77,7 +82,8 @@ const handler = async (req: Request): Promise<Response> => {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">New Message Received</h2>
-          <p style="color: #666;">You have received a new message from ${senderType}:</p>
+          <p style="color: #666;">Dear ${recipientName},</p>
+          <p style="color: #666;">You have received a new message from ${senderName}:</p>
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px;">
             <h3 style="color: #333; margin-top: 0;">${subject}</h3>
             <p style="color: #666; white-space: pre-wrap;">${content}</p>
