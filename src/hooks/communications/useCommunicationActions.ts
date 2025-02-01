@@ -136,18 +136,35 @@ export const useCommunicationActions = (tenantId?: string) => {
     try {
       console.log("Attempting to delete communication:", commId);
       
-      // First delete all replies to this communication
-      const { error: repliesError } = await supabase
+      // First, fetch all replies to this communication
+      const { data: replies, error: fetchError } = await supabase
         .from('tenant_communications')
-        .delete()
+        .select('id')
         .eq('parent_id', commId);
 
-      if (repliesError) {
-        console.error("Error deleting replies:", repliesError);
-        throw repliesError;
+      if (fetchError) {
+        console.error("Error fetching replies:", fetchError);
+        throw fetchError;
       }
 
-      // Then delete the original communication
+      console.log("Found replies:", replies);
+
+      // If there are replies, delete them one by one
+      if (replies && replies.length > 0) {
+        for (const reply of replies) {
+          const { error: replyError } = await supabase
+            .from('tenant_communications')
+            .delete()
+            .eq('id', reply.id);
+
+          if (replyError) {
+            console.error("Error deleting reply:", replyError);
+            throw replyError;
+          }
+        }
+      }
+
+      // Now that all replies are deleted, delete the original communication
       const { error } = await supabase
         .from('tenant_communications')
         .delete()
