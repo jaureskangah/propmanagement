@@ -23,10 +23,10 @@ export const CommunicationDetailsDialog = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  if (!communication) return null;
+  console.log("CommunicationDetailsDialog render:", { communication, isOpen });
 
   const handleSubmitReply = async () => {
-    if (!communication.tenant_id) {
+    if (!communication?.tenant_id) {
       toast({
         title: "Error",
         description: "Cannot reply to this message: Missing tenant ID",
@@ -77,8 +77,13 @@ export const CommunicationDetailsDialog = ({
     }
   };
 
+  if (!communication) {
+    console.log("No communication provided to dialog");
+    return null;
+  }
+
   return (
-    <Dialog open={isOpen} onOpenChange={() => onClose()}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>{communication.subject}</DialogTitle>
