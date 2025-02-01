@@ -37,8 +37,8 @@ export const NewCommunicationDialog = ({
   const handleSubmit = () => {
     if (!newCommData.subject.trim()) {
       toast({
-        title: "Erreur",
-        description: "Le sujet est requis",
+        title: "Error",
+        description: "Subject is required",
         variant: "destructive",
       });
       return;
@@ -46,8 +46,8 @@ export const NewCommunicationDialog = ({
 
     if (!newCommData.content.trim()) {
       toast({
-        title: "Erreur",
-        description: "Le contenu du message est requis",
+        title: "Error",
+        description: "Message content is required",
         variant: "destructive",
       });
       return;
@@ -60,43 +60,43 @@ export const NewCommunicationDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nouveau Message</DialogTitle>
+          <DialogTitle>New Message</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Label>Catégorie</Label>
+            <Label>Category</Label>
             <Select 
               value={newCommData.category} 
               onValueChange={handleCategoryChange}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionner une catégorie" />
+                <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="general">Général</SelectItem>
+                <SelectItem value="general">General</SelectItem>
                 <SelectItem value="maintenance">Maintenance</SelectItem>
-                <SelectItem value="payment">Paiement</SelectItem>
+                <SelectItem value="payment">Payment</SelectItem>
                 <SelectItem value="urgent">Urgent</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Sujet<span className="text-red-500">*</span></Label>
+            <Label>Subject<span className="text-red-500">*</span></Label>
             <Input
               value={newCommData.subject}
               onChange={(e) => onDataChange({ ...newCommData, subject: e.target.value })}
-              placeholder="Entrer le sujet"
+              placeholder="Enter subject"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Contenu<span className="text-red-500">*</span></Label>
+            <Label>Content<span className="text-red-500">*</span></Label>
             <Textarea
               value={newCommData.content}
               onChange={(e) => onDataChange({ ...newCommData, content: e.target.value })}
-              placeholder="Entrer le contenu du message"
+              placeholder="Enter message content"
               rows={4}
               required
             />
@@ -105,10 +105,10 @@ export const NewCommunicationDialog = ({
 
         <div className="flex justify-end space-x-2">
           <Button variant="outline" onClick={onClose}>
-            Annuler
+            Cancel
           </Button>
           <Button onClick={handleSubmit}>
-            Envoyer
+            Send
           </Button>
         </div>
       </DialogContent>
