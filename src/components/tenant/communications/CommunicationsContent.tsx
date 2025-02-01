@@ -24,7 +24,6 @@ export const CommunicationsContent = ({
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
   const [selectedComm, setSelectedComm] = useState<Communication | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const { handleDeleteCommunication } = useCommunicationActions();
 
@@ -48,17 +47,7 @@ export const CommunicationsContent = ({
 
   const handleCommunicationClick = (comm: Communication) => {
     console.log("Communication clicked:", comm);
-    setSelectedComm(comm);
-    setIsDialogOpen(true);
-    // On n'appelle onCommunicationSelect qu'une seule fois ici
     onCommunicationSelect(comm);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setSelectedComm(null);
-    // On passe null pour réinitialiser la sélection
-    onCommunicationSelect(null);
   };
 
   console.log("CommunicationsContent render:", {
@@ -66,8 +55,7 @@ export const CommunicationsContent = ({
     filteredCount: filteredCommunications.length,
     selectedType,
     startDate,
-    selectedComm: selectedComm?.id,
-    isDialogOpen
+    selectedComm: selectedComm?.id
   });
 
   return (
@@ -89,12 +77,6 @@ export const CommunicationsContent = ({
           onCommunicationClick={handleCommunicationClick}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={handleDelete}
-        />
-
-        <CommunicationDetailsDialog
-          communication={selectedComm}
-          isOpen={isDialogOpen}
-          onClose={handleCloseDialog}
         />
       </div>
     </CardContent>
