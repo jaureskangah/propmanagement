@@ -66,7 +66,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Found tenant and owner:", { tenant, owner });
 
-    // Send email to the recipient (owner if from tenant, tenant if from owner)
+    // If message is from tenant, send to owner. If from owner, send to tenant
     const recipientEmail = isFromTenant ? owner.email : tenant.email;
     const senderName = isFromTenant 
       ? tenant.name 
@@ -74,6 +74,13 @@ const handler = async (req: Request): Promise<Response> => {
     const recipientName = isFromTenant 
       ? `${owner.first_name} ${owner.last_name}`
       : tenant.name;
+
+    console.log("Sending email to:", {
+      recipientEmail,
+      senderName,
+      recipientName,
+      isFromTenant
+    });
     
     const emailResponse = await resend.emails.send({
       from: "Property Management <onboarding@resend.dev>",
