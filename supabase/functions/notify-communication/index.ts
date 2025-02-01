@@ -11,13 +11,6 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface NotificationRequest {
-  tenantId: string;
-  subject: string;
-  content: string;
-  isFromTenant: boolean;
-}
-
 const handler = async (req: Request): Promise<Response> => {
   console.log("Starting notify-communication function");
   
@@ -31,19 +24,14 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
-    const { tenantId, subject, content, isFromTenant }: NotificationRequest = await req.json();
+    const { tenantId, subject, content, isFromTenant } = await req.json();
     
-    console.log("Request data:", { tenantId, subject, isFromTenant });
+    console.log("Request data:", { tenantId, subject, content, isFromTenant });
 
-    // Fetch tenant and owner information
+    // Fetch tenant information
     const { data: tenant, error: tenantError } = await supabase
       .from("tenants")
-      .select(`
-        email,
-        name,
-        user_id,
-        property_id
-      `)
+      .select("email, name")
       .eq("id", tenantId)
       .single();
 
@@ -52,51 +40,31 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Tenant not found");
     }
 
-    // Get owner's email from profiles using user_id
-    const { data: owner, error: ownerError } = await supabase
-      .from("profiles")
-      .select("email, first_name, last_name")
-      .eq("id", tenant.user_id)
-      .single();
+    console.log("Found tenant:", tenant);
 
-    if (ownerError || !owner) {
-      console.error("Error fetching owner:", ownerError);
-      throw new Error("Owner not found");
-    }
+    // Determine recipient based on who sent the message
+    const recipientEmail = tenant.email;
+    const recipientName = tenant.name;
 
-    console.log("Found tenant and owner:", { tenant, owner });
-
-    // If message is from tenant, send to owner. If from owner, send to tenant
-    const recipientEmail = isFromTenant ? owner.email : tenant.email;
-    const senderName = isFromTenant 
-      ? tenant.name 
-      : `${owner.first_name} ${owner.last_name}`;
-    const recipientName = isFromTenant 
-      ? `${owner.first_name} ${owner.last_name}`
-      : tenant.name;
-
-    console.log("Sending email to:", {
-      recipientEmail,
-      senderName,
-      recipientName,
-      isFromTenant
-    });
-    
+    // Send email notification
     const emailResponse = await resend.emails.send({
       from: "Property Management <onboarding@resend.dev>",
       to: [recipientEmail],
       subject: `New Message: ${subject}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">New Message Received</h2>
-          <p style="color: #666;">Dear ${recipientName},</p>
-          <p style="color: #666;">You have received a new message from ${senderName}:</p>
-          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px;">
-            <h3 style="color: #333; margin-top: 0;">${subject}</h3>
-            <p style="color: #666; white-space: pre-wrap;">${content}</p>
+          <h2 style="color: #333;">Hello ${recipientName},</h2>
+          <p style="color: #666; line-height: 1.6;">
+            ${isFromTenant ? 'Your message has been sent to the property manager.' : 'You have received a new message from your property manager.'}
+          </p>
+          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3 style="color: #333; margin-top: 0;">Message Details:</h3>
+            <p style="color: #666;"><strong>Subject:</strong> ${subject}</p>
+            <p style="color: #666;"><strong>Content:</strong><br>${content}</p>
           </div>
-          <p style="color: #888; font-size: 0.9em; margin-top: 20px;">
-            This is an automated notification from your property management system.
+          <hr style="border: 1px solid #eee; margin: 20px 0;" />
+          <p style="color: #888; font-size: 0.9em;">
+            This is an automated message from your property management system.
           </p>
         </div>
       `,
@@ -104,17 +72,30 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Email sent successfully:", emailResponse);
 
+    // Update the tenant_communications record to mark as notified
+    const { error: updateError } = await supabase
+      .from("tenant_communications")
+      .update({ tenant_notified: true })
+      .eq("tenant_id", tenantId)
+      .eq("subject", subject)
+      .is("tenant_notified", false);
+
+    if (updateError) {
+      console.error("Error updating communication record:", updateError);
+    }
+
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
-      headers: { "Content-Type": "application/json", ...corsHeaders },
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (error: any) {
+
+  } catch (error) {
     console.error("Error in notify-communication function:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: `Failed to send notification: ${error.message}` }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json", ...corsHeaders },
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
       }
     );
   }
