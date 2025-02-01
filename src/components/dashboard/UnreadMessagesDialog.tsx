@@ -22,15 +22,23 @@ export const UnreadMessagesDialog = ({
 }: UnreadMessagesDialogProps) => {
   const navigate = useNavigate();
 
+  // Only show messages from tenants
+  const tenantMessages = unreadMessages.filter(message => message.is_from_tenant);
+
   const handleViewMessages = () => {
     onOpenChange(false);
-    if (unreadMessages.length > 0 && unreadMessages[0].tenants?.id) {
-      console.log("Navigating to tenant communications:", unreadMessages[0].tenants.id);
-      navigate(`/tenants?selected=${unreadMessages[0].tenants.id}&tab=communications`);
+    if (tenantMessages.length > 0 && tenantMessages[0].tenants?.id) {
+      console.log("Navigating to tenant communications:", tenantMessages[0].tenants.id);
+      navigate(`/tenants?selected=${tenantMessages[0].tenants.id}&tab=communications`);
     } else {
       navigate("/tenants");
     }
   };
+
+  // Don't show dialog if there are no messages from tenants
+  if (tenantMessages.length === 0) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -38,10 +46,10 @@ export const UnreadMessagesDialog = ({
         <DialogHeader>
           <DialogTitle>New Messages</DialogTitle>
           <DialogDescription>
-            You have {unreadMessages.length} new unread message
-            {unreadMessages.length > 1 ? 's' : ''} from your tenants:
+            You have {tenantMessages.length} new unread message
+            {tenantMessages.length > 1 ? 's' : ''} from your tenants:
             <ul className="mt-2 space-y-2">
-              {unreadMessages.map((message) => (
+              {tenantMessages.map((message) => (
                 <li key={message.id} className="text-sm">
                   <span className="font-semibold">
                     {message.tenants?.name} (Unit {message.tenants?.unit_number}):
