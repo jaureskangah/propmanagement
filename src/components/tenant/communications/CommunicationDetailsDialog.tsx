@@ -27,8 +27,8 @@ export const CommunicationDetailsDialog = ({
   const handleSubmitReply = async () => {
     if (!communication.tenant_id) {
       toast({
-        title: "Erreur",
-        description: "Impossible de répondre à ce message : ID du locataire manquant",
+        title: "Error",
+        description: "Cannot reply to this message: Missing tenant ID",
         variant: "destructive",
       });
       return;
@@ -36,8 +36,8 @@ export const CommunicationDetailsDialog = ({
 
     if (!replyContent.trim()) {
       toast({
-        title: "Erreur",
-        description: "Le message ne peut pas être vide",
+        title: "Error",
+        description: "Message cannot be empty",
         variant: "destructive",
       });
       return;
@@ -60,8 +60,8 @@ export const CommunicationDetailsDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Succès",
-        description: "Votre réponse a été envoyée",
+        title: "Success",
+        description: "Your reply has been sent",
       });
 
       setReplyContent("");
@@ -69,8 +69,8 @@ export const CommunicationDetailsDialog = ({
     } catch (error) {
       console.error("Error sending reply:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible d'envoyer la réponse",
+        title: "Error",
+        description: "Unable to send reply",
         variant: "destructive",
       });
     } finally {
@@ -91,22 +91,22 @@ export const CommunicationDetailsDialog = ({
           <div className="text-sm whitespace-pre-wrap">{communication.content}</div>
 
           <div className="pt-4 border-t">
-            <h4 className="font-medium mb-2">Répondre</h4>
+            <h4 className="font-medium mb-2">Reply</h4>
             <Textarea
               value={replyContent}
               onChange={(e) => setReplyContent(e.target.value)}
-              placeholder="Écrivez votre réponse ici..."
+              placeholder="Write your reply here..."
               rows={4}
             />
             <div className="flex justify-end gap-2 mt-2">
               <Button variant="outline" onClick={onClose}>
-                Annuler
+                Cancel
               </Button>
               <Button 
                 onClick={handleSubmitReply} 
                 disabled={isSubmitting || !replyContent.trim()}
               >
-                {isSubmitting ? "Envoi..." : "Envoyer"}
+                {isSubmitting ? "Sending..." : "Send"}
               </Button>
             </div>
           </div>
