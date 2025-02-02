@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, LayoutDashboard, Home, Users, Wrench, MessageSquare } from "lucide-react";
+import { Menu, X, LayoutDashboard, Home, Users, Wrench, MessageSquare, HelpCircle } from "lucide-react";
 import { SidebarNavLink } from "./sidebar/SidebarNavLink";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarToggle } from "./sidebar/SidebarToggle";
@@ -17,6 +17,11 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
 
   const toggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  const handleSupportClick = () => {
+    // You can customize this to open a support modal, redirect to a support page, etc.
+    window.open('mailto:support@yourapp.com', '_blank');
   };
 
   return (
@@ -61,6 +66,16 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
                   </>
                 )}
               </nav>
+              <div className="p-4 border-t">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start gap-2" 
+                  onClick={handleSupportClick}
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  Get Support
+                </Button>
+              </div>
             </div>
           </SheetContent>
         </Sheet>
@@ -110,8 +125,19 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
           )}
         </nav>
 
-        <div className="h-[60px] border-t p-4">
-          <SidebarToggle isCollapsed={isCollapsed} onToggle={toggleCollapse} />
+        <div className="border-t p-4">
+          <Button 
+            variant="outline" 
+            className="w-full justify-start gap-2" 
+            onClick={handleSupportClick}
+            title={isCollapsed ? "Get Support" : undefined}
+          >
+            <HelpCircle className="h-4 w-4" />
+            {!isCollapsed && "Get Support"}
+          </Button>
+          <div className="mt-2">
+            <SidebarToggle isCollapsed={isCollapsed} onToggle={toggleCollapse} />
+          </div>
         </div>
       </aside>
 
