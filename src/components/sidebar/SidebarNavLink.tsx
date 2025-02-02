@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 interface SidebarNavLinkProps {
   to: string;
   icon: LucideIcon;
-  label: string;
-  isCollapsed: boolean;
+  children: React.ReactNode;
+  collapsed?: boolean;
 }
 
-export const SidebarNavLink = ({ to, icon: Icon, label, isCollapsed }: SidebarNavLinkProps) => {
+export const SidebarNavLink = ({ to, icon: Icon, children, collapsed }: SidebarNavLinkProps) => {
   return (
     <NavLink
       to={to}
@@ -19,13 +19,13 @@ export const SidebarNavLink = ({ to, icon: Icon, label, isCollapsed }: SidebarNa
           isActive 
             ? "bg-[#ea384c] text-white" 
             : "hover:bg-[#fde1d3] dark:hover:bg-[#ea384c]/20 hover:text-[#ea384c] dark:hover:text-white",
-          isCollapsed && "justify-center px-2"
+          collapsed && "justify-center px-2"
         )
       }
-      title={label}
+      title={collapsed ? String(children) : undefined}
     >
       <Icon className="h-5 w-5" />
-      {!isCollapsed && label}
+      {!collapsed && children}
     </NavLink>
   );
 };

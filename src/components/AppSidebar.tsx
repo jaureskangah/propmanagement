@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard, Home, Users, Wrench, MessageSquare } from "lucide-react";
 import { SidebarNavLink } from "./sidebar/SidebarNavLink";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarToggle } from "./sidebar/SidebarToggle";
@@ -32,30 +32,30 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
           <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
             <div className="flex flex-col h-full">
               <div className="p-6">
-                <SidebarLogo />
+                <SidebarLogo isCollapsed={false} />
               </div>
               <nav className="flex-1 px-4 pb-6">
                 {!isTenant ? (
                   <>
-                    <SidebarNavLink to="/dashboard" icon="LayoutDashboard">
+                    <SidebarNavLink to="/dashboard" icon={LayoutDashboard}>
                       Dashboard
                     </SidebarNavLink>
-                    <SidebarNavLink to="/properties" icon="Home">
+                    <SidebarNavLink to="/properties" icon={Home}>
                       Properties
                     </SidebarNavLink>
-                    <SidebarNavLink to="/tenants" icon="Users">
+                    <SidebarNavLink to="/tenants" icon={Users}>
                       Tenants
                     </SidebarNavLink>
-                    <SidebarNavLink to="/maintenance" icon="Wrench">
+                    <SidebarNavLink to="/maintenance" icon={Wrench}>
                       Maintenance
                     </SidebarNavLink>
                   </>
                 ) : (
                   <>
-                    <SidebarNavLink to="/tenant/maintenance" icon="Wrench">
+                    <SidebarNavLink to="/tenant/maintenance" icon={Wrench}>
                       Maintenance
                     </SidebarNavLink>
-                    <SidebarNavLink to="/tenant/communications" icon="MessageSquare">
+                    <SidebarNavLink to="/tenant/communications" icon={MessageSquare}>
                       Communications
                     </SidebarNavLink>
                   </>
@@ -74,34 +74,34 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
       >
         <div className="flex h-[60px] items-center border-b px-6">
           <Link to="/" className="flex items-center gap-2 font-semibold">
-            <SidebarLogo collapsed={isCollapsed} />
+            <SidebarLogo isCollapsed={isCollapsed} />
           </Link>
         </div>
 
         <nav className="flex-1 space-y-1 p-4">
           {!isTenant ? (
             <>
-              <SidebarNavLink to="/dashboard" icon="LayoutDashboard" collapsed={isCollapsed}>
+              <SidebarNavLink to="/dashboard" icon={LayoutDashboard} collapsed={isCollapsed}>
                 Dashboard
               </SidebarNavLink>
-              <SidebarNavLink to="/properties" icon="Home" collapsed={isCollapsed}>
+              <SidebarNavLink to="/properties" icon={Home} collapsed={isCollapsed}>
                 Properties
               </SidebarNavLink>
-              <SidebarNavLink to="/tenants" icon="Users" collapsed={isCollapsed}>
+              <SidebarNavLink to="/tenants" icon={Users} collapsed={isCollapsed}>
                 Tenants
               </SidebarNavLink>
-              <SidebarNavLink to="/maintenance" icon="Wrench" collapsed={isCollapsed}>
+              <SidebarNavLink to="/maintenance" icon={Wrench} collapsed={isCollapsed}>
                 Maintenance
               </SidebarNavLink>
             </>
           ) : (
             <>
-              <SidebarNavLink to="/tenant/maintenance" icon="Wrench" collapsed={isCollapsed}>
+              <SidebarNavLink to="/tenant/maintenance" icon={Wrench} collapsed={isCollapsed}>
                 Maintenance
               </SidebarNavLink>
               <SidebarNavLink
                 to="/tenant/communications"
-                icon="MessageSquare"
+                icon={MessageSquare}
                 collapsed={isCollapsed}
               >
                 Communications
