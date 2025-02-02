@@ -12,6 +12,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -39,7 +40,11 @@ export const DashboardContent = ({
   const { preferences, updatePreferences } = useDashboardPreferences();
   
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8, // Distance en pixels avant que le drag ne commence
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -54,29 +59,32 @@ export const DashboardContent = ({
   ) || [];
 
   const defaultOrder = ["metrics", "priority", "revenue", "activity"];
-  const currentOrder = preferences.widget_order.length > 0 
+  const currentOrder = preferences?.widget_order?.length > 0 
     ? preferences.widget_order 
     : defaultOrder;
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
-    if (active.id !== over.id) {
-      const oldIndex = currentOrder.indexOf(active.id);
-      const newIndex = currentOrder.indexOf(over.id);
+    if (active.id !== over?.id) {
+      const oldIndex = currentOrder.indexOf(active.id.toString());
+      const newIndex = currentOrder.indexOf(over?.id.toString() || "");
       
-      const newOrder = arrayMove(currentOrder, oldIndex, newIndex);
-      updatePreferences.mutate({ widget_order: newOrder });
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newOrder = arrayMove(currentOrder, oldIndex, newIndex);
+        console.log("Updating widget order:", newOrder);
+        updatePreferences.mutate({ widget_order: newOrder });
+      }
     }
   };
 
   const renderSection = (sectionId: string) => {
-    if (preferences.hidden_sections.includes(sectionId)) return null;
+    if (preferences?.hidden_sections?.includes(sectionId)) return null;
 
     switch (sectionId) {
       case "metrics":
         return (
-          <SortableSection id="metrics">
+          <SortableSection id="metrics" key="metrics">
             <DashboardMetrics
               propertiesData={propertiesData}
               maintenanceData={maintenanceData}
@@ -87,7 +95,7 @@ export const DashboardContent = ({
         );
       case "priority":
         return (
-          <SortableSection id="priority">
+          <SortableSection id="priority" key="priority">
             <PrioritySection
               maintenanceData={maintenanceData}
               tenantsData={tenantsData}
@@ -97,13 +105,13 @@ export const DashboardContent = ({
         );
       case "revenue":
         return (
-          <SortableSection id="revenue">
+          <SortableSection id="revenue" key="revenue">
             <RevenueChart />
           </SortableSection>
         );
       case "activity":
         return (
-          <SortableSection id="activity">
+          <SortableSection id="activity" key="activity">
             <RecentActivity />
           </SortableSection>
         );
