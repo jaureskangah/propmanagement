@@ -79,7 +79,7 @@ export const DashboardMetrics = ({
     ? Math.round(((occupiedUnits - previousMonthTenants) / previousMonthTenants) * 100)
     : 0;
 
-  // Generate occupancy chart data
+  // Generate chart data
   const occupancyChartData = generateMonthlyData(filteredTenantsData).map((m, i, arr) => {
     const monthUnits = propertiesData.reduce((acc, property) => {
       const propertyDate = new Date(property.created_at);
@@ -94,7 +94,23 @@ export const DashboardMetrics = ({
     };
   });
 
-  // Ajout du calcul des messages non lus
+  // Get new properties this month
+  const newPropertiesThisMonth = propertiesData?.filter(property => 
+    isWithinInterval(new Date(property.created_at), {
+      start: dateRange.startDate,
+      end: dateRange.endDate
+    })
+  ).length || 0;
+
+  // Generate other chart data
+  const revenueChartData = generateMonthlyData(tenantsData, 'rent_amount');
+  const maintenanceChartData = generateMonthlyData(maintenanceData);
+  const tenantsChartData = generateMonthlyData(tenantsData).map(m => ({ value: m.value || 0 }));
+  const propertiesChartData = generateMonthlyData(propertiesData).map(m => ({ 
+    value: m.value > 0 ? 1 : 0  // Normalize to 1 if there are properties, 0 otherwise
+  }));
+
+  // Calculate unread messages
   const unreadMessages = filteredTenantsData.reduce((acc, tenant) => {
     const unreadCount = tenant.tenant_communications?.filter(
       (comm: any) => comm.status === 'unread' && comm.is_from_tenant
@@ -104,7 +120,6 @@ export const DashboardMetrics = ({
 
   return (
     <div className="relative">
-      {/* Bulle de notification */}
       {unreadMessages > 0 && (
         <Button
           variant="ghost"
@@ -164,7 +179,7 @@ export const DashboardMetrics = ({
           description={
             <div className="flex items-center gap-1 text-green-600">
               <ArrowUpRight className="h-3 w-3" />
-              <span>{occupancyRate}% occupancy rate</span>
+              <span>{globalOccupancyRate}% occupancy rate</span>
             </div>
           }
           chartData={tenantsChartData}
