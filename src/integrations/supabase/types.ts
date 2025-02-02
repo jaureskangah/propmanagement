@@ -9,6 +9,44 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      dashboard_preferences: {
+        Row: {
+          created_at: string
+          custom_filters: Json | null
+          hidden_sections: string[] | null
+          id: string
+          updated_at: string
+          user_id: string
+          widget_order: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          custom_filters?: Json | null
+          hidden_sections?: string[] | null
+          id?: string
+          updated_at?: string
+          user_id: string
+          widget_order?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          custom_filters?: Json | null
+          hidden_sections?: string[] | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+          widget_order?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dashboard_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maintenance_budgets: {
         Row: {
           amount: number
