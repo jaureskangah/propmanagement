@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import { CSSProperties } from "react";
 
 interface SortableSectionProps {
   id: string;
@@ -17,10 +18,10 @@ export function SortableSection({ id, children }: SortableSectionProps) {
     isDragging,
   } = useSortable({ id });
 
-  const style = {
+  const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
-    position: 'relative',
+    position: 'relative' as const,
     zIndex: isDragging ? 1 : 0,
   };
 
