@@ -42,7 +42,9 @@ export const DashboardContent = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Distance en pixels avant que le drag ne commence
+        distance: 5, // Reduced distance for easier activation
+        tolerance: 5, // Added tolerance for better touch support
+        delay: 0, // No delay for immediate response
       },
     }),
     useSensor(KeyboardSensor, {
@@ -66,9 +68,9 @@ export const DashboardContent = ({
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
-    if (active.id !== over?.id) {
+    if (over && active.id !== over.id) {
       const oldIndex = currentOrder.indexOf(active.id.toString());
-      const newIndex = currentOrder.indexOf(over?.id.toString() || "");
+      const newIndex = currentOrder.indexOf(over.id.toString());
       
       if (oldIndex !== -1 && newIndex !== -1) {
         const newOrder = arrayMove(currentOrder, oldIndex, newIndex);
@@ -136,7 +138,7 @@ export const DashboardContent = ({
           items={currentOrder}
           strategy={verticalListSortingStrategy}
         >
-          <div className="space-y-6">
+          <div className="space-y-6 pl-8">
             {currentOrder.map((sectionId) => renderSection(sectionId))}
           </div>
         </SortableContext>

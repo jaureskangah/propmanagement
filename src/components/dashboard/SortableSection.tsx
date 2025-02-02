@@ -23,6 +23,7 @@ export function SortableSection({ id, children }: SortableSectionProps) {
     transition,
     position: 'relative' as const,
     zIndex: isDragging ? 1 : 0,
+    touchAction: 'none',
   };
 
   return (
@@ -34,9 +35,9 @@ export function SortableSection({ id, children }: SortableSectionProps) {
       <div
         {...attributes}
         {...listeners}
-        className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-2"
+        className="absolute -left-8 top-1/2 -translate-y-1/2 p-2 cursor-grab active:cursor-grabbing hover:bg-accent rounded-lg group"
       >
-        <GripVertical className="h-5 w-5 text-muted-foreground" />
+        <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
       <div className="group">
         {children}
