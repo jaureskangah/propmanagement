@@ -11,7 +11,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
       <h1 className="text-2xl font-semibold">{title}</h1>
       <div className="flex items-center gap-4">
         <ThemeToggle />
-        <NotificationBell />
+        <NotificationBell unreadCount={0} />
       </div>
     </div>
   );

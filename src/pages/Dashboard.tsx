@@ -116,7 +116,7 @@ const Dashboard = () => {
     <div className="flex h-screen">
       <AppSidebar />
       <div className="flex-1 space-y-6 p-8 font-sans">
-        <DashboardHeader />
+        <DashboardHeader title="Dashboard" />
         
         <DashboardContent
           dateRange={dateRange}
