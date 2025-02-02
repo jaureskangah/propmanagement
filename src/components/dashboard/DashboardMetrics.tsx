@@ -49,7 +49,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.occupancy.chartData}
           chartColor="#7C3AED"
-          tooltip="Taux d'occupation global de vos propriétés. Un taux élevé indique une bonne gestion locative."
+          tooltip="Global occupancy rate of your properties. A high rate indicates effective rental management."
         />
 
         <DashboardMetric
@@ -64,7 +64,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.properties.chartData}
           chartColor="#1E40AF"
-          tooltip="Nombre total de propriétés dans votre portefeuille et évolution mensuelle."
+          tooltip="Total number of properties in your portfolio and monthly evolution."
         />
 
         <DashboardMetric
@@ -79,7 +79,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.tenants.chartData}
           chartColor="#4F46E5"
-          tooltip="Nombre total de locataires actifs et taux d'occupation correspondant."
+          tooltip="Total number of active tenants and corresponding occupancy rate."
         />
 
         <DashboardMetric
@@ -94,7 +94,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.maintenance.chartData}
           chartColor="#D97706"
-          tooltip="Demandes de maintenance en attente nécessitant votre attention."
+          tooltip="Pending maintenance requests requiring your attention."
         />
 
         <DashboardMetric
@@ -109,7 +109,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.revenue.chartData}
           chartColor="#059669"
-          tooltip="Revenus mensuels basés sur les baux actuels et historique des paiements."
+          tooltip="Monthly revenue based on current leases and payment history."
         />
 
         <DashboardMetric
@@ -124,7 +124,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.communications?.chartData || []}
           chartColor="#E11D48"
-          tooltip="Messages non lus de vos locataires nécessitant une réponse."
+          tooltip="Unread messages from your tenants requiring a response."
         />
       </div>
     </div>
