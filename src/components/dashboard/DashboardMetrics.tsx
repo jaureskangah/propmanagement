@@ -1,6 +1,7 @@
 import { NotificationBell } from "./NotificationBell";
 import { useMetricsData } from "./hooks/useMetricsData";
 import { MetricsGrid } from "./metrics/MetricsGrid";
+import type { DateRange } from "./DashboardDateFilter";
 
 interface DashboardMetricsProps {
   propertiesData: any[];
