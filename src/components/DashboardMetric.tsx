@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { GripVertical } from "lucide-react";
 
 interface DashboardMetricProps {
   title: string;
@@ -51,7 +52,7 @@ export function DashboardMetric({
 
   const card = (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg",
+      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing",
       "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
       "after:absolute after:inset-0 after:rounded-lg after:border-2 after:border-transparent after:transition-colors hover:after:border-primary/20",
       className
