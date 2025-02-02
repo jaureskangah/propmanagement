@@ -11,6 +11,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const RevenueChart = () => {
   const { data: expenses, isLoading: isLoadingExpenses } = useQuery({
@@ -134,6 +135,10 @@ export const RevenueChart = () => {
               <Tooltip 
                 content={({ active, payload, label }) => {
                   if (active && payload && payload.length) {
+                    const revenue = Number(payload[0].value);
+                    const expenses = Number(payload[1].value);
+                    const profit = revenue - expenses;
+                    
                     return (
                       <div className="rounded-lg border bg-background p-4 shadow-md animate-fade-in">
                         <p className="font-semibold mb-2">{label}</p>
@@ -141,24 +146,22 @@ export const RevenueChart = () => {
                           <div className="grid grid-cols-2 gap-2">
                             <span className="text-muted-foreground">Revenue:</span>
                             <span className="font-medium text-blue-500">
-                              ${payload[0].value.toLocaleString()}
+                              ${revenue.toLocaleString()}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-2">
                             <span className="text-muted-foreground">Expenses:</span>
                             <span className="font-medium text-blue-300">
-                              ${payload[1].value.toLocaleString()}
+                              ${expenses.toLocaleString()}
                             </span>
                           </div>
                           <div className="grid grid-cols-2 gap-2 border-t pt-1 mt-1">
                             <span className="text-muted-foreground">Profit:</span>
                             <span className={cn(
                               "font-medium",
-                              payload[0].value - payload[1].value > 0 
-                                ? "text-green-500" 
-                                : "text-red-500"
+                              profit > 0 ? "text-green-500" : "text-red-500"
                             )}>
-                              ${(payload[0].value - payload[1].value).toLocaleString()}
+                              ${profit.toLocaleString()}
                             </span>
                           </div>
                         </div>
