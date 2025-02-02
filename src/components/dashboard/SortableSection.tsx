@@ -35,9 +35,9 @@ export function SortableSection({ id, children }: SortableSectionProps) {
       <div
         {...attributes}
         {...listeners}
-        className="absolute -left-8 top-1/2 -translate-y-1/2 p-2 cursor-grab active:cursor-grabbing hover:bg-accent rounded-lg group"
+        className="absolute -left-8 top-1/2 -translate-y-1/2 p-2 cursor-grab active:cursor-grabbing hover:bg-accent rounded-lg"
       >
-        <GripVertical className="h-5 w-5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        <GripVertical className="h-5 w-5 text-muted-foreground" />
       </div>
       <div className="group">
         {children}
