@@ -94,7 +94,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.maintenance.chartData}
           chartColor="#D97706"
-          tooltip="Pending maintenance requests requiring your attention."
+          tooltip="Pending maintenance requests that need attention. This includes repairs, routine maintenance, and emergency interventions. Regular monitoring helps maintain property value and tenant satisfaction."
         />
 
         <DashboardMetric
