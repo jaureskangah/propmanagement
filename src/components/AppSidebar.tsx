@@ -21,7 +21,7 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
 
   const handleSupportClick = () => {
     // You can customize this to open a support modal, redirect to a support page, etc.
-    window.open('mailto:support@yourapp.com', '_blank');
+    window.open('mailto:contact@propmanagement.app', '_blank');
   };
 
   return (
