@@ -1,5 +1,5 @@
 import { DashboardMetric } from "@/components/DashboardMetric";
-import { Building2, Users, Wrench, DollarSign, ArrowUpRight, ArrowDownRight, Percent } from "lucide-react";
+import { Building2, Users, Wrench, DollarSign, ArrowUpRight, ArrowDownRight, Percent, MessageSquare } from "lucide-react";
 import { DateRange } from "./DashboardDateFilter";
 import { NotificationBell } from "./NotificationBell";
 import { useMetricsData } from "./hooks/useMetricsData";
@@ -29,7 +29,7 @@ export const DashboardMetrics = ({
     <div className="relative">
       <NotificationBell unreadCount={unreadMessages} />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
         <DashboardMetric
           title="Global Occupancy"
           value={`${metrics.occupancy.rate}%`}
@@ -105,6 +105,20 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.revenue.chartData}
           chartColor="#059669"
+        />
+
+        <DashboardMetric
+          title="Unread Messages"
+          value={unreadMessages.toString()}
+          icon={<MessageSquare className="h-4 w-4 text-rose-600" />}
+          description={
+            <div className="flex items-center gap-1 text-rose-600">
+              <ArrowUpRight className="h-3 w-3" />
+              <span>Messages requiring attention</span>
+            </div>
+          }
+          chartData={metrics.communications?.chartData || []}
+          chartColor="#E11D48"
         />
       </div>
     </div>

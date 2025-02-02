@@ -43,12 +43,20 @@ export const useMetricsData = (
     value: m.value > 0 ? 1 : 0
   }));
 
+  // Calculer les données pour les communications non lues
   const unreadMessages = filteredTenantsData.reduce((acc, tenant) => {
     const unreadCount = tenant.tenant_communications?.filter(
       (comm: any) => comm.status === 'unread' && comm.is_from_tenant
     ).length || 0;
     return acc + unreadCount;
   }, 0);
+
+  // Générer les données du graphique pour les communications
+  const communicationsChartData = generateMonthlyData(
+    filteredTenantsData.flatMap(tenant => 
+      tenant.tenant_communications?.filter((comm: any) => comm.status === 'unread' && comm.is_from_tenant) || []
+    )
+  ).map(m => ({ value: m.value || 0 }));
 
   return {
     metrics: {
@@ -74,6 +82,9 @@ export const useMetricsData = (
       revenue: {
         monthly: totalMonthlyRevenue,
         chartData: revenueChartData
+      },
+      communications: {
+        chartData: communicationsChartData
       }
     },
     unreadMessages
