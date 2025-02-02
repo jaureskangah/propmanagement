@@ -15,6 +15,7 @@ export const useMaintenanceAlerts = () => {
       if (error) throw error;
 
       return maintenanceRequests.map(request => ({
+        id: request.id,
         title: request.title || 'Maintenance Request',
         issue: request.issue,
         priority: request.priority.toLowerCase(),
@@ -30,10 +31,7 @@ export const useMaintenanceAlerts = () => {
     queryFn: async () => {
       const { data: budgets, error } = await supabase
         .from('maintenance_budgets')
-        .select(`
-          *,
-          maintenance_expenses (amount)
-        `);
+        .select('*, maintenance_expenses!maintenance_expenses_budget_id_fkey(amount)');
 
       if (error) throw error;
 
@@ -42,6 +40,7 @@ export const useMaintenanceAlerts = () => {
         const remainingBudget = budget.amount - totalExpenses;
         
         return {
+          id: budget.id,
           title: 'Budget Alert',
           issue: `Remaining budget for ${budget.year}: $${remainingBudget.toLocaleString()}`,
           priority: remainingBudget < budget.amount * 0.2 ? 'high' : 'medium',
@@ -76,6 +75,7 @@ export const useMaintenanceAlerts = () => {
           return dueDate < today;
         })
         .map((payment: any) => ({
+          id: payment.id,
           title: 'Late Payment Alert',
           issue: `${payment.tenants.name} is late on payment of $${payment.amount}`,
           priority: 'high',

@@ -15,8 +15,7 @@ export const MaintenanceNotifications = () => {
     })),
     ...paymentAlerts.map(alert => ({
       ...alert,
-      icon: CreditCard,
-      priority: 'high'
+      icon: CreditCard
     })),
     ...notifications.map(notif => ({
       ...notif,

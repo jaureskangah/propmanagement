@@ -60,6 +60,7 @@ export type Database = {
       maintenance_expenses: {
         Row: {
           amount: number
+          budget_id: string | null
           category: string
           created_at: string
           date: string
@@ -72,6 +73,7 @@ export type Database = {
         }
         Insert: {
           amount: number
+          budget_id?: string | null
           category: string
           created_at?: string
           date: string
@@ -84,6 +86,7 @@ export type Database = {
         }
         Update: {
           amount?: number
+          budget_id?: string | null
           category?: string
           created_at?: string
           date?: string
@@ -95,6 +98,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "maintenance_expenses_budget_id_fkey"
+            columns: ["budget_id"]
+            isOneToOne: false
+            referencedRelation: "maintenance_budgets"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "maintenance_expenses_property_id_fkey"
             columns: ["property_id"]
