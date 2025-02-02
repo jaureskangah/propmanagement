@@ -4,7 +4,7 @@ import { NotificationsList } from "./NotificationsList";
 import { useMaintenanceAlerts } from "@/hooks/useMaintenanceAlerts";
 
 export const MaintenanceNotifications = () => {
-  const { notifications, budgetAlerts } = useMaintenanceAlerts();
+  const { notifications, budgetAlerts, paymentAlerts } = useMaintenanceAlerts();
 
   // Combine notifications and alerts with their respective icons
   const allNotifications = [
@@ -12,6 +12,11 @@ export const MaintenanceNotifications = () => {
       ...alert,
       icon: alert.type === 'budget' ? AlertTriangle : 
             alert.type === 'payment' ? CreditCard : TrendingUp
+    })),
+    ...paymentAlerts.map(alert => ({
+      ...alert,
+      icon: CreditCard,
+      priority: 'high'
     })),
     ...notifications.map(notif => ({
       ...notif,

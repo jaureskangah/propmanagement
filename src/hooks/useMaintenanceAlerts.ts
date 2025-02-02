@@ -1,140 +1,93 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
-import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
-
-interface Notification {
-  id: string;
-  title: string;
-  issue: string;
-  priority: string;
-  deadline?: string;
-  created_at: string;
-}
-
-interface BudgetAlert {
-  id: string;
-  title: string;
-  issue: string;
-  priority: string;
-  type: 'budget' | 'payment' | 'unusual';
-}
 
 export const useMaintenanceAlerts = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [budgetAlerts, setBudgetAlerts] = useState<BudgetAlert[]>([]);
-  const { toast } = useToast();
+  // Fetch notifications
+  const { data: notifications = [] } = useQuery({
+    queryKey: ['maintenance_notifications'],
+    queryFn: async () => {
+      const { data: maintenanceRequests, error } = await supabase
+        .from('maintenance_requests')
+        .select('*')
+        .eq('status', 'Pending')
+        .order('created_at', { ascending: false });
 
-  const generateBudgetAlerts = (budgetData: any[], expensesData: any[]) => {
-    const alerts: BudgetAlert[] = [];
+      if (error) throw error;
 
-    budgetData?.forEach((budget) => {
-      const budgetExpenses = expensesData?.filter(expense => 
-        expense.property_id === budget.property_id
-      ) || [];
+      return maintenanceRequests.map(request => ({
+        title: request.title || 'Maintenance Request',
+        issue: request.issue,
+        priority: request.priority.toLowerCase(),
+        deadline: request.deadline,
+        type: 'maintenance'
+      }));
+    }
+  });
 
-      const totalExpenses = budgetExpenses.reduce(
-        (sum, expense) => sum + (expense.amount || 0),
-        0
-      );
+  // Fetch budget alerts
+  const { data: budgetAlerts = [] } = useQuery({
+    queryKey: ['budget_alerts'],
+    queryFn: async () => {
+      const { data: budgets, error } = await supabase
+        .from('maintenance_budgets')
+        .select(`
+          *,
+          maintenance_expenses (amount)
+        `);
 
-      if (totalExpenses > budget.amount) {
-        alerts.push({
-          id: `budget-${budget.id}`,
-          title: "Dépassement de Budget",
-          issue: `Le budget de maintenance (${budget.amount}€) a été dépassé de ${(totalExpenses - budget.amount).toLocaleString()}€`,
-          priority: "high",
+      if (error) throw error;
+
+      return budgets.map(budget => {
+        const totalExpenses = budget.maintenance_expenses?.reduce((sum: number, exp: any) => sum + exp.amount, 0) || 0;
+        const remainingBudget = budget.amount - totalExpenses;
+        
+        return {
+          title: 'Budget Alert',
+          issue: `Remaining budget for ${budget.year}: $${remainingBudget.toLocaleString()}`,
+          priority: remainingBudget < budget.amount * 0.2 ? 'high' : 'medium',
           type: 'budget'
-        });
-      }
+        };
+      });
+    }
+  });
 
-      if (budgetExpenses.length > 0) {
-        const averageExpense = totalExpenses / budgetExpenses.length;
-        const unusualExpenses = budgetExpenses.filter(
-          expense => expense.amount > averageExpense * 1.2
-        );
+  // Fetch payment alerts
+  const { data: paymentAlerts = [] } = useQuery({
+    queryKey: ['payment_alerts'],
+    queryFn: async () => {
+      const { data: payments, error } = await supabase
+        .from('tenant_payments')
+        .select(`
+          *,
+          tenants (
+            name,
+            rent_amount
+          )
+        `)
+        .eq('status', 'pending')
+        .order('payment_date', { ascending: false });
 
-        unusualExpenses.forEach(expense => {
-          alerts.push({
-            id: `unusual-${expense.category}`,
-            title: "Coût Inhabituel Détecté",
-            issue: `Dépense inhabituelle de ${expense.amount.toLocaleString()}€ dans la catégorie ${expense.category}`,
-            priority: "medium",
-            type: 'unusual'
-          });
-        });
-      }
-    });
+      if (error) throw error;
 
-    return alerts;
+      const today = new Date();
+      return payments
+        .filter((payment: any) => {
+          const dueDate = new Date(payment.payment_date);
+          return dueDate < today;
+        })
+        .map((payment: any) => ({
+          title: 'Late Payment Alert',
+          issue: `${payment.tenants.name} is late on payment of $${payment.amount}`,
+          priority: 'high',
+          type: 'payment',
+          deadline: payment.payment_date
+        }));
+    }
+  });
+
+  return {
+    notifications,
+    budgetAlerts,
+    paymentAlerts
   };
-
-  const fetchNotifications = async () => {
-    const { data: maintenanceData, error: maintenanceError } = await supabase
-      .from('maintenance_requests')
-      .select('*')
-      .order('created_at', { ascending: false })
-      .limit(10);
-
-    if (maintenanceError) {
-      console.error('Error fetching maintenance notifications:', maintenanceError);
-      return;
-    }
-
-    const { data: budgetData, error: budgetError } = await supabase
-      .from('maintenance_budgets')
-      .select('*');
-
-    if (budgetError) {
-      console.error('Error fetching budget data:', budgetError);
-      return;
-    }
-
-    const { data: expensesData, error: expensesError } = await supabase
-      .from('maintenance_expenses')
-      .select('*');
-
-    if (expensesError) {
-      console.error('Error fetching expenses data:', expensesError);
-      return;
-    }
-
-    const budgetAlerts = generateBudgetAlerts(budgetData || [], expensesData || []);
-
-    setNotifications(maintenanceData || []);
-    setBudgetAlerts(budgetAlerts);
-  };
-
-  useEffect(() => {
-    fetchNotifications();
-
-    const channel = supabase
-      .channel('maintenance-updates')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'maintenance_requests'
-        },
-        (payload: RealtimePostgresChangesPayload<Notification>) => {
-          console.log('Real-time update:', payload);
-          const newNotification = payload.new as Notification;
-          if (newNotification?.title) {
-            toast({
-              title: "Nouvelle demande de maintenance",
-              description: newNotification.title,
-            });
-            fetchNotifications();
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [toast]);
-
-  return { notifications, budgetAlerts };
 };
