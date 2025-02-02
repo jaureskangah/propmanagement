@@ -97,7 +97,7 @@ const Properties = () => {
         <div className="space-y-2">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
-              <h1 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
                 Properties Management
               </h1>
               <p className="text-muted-foreground mt-1">

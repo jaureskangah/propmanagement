@@ -45,7 +45,7 @@ const Maintenance = () => {
       <AppSidebar />
       <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 font-sans">
         <div className="mb-4">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-foreground">
             Maintenance Management
           </h1>
           <p className="text-muted-foreground mt-1">
