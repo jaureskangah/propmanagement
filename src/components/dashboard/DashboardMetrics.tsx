@@ -49,6 +49,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.occupancy.chartData}
           chartColor="#7C3AED"
+          tooltip="Taux d'occupation global de vos propriétés. Un taux élevé indique une bonne gestion locative."
         />
 
         <DashboardMetric
@@ -63,6 +64,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.properties.chartData}
           chartColor="#1E40AF"
+          tooltip="Nombre total de propriétés dans votre portefeuille et évolution mensuelle."
         />
 
         <DashboardMetric
@@ -77,6 +79,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.tenants.chartData}
           chartColor="#4F46E5"
+          tooltip="Nombre total de locataires actifs et taux d'occupation correspondant."
         />
 
         <DashboardMetric
@@ -91,6 +94,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.maintenance.chartData}
           chartColor="#D97706"
+          tooltip="Demandes de maintenance en attente nécessitant votre attention."
         />
 
         <DashboardMetric
@@ -105,6 +109,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.revenue.chartData}
           chartColor="#059669"
+          tooltip="Revenus mensuels basés sur les baux actuels et historique des paiements."
         />
 
         <DashboardMetric
@@ -119,6 +124,7 @@ export const DashboardMetrics = ({
           }
           chartData={metrics.communications?.chartData || []}
           chartColor="#E11D48"
+          tooltip="Messages non lus de vos locataires nécessitant une réponse."
         />
       </div>
     </div>

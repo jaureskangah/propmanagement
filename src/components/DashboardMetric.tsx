@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface DashboardMetricProps {
   title: string;
@@ -14,6 +15,7 @@ interface DashboardMetricProps {
   chartData?: Array<{ value: number }>;
   chartColor?: string;
   isLoading?: boolean;
+  tooltip?: string;
 }
 
 export function DashboardMetric({ 
@@ -27,6 +29,7 @@ export function DashboardMetric({
   chartData = [],
   chartColor = "#1E40AF",
   isLoading = false,
+  tooltip
 }: DashboardMetricProps) {
   if (isLoading) {
     return (
@@ -46,7 +49,7 @@ export function DashboardMetric({
     );
   }
 
-  return (
+  const card = (
     <Card className={cn(
       "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg",
       "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
@@ -118,4 +121,25 @@ export function DashboardMetric({
       </CardContent>
     </Card>
   );
+
+  if (tooltip) {
+    return (
+      <TooltipProvider>
+        <UITooltip delayDuration={300}>
+          <TooltipTrigger asChild>
+            {card}
+          </TooltipTrigger>
+          <TooltipContent 
+            className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in"
+            side="top"
+            align="center"
+          >
+            <p className="text-sm text-gray-600">{tooltip}</p>
+          </TooltipContent>
+        </UITooltip>
+      </TooltipProvider>
+    );
+  }
+
+  return card;
 }
