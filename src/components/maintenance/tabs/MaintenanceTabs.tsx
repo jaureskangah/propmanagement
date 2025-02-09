@@ -1,4 +1,3 @@
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, ClipboardList, Users, DollarSign } from "lucide-react";
 import { PreventiveMaintenance } from "../PreventiveMaintenance";
@@ -16,35 +15,6 @@ interface MaintenanceTabsProps {
 }
 
 export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTabsProps) => {
-  const mockWorkOrders = [
-    {
-      id: "1",
-      title: "Fix Leaking Faucet",
-      status: "In Progress",
-      property: "123 Main St",
-      unit: "4B",
-      vendor: "John's Plumbing",
-      cost: 150,
-      date: "2024-03-20",
-      priority: "high"
-    },
-    {
-      id: "2",
-      title: "Replace AC Filter",
-      status: "Scheduled",
-      property: "456 Oak Ave",
-      unit: "2A",
-      vendor: "Cool Air Services",
-      cost: 75,
-      date: "2024-03-22",
-      priority: "medium"
-    }
-  ];
-
-  const handleCreateWorkOrder = () => {
-    console.log("Create work order clicked");
-  };
-
   return (
     <Tabs defaultValue="preventive" className="space-y-4">
       <TabsList className="w-full justify-start bg-background border-b p-0 h-auto overflow-x-auto flex-nowrap">
@@ -87,10 +57,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
       </TabsContent>
 
       <TabsContent value="work-orders" className="animate-fade-in">
-        <WorkOrderList 
-          workOrders={mockWorkOrders}
-          onCreateWorkOrder={handleCreateWorkOrder}
-        />
+        <WorkOrderList propertyId={propertyId} />
       </TabsContent>
 
       <TabsContent value="financials" className="animate-fade-in">
