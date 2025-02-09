@@ -1,9 +1,13 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, ClipboardList, Users, DollarSign } from "lucide-react";
 import { PreventiveMaintenance } from "../PreventiveMaintenance";
 import { WorkOrderList } from "../work-orders/WorkOrderList";
 import { VendorList } from "../vendors/VendorList";
 import { PropertyFinancials } from "../PropertyFinancials";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -15,6 +19,42 @@ interface MaintenanceTabsProps {
 }
 
 export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTabsProps) => {
+  const [isCreatingWorkOrder, setIsCreatingWorkOrder] = useState(false);
+
+  const { data: workOrders = [] } = useQuery({
+    queryKey: ['work-orders', propertyId],
+    queryFn: async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Not authenticated");
+
+      const { data, error } = await supabase
+        .from('vendor_interventions')
+        .select(`
+          *,
+          vendors (
+            name
+          ),
+          properties (
+            name
+          )
+        `)
+        .eq('user_id', userData.user.id);
+
+      if (error) throw error;
+
+      return data.map(order => ({
+        ...order,
+        vendor: order.vendors?.name || 'Unknown Vendor',
+        property: order.properties?.name || undefined,
+        unit: order.unit_number || undefined
+      }));
+    },
+  });
+
+  const handleCreateWorkOrder = () => {
+    setIsCreatingWorkOrder(true);
+  };
+
   return (
     <Tabs defaultValue="preventive" className="space-y-4">
       <TabsList className="w-full justify-start bg-background border-b p-0 h-auto overflow-x-auto flex-nowrap">
@@ -57,7 +97,10 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
       </TabsContent>
 
       <TabsContent value="work-orders" className="animate-fade-in">
-        <WorkOrderList propertyId={propertyId} />
+        <WorkOrderList 
+          workOrders={workOrders} 
+          onCreateWorkOrder={handleCreateWorkOrder}
+        />
       </TabsContent>
 
       <TabsContent value="financials" className="animate-fade-in">

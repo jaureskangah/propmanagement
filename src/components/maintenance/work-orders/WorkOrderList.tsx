@@ -14,7 +14,6 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  Calendar,
   Building,
   Home,
   DollarSign
@@ -61,6 +60,8 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   const [sortBy, setSortBy] = useState<"date" | "cost">("date");
 
   const filteredAndSortedOrders = React.useMemo(() => {
+    if (!workOrders) return [];
+    
     return workOrders
       .filter((order) => {
         const matchesStatus = statusFilter === "all" || order.status === statusFilter;
@@ -73,7 +74,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         if (sortBy === "date") {
           return (b.date || "").localeCompare(a.date || "");
         } else {
-          return b.cost - a.cost;
+          return (b.cost || 0) - (a.cost || 0);
         }
       });
   }, [workOrders, statusFilter, searchQuery, sortBy]);
@@ -184,4 +185,3 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
     </>
   );
 };
-
