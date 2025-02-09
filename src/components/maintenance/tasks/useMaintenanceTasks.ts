@@ -59,14 +59,14 @@ export const useMaintenanceTasks = () => {
 
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
       toast({
-        title: "Succès",
-        description: `Tâche marquée comme ${!task.completed ? 'complétée' : 'non complétée'}`,
+        title: "Success",
+        description: `Task marked as ${!task.completed ? 'completed' : 'incomplete'}`,
       });
     } catch (error) {
       console.error("Error updating task:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le statut de la tâche",
+        title: "Error",
+        description: "Unable to update task status",
         variant: "destructive",
       });
     }
@@ -83,14 +83,14 @@ export const useMaintenanceTasks = () => {
 
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
       toast({
-        title: "Succès",
-        description: "Tâche supprimée avec succès",
+        title: "Success",
+        description: "Task deleted successfully",
       });
     } catch (error) {
       console.error("Error deleting task:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de supprimer la tâche",
+        title: "Error",
+        description: "Unable to delete task",
         variant: "destructive",
       });
     }
@@ -99,8 +99,8 @@ export const useMaintenanceTasks = () => {
   const handleAddTask = async (newTask: NewTask) => {
     if (!user?.id) {
       toast({
-        title: "Erreur",
-        description: "Vous devez être connecté pour ajouter des tâches",
+        title: "Error",
+        description: "You must be logged in to add tasks",
         variant: "destructive",
       });
       return;
@@ -137,14 +137,14 @@ export const useMaintenanceTasks = () => {
 
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
       toast({
-        title: "Succès",
-        description: "Tâche ajoutée avec succès",
+        title: "Success",
+        description: "Task added successfully",
       });
     } catch (error) {
       console.error("Error adding task:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible d'ajouter la tâche",
+        title: "Error",
+        description: "Unable to add task",
         variant: "destructive",
       });
     }
@@ -163,8 +163,8 @@ export const useMaintenanceTasks = () => {
     } catch (error) {
       console.error("Error updating task position:", error);
       toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour la position de la tâche",
+        title: "Error",
+        description: "Unable to update task position",
         variant: "destructive",
       });
     }

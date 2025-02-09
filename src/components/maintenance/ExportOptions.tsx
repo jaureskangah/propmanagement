@@ -6,7 +6,6 @@ import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { Task } from "./types";
 
 interface ExportOptionsProps {
@@ -19,15 +18,15 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
     const workbook = XLSX.utils.book_new();
     
     const data = tasks.map(task => ({
-      Date: format(new Date(task.date), 'PPP', { locale: fr }),
-      Titre: task.title,
+      Date: format(new Date(task.date), 'PPP'),
+      Title: task.title,
       Type: task.type,
-      Statut: task.completed ? 'Complété' : 'En cours'
+      Status: task.completed ? 'Completed' : 'In Progress'
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Tâches");
-    XLSX.writeFile(workbook, "taches_maintenance.xlsx");
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Tasks");
+    XLSX.writeFile(workbook, "maintenance_tasks.xlsx");
   };
 
   const handlePDFExport = () => {
@@ -35,21 +34,21 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
     const doc = new jsPDF();
 
     const tableData = tasks.map(task => [
-      format(new Date(task.date), 'PPP', { locale: fr }),
+      format(new Date(task.date), 'PPP'),
       task.title,
       task.type,
-      task.completed ? 'Complété' : 'En cours'
+      task.completed ? 'Completed' : 'In Progress'
     ]);
 
-    doc.text("Liste des tâches de maintenance", 14, 15);
+    doc.text("Maintenance Tasks List", 14, 15);
     
     autoTable(doc, {
-      head: [["Date", "Titre", "Type", "Statut"]],
+      head: [["Date", "Title", "Type", "Status"]],
       body: tableData,
       startY: 20,
     });
 
-    doc.save("taches_maintenance.pdf");
+    doc.save("maintenance_tasks.pdf");
   };
 
   return (
@@ -60,7 +59,7 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
         className="flex items-center gap-2"
       >
         <FileSpreadsheet className="h-4 w-4" />
-        Exporter Excel
+        Export Excel
       </Button>
       <Button
         variant="outline"
@@ -68,9 +67,8 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
         className="flex items-center gap-2"
       >
         <FileText className="h-4 w-4" />
-        Exporter PDF
+        Export PDF
       </Button>
     </div>
   );
 };
-

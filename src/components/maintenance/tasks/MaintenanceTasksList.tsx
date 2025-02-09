@@ -1,3 +1,4 @@
+
 import { useMaintenanceTasks } from './useMaintenanceTasks';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { ExportOptions } from '../ExportOptions';
@@ -75,7 +76,7 @@ const SortableTableRow = ({ task, index, onTaskCompletion, onDeleteTask, onViewP
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Marquer comme {task.completed ? 'non complétée' : 'complétée'}</p>
+              <p>Mark as {task.completed ? 'incomplete' : 'complete'}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -124,7 +125,7 @@ const SortableTableRow = ({ task, index, onTaskCompletion, onDeleteTask, onViewP
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Voir les photos</p>
+                  <p>View photos</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -141,7 +142,7 @@ const SortableTableRow = ({ task, index, onTaskCompletion, onDeleteTask, onViewP
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Dupliquer la tâche</p>
+                <p>Duplicate task</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -158,7 +159,7 @@ const SortableTableRow = ({ task, index, onTaskCompletion, onDeleteTask, onViewP
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Supprimer la tâche</p>
+                <p>Delete task</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -193,7 +194,7 @@ export const MaintenanceTasksList = () => {
   };
 
   if (isLoading) {
-    return <div>Chargement...</div>;
+    return <div>Loading...</div>;
   }
 
   return (
@@ -201,14 +202,14 @@ export const MaintenanceTasksList = () => {
       <div className="overflow-x-auto">
         <DndContext sensors={sensors} onDragEnd={onDragEnd}>
           <Table>
-            <TableCaption>Liste des tâches de maintenance planifiées.</TableCaption>
+            <TableCaption>List of scheduled maintenance tasks.</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[50px]"></TableHead>
-                <TableHead className="w-[100px]">Statut</TableHead>
-                <TableHead>Titre</TableHead>
+                <TableHead className="w-[100px]">Status</TableHead>
+                <TableHead>Title</TableHead>
                 <TableHead className="hidden md:table-cell">Type</TableHead>
-                <TableHead className="hidden md:table-cell">Priorité</TableHead>
+                <TableHead className="hidden md:table-cell">Priority</TableHead>
                 <TableHead className="hidden md:table-cell">Date</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
