@@ -29,8 +29,10 @@ export const useMaintenanceTasks = () => {
         ...task,
         date: new Date(task.date),
         type: task.type as "regular" | "inspection" | "seasonal",
-        priority: task.priority || "medium",
-        status: task.status || "pending"
+        priority: (task.priority || "medium") as "low" | "medium" | "high" | "urgent",
+        status: (task.status || "pending") as "pending" | "in_progress" | "completed",
+        completed: Boolean(task.completed),
+        is_recurring: Boolean(task.is_recurring)
       }));
     },
   });
