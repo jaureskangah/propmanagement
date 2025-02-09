@@ -224,6 +224,7 @@ export type Database = {
           created_at: string
           date: string
           id: string
+          photos: string[] | null
           title: string
           type: string
           updated_at: string
@@ -234,6 +235,7 @@ export type Database = {
           created_at?: string
           date: string
           id?: string
+          photos?: string[] | null
           title: string
           type: string
           updated_at?: string
@@ -244,6 +246,7 @@ export type Database = {
           created_at?: string
           date?: string
           id?: string
+          photos?: string[] | null
           title?: string
           type?: string
           updated_at?: string
