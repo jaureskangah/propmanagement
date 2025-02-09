@@ -626,6 +626,7 @@ export type Database = {
           description: string
           id: string
           photos: string[] | null
+          priority: string
           property_id: string | null
           status: string
           title: string
@@ -640,6 +641,7 @@ export type Database = {
           description: string
           id?: string
           photos?: string[] | null
+          priority?: string
           property_id?: string | null
           status?: string
           title: string
@@ -654,6 +656,7 @@ export type Database = {
           description?: string
           id?: string
           photos?: string[] | null
+          priority?: string
           property_id?: string | null
           status?: string
           title?: string

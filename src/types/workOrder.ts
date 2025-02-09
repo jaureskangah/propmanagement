@@ -1,3 +1,4 @@
+
 export interface WorkOrder {
   id: string;
   title: string;
@@ -8,4 +9,5 @@ export interface WorkOrder {
   vendor: string;
   cost: number;
   date?: string;
+  priority: string;
 }
