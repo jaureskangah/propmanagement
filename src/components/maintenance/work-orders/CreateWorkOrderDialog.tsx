@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -48,12 +49,11 @@ export const CreateWorkOrderDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Submitting work order form...");
 
     if (!title || !description || !propertyId || !unit || !cost || !date || !vendor) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: "Champs manquants",
+        description: "Veuillez remplir tous les champs obligatoires",
         variant: "destructive",
       });
       return;
@@ -61,7 +61,11 @@ export const CreateWorkOrderDialog = ({
 
     setIsSubmitting(true);
     try {
-      console.log("Uploading photos...");
+      toast({
+        title: "Création en cours",
+        description: "Traitement de votre bon de travail...",
+      });
+
       const photoUrls: string[] = [];
       if (photos.length > 0) {
         for (const photo of photos) {
@@ -83,7 +87,6 @@ export const CreateWorkOrderDialog = ({
         }
       }
 
-      console.log("Creating work order in database...");
       const { error } = await supabase
         .from('vendor_interventions')
         .insert({
@@ -99,15 +102,11 @@ export const CreateWorkOrderDialog = ({
           user_id: (await supabase.auth.getUser()).data.user?.id
         });
 
-      if (error) {
-        console.error("Error creating work order:", error);
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log("Work order created successfully");
       toast({
-        title: "Success",
-        description: "Work order created successfully",
+        title: "Succès",
+        description: "Le bon de travail a été créé avec succès",
       });
       
       resetForm();
@@ -115,10 +114,10 @@ export const CreateWorkOrderDialog = ({
       onClose();
       
     } catch (error: any) {
-      console.error("Error creating work order:", error);
+      console.error("Erreur lors de la création du bon de travail:", error);
       toast({
-        title: "Error",
-        description: "Unable to create work order",
+        title: "Erreur",
+        description: "Impossible de créer le bon de travail",
         variant: "destructive",
       });
     } finally {
@@ -141,7 +140,7 @@ export const CreateWorkOrderDialog = ({
     }}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create New Work Order</DialogTitle>
+          <DialogTitle>Créer un nouveau bon de travail</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <BasicInfoFields
@@ -179,14 +178,14 @@ export const CreateWorkOrderDialog = ({
 
           <div className="flex justify-end gap-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Annuler
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
               className="bg-blue-500 hover:bg-blue-600"
             >
-              {isSubmitting ? "Creating..." : "Create Order"}
+              {isSubmitting ? "Création..." : "Créer le bon"}
             </Button>
           </div>
         </form>

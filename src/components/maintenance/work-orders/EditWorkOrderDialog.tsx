@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -29,9 +30,14 @@ export const EditWorkOrderDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating work order...");
+    console.log("Mise à jour du bon de travail...");
 
     try {
+      toast({
+        title: "Mise à jour en cours",
+        description: "Traitement de vos modifications...",
+      });
+
       const { error } = await supabase
         .from("vendor_interventions")
         .update({
@@ -45,17 +51,17 @@ export const EditWorkOrderDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Work order updated successfully",
+        title: "Succès",
+        description: "Le bon de travail a été mis à jour avec succès",
       });
 
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("Error updating work order:", error);
+      console.error("Erreur lors de la mise à jour du bon de travail:", error);
       toast({
-        title: "Error",
-        description: "Failed to update work order",
+        title: "Erreur",
+        description: "Impossible de mettre à jour le bon de travail",
         variant: "destructive",
       });
     }
@@ -65,11 +71,11 @@ export const EditWorkOrderDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Work Order</DialogTitle>
+          <DialogTitle>Modifier le bon de travail</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <label htmlFor="title">Title</label>
+            <label htmlFor="title">Titre</label>
             <Input
               id="title"
               value={title}
@@ -89,21 +95,21 @@ export const EditWorkOrderDialog = ({
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="status">Status</label>
+            <label htmlFor="status">Statut</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Scheduled">Scheduled</SelectItem>
-                <SelectItem value="In Progress">In Progress</SelectItem>
-                <SelectItem value="Completed">Completed</SelectItem>
+                <SelectItem value="Scheduled">Planifié</SelectItem>
+                <SelectItem value="In Progress">En cours</SelectItem>
+                <SelectItem value="Completed">Terminé</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="cost">Cost</label>
+            <label htmlFor="cost">Coût</label>
             <Input
               id="cost"
               type="number"
@@ -115,9 +121,11 @@ export const EditWorkOrderDialog = ({
 
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+              Annuler
             </Button>
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit">
+              Enregistrer les modifications
+            </Button>
           </div>
         </form>
       </DialogContent>

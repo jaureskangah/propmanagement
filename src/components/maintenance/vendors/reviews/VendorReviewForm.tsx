@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
@@ -38,7 +39,12 @@ export const VendorReviewForm = ({
   const onSubmit = async (data: any) => {
     try {
       if (!user?.id) {
-        throw new Error("User not authenticated");
+        toast({
+          title: "Erreur d'authentification",
+          description: "Vous devez être connecté pour soumettre un avis.",
+          variant: "destructive",
+        });
+        return;
       }
 
       setIsSubmitting(true);
@@ -49,7 +55,7 @@ export const VendorReviewForm = ({
         price_rating: data.priceRating,
         punctuality_rating: data.punctualityRating,
         user_id: user.id,
-        rating: 0, // This will be calculated by the database trigger
+        rating: 0, // Calculé par le trigger de la base de données
       };
 
       if (initialData) {
@@ -61,8 +67,8 @@ export const VendorReviewForm = ({
         if (error) throw error;
 
         toast({
-          title: "Review updated",
-          description: "Your review has been updated successfully.",
+          title: "Avis mis à jour",
+          description: "Votre avis a été mis à jour avec succès.",
         });
       } else {
         const { error } = await supabase
@@ -72,17 +78,17 @@ export const VendorReviewForm = ({
         if (error) throw error;
 
         toast({
-          title: "Review added",
-          description: "Your review has been submitted successfully.",
+          title: "Avis ajouté",
+          description: "Votre avis a été soumis avec succès.",
         });
       }
       
       onSuccess();
     } catch (error) {
-      console.error("Error submitting review:", error);
+      console.error("Erreur lors de la soumission de l'avis:", error);
       toast({
-        title: "Error",
-        description: "An error occurred while saving the review.",
+        title: "Erreur",
+        description: "Une erreur est survenue lors de l'enregistrement de l'avis.",
         variant: "destructive",
       });
     } finally {

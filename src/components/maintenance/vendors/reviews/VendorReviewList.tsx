@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, Pencil, Trash2 } from "lucide-react";
@@ -13,7 +14,6 @@ import { useState } from "react";
 
 interface VendorReviewListProps {
   reviews: VendorReview[];
-  onEdit: (review: VendorReview) => void;
   onRefresh: () => void;
 }
 
@@ -25,6 +25,11 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
 
   const handleDelete = async (review: VendorReview) => {
     try {
+      toast({
+        title: "Suppression en cours",
+        description: "Traitement de votre demande...",
+      });
+
       const { error } = await supabase
         .from('vendor_reviews')
         .delete()
@@ -33,16 +38,16 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
       if (error) throw error;
 
       toast({
-        title: "Review deleted",
-        description: "The review has been deleted successfully.",
+        title: "Avis supprimé",
+        description: "L'avis a été supprimé avec succès.",
       });
       
       onRefresh();
     } catch (error) {
-      console.error("Error deleting review:", error);
+      console.error("Erreur lors de la suppression de l'avis:", error);
       toast({
-        title: "Error",
-        description: "An error occurred while deleting the review.",
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la suppression de l'avis.",
         variant: "destructive",
       });
     }
@@ -73,15 +78,15 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-2 text-sm">
                   <div>
-                    <p className="font-medium">Quality</p>
+                    <p className="font-medium">Qualité</p>
                     <p>{review.quality_rating}/5</p>
                   </div>
                   <div>
-                    <p className="font-medium">Price</p>
+                    <p className="font-medium">Prix</p>
                     <p>{review.price_rating}/5</p>
                   </div>
                   <div>
-                    <p className="font-medium">Punctuality</p>
+                    <p className="font-medium">Ponctualité</p>
                     <p>{review.punctuality_rating}/5</p>
                   </div>
                 </div>
@@ -96,7 +101,7 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
                       onClick={() => handleEdit(review)}
                     >
                       <Pencil className="h-4 w-4 mr-1" />
-                      Edit
+                      Modifier
                     </Button>
                     <Button
                       variant="destructive"
@@ -104,7 +109,7 @@ export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) 
                       onClick={() => handleDelete(review)}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Delete
+                      Supprimer
                     </Button>
                   </div>
                 )}
