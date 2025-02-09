@@ -1,11 +1,23 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, X, LayoutDashboard, Home, Users, Wrench, MessageSquare, HelpCircle } from "lucide-react";
+import { 
+  Menu, 
+  X, 
+  LayoutDashboard, 
+  Home, 
+  Users, 
+  Wrench, 
+  MessageSquare, 
+  HelpCircle, 
+  ChevronLeft 
+} from "lucide-react";
 import { SidebarNavLink } from "./sidebar/SidebarNavLink";
 import { SidebarLogo } from "./sidebar/SidebarLogo";
 import { SidebarToggle } from "./sidebar/SidebarToggle";
+import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
   isTenant?: boolean;
@@ -20,7 +32,6 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
   };
 
   const handleSupportClick = () => {
-    // You can customize this to open a support modal, redirect to a support page, etc.
     window.open('mailto:contact@propmanagement.app', '_blank');
   };
 
@@ -39,7 +50,7 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
               <div className="p-6">
                 <SidebarLogo isCollapsed={false} />
               </div>
-              <nav className="flex-1 px-4 pb-6">
+              <nav className="flex-1 space-y-2 px-4 pb-6">
                 {!isTenant ? (
                   <>
                     <SidebarNavLink to="/dashboard" icon={LayoutDashboard}>
@@ -83,9 +94,11 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
 
       {/* Desktop Sidebar */}
       <aside
-        className={`hidden md:flex h-screen flex-col border-r bg-sidebar-background transition-all duration-300 ${
-          isCollapsed ? "w-[80px]" : "w-[270px]"
-        } fixed left-0 top-0`}
+        className={cn(
+          "hidden md:flex h-screen flex-col border-r bg-sidebar-background transition-all duration-300",
+          isCollapsed ? "w-[80px]" : "w-[270px]",
+          "fixed left-0 top-0 z-30"
+        )}
       >
         <div className="flex h-[60px] items-center border-b px-6">
           <Link to="/" className="flex items-center gap-2 font-semibold">
@@ -93,31 +106,57 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
           </Link>
         </div>
 
-        <nav className="flex-1 space-y-1 p-4">
+        <nav className="flex-1 space-y-2 p-4">
           {!isTenant ? (
             <>
-              <SidebarNavLink to="/dashboard" icon={LayoutDashboard} collapsed={isCollapsed}>
+              <SidebarNavLink 
+                to="/dashboard" 
+                icon={LayoutDashboard} 
+                collapsed={isCollapsed}
+                tooltipContent="Dashboard"
+              >
                 Dashboard
               </SidebarNavLink>
-              <SidebarNavLink to="/properties" icon={Home} collapsed={isCollapsed}>
+              <SidebarNavLink 
+                to="/properties" 
+                icon={Home} 
+                collapsed={isCollapsed}
+                tooltipContent="Properties"
+              >
                 Properties
               </SidebarNavLink>
-              <SidebarNavLink to="/tenants" icon={Users} collapsed={isCollapsed}>
+              <SidebarNavLink 
+                to="/tenants" 
+                icon={Users} 
+                collapsed={isCollapsed}
+                tooltipContent="Tenants"
+              >
                 Tenants
               </SidebarNavLink>
-              <SidebarNavLink to="/maintenance" icon={Wrench} collapsed={isCollapsed}>
+              <SidebarNavLink 
+                to="/maintenance" 
+                icon={Wrench} 
+                collapsed={isCollapsed}
+                tooltipContent="Maintenance"
+              >
                 Maintenance
               </SidebarNavLink>
             </>
           ) : (
             <>
-              <SidebarNavLink to="/tenant/maintenance" icon={Wrench} collapsed={isCollapsed}>
+              <SidebarNavLink 
+                to="/tenant/maintenance" 
+                icon={Wrench} 
+                collapsed={isCollapsed}
+                tooltipContent="Maintenance"
+              >
                 Maintenance
               </SidebarNavLink>
-              <SidebarNavLink
-                to="/tenant/communications"
-                icon={MessageSquare}
+              <SidebarNavLink 
+                to="/tenant/communications" 
+                icon={MessageSquare} 
                 collapsed={isCollapsed}
+                tooltipContent="Communications"
               >
                 Communications
               </SidebarNavLink>
@@ -125,10 +164,16 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
           )}
         </nav>
 
-        <div className="border-t p-4">
+        <div className={cn(
+          "border-t p-4",
+          isCollapsed ? "flex justify-center" : ""
+        )}>
           <Button 
             variant="outline" 
-            className="w-full justify-start gap-2" 
+            className={cn(
+              "w-full justify-start gap-2 transition-colors",
+              isCollapsed && "w-10 h-10 p-0 justify-center"
+            )}
             onClick={handleSupportClick}
             title={isCollapsed ? "Get Support" : undefined}
           >
@@ -142,7 +187,12 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
       </aside>
 
       {/* Main Content Wrapper */}
-      <div className={`md:pl-[270px] min-h-screen transition-all duration-300 ${isCollapsed ? "md:pl-[80px]" : ""}`}>
+      <div 
+        className={cn(
+          "min-h-screen transition-all duration-300 bg-gray-50",
+          isCollapsed ? "md:pl-[80px]" : "md:pl-[270px]"
+        )}
+      >
         {/* Page content will be rendered here */}
       </div>
     </>
