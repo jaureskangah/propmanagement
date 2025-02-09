@@ -90,8 +90,7 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
                   </div>
                   <Progress 
                     value={metric.progress} 
-                    className="h-1.5 transition-all duration-300"
-                    indicatorClassName={`${metric.progressColor}`}
+                    className={`h-1.5 transition-all duration-300 ${metric.progressColor}`}
                   />
                 </div>
               )}
@@ -102,3 +101,4 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
     </>
   );
 };
+
