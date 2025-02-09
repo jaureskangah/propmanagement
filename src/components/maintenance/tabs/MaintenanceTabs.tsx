@@ -67,35 +67,35 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
   };
 
   return (
-    <>
+    <div className="animate-fade-in">
       <Tabs defaultValue="preventive" className="space-y-4">
         <TabsList className="w-full justify-start bg-background border-b p-0 h-auto overflow-x-auto flex-nowrap">
           <TabsTrigger 
             value="preventive"
-            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-300 hover:bg-accent/50 data-[state=active]:animate-scale-in whitespace-nowrap"
           >
-            <Calendar className="h-4 w-4 hidden sm:block" />
+            <Calendar className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110" />
             <span>Preventive</span>
           </TabsTrigger>
           <TabsTrigger 
             value="vendors"
-            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-300 hover:bg-accent/50 data-[state=active]:animate-scale-in whitespace-nowrap"
           >
-            <Users className="h-4 w-4 hidden sm:block" />
+            <Users className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110" />
             <span>Vendors</span>
           </TabsTrigger>
           <TabsTrigger 
             value="work-orders"
-            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-300 hover:bg-accent/50 data-[state=active]:animate-scale-in whitespace-nowrap"
           >
-            <ClipboardList className="h-4 w-4 hidden sm:block" />
+            <ClipboardList className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110" />
             <span>Work Orders</span>
           </TabsTrigger>
           <TabsTrigger 
             value="financials"
-            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-200 whitespace-nowrap"
+            className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary rounded-none transition-all duration-300 hover:bg-accent/50 data-[state=active]:animate-scale-in whitespace-nowrap"
           >
-            <DollarSign className="h-4 w-4 hidden sm:block" />
+            <DollarSign className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110" />
             <span>Costs</span>
           </TabsTrigger>
         </TabsList>
@@ -126,6 +126,6 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
         onSuccess={handleSuccess}
         propertyId={propertyId}
       />
-    </>
+    </div>
   );
 };

@@ -80,16 +80,19 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
   return (
-    <>
+    <div className="animate-fade-in">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Work Orders</h2>
-        <Button onClick={onCreateWorkOrder} className="flex items-center gap-2">
+        <Button 
+          onClick={onCreateWorkOrder} 
+          className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
+        >
           <Plus className="h-4 w-4" />
           Create Order
         </Button>
       </div>
 
-      <div className="space-y-4 mb-6">
+      <div className="space-y-4 mb-6 animate-fade-in">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -98,13 +101,13 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                 placeholder="Search by title or property..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8"
+                className="pl-8 transition-all duration-300 hover:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
           </div>
 
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -116,7 +119,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
           </Select>
 
           <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -131,12 +134,12 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         {filteredAndSortedOrders.map((order) => {
           const statusConfig = getStatusConfig(order.status);
           return (
-            <Card key={order.id}>
+            <Card key={order.id} className="group transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
               <CardContent className="pt-6">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold">{order.title}</h3>
-                    <Wrench className="h-5 w-5 text-blue-500" />
+                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors duration-300">{order.title}</h3>
+                    <Wrench className="h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:rotate-12" />
                   </div>
                   {order.property && (
                     <div className="flex items-center gap-2">
@@ -151,7 +154,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                     </div>
                   )}
                   <div className="flex items-center gap-2 mt-2">
-                    <Badge className={statusConfig.className}>
+                    <Badge className={`${statusConfig.className} transition-all duration-300`}>
                       <div className="flex items-center">
                         {statusConfig.icon}
                         {order.status}
@@ -167,11 +170,19 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                     <p><strong>Cost:</strong> ${order.cost}</p>
                   </div>
                   <div className="flex gap-2 mt-4">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="transition-all duration-300 hover:scale-105"
+                    >
                       <FileImage className="h-4 w-4 mr-2" />
                       Photos
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="transition-all duration-300 hover:scale-105"
+                    >
                       <CheckSquare className="h-4 w-4 mr-2" />
                       Update
                     </Button>
@@ -182,6 +193,6 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
           );
         })}
       </div>
-    </>
+    </div>
   );
 };
