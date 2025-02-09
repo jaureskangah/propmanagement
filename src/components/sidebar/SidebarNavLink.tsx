@@ -2,7 +2,12 @@
 import { NavLink } from "react-router-dom";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Tooltip } from "@/components/ui/tooltip";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SidebarNavLinkProps {
   to: string;
@@ -37,11 +42,19 @@ export const SidebarNavLink = ({ to, icon: Icon, children, collapsed, tooltipCon
 
   if (collapsed && tooltipContent) {
     return (
-      <Tooltip content={tooltipContent} side="right">
-        {link}
-      </Tooltip>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            {link}
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {tooltipContent}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 
   return link;
 };
+
