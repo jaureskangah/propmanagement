@@ -1,3 +1,4 @@
+
 import { useMaintenanceTasks } from './useMaintenanceTasks';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { ExportOptions } from '../ExportOptions';
@@ -13,11 +14,14 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { format } from 'date-fns';
-import { CalendarIcon, Copy, Trash2 } from 'lucide-react';
-import { Badge } from "@/components/ui/badge"
+import { CalendarIcon, Copy, Eye, Trash2 } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
+import { ViewPhotosDialog } from './ViewPhotosDialog';
+import { useState } from 'react';
 
 export const MaintenanceTasksList = () => {
   const { tasks, isLoading, handleTaskCompletion, handleDeleteTask } = useMaintenanceTasks();
+  const [selectedTask, setSelectedTask] = useState<{ id: string; photos?: string[] } | null>(null);
   useRealtimeNotifications();
 
   if (isLoading) {
@@ -55,6 +59,15 @@ export const MaintenanceTasksList = () => {
               <TableCell>{format(task.date, 'PPP')}</TableCell>
               <TableCell>
                 <div className="flex gap-2">
+                  {task.photos && task.photos.length > 0 && (
+                    <Button 
+                      variant="outline" 
+                      size="icon"
+                      onClick={() => setSelectedTask(task)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button variant="outline" size="icon">
                     <Copy className="h-4 w-4" />
                   </Button>
@@ -69,6 +82,14 @@ export const MaintenanceTasksList = () => {
       </Table>
       
       <ExportOptions tasks={tasks} />
+
+      {selectedTask && (
+        <ViewPhotosDialog
+          isOpen={!!selectedTask}
+          onClose={() => setSelectedTask(null)}
+          photos={selectedTask.photos || []}
+        />
+      )}
     </div>
   );
 };
