@@ -7,16 +7,10 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
-
-interface MaintenanceTask {
-  title: string;
-  priority: string;
-  status: string;
-  date: string;
-}
+import { Task } from "./types";
 
 interface ExportOptionsProps {
-  tasks: MaintenanceTask[];
+  tasks: Task[];
 }
 
 export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
@@ -27,8 +21,8 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
     const data = tasks.map(task => ({
       Date: format(new Date(task.date), 'PPP', { locale: fr }),
       Titre: task.title,
-      Priorité: task.priority,
-      Statut: task.status
+      Type: task.type,
+      Statut: task.completed ? 'Complété' : 'En cours'
     }));
 
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -43,14 +37,14 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
     const tableData = tasks.map(task => [
       format(new Date(task.date), 'PPP', { locale: fr }),
       task.title,
-      task.priority,
-      task.status
+      task.type,
+      task.completed ? 'Complété' : 'En cours'
     ]);
 
     doc.text("Liste des tâches de maintenance", 14, 15);
     
     autoTable(doc, {
-      head: [["Date", "Titre", "Priorité", "Statut"]],
+      head: [["Date", "Titre", "Type", "Statut"]],
       body: tableData,
       startY: 20,
     });
@@ -79,3 +73,4 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
     </div>
   );
 };
+
