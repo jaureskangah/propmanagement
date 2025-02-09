@@ -32,8 +32,13 @@ export const useMaintenanceTasks = () => {
         priority: (task.priority || "medium") as "low" | "medium" | "high" | "urgent",
         status: (task.status || "pending") as "pending" | "in_progress" | "completed",
         completed: Boolean(task.completed),
-        is_recurring: Boolean(task.is_recurring)
-      }));
+        is_recurring: Boolean(task.is_recurring),
+        recurrence_pattern: task.recurrence_pattern ? {
+          frequency: (task.recurrence_pattern as any).frequency || "daily",
+          interval: (task.recurrence_pattern as any).interval || 1,
+          endDate: (task.recurrence_pattern as any).endDate
+        } : undefined
+      })) as Task[];
     },
   });
 
@@ -121,7 +126,11 @@ export const useMaintenanceTasks = () => {
           user_id: user.id,
           position: nextPosition,
           is_recurring: newTask.is_recurring || false,
-          recurrence_pattern: newTask.recurrence_pattern || null
+          recurrence_pattern: newTask.recurrence_pattern ? {
+            frequency: newTask.recurrence_pattern.frequency,
+            interval: newTask.recurrence_pattern.interval,
+            endDate: newTask.recurrence_pattern.endDate
+          } : null
         });
 
       if (error) throw error;
