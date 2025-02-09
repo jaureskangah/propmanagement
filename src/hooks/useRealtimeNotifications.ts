@@ -1,3 +1,4 @@
+
 import { useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
@@ -5,7 +6,17 @@ import { useToast } from '@/hooks/use-toast';
 export function useRealtimeNotifications() {
   const { toast } = useToast();
 
-  const handleNotification = useCallback((payload: any) => {
+  const handleUrgentTasks = useCallback((payload: any) => {
+    if (payload.new.priority === 'high' || payload.new.priority === 'urgent') {
+      toast({
+        title: "Tâche urgente",
+        description: `Nouvelle tâche urgente : ${payload.new.title}`,
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  const handleMaintenanceRequest = useCallback((payload: any) => {
     if (payload.eventType === 'INSERT') {
       toast({
         title: "Nouvelle demande de maintenance",
@@ -21,22 +32,6 @@ export function useRealtimeNotifications() {
     }
   }, [toast]);
 
-  const handleCommunication = useCallback((payload: any) => {
-    console.log("Communication payload:", payload);
-    
-    if (payload.eventType === 'INSERT') {
-      // Vérifier si le message vient d'un locataire
-      if (payload.new.is_from_tenant) {
-        toast({
-          title: "Nouveau message d'un locataire",
-          description: `Sujet: ${payload.new.subject}`,
-          variant: "default",
-          duration: 5000,
-        });
-      }
-    }
-  }, [toast]);
-
   useEffect(() => {
     const channel = supabase
       .channel('db-changes')
@@ -45,18 +40,18 @@ export function useRealtimeNotifications() {
         {
           event: '*',
           schema: 'public',
-          table: 'maintenance_requests'
+          table: 'maintenance_tasks'
         },
-        handleNotification
+        handleUrgentTasks
       )
       .on(
         'postgres_changes',
         {
           event: '*',
           schema: 'public',
-          table: 'tenant_communications'
+          table: 'maintenance_requests'
         },
-        handleCommunication
+        handleMaintenanceRequest
       )
       .subscribe();
 
@@ -66,5 +61,5 @@ export function useRealtimeNotifications() {
       console.log("Cleaning up realtime notifications subscription");
       supabase.removeChannel(channel);
     };
-  }, [handleNotification, handleCommunication]);
+  }, [handleUrgentTasks, handleMaintenanceRequest]);
 }
