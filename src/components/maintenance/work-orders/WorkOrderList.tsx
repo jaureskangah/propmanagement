@@ -31,19 +31,19 @@ const getStatusConfig = (status: string) => {
       return {
         variant: "default" as const,
         icon: <AlertCircle className="h-4 w-4 mr-1" />,
-        className: "bg-blue-500"
+        className: "bg-blue-500/90 backdrop-blur-sm"
       };
     case "Scheduled":
       return {
         variant: "secondary" as const,
         icon: <Clock className="h-4 w-4 mr-1" />,
-        className: "bg-orange-500"
+        className: "bg-orange-500/90 backdrop-blur-sm"
       };
     case "Completed":
       return {
         variant: "outline" as const,
         icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
-        className: "bg-green-500 text-white"
+        className: "bg-green-500/90 backdrop-blur-sm text-white"
       };
     default:
       return {
@@ -80,19 +80,19 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
   return (
-    <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Work Orders</h2>
+    <div className="animate-fade-in space-y-6">
+      <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Work Orders</h2>
         <Button 
           onClick={onCreateWorkOrder} 
-          className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
+          className="flex items-center gap-2 transition-all duration-300 hover:scale-105 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md hover:shadow-lg"
         >
           <Plus className="h-4 w-4" />
           Create Order
         </Button>
       </div>
 
-      <div className="space-y-4 mb-6 animate-fade-in">
+      <div className="space-y-4 animate-fade-in">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -101,16 +101,16 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                 placeholder="Search by title or property..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 transition-all duration-300 hover:border-primary focus:ring-2 focus:ring-primary/20"
+                className="pl-8 transition-all duration-300 hover:border-primary focus:ring-2 focus:ring-primary/20 bg-white/80 backdrop-blur-sm"
               />
             </div>
           </div>
 
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary">
+            <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-white/80 backdrop-blur-sm">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white/95 backdrop-blur-lg">
               <SelectItem value="all">All statuses</SelectItem>
               <SelectItem value="In Progress">In Progress</SelectItem>
               <SelectItem value="Scheduled">Scheduled</SelectItem>
@@ -119,10 +119,10 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
           </Select>
 
           <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
-            <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary">
+            <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-white/80 backdrop-blur-sm">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white/95 backdrop-blur-lg">
               <SelectItem value="date">Date</SelectItem>
               <SelectItem value="cost">Cost</SelectItem>
             </SelectContent>
@@ -134,12 +134,12 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         {filteredAndSortedOrders.map((order) => {
           const statusConfig = getStatusConfig(order.status);
           return (
-            <Card key={order.id} className="group transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+            <Card key={order.id} className="group transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-white/80 backdrop-blur-sm border border-gray-100">
               <CardContent className="pt-6">
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-semibold group-hover:text-primary transition-colors duration-300">{order.title}</h3>
-                    <Wrench className="h-5 w-5 text-blue-500 transition-transform duration-300 group-hover:rotate-12" />
+                    <h3 className="text-lg font-semibold group-hover:text-red-500 transition-colors duration-300">{order.title}</h3>
+                    <Wrench className="h-5 w-5 text-red-500 transition-transform duration-300 group-hover:rotate-12" />
                   </div>
                   {order.property && (
                     <div className="flex items-center gap-2">
@@ -154,7 +154,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                     </div>
                   )}
                   <div className="flex items-center gap-2 mt-2">
-                    <Badge className={`${statusConfig.className} transition-all duration-300`}>
+                    <Badge className={`${statusConfig.className} transition-all duration-300 shadow-sm`}>
                       <div className="flex items-center">
                         {statusConfig.icon}
                         {order.status}
@@ -173,7 +173,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="transition-all duration-300 hover:scale-105"
+                      className="transition-all duration-300 hover:scale-105 bg-white hover:bg-gray-50"
                     >
                       <FileImage className="h-4 w-4 mr-2" />
                       Photos
@@ -181,7 +181,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                     <Button 
                       variant="outline" 
                       size="sm"
-                      className="transition-all duration-300 hover:scale-105"
+                      className="transition-all duration-300 hover:scale-105 bg-white hover:bg-gray-50"
                     >
                       <CheckSquare className="h-4 w-4 mr-2" />
                       Update
