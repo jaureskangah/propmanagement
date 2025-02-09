@@ -218,13 +218,51 @@ export type Database = {
           },
         ]
       }
+      maintenance_task_templates: {
+        Row: {
+          created_at: string
+          id: string
+          priority: string | null
+          recurrence_pattern: Json
+          title: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          priority?: string | null
+          recurrence_pattern: Json
+          title: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          priority?: string | null
+          recurrence_pattern?: Json
+          title?: string
+          type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       maintenance_tasks: {
         Row: {
           completed: boolean | null
           created_at: string
           date: string
           id: string
+          is_recurring: boolean | null
           photos: string[] | null
+          position: number | null
+          priority: string | null
+          recurrence_pattern: Json | null
+          status: string | null
           title: string
           type: string
           updated_at: string
@@ -235,7 +273,12 @@ export type Database = {
           created_at?: string
           date: string
           id?: string
+          is_recurring?: boolean | null
           photos?: string[] | null
+          position?: number | null
+          priority?: string | null
+          recurrence_pattern?: Json | null
+          status?: string | null
           title: string
           type: string
           updated_at?: string
@@ -246,7 +289,12 @@ export type Database = {
           created_at?: string
           date?: string
           id?: string
+          is_recurring?: boolean | null
           photos?: string[] | null
+          position?: number | null
+          priority?: string | null
+          recurrence_pattern?: Json | null
+          status?: string | null
           title?: string
           type?: string
           updated_at?: string
