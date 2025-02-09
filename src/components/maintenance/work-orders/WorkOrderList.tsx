@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -14,8 +15,14 @@ interface WorkOrderListProps {
 export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"date" | "cost">("date");
+  const [sortBy, setSortBy] = useState<"date" | "cost" | "priority">("date");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
+    from: undefined,
+    to: undefined,
+  });
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [vendorSearch, setVendorSearch] = useState("");
   const { toast } = useToast();
 
   const { 
@@ -26,15 +33,18 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
   } = useWorkOrders({
     statusFilter,
     searchQuery,
-    sortBy
+    sortBy,
+    dateRange,
+    priorityFilter,
+    vendorSearch
   });
 
   const handleCreateSuccess = () => {
     refetch();
     setIsCreateDialogOpen(false);
     toast({
-      title: "Work order created",
-      description: "The work order has been created successfully",
+      title: "Bon de travail créé",
+      description: "Le bon de travail a été créé avec succès",
     });
   };
 
@@ -47,19 +57,19 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Chargement...</div>;
   }
 
   return (
     <>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Work Orders</h2>
+        <h2 className="text-xl font-semibold">Bons de travail</h2>
         <Button 
           onClick={() => setIsCreateDialogOpen(true)}
           className="flex items-center gap-2"
         >
           <Plus className="h-4 w-4" />
-          Create Order
+          Créer un bon
         </Button>
       </div>
 
@@ -68,8 +78,14 @@ export const WorkOrderList = ({ propertyId }: WorkOrderListProps) => {
         setSearchQuery={setSearchQuery}
         statusFilter={statusFilter}
         setStatusFilter={setStatusFilter}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+        priorityFilter={priorityFilter}
+        setPriorityFilter={setPriorityFilter}
         sortBy={sortBy}
         setSortBy={setSortBy}
+        vendorSearch={vendorSearch}
+        setVendorSearch={setVendorSearch}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
