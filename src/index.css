@@ -76,15 +76,15 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
 
-    /* Updated dark mode sidebar colors for better visibility */
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Mise à jour des couleurs du sidebar en mode sombre pour un meilleur contraste */
+    --sidebar-background: 240 10% 3.9%; /* Fond plus sombre */
+    --sidebar-foreground: 0 0% 98%; /* Texte plus clair */
+    --sidebar-primary: 0 62.8% 30.6%; /* Rouge plus foncé pour les éléments actifs */
+    --sidebar-primary-foreground: 0 0% 100%; /* Texte blanc sur fond rouge */
+    --sidebar-accent: 240 3.7% 15.9%; /* Accent plus sombre */
+    --sidebar-accent-foreground: 240 4.8% 95.9%; /* Texte clair sur accent */
+    --sidebar-border: 240 3.7% 15.9%; /* Bordures plus sombres */
+    --sidebar-ring: 240 4.9% 83.9%; /* Anneau de focus plus visible */
   }
 }
 
