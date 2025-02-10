@@ -1,7 +1,9 @@
+
 import { NotificationBell } from "./NotificationBell";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DashboardCustomization } from "./DashboardCustomization";
 
 interface DashboardHeaderProps {
   title: string;
@@ -29,6 +31,7 @@ export const DashboardHeader = ({ title, trend }: DashboardHeaderProps) => {
             <span>{trend.value >= 0 ? "+" : ""}{trend.value}% {trend.label || "this month"}</span>
           </div>
         )}
+        <DashboardCustomization />
         <ThemeToggle />
         <NotificationBell unreadCount={0} />
       </div>

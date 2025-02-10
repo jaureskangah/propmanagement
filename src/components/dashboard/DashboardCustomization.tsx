@@ -1,6 +1,7 @@
+
+import React from "react";
+import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetContent,
@@ -10,25 +11,15 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Settings } from "lucide-react";
-import { useDashboardPreferences } from "./hooks/useDashboardPreferences";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
-const AVAILABLE_SECTIONS = [
-  { id: "metrics", label: "Metrics Overview" },
-  { id: "priority", label: "Priority Section" },
-  { id: "revenue", label: "Revenue Chart" },
-  { id: "activity", label: "Recent Activity" },
-];
+interface DashboardPreferences {
+  hidden_sections: string[];
+}
 
 export function DashboardCustomization() {
-  const { preferences, updatePreferences } = useDashboardPreferences();
-
-  const toggleSection = (sectionId: string) => {
-    const newHiddenSections = preferences.hidden_sections.includes(sectionId)
-      ? preferences.hidden_sections.filter((id) => id !== sectionId)
-      : [...preferences.hidden_sections, sectionId];
-
-    updatePreferences.mutate({ hidden_sections: newHiddenSections });
-  };
+  const { theme, setTheme } = useTheme();
 
   return (
     <Sheet>
@@ -39,30 +30,23 @@ export function DashboardCustomization() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Dashboard Customization</SheetTitle>
+          <SheetTitle>Personnalisation</SheetTitle>
           <SheetDescription>
-            Customize your dashboard layout and visible sections
+            Personnalisez votre tableau de bord et son apparence
           </SheetDescription>
         </SheetHeader>
 
         <div className="mt-6">
-          <h3 className="text-sm font-medium mb-4">Visible Sections</h3>
+          <h3 className="text-sm font-medium mb-4">Thème</h3>
           <div className="space-y-4">
-            {AVAILABLE_SECTIONS.map((section) => (
-              <div
-                key={section.id}
-                className="flex items-center justify-between"
-              >
-                <Label htmlFor={section.id} className="cursor-pointer">
-                  {section.label}
-                </Label>
-                <Switch
-                  id={section.id}
-                  checked={!preferences.hidden_sections.includes(section.id)}
-                  onCheckedChange={() => toggleSection(section.id)}
-                />
-              </div>
-            ))}
+            <div className="flex items-center justify-between">
+              <Label htmlFor="dark-mode">Mode sombre</Label>
+              <Switch
+                id="dark-mode"
+                checked={theme === "dark"}
+                onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+              />
+            </div>
           </div>
         </div>
       </SheetContent>
