@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { MobileSidebar } from "./sidebar/MobileSidebar";
@@ -37,7 +38,7 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
 
       <div 
         className={cn(
-          "min-h-screen transition-all duration-300 bg-gray-50",
+          "min-h-screen transition-all duration-300 bg-background",
           isCollapsed ? "md:pl-[80px]" : "md:pl-[270px]"
         )}
       >
