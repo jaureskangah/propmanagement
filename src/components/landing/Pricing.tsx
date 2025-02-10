@@ -1,3 +1,4 @@
+
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,11 +12,14 @@ const plans = [
     name: "Freemium",
     price: "Free",
     features: [
-      "Up to 2 properties",
-      "Rent management",
-      "Digital documents",
+      "Jusqu'à 2 propriétés",
+      "Gestion des loyers",
+      "Documents numériques",
+      "Fiches propriétés basiques",
+      "Notifications email",
+      "Support communautaire",
     ],
-    buttonText: "Get Started Free",
+    buttonText: "Commencer gratuitement",
     priceId: null,
   },
   {
@@ -23,28 +27,40 @@ const plans = [
     price: "39.99",
     popular: true,
     features: [
-      "Up to 5 properties",
-      "Rent management",
-      "Digital documents",
-      "Mobile app",
-      "Tenant screening",
-      "Priority support",
+      "Jusqu'à 5 propriétés",
+      "Gestion des loyers",
+      "Documents numériques",
+      "Application mobile",
+      "Vérification des locataires",
+      "Support prioritaire",
+      "Tableau de bord avancé",
+      "Rapports financiers",
+      "Gestion des maintenances",
+      "Paiements en ligne",
     ],
-    buttonText: "Start Now",
+    buttonText: "Commencer maintenant",
     priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
   },
   {
     name: "Enterprise",
     price: "99.99",
     features: [
-      "Up to 20 properties",
-      "Rent management",
-      "Digital documents",
-      "Mobile app",
-      "Tenant screening",
-      "24/7 Priority support",
+      "Jusqu'à 20 propriétés",
+      "Gestion des loyers",
+      "Documents numériques",
+      "Application mobile",
+      "Vérification des locataires",
+      "Support 24/7 dédié",
+      "Tableau de bord personnalisé",
+      "Rapports financiers avancés",
+      "Gestion des maintenances",
+      "Paiements en ligne",
+      "API personnalisée",
+      "Formation utilisateurs",
+      "Backup quotidien",
+      "Analyses prédictives",
     ],
-    buttonText: "Start Now",
+    buttonText: "Commencer maintenant",
     priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
   },
 ];
@@ -62,8 +78,8 @@ export default function Pricing() {
 
     if (!user) {
       toast({
-        title: "Authentication required",
-        description: "Please sign in to subscribe to a plan",
+        title: "Authentification requise",
+        description: "Veuillez vous connecter pour souscrire à un abonnement",
         variant: "destructive",
       });
       return;
@@ -71,8 +87,8 @@ export default function Pricing() {
 
     try {
       toast({
-        title: "Processing",
-        description: "Preparing your checkout session...",
+        title: "Traitement en cours",
+        description: "Préparation de votre session de paiement...",
       });
 
       console.log('Creating checkout session for price:', priceId);
@@ -83,8 +99,8 @@ export default function Pricing() {
       if (error) {
         console.error('Supabase function error:', error);
         toast({
-          title: "Error",
-          description: error.message || "Failed to create checkout session",
+          title: "Erreur",
+          description: error.message || "Échec de la création de la session de paiement",
           variant: "destructive",
         });
         return;
@@ -96,16 +112,16 @@ export default function Pricing() {
       } else {
         console.error('No checkout URL received');
         toast({
-          title: "Error",
-          description: "Failed to create checkout session - no URL received",
+          title: "Erreur",
+          description: "Échec de la création de la session de paiement - pas d'URL reçue",
           variant: "destructive",
         });
       }
     } catch (error: any) {
       console.error('Error:', error);
       toast({
-        title: "Error",
-        description: error.message || "An error occurred while processing your request",
+        title: "Erreur",
+        description: error.message || "Une erreur est survenue lors du traitement de votre demande",
         variant: "destructive",
       });
     }
@@ -116,10 +132,10 @@ export default function Pricing() {
       <div className="container px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Simple and transparent pricing
+            Tarification simple et transparente
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Choose the plan that best suits your needs
+            Choisissez le plan qui correspond le mieux à vos besoins
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
@@ -133,7 +149,7 @@ export default function Pricing() {
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-[#ea384c] text-white text-sm font-medium px-3 py-1 rounded-full">
-                    Most Popular
+                    Le plus populaire
                   </span>
                 </div>
               )}
@@ -146,15 +162,15 @@ export default function Pricing() {
                     <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
                   ) : (
                     <>
-                      <span className="text-4xl font-bold tracking-tight">CA${plan.price}</span>
-                      <span className="ml-1 text-sm font-semibold">/month</span>
+                      <span className="text-4xl font-bold tracking-tight">€{plan.price}</span>
+                      <span className="ml-1 text-sm font-semibold">/mois</span>
                     </>
                   )}
                 </div>
                 <ul className="mt-8 space-y-4">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex items-center">
-                      <Check className="h-5 w-5 text-green-500 mr-2" />
+                      <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
                       <span className="text-gray-700">{feature}</span>
                     </li>
                   ))}
