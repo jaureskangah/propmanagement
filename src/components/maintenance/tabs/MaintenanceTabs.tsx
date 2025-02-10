@@ -82,7 +82,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
                 <TooltipTrigger asChild>
                   <TabsTrigger 
                     value="preventive"
-                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary dark:data-[state=active]:border-red-500 data-[state=active]:text-red-500 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-red-500 dark:data-[state=active]:border-red-500 text-slate-600 data-[state=active]:text-red-500 dark:text-slate-300 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
                   >
                     <Calendar className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110 group-hover:text-red-500" />
                     <span>Preventive</span>
@@ -99,7 +99,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
                 <TooltipTrigger asChild>
                   <TabsTrigger 
                     value="vendors"
-                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary dark:data-[state=active]:border-red-500 data-[state=active]:text-red-500 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-red-500 dark:data-[state=active]:border-red-500 text-slate-600 data-[state=active]:text-red-500 dark:text-slate-300 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
                   >
                     <Users className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110 group-hover:text-red-500" />
                     <span>Vendors</span>
@@ -116,7 +116,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
                 <TooltipTrigger asChild>
                   <TabsTrigger 
                     value="work-orders"
-                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary dark:data-[state=active]:border-red-500 data-[state=active]:text-red-500 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-red-500 dark:data-[state=active]:border-red-500 text-slate-600 data-[state=active]:text-red-500 dark:text-slate-300 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
                   >
                     <ClipboardList className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110 group-hover:text-red-500" />
                     <span>Work Orders</span>
@@ -133,7 +133,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
                 <TooltipTrigger asChild>
                   <TabsTrigger 
                     value="financials"
-                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-primary dark:data-[state=active]:border-red-500 data-[state=active]:text-red-500 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
+                    className="flex items-center gap-2 px-4 sm:px-6 py-3 data-[state=active]:border-b-2 data-[state=active]:border-red-500 dark:data-[state=active]:border-red-500 text-slate-600 data-[state=active]:text-red-500 dark:text-slate-300 dark:data-[state=active]:text-red-400 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:animate-scale-in whitespace-nowrap group"
                   >
                     <DollarSign className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110 group-hover:text-red-500" />
                     <span>Costs</span>
@@ -176,3 +176,4 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
     </div>
   );
 };
+
