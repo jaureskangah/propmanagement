@@ -1,23 +1,7 @@
-
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { 
-  Menu, 
-  X, 
-  LayoutDashboard, 
-  Home, 
-  Users, 
-  Wrench, 
-  MessageSquare, 
-  HelpCircle, 
-  ChevronLeft 
-} from "lucide-react";
-import { SidebarNavLink } from "./sidebar/SidebarNavLink";
-import { SidebarLogo } from "./sidebar/SidebarLogo";
-import { SidebarToggle } from "./sidebar/SidebarToggle";
 import { cn } from "@/lib/utils";
+import { MobileSidebar } from "./sidebar/MobileSidebar";
+import { DesktopSidebar } from "./sidebar/DesktopSidebar";
 
 interface AppSidebarProps {
   isTenant?: boolean;
@@ -37,156 +21,20 @@ const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
 
   return (
     <>
-      {/* Mobile Menu Button - Fixed Position */}
-      <div className="fixed top-4 left-4 z-50 md:hidden">
-        <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="bg-white/50 backdrop-blur-sm">
-              {isMobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
-            <div className="flex flex-col h-full">
-              <div className="p-6">
-                <SidebarLogo isCollapsed={false} />
-              </div>
-              <nav className="flex-1 space-y-2 px-4 pb-6">
-                {!isTenant ? (
-                  <>
-                    <SidebarNavLink to="/dashboard" icon={LayoutDashboard}>
-                      Dashboard
-                    </SidebarNavLink>
-                    <SidebarNavLink to="/properties" icon={Home}>
-                      Properties
-                    </SidebarNavLink>
-                    <SidebarNavLink to="/tenants" icon={Users}>
-                      Tenants
-                    </SidebarNavLink>
-                    <SidebarNavLink to="/maintenance" icon={Wrench}>
-                      Maintenance
-                    </SidebarNavLink>
-                  </>
-                ) : (
-                  <>
-                    <SidebarNavLink to="/tenant/maintenance" icon={Wrench}>
-                      Maintenance
-                    </SidebarNavLink>
-                    <SidebarNavLink to="/tenant/communications" icon={MessageSquare}>
-                      Communications
-                    </SidebarNavLink>
-                  </>
-                )}
-              </nav>
-              <div className="p-4 border-t">
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start gap-2" 
-                  onClick={handleSupportClick}
-                >
-                  <HelpCircle className="h-4 w-4" />
-                  Get Support
-                </Button>
-              </div>
-            </div>
-          </SheetContent>
-        </Sheet>
-      </div>
+      <MobileSidebar 
+        isMobileOpen={isMobileOpen}
+        setIsMobileOpen={setIsMobileOpen}
+        isTenant={isTenant}
+        handleSupportClick={handleSupportClick}
+      />
 
-      {/* Desktop Sidebar */}
-      <aside
-        className={cn(
-          "hidden md:flex h-screen flex-col border-r bg-sidebar-background transition-all duration-300",
-          isCollapsed ? "w-[80px]" : "w-[270px]",
-          "fixed left-0 top-0 z-30"
-        )}
-      >
-        <div className="flex h-[60px] items-center border-b px-6">
-          <Link to="/" className="flex items-center gap-2 font-semibold">
-            <SidebarLogo isCollapsed={isCollapsed} />
-          </Link>
-        </div>
+      <DesktopSidebar 
+        isCollapsed={isCollapsed}
+        isTenant={isTenant}
+        handleSupportClick={handleSupportClick}
+        toggleCollapse={toggleCollapse}
+      />
 
-        <nav className="flex-1 space-y-2 p-4">
-          {!isTenant ? (
-            <>
-              <SidebarNavLink 
-                to="/dashboard" 
-                icon={LayoutDashboard} 
-                collapsed={isCollapsed}
-                tooltipContent="Dashboard"
-              >
-                Dashboard
-              </SidebarNavLink>
-              <SidebarNavLink 
-                to="/properties" 
-                icon={Home} 
-                collapsed={isCollapsed}
-                tooltipContent="Properties"
-              >
-                Properties
-              </SidebarNavLink>
-              <SidebarNavLink 
-                to="/tenants" 
-                icon={Users} 
-                collapsed={isCollapsed}
-                tooltipContent="Tenants"
-              >
-                Tenants
-              </SidebarNavLink>
-              <SidebarNavLink 
-                to="/maintenance" 
-                icon={Wrench} 
-                collapsed={isCollapsed}
-                tooltipContent="Maintenance"
-              >
-                Maintenance
-              </SidebarNavLink>
-            </>
-          ) : (
-            <>
-              <SidebarNavLink 
-                to="/tenant/maintenance" 
-                icon={Wrench} 
-                collapsed={isCollapsed}
-                tooltipContent="Maintenance"
-              >
-                Maintenance
-              </SidebarNavLink>
-              <SidebarNavLink 
-                to="/tenant/communications" 
-                icon={MessageSquare} 
-                collapsed={isCollapsed}
-                tooltipContent="Communications"
-              >
-                Communications
-              </SidebarNavLink>
-            </>
-          )}
-        </nav>
-
-        <div className={cn(
-          "border-t p-4",
-          isCollapsed ? "flex justify-center" : ""
-        )}>
-          <Button 
-            variant="outline" 
-            className={cn(
-              "w-full justify-start gap-2 transition-colors",
-              isCollapsed && "w-10 h-10 p-0 justify-center"
-            )}
-            onClick={handleSupportClick}
-            title={isCollapsed ? "Get Support" : undefined}
-          >
-            <HelpCircle className="h-4 w-4" />
-            {!isCollapsed && "Get Support"}
-          </Button>
-          <div className="mt-2">
-            <SidebarToggle isCollapsed={isCollapsed} onToggle={toggleCollapse} />
-          </div>
-        </div>
-      </aside>
-
-      {/* Main Content Wrapper */}
       <div 
         className={cn(
           "min-h-screen transition-all duration-300 bg-gray-50",
