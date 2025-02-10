@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -9,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Building2, Edit, Trash2, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface PropertyCardProps {
   property: {
@@ -25,15 +27,28 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: PropertyCardProps) => {
+  const [imageLoaded, setImageLoaded] = React.useState(false);
   const placeholderImage = "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&auto=format&fit=crop&q=60";
   
   return (
     <Card className="w-full h-full group hover:shadow-lg transition-all duration-300 animate-fade-in">
-      <div className="relative w-full h-40 sm:h-48 overflow-hidden rounded-t-lg">
+      <div className="relative w-full h-40 sm:h-48 overflow-hidden rounded-t-lg bg-slate-100">
+        <div 
+          className={cn(
+            "absolute inset-0 bg-slate-200 animate-pulse",
+            imageLoaded ? "opacity-0" : "opacity-100"
+          )}
+        />
         <img
           src={property.image || placeholderImage}
           alt={property.name}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          className={cn(
+            "w-full h-full object-cover transition-all duration-500",
+            "group-hover:scale-105",
+            imageLoaded ? "opacity-100" : "opacity-0"
+          )}
+          loading="lazy"
+          onLoad={() => setImageLoaded(true)}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
             target.src = placeholderImage;
@@ -44,12 +59,14 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
       <CardHeader className="space-y-2 p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div className="space-y-2">
-            <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2">{property.name}</CardTitle>
-            <Badge variant="secondary" className="text-sm">
+            <CardTitle className="text-lg sm:text-xl font-bold line-clamp-2 animate-fade-in">
+              {property.name}
+            </CardTitle>
+            <Badge variant="secondary" className="text-sm animate-fade-in">
               {property.type}
             </Badge>
           </div>
-          <div className="flex sm:flex-col gap-2">
+          <div className="flex sm:flex-col gap-2 animate-fade-in">
             <Button
               variant="ghost"
               size="icon"
@@ -76,18 +93,18 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
             </Button>
           </div>
         </div>
-        <CardDescription className="text-sm break-words line-clamp-2">
+        <CardDescription className="text-sm break-words line-clamp-2 animate-fade-in">
           {property.address}
         </CardDescription>
       </CardHeader>
       
       <CardContent className="p-4 sm:p-6">
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 animate-fade-in">
+          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
             <p className="text-xs sm:text-sm font-medium text-muted-foreground">Units</p>
             <p className="text-base sm:text-lg font-semibold">{property.units}</p>
           </div>
-          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg">
+          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
             <p className="text-xs sm:text-sm font-medium text-muted-foreground">Type</p>
             <p className="text-base sm:text-lg font-semibold capitalize">{property.type}</p>
           </div>
