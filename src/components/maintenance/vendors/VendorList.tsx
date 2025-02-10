@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
@@ -146,16 +147,6 @@ export const VendorList = () => {
         <TabsContent value="reviews">
           <VendorReviewList
             reviews={reviews}
-            onEdit={(review) => {
-              const vendor = vendors.find(v => v.id === review.vendor_id);
-              if (vendor) {
-                setSelectedVendorForReview({
-                  id: vendor.id,
-                  name: vendor.name,
-                });
-                setReviewDialogOpen(true);
-              }
-            }}
             onRefresh={refetchReviews}
           />
         </TabsContent>
