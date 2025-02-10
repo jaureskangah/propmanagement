@@ -1,3 +1,4 @@
+
 import { NavLink } from "react-router-dom";
 import { Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,7 +9,7 @@ interface SidebarLogoProps {
 
 export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   return (
-    <div className="mb-8">
+    <div className="mt-4 mb-8">
       <NavLink
         to="/"
         className="text-xl font-bold text-center block hover:text-[#ea384c] transition-colors"
