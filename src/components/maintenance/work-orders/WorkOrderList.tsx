@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,19 +30,19 @@ const getStatusConfig = (status: string) => {
       return {
         variant: "default" as const,
         icon: <AlertCircle className="h-4 w-4 mr-1" />,
-        className: "bg-blue-500/90 backdrop-blur-sm"
+        className: "bg-blue-500/90"
       };
     case "Scheduled":
       return {
         variant: "secondary" as const,
         icon: <Clock className="h-4 w-4 mr-1" />,
-        className: "bg-orange-500/90 backdrop-blur-sm"
+        className: "bg-orange-500/90"
       };
     case "Completed":
       return {
         variant: "outline" as const,
         icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
-        className: "bg-green-500/90 backdrop-blur-sm text-white"
+        className: "bg-green-500/90 text-white"
       };
     default:
       return {
@@ -82,7 +81,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">Work Orders</h2>
+        <h2 className="text-xl font-semibold text-foreground">Work Orders</h2>
         <Button 
           onClick={onCreateWorkOrder} 
           className="flex items-center gap-2 transition-all duration-300 hover:scale-105 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md hover:shadow-lg"
@@ -196,4 +195,3 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
     </div>
   );
 };
-
