@@ -28,7 +28,25 @@ interface PropertyCardProps {
 
 const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: PropertyCardProps) => {
   const [imageLoaded, setImageLoaded] = React.useState(false);
-  const placeholderImage = "https://images.unsplash.com/photo-1487958449943-2429e8be8625?w=800&auto=format&fit=crop&q=60";
+  
+  const getDefaultImageByType = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'apartment':
+        return "https://images.unsplash.com/photo-1439337153520-7082a56a81f4";
+      case 'house':
+        return "https://images.unsplash.com/photo-1501854140801-50d01698950b";
+      case 'studio':
+        return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
+      case 'condo':
+        return "https://images.unsplash.com/photo-1439337153520-7082a56a81f4";
+      case 'office':
+        return "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7";
+      case 'commercial space':
+        return "https://images.unsplash.com/photo-1473091534298-04dcbce3278c";
+      default:
+        return "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
+    }
+  };
   
   return (
     <Card className="w-full h-full group hover:shadow-lg transition-all duration-300 animate-fade-in">
@@ -40,7 +58,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
           )}
         />
         <img
-          src={property.image || placeholderImage}
+          src={property.image || getDefaultImageByType(property.type)}
           alt={property.name}
           className={cn(
             "w-full h-full object-cover transition-all duration-500",
@@ -51,7 +69,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
           onLoad={() => setImageLoaded(true)}
           onError={(e) => {
             const target = e.target as HTMLImageElement;
-            target.src = placeholderImage;
+            target.src = getDefaultImageByType(property.type);
           }}
         />
       </div>
@@ -115,3 +133,4 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
 };
 
 export default PropertyCard;
+
