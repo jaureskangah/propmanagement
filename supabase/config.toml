@@ -1,10 +1,6 @@
+
 project_id = "jhjhzwbvmkurwfohjxlu"
 
-[functions.send-tenant-email]
-verify_jwt = false
-
-[functions.notify-communication]
-verify_jwt = false
-
-[functions.lease-expiry-notifications]
+[[functions]]
+name = "send-contact-email"
 verify_jwt = false
