@@ -1,3 +1,4 @@
+
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -20,7 +21,7 @@ export default function Contact() {
               <Phone className="h-6 w-6 text-[#ea384c]" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Phone</h3>
-            <p className="text-gray-600 text-center">+1 (555) 123-4567</p>
+            <p className="text-gray-600 text-center">+1 (555) 781-1872</p>
           </div>
 
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
