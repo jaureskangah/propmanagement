@@ -29,7 +29,7 @@ export default function Contact() {
               <Mail className="h-6 w-6 text-[#ea384c]" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Email</h3>
-            <p className="text-gray-600 text-center">contact@propmanager.com</p>
+            <p className="text-gray-600 text-center">contact@propmanagement.app</p>
           </div>
 
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
@@ -37,7 +37,7 @@ export default function Contact() {
               <MapPin className="h-6 w-6 text-[#ea384c]" />
             </div>
             <h3 className="text-lg font-semibold mb-2">Office</h3>
-            <p className="text-gray-600 text-center">123 Business Ave, Montreal, QC</p>
+            <p className="text-gray-600 text-center">Moncton, New Brunswick</p>
           </div>
         </div>
 
