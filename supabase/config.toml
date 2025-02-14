@@ -1,6 +1,5 @@
 
 project_id = "jhjhzwbvmkurwfohjxlu"
 
-[[functions]]
-name = "send-contact-email"
+[functions.send-contact-email]
 verify_jwt = false
