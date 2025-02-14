@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Card,
@@ -32,13 +31,13 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   const getDefaultImageByType = (type: string) => {
     switch (type.toLowerCase()) {
       case 'apartment':
-        return "https://images.unsplash.com/photo-1439337153520-7082a56a81f4";
+        return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
       case 'house':
         return "https://images.unsplash.com/photo-1501854140801-50d01698950b";
       case 'studio':
         return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
       case 'condo':
-        return "https://images.unsplash.com/photo-1439337153520-7082a56a81f4";
+        return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
       case 'office':
         return "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7";
       case 'commercial space':
@@ -133,4 +132,3 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
 };
 
 export default PropertyCard;
-
