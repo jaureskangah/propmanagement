@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,7 +35,9 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   async function onSubmit(values: SignUpFormValues) {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signUp({
+      console.log('Starting signup process with values:', values);
+
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
@@ -46,7 +49,31 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         },
       });
 
-      if (error) throw error;
+      if (signUpError) {
+        console.error('Signup error:', signUpError);
+        throw signUpError;
+      }
+
+      if (signUpData?.user) {
+        console.log('User created successfully:', signUpData.user);
+        
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert([
+            {
+              id: signUpData.user.id,
+              first_name: values.firstName,
+              last_name: values.lastName,
+              email: values.email,
+              is_tenant_user: values.isTenant,
+            }
+          ]);
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          throw profileError;
+        }
+      }
 
       toast({
         title: 'Success',
@@ -54,6 +81,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       });
       onSuccess();
     } catch (error) {
+      console.error('Error in signup process:', error);
       toast({
         title: 'Error',
         description: error.message,
