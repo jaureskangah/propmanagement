@@ -8,28 +8,28 @@ import {
 
 const faqItems = [
   {
-    question: "Comment puis-je commencer à utiliser la plateforme ?",
-    answer: "C'est très simple ! Créez un compte gratuitement, ajoutez vos propriétés et commencez à gérer vos biens immobiliers en quelques minutes. Notre interface intuitive vous guidera à chaque étape."
+    question: "How can I start using the platform?",
+    answer: "It's very simple! Create a free account, add your properties, and start managing your real estate in minutes. Our intuitive interface will guide you through each step."
   },
   {
-    question: "Quelles fonctionnalités sont incluses dans l'abonnement de base ?",
-    answer: "L'abonnement de base comprend la gestion des propriétés, le suivi des paiements, la gestion des documents, et la communication avec les locataires. Vous avez accès à toutes les fonctionnalités essentielles pour une gestion efficace."
+    question: "What features are included in the basic subscription?",
+    answer: "The basic subscription includes property management, payment tracking, document management, and tenant communication. You have access to all essential features for efficient management."
   },
   {
-    question: "Puis-je gérer plusieurs propriétés ?",
-    answer: "Oui, vous pouvez gérer autant de propriétés que vous le souhaitez. Notre plateforme est conçue pour s'adapter à votre portefeuille immobilier, que vous ayez une ou plusieurs propriétés."
+    question: "Can I manage multiple properties?",
+    answer: "Yes, you can manage as many properties as you want. Our platform is designed to adapt to your real estate portfolio, whether you have one or multiple properties."
   },
   {
-    question: "Comment fonctionne la communication avec les locataires ?",
-    answer: "Notre système de messagerie intégré permet une communication directe et efficace avec vos locataires. Vous pouvez envoyer des notifications, répondre aux demandes et partager des documents, le tout depuis une interface centralisée."
+    question: "How does tenant communication work?",
+    answer: "Our integrated messaging system enables direct and efficient communication with your tenants. You can send notifications, respond to requests, and share documents, all from a centralized interface."
   },
   {
-    question: "Les données sont-elles sécurisées ?",
-    answer: "La sécurité est notre priorité. Toutes les données sont cryptées et stockées de manière sécurisée. Nous utilisons les dernières technologies de sécurité pour protéger vos informations et celles de vos locataires."
+    question: "Is my data secure?",
+    answer: "Security is our priority. All data is encrypted and securely stored. We use the latest security technologies to protect your information and that of your tenants."
   },
   {
-    question: "Puis-je exporter mes données ?",
-    answer: "Oui, vous pouvez exporter vos données à tout moment dans différents formats (PDF, Excel). Cela vous permet de garder une trace de votre activité et de générer des rapports personnalisés."
+    question: "Can I export my data?",
+    answer: "Yes, you can export your data at any time in different formats (PDF, Excel). This allows you to keep track of your activity and generate customized reports."
   }
 ];
 
@@ -39,10 +39,10 @@ export default function FAQ() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Questions fréquentes
+            Frequently Asked Questions
           </h2>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            Trouvez rapidement des réponses à vos questions
+            Find quick answers to your questions
           </p>
         </div>
 
