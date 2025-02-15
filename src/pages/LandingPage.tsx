@@ -1,6 +1,8 @@
+
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";
+import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
 import Contact from "@/components/landing/Contact";
 import Footer from "@/components/landing/Footer";
@@ -16,6 +18,7 @@ export default function LandingPage() {
       <div className="pt-16">
         <Hero onShowAuthModal={() => setShowAuthModal(true)} />
         <Features />
+        <HowItWorks />
         <Pricing />
         <Contact />
         <Footer />
