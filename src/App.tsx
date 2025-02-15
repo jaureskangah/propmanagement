@@ -10,7 +10,7 @@ import Terms from "./pages/legal/Terms";
 import Cookies from "./pages/legal/Cookies";
 import About from "./pages/company/About";
 import Careers from "./pages/company/Careers";
-import AuthProvider from "./components/AuthProvider";
+import { AuthProvider } from "./components/AuthProvider";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
