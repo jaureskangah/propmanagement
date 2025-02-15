@@ -35,29 +35,29 @@ const faqItems = [
 
 export default function FAQ() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-12 md:py-20 bg-white">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+        <div className="text-center mb-8 md:mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900 mb-3 md:mb-4">
             Frequently Asked Questions
           </h2>
-          <p className="text-slate-600 text-lg max-w-2xl mx-auto">
+          <p className="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
             Find quick answers to your questions
           </p>
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
+        <div className="max-w-3xl mx-auto px-0 sm:px-4">
+          <Accordion type="single" collapsible className="space-y-3 md:space-y-4">
             {faqItems.map((item, index) => (
               <AccordionItem 
                 key={index} 
                 value={`item-${index}`}
-                className="bg-white border border-red-100 rounded-lg px-4 hover:shadow-md transition-shadow"
+                className="bg-white border border-red-100 rounded-lg px-3 md:px-4 hover:shadow-md transition-shadow"
               >
-                <AccordionTrigger className="text-left hover:no-underline py-4 text-slate-900 font-medium">
+                <AccordionTrigger className="text-left hover:no-underline py-3 md:py-4 text-slate-900 font-medium text-sm md:text-base pr-2">
                   {item.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-slate-600 pb-4">
+                <AccordionContent className="text-slate-600 text-sm md:text-base pb-3 md:pb-4">
                   {item.answer}
                 </AccordionContent>
               </AccordionItem>
