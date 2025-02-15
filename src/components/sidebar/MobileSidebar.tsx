@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, HelpCircle } from "lucide-react";
 import { SidebarNavLink } from "./SidebarNavLink";
 import { SidebarLogo } from "./SidebarLogo";
-import { SidebarLinks } from "./SidebarLinks";
+import SidebarLinks from "./SidebarLinks";
 
 interface MobileSidebarProps {
   isMobileOpen: boolean;
@@ -50,5 +50,4 @@ export const MobileSidebar = ({
       </Sheet>
     </div>
   );
-};
-
+}

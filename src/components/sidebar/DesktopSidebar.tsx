@@ -6,7 +6,7 @@ import { SidebarNavLink } from "./SidebarNavLink";
 import { SidebarLogo } from "./SidebarLogo";
 import { SidebarToggle } from "./SidebarToggle";
 import { cn } from "@/lib/utils";
-import { SidebarLinks } from "./SidebarLinks";
+import SidebarLinks from "./SidebarLinks";
 
 interface DesktopSidebarProps {
   isCollapsed: boolean;
@@ -61,4 +61,4 @@ export const DesktopSidebar = ({
       </div>
     </aside>
   );
-};
+}
