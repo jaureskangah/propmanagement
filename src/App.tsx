@@ -1,38 +1,61 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
+import Dashboard from './pages/Dashboard';
+import Properties from './pages/Properties';
+import Tenants from './pages/Tenants';
+import Maintenance from './pages/Maintenance';
+import Settings from './pages/Settings';
+import { useAuthSession } from './hooks/useAuthSession';
+import AuthModal from './components/auth/AuthModal';
+import AdminDashboard from "@/pages/AdminDashboard";
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LandingPage from "./pages/LandingPage";
-import Dashboard from "./pages/Dashboard";
-import Properties from "./pages/Properties";
-import Tenants from "./pages/Tenants";
-import Maintenance from "./pages/Maintenance";
-import Privacy from "./pages/legal/Privacy";
-import Terms from "./pages/legal/Terms";
-import Cookies from "./pages/legal/Cookies";
-import About from "./pages/company/About";
-import Careers from "./pages/company/Careers";
-import { AuthProvider } from "./components/AuthProvider";
-import { Toaster } from "./components/ui/toaster";
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuthSession();
 
-function App() {
-  return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/tenants" element={<Tenants />} />
-          <Route path="/maintenance" element={<Maintenance />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/cookies" element={<Cookies />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/careers" element={<Careers />} />
-        </Routes>
-        <Toaster />
-      </Router>
-    </AuthProvider>
-  );
+  if (loading) {
+    return <div>Loading...</div>; // You can replace this with a spinner or loading component
+  }
+
+  return user ? <>{children}</> : <Navigate to="/" />;
 }
 
-export default App;
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        } />
+        <Route path="/properties" element={
+          <PrivateRoute>
+            <Properties />
+          </PrivateRoute>
+        } />
+        <Route path="/tenants" element={
+          <PrivateRoute>
+            <Tenants />
+          </PrivateRoute>
+        } />
+        <Route path="/maintenance" element={
+          <PrivateRoute>
+            <Maintenance />
+          </PrivateRoute>
+        } />
+        <Route path="/settings" element={
+          <PrivateRoute>
+            <Settings />
+          </PrivateRoute>
+        } />
+      <Route path="/admin" element={
+        <PrivateRoute>
+          <AdminDashboard />
+        </PrivateRoute>
+      } />
+      </Routes>
+    </Router>
+  );
+}
