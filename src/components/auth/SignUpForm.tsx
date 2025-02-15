@@ -37,7 +37,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       setLoading(true);
       console.log('Starting signup process with values:', values);
 
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
         options: {
@@ -49,32 +49,12 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         },
       });
 
-      if (signUpError) {
-        console.error('Signup error:', signUpError);
-        throw signUpError;
+      if (error) {
+        console.error('Signup error:', error);
+        throw error;
       }
 
-      if (signUpData?.user) {
-        console.log('User created successfully:', signUpData.user);
-        
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: signUpData.user.id,
-              first_name: values.firstName,
-              last_name: values.lastName,
-              email: values.email,
-              is_tenant_user: values.isTenant,
-            }
-          ]);
-
-        if (profileError) {
-          console.error('Profile creation error:', profileError);
-          throw profileError;
-        }
-      }
-
+      console.log('Signup successful:', data);
       toast({
         title: 'Success',
         description: 'Please check your email to confirm your account.',
