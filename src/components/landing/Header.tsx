@@ -63,7 +63,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
     const section = document.querySelector(`#${sectionId}`);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
-      setIsMobileMenuOpen(false); // Ferme le menu mobile après avoir cliqué
+      setIsMobileMenuOpen(false);
     }
   };
 
@@ -71,7 +71,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
     <>
       <div 
         className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
-        onClick={() => scrollToSection('features')}
+        onClick={() => scrollToSection('everything-you-need')}
       >
         <List className="h-4 w-4" />
         <span>Features</span>
