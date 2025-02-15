@@ -64,7 +64,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
     if (section) {
       const headerHeight = 64; // Hauteur du header en pixels
       const elementPosition = section.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+      const offsetPosition = elementPosition + window.scrollY - headerHeight;
 
       window.scrollTo({
         top: offsetPosition,
