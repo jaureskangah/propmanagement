@@ -1,5 +1,5 @@
+
 import { Building2, List, DollarSign, Gift, LogIn, LogOut, X } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
@@ -18,7 +18,6 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Query to check if user is a tenant
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
@@ -60,17 +59,34 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
     }
   };
 
+  const scrollToSection = (sectionId: string) => {
+    const section = document.querySelector(`#${sectionId}`);
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+      setIsMobileMenuOpen(false); // Ferme le menu mobile après avoir cliqué
+    }
+  };
+
   const NavLinks = () => (
     <>
-      <div className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors">
+      <div 
+        className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
+        onClick={() => scrollToSection('features')}
+      >
         <List className="h-4 w-4" />
         <span>Features</span>
       </div>
-      <div className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors">
+      <div 
+        className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
+        onClick={() => scrollToSection('pricing')}
+      >
         <DollarSign className="h-4 w-4" />
         <span>Pricing</span>
       </div>
-      <div className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors">
+      <div 
+        className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
+        onClick={() => scrollToSection('pricing')}
+      >
         <Gift className="h-4 w-4" />
         <span>Free Trial</span>
       </div>
