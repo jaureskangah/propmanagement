@@ -4,23 +4,23 @@ import { ArrowRight, ListChecks, Building2, MessageSquare, Search } from "lucide
 const steps = [
   {
     icon: <ListChecks className="w-12 h-12 text-[#ea384c]" />,
-    title: "Créez votre compte",
-    description: "Inscrivez-vous gratuitement et commencez à gérer vos propriétés en quelques minutes."
+    title: "Create your account",
+    description: "Sign up for free and start managing your properties in minutes."
   },
   {
     icon: <Building2 className="w-12 h-12 text-[#ea384c]" />,
-    title: "Ajoutez vos propriétés",
-    description: "Enregistrez facilement vos biens immobiliers avec leurs caractéristiques détaillées."
+    title: "Add your properties",
+    description: "Easily register your real estate properties with detailed characteristics."
   },
   {
     icon: <Search className="w-12 h-12 text-[#ea384c]" />,
-    title: "Gérez vos locataires",
-    description: "Suivez les paiements, les documents et les demandes de maintenance en un seul endroit."
+    title: "Manage your tenants",
+    description: "Track payments, documents, and maintenance requests in one place."
   },
   {
     icon: <MessageSquare className="w-12 h-12 text-[#ea384c]" />,
-    title: "Communication simplifiée",
-    description: "Restez en contact avec vos locataires et gérez efficacement les demandes."
+    title: "Simplified communication",
+    description: "Stay in touch with your tenants and efficiently manage requests."
   }
 ];
 
@@ -30,10 +30,10 @@ export default function HowItWorks() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            Comment ça marche
+            How it works
           </h2>
           <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-            Une solution simple et efficace pour la gestion de vos biens immobiliers
+            A simple and effective solution for managing your real estate properties
           </p>
         </div>
 
