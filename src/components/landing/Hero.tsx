@@ -33,7 +33,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
           <Button 
             variant="outline" 
             size="lg" 
-            className="w-full sm:w-auto border-red-100 hover:bg-white hover:text-[#ea384c] hover:border-[#ea384c] text-[#ea384c] shadow-lg hover:shadow-xl transition-all duration-300"
+            className="w-full sm:w-auto bg-white text-[#ea384c] border-red-100 hover:bg-[#ea384c] hover:text-white hover:border-[#ea384c] shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={scrollToHowItWorks}
           >
             Learn More
