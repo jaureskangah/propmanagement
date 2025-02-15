@@ -62,7 +62,14 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const scrollToSection = (sectionId: string) => {
     const section = document.querySelector(`#${sectionId}`);
     if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
+      const headerHeight = 64; // Hauteur du header en pixels
+      const elementPosition = section.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
+      });
       setIsMobileMenuOpen(false);
     }
   };
