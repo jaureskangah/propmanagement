@@ -1,3 +1,4 @@
+
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,13 +12,13 @@ const plans = [
     name: "Freemium",
     price: "Free",
     features: [
-      "Jusqu'à 2 propriétés",
-      "Gestion des loyers",
-      "Documents numériques",
-      "Fiches propriétés basiques",
-      "Notifications email",
+      "Up to 2 properties",
+      "Rent management",
+      "Digital documents",
+      "Basic property cards",
+      "Email notifications",
     ],
-    buttonText: "Commencer gratuitement",
+    buttonText: "Start for free",
     priceId: null,
   },
   {
@@ -25,34 +26,34 @@ const plans = [
     price: "39.99",
     popular: true,
     features: [
-      "Jusqu'à 5 propriétés",
-      "Gestion des loyers",
-      "Documents numériques",
-      "Vérification des locataires",
-      "Support prioritaire",
-      "Tableau de bord avancé",
-      "Rapports financiers",
-      "Gestion des maintenances",
+      "Up to 5 properties",
+      "Rent management",
+      "Digital documents",
+      "Tenant verification",
+      "Priority support",
+      "Advanced dashboard",
+      "Financial reports",
+      "Maintenance management",
     ],
-    buttonText: "Commencer maintenant",
+    buttonText: "Get started",
     priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
   },
   {
     name: "Enterprise",
     price: "99.99",
     features: [
-      "Jusqu'à 20 propriétés",
-      "Gestion des loyers",
-      "Documents numériques",
-      "Vérification des locataires",
-      "Support 24/7 dédié",
-      "Tableau de bord personnalisé",
-      "Rapports financiers avancés",
-      "Gestion des maintenances",
-      "Formation utilisateurs",
-      "Backup quotidien",
+      "Up to 20 properties",
+      "Rent management",
+      "Digital documents",
+      "Tenant verification",
+      "24/7 dedicated support",
+      "Custom dashboard",
+      "Advanced financial reports",
+      "Maintenance management",
+      "User training",
+      "Daily backup",
     ],
-    buttonText: "Commencer maintenant",
+    buttonText: "Get started",
     priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
   },
 ];
@@ -70,8 +71,8 @@ export default function Pricing() {
 
     if (!user) {
       toast({
-        title: "Authentification requise",
-        description: "Veuillez vous connecter pour souscrire à un abonnement",
+        title: "Authentication required",
+        description: "Please sign in to subscribe to a plan",
         variant: "destructive",
       });
       return;
@@ -79,8 +80,8 @@ export default function Pricing() {
 
     try {
       toast({
-        title: "Traitement en cours",
-        description: "Préparation de votre session de paiement...",
+        title: "Processing",
+        description: "Preparing your payment session...",
       });
 
       console.log('Creating checkout session for price:', priceId);
@@ -91,8 +92,8 @@ export default function Pricing() {
       if (error) {
         console.error('Supabase function error:', error);
         toast({
-          title: "Erreur",
-          description: error.message || "Échec de la création de la session de paiement",
+          title: "Error",
+          description: error.message || "Failed to create payment session",
           variant: "destructive",
         });
         return;
@@ -104,16 +105,16 @@ export default function Pricing() {
       } else {
         console.error('No checkout URL received');
         toast({
-          title: "Erreur",
-          description: "Échec de la création de la session de paiement - pas d'URL reçue",
+          title: "Error",
+          description: "Failed to create payment session - no URL received",
           variant: "destructive",
         });
       }
     } catch (error: any) {
       console.error('Error:', error);
       toast({
-        title: "Erreur",
-        description: error.message || "Une erreur est survenue lors du traitement de votre demande",
+        title: "Error",
+        description: error.message || "An error occurred while processing your request",
         variant: "destructive",
       });
     }
@@ -124,10 +125,10 @@ export default function Pricing() {
       <div className="container px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Tarification simple et transparente
+            Simple and transparent pricing
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Choisissez le plan qui correspond le mieux à vos besoins
+            Choose the plan that best fits your needs
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
@@ -141,7 +142,7 @@ export default function Pricing() {
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-[#ea384c] text-white text-sm font-medium px-3 py-1 rounded-full">
-                    Le plus populaire
+                    Most popular
                   </span>
                 </div>
               )}
@@ -154,8 +155,8 @@ export default function Pricing() {
                     <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
                   ) : (
                     <>
-                      <span className="text-4xl font-bold tracking-tight">€{plan.price}</span>
-                      <span className="ml-1 text-sm font-semibold">/mois</span>
+                      <span className="text-4xl font-bold tracking-tight">CA${plan.price}</span>
+                      <span className="ml-1 text-sm font-semibold">/month</span>
                     </>
                   )}
                 </div>
