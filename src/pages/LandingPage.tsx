@@ -7,6 +7,7 @@ import Pricing from "@/components/landing/Pricing";
 import FAQ from "@/components/landing/FAQ";
 import Contact from "@/components/landing/Contact";
 import Footer from "@/components/landing/Footer";
+import CallToAction from "@/components/landing/CallToAction";
 import AuthModal from "@/components/auth/AuthModal";
 import { useState } from "react";
 
@@ -21,6 +22,7 @@ export default function LandingPage() {
         <Features />
         <HowItWorks />
         <Pricing />
+        <CallToAction onShowAuthModal={() => setShowAuthModal(true)} />
         <FAQ />
         <Contact />
         <Footer />

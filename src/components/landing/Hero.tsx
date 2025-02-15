@@ -19,7 +19,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
         <div className="flex justify-center gap-4 animate-fade-in delay-200">
           <Button 
             size="lg" 
-            className="group bg-[#ea384c] hover:bg-[#d41f32] text-white"
+            className="group bg-[#ea384c] hover:bg-[#d41f32] text-white shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={onShowAuthModal}
           >
             Get Started Now
@@ -28,7 +28,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
           <Button 
             variant="outline" 
             size="lg" 
-            className="bg-white text-[#ea384c] border-red-100 hover:bg-red-50"
+            className="bg-white text-[#ea384c] border-red-100 hover:bg-red-50 shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={onShowAuthModal}
           >
             Learn More
