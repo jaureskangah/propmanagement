@@ -4,6 +4,7 @@ import Hero from "@/components/landing/Hero";
 import Features from "@/components/landing/Features";
 import HowItWorks from "@/components/landing/HowItWorks";
 import Pricing from "@/components/landing/Pricing";
+import FAQ from "@/components/landing/FAQ";
 import Contact from "@/components/landing/Contact";
 import Footer from "@/components/landing/Footer";
 import AuthModal from "@/components/auth/AuthModal";
@@ -20,6 +21,7 @@ export default function LandingPage() {
         <Features />
         <HowItWorks />
         <Pricing />
+        <FAQ />
         <Contact />
         <Footer />
       </div>
