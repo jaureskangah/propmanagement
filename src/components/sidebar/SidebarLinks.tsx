@@ -11,7 +11,12 @@ import {
   LayoutDashboard
 } from "lucide-react";
 
-export default function SidebarLinks() {
+interface SidebarLinksProps {
+  isTenant?: boolean;
+  collapsed?: boolean;
+}
+
+export default function SidebarLinks({ isTenant = false, collapsed = false }: SidebarLinksProps) {
   const location = useLocation();
   const { user } = useAuthSession();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
@@ -79,7 +84,7 @@ export default function SidebarLinks() {
                 : "text-gray-400 group-hover:text-gray-500"
             )}
           />
-          {link.label}
+          {!collapsed && link.label}
         </Link>
       ))}
     </nav>
