@@ -7,6 +7,11 @@ interface HeroProps {
 }
 
 export default function Hero({ onShowAuthModal }: HeroProps) {
+  const scrollToHowItWorks = () => {
+    const howItWorksSection = document.querySelector('#how-it-works');
+    howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
       <div className="text-center space-y-6 md:space-y-8">
@@ -28,8 +33,8 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
           <Button 
             variant="outline" 
             size="lg" 
-            className="w-full sm:w-auto bg-white text-[#ea384c] border-red-100 hover:bg-red-50 shadow-lg hover:shadow-xl transition-all duration-300"
-            onClick={onShowAuthModal}
+            className="w-full sm:w-auto border-red-100 hover:bg-white hover:text-[#ea384c] hover:border-[#ea384c] text-[#ea384c] shadow-lg hover:shadow-xl transition-all duration-300"
+            onClick={scrollToHowItWorks}
           >
             Learn More
           </Button>
