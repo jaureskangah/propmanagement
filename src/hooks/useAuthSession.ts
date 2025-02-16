@@ -13,12 +13,20 @@ export function useAuthSession() {
 
     async function getInitialSession() {
       try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting initial session:', error);
+          if (mounted) setLoading(false);
+          return;
+        }
+
+        console.log('Initial session check:', {
+          hasSession: !!initialSession,
+          userEmail: initialSession?.user?.email
+        });
+
         if (mounted) {
-          console.log('Initial auth state:', {
-            user: initialSession?.user?.email,
-            authenticated: !!initialSession
-          });
           if (initialSession) {
             setSession(initialSession);
             setUser(initialSession.user);
@@ -26,37 +34,54 @@ export function useAuthSession() {
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
-        if (mounted) {
-          setLoading(false);
-        }
+        console.error('Unexpected error during session check:', error);
+        if (mounted) setLoading(false);
       }
     }
 
+    console.log('Setting up auth listeners...');
     getInitialSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
-        console.log('Auth state changed:', event, currentSession?.user?.email);
+        console.log('Auth state changed:', { 
+          event, 
+          userEmail: currentSession?.user?.email,
+          userId: currentSession?.user?.id 
+        });
         
         if (mounted) {
-          setSession(currentSession);
-          setUser(currentSession?.user ?? null);
+          if (currentSession) {
+            setSession(currentSession);
+            setUser(currentSession.user);
+          } else {
+            setSession(null);
+            setUser(null);
+          }
           setLoading(false);
         }
       }
     );
 
     return () => {
+      console.log('Cleaning up auth listeners...');
       mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
+  const isAuthenticated = !!user && !!session;
+  console.log('Auth state:', { 
+    isAuthenticated, 
+    hasUser: !!user, 
+    hasSession: !!session, 
+    loading 
+  });
+
   return { 
     user,
     session,
     loading,
-    isAuthenticated: !!user && !!session
+    isAuthenticated
   };
 }

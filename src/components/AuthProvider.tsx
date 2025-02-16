@@ -19,7 +19,11 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
 
 interface AuthProviderProps {
@@ -27,18 +31,24 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { user, session, loading, isAuthenticated } = useAuthSession();
+  const auth = useAuthSession();
+  console.log('AuthProvider state:', { 
+    hasUser: !!auth.user,
+    isLoading: auth.loading,
+    isAuthenticated: auth.isAuthenticated
+  });
 
-  if (loading) {
+  // Ne montrez le loader que pendant le chargement initial
+  if (auth.loading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAuthenticated }}>
+    <AuthContext.Provider value={auth}>
       {children}
     </AuthContext.Provider>
   );
