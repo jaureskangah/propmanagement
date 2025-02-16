@@ -32,13 +32,7 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const auth = useAuthSession();
-  console.log('AuthProvider state:', { 
-    hasUser: !!auth.user,
-    isLoading: auth.loading,
-    isAuthenticated: auth.isAuthenticated
-  });
 
-  // Ne montrez le loader que pendant le chargement initial
   if (auth.loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">

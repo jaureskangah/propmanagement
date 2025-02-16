@@ -21,67 +21,48 @@ export function useAuthSession() {
           return;
         }
 
-        console.log('Initial session check:', {
-          hasSession: !!initialSession,
-          userEmail: initialSession?.user?.email
-        });
+        if (!mounted) return;
 
-        if (mounted) {
-          if (initialSession) {
-            setSession(initialSession);
-            setUser(initialSession.user);
-          }
-          setLoading(false);
+        if (initialSession) {
+          setSession(initialSession);
+          setUser(initialSession.user);
         }
+        
+        setLoading(false);
       } catch (error) {
         console.error('Unexpected error during session check:', error);
         if (mounted) setLoading(false);
       }
     }
 
-    console.log('Setting up auth listeners...');
     getInitialSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        console.log('Auth state changed:', { 
-          event, 
-          userEmail: currentSession?.user?.email,
-          userId: currentSession?.user?.id 
-        });
-        
-        if (mounted) {
-          if (currentSession) {
-            setSession(currentSession);
-            setUser(currentSession.user);
-          } else {
-            setSession(null);
-            setUser(null);
-          }
-          setLoading(false);
+      (_event, currentSession) => {
+        if (!mounted) return;
+
+        if (currentSession) {
+          setSession(currentSession);
+          setUser(currentSession.user);
+        } else {
+          setSession(null);
+          setUser(null);
         }
+        
+        setLoading(false);
       }
     );
 
     return () => {
-      console.log('Cleaning up auth listeners...');
       mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  const isAuthenticated = !!user && !!session;
-  console.log('Auth state:', { 
-    isAuthenticated, 
-    hasUser: !!user, 
-    hasSession: !!session, 
-    loading 
-  });
-
   return { 
     user,
     session,
     loading,
-    isAuthenticated
+    isAuthenticated: !!user && !!session
   };
 }
