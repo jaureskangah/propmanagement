@@ -1,20 +1,20 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuthSession } from "@/hooks/useAuthSession";
+import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { Communication } from "@/types/tenant";
 
 export const useTenantCommunications = () => {
   const [communications, setCommunications] = useState<Communication[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
-  const { session } = useAuthSession();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {
-    if (session?.user) {
+    if (user) {
       fetchTenantId();
     }
-  }, [session?.user]);
+  }, [user]);
 
   useEffect(() => {
     if (tenantId) {
@@ -28,7 +28,7 @@ export const useTenantCommunications = () => {
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select('id')
-        .eq('tenant_profile_id', session?.user?.id)
+        .eq('tenant_profile_id', user?.id)
         .maybeSingle();
 
       if (error) throw error;
@@ -37,7 +37,7 @@ export const useTenantCommunications = () => {
         console.log("Found tenant ID:", tenant.id);
         setTenantId(tenant.id);
       } else {
-        console.log("No tenant found for user:", session?.user?.id);
+        console.log("No tenant found for user:", user?.id);
         toast({
           title: "Not linked to a tenant profile",
           description: "Please contact your property manager to link your account.",

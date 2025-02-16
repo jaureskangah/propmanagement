@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { TenantInfoCard } from "./tenant/profile/TenantInfoCard";
@@ -5,7 +6,7 @@ import { UnlinkedTenantProfile } from "./tenant/profile/UnlinkedTenantProfile";
 import { TenantTabs } from "./tenant/profile/TenantTabs";
 import type { Tenant } from "@/types/tenant";
 import { useQueryClient } from "@tanstack/react-query";
-import { useAuthSession } from "@/hooks/useAuthSession";
+import { useAuth } from "@/components/AuthProvider";
 
 interface TenantProfileProps {
   tenant: Tenant;
@@ -13,8 +14,8 @@ interface TenantProfileProps {
 
 const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const queryClient = useQueryClient();
-  const { session } = useAuthSession();
-  const isTenantUser = session?.user?.id === tenant.tenant_profile_id;
+  const { user } = useAuth();
+  const isTenantUser = user?.id === tenant.tenant_profile_id;
 
   // Préchargement des données
   React.useEffect(() => {
@@ -49,8 +50,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
   };
 
-  // Si l'utilisateur est un tenant non lié, montrer uniquement le bouton de liaison
-  if (session?.user && !isTenantUser && session.user.email === tenant.email) {
+  if (user && !isTenantUser && user.email === tenant.email) {
     return <UnlinkedTenantProfile tenant={tenant} onProfileLinked={handleDataUpdate} />;
   }
 
