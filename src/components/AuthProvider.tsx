@@ -19,79 +19,47 @@ export const useAuth = () => {
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { user, setUser, session, setSession, loading, setLoading } = useAuthSession();
+  const { user, setUser, session, setSession, loading, setLoading, initializeAuthState } = useAuthSession();
   const { linkTenantProfile } = useTenantProfileLink();
   useRealtimeNotifications();
 
   useEffect(() => {
-    let mounted = true;
+    // Initialize auth state when component mounts
+    initializeAuthState();
 
-    async function getInitialSession() {
-      try {
-        console.log('Getting initial session...');
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-        
-        if (mounted) {
-          if (initialSession) {
-            console.log('Initial session found:', initialSession.user.email);
-            setUser(initialSession.user);
-            setSession(initialSession);
-            setLoading(false);
-            
-            if (initialSession.user.user_metadata.is_tenant_user) {
-              await linkTenantProfile(initialSession.user);
-            }
-          } else {
-            console.log('No initial session found');
-            setUser(null);
-            setSession(null);
-            setLoading(false);
-          }
-        }
-      } catch (error) {
-        console.error('Error getting initial session:', error);
-        if (mounted) {
-          setUser(null);
-          setSession(null);
-          setLoading(false);
-        }
-      }
-    }
-
-    getInitialSession();
-
+    // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event, currentSession?.user?.email);
-      
-      if (mounted) {
+      console.log('Auth state changed:', event, 'User:', currentSession?.user?.email);
+
+      if (event === 'SIGNED_IN') {
         if (currentSession) {
-          console.log('Setting session:', currentSession.user.email);
+          console.log('User signed in:', currentSession.user.email);
           setUser(currentSession.user);
           setSession(currentSession);
-          
+          setLoading(false);
+
           if (currentSession.user.user_metadata.is_tenant_user) {
             await linkTenantProfile(currentSession.user);
           }
-        } else {
-          console.log('Clearing session');
-          setUser(null);
-          setSession(null);
         }
+      } else if (event === 'SIGNED_OUT') {
+        console.log('User signed out');
+        setUser(null);
+        setSession(null);
         setLoading(false);
       }
     });
 
+    // Cleanup subscription
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
-  }, [setUser, setSession, setLoading, linkTenantProfile]);
+  }, [setUser, setSession, setLoading, linkTenantProfile, initializeAuthState]);
 
-  console.log('AuthProvider state:', { 
-    hasUser: !!user, 
-    hasSession: !!session, 
+  console.log('AuthProvider render:', {
+    isAuthenticated: !!session,
+    userEmail: user?.email,
     loading,
-    userEmail: user?.email
   });
 
   return (

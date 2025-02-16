@@ -8,34 +8,33 @@ export function useAuthSession() {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Reset auth state
-  const resetAuthState = useCallback(() => {
-    setUser(null);
-    setSession(null);
-    setLoading(false);
-  }, []);
-
-  // Set auth state
-  const setAuthState = useCallback((newSession: Session | null) => {
-    if (newSession?.user) {
-      setUser(newSession.user);
-      setSession(newSession);
-    } else {
-      resetAuthState();
-    }
-    setLoading(false);
-  }, [resetAuthState]);
-
   // Initialize auth state
   const initializeAuthState = useCallback(async () => {
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      setAuthState(session);
+      console.log('Initializing auth state...');
+      const { data: { session }, error } = await supabase.auth.getSession();
+      
+      if (error) {
+        throw error;
+      }
+
+      if (session) {
+        console.log('Found existing session for user:', session.user.email);
+        setUser(session.user);
+        setSession(session);
+      } else {
+        console.log('No existing session found');
+        setUser(null);
+        setSession(null);
+      }
     } catch (error) {
       console.error('Error initializing auth state:', error);
-      resetAuthState();
+      setUser(null);
+      setSession(null);
+    } finally {
+      setLoading(false);
     }
-  }, [setAuthState, resetAuthState]);
+  }, []);
 
   return {
     user,
@@ -44,8 +43,6 @@ export function useAuthSession() {
     setSession,
     loading,
     setLoading,
-    resetAuthState,
-    setAuthState,
     initializeAuthState
   };
 }
