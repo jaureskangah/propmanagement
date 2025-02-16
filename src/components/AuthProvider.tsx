@@ -1,8 +1,8 @@
+
 import { createContext, useContext, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
 import { useAuthSession } from '@/hooks/useAuthSession';
-import { updateTenantProfile } from '@/hooks/useProfileUpdate';
 import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
 import { useTenantProfileLink } from '@/hooks/useTenantProfileLink';
 
@@ -25,43 +25,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let mounted = true;
 
-    const handleSession = async (session: any) => {
-      if (!mounted) return;
-
+    // Initial session check
+    const checkSession = async () => {
       try {
-        if (session?.user) {
-          console.log('AuthProvider: Valid session found for user:', session.user.email);
-          await updateTenantProfile(session.user);
-          
-          if (session.user.user_metadata.is_tenant_user) {
-            await linkTenantProfile(session.user);
-          }
-          
+        const { data: { session } } = await supabase.auth.getSession();
+        console.log('Initial session check:', session?.user ?? 'No session');
+        if (mounted && session?.user) {
           setUser(session.user);
-        } else {
-          console.log('AuthProvider: No valid session found');
-          setUser(null);
         }
       } catch (error) {
-        console.error('Error handling session:', error);
-        setUser(null);
-        localStorage.removeItem('supabase.auth.token');
-        await supabase.auth.signOut();
+        console.error('Error checking session:', error);
+      } finally {
+        if (mounted) setLoading(false);
       }
     };
 
+    checkSession();
+
+    // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('AuthProvider: Auth state changed:', event, session?.user?.email ?? 'No user');
+      console.log('Auth state changed:', event, session?.user?.email ?? 'No user');
       
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-        await handleSession(session);
-      } else if (event === 'SIGNED_OUT') {
-        console.log('AuthProvider: User signed out');
-        setUser(null);
-        localStorage.removeItem('supabase.auth.token');
+      if (mounted) {
+        if (session?.user) {
+          setUser(session.user);
+          if (session.user.user_metadata.is_tenant_user) {
+            await linkTenantProfile(session.user);
+          }
+        } else {
+          setUser(null);
+        }
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
 
     return () => {

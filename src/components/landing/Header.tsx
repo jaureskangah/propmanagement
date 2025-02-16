@@ -1,4 +1,3 @@
-
 import { Building2, List, DollarSign, Gift, LogIn, LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
@@ -44,15 +43,9 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleSignOut = async () => {
     try {
-      localStorage.removeItem('supabase.auth.token');
-      localStorage.removeItem('sb-jhjhzwbvmkurwfohjxlu-auth-token');
-      
-      navigate("/");
-      
       await supabase.auth.signOut();
-      
+      navigate("/");
       toast.success("Successfully signed out");
-      
     } catch (error) {
       console.error("Error during sign out:", error);
       toast.error("Error signing out");
