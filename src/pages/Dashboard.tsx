@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -11,12 +12,20 @@ import type { DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
   console.log("Rendering Dashboard");
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
+
+  useEffect(() => {
+    console.log("Dashboard auth state:", { user, authLoading });
+    if (!authLoading && !user) {
+      console.log("No user found, redirecting to login");
+      navigate("/");
+    }
+  }, [user, authLoading, navigate]);
 
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -33,7 +42,6 @@ const Dashboard = () => {
     enabled: !!user,
   });
 
-  // Calculer la tendance globale basée sur les revenus
   const { data: currentMonthRevenue } = useQuery({
     queryKey: ["revenue", "current", dateRange],
     queryFn: async () => {
@@ -69,7 +77,6 @@ const Dashboard = () => {
     enabled: !!user,
   });
 
-  // Calculer la tendance en pourcentage
   const calculateTrend = () => {
     if (!previousMonthRevenue || previousMonthRevenue === 0) return 0;
     const difference = (currentMonthRevenue || 0) - previousMonthRevenue;
@@ -142,7 +149,8 @@ const Dashboard = () => {
     }
   }, [profileData, navigate]);
 
-  if (isLoadingProfile) {
+  // Show loading state while authentication is being checked
+  if (authLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -150,9 +158,18 @@ const Dashboard = () => {
     );
   }
 
+  // If not loading and no user, redirect will happen in the useEffect
   if (!user) {
-    navigate("/");
     return null;
+  }
+
+  // Show loading state while profile data is being fetched
+  if (isLoadingProfile) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
