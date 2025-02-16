@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     async function getInitialSession() {
       try {
-        setLoading(true);
+        console.log('Getting initial session...');
         const { data: { session: initialSession } } = await supabase.auth.getSession();
         
         if (mounted) {
@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log('Initial session found:', initialSession.user.email);
             setUser(initialSession.user);
             setSession(initialSession);
+            setLoading(false);
             
             if (initialSession.user.user_metadata.is_tenant_user) {
               await linkTenantProfile(initialSession.user);
@@ -44,12 +45,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             console.log('No initial session found');
             setUser(null);
             setSession(null);
+            setLoading(false);
           }
         }
       } catch (error) {
         console.error('Error getting initial session:', error);
-      } finally {
         if (mounted) {
+          setUser(null);
+          setSession(null);
           setLoading(false);
         }
       }
@@ -87,7 +90,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   console.log('AuthProvider state:', { 
     hasUser: !!user, 
     hasSession: !!session, 
-    loading 
+    loading,
+    userEmail: user?.email
   });
 
   return (
