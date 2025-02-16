@@ -53,36 +53,20 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
       }
 
       console.log('Signin successful:', data.user.email);
+
+      // Call onSuccess callback
+      onSuccess();
       
-      // Get user profile with error handling
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('is_tenant_user')
-        .eq('id', data.user.id)
-        .single();
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-      }
-
       toast({
         title: 'Success',
         description: 'You have been signed in successfully.',
       });
-      
-      // Call onSuccess before navigation
-      onSuccess();
 
-      // Immediate redirect based on user type
-      if (profile?.is_tenant_user) {
-        console.log('Redirecting tenant to maintenance page');
-        navigate('/maintenance', { replace: true });
-      } else {
-        console.log('Redirecting user to dashboard');
-        navigate('/dashboard', { replace: true });
-      }
+      // Use replace instead of push to prevent going back to login
+      console.log('Redirecting to dashboard...');
+      navigate('/dashboard', { replace: true });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during signin:', error);
       toast({
         title: 'Error',
