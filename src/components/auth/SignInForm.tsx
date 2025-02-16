@@ -52,25 +52,51 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         throw new Error('No user data returned from signin');
       }
 
-      console.log('Signin successful:', data.user.email);
+      // Attendre que la session soit récupérée
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        throw sessionError;
+      }
 
-      // Call onSuccess callback
-      onSuccess();
-      
+      if (!session) {
+        throw new Error('No session available after signin');
+      }
+
+      // Get user profile to determine redirect
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('is_tenant_user')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
+        throw profileError;
+      }
+
+      // Informer l'utilisateur
       toast({
-        title: 'Success',
-        description: 'You have been signed in successfully.',
+        title: 'Connexion réussie',
+        description: 'Vous êtes maintenant connecté.',
       });
 
-      // Use replace instead of push to prevent going back to login
-      console.log('Redirecting to dashboard...');
-      navigate('/dashboard', { replace: true });
+      // Appeler onSuccess pour mettre à jour l'état global
+      onSuccess();
+
+      // Rediriger en fonction du type d'utilisateur
+      if (profile?.is_tenant_user) {
+        console.log('Redirecting tenant to maintenance...');
+        navigate('/maintenance', { replace: true });
+      } else {
+        console.log('Redirecting to dashboard...');
+        navigate('/dashboard', { replace: true });
+      }
 
     } catch (error: any) {
       console.error('Error during signin:', error);
       toast({
-        title: 'Error',
-        description: error.message || 'An error occurred during sign in',
+        title: 'Erreur',
+        description: error.message || 'Une erreur est survenue lors de la connexion',
         variant: 'destructive',
       });
     } finally {
@@ -114,7 +140,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           )}
         />
         <Button type="submit" className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90" disabled={loading}>
-          {loading ? 'Signing in...' : 'Sign In'}
+          {loading ? 'Connexion en cours...' : 'Se connecter'}
         </Button>
       </form>
     </Form>

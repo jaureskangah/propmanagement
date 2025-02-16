@@ -25,41 +25,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     // Initialize auth state when component mounts
+    console.log("AuthProvider: Initializing auth state...");
     initializeAuthState();
 
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, 'User:', currentSession?.user?.email);
 
-      if (event === 'SIGNED_IN') {
-        if (currentSession) {
-          console.log('User signed in:', currentSession.user.email);
-          setUser(currentSession.user);
-          setSession(currentSession);
-          setLoading(false);
-
-          if (currentSession.user.user_metadata.is_tenant_user) {
-            await linkTenantProfile(currentSession.user);
-          }
+      if (currentSession) {
+        console.log('Setting session and user from auth change');
+        setUser(currentSession.user);
+        setSession(currentSession);
+        
+        if (currentSession.user.user_metadata.is_tenant_user) {
+          await linkTenantProfile(currentSession.user);
         }
-      } else if (event === 'SIGNED_OUT') {
-        console.log('User signed out');
+      } else {
+        console.log('Clearing session and user from auth change');
         setUser(null);
         setSession(null);
-        setLoading(false);
       }
+      
+      setLoading(false);
     });
 
     // Cleanup subscription
     return () => {
+      console.log("Cleaning up auth subscription");
       subscription.unsubscribe();
     };
   }, [setUser, setSession, setLoading, linkTenantProfile, initializeAuthState]);
 
-  console.log('AuthProvider render:', {
-    isAuthenticated: !!session,
-    userEmail: user?.email,
+  console.log('AuthProvider state:', {
+    hasUser: !!user,
+    hasSession: !!session,
     loading,
+    userEmail: user?.email
   });
 
   return (

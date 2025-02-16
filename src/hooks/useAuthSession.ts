@@ -12,16 +12,17 @@ export function useAuthSession() {
   const initializeAuthState = useCallback(async () => {
     try {
       console.log('Initializing auth state...');
-      const { data: { session }, error } = await supabase.auth.getSession();
+      const { data: { session: currentSession }, error } = await supabase.auth.getSession();
       
       if (error) {
+        console.error('Error getting session:', error);
         throw error;
       }
 
-      if (session) {
-        console.log('Found existing session for user:', session.user.email);
-        setUser(session.user);
-        setSession(session);
+      if (currentSession) {
+        console.log('Found existing session for user:', currentSession.user.email);
+        setUser(currentSession.user);
+        setSession(currentSession);
       } else {
         console.log('No existing session found');
         setUser(null);
