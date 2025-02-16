@@ -50,7 +50,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         throw new Error('No user data returned from signin');
       }
 
-      console.log('Signin successful:', data);
+      console.log('Signin successful:', data.user.email);
       
       toast({
         title: 'Success',

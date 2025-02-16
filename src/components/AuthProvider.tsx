@@ -23,44 +23,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useRealtimeNotifications();
 
   useEffect(() => {
-    let mounted = true;
-
-    // Initial session check
-    const checkSession = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        console.log('Initial session check:', session?.user ?? 'No session');
-        if (mounted && session?.user) {
-          setUser(session.user);
-        }
-      } catch (error) {
-        console.error('Error checking session:', error);
-      } finally {
-        if (mounted) setLoading(false);
-      }
-    };
-
-    checkSession();
-
-    // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.email ?? 'No user');
-      
-      if (mounted) {
-        if (session?.user) {
-          setUser(session.user);
-          if (session.user.user_metadata.is_tenant_user) {
-            await linkTenantProfile(session.user);
-          }
-        } else {
-          setUser(null);
-        }
+    // Vérification immédiate de la session au chargement
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial auth check:', session?.user?.email ?? 'No session');
+      if (session?.user) {
+        setUser(session.user);
+        setLoading(false);
+      } else {
+        setUser(null);
         setLoading(false);
       }
     });
 
+    // Souscription aux changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event, session?.user?.email);
+      
+      if (session?.user) {
+        console.log('Setting user:', session.user);
+        setUser(session.user);
+        if (session.user.user_metadata.is_tenant_user) {
+          linkTenantProfile(session.user);
+        }
+      } else {
+        console.log('Clearing user');
+        setUser(null);
+      }
+      
+      setLoading(false);
+    });
+
     return () => {
-      mounted = false;
       subscription.unsubscribe();
     };
   }, [setUser, setLoading, linkTenantProfile]);
