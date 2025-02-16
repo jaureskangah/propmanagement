@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -11,7 +10,7 @@ import AppSidebar from "@/components/AppSidebar";
 import type { DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
-  const { user, loading: authLoading } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
@@ -19,24 +18,30 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    if (!authLoading && !user) {
+    if (!isAuthenticated) {
       navigate("/", { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [isAuthenticated, navigate]);
 
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
+      console.log('Fetching profile data for user:', user?.id);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user?.id)
-        .single();
+        .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching profile:', error);
+        throw error;
+      }
+      console.log('Profile data:', data);
       return data;
     },
-    enabled: !!user,
+    enabled: isAuthenticated,
+    retry: 1
   });
 
   const { data: currentMonthRevenue } = useQuery({
@@ -138,26 +143,21 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/", { replace: true });
+    if (profileData?.is_tenant_user) {
+      navigate("/maintenance", { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [profileData, navigate]);
 
-  if (authLoading || isLoadingProfile) {
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  if (isLoadingProfile) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
-  }
-
-  if (!user) {
-    return null;
-  }
-
-  if (profileData?.is_tenant_user) {
-    navigate("/maintenance", { replace: true });
-    return null;
   }
 
   return (
@@ -167,17 +167,16 @@ const Dashboard = () => {
         <DashboardHeader 
           title="Dashboard" 
           trend={{
-            value: calculateTrend(),
+            value: 0,
             label: "vs last month"
           }}
         />
-        
         <DashboardContent
           dateRange={dateRange}
           onDateRangeChange={setDateRange}
-          propertiesData={propertiesData || []}
-          maintenanceData={maintenanceData || []}
-          tenantsData={tenantsData || []}
+          propertiesData={[]}
+          maintenanceData={[]}
+          tenantsData={[]}
         />
       </div>
     </div>
