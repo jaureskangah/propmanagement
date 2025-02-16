@@ -11,21 +11,24 @@ import AppSidebar from "@/components/AppSidebar";
 import type { DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
-  console.log("Rendering Dashboard");
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [mounted, setMounted] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     endDate: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0),
   });
 
   useEffect(() => {
-    console.log("Dashboard auth state:", { user, authLoading });
-    if (!authLoading && !user) {
-      console.log("No user found, redirecting to login");
-      navigate("/");
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && !authLoading && !user) {
+      navigate("/", { replace: true });
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, mounted]);
 
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -39,7 +42,7 @@ const Dashboard = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!user,
+    enabled: !!user && mounted,
   });
 
   const { data: currentMonthRevenue } = useQuery({
@@ -54,7 +57,7 @@ const Dashboard = () => {
       if (error) throw error;
       return data?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
     },
-    enabled: !!user,
+    enabled: !!user && mounted && !profileData?.is_tenant_user,
   });
 
   const { data: previousMonthRevenue } = useQuery({
@@ -74,7 +77,7 @@ const Dashboard = () => {
       if (error) throw error;
       return data?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
     },
-    enabled: !!user,
+    enabled: !!user && mounted && !profileData?.is_tenant_user,
   });
 
   const calculateTrend = () => {
@@ -90,10 +93,9 @@ const Dashboard = () => {
         .from("properties")
         .select("*, tenants(*)");
       if (error) throw error;
-      console.log("Properties data:", data);
       return data;
     },
-    enabled: !!user && !profileData?.is_tenant_user,
+    enabled: !!user && mounted && !profileData?.is_tenant_user,
   });
 
   const { data: maintenanceData, isLoading: isLoadingMaintenance } = useQuery({
@@ -103,10 +105,9 @@ const Dashboard = () => {
         .from("maintenance_requests")
         .select("*");
       if (error) throw error;
-      console.log("Maintenance data:", data);
       return data;
     },
-    enabled: !!user && !profileData?.is_tenant_user,
+    enabled: !!user && mounted && !profileData?.is_tenant_user,
   });
 
   const { data: tenantsData, isLoading: isLoadingTenants } = useQuery({
@@ -137,20 +138,18 @@ const Dashboard = () => {
           )
         `);
       if (error) throw error;
-      console.log("Tenants data:", data);
       return data;
     },
-    enabled: !!user && !profileData?.is_tenant_user,
+    enabled: !!user && mounted && !profileData?.is_tenant_user,
   });
 
   useEffect(() => {
-    if (profileData?.is_tenant_user) {
-      navigate("/maintenance");
+    if (mounted && profileData?.is_tenant_user) {
+      navigate("/maintenance", { replace: true });
     }
-  }, [profileData, navigate]);
+  }, [profileData, navigate, mounted]);
 
-  // Show loading state while authentication is being checked
-  if (authLoading) {
+  if (!mounted || authLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -158,12 +157,10 @@ const Dashboard = () => {
     );
   }
 
-  // If not loading and no user, redirect will happen in the useEffect
   if (!user) {
     return null;
   }
 
-  // Show loading state while profile data is being fetched
   if (isLoadingProfile) {
     return (
       <div className="flex items-center justify-center h-screen">
