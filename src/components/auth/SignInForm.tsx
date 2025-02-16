@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -33,21 +34,32 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('Starting signin process...');
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Signin error:', error);
+        throw error;
+      }
 
+      if (!data.user) {
+        throw new Error('No user data returned from signin');
+      }
+
+      console.log('Signin successful:', data);
+      
       toast({
         title: 'Success',
         description: 'You have been signed in successfully.',
       });
       
-      // Appeler onSuccess immédiatement après une connexion réussie
       onSuccess();
     } catch (error) {
+      console.error('Error during signin:', error);
       toast({
         title: 'Error',
         description: error.message,

@@ -46,12 +46,17 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             last_name: values.lastName,
             is_tenant_user: values.isTenant,
           },
+          emailRedirectTo: window.location.origin,
         },
       });
 
       if (error) {
         console.error('Signup error:', error);
         throw error;
+      }
+
+      if (!data.user) {
+        throw new Error('No user data returned from signup');
       }
 
       console.log('Signup successful:', data);
