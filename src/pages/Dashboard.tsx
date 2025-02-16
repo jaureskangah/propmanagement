@@ -11,25 +11,43 @@ import AppSidebar from "@/components/AppSidebar";
 import type { DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
+  console.log('📊 Dashboard Mount:', { 
+    hasUser: !!user, 
+    isAuthenticated, 
+    loading,
+    timestamp: new Date().toISOString()
+  });
+
   useEffect(() => {
-    if (!isAuthenticated) {
+    console.log('🔒 Auth check effect:', { 
+      isAuthenticated, 
+      timestamp: new Date().toISOString() 
+    });
+
+    if (!loading && !isAuthenticated) {
+      console.log('🚫 User not authenticated, redirecting to home');
       navigate("/", { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, loading, navigate]);
 
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
+      console.log('👤 Fetching profile data for user:', user?.id);
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user?.id)
         .maybeSingle();
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error fetching profile:', error);
+        throw error;
+      }
+      console.log('✅ Profile data fetched:', data);
       return data;
     },
     enabled: !!user?.id,
@@ -37,15 +55,13 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (profileData?.is_tenant_user) {
+      console.log('🏠 Redirecting tenant to maintenance page');
       navigate("/maintenance", { replace: true });
     }
   }, [profileData, navigate]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
-  if (isLoadingProfile) {
+  if (loading) {
+    console.log('⌛ Dashboard loading...');
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -53,6 +69,21 @@ const Dashboard = () => {
     );
   }
 
+  if (!isAuthenticated) {
+    console.log('🚫 Not authenticated, rendering null');
+    return null;
+  }
+
+  if (isLoadingProfile) {
+    console.log('👤 Loading profile...');
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  console.log('🎉 Rendering dashboard content');
   return (
     <div className="flex h-screen">
       <AppSidebar />
