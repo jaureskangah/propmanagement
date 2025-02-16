@@ -24,44 +24,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useRealtimeNotifications();
 
   useEffect(() => {
-    // Vérification immédiate de la session au chargement
-    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
-      console.log('Initial auth check:', currentSession?.user?.email ?? 'No session');
-      if (currentSession?.user) {
-        setUser(currentSession.user);
-        setSession(currentSession);
-        setLoading(false);
-      } else {
-        setUser(null);
-        setSession(null);
-        setLoading(false);
-      }
-    });
+    let mounted = true;
 
-    // Souscription aux changements d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+    async function getInitialSession() {
+      try {
+        setLoading(true);
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        
+        if (mounted) {
+          if (initialSession) {
+            console.log('Initial session found:', initialSession.user.email);
+            setUser(initialSession.user);
+            setSession(initialSession);
+            
+            if (initialSession.user.user_metadata.is_tenant_user) {
+              await linkTenantProfile(initialSession.user);
+            }
+          } else {
+            console.log('No initial session found');
+            setUser(null);
+            setSession(null);
+          }
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    getInitialSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.email);
       
-      if (currentSession?.user) {
-        console.log('Setting user:', currentSession.user);
-        setUser(currentSession.user);
-        setSession(currentSession);
-        if (currentSession.user.user_metadata.is_tenant_user) {
-          linkTenantProfile(currentSession.user);
+      if (mounted) {
+        if (currentSession) {
+          console.log('Setting session:', currentSession.user.email);
+          setUser(currentSession.user);
+          setSession(currentSession);
+          
+          if (currentSession.user.user_metadata.is_tenant_user) {
+            await linkTenantProfile(currentSession.user);
+          }
+        } else {
+          console.log('Clearing session');
+          setUser(null);
+          setSession(null);
         }
-      } else {
-        console.log('Clearing user');
-        setUser(null);
-        setSession(null);
+        setLoading(false);
       }
-      
-      setLoading(false);
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, [setUser, setSession, setLoading, linkTenantProfile]);
+
+  console.log('AuthProvider state:', { 
+    hasUser: !!user, 
+    hasSession: !!session, 
+    loading 
+  });
 
   return (
     <AuthContext.Provider value={{ user, session, loading }}>
