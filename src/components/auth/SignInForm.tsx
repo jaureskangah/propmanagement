@@ -17,7 +17,7 @@ const formSchema = z.object({
 });
 
 interface SignInFormProps {
-  onSuccess: () => void;
+  onSuccess?: () => void;
 }
 
 export default function SignInForm({ onSuccess }: SignInFormProps) {
@@ -36,64 +36,28 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      console.log('Starting signin process...');
-      
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (error) {
-        console.error('Signin error:', error);
-        throw error;
-      }
+      if (error) throw error;
 
-      if (!data.user) {
-        throw new Error('No user data returned from signin');
-      }
-
-      // Attendre que la session soit récupérée
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) {
-        throw sessionError;
-      }
-
-      if (!session) {
-        throw new Error('No session available after signin');
-      }
-
-      // Get user profile to determine redirect
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('is_tenant_user')
-        .eq('id', data.user.id)
-        .single();
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-        throw profileError;
-      }
-
-      // Informer l'utilisateur
       toast({
         title: 'Connexion réussie',
-        description: 'Vous êtes maintenant connecté.',
+        description: 'Vous allez être redirigé vers le tableau de bord.',
       });
 
-      // Appeler onSuccess pour mettre à jour l'état global
-      onSuccess();
-
-      // Rediriger en fonction du type d'utilisateur
-      if (profile?.is_tenant_user) {
-        console.log('Redirecting tenant to maintenance...');
-        navigate('/maintenance', { replace: true });
-      } else {
-        console.log('Redirecting to dashboard...');
-        navigate('/dashboard', { replace: true });
+      if (onSuccess) {
+        onSuccess();
       }
 
+      // Laisser le temps au toast de s'afficher
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, 1000);
+
     } catch (error: any) {
-      console.error('Error during signin:', error);
       toast({
         title: 'Erreur',
         description: error.message || 'Une erreur est survenue lors de la connexion',
