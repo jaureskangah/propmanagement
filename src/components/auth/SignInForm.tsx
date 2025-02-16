@@ -1,5 +1,6 @@
 
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -22,6 +23,7 @@ interface SignInFormProps {
 export default function SignInForm({ onSuccess }: SignInFormProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -52,12 +54,27 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
 
       console.log('Signin successful:', data.user.email);
       
+      // Get user profile to check if they are a tenant
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('is_tenant_user')
+        .eq('id', data.user.id)
+        .single();
+
       toast({
         title: 'Success',
         description: 'You have been signed in successfully.',
       });
       
       onSuccess();
+
+      // Redirect based on user type
+      if (profile?.is_tenant_user) {
+        navigate('/maintenance');
+      } else {
+        navigate('/dashboard');
+      }
+
     } catch (error) {
       console.error('Error during signin:', error);
       toast({
