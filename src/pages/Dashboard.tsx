@@ -21,6 +21,8 @@ const Dashboard = () => {
     timestamp: new Date().toISOString()
   });
 
+  // Temporairement commenté pour permettre l'accès sans authentification
+  /*
   useEffect(() => {
     console.log('🔒 Auth check effect:', { 
       isAuthenticated, 
@@ -32,6 +34,7 @@ const Dashboard = () => {
       navigate("/", { replace: true });
     }
   }, [isAuthenticated, loading, navigate]);
+  */
 
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -60,6 +63,8 @@ const Dashboard = () => {
     }
   }, [profileData, navigate]);
 
+  // Supprimé la vérification de loading pour permettre l'affichage direct
+  /*
   if (loading) {
     console.log('⌛ Dashboard loading...');
     return (
@@ -73,7 +78,10 @@ const Dashboard = () => {
     console.log('🚫 Not authenticated, rendering null');
     return null;
   }
+  */
 
+  // Supprimé la vérification du profil pour permettre l'affichage direct
+  /*
   if (isLoadingProfile) {
     console.log('👤 Loading profile...');
     return (
@@ -82,6 +90,7 @@ const Dashboard = () => {
       </div>
     );
   }
+  */
 
   console.log('🎉 Rendering dashboard content');
   return (

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
@@ -10,14 +10,10 @@ import Settings from './pages/Settings';
 import { useAuth } from '@/components/AuthProvider';
 import AdminDashboard from "@/pages/AdminDashboard";
 
+// Temporairement modifié pour permettre l'accès sans authentification
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  return user ? <>{children}</> : <Navigate to="/" />;
+  // Désactive temporairement la vérification d'authentification
+  return <>{children}</>;
 }
 
 export default function App() {
