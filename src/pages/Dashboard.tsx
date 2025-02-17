@@ -21,21 +21,7 @@ const Dashboard = () => {
     timestamp: new Date().toISOString()
   });
 
-  // Temporairement commenté pour permettre l'accès sans authentification
-  /*
-  useEffect(() => {
-    console.log('🔒 Auth check effect:', { 
-      isAuthenticated, 
-      timestamp: new Date().toISOString() 
-    });
-
-    if (!loading && !isAuthenticated) {
-      console.log('🚫 User not authenticated, redirecting to home');
-      navigate("/", { replace: true });
-    }
-  }, [isAuthenticated, loading, navigate]);
-  */
-
+  // Utilisation de useQuery avec staleTime pour éviter les rechargements inutiles
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
@@ -54,6 +40,8 @@ const Dashboard = () => {
       return data;
     },
     enabled: !!user?.id,
+    staleTime: 1000 * 60 * 5, // Données considérées comme fraîches pendant 5 minutes
+    cacheTime: 1000 * 60 * 30, // Garde en cache pendant 30 minutes
   });
 
   useEffect(() => {
@@ -63,34 +51,14 @@ const Dashboard = () => {
     }
   }, [profileData, navigate]);
 
-  // Supprimé la vérification de loading pour permettre l'affichage direct
-  /*
-  if (loading) {
-    console.log('⌛ Dashboard loading...');
+  // Affiche un loader uniquement pendant le chargement initial
+  if (loading || isLoadingProfile) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
-
-  if (!isAuthenticated) {
-    console.log('🚫 Not authenticated, rendering null');
-    return null;
-  }
-  */
-
-  // Supprimé la vérification du profil pour permettre l'affichage direct
-  /*
-  if (isLoadingProfile) {
-    console.log('👤 Loading profile...');
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-  */
 
   console.log('🎉 Rendering dashboard content');
   return (

@@ -1,10 +1,11 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { ActivityCard } from "./activity/ActivityCard";
 import { TenantActivity } from "./activity/TenantActivity";
 import { PaymentActivity } from "./activity/PaymentActivity";
 import { MaintenanceActivity } from "./activity/MaintenanceActivity";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase"; // Add this import
+import { supabase } from "@/lib/supabase";
 
 interface Activity {
   id: string;
@@ -23,11 +24,13 @@ export const RecentActivity = () => {
       const { data, error } = await supabase
         .from("tenants")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(3);
       if (error) throw error;
       console.log("Recent tenants data:", data);
       return data;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const { data: payments, isLoading: isLoadingPayments } = useQuery({
@@ -42,11 +45,13 @@ export const RecentActivity = () => {
             unit_number
           )
         `)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(3);
       if (error) throw error;
       console.log("Recent payments data:", data);
       return data;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const { data: maintenance, isLoading: isLoadingMaintenance } = useQuery({
@@ -56,29 +61,31 @@ export const RecentActivity = () => {
       const { data, error } = await supabase
         .from("maintenance_requests")
         .select("*")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .limit(3);
       if (error) throw error;
       console.log("Recent maintenance data:", data);
       return data;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   useEffect(() => {
     if (tenants && payments && maintenance) {
       const combinedActivities: Activity[] = [
-        ...(tenants?.slice(0, 3).map(tenant => ({
+        ...(tenants?.map(tenant => ({
           id: tenant.id,
           created_at: tenant.created_at,
           type: 'tenant' as const,
           component: <TenantActivity tenant={tenant} />
         })) || []),
-        ...(payments?.slice(0, 3).map(payment => ({
+        ...(payments?.map(payment => ({
           id: payment.id,
           created_at: payment.created_at,
           type: 'payment' as const,
           component: <PaymentActivity payment={payment} />
         })) || []),
-        ...(maintenance?.slice(0, 3).map(request => ({
+        ...(maintenance?.map(request => ({
           id: request.id,
           created_at: request.created_at,
           type: 'maintenance' as const,
