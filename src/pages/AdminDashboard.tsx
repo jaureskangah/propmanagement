@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Building2, HomeIcon, DollarSign } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { format } from "date-fns";
 
 interface AdminMetrics {
   total_users: number;
@@ -25,13 +26,23 @@ export default function AdminDashboard() {
 
   const fetchMetrics = async () => {
     try {
+      console.log("Fetching admin metrics...");
       const { data, error } = await supabase
         .from('admin_metrics')
         .select('*')
         .order('metric_date', { ascending: true });
 
       if (error) throw error;
-      setMetrics(data || []);
+
+      // Format the data for the charts
+      const formattedData = data?.map(metric => ({
+        ...metric,
+        metric_date: format(new Date(metric.metric_date), 'dd/MM/yyyy'),
+        total_revenue: Number(metric.total_revenue)
+      })) || [];
+
+      console.log("Fetched metrics:", formattedData);
+      setMetrics(formattedData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Une erreur est survenue');
       console.error('Error fetching metrics:', err);
@@ -106,11 +117,29 @@ export default function AdminDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={metrics}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="metric_date" />
+                <XAxis 
+                  dataKey="metric_date" 
+                  tick={{ fontSize: 12 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="total_users" stroke="#8884d8" name="Total Utilisateurs" />
-                <Line type="monotone" dataKey="active_users" stroke="#82ca9d" name="Utilisateurs Actifs" />
+                <Line 
+                  type="monotone" 
+                  dataKey="total_users" 
+                  stroke="#8884d8" 
+                  name="Total Utilisateurs"
+                  strokeWidth={2}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="active_users" 
+                  stroke="#82ca9d" 
+                  name="Utilisateurs Actifs"
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
@@ -124,10 +153,24 @@ export default function AdminDashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={metrics}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="metric_date" />
+                <XAxis 
+                  dataKey="metric_date" 
+                  tick={{ fontSize: 12 }}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
                 <YAxis />
-                <Tooltip />
-                <Line type="monotone" dataKey="total_revenue" stroke="#82ca9d" name="Revenu Total" />
+                <Tooltip 
+                  formatter={(value) => [`$${Number(value).toLocaleString()}`, "Revenu Total"]}
+                />
+                <Line 
+                  type="monotone" 
+                  dataKey="total_revenue" 
+                  stroke="#82ca9d" 
+                  name="Revenu Total"
+                  strokeWidth={2}
+                />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>
