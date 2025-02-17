@@ -7,6 +7,7 @@ import { Bell, Lock, User, Globe, Moon, Mail } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { EditProfileDialog } from "@/components/settings/EditProfileDialog";
+import { ChangePasswordDialog } from "@/components/settings/ChangePasswordDialog";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
@@ -103,7 +104,7 @@ export default function Settings() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button variant="outline">Changer le mot de passe</Button>
+              <ChangePasswordDialog />
             </CardContent>
           </Card>
 
