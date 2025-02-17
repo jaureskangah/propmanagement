@@ -44,23 +44,23 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
       if (error) throw error;
 
       toast({
-        title: 'Connexion réussie',
-        description: 'Vous allez être redirigé vers le tableau de bord.',
+        title: "Success",
+        description: "You have been successfully logged in.",
       });
 
       if (onSuccess) {
         onSuccess();
       }
 
-      // Laisser le temps au toast de s'afficher
+      // Allow the toast to be visible before redirecting
       setTimeout(() => {
         navigate('/dashboard', { replace: true });
       }, 1000);
 
     } catch (error: any) {
       toast({
-        title: 'Erreur',
-        description: error.message || 'Une erreur est survenue lors de la connexion',
+        title: "Error",
+        description: error.message || 'An error occurred during login',
         variant: 'destructive',
       });
     } finally {

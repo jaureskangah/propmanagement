@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +10,7 @@ import { EmailField } from './form/EmailField';
 import { PasswordFields } from './form/PasswordFields';
 import { TenantCheckbox } from './form/TenantCheckbox';
 import { SignUpFormValues, signUpFormSchema } from './signUpValidation';
+import { useNavigate } from 'react-router-dom';
 
 interface SignUpFormProps {
   onSuccess: () => void;
@@ -19,6 +19,7 @@ interface SignUpFormProps {
 export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpFormSchema),
@@ -64,8 +65,17 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         title: 'Success',
         description: 'Please check your email to confirm your account.',
       });
-      onSuccess();
-    } catch (error) {
+
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // Redirect to dashboard after successful signup
+      setTimeout(() => {
+        navigate('/dashboard', { replace: true });
+      }, 1000);
+
+    } catch (error: any) {
       console.error('Error in signup process:', error);
       toast({
         title: 'Error',
