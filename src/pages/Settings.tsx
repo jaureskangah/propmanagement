@@ -3,7 +3,7 @@ import AppSidebar from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Bell, Lock, User, Globe, Moon, Mail } from "lucide-react";
+import { Bell, Lock, User, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { EditProfileDialog } from "@/components/settings/EditProfileDialog";
@@ -11,12 +11,12 @@ import { ChangePasswordDialog } from "@/components/settings/ChangePasswordDialog
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Settings() {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
-  const [notifications, setNotifications] = useState(true);
-  const [emailUpdates, setEmailUpdates] = useState(true);
+  const { toast } = useToast();
 
   const { data: profile, isLoading, refetch } = useQuery({
     queryKey: ['profile', user?.id],
@@ -32,6 +32,32 @@ export default function Settings() {
     },
     enabled: !!user?.id
   });
+
+  const updateNotificationPreference = async (type: 'push_notifications' | 'email_updates', value: boolean) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ [type]: value })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Préférences mises à jour",
+        description: "Vos préférences de notification ont été enregistrées."
+      });
+
+      refetch();
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour des préférences.",
+        variant: "destructive"
+      });
+    }
+  };
 
   return (
     <div className="flex h-screen">
@@ -126,8 +152,9 @@ export default function Settings() {
                   <p className="text-sm text-muted-foreground">Recevoir des notifications push</p>
                 </div>
                 <Switch 
-                  checked={notifications} 
-                  onCheckedChange={setNotifications}
+                  checked={profile?.push_notifications ?? true}
+                  onCheckedChange={(checked) => updateNotificationPreference('push_notifications', checked)}
+                  disabled={isLoading}
                 />
               </div>
               <div className="flex justify-between items-center">
@@ -136,8 +163,9 @@ export default function Settings() {
                   <p className="text-sm text-muted-foreground">Recevoir des mises à jour par email</p>
                 </div>
                 <Switch 
-                  checked={emailUpdates} 
-                  onCheckedChange={setEmailUpdates}
+                  checked={profile?.email_updates ?? true}
+                  onCheckedChange={(checked) => updateNotificationPreference('email_updates', checked)}
+                  disabled={isLoading}
                 />
               </div>
             </CardContent>

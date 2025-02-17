@@ -371,12 +371,14 @@ export type Database = {
           company: string | null
           created_at: string
           email: string
+          email_updates: boolean | null
           first_name: string | null
           id: string
           is_tenant_user: boolean | null
           last_name: string | null
           phone: string | null
           position: string | null
+          push_notifications: boolean | null
           updated_at: string
         }
         Insert: {
@@ -384,12 +386,14 @@ export type Database = {
           company?: string | null
           created_at?: string
           email: string
+          email_updates?: boolean | null
           first_name?: string | null
           id: string
           is_tenant_user?: boolean | null
           last_name?: string | null
           phone?: string | null
           position?: string | null
+          push_notifications?: boolean | null
           updated_at?: string
         }
         Update: {
@@ -397,12 +401,14 @@ export type Database = {
           company?: string | null
           created_at?: string
           email?: string
+          email_updates?: boolean | null
           first_name?: string | null
           id?: string
           is_tenant_user?: boolean | null
           last_name?: string | null
           phone?: string | null
           position?: string | null
+          push_notifications?: boolean | null
           updated_at?: string
         }
         Relationships: []
