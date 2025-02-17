@@ -23,8 +23,8 @@ export function ChangePasswordDialog() {
     
     if (formData.newPassword !== formData.confirmPassword) {
       toast({
-        title: "Erreur",
-        description: "Les nouveaux mots de passe ne correspondent pas.",
+        title: "Error",
+        description: "New passwords do not match.",
         variant: "destructive"
       });
       return;
@@ -32,8 +32,8 @@ export function ChangePasswordDialog() {
 
     if (formData.newPassword.length < 6) {
       toast({
-        title: "Erreur",
-        description: "Le mot de passe doit contenir au moins 6 caractères.",
+        title: "Error",
+        description: "Password must be at least 6 characters long.",
         variant: "destructive"
       });
       return;
@@ -48,8 +48,8 @@ export function ChangePasswordDialog() {
       if (error) throw error;
 
       toast({
-        title: "Succès",
-        description: "Votre mot de passe a été modifié avec succès."
+        title: "Success",
+        description: "Your password has been successfully changed."
       });
       
       setFormData({
@@ -60,8 +60,8 @@ export function ChangePasswordDialog() {
       setIsOpen(false);
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du changement de mot de passe.",
+        title: "Error",
+        description: "An error occurred while changing the password.",
         variant: "destructive"
       });
     } finally {
@@ -72,15 +72,15 @@ export function ChangePasswordDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Changer le mot de passe</Button>
+        <Button variant="outline">Change Password</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Changer le mot de passe</DialogTitle>
+          <DialogTitle>Change Password</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Mot de passe actuel</Label>
+            <Label htmlFor="currentPassword">Current Password</Label>
             <Input
               id="currentPassword"
               type="password"
@@ -89,7 +89,7 @@ export function ChangePasswordDialog() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="newPassword">Nouveau mot de passe</Label>
+            <Label htmlFor="newPassword">New Password</Label>
             <Input
               id="newPassword"
               type="password"
@@ -98,7 +98,7 @@ export function ChangePasswordDialog() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirmer le nouveau mot de passe</Label>
+            <Label htmlFor="confirmPassword">Confirm New Password</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -108,16 +108,16 @@ export function ChangePasswordDialog() {
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Annuler
+              Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Modification en cours...
+                  Updating...
                 </>
               ) : (
-                "Modifier"
+                "Update"
               )}
             </Button>
           </div>

@@ -1,3 +1,4 @@
+
 import { useAuth } from "@/components/AuthProvider";
 import AppSidebar from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,15 +46,15 @@ export default function Settings() {
       if (error) throw error;
 
       toast({
-        title: "Préférences mises à jour",
-        description: "Vos préférences de notification ont été enregistrées."
+        title: "Preferences updated",
+        description: "Your notification preferences have been saved."
       });
 
       refetch();
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la mise à jour des préférences.",
+        title: "Error",
+        description: "An error occurred while updating preferences.",
         variant: "destructive"
       });
     }
@@ -65,19 +66,19 @@ export default function Settings() {
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-6 p-8 pb-16">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Paramètres</h1>
+            <h1 className="text-3xl font-bold">Settings</h1>
           </div>
 
           <div className="grid gap-6">
-            {/* Profil */}
+            {/* Profile */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5" />
-                  Profil
+                  Profile
                 </CardTitle>
                 <CardDescription>
-                  Gérez vos informations personnelles
+                  Manage your personal information
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -89,13 +90,13 @@ export default function Settings() {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="font-medium">Prénom</p>
+                        <p className="font-medium">First Name</p>
                         <p className="text-sm text-muted-foreground">
                           {profile?.first_name || '-'}
                         </p>
                       </div>
                       <div>
-                        <p className="font-medium">Nom</p>
+                        <p className="font-medium">Last Name</p>
                         <p className="text-sm text-muted-foreground">
                           {profile?.last_name || '-'}
                         </p>
@@ -119,15 +120,15 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            {/* Sécurité */}
+            {/* Security */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lock className="h-5 w-5" />
-                  Sécurité
+                  Security
                 </CardTitle>
                 <CardDescription>
-                  Gérez vos paramètres de sécurité
+                  Manage your security settings
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -143,14 +144,14 @@ export default function Settings() {
                   Notifications
                 </CardTitle>
                 <CardDescription>
-                  Configurez vos préférences de notification
+                  Configure your notification preferences
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Notifications push</p>
-                    <p className="text-sm text-muted-foreground">Recevoir des notifications push</p>
+                    <p className="font-medium">Push notifications</p>
+                    <p className="text-sm text-muted-foreground">Receive push notifications</p>
                   </div>
                   <Switch 
                     checked={profile?.push_notifications ?? true}
@@ -160,8 +161,8 @@ export default function Settings() {
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Mises à jour par email</p>
-                    <p className="text-sm text-muted-foreground">Recevoir des mises à jour par email</p>
+                    <p className="font-medium">Email updates</p>
+                    <p className="text-sm text-muted-foreground">Receive email updates</p>
                   </div>
                   <Switch 
                     checked={profile?.email_updates ?? true}
@@ -172,22 +173,22 @@ export default function Settings() {
               </CardContent>
             </Card>
 
-            {/* Apparence */}
+            {/* Appearance */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Moon className="h-5 w-5" />
-                  Apparence
+                  Appearance
                 </CardTitle>
                 <CardDescription>
-                  Personnalisez l'apparence de l'application
+                  Customize the application appearance
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Thème sombre</p>
-                    <p className="text-sm text-muted-foreground">Basculer entre le thème clair et sombre</p>
+                    <p className="font-medium">Dark theme</p>
+                    <p className="text-sm text-muted-foreground">Toggle between light and dark theme</p>
                   </div>
                   <Switch 
                     checked={theme === "dark"} 

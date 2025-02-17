@@ -44,16 +44,16 @@ export function EditProfileDialog({
       if (error) throw error;
 
       toast({
-        title: "Profil mis à jour",
-        description: "Vos informations ont été enregistrées avec succès."
+        title: "Profile updated",
+        description: "Your information has been successfully saved."
       });
       
       onProfileUpdate();
       setIsOpen(false);
     } catch (error) {
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la mise à jour du profil.",
+        title: "Error",
+        description: "An error occurred while updating the profile.",
         variant: "destructive"
       });
     } finally {
@@ -64,16 +64,16 @@ export function EditProfileDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Modifier</Button>
+        <Button variant="outline">Edit</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Modifier le profil</DialogTitle>
+          <DialogTitle>Edit Profile</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">Prénom</Label>
+              <Label htmlFor="firstName">First Name</Label>
               <Input
                 id="firstName"
                 value={formData.first_name}
@@ -81,7 +81,7 @@ export function EditProfileDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Nom</Label>
+              <Label htmlFor="lastName">Last Name</Label>
               <Input
                 id="lastName"
                 value={formData.last_name}
@@ -91,16 +91,16 @@ export function EditProfileDialog({
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Annuler
+              Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enregistrement...
+                  Saving...
                 </>
               ) : (
-                "Enregistrer"
+                "Save"
               )}
             </Button>
           </div>

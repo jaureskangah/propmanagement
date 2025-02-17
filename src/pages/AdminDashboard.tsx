@@ -44,7 +44,7 @@ export default function AdminDashboard() {
       console.log("Fetched metrics:", formattedData);
       setMetrics(formattedData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching metrics:', err);
     } finally {
       setLoading(false);
@@ -59,17 +59,17 @@ export default function AdminDashboard() {
     total_tenants: 0
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Chargement...</div>;
+  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Tableau de bord administrateur</h1>
+      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Utilisateurs Totaux</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Utilisateurs Actifs</CardTitle>
+            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
             <Users className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Propriétés</CardTitle>
+            <CardTitle className="text-sm font-medium">Properties</CardTitle>
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenu Total</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="col-span-1">
           <CardHeader>
-            <CardTitle>Évolution des utilisateurs</CardTitle>
+            <CardTitle>User Growth</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -130,14 +130,14 @@ export default function AdminDashboard() {
                   type="monotone" 
                   dataKey="total_users" 
                   stroke="#8884d8" 
-                  name="Total Utilisateurs"
+                  name="Total Users"
                   strokeWidth={2}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="active_users" 
                   stroke="#82ca9d" 
-                  name="Utilisateurs Actifs"
+                  name="Active Users"
                   strokeWidth={2}
                 />
               </LineChart>
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
 
         <Card className="col-span-1">
           <CardHeader>
-            <CardTitle>Évolution du revenu</CardTitle>
+            <CardTitle>Revenue Growth</CardTitle>
           </CardHeader>
           <CardContent className="h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -162,13 +162,13 @@ export default function AdminDashboard() {
                 />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value) => [`$${Number(value).toLocaleString()}`, "Revenu Total"]}
+                  formatter={(value) => [`$${Number(value).toLocaleString()}`, "Total Revenue"]}
                 />
                 <Line 
                   type="monotone" 
                   dataKey="total_revenue" 
                   stroke="#82ca9d" 
-                  name="Revenu Total"
+                  name="Total Revenue"
                   strokeWidth={2}
                 />
               </LineChart>
