@@ -77,32 +77,11 @@ export default function Settings() {
                     <p className="font-medium">Email</p>
                     <p className="text-sm text-muted-foreground">{user?.email}</p>
                   </div>
-                  <div>
-                    <p className="font-medium">Téléphone</p>
-                    <p className="text-sm text-muted-foreground">
-                      {profile?.phone || '-'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Entreprise</p>
-                    <p className="text-sm text-muted-foreground">
-                      {profile?.company || '-'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="font-medium">Poste</p>
-                    <p className="text-sm text-muted-foreground">
-                      {profile?.position || '-'}
-                    </p>
-                  </div>
                   <div className="flex justify-end">
                     <EditProfileDialog
                       initialData={{
                         first_name: profile?.first_name || '',
                         last_name: profile?.last_name || '',
-                        phone: profile?.phone || '',
-                        company: profile?.company || '',
-                        position: profile?.position || '',
                       }}
                       onProfileUpdate={refetch}
                     />

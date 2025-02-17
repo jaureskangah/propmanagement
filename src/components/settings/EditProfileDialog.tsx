@@ -12,9 +12,6 @@ import { Loader2 } from "lucide-react";
 interface ProfileFormData {
   first_name: string;
   last_name: string;
-  phone: string;
-  company: string;
-  position: string;
 }
 
 export function EditProfileDialog({ 
@@ -41,9 +38,6 @@ export function EditProfileDialog({
         .update({
           first_name: formData.first_name,
           last_name: formData.last_name,
-          phone: formData.phone,
-          company: formData.company,
-          position: formData.position,
         })
         .eq('id', user.id);
 
@@ -94,30 +88,6 @@ export function EditProfileDialog({
                 onChange={(e) => setFormData(prev => ({ ...prev, last_name: e.target.value }))}
               />
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Téléphone</Label>
-            <Input
-              id="phone"
-              value={formData.phone}
-              onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="company">Entreprise</Label>
-            <Input
-              id="company"
-              value={formData.company}
-              onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="position">Poste</Label>
-            <Input
-              id="position"
-              value={formData.position}
-              onChange={(e) => setFormData(prev => ({ ...prev, position: e.target.value }))}
-            />
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
