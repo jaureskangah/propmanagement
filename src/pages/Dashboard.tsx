@@ -21,7 +21,6 @@ const Dashboard = () => {
     timestamp: new Date().toISOString()
   });
 
-  // Utilisation de useQuery avec staleTime pour éviter les rechargements inutiles
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
@@ -41,7 +40,7 @@ const Dashboard = () => {
     },
     enabled: !!user?.id,
     staleTime: 1000 * 60 * 5, // Données considérées comme fraîches pendant 5 minutes
-    gcTime: 1000 * 60 * 30, // Garde en cache pendant 30 minutes (remplace cacheTime)
+    gcTime: 1000 * 60 * 30  // Garde en cache pendant 30 minutes (remplace cacheTime)
   });
 
   useEffect(() => {
@@ -51,7 +50,6 @@ const Dashboard = () => {
     }
   }, [profileData, navigate]);
 
-  // Affiche un loader uniquement pendant le chargement initial
   if (loading || isLoadingProfile) {
     return (
       <div className="flex items-center justify-center min-h-screen">
