@@ -14,54 +14,70 @@ const Dashboard = () => {
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  console.log('📊 Dashboard State:', { 
+  console.log('🔍 Dashboard Render:', { 
     hasUser: !!user, 
     userId: user?.id,
     isAuthenticated, 
     loading,
     timestamp: new Date().toISOString(),
-    currentPath: window.location.pathname
+    currentPath: window.location.pathname,
+    sessionState: supabase.auth.session,
   });
 
-  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
+  const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
       console.log('👤 Fetching profile data for user:', user?.id);
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user?.id)
-        .single();
-      
-      if (error) {
-        console.error('❌ Error fetching profile:', error);
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user?.id)
+          .single();
+        
+        if (error) {
+          console.error('❌ Error fetching profile:', error);
+          throw error;
+        }
+        
+        console.log('✅ Profile data fetched:', data);
+        return data;
+      } catch (error) {
+        console.error('💥 Profile fetch failed:', error);
         return null;
       }
-      console.log('✅ Profile data fetched:', data);
-      return data;
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id && isAuthenticated,
     staleTime: 1000 * 60 * 5,
-    retry: false
+    retry: 1
   });
 
+  // Log every effect execution
   useEffect(() => {
-    // Si le chargement est terminé et que l'utilisateur n'est pas authentifié
-    if (!loading && !isAuthenticated) {
-      console.log('🚫 Not authenticated, redirecting to auth');
-      navigate("/auth", { replace: true });
-      return;
-    }
+    console.log('⚡️ Auth Effect triggered:', {
+      loading,
+      isAuthenticated,
+      hasProfile: !!profileData,
+      userId: user?.id,
+      timestamp: new Date().toISOString()
+    });
 
-    // Si le profil est chargé et que c'est un tenant
-    if (profileData?.is_tenant_user) {
-      console.log('👥 Tenant user detected, redirecting to maintenance');
-      navigate("/maintenance", { replace: true });
-    }
-  }, [loading, isAuthenticated, profileData, navigate]);
+    if (!loading) {
+      if (!isAuthenticated) {
+        console.log('🚫 Redirecting to auth - Not authenticated');
+        navigate("/auth", { replace: true });
+        return;
+      }
 
-  // Afficher le loader pendant la vérification initiale
+      if (profileData?.is_tenant_user) {
+        console.log('👥 Redirecting to maintenance - Tenant user');
+        navigate("/maintenance", { replace: true });
+      }
+    }
+  }, [loading, isAuthenticated, profileData, navigate, user?.id]);
+
   if (loading || isLoadingProfile) {
+    console.log('⏳ Loading state:', { loading, isLoadingProfile });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center space-y-4">
@@ -74,15 +90,21 @@ const Dashboard = () => {
     );
   }
 
-  // Ne pas afficher le dashboard si non authentifié
   if (!isAuthenticated) {
+    console.log('🔒 Not rendering - User not authenticated');
     return null;
   }
 
-  console.log('🎉 Rendering dashboard content', {
+  if (profileError) {
+    console.error('❌ Profile error:', profileError);
+    return null;
+  }
+
+  console.log('🎉 Rendering dashboard:', {
     userId: user?.id,
     isAuthenticated,
-    hasProfile: !!profileData
+    hasProfile: !!profileData,
+    timestamp: new Date().toISOString()
   });
 
   return (
