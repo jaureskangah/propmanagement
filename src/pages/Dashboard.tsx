@@ -42,7 +42,9 @@ const Dashboard = () => {
     enabled: isAuthenticated && !!user?.id,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
-    retry: 1
+    retry: 1,
+    refetchOnMount: true,
+    refetchOnWindowFocus: false
   });
 
   useEffect(() => {
@@ -51,12 +53,15 @@ const Dashboard = () => {
       navigate("/auth", { replace: true });
       return;
     }
+  }, [isAuthenticated, loading, navigate]);
 
+  // Séparation de la logique de redirection du tenant
+  useEffect(() => {
     if (profileData?.is_tenant_user) {
       console.log('🏠 Redirecting tenant to maintenance page');
       navigate("/maintenance", { replace: true });
     }
-  }, [isAuthenticated, loading, profileData, navigate]);
+  }, [profileData, navigate]);
 
   if (!isAuthenticated) {
     return (
