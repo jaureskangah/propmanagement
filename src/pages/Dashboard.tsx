@@ -40,30 +40,31 @@ const Dashboard = () => {
       return data;
     },
     enabled: isAuthenticated && !!user?.id,
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 30,
-    retry: 1,
-    refetchOnMount: true,
-    refetchOnWindowFocus: false
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes
+    retry: false, // Désactivation des retries
+    refetchOnMount: false, // Désactivation du refetch au montage
+    refetchOnWindowFocus: false // Désactivation du refetch au focus
   });
 
+  // Effet combiné pour la gestion de l'authentification et des redirections
   useEffect(() => {
+    // Si l'utilisateur n'est pas authentifié et que le chargement est terminé
     if (!isAuthenticated && !loading) {
       console.log('🔒 User not authenticated, redirecting to login');
       navigate("/auth", { replace: true });
       return;
     }
-  }, [isAuthenticated, loading, navigate]);
 
-  // Séparation de la logique de redirection du tenant
-  useEffect(() => {
-    if (profileData?.is_tenant_user) {
+    // Si l'utilisateur est un tenant et que les données du profil sont chargées
+    if (isAuthenticated && !loading && profileData?.is_tenant_user) {
       console.log('🏠 Redirecting tenant to maintenance page');
       navigate("/maintenance", { replace: true });
     }
-  }, [profileData, navigate]);
+  }, [isAuthenticated, loading, profileData, navigate]);
 
-  if (!isAuthenticated) {
+  // Affichage du loader pendant la vérification de l'authentification
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -72,7 +73,8 @@ const Dashboard = () => {
     );
   }
 
-  if (loading || isLoadingProfile) {
+  // Affichage du loader pendant le chargement du profil
+  if (isLoadingProfile) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -81,12 +83,18 @@ const Dashboard = () => {
     );
   }
 
+  // Gestion des erreurs
   if (profileError) {
     return (
       <div className="flex items-center justify-center min-h-screen text-red-500">
         <p>Une erreur est survenue lors du chargement du profil.</p>
       </div>
     );
+  }
+
+  // Si non authentifié après le chargement, ne rien afficher (la redirection sera gérée par l'effet)
+  if (!isAuthenticated) {
+    return null;
   }
 
   console.log('🎉 Rendering dashboard content');
