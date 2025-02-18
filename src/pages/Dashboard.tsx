@@ -19,10 +19,11 @@ const Dashboard = () => {
     userId: user?.id,
     isAuthenticated, 
     loading,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    currentPath: window.location.pathname
   });
 
-  const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
+  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
       console.log('👤 Fetching profile data for user:', user?.id);
@@ -30,74 +31,60 @@ const Dashboard = () => {
         .from("profiles")
         .select("*")
         .eq("id", user?.id)
-        .maybeSingle();
+        .single();
       
       if (error) {
         console.error('❌ Error fetching profile:', error);
-        throw error;
+        return null;
       }
       console.log('✅ Profile data fetched:', data);
       return data;
     },
-    enabled: isAuthenticated && !!user?.id,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 30, // 30 minutes
-    retry: false, // Désactivation des retries
-    refetchOnMount: false, // Désactivation du refetch au montage
-    refetchOnWindowFocus: false // Désactivation du refetch au focus
+    enabled: !!user?.id,
+    staleTime: 1000 * 60 * 5,
+    retry: false
   });
 
-  // Effet combiné pour la gestion de l'authentification et des redirections
   useEffect(() => {
-    // Si l'utilisateur n'est pas authentifié et que le chargement est terminé
-    if (!isAuthenticated && !loading) {
-      console.log('🔒 User not authenticated, redirecting to login');
+    // Si le chargement est terminé et que l'utilisateur n'est pas authentifié
+    if (!loading && !isAuthenticated) {
+      console.log('🚫 Not authenticated, redirecting to auth');
       navigate("/auth", { replace: true });
       return;
     }
 
-    // Si l'utilisateur est un tenant et que les données du profil sont chargées
-    if (isAuthenticated && !loading && profileData?.is_tenant_user) {
-      console.log('🏠 Redirecting tenant to maintenance page');
+    // Si le profil est chargé et que c'est un tenant
+    if (profileData?.is_tenant_user) {
+      console.log('👥 Tenant user detected, redirecting to maintenance');
       navigate("/maintenance", { replace: true });
     }
-  }, [isAuthenticated, loading, profileData, navigate]);
+  }, [loading, isAuthenticated, profileData, navigate]);
 
-  // Affichage du loader pendant la vérification de l'authentification
-  if (loading) {
+  // Afficher le loader pendant la vérification initiale
+  if (loading || isLoadingProfile) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2">Vérification de l'authentification...</span>
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="text-sm text-gray-500">
+            {loading ? "Vérification de l'authentification..." : "Chargement du profil..."}
+          </span>
+        </div>
       </div>
     );
   }
 
-  // Affichage du loader pendant le chargement du profil
-  if (isLoadingProfile) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2">Chargement du profil...</span>
-      </div>
-    );
-  }
-
-  // Gestion des erreurs
-  if (profileError) {
-    return (
-      <div className="flex items-center justify-center min-h-screen text-red-500">
-        <p>Une erreur est survenue lors du chargement du profil.</p>
-      </div>
-    );
-  }
-
-  // Si non authentifié après le chargement, ne rien afficher (la redirection sera gérée par l'effet)
+  // Ne pas afficher le dashboard si non authentifié
   if (!isAuthenticated) {
     return null;
   }
 
-  console.log('🎉 Rendering dashboard content');
+  console.log('🎉 Rendering dashboard content', {
+    userId: user?.id,
+    isAuthenticated,
+    hasProfile: !!profileData
+  });
+
   return (
     <div className="flex h-screen">
       <AppSidebar />
