@@ -14,14 +14,15 @@ const Dashboard = () => {
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  console.log('📊 Dashboard Mount:', { 
+  console.log('📊 Dashboard State:', { 
     hasUser: !!user, 
+    userId: user?.id,
     isAuthenticated, 
     loading,
     timestamp: new Date().toISOString()
   });
 
-  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
+  const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
       console.log('👤 Fetching profile data for user:', user?.id);
@@ -38,22 +39,47 @@ const Dashboard = () => {
       console.log('✅ Profile data fetched:', data);
       return data;
     },
-    enabled: !!user?.id,
-    staleTime: 1000 * 60 * 5, // Données considérées comme fraîches pendant 5 minutes
-    gcTime: 1000 * 60 * 30  // Garde en cache pendant 30 minutes (remplace cacheTime)
+    enabled: isAuthenticated && !!user?.id,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    retry: 1
   });
 
   useEffect(() => {
+    if (!isAuthenticated && !loading) {
+      console.log('🔒 User not authenticated, redirecting to login');
+      navigate("/auth", { replace: true });
+      return;
+    }
+
     if (profileData?.is_tenant_user) {
       console.log('🏠 Redirecting tenant to maintenance page');
       navigate("/maintenance", { replace: true });
     }
-  }, [profileData, navigate]);
+  }, [isAuthenticated, loading, profileData, navigate]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Vérification de l'authentification...</span>
+      </div>
+    );
+  }
 
   if (loading || isLoadingProfile) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <span className="ml-2">Chargement du profil...</span>
+      </div>
+    );
+  }
+
+  if (profileError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        <p>Une erreur est survenue lors du chargement du profil.</p>
       </div>
     );
   }
