@@ -1,0 +1,46 @@
+
+import { cn } from "@/lib/utils";
+
+interface RevenueTooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+}
+
+export const RevenueChartTooltip = ({ active, payload, label }: RevenueTooltipProps) => {
+  if (active && payload && payload.length) {
+    const revenue = Number(payload[0].value);
+    const expenses = Number(payload[1].value);
+    const profit = revenue - expenses;
+    
+    return (
+      <div className="rounded-lg border bg-background p-4 shadow-md animate-fade-in">
+        <p className="font-semibold mb-2">{label}</p>
+        <div className="space-y-1">
+          <div className="grid grid-cols-2 gap-2">
+            <span className="text-muted-foreground">Revenue:</span>
+            <span className="font-medium text-blue-500">
+              ${revenue.toLocaleString()}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            <span className="text-muted-foreground">Expenses:</span>
+            <span className="font-medium text-blue-300">
+              ${expenses.toLocaleString()}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 border-t pt-1 mt-1">
+            <span className="text-muted-foreground">Profit:</span>
+            <span className={cn(
+              "font-medium",
+              profit > 0 ? "text-green-500" : "text-red-500"
+            )}>
+              ${profit.toLocaleString()}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};

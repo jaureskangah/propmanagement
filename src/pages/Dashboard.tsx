@@ -41,7 +41,7 @@ const Dashboard = () => {
     },
     enabled: !!user?.id,
     staleTime: 1000 * 60 * 5, // Données considérées comme fraîches pendant 5 minutes
-    cacheTime: 1000 * 60 * 30, // Garde en cache pendant 30 minutes
+    gcTime: 1000 * 60 * 30, // Garde en cache pendant 30 minutes (remplace cacheTime)
   });
 
   useEffect(() => {
