@@ -20,8 +20,7 @@ const Dashboard = () => {
     isAuthenticated, 
     loading,
     timestamp: new Date().toISOString(),
-    currentPath: window.location.pathname,
-    sessionState: supabase.auth.session,
+    currentPath: window.location.pathname
   });
 
   const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
