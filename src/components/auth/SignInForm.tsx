@@ -52,10 +52,8 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         onSuccess();
       }
 
-      // Allow the toast to be visible before redirecting
-      setTimeout(() => {
-        navigate('/dashboard', { replace: true });
-      }, 1000);
+      // Rediriger vers la page d'accueil au lieu du dashboard
+      navigate('/', { replace: true });
 
     } catch (error: any) {
       toast({
