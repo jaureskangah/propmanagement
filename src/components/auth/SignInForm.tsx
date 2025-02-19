@@ -36,12 +36,16 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log('🔒 Tentative de connexion...', values.email);
+      
+      const { error, data } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
       if (error) throw error;
+
+      console.log('✅ Connexion réussie:', data);
 
       toast({
         title: "Success",
@@ -52,10 +56,15 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         onSuccess();
       }
 
-      // Rediriger vers la page d'accueil au lieu du dashboard
-      navigate('/', { replace: true });
+      // Attendre un peu pour être sûr que la session est bien établie
+      console.log('⏳ Attente avant redirection...');
+      setTimeout(() => {
+        console.log('🚀 Redirection vers le dashboard...');
+        navigate('/dashboard', { replace: true });
+      }, 1000);
 
     } catch (error: any) {
+      console.error('❌ Erreur de connexion:', error);
       toast({
         title: "Error",
         description: error.message || 'An error occurred during login',
