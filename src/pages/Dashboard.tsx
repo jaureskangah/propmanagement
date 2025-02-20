@@ -14,97 +14,88 @@ const Dashboard = () => {
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  console.log('🔍 Dashboard Render:', { 
-    hasUser: !!user, 
-    userId: user?.id,
-    isAuthenticated, 
-    loading,
-    timestamp: new Date().toISOString(),
-    currentPath: window.location.pathname
-  });
+  // Protéger la route du dashboard immédiatement si pas authentifié
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      console.log('🚫 Non authentifié, redirection vers /auth');
+      navigate("/auth", { replace: true });
+    }
+  }, [loading, isAuthenticated, navigate]);
 
   const { data: profileData, isLoading: isLoadingProfile, error: profileError } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
-      console.log('👤 Fetching profile data for user:', user?.id);
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user?.id)
-          .single();
-        
-        if (error) {
-          console.error('❌ Error fetching profile:', error);
-          throw error;
-        }
-        
-        console.log('✅ Profile data fetched:', data);
-        return data;
-      } catch (error) {
-        console.error('💥 Profile fetch failed:', error);
-        return null;
+      if (!user?.id) return null;
+      
+      console.log('👤 Fetching profile data for user:', user.id);
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+      
+      if (error) {
+        console.error('❌ Error fetching profile:', error);
+        throw error;
       }
+      
+      console.log('✅ Profile data fetched:', data);
+      return data;
     },
     enabled: !!user?.id && isAuthenticated,
     staleTime: 1000 * 60 * 5,
     retry: 1
   });
 
-  // Log every effect execution
-  useEffect(() => {
-    console.log('⚡️ Auth Effect triggered:', {
-      loading,
-      isAuthenticated,
-      hasProfile: !!profileData,
-      userId: user?.id,
-      timestamp: new Date().toISOString()
-    });
-
-    if (!loading) {
-      if (!isAuthenticated) {
-        console.log('🚫 Redirecting to auth - Not authenticated');
-        navigate("/auth", { replace: true });
-        return;
-      }
-
-      if (profileData?.is_tenant_user) {
-        console.log('👥 Redirecting to maintenance - Tenant user');
-        navigate("/maintenance", { replace: true });
-      }
-    }
-  }, [loading, isAuthenticated, profileData, navigate, user?.id]);
-
-  if (loading || isLoadingProfile) {
-    console.log('⏳ Loading state:', { loading, isLoadingProfile });
+  // Afficher le loader pendant la vérification de l'authentification
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="flex flex-col items-center space-y-4">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <span className="text-sm text-gray-500">
-            {loading ? "Vérification de l'authentification..." : "Chargement du profil..."}
+            Vérification de l'authentification...
           </span>
         </div>
       </div>
     );
   }
 
+  // Rediriger si non authentifié
   if (!isAuthenticated) {
-    console.log('🔒 Not rendering - User not authenticated');
-    return null;
+    return null; // Le useEffect s'occupera de la redirection
   }
 
+  // Afficher le loader pendant le chargement du profil
+  if (isLoadingProfile) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <span className="text-sm text-gray-500">
+            Chargement du profil...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Gérer l'erreur de profil
   if (profileError) {
     console.error('❌ Profile error:', profileError);
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-500">
+        Une erreur est survenue lors du chargement du profil.
+      </div>
+    );
   }
 
-  console.log('🎉 Rendering dashboard:', {
-    userId: user?.id,
-    isAuthenticated,
-    hasProfile: !!profileData,
-    timestamp: new Date().toISOString()
-  });
+  // Rediriger les utilisateurs locataires vers la page maintenance
+  if (profileData?.is_tenant_user) {
+    console.log('👥 Redirecting to maintenance - Tenant user');
+    navigate("/maintenance", { replace: true });
+    return null;
+  }
 
   return (
     <div className="flex h-screen">
