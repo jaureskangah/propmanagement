@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
@@ -14,6 +15,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
   console.log('ProtectedRoute state:', { isAuthenticated, loading });
 
+  // Si nous chargeons toujours, montrer le spinner
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -22,11 +24,13 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
+  // Si nous ne sommes pas authentifiés et que le chargement est terminé, rediriger
   if (!isAuthenticated) {
     console.log('User not authenticated, redirecting to /auth');
     return <Navigate to="/auth" replace />;
   }
 
+  // Si nous sommes authentifiés et que le chargement est terminé, afficher le contenu
   console.log('User authenticated, rendering protected content');
   return <>{children}</>;
 };
