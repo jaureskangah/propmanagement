@@ -7,10 +7,11 @@ import { Database } from "@/integrations/supabase/types";
 
 // Définir le type des tables disponibles
 type TableName = keyof Database['public']['Tables'];
+type TablesRow<T extends TableName> = Database['public']['Tables'][T]['Row'];
 
-export function useSupabaseQuery<T>(
+export function useSupabaseQuery<T extends TableName>(
   key: string[],
-  table: TableName,
+  table: T,
   options: {
     select?: string;
     match?: Record<string, any>;
@@ -48,15 +49,15 @@ export function useSupabaseQuery<T>(
         throw error;
       }
 
-      return data as T[];
+      return data as TablesRow<T>[];
     },
   });
 }
 
-export function useSupabaseMutation<T>(
-  table: TableName,
+export function useSupabaseMutation<T extends TableName>(
+  table: T,
   options: {
-    onSuccess?: (data: T) => void;
+    onSuccess?: (data: TablesRow<T>) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -65,7 +66,7 @@ export function useSupabaseMutation<T>(
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (variables: Partial<T>) => {
+    mutationFn: async (variables: Partial<TablesRow<T>>) => {
       const { data, error } = await supabase
         .from(table)
         .insert(variables)
@@ -77,7 +78,7 @@ export function useSupabaseMutation<T>(
         throw error;
       }
 
-      return data as T;
+      return data as TablesRow<T>;
     },
     onSuccess: (data) => {
       if (options.successMessage) {
@@ -91,16 +92,15 @@ export function useSupabaseMutation<T>(
         options.onSuccess(data);
       }
 
-      // Invalider le cache pour recharger les données
       queryClient.invalidateQueries({ queryKey: [table] });
     },
   });
 }
 
-export function useSupabaseUpdate<T>(
-  table: TableName,
+export function useSupabaseUpdate<T extends TableName>(
+  table: T,
   options: {
-    onSuccess?: (data: T) => void;
+    onSuccess?: (data: TablesRow<T>) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -114,7 +114,7 @@ export function useSupabaseUpdate<T>(
       data,
     }: {
       id: string;
-      data: Partial<T>;
+      data: Partial<TablesRow<T>>;
     }) => {
       const { data: updatedData, error } = await supabase
         .from(table)
@@ -128,7 +128,7 @@ export function useSupabaseUpdate<T>(
         throw error;
       }
 
-      return updatedData as T;
+      return updatedData as TablesRow<T>;
     },
     onSuccess: (data) => {
       if (options.successMessage) {
@@ -147,8 +147,8 @@ export function useSupabaseUpdate<T>(
   });
 }
 
-export function useSupabaseDelete(
-  table: TableName,
+export function useSupabaseDelete<T extends TableName>(
+  table: T,
   options: {
     onSuccess?: () => void;
     successMessage?: string;
