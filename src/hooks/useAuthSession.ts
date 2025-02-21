@@ -9,11 +9,11 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Récupération immédiate de la session
+    // Initialisation immédiate de la session
     const getInitialSession = async () => {
       try {
         const { data: { session: initialSession } } = await supabase.auth.getSession();
-        console.log('Session initiale:', {
+        console.log('Session initiale :', {
           hasSession: !!initialSession,
           userId: initialSession?.user?.id
         });
@@ -23,17 +23,15 @@ export function useAuthSession() {
       } catch (error) {
         console.error('Erreur lors de la récupération de la session:', error);
       } finally {
+        // Désactiver le chargement une fois que nous avons la session initiale
         setLoading(false);
       }
     };
 
-    // Appel immédiat pour récupérer la session
     getInitialSession();
 
-    // Abonnement aux changements d'état d'authentification
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, updatedSession) => {
+    // Écouter les changements d'authentification
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, updatedSession) => {
       console.log('Changement d\'état d\'authentification:', {
         event: _event,
         hasSession: !!updatedSession,
@@ -42,24 +40,20 @@ export function useAuthSession() {
 
       setSession(updatedSession);
       setUser(updatedSession?.user ?? null);
-      setLoading(false);
+      // Ne pas modifier loading ici car il est déjà géré par getInitialSession
     });
 
-    // Nettoyage
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  console.log('useAuthSession état actuel:', {
-    hasUser: !!user,
-    hasSession: !!session,
-    loading,
-    isAuthenticated: !!user && !!session
-  });
+  const isAuthenticated = !!session?.user;
 
   return {
     user,
     session,
     loading,
-    isAuthenticated: !!user && !!session
+    isAuthenticated
   };
 }

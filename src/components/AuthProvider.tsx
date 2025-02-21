@@ -2,7 +2,6 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { useAuthSession } from '@/hooks/useAuthSession';
-import { Loader2 } from 'lucide-react';
 
 interface AuthContextType {
   user: User | null;
@@ -21,7 +20,7 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
   }
   return context;
 };
@@ -34,21 +33,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const { user, session, loading, isAuthenticated } = useAuthSession();
 
   // Log pour debug
-  console.log('AuthProvider state:', {
+  console.log('État AuthProvider:', {
     hasUser: !!user,
     hasSession: !!session,
     loading,
-    isAuthenticated: !!user && !!session
+    isAuthenticated
   });
 
-  // Important: Ne pas afficher le loader pendant la phase initiale
-  // Cela permet d'éviter le blocage infini
   return (
     <AuthContext.Provider value={{ 
       user, 
       session, 
-      loading: false, // Forcer loading à false pour débloquer
-      isAuthenticated: !!user && !!session
+      loading, // Utiliser l'état de chargement réel
+      isAuthenticated
     }}>
       {children}
     </AuthContext.Provider>
