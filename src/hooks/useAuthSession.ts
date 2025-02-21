@@ -9,33 +9,45 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Récupérer la session initiale
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
-      console.log("Initial session check:", { hasSession: !!initialSession });
-      setSession(initialSession);
-      setUser(initialSession?.user ?? null);
+    // 1. Get initial session
+    const initializeAuth = async () => {
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log('Initial session check:', { hasSession: !!initialSession });
+        
+        if (initialSession) {
+          setSession(initialSession);
+          setUser(initialSession.user);
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    // 2. Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
+      console.log('Auth state changed:', { 
+        event,
+        hasSession: !!newSession,
+        userId: newSession?.user?.id 
+      });
+
+      setSession(newSession);
+      setUser(newSession?.user ?? null);
       setLoading(false);
     });
 
-    // Écouter les changements d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, currentSession) => {
-        console.log("Auth state changed:", { 
-          hasSession: !!currentSession,
-          userId: currentSession?.user?.id 
-        });
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        setLoading(false);
-      }
-    );
-
+    // 3. Cleanup subscription
     return () => {
       subscription.unsubscribe();
     };
   }, []);
 
-  console.log("Current auth state:", { 
+  console.log('useAuthSession current state:', { 
     hasUser: !!user, 
     hasSession: !!session,
     loading,
@@ -46,6 +58,6 @@ export function useAuthSession() {
     user, 
     session, 
     loading,
-    isAuthenticated: !!user && !!session 
+    isAuthenticated: !!user && !!session
   };
 }
