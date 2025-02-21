@@ -12,7 +12,8 @@ const Dashboard = () => {
       units: 12,
       created_at: "2024-01-15",
       type: "Appartement",
-      address: "123 rue des Oliviers"
+      address: "123 rue des Oliviers",
+      user_id: "1" // Ajout du user_id requis
     },
     {
       id: "2",
@@ -20,7 +21,8 @@ const Dashboard = () => {
       units: 8,
       created_at: "2024-02-01",
       type: "Maison",
-      address: "45 avenue de la Mer"
+      address: "45 avenue de la Mer",
+      user_id: "1" // Ajout du user_id requis
     }
   ];
 
@@ -31,25 +33,31 @@ const Dashboard = () => {
       issue: "Fuite robinet cuisine",
       status: "Pending",
       created_at: "2024-03-15",
-      priority: "Medium"
+      priority: "Medium",
+      title: "Fuite robinet cuisine", // Ajout du titre requis
+      description: "Réparation urgente nécessaire"
     },
     {
       id: "m2",
       issue: "Problème chauffage",
       status: "In Progress",
       created_at: "2024-03-10",
-      priority: "High"
+      priority: "High",
+      title: "Problème chauffage",
+      description: "Le chauffage ne fonctionne pas"
     },
     {
       id: "m3",
       issue: "Peinture hall entrée",
       status: "Completed",
       created_at: "2024-03-05",
-      priority: "Low"
+      priority: "Low",
+      title: "Peinture hall entrée",
+      description: "Rafraîchissement de la peinture"
     }
   ];
 
-  // Données statiques pour les locataires
+  // Données statiques pour les locataires avec tous les champs requis
   const mockTenantsData = [
     {
       id: "t1",
@@ -57,10 +65,30 @@ const Dashboard = () => {
       unit_number: "A101",
       created_at: "2024-01-20",
       rent_amount: 800,
+      email: "marie.dupont@email.com",
+      lease_start: "2024-01-01",
+      lease_end: "2025-01-01",
+      property_id: "1",
+      user_id: "1",
       tenant_payments: [
-        { id: "p1", amount: 800, payment_date: "2024-03-01" },
-        { id: "p2", amount: 800, payment_date: "2024-02-01" }
-      ]
+        { 
+          id: "p1", 
+          amount: 800, 
+          payment_date: "2024-03-01",
+          status: "completed",
+          tenant_id: "t1",
+          created_at: "2024-03-01"
+        },
+        { 
+          id: "p2", 
+          amount: 800, 
+          payment_date: "2024-02-01",
+          status: "completed",
+          tenant_id: "t1",
+          created_at: "2024-02-01"
+        }
+      ],
+      tenant_communications: []
     },
     {
       id: "t2",
@@ -68,9 +96,22 @@ const Dashboard = () => {
       unit_number: "B202",
       created_at: "2024-02-01",
       rent_amount: 950,
+      email: "jean.martin@email.com",
+      lease_start: "2024-02-01",
+      lease_end: "2025-02-01",
+      property_id: "2",
+      user_id: "1",
       tenant_payments: [
-        { id: "p3", amount: 950, payment_date: "2024-03-01" }
-      ]
+        { 
+          id: "p3", 
+          amount: 950, 
+          payment_date: "2024-03-01",
+          status: "completed",
+          tenant_id: "t2",
+          created_at: "2024-03-01"
+        }
+      ],
+      tenant_communications: []
     }
   ];
 
