@@ -56,9 +56,9 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         onSuccess();
       }
 
-      // Redirection vers la page d'accueil au lieu du dashboard
-      console.log('🚀 Redirection vers la page d\'accueil...');
-      navigate('/', { replace: true });
+      // Redirection vers le dashboard au lieu de la page d'accueil
+      console.log('🚀 Redirection vers le dashboard...');
+      navigate('/dashboard');
 
     } catch (error: any) {
       console.error('❌ Erreur de connexion:', error);
