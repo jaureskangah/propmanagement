@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useSupabaseError } from "./useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
 import { Database } from "@/integrations/supabase/types";
+import { PostgrestSingleResponse } from "@supabase/supabase-js";
 
 type Tables = Database['public']['Tables']
 type TableName = keyof Tables
@@ -65,7 +66,7 @@ export function useSupabaseMutation<T extends TableName>(
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (variables: Partial<Tables[T]['Insert']>) => {
+    mutationFn: async (variables: Tables[T]['Insert']) => {
       const { data, error } = await supabase
         .from(table)
         .insert(variables)
@@ -113,21 +114,21 @@ export function useSupabaseUpdate<T extends TableName>(
       data,
     }: {
       id: string;
-      data: Partial<Tables[T]['Update']>;
-    }) => {
-      const { data: updatedData, error } = await supabase
+      data: Tables[T]['Update'];
+    }): Promise<Tables[T]['Row']> => {
+      const result = await supabase
         .from(table)
         .update(data)
         .eq('id', id)
         .select()
         .single();
 
-      if (error) {
-        handleError(error);
-        throw error;
+      if (result.error) {
+        handleError(result.error);
+        throw result.error;
       }
 
-      return updatedData as Tables[T]['Row'];
+      return result.data as Tables[T]['Row'];
     },
     onSuccess: (data) => {
       if (options.successMessage) {
