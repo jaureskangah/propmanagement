@@ -56,9 +56,11 @@ const Dashboard = () => {
     enabled: !!user?.id && isAuthenticated,
     staleTime: 1000 * 60 * 5,
     retry: false,
-    onError: (error) => {
-      console.error("Profile query error:", error);
-      toast.error("Error loading profile data");
+    meta: {
+      onError: (error: Error) => {
+        console.error("Profile query error:", error);
+        toast.error("Error loading profile data");
+      }
     }
   });
 
