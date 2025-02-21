@@ -56,12 +56,9 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         onSuccess();
       }
 
-      // Attendre un peu pour être sûr que la session est bien établie
-      console.log('⏳ Attente avant redirection...');
-      setTimeout(() => {
-        console.log('🚀 Redirection vers le dashboard...');
-        navigate('/dashboard', { replace: true });
-      }, 1000);
+      // Redirection vers la page d'accueil au lieu du dashboard
+      console.log('🚀 Redirection vers la page d\'accueil...');
+      navigate('/', { replace: true });
 
     } catch (error: any) {
       console.error('❌ Erreur de connexion:', error);
