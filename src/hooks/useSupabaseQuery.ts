@@ -9,9 +9,9 @@ import { PostgrestError } from "@supabase/supabase-js";
 type Tables = Database['public']['Tables']
 type TableName = keyof Tables
 
-type SupabaseRow<T extends TableName> = Tables[T]['Row']
-type SupabaseInsert<T extends TableName> = Tables[T]['Insert']
-type SupabaseUpdate<T extends TableName> = Tables[T]['Update']
+type Row<T extends TableName> = Tables[T]['Row']
+type Insert<T extends TableName> = Tables[T]['Insert']
+type Update<T extends TableName> = Tables[T]['Update']
 
 interface QueryOptions {
   select?: string;
@@ -30,32 +30,34 @@ export function useSupabaseQuery<T extends TableName>(
   return useQuery({
     queryKey: key,
     queryFn: async () => {
-      let query = supabase.from(table).select(options.select || '*');
+      try {
+        let query = supabase.from(table).select(options.select || '*');
 
-      if (options.match) {
-        Object.entries(options.match).forEach(([key, value]) => {
-          query = query.eq(key, value);
-        });
-      }
+        if (options.match) {
+          Object.entries(options.match).forEach(([key, value]) => {
+            query = query.eq(key, value);
+          });
+        }
 
-      if (options.order) {
-        query = query.order(options.order.column, {
-          ascending: options.order.ascending ?? true,
-        });
-      }
+        if (options.order) {
+          query = query.order(options.order.column, {
+            ascending: options.order.ascending ?? true,
+          });
+        }
 
-      if (options.limit) {
-        query = query.limit(options.limit);
-      }
+        if (options.limit) {
+          query = query.limit(options.limit);
+        }
 
-      const { data, error } = await query;
+        const { data, error } = await query;
 
-      if (error) {
-        handleError(error);
+        if (error) throw error;
+
+        return (data ?? []) as Row<T>[];
+      } catch (error) {
+        handleError(error as PostgrestError);
         throw error;
       }
-
-      return (data || []) as SupabaseRow<T>[];
     },
   });
 }
@@ -63,7 +65,7 @@ export function useSupabaseQuery<T extends TableName>(
 export function useSupabaseMutation<T extends TableName>(
   table: T,
   options: {
-    onSuccess?: (data: SupabaseRow<T>) => void;
+    onSuccess?: (data: Row<T>) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -72,16 +74,20 @@ export function useSupabaseMutation<T extends TableName>(
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (variables: Partial<SupabaseInsert<T>>) => {
+    mutationFn: async (variables: Partial<Insert<T>>) => {
       try {
+        type WithoutNulls<T> = {
+          [P in keyof T]: Exclude<T[P], null>;
+        };
+
         const { data, error } = await supabase
           .from(table)
-          .insert(variables as SupabaseInsert<T>)
+          .insert(variables as WithoutNulls<Insert<T>>)
           .select()
           .single();
 
         if (error) throw error;
-        return data as SupabaseRow<T>;
+        return data as Row<T>;
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -107,7 +113,7 @@ export function useSupabaseMutation<T extends TableName>(
 export function useSupabaseUpdate<T extends TableName>(
   table: T,
   options: {
-    onSuccess?: (data: SupabaseRow<T>) => void;
+    onSuccess?: (data: Row<T>) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -121,18 +127,22 @@ export function useSupabaseUpdate<T extends TableName>(
       data,
     }: {
       id: string;
-      data: Partial<SupabaseUpdate<T>>;
+      data: Partial<Update<T>>;
     }) => {
       try {
+        type WithoutNulls<T> = {
+          [P in keyof T]: Exclude<T[P], null>;
+        };
+
         const { data: updatedData, error } = await supabase
           .from(table)
-          .update(data as SupabaseUpdate<T>)
-          .eq('id', id)
+          .update(data as WithoutNulls<Update<T>>)
+          .eq('id' as keyof Row<T>, id)
           .select()
           .single();
 
         if (error) throw error;
-        return updatedData as SupabaseRow<T>;
+        return updatedData as Row<T>;
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -172,7 +182,7 @@ export function useSupabaseDelete<T extends TableName>(
         const { error } = await supabase
           .from(table)
           .delete()
-          .eq('id', id);
+          .eq('id' as keyof Row<T>, id);
 
         if (error) throw error;
       } catch (error) {
