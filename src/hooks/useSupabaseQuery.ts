@@ -3,10 +3,14 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useSupabaseError } from "./useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
+import { Database } from "@/integrations/supabase/types";
+
+// Définir le type des tables disponibles
+type TableName = keyof Database['public']['Tables'];
 
 export function useSupabaseQuery<T>(
   key: string[],
-  table: string,
+  table: TableName,
   options: {
     select?: string;
     match?: Record<string, any>;
@@ -50,7 +54,7 @@ export function useSupabaseQuery<T>(
 }
 
 export function useSupabaseMutation<T>(
-  table: string,
+  table: TableName,
   options: {
     onSuccess?: (data: T) => void;
     successMessage?: string;
@@ -94,7 +98,7 @@ export function useSupabaseMutation<T>(
 }
 
 export function useSupabaseUpdate<T>(
-  table: string,
+  table: TableName,
   options: {
     onSuccess?: (data: T) => void;
     successMessage?: string;
@@ -144,7 +148,7 @@ export function useSupabaseUpdate<T>(
 }
 
 export function useSupabaseDelete(
-  table: string,
+  table: TableName,
   options: {
     onSuccess?: () => void;
     successMessage?: string;
