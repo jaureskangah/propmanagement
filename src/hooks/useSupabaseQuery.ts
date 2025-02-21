@@ -53,7 +53,7 @@ export function useSupabaseQuery<T extends TableName>(
 
         if (error) throw error;
 
-        return data as unknown as Row<T>[];
+        return data as Row<T>[];
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -74,7 +74,7 @@ export function useSupabaseMutation<T extends TableName>(
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (variables: Partial<Insert<T>>) => {
+    mutationFn: async (variables: Insert<T>) => {
       try {
         const { data, error } = await supabase
           .from(table)
@@ -83,7 +83,7 @@ export function useSupabaseMutation<T extends TableName>(
           .single();
 
         if (error) throw error;
-        return data as unknown as Row<T>;
+        return data as Row<T>;
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -123,18 +123,18 @@ export function useSupabaseUpdate<T extends TableName>(
       data,
     }: {
       id: string;
-      data: Partial<Update<T>>;
+      data: Update<T>;
     }) => {
       try {
         const { data: updatedData, error } = await supabase
           .from(table)
           .update(data)
-          .eq('id', id)
+          .eq('id', id as keyof Row<T>)
           .select()
           .single();
 
         if (error) throw error;
-        return updatedData as unknown as Row<T>;
+        return updatedData as Row<T>;
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -174,7 +174,7 @@ export function useSupabaseDelete<T extends TableName>(
         const { error } = await supabase
           .from(table)
           .delete()
-          .eq('id', id);
+          .eq('id', id as keyof Row<T>);
 
         if (error) throw error;
       } catch (error) {
