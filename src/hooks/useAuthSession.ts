@@ -9,40 +9,34 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fonction pour mettre à jour l'état avec une session
-    const updateSessionState = (currentSession: Session | null) => {
-      console.log('Updating session state:', {
-        hasSession: !!currentSession,
-        userId: currentSession?.user?.id
+    // Récupérer la session initiale
+    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      console.log('Session initiale chargée:', {
+        hasSession: !!initialSession,
+        userId: initialSession?.user?.id
       });
       
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
+      setSession(initialSession);
+      setUser(initialSession?.user ?? null);
       setLoading(false);
-    };
-
-    // Vérifier la session immédiatement au chargement
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session loaded:', { 
-        hasSession: !!session,
-        userId: session?.user?.id
-      });
-      updateSessionState(session);
     });
 
     // S'abonner aux changements d'état d'authentification
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('Auth state changed event:', {
+    } = supabase.auth.onAuthStateChange((_event, updatedSession) => {
+      console.log('Changement d\'état d\'authentification:', {
         event: _event,
-        hasSession: !!session,
-        userId: session?.user?.id
+        hasSession: !!updatedSession,
+        userId: updatedSession?.user?.id
       });
-      updateSessionState(session);
+
+      setSession(updatedSession);
+      setUser(updatedSession?.user ?? null);
+      setLoading(false);
     });
 
-    // Nettoyage de l'abonnement
+    // Nettoyage
     return () => subscription.unsubscribe();
   }, []);
 
