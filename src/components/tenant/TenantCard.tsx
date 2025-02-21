@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -102,15 +103,15 @@ export const TenantCard = ({
         {!isMobile && (
           <div className="grid grid-cols-3 gap-4 pt-2 border-t">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Mail className="h-4 w-4" />
-              <span className="truncate">{tenant.email}</span>
+              <Mail className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate" title={tenant.email}>{tenant.email}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Phone className="h-4 w-4" />
-              <span>{tenant.phone || "N/A"}</span>
+              <Phone className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate" title={tenant.phone || "N/A"}>{tenant.phone || "N/A"}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
+            <div className="flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
+              <Calendar className="h-4 w-4 flex-shrink-0" />
               <span>${tenant.rent_amount}/month</span>
             </div>
           </div>
