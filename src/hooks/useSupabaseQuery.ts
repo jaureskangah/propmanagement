@@ -4,20 +4,26 @@ import { supabase } from "@/lib/supabase";
 import { useSupabaseError } from "./useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
 import { Database } from "@/integrations/supabase/types";
-import { PostgrestSingleResponse } from "@supabase/supabase-js";
+import { PostgrestError } from "@supabase/supabase-js";
 
 type Tables = Database['public']['Tables']
 type TableName = keyof Tables
 
+type SupabaseRow<T extends TableName> = Tables[T]['Row']
+type SupabaseInsert<T extends TableName> = Tables[T]['Insert']
+type SupabaseUpdate<T extends TableName> = Tables[T]['Update']
+
+interface QueryOptions {
+  select?: string;
+  match?: Record<string, any>;
+  order?: { column: string; ascending?: boolean };
+  limit?: number;
+}
+
 export function useSupabaseQuery<T extends TableName>(
   key: string[],
   table: T,
-  options: {
-    select?: string;
-    match?: Record<string, any>;
-    order?: { column: string; ascending?: boolean };
-    limit?: number;
-  } = {}
+  options: QueryOptions = {}
 ) {
   const { handleError } = useSupabaseError();
 
@@ -49,7 +55,7 @@ export function useSupabaseQuery<T extends TableName>(
         throw error;
       }
 
-      return data as Tables[T]['Row'][];
+      return (data || []) as SupabaseRow<T>[];
     },
   });
 }
@@ -57,7 +63,7 @@ export function useSupabaseQuery<T extends TableName>(
 export function useSupabaseMutation<T extends TableName>(
   table: T,
   options: {
-    onSuccess?: (data: Tables[T]['Row']) => void;
+    onSuccess?: (data: SupabaseRow<T>) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -66,19 +72,20 @@ export function useSupabaseMutation<T extends TableName>(
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (variables: Tables[T]['Insert']) => {
-      const { data, error } = await supabase
-        .from(table)
-        .insert(variables)
-        .select()
-        .single();
+    mutationFn: async (variables: Partial<SupabaseInsert<T>>) => {
+      try {
+        const { data, error } = await supabase
+          .from(table)
+          .insert(variables as SupabaseInsert<T>)
+          .select()
+          .single();
 
-      if (error) {
-        handleError(error);
+        if (error) throw error;
+        return data as SupabaseRow<T>;
+      } catch (error) {
+        handleError(error as PostgrestError);
         throw error;
       }
-
-      return data as Tables[T]['Row'];
     },
     onSuccess: (data) => {
       if (options.successMessage) {
@@ -100,7 +107,7 @@ export function useSupabaseMutation<T extends TableName>(
 export function useSupabaseUpdate<T extends TableName>(
   table: T,
   options: {
-    onSuccess?: (data: Tables[T]['Row']) => void;
+    onSuccess?: (data: SupabaseRow<T>) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -114,21 +121,22 @@ export function useSupabaseUpdate<T extends TableName>(
       data,
     }: {
       id: string;
-      data: Tables[T]['Update'];
-    }): Promise<Tables[T]['Row']> => {
-      const result = await supabase
-        .from(table)
-        .update(data)
-        .eq('id', id)
-        .select()
-        .single();
+      data: Partial<SupabaseUpdate<T>>;
+    }) => {
+      try {
+        const { data: updatedData, error } = await supabase
+          .from(table)
+          .update(data as SupabaseUpdate<T>)
+          .eq('id', id)
+          .select()
+          .single();
 
-      if (result.error) {
-        handleError(result.error);
-        throw result.error;
+        if (error) throw error;
+        return updatedData as SupabaseRow<T>;
+      } catch (error) {
+        handleError(error as PostgrestError);
+        throw error;
       }
-
-      return result.data as Tables[T]['Row'];
     },
     onSuccess: (data) => {
       if (options.successMessage) {
@@ -160,13 +168,15 @@ export function useSupabaseDelete<T extends TableName>(
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from(table)
-        .delete()
-        .eq('id', id);
+      try {
+        const { error } = await supabase
+          .from(table)
+          .delete()
+          .eq('id', id);
 
-      if (error) {
-        handleError(error);
+        if (error) throw error;
+      } catch (error) {
+        handleError(error as PostgrestError);
         throw error;
       }
     },
