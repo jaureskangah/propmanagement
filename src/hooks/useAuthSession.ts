@@ -9,19 +9,28 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Récupérer la session initiale
-    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
-      console.log('Session initiale chargée:', {
-        hasSession: !!initialSession,
-        userId: initialSession?.user?.id
-      });
-      
-      setSession(initialSession);
-      setUser(initialSession?.user ?? null);
-      setLoading(false);
-    });
+    // Récupération immédiate de la session
+    const getInitialSession = async () => {
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log('Session initiale:', {
+          hasSession: !!initialSession,
+          userId: initialSession?.user?.id
+        });
+        
+        setSession(initialSession);
+        setUser(initialSession?.user ?? null);
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la session:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // S'abonner aux changements d'état d'authentification
+    // Appel immédiat pour récupérer la session
+    getInitialSession();
+
+    // Abonnement aux changements d'état d'authentification
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, updatedSession) => {
@@ -39,6 +48,13 @@ export function useAuthSession() {
     // Nettoyage
     return () => subscription.unsubscribe();
   }, []);
+
+  console.log('useAuthSession état actuel:', {
+    hasUser: !!user,
+    hasSession: !!session,
+    loading,
+    isAuthenticated: !!user && !!session
+  });
 
   return {
     user,
