@@ -31,9 +31,16 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const auth = useAuthSession();
+  const { user, session, loading, isAuthenticated } = useAuthSession();
 
-  if (auth.loading) {
+  console.log('AuthProvider state:', {
+    hasUser: !!user,
+    hasSession: !!session,
+    loading,
+    isAuthenticated
+  });
+
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
@@ -42,7 +49,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={auth}>
+    <AuthContext.Provider value={{ 
+      user, 
+      session, 
+      loading, 
+      isAuthenticated: !!user && !!session
+    }}>
       {children}
     </AuthContext.Provider>
   );
