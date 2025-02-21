@@ -9,11 +9,11 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/components/ui/use-toast';
-import { Mail, Lock } from 'lucide-react';
+import { Mail, Lock, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email('Adresse email invalide'),
+  password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
 });
 
 interface SignInFormProps {
@@ -36,7 +36,6 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      console.log('🔒 Tentative de connexion...', values.email);
       
       const { error, data } = await supabase.auth.signInWithPassword({
         email: values.email,
@@ -45,26 +44,30 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
 
       if (error) throw error;
 
-      console.log('✅ Connexion réussie:', data);
-
       toast({
-        title: "Success",
-        description: "You have been successfully logged in.",
+        title: "Connexion réussie",
+        description: "Vous êtes maintenant connecté.",
       });
 
       if (onSuccess) {
         onSuccess();
       }
 
-      // Redirection vers le dashboard au lieu de la page d'accueil
-      console.log('🚀 Redirection vers le dashboard...');
       navigate('/dashboard');
 
     } catch (error: any) {
-      console.error('❌ Erreur de connexion:', error);
+      let errorMessage = "Une erreur s'est produite lors de la connexion";
+      
+      // Gestion des erreurs spécifiques de Supabase
+      if (error.message === 'Invalid login credentials') {
+        errorMessage = "Email ou mot de passe incorrect";
+      } else if (error.message === 'Email not confirmed') {
+        errorMessage = "Veuillez confirmer votre email avant de vous connecter";
+      }
+
       toast({
-        title: "Error",
-        description: error.message || 'An error occurred during login',
+        title: "Erreur",
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -84,7 +87,12 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
               <FormControl>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                  <Input placeholder="Enter your email" className="pl-10" {...field} />
+                  <Input 
+                    placeholder="nom@exemple.com" 
+                    className="pl-10" 
+                    {...field}
+                    disabled={loading}
+                  />
                 </div>
               </FormControl>
               <FormMessage />
@@ -96,19 +104,36 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Mot de passe</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                  <Input type="password" placeholder="Enter your password" className="pl-10" {...field} />
+                  <Input 
+                    type="password" 
+                    placeholder="••••••••" 
+                    className="pl-10" 
+                    {...field}
+                    disabled={loading}
+                  />
                 </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90" disabled={loading}>
-          {loading ? 'Connexion en cours...' : 'Se connecter'}
+        <Button 
+          type="submit" 
+          className="w-full" 
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Connexion en cours...
+            </>
+          ) : (
+            'Se connecter'
+          )}
         </Button>
       </form>
     </Form>

@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -11,6 +12,7 @@ import { PasswordFields } from './form/PasswordFields';
 import { TenantCheckbox } from './form/TenantCheckbox';
 import { SignUpFormValues, signUpFormSchema } from './signUpValidation';
 import { useNavigate } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 
 interface SignUpFormProps {
   onSuccess: () => void;
@@ -36,7 +38,6 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   async function onSubmit(values: SignUpFormValues) {
     try {
       setLoading(true);
-      console.log('Starting signup process with values:', values);
 
       const { data, error } = await supabase.auth.signUp({
         email: values.email,
@@ -47,39 +48,41 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             last_name: values.lastName,
             is_tenant_user: values.isTenant,
           },
-          emailRedirectTo: window.location.origin,
         },
       });
 
-      if (error) {
-        console.error('Signup error:', error);
-        throw error;
-      }
+      if (error) throw error;
 
       if (!data.user) {
-        throw new Error('No user data returned from signup');
+        throw new Error('Aucune donnée utilisateur retournée');
       }
 
-      console.log('Signup successful:', data);
       toast({
-        title: 'Success',
-        description: 'Please check your email to confirm your account.',
+        title: 'Inscription réussie',
+        description: data.session ? 
+          'Votre compte a été créé avec succès.' : 
+          'Veuillez vérifier votre email pour confirmer votre compte.',
       });
 
       if (onSuccess) {
         onSuccess();
       }
 
-      // Redirect to dashboard after successful signup
-      setTimeout(() => {
-        navigate('/dashboard', { replace: true });
-      }, 1000);
+      // Si l'utilisateur est directement connecté (pas de confirmation email requise)
+      if (data.session) {
+        navigate('/dashboard');
+      }
 
     } catch (error: any) {
-      console.error('Error in signup process:', error);
+      let errorMessage = "Une erreur s'est produite lors de l'inscription";
+      
+      if (error.message.includes('already registered')) {
+        errorMessage = "Cette adresse email est déjà utilisée";
+      }
+
       toast({
-        title: 'Error',
-        description: error.message,
+        title: "Erreur",
+        description: errorMessage,
         variant: 'destructive',
       });
     } finally {
@@ -90,13 +93,20 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        <NameFields form={form} />
-        <EmailField form={form} />
-        <PasswordFields form={form} />
-        <TenantCheckbox form={form} />
+        <NameFields form={form} disabled={loading} />
+        <EmailField form={form} disabled={loading} />
+        <PasswordFields form={form} disabled={loading} />
+        <TenantCheckbox form={form} disabled={loading} />
         
-        <Button type="submit" className="w-full bg-[#ea384c] hover:bg-[#ea384c]/90" disabled={loading}>
-          {loading ? 'Signing up...' : 'Sign Up'}
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Inscription en cours...
+            </>
+          ) : (
+            "S'inscrire"
+          )}
         </Button>
       </form>
     </Form>
