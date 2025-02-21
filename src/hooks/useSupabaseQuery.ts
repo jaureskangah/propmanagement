@@ -53,7 +53,7 @@ export function useSupabaseQuery<T extends TableName>(
 
         if (error) throw error;
 
-        return (data ?? []) as Row<T>[];
+        return data as unknown as Row<T>[];
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -76,18 +76,14 @@ export function useSupabaseMutation<T extends TableName>(
   return useMutation({
     mutationFn: async (variables: Partial<Insert<T>>) => {
       try {
-        type WithoutNulls<T> = {
-          [P in keyof T]: Exclude<T[P], null>;
-        };
-
         const { data, error } = await supabase
           .from(table)
-          .insert(variables as WithoutNulls<Insert<T>>)
+          .insert(variables)
           .select()
           .single();
 
         if (error) throw error;
-        return data as Row<T>;
+        return data as unknown as Row<T>;
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -130,19 +126,15 @@ export function useSupabaseUpdate<T extends TableName>(
       data: Partial<Update<T>>;
     }) => {
       try {
-        type WithoutNulls<T> = {
-          [P in keyof T]: Exclude<T[P], null>;
-        };
-
         const { data: updatedData, error } = await supabase
           .from(table)
-          .update(data as WithoutNulls<Update<T>>)
-          .eq('id' as keyof Row<T>, id)
+          .update(data)
+          .eq('id', id)
           .select()
           .single();
 
         if (error) throw error;
-        return updatedData as Row<T>;
+        return updatedData as unknown as Row<T>;
       } catch (error) {
         handleError(error as PostgrestError);
         throw error;
@@ -182,7 +174,7 @@ export function useSupabaseDelete<T extends TableName>(
         const { error } = await supabase
           .from(table)
           .delete()
-          .eq('id' as keyof Row<T>, id);
+          .eq('id', id);
 
         if (error) throw error;
       } catch (error) {
