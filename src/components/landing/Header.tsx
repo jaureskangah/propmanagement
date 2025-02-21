@@ -14,14 +14,18 @@ interface HeaderProps {
 }
 
 export default function Header({ onShowAuthModal }: HeaderProps) {
-  const { user, session } = useAuth();
+  const { user, session, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Ajout de logs pour debug
   useEffect(() => {
-    console.log("Auth state in Header:", { user, session });
-  }, [user, session]);
+    console.log("Header re-render:", { 
+      hasUser: !!user, 
+      hasSession: !!session,
+      isAuthenticated
+    });
+  }, [user, session, isAuthenticated]);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -99,7 +103,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       </div>
 
       {/* Navigation pour utilisateurs authentifiés */}
-      {user && session ? (
+      {isAuthenticated ? (
         <>
           <Button 
             variant="ghost" 
