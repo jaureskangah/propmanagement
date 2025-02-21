@@ -14,58 +14,57 @@ const Dashboard = () => {
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Logging de l'état d'authentification
+  // Simplified route protection
   useEffect(() => {
-    console.log("Dashboard state:", {
-      user: !!user,
-      isAuthenticated,
-      loading,
-      userId: user?.id
-    });
-  }, [user, isAuthenticated, loading]);
+    const checkAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          console.log('No active session found, redirecting to auth');
+          navigate("/auth", { replace: true });
+        }
+      } catch (error) {
+        console.error('Error checking auth status:', error);
+        navigate("/auth", { replace: true });
+      }
+    };
 
-  // Protection de route
-  useEffect(() => {
     if (!loading && !isAuthenticated) {
-      console.log("Redirecting to auth - Not authenticated");
-      navigate("/auth");
-      return;
+      checkAuth();
     }
   }, [loading, isAuthenticated, navigate]);
 
-  // Charger les données du profil
+  // Profile data query with better error handling
   const { data: profileData, isLoading: isLoadingProfile } = useQuery({
     queryKey: ["profile", user?.id],
     queryFn: async () => {
-      console.log("Fetching profile data for user:", user?.id);
-      try {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user?.id)
-          .maybeSingle();
+      if (!user?.id) throw new Error("No user ID available");
+      
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
 
-        if (error) {
-          console.error("Error fetching profile:", error);
-          toast.error("Failed to load profile data");
-          throw error;
-        }
-
-        console.log("Profile data loaded:", data);
-        return data;
-      } catch (error) {
-        console.error("Profile fetch error:", error);
+      if (error) {
+        toast.error("Failed to load profile data");
         throw error;
       }
+
+      return data;
     },
     enabled: !!user?.id && isAuthenticated,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: 1
+    staleTime: 1000 * 60 * 5,
+    retry: false,
+    onError: (error) => {
+      console.error("Profile query error:", error);
+      toast.error("Error loading profile data");
+    }
   });
 
-  // Gérer les états de chargement
-  if (loading || (!profileData && isLoadingProfile)) {
-    console.log("Loading state:", { loading, isLoadingProfile });
+  // Show loading state only when necessary
+  const isInitialLoading = loading || (isAuthenticated && !profileData && isLoadingProfile);
+  if (isInitialLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -73,15 +72,12 @@ const Dashboard = () => {
     );
   }
 
-  // Vérifier l'authentification
+  // Early return if not authenticated
   if (!isAuthenticated || !user) {
-    console.log("Not authenticated, returning null");
     return null;
   }
 
-  console.log("Rendering dashboard with profile:", profileData);
-
-  // Rendu du dashboard
+  // Render dashboard
   return (
     <div className="flex h-screen">
       <AppSidebar />
