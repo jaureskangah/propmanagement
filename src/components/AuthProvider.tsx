@@ -31,7 +31,7 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { user, session, loading } = useAuthSession();
+  const { user, session, loading, isAuthenticated } = useAuthSession();
 
   // Log pour debug
   console.log('AuthProvider state:', {
@@ -41,19 +41,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isAuthenticated: !!user && !!session
   });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
+  // Important: Ne pas afficher le loader pendant la phase initiale
+  // Cela permet d'éviter le blocage infini
   return (
     <AuthContext.Provider value={{ 
       user, 
       session, 
-      loading, 
+      loading: false, // Forcer loading à false pour débloquer
       isAuthenticated: !!user && !!session
     }}>
       {children}
