@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
@@ -13,9 +13,15 @@ import AdminDashboard from "@/pages/AdminDashboard";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
-  console.log('ProtectedRoute state:', { isAuthenticated, loading });
+  const navigate = useNavigate();
 
-  // Si nous chargeons toujours, montrer le spinner
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      navigate('/auth');
+    }
+  }, [loading, isAuthenticated, navigate]);
+
+  // Pendant le chargement, afficher un spinner
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -24,15 +30,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     );
   }
 
-  // Si nous ne sommes pas authentifiés et que le chargement est terminé, rediriger
-  if (!isAuthenticated) {
-    console.log('User not authenticated, redirecting to /auth');
-    return <Navigate to="/auth" replace />;
-  }
-
-  // Si nous sommes authentifiés et que le chargement est terminé, afficher le contenu
-  console.log('User authenticated, rendering protected content');
-  return <>{children}</>;
+  // Si authentifié, afficher le contenu
+  return isAuthenticated ? <>{children}</> : null;
 };
 
 export default function App() {

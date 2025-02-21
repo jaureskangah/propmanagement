@@ -1,22 +1,8 @@
-import { useEffect } from "react";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import AppSidebar from "@/components/AppSidebar";
-import { useAuthSession } from "@/hooks/useAuthSession";
-import { useNavigate } from "react-router-dom";
-import { Loader2 } from "lucide-react";
 
 const Dashboard = () => {
-  const { loading, isAuthenticated } = useAuthSession();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      console.log("User not authenticated, redirecting to auth page");
-      navigate("/auth");
-    }
-  }, [loading, isAuthenticated, navigate]);
-
   // Données statiques pour les propriétés
   const mockPropertiesData = [
     {
@@ -127,18 +113,6 @@ const Dashboard = () => {
       tenant_communications: []
     }
   ];
-
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return null;
-  }
 
   return (
     <div className="flex h-screen">
