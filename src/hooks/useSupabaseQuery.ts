@@ -5,9 +5,8 @@ import { useSupabaseError } from "./useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
 import { Database } from "@/integrations/supabase/types";
 
-// Définir le type des tables disponibles
-type TableName = keyof Database['public']['Tables'];
-type TablesRow<T extends TableName> = Database['public']['Tables'][T]['Row'];
+type Tables = Database['public']['Tables']
+type TableName = keyof Tables
 
 export function useSupabaseQuery<T extends TableName>(
   key: string[],
@@ -49,7 +48,7 @@ export function useSupabaseQuery<T extends TableName>(
         throw error;
       }
 
-      return data as TablesRow<T>[];
+      return data as Tables[T]['Row'][];
     },
   });
 }
@@ -57,7 +56,7 @@ export function useSupabaseQuery<T extends TableName>(
 export function useSupabaseMutation<T extends TableName>(
   table: T,
   options: {
-    onSuccess?: (data: TablesRow<T>) => void;
+    onSuccess?: (data: Tables[T]['Row']) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -66,7 +65,7 @@ export function useSupabaseMutation<T extends TableName>(
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (variables: Partial<TablesRow<T>>) => {
+    mutationFn: async (variables: Partial<Tables[T]['Insert']>) => {
       const { data, error } = await supabase
         .from(table)
         .insert(variables)
@@ -78,7 +77,7 @@ export function useSupabaseMutation<T extends TableName>(
         throw error;
       }
 
-      return data as TablesRow<T>;
+      return data as Tables[T]['Row'];
     },
     onSuccess: (data) => {
       if (options.successMessage) {
@@ -100,7 +99,7 @@ export function useSupabaseMutation<T extends TableName>(
 export function useSupabaseUpdate<T extends TableName>(
   table: T,
   options: {
-    onSuccess?: (data: TablesRow<T>) => void;
+    onSuccess?: (data: Tables[T]['Row']) => void;
     successMessage?: string;
   } = {}
 ) {
@@ -114,7 +113,7 @@ export function useSupabaseUpdate<T extends TableName>(
       data,
     }: {
       id: string;
-      data: Partial<TablesRow<T>>;
+      data: Partial<Tables[T]['Update']>;
     }) => {
       const { data: updatedData, error } = await supabase
         .from(table)
@@ -128,7 +127,7 @@ export function useSupabaseUpdate<T extends TableName>(
         throw error;
       }
 
-      return updatedData as TablesRow<T>;
+      return updatedData as Tables[T]['Row'];
     },
     onSuccess: (data) => {
       if (options.successMessage) {
