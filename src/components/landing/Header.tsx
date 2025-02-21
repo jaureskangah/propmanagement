@@ -1,4 +1,5 @@
-import { Building2, List, DollarSign, Gift, LogIn, LogOut, X } from "lucide-react";
+
+import { Building2, List, DollarSign, Gift, LogIn, LogOut, X, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
@@ -13,7 +14,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onShowAuthModal }: HeaderProps) {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -35,7 +36,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleDashboardClick = () => {
     if (profile?.is_tenant_user) {
-      navigate("/tenant/maintenance");
+      navigate("/maintenance");
     } else {
       navigate("/dashboard");
     }
@@ -55,7 +56,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const scrollToSection = (sectionId: string) => {
     const section = document.querySelector(`#${sectionId}`);
     if (section) {
-      const headerHeight = 64; // Hauteur du header en pixels
+      const headerHeight = 64;
       const elementPosition = section.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - headerHeight;
 
@@ -69,6 +70,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const NavLinks = () => (
     <>
+      {/* Navigation publique */}
       <div 
         className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
         onClick={() => scrollToSection('everything-you-need')}
@@ -90,13 +92,17 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
         <Gift className="h-4 w-4" />
         <span>Free Trial</span>
       </div>
-      {user ? (
-        <div className="flex items-center gap-4">
+
+      {/* Navigation pour utilisateurs authentifiés */}
+      {isAuthenticated ? (
+        <>
           <Button 
-            variant="default" 
+            variant="ghost" 
             size="sm"
             onClick={handleDashboardClick}
+            className="flex items-center gap-2"
           >
+            <LayoutDashboard className="h-4 w-4" />
             Dashboard
           </Button>
           <Button
@@ -108,7 +114,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
             <LogOut className="h-4 w-4 mr-2" />
             Sign Out
           </Button>
-        </div>
+        </>
       ) : (
         <Button
           variant="default"
@@ -127,7 +133,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
     <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
             <Building2 className="h-8 w-8 text-[#ea384c]" />
             <span className="text-xl font-bold text-black">PropManagement</span>
           </div>
