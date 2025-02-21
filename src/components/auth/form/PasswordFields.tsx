@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Lock } from "lucide-react";
@@ -6,9 +7,10 @@ import { SignUpFormValues } from "../signUpValidation";
 
 interface PasswordFieldsProps {
   form: UseFormReturn<SignUpFormValues>;
+  disabled?: boolean;
 }
 
-export function PasswordFields({ form }: PasswordFieldsProps) {
+export function PasswordFields({ form, disabled }: PasswordFieldsProps) {
   return (
     <>
       <FormField
@@ -20,7 +22,7 @@ export function PasswordFields({ form }: PasswordFieldsProps) {
             <FormControl>
               <div className="relative">
                 <Lock className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input type="password" placeholder="••••••" className="pl-8" {...field} />
+                <Input type="password" placeholder="••••••" className="pl-8" disabled={disabled} {...field} />
               </div>
             </FormControl>
             <FormMessage />
@@ -36,7 +38,7 @@ export function PasswordFields({ form }: PasswordFieldsProps) {
             <FormControl>
               <div className="relative">
                 <Lock className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input type="password" placeholder="••••••" className="pl-8" {...field} />
+                <Input type="password" placeholder="••••••" className="pl-8" disabled={disabled} {...field} />
               </div>
             </FormControl>
             <FormMessage />

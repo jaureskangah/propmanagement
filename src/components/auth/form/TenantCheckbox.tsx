@@ -1,3 +1,4 @@
+
 import { FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn } from "react-hook-form";
@@ -5,9 +6,10 @@ import { SignUpFormValues } from "../signUpValidation";
 
 interface TenantCheckboxProps {
   form: UseFormReturn<SignUpFormValues>;
+  disabled?: boolean;
 }
 
-export function TenantCheckbox({ form }: TenantCheckboxProps) {
+export function TenantCheckbox({ form, disabled }: TenantCheckboxProps) {
   return (
     <FormField
       control={form.control}
@@ -18,6 +20,7 @@ export function TenantCheckbox({ form }: TenantCheckboxProps) {
             <Checkbox
               checked={field.value}
               onCheckedChange={field.onChange}
+              disabled={disabled}
             />
           </FormControl>
           <div className="space-y-1 leading-none">
