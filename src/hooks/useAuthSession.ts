@@ -38,8 +38,14 @@ export function useAuthSession() {
   console.log("Current auth state:", { 
     hasUser: !!user, 
     hasSession: !!session,
-    loading 
+    loading,
+    isAuthenticated: !!user && !!session
   });
 
-  return { user, session, loading };
+  return { 
+    user, 
+    session, 
+    loading,
+    isAuthenticated: !!user && !!session 
+  };
 }
