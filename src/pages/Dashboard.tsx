@@ -8,22 +8,64 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useNavigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
+import { toast } from "sonner";
 
 const Dashboard = () => {
   const { user, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
 
-  // Protection de route avec une seule redirection
+  // Logging de l'état d'authentification
+  useEffect(() => {
+    console.log("Dashboard state:", {
+      user: !!user,
+      isAuthenticated,
+      loading,
+      userId: user?.id
+    });
+  }, [user, isAuthenticated, loading]);
+
+  // Protection de route
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      console.log('Non authentifié, redirection vers /auth');
-      navigate("/auth", { replace: true });
+      console.log("Redirecting to auth - Not authenticated");
+      navigate("/auth");
       return;
     }
   }, [loading, isAuthenticated, navigate]);
 
-  // Attendre que l'authentification soit vérifiée
-  if (loading) {
+  // Charger les données du profil
+  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
+    queryKey: ["profile", user?.id],
+    queryFn: async () => {
+      console.log("Fetching profile data for user:", user?.id);
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", user?.id)
+          .maybeSingle();
+
+        if (error) {
+          console.error("Error fetching profile:", error);
+          toast.error("Failed to load profile data");
+          throw error;
+        }
+
+        console.log("Profile data loaded:", data);
+        return data;
+      } catch (error) {
+        console.error("Profile fetch error:", error);
+        throw error;
+      }
+    },
+    enabled: !!user?.id && isAuthenticated,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: 1
+  });
+
+  // Gérer les états de chargement
+  if (loading || (!profileData && isLoadingProfile)) {
+    console.log("Loading state:", { loading, isLoadingProfile });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -31,35 +73,13 @@ const Dashboard = () => {
     );
   }
 
-  // Arrêter le rendu si non authentifié
+  // Vérifier l'authentification
   if (!isAuthenticated || !user) {
+    console.log("Not authenticated, returning null");
     return null;
   }
 
-  // Charger les données du profil uniquement si authentifié
-  const { data: profileData, isLoading: isLoadingProfile } = useQuery({
-    queryKey: ["profile", user.id],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
-      return data;
-    },
-    enabled: !!user?.id,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    retry: false
-  });
-
-  // Attendre le chargement du profil
-  if (isLoadingProfile) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
+  console.log("Rendering dashboard with profile:", profileData);
 
   // Rendu du dashboard
   return (
