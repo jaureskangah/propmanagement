@@ -7,16 +7,21 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
 }
 
 export default function Header({ onShowAuthModal }: HeaderProps) {
-  const { user, isAuthenticated } = useAuth();
+  const { user, session } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Ajout de logs pour debug
+  useEffect(() => {
+    console.log("Auth state in Header:", { user, session });
+  }, [user, session]);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -94,7 +99,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       </div>
 
       {/* Navigation pour utilisateurs authentifiés */}
-      {isAuthenticated ? (
+      {user && session ? (
         <>
           <Button 
             variant="ghost" 
