@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
@@ -13,6 +12,7 @@ import AdminDashboard from "@/pages/AdminDashboard";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
+  console.log('ProtectedRoute state:', { isAuthenticated, loading });
 
   if (loading) {
     return (
@@ -23,9 +23,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   if (!isAuthenticated) {
+    console.log('User not authenticated, redirecting to /auth');
     return <Navigate to="/auth" replace />;
   }
 
+  console.log('User authenticated, rendering protected content');
   return <>{children}</>;
 };
 

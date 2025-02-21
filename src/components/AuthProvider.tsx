@@ -31,13 +31,14 @@ interface AuthProviderProps {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const { user, session, loading, isAuthenticated } = useAuthSession();
+  const { user, session, loading } = useAuthSession();
 
+  // Log pour debug
   console.log('AuthProvider state:', {
     hasUser: !!user,
     hasSession: !!session,
     loading,
-    isAuthenticated
+    isAuthenticated: !!user && !!session
   });
 
   if (loading) {

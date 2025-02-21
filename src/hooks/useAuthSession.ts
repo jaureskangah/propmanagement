@@ -46,21 +46,10 @@ export function useAuthSession() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Force la réévaluation de isAuthenticated à chaque changement
-  const isAuthenticated = Boolean(user?.id && session?.access_token);
-
-  console.log('useAuthSession final state:', {
-    hasUser: !!user,
-    hasSession: !!session,
-    userId: user?.id,
-    accessToken: !!session?.access_token,
-    isAuthenticated
-  });
-
   return {
     user,
     session,
     loading,
-    isAuthenticated
+    isAuthenticated: !!user && !!session
   };
 }
