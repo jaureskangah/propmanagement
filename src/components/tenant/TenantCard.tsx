@@ -101,18 +101,20 @@ export const TenantCard = ({
           </div>
         </div>
         {!isMobile && (
-          <div className="grid grid-cols-3 gap-4 pt-2 border-t">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="grid grid-cols-3 gap-2 pt-2 border-t">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
               <Mail className="h-4 w-4 flex-shrink-0" />
               <span className="truncate" title={tenant.email}>{tenant.email}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
               <Phone className="h-4 w-4 flex-shrink-0" />
               <span className="truncate" title={tenant.phone || "N/A"}>{tenant.phone || "N/A"}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground whitespace-nowrap">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
               <Calendar className="h-4 w-4 flex-shrink-0" />
-              <span>${tenant.rent_amount}/month</span>
+              <span className="truncate" title={`$${tenant.rent_amount}/month`}>
+                ${tenant.rent_amount}/month
+              </span>
             </div>
           </div>
         )}
