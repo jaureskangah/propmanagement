@@ -9,55 +9,58 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Get initial session
-    const initializeAuth = async () => {
-      try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-        console.log('Initial session check:', { hasSession: !!initialSession });
-        
-        if (initialSession) {
-          setSession(initialSession);
-          setUser(initialSession.user);
-        }
-      } catch (error) {
-        console.error('Error getting initial session:', error);
-      } finally {
-        setLoading(false);
-      }
+    // Fonction pour mettre à jour l'état avec une session
+    const updateSessionState = (currentSession: Session | null) => {
+      console.log('Updating session state:', {
+        hasSession: !!currentSession,
+        userId: currentSession?.user?.id
+      });
+      
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      setLoading(false);
     };
 
-    initializeAuth();
-
-    // 2. Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, newSession) => {
-      console.log('Auth state changed:', { 
-        event,
-        hasSession: !!newSession,
-        userId: newSession?.user?.id 
+    // Vérifier la session immédiatement au chargement
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session loaded:', { 
+        hasSession: !!session,
+        userId: session?.user?.id
       });
-
-      setSession(newSession);
-      setUser(newSession?.user ?? null);
-      setLoading(false);
+      updateSessionState(session);
     });
 
-    // 3. Cleanup subscription
-    return () => {
-      subscription.unsubscribe();
-    };
+    // S'abonner aux changements d'état d'authentification
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth state changed event:', {
+        event: _event,
+        hasSession: !!session,
+        userId: session?.user?.id
+      });
+      updateSessionState(session);
+    });
+
+    // Nettoyage de l'abonnement
+    return () => subscription.unsubscribe();
   }, []);
 
-  console.log('useAuthSession current state:', { 
-    hasUser: !!user, 
+  // Force la réévaluation de isAuthenticated à chaque changement
+  const isAuthenticated = Boolean(user?.id && session?.access_token);
+
+  console.log('useAuthSession final state:', {
+    hasUser: !!user,
     hasSession: !!session,
-    loading,
-    isAuthenticated: !!user && !!session
+    userId: user?.id,
+    accessToken: !!session?.access_token,
+    isAuthenticated
   });
 
-  return { 
-    user, 
-    session, 
+  return {
+    user,
+    session,
     loading,
-    isAuthenticated: !!user && !!session
+    isAuthenticated
   };
 }
