@@ -11,40 +11,52 @@ export function useAuthSession() {
   useEffect(() => {
     let mounted = true;
 
-    async function getInitialSession() {
+    const initialize = async () => {
       try {
-        console.log('Fetching initial session...');
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-        console.log('Initial session:', { 
-          hasSession: !!initialSession,
-          userId: initialSession?.user?.id 
-        });
+        console.log('Initializing auth session...');
         
+        // Get the initial session
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting session:', error);
+          if (mounted) {
+            setLoading(false);
+          }
+          return;
+        }
+
+        console.log('Initial session:', {
+          hasSession: !!initialSession,
+          userId: initialSession?.user?.id
+        });
+
         if (mounted) {
           setSession(initialSession);
           setUser(initialSession?.user ?? null);
           setLoading(false);
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
+        console.error('Unexpected error during initialization:', error);
         if (mounted) {
           setLoading(false);
         }
       }
-    }
+    };
 
-    getInitialSession();
+    initialize();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('Auth state changed:', { 
-        event: _event, 
-        hasSession: !!session,
-        userId: session?.user?.id 
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      console.log('Auth state changed:', {
+        event,
+        hasSession: !!currentSession,
+        userId: currentSession?.user?.id
       });
-      
+
       if (mounted) {
-        setSession(session);
-        setUser(session?.user ?? null);
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
         setLoading(false);
       }
     });
@@ -55,10 +67,19 @@ export function useAuthSession() {
     };
   }, []);
 
+  const isAuthenticated = !!session?.user && !!user;
+
+  console.log('useAuthSession state:', {
+    isAuthenticated,
+    loading,
+    hasUser: !!user,
+    hasSession: !!session
+  });
+
   return {
     user,
     session,
     loading,
-    isAuthenticated: !!session?.user
+    isAuthenticated
   };
 }
