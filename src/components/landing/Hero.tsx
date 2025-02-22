@@ -30,7 +30,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
             className="w-full sm:w-auto group bg-[#ea384c] hover:bg-[#d41f32] text-white shadow-lg hover:shadow-xl transition-all duration-300"
             onClick={onShowAuthModal}
           >
-            {t('getStarted')}
+            {t('heroGetStarted')}
             <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button 

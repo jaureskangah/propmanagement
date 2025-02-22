@@ -36,7 +36,7 @@ const getPlans = (t: (key: string) => string) => [
       t('financialReports'),
       t('maintenanceManagement'),
     ],
-    buttonText: "getStarted",
+    buttonText: "pricingGetStarted",
     priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
   },
   {
@@ -54,7 +54,7 @@ const getPlans = (t: (key: string) => string) => [
       t('userTraining'),
       t('dailyBackup'),
     ],
-    buttonText: "getStarted",
+    buttonText: "pricingGetStarted",
     priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
   },
 ];
