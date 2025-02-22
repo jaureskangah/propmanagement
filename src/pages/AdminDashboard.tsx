@@ -55,7 +55,6 @@ export default function AdminDashboard() {
 
   const handleDownload = async () => {
     try {
-      // Convertir les données en CSV
       const headers = ["Date", "Total Users", "Active Users", "Total Revenue", "Total Properties", "Total Tenants"];
       const csvData = [
         headers.join(","),
@@ -69,7 +68,6 @@ export default function AdminDashboard() {
         ].join(","))
       ].join("\n");
 
-      // Créer et télécharger le fichier
       const blob = new Blob([csvData], { type: 'text/csv' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -96,13 +94,30 @@ export default function AdminDashboard() {
 
   const handleShare = async () => {
     try {
-      const shareUrl = `${window.location.origin}/admin`;
-      await navigator.clipboard.writeText(shareUrl);
+      const shareUrl = window.location.href;
       
-      toast({
-        title: "Lien copié",
-        description: "Le lien vers le tableau de bord a été copié dans le presse-papiers",
-      });
+      if (navigator.share && /mobile|android|iphone/i.test(navigator.userAgent)) {
+        // Utiliser l'API Web Share sur mobile si disponible
+        await navigator.share({
+          title: 'Tableau de bord administrateur',
+          text: 'Consultez les métriques administrateur',
+          url: shareUrl
+        });
+        
+        toast({
+          title: "Partage réussi",
+          description: "Le lien a été partagé avec succès",
+        });
+      } else {
+        // Utiliser le presse-papiers sur desktop
+        await navigator.clipboard.writeText(shareUrl);
+        
+        toast({
+          title: "Lien copié",
+          description: "Le lien a été copié dans votre presse-papiers",
+          duration: 3000,
+        });
+      }
     } catch (err) {
       console.error('Error sharing:', err);
       toast({
