@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,7 +6,7 @@ import { Plus } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { MaintenanceRequest } from "@/types/tenant";
-import { useAuthSession } from "@/hooks/useAuthSession";
+import { useAuth } from '@/components/AuthProvider';
 import { MaintenanceList } from "./components/MaintenanceList";
 import { AddMaintenanceDialog } from "../maintenance/AddMaintenanceDialog";
 
@@ -13,7 +14,7 @@ export const TenantMaintenanceView = () => {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const { session } = useAuthSession();
+  const { session } = useAuth();
   const { toast } = useToast();
 
   useEffect(() => {

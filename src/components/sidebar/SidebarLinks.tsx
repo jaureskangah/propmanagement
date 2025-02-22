@@ -1,7 +1,7 @@
 
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useAuthSession } from "@/hooks/useAuthSession";
+import { useAuth } from '@/components/AuthProvider';
 import {
   HomeIcon,
   Building2,
@@ -18,7 +18,7 @@ interface SidebarLinksProps {
 
 export default function SidebarLinks({ isTenant = false, collapsed = false }: SidebarLinksProps) {
   const location = useLocation();
-  const { user } = useAuthSession();
+  const { user } = useAuth();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
 
   const links = [
