@@ -1,3 +1,4 @@
+
 import { Bell, AlertTriangle, CreditCard, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NotificationsList } from "./NotificationsList";

@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
@@ -22,7 +23,9 @@ export const useMaintenanceAlerts = () => {
         deadline: request.deadline,
         type: 'maintenance'
       }));
-    }
+    },
+    staleTime: 1000 * 60, // 1 minute
+    refetchInterval: 1000 * 60 // Refresh every minute
   });
 
   // Fetch budget alerts
@@ -31,7 +34,8 @@ export const useMaintenanceAlerts = () => {
     queryFn: async () => {
       const { data: budgets, error } = await supabase
         .from('maintenance_budgets')
-        .select('*, maintenance_expenses!maintenance_expenses_budget_id_fkey(amount)');
+        .select('*, maintenance_expenses!maintenance_expenses_budget_id_fkey(amount)')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
@@ -47,7 +51,8 @@ export const useMaintenanceAlerts = () => {
           type: 'budget'
         };
       });
-    }
+    },
+    staleTime: 1000 * 60 * 5 // 5 minutes
   });
 
   // Fetch payment alerts
@@ -82,7 +87,8 @@ export const useMaintenanceAlerts = () => {
           type: 'payment',
           deadline: payment.payment_date
         }));
-    }
+    },
+    staleTime: 1000 * 60 * 5 // 5 minutes
   });
 
   return {
