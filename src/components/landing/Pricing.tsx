@@ -6,6 +6,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useLocale } from "../providers/LocaleProvider";
 
 const plans = [
   {
@@ -18,7 +19,7 @@ const plans = [
       "Basic property cards",
       "Email notifications",
     ],
-    buttonText: "Start for free",
+    buttonText: "pricingStartFree",
     priceId: null,
   },
   {
@@ -35,7 +36,7 @@ const plans = [
       "Financial reports",
       "Maintenance management",
     ],
-    buttonText: "Get started",
+    buttonText: "getStarted",
     priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
   },
   {
@@ -53,7 +54,7 @@ const plans = [
       "User training",
       "Daily backup",
     ],
-    buttonText: "Get started",
+    buttonText: "getStarted",
     priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
   },
 ];
@@ -62,6 +63,7 @@ export default function Pricing() {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useLocale();
 
   const handleSubscribe = async (priceId: string | null) => {
     if (!priceId) {
@@ -125,10 +127,10 @@ export default function Pricing() {
       <div className="container px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Simple and transparent pricing
+            {t('pricingTitle')}
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            Choose the plan that best fits your needs
+            {t('pricingSubtitle')}
           </p>
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
@@ -142,7 +144,7 @@ export default function Pricing() {
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                   <span className="bg-[#ea384c] text-white text-sm font-medium px-3 py-1 rounded-full">
-                    Most popular
+                    {t('mostPopular')}
                   </span>
                 </div>
               )}
@@ -156,7 +158,7 @@ export default function Pricing() {
                   ) : (
                     <>
                       <span className="text-4xl font-bold tracking-tight">CA${plan.price}</span>
-                      <span className="ml-1 text-sm font-semibold">/month</span>
+                      <span className="ml-1 text-sm font-semibold">{t('month')}</span>
                     </>
                   )}
                 </div>
@@ -174,7 +176,7 @@ export default function Pricing() {
                   className="w-full bg-[#ea384c] hover:bg-[#d41f32] text-white"
                   onClick={() => handleSubscribe(plan.priceId)}
                 >
-                  {plan.buttonText}
+                  {t(plan.buttonText)}
                 </Button>
               </CardFooter>
             </Card>
