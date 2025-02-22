@@ -1,5 +1,6 @@
+
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import SignInForm from './SignInForm';
@@ -20,6 +21,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <DialogTitle className="text-2xl font-bold text-center">
             Welcome to PropManagement
           </DialogTitle>
+          <DialogDescription className="text-center text-gray-500">
+            Please sign in or create an account to continue
+          </DialogDescription>
         </DialogHeader>
         <ScrollArea className="flex-grow pr-4 h-[60vh]">
           <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'signin' | 'signup')} className="w-full">

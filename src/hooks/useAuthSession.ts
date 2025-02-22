@@ -9,51 +9,55 @@ export function useAuthSession() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Initialisation immédiate de la session
+    let mounted = true;
+
     const getInitialSession = async () => {
       try {
         const { data: { session: initialSession } } = await supabase.auth.getSession();
-        console.log('Session initiale :', {
-          hasSession: !!initialSession,
-          userId: initialSession?.user?.id
-        });
         
-        setSession(initialSession);
-        setUser(initialSession?.user ?? null);
+        if (mounted) {
+          console.log('Session initiale récupérée:', {
+            hasSession: !!initialSession,
+            userId: initialSession?.user?.id
+          });
+          
+          setSession(initialSession);
+          setUser(initialSession?.user ?? null);
+          setLoading(false); // Important: on met loading à false après avoir mis à jour la session
+        }
       } catch (error) {
         console.error('Erreur lors de la récupération de la session:', error);
-      } finally {
-        // Désactiver le chargement une fois que nous avons la session initiale
-        setLoading(false);
+        if (mounted) {
+          setLoading(false); // Important: on met aussi loading à false en cas d'erreur
+        }
       }
     };
 
     getInitialSession();
 
-    // Écouter les changements d'authentification
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, updatedSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, updatedSession) => {
       console.log('Changement d\'état d\'authentification:', {
         event: _event,
         hasSession: !!updatedSession,
         userId: updatedSession?.user?.id
       });
 
-      setSession(updatedSession);
-      setUser(updatedSession?.user ?? null);
-      // Ne pas modifier loading ici car il est déjà géré par getInitialSession
+      if (mounted) {
+        setSession(updatedSession);
+        setUser(updatedSession?.user ?? null);
+      }
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
-
-  const isAuthenticated = !!session?.user;
 
   return {
     user,
     session,
     loading,
-    isAuthenticated
+    isAuthenticated: !!session?.user
   };
 }
