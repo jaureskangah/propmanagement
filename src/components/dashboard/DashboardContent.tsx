@@ -1,3 +1,4 @@
+
 import { RevenueChart } from "./RevenueChart";
 import { RecentActivity } from "./RecentActivity";
 import { DashboardMetrics } from "./DashboardMetrics";
@@ -21,6 +22,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { SortableSection } from "./SortableSection";
+import { useEffect } from "react";
 
 interface DashboardContentProps {
   dateRange: DateRange;
@@ -39,12 +41,26 @@ export const DashboardContent = ({
 }: DashboardContentProps) => {
   const { preferences, updatePreferences } = useDashboardPreferences();
   
+  useEffect(() => {
+    console.log("DashboardContent mounted with data:", {
+      propertiesCount: propertiesData?.length,
+      maintenanceCount: maintenanceData?.length,
+      tenantsCount: tenantsData?.length,
+      dateRange,
+      hasPreferences: !!preferences
+    });
+
+    return () => {
+      console.log("DashboardContent unmounting");
+    };
+  }, [propertiesData, maintenanceData, tenantsData, dateRange, preferences]);
+  
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // Reduced distance for easier activation
-        tolerance: 5, // Added tolerance for better touch support
-        delay: 0, // No delay for immediate response
+        distance: 5,
+        tolerance: 5,
+        delay: 0,
       },
     }),
     useSensor(KeyboardSensor, {
@@ -60,6 +76,11 @@ export const DashboardContent = ({
     }))
   ) || [];
 
+  console.log("Processed payments data:", {
+    totalPayments: paymentsData.length,
+    tenantsWithPayments: new Set(paymentsData.map(p => p.tenants?.id)).size
+  });
+
   const defaultOrder = ["metrics", "priority", "revenue", "activity"];
   const currentOrder = preferences?.widget_order?.length > 0 
     ? preferences.widget_order 
@@ -67,6 +88,7 @@ export const DashboardContent = ({
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    console.log("Drag end event:", { active, over });
     
     if (over && active.id !== over.id) {
       const oldIndex = currentOrder.indexOf(active.id.toString());
@@ -81,7 +103,12 @@ export const DashboardContent = ({
   };
 
   const renderSection = (sectionId: string) => {
-    if (preferences?.hidden_sections?.includes(sectionId)) return null;
+    console.log("Rendering section:", sectionId);
+    
+    if (preferences?.hidden_sections?.includes(sectionId)) {
+      console.log("Section is hidden:", sectionId);
+      return null;
+    }
 
     switch (sectionId) {
       case "metrics":
@@ -118,9 +145,18 @@ export const DashboardContent = ({
           </SortableSection>
         );
       default:
+        console.warn("Unknown section ID:", sectionId);
         return null;
     }
   };
+
+  useEffect(() => {
+    console.log("Current dashboard state:", {
+      currentOrder,
+      hiddenSections: preferences?.hidden_sections,
+      isUpdatePreferencesPending: updatePreferences.isPending
+    });
+  }, [currentOrder, preferences?.hidden_sections, updatePreferences.isPending]);
 
   return (
     <div className="space-y-6">
