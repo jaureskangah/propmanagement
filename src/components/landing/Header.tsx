@@ -9,7 +9,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
 import { useLocale } from "../providers/LocaleProvider";
 import { LanguageSelector } from "./LanguageSelector";
-import { UnitToggle } from "./UnitToggle";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
@@ -101,7 +100,6 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
       <div className="flex items-center gap-4">
         <LanguageSelector />
-        <UnitToggle />
       </div>
 
       {isAuthenticated ? (
