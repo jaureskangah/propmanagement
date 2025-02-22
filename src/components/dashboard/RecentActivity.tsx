@@ -4,7 +4,7 @@ import { ActivityCard } from "./activity/ActivityCard";
 import { TenantActivity } from "./activity/TenantActivity";
 import { PaymentActivity } from "./activity/PaymentActivity";
 import { MaintenanceActivity } from "./activity/MaintenanceActivity";
-import { useState, useEffect } from "react";
+import { useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 
 interface Activity {
@@ -15,8 +15,6 @@ interface Activity {
 }
 
 export const RecentActivity = () => {
-  const [allActivities, setAllActivities] = useState<Activity[]>([]);
-
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ["recent_tenants"],
     queryFn: async () => {
@@ -30,7 +28,8 @@ export const RecentActivity = () => {
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchInterval: false
   });
 
   const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
@@ -51,7 +50,8 @@ export const RecentActivity = () => {
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchInterval: false
   });
 
   const { data: maintenance = [], isLoading: isLoadingMaintenance } = useQuery({
@@ -67,36 +67,37 @@ export const RecentActivity = () => {
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     retry: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
+    refetchInterval: false
   });
 
-  useEffect(() => {
-    if (tenants && payments && maintenance) {
-      const combinedActivities: Activity[] = [
-        ...(tenants?.map(tenant => ({
-          id: tenant.id,
-          created_at: tenant.created_at,
-          type: 'tenant' as const,
-          component: <TenantActivity tenant={tenant} />
-        })) || []),
-        ...(payments?.map(payment => ({
-          id: payment.id,
-          created_at: payment.created_at,
-          type: 'payment' as const,
-          component: <PaymentActivity payment={payment} />
-        })) || []),
-        ...(maintenance?.map(request => ({
-          id: request.id,
-          created_at: request.created_at,
-          type: 'maintenance' as const,
-          component: <MaintenanceActivity request={request} />
-        })) || [])
-      ].sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
+  const allActivities = useMemo(() => {
+    if (!tenants || !payments || !maintenance) return [];
 
-      setAllActivities(combinedActivities);
-    }
+    const combinedActivities: Activity[] = [
+      ...tenants.map(tenant => ({
+        id: tenant.id,
+        created_at: tenant.created_at,
+        type: 'tenant' as const,
+        component: <TenantActivity tenant={tenant} />
+      })),
+      ...payments.map(payment => ({
+        id: payment.id,
+        created_at: payment.created_at,
+        type: 'payment' as const,
+        component: <PaymentActivity payment={payment} />
+      })),
+      ...maintenance.map(request => ({
+        id: request.id,
+        created_at: request.created_at,
+        type: 'maintenance' as const,
+        component: <MaintenanceActivity request={request} />
+      }))
+    ];
+
+    return combinedActivities.sort((a, b) => 
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
   }, [tenants, payments, maintenance]);
 
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
