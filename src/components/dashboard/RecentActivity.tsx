@@ -17,26 +17,25 @@ interface Activity {
 export const RecentActivity = () => {
   const [allActivities, setAllActivities] = useState<Activity[]>([]);
 
-  const { data: tenants, isLoading: isLoadingTenants } = useQuery({
+  const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ["recent_tenants"],
     queryFn: async () => {
-      console.log("Fetching recent tenants...");
       const { data, error } = await supabase
         .from("tenants")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(3);
       if (error) throw error;
-      console.log("Recent tenants data:", data);
       return data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+    refetchOnWindowFocus: false
   });
 
-  const { data: payments, isLoading: isLoadingPayments } = useQuery({
+  const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
     queryKey: ["recent_payments"],
     queryFn: async () => {
-      console.log("Fetching recent payments...");
       const { data, error } = await supabase
         .from("tenant_payments")
         .select(`
@@ -48,38 +47,28 @@ export const RecentActivity = () => {
         .order("created_at", { ascending: false })
         .limit(3);
       if (error) throw error;
-      console.log("Recent payments data:", data);
       return data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+    refetchOnWindowFocus: false
   });
 
-  const { data: maintenance, isLoading: isLoadingMaintenance } = useQuery({
+  const { data: maintenance = [], isLoading: isLoadingMaintenance } = useQuery({
     queryKey: ["recent_maintenance"],
     queryFn: async () => {
-      console.log("Fetching recent maintenance requests...");
       const { data, error } = await supabase
         .from("maintenance_requests")
         .select("*")
         .order("created_at", { ascending: false })
         .limit(3);
       if (error) throw error;
-      console.log("Recent maintenance data:", data);
       return data;
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+    refetchOnWindowFocus: false
   });
-
-  useEffect(() => {
-    console.log("RecentActivity loading state:", {
-      isLoadingTenants,
-      isLoadingPayments,
-      isLoadingMaintenance,
-      hasTenantsData: !!tenants?.length,
-      hasPaymentsData: !!payments?.length,
-      hasMaintenanceData: !!maintenance?.length
-    });
-  }, [isLoadingTenants, isLoadingPayments, isLoadingMaintenance, tenants, payments, maintenance]);
 
   useEffect(() => {
     if (tenants && payments && maintenance) {
@@ -105,15 +94,6 @@ export const RecentActivity = () => {
       ].sort((a, b) => 
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
-
-      console.log("Setting combined activities:", {
-        totalActivities: combinedActivities.length,
-        byType: {
-          tenants: combinedActivities.filter(a => a.type === 'tenant').length,
-          payments: combinedActivities.filter(a => a.type === 'payment').length,
-          maintenance: combinedActivities.filter(a => a.type === 'maintenance').length,
-        }
-      });
 
       setAllActivities(combinedActivities);
     }
