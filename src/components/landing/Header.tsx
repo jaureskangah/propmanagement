@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
@@ -17,15 +17,6 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const { user, session, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Ajout de logs pour debug
-  useEffect(() => {
-    console.log("Header re-render:", { 
-      hasUser: !!user, 
-      hasSession: !!session,
-      isAuthenticated
-    });
-  }, [user, session, isAuthenticated]);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -41,6 +32,10 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       return data;
     },
     enabled: !!user,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchInterval: false
   });
 
   const handleDashboardClick = () => {
@@ -79,7 +74,6 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const NavLinks = () => (
     <>
-      {/* Navigation publique */}
       <div 
         className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
         onClick={() => scrollToSection('everything-you-need')}
@@ -102,7 +96,6 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
         <span>Free Trial</span>
       </div>
 
-      {/* Navigation pour utilisateurs authentifiés */}
       {isAuthenticated ? (
         <>
           <Button 
