@@ -1,10 +1,12 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Building2, HomeIcon, DollarSign } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, Building2, HomeIcon, DollarSign, Download, Share2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from "date-fns";
+import { useToast } from "@/components/ui/use-toast";
 
 interface AdminMetrics {
   total_users: number;
@@ -19,6 +21,7 @@ export default function AdminDashboard() {
   const [metrics, setMetrics] = useState<AdminMetrics[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchMetrics();
@@ -34,7 +37,6 @@ export default function AdminDashboard() {
 
       if (error) throw error;
 
-      // Format the data for the charts
       const formattedData = data?.map(metric => ({
         ...metric,
         metric_date: format(new Date(metric.metric_date), 'dd/MM/yyyy'),
@@ -51,6 +53,66 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleDownload = async () => {
+    try {
+      // Convertir les données en CSV
+      const headers = ["Date", "Total Users", "Active Users", "Total Revenue", "Total Properties", "Total Tenants"];
+      const csvData = [
+        headers.join(","),
+        ...metrics.map(metric => [
+          metric.metric_date,
+          metric.total_users,
+          metric.active_users,
+          metric.total_revenue,
+          metric.total_properties,
+          metric.total_tenants
+        ].join(","))
+      ].join("\n");
+
+      // Créer et télécharger le fichier
+      const blob = new Blob([csvData], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `admin_metrics_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast({
+        title: "Téléchargement réussi",
+        description: "Les données ont été téléchargées avec succès",
+      });
+    } catch (err) {
+      console.error('Error downloading data:', err);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors du téléchargement",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      const shareUrl = `${window.location.origin}/admin`;
+      await navigator.clipboard.writeText(shareUrl);
+      
+      toast({
+        title: "Lien copié",
+        description: "Le lien vers le tableau de bord a été copié dans le presse-papiers",
+      });
+    } catch (err) {
+      console.error('Error sharing:', err);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors du partage",
+        variant: "destructive",
+      });
+    }
+  };
+
   const latestMetrics = metrics[metrics.length - 1] || {
     total_users: 0,
     active_users: 0,
@@ -64,7 +126,19 @@ export default function AdminDashboard() {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+        <div className="flex gap-4">
+          <Button variant="outline" onClick={handleDownload}>
+            <Download className="mr-2" />
+            Télécharger les données
+          </Button>
+          <Button variant="outline" onClick={handleShare}>
+            <Share2 className="mr-2" />
+            Partager
+          </Button>
+        </div>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <Card>
