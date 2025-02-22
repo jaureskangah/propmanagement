@@ -1,38 +1,41 @@
 
 import { Building2, Users, Wrench, Shield } from "lucide-react";
+import { useLocale } from "../providers/LocaleProvider";
 
 export default function Features() {
+  const { t } = useLocale();
+
   return (
     <div id="everything-you-need" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
       <div className="text-center mb-16">
         <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-          Everything You Need
+          {t('everythingYouNeed')}
         </h2>
         <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-          Powerful tools for efficient management of your real estate portfolio
+          {t('featuresSubtitle')}
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         <FeatureCard
           icon={<Building2 className="text-[#ea384c]" />}
-          title="Property Management"
-          description="Track your properties and their performance in real-time"
+          title={t('propertyManagement')}
+          description={t('propertyManagementDesc')}
         />
         <FeatureCard
           icon={<Users className="text-[#ea384c]" />}
-          title="Tenant Management"
-          description="Easily manage your tenants and their documents"
+          title={t('tenantManagement')}
+          description={t('tenantManagementDesc')}
         />
         <FeatureCard
           icon={<Wrench className="text-[#ea384c]" />}
-          title="Maintenance"
-          description="Track and manage maintenance requests"
+          title={t('maintenance')}
+          description={t('maintenanceDesc')}
         />
         <FeatureCard
           icon={<Shield className="text-[#ea384c]" />}
-          title="Security"
-          description="Your data is secure and protected"
+          title={t('security')}
+          description={t('securityDesc')}
         />
       </div>
     </div>

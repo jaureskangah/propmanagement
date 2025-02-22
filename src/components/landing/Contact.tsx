@@ -8,11 +8,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "../providers/LocaleProvider";
 
 export default function Contact() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -53,10 +55,10 @@ export default function Contact() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Contact Us
+            {t('contactUs')}
           </h2>
           <p className="mt-4 text-lg text-gray-600">
-            We're here to help and answer any question you might have
+            {t('contactSubtitle')}
           </p>
         </div>
 
@@ -65,7 +67,7 @@ export default function Contact() {
             <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <Phone className="h-6 w-6 text-[#ea384c]" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Phone</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('phone')}</h3>
             <p className="text-gray-600 text-center">+1 (506) 781-1872</p>
           </div>
 
@@ -73,7 +75,7 @@ export default function Contact() {
             <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <Mail className="h-6 w-6 text-[#ea384c]" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Email</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('email')}</h3>
             <p className="text-gray-600 text-center">contact@propmanagement.app</p>
           </div>
 
@@ -81,7 +83,7 @@ export default function Contact() {
             <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <MapPin className="h-6 w-6 text-[#ea384c]" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">Office</h3>
+            <h3 className="text-lg font-semibold mb-2">{t('office')}</h3>
             <p className="text-gray-600 text-center">Moncton, New Brunswick</p>
           </div>
         </div>
@@ -90,43 +92,43 @@ export default function Contact() {
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button className="bg-[#ea384c] hover:bg-[#d41f32] text-white">
-                Send us a message
+                {t('sendMessage')}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Send us a message</DialogTitle>
+                <DialogTitle>{t('sendMessage')}</DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">{t('yourName')}</Label>
                   <Input
                     id="name"
                     name="name"
                     required
                     className="mt-1"
-                    placeholder="Your name"
+                    placeholder={t('yourName')}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('email')}</Label>
                   <Input
                     id="email"
                     name="email"
                     type="email"
                     required
                     className="mt-1"
-                    placeholder="your@email.com"
+                    placeholder={t('yourEmail')}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="message">Message</Label>
+                  <Label htmlFor="message">{t('message')}</Label>
                   <Textarea
                     id="message"
                     name="message"
                     required
                     className="mt-1"
-                    placeholder="How can we help you?"
+                    placeholder={t('message')}
                     rows={4}
                   />
                 </div>
@@ -136,7 +138,7 @@ export default function Contact() {
                     className="bg-[#ea384c] hover:bg-[#d41f32] text-white"
                     disabled={isLoading}
                   >
-                    {isLoading ? "Sending..." : "Send message"}
+                    {isLoading ? t('sending') : t('send')}
                   </Button>
                 </div>
               </form>
