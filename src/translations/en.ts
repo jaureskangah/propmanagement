@@ -3,7 +3,7 @@ import { Translations } from './types';
 export const enTranslations: Translations = {
   // Navigation
   features: "Features",
-  pricing: "Pricing",
+  pricing: "Pricing", 
   freeTrial: "Free Trial",
   signIn: "Sign In",
   signOut: "Sign Out",
@@ -14,22 +14,22 @@ export const enTranslations: Translations = {
   imperial: "Imperial",
 
   // Hero Section
-  heroTitle: "Simplify Your Property Management",
-  heroSubtitle: "A complete solution to manage your properties, tenants, and maintenance with ease.",
+  heroTitle: "Simplified Property Management in Canada",
+  heroSubtitle: "Complete solution for Canadian properties, compliant with provincial laws. Perfect for property owners and managers from Ontario to British Columbia.",
   heroGetStarted: "Get Started Now",
   learnMore: "Learn More",
 
   // Features Section
   everythingYouNeed: "Everything You Need",
-  featuresSubtitle: "Powerful tools for efficient management of your real estate portfolio",
+  featuresSubtitle: "Powerful tools tailored for the Canadian real estate market",
   propertyManagement: "Property Management",
-  propertyManagementDesc: "Track your properties and their performance in real-time",
+  propertyManagementDesc: "Manage your properties according to Canadian standards with province-specific tools",
   tenantManagement: "Tenant Management",
-  tenantManagementDesc: "Easily manage your tenants and their documents",
+  tenantManagementDesc: "Manage tenants and documents in compliance with provincial rental laws",
   maintenance: "Maintenance",
-  maintenanceDesc: "Track and manage maintenance requests",
+  maintenanceDesc: "Track and manage maintenance requests according to Canadian standards",
   security: "Security",
-  securityDesc: "Your data is secure and protected",
+  securityDesc: "Your data is secured according to Canadian data protection standards",
 
   // Pricing Plans
   freemiumPlan: "Freemium",

@@ -14,22 +14,22 @@ export const frTranslations: Translations = {
   imperial: "Impérial",
 
   // Hero Section
-  heroTitle: "Simplifiez votre gestion immobilière",
-  heroSubtitle: "Une solution complète pour gérer vos propriétés, locataires et maintenance en toute simplicité.",
+  heroTitle: "La Gestion Immobilière Simplifiée au Canada",
+  heroSubtitle: "Solution complète pour gérer vos propriétés canadiennes, conforme aux lois provinciales. Idéal pour les propriétaires et gestionnaires immobiliers de l'Ontario au Québec.",
   heroGetStarted: "Commencer maintenant",
   learnMore: "En savoir plus",
 
   // Features Section
   everythingYouNeed: "Tout ce dont vous avez besoin",
-  featuresSubtitle: "Des outils puissants pour une gestion efficace de votre portefeuille immobilier",
-  propertyManagement: "Gestion immobilière",
-  propertyManagementDesc: "Suivez vos propriétés et leurs performances en temps réel",
-  tenantManagement: "Gestion des locataires",
-  tenantManagementDesc: "Gérez facilement vos locataires et leurs documents",
+  featuresSubtitle: "Des outils puissants adaptés au marché immobilier canadien",
+  propertyManagement: "Gestion Immobilière",
+  propertyManagementDesc: "Gérez vos propriétés selon les normes canadiennes avec des outils adaptés à chaque province",
+  tenantManagement: "Gestion des Locataires",
+  tenantManagementDesc: "Gérez vos locataires et documents conformément aux lois provinciales sur la location",
   maintenance: "Maintenance",
-  maintenanceDesc: "Suivez et gérez les demandes de maintenance",
+  maintenanceDesc: "Suivez et gérez les demandes d'entretien selon les normes canadiennes",
   security: "Sécurité",
-  securityDesc: "Vos données sont sécurisées et protégées",
+  securityDesc: "Vos données sont sécurisées selon les normes canadiennes de protection des données",
 
   // Pricing Plans
   freemiumPlan: "Gratuit",
