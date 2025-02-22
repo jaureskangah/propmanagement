@@ -1,0 +1,120 @@
+
+import { Translations } from './types';
+
+export const enTranslations: Translations = {
+  // Navigation
+  features: "Features",
+  pricing: "Pricing",
+  freeTrial: "Free Trial",
+  signIn: "Sign In",
+  signOut: "Sign Out",
+  dashboard: "Dashboard",
+  language: "Language",
+  units: "Units",
+  metric: "Metric",
+  imperial: "Imperial",
+
+  // Hero Section
+  heroTitle: "Simplify Your Property Management",
+  heroSubtitle: "A complete solution to manage your properties, tenants, and maintenance with ease.",
+  getStarted: "Get Started Now",
+  learnMore: "Learn More",
+
+  // Features Section
+  everythingYouNeed: "Everything You Need",
+  featuresSubtitle: "Powerful tools for efficient management of your real estate portfolio",
+  propertyManagement: "Property Management",
+  propertyManagementDesc: "Track your properties and their performance in real-time",
+  tenantManagement: "Tenant Management",
+  tenantManagementDesc: "Easily manage your tenants and their documents",
+  maintenance: "Maintenance",
+  maintenanceDesc: "Track and manage maintenance requests",
+  security: "Security",
+  securityDesc: "Your data is secure and protected",
+
+  // Pricing Plans
+  freemiumPlan: "Freemium",
+  proPlan: "Pro",
+  enterprisePlan: "Enterprise",
+  free: "Free",
+  month: "/month",
+  mostPopular: "Most Popular",
+  pricingTitle: "Simple and transparent pricing",
+  pricingSubtitle: "Choose the plan that best fits your needs",
+  pricingStartFree: "Start for free",
+
+  // Plan Features
+  upTo2Properties: "Up to 2 properties",
+  upTo5Properties: "Up to 5 properties",
+  upTo20Properties: "Up to 20 properties",
+  rentManagement: "Rent management",
+  digitalDocuments: "Digital documents",
+  basicPropertyCards: "Basic property cards",
+  emailNotifications: "Email notifications",
+  tenantVerification: "Tenant verification",
+  prioritySupport: "Priority support",
+  advancedDashboard: "Advanced dashboard",
+  financialReports: "Financial reports",
+  maintenanceManagement: "Maintenance management",
+  dedicatedSupport: "24/7 dedicated support",
+  customDashboard: "Custom dashboard",
+  advancedFinancialReports: "Advanced financial reports",
+  userTraining: "User training",
+  dailyBackup: "Daily backup",
+
+  // Toast Messages
+  authRequired: "Authentication required",
+  pleaseSignInToSubscribe: "Please sign in to subscribe to a plan",
+  processing: "Processing",
+  preparingPaymentSession: "Preparing your payment session...",
+  error: "Error",
+  failedToCreateSession: "Failed to create payment session",
+  failedToCreateSessionNoUrl: "Failed to create payment session - no URL received",
+  generalError: "An error occurred while processing your request",
+
+  // Contact Section
+  contactUs: "Contact Us",
+  contactSubtitle: "We're here to help and answer any question you might have",
+  phone: "Phone",
+  email: "Email",
+  office: "Office",
+  sendMessage: "Send us a message",
+  yourName: "Your name",
+  yourEmail: "your@email.com",
+  message: "How can we help you?",
+  sending: "Sending...",
+  send: "Send message",
+
+  // Authentication
+  welcome: "Welcome to PropManagement",
+  authDescription: "Please sign in or create an account to continue",
+  firstName: "First Name",
+  lastName: "Last Name",
+  password: "Password",
+  confirmPassword: "Confirm Password",
+  iAmTenant: "I am a tenant",
+  register: "Sign Up",
+  processingRegistration: "Registration in progress...",
+  processingLogin: "Login in progress...",
+
+  // Call to Action
+  readyToStart: "Ready to Simplify Your Management?",
+  joinOthers: "Join thousands of property owners who trust our solution",
+  ctaStartFree: "Try For Free",
+
+  // FAQ
+  frequentlyAskedQuestions: "Frequently Asked Questions",
+  findAnswers: "Find quick answers to your questions",
+  faqHowToStart: "How can I start using the platform?",
+  faqHowToStartAnswer: "It's very simple! Create a free account, add your properties, and start managing your real estate in minutes. Our intuitive interface will guide you through each step.",
+  faqFeatures: "What features are included in the basic subscription?",
+  faqFeaturesAnswer: "The basic subscription includes property management, payment tracking, document management, and tenant communication. You have access to all essential features for efficient management.",
+  faqMultipleProperties: "Can I manage multiple properties?",
+  faqMultiplePropertiesAnswer: "Yes, you can manage as many properties as you want. Our platform is designed to adapt to your real estate portfolio, whether you have one or multiple properties.",
+  faqCommunication: "How does tenant communication work?",
+  faqCommunicationAnswer: "Our integrated messaging system enables direct and efficient communication with your tenants. You can send notifications, respond to requests, and share documents, all from a centralized interface.",
+  faqSecurity: "Is my data secure?",
+  faqSecurityAnswer: "Security is our priority. All data is encrypted and securely stored. We use the latest security technologies to protect your information and that of your tenants.",
+  faqExport: "Can I export my data?",
+  faqExportAnswer: "Yes, you can export your data at any time in different formats (PDF, Excel). This allows you to keep track of your activity and generate customized reports."
+};
