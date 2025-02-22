@@ -9,8 +9,8 @@ export function useRealtimeNotifications() {
   const handleUrgentTasks = useCallback((payload: any) => {
     if (payload.new.priority === 'high' || payload.new.priority === 'urgent') {
       toast({
-        title: "Tâche urgente",
-        description: `Nouvelle tâche urgente : ${payload.new.title}`,
+        title: "Urgent Task",
+        description: `New urgent task: ${payload.new.title}`,
         variant: "destructive",
       });
     }
@@ -19,14 +19,14 @@ export function useRealtimeNotifications() {
   const handleMaintenanceRequest = useCallback((payload: any) => {
     if (payload.eventType === 'INSERT') {
       toast({
-        title: "Nouvelle demande de maintenance",
+        title: "New Maintenance Request",
         description: payload.new.title,
       });
     } else if (payload.eventType === 'UPDATE') {
       if (payload.new.tenant_notified && !payload.old.tenant_notified) {
         toast({
-          title: "Mise à jour de maintenance",
-          description: `La demande "${payload.new.title}" a été mise à jour`,
+          title: "Maintenance Update",
+          description: `Request "${payload.new.title}" has been updated`,
         });
       }
     }
@@ -55,10 +55,7 @@ export function useRealtimeNotifications() {
       )
       .subscribe();
 
-    console.log("Realtime notifications channel subscribed");
-
     return () => {
-      console.log("Cleaning up realtime notifications subscription");
       supabase.removeChannel(channel);
     };
   }, [handleUrgentTasks, handleMaintenanceRequest]);

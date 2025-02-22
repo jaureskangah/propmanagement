@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { MaintenanceMetrics } from "../MaintenanceMetrics";
 import { MaintenanceNotifications } from "../MaintenanceNotifications";
@@ -24,7 +25,6 @@ export const MaintenanceMetricsSection = ({
   });
 
   useEffect(() => {
-    // Update initial values when props change
     setMetrics({
       totalRequests: initialTotal,
       pendingRequests: initialPending,
@@ -34,8 +34,6 @@ export const MaintenanceMetricsSection = ({
   }, [initialTotal, initialPending, initialResolved, initialUrgent]);
 
   useEffect(() => {
-    console.log("Setting up realtime subscription for maintenance metrics...");
-    
     const channel = supabase
       .channel('maintenance-metrics')
       .on(
@@ -45,10 +43,7 @@ export const MaintenanceMetricsSection = ({
           schema: 'public',
           table: 'maintenance_requests'
         },
-        async (payload) => {
-          console.log('Realtime update received:', payload);
-          
-          // Fetch updated counts
+        async () => {
           const { data: requests, error } = await supabase
             .from('maintenance_requests')
             .select('status, priority');
@@ -58,13 +53,10 @@ export const MaintenanceMetricsSection = ({
             return;
           }
 
-          // Calculate new metrics
           const total = requests.length;
           const pending = requests.filter(r => r.status === 'Pending').length;
           const resolved = requests.filter(r => r.status === 'Resolved').length;
           const urgent = requests.filter(r => r.priority === 'Urgent').length;
-
-          console.log('Updated metrics:', { total, pending, resolved, urgent });
 
           setMetrics({
             totalRequests: total,
@@ -77,7 +69,6 @@ export const MaintenanceMetricsSection = ({
       .subscribe();
 
     return () => {
-      console.log('Cleaning up realtime subscription...');
       supabase.removeChannel(channel);
     };
   }, []);
