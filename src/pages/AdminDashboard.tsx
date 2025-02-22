@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -97,7 +96,6 @@ export default function AdminDashboard() {
       const shareUrl = window.location.href;
       
       if (navigator.share && /mobile|android|iphone/i.test(navigator.userAgent)) {
-        // Utiliser l'API Web Share sur mobile si disponible
         await navigator.share({
           title: 'Tableau de bord administrateur',
           text: 'Consultez les métriques administrateur',
@@ -109,7 +107,6 @@ export default function AdminDashboard() {
           description: "Le lien a été partagé avec succès",
         });
       } else {
-        // Utiliser le presse-papiers sur desktop
         await navigator.clipboard.writeText(shareUrl);
         
         toast({
@@ -136,26 +133,26 @@ export default function AdminDashboard() {
     total_tenants: 0
   };
 
-  if (loading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <div className="flex gap-4">
-          <Button variant="outline" onClick={handleDownload}>
-            <Download className="mr-2" />
-            Télécharger les données
+    <div className="container mx-auto px-4 py-6 sm:px-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+        <div className="flex flex-wrap gap-2 sm:gap-4 w-full sm:w-auto">
+          <Button className="flex-1 sm:flex-none" variant="outline" onClick={handleDownload}>
+            <Download className="h-4 w-4 mr-2" />
+            <span className="whitespace-nowrap">Télécharger</span>
           </Button>
-          <Button variant="outline" onClick={handleShare}>
-            <Share2 className="mr-2" />
-            Partager
+          <Button className="flex-1 sm:flex-none" variant="outline" onClick={handleShare}>
+            <Share2 className="h-4 w-4 mr-2" />
+            <span className="whitespace-nowrap">Partager</span>
           </Button>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Users</CardTitle>
@@ -197,7 +194,7 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <Card className="col-span-1">
           <CardHeader>
             <CardTitle>User Growth</CardTitle>
