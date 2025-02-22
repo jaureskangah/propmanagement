@@ -1,51 +1,26 @@
 
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
 
 const Dashboard = () => {
-  const { isAuthenticated, loading, user } = useAuth();
-  const navigate = useNavigate();
+  const { isAuthenticated, loading } = useAuth();
 
-  useEffect(() => {
-    console.log('Dashboard mount effect:', {
-      isAuthenticated,
-      loading,
-      userId: user?.id
-    });
-
-    // Only redirect if we're sure about the authentication state
-    if (!loading && !isAuthenticated) {
-      console.log('Not authenticated, redirecting to auth page...');
-      navigate('/auth');
-      return;
-    }
-
-    if (!loading && isAuthenticated) {
-      console.log('Successfully authenticated, showing dashboard');
-    }
-  }, [loading, isAuthenticated, navigate, user]);
-
-  // Show loading state
   if (loading) {
-    console.log('Dashboard loading state active');
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
 
-  // Handle unauthenticated state
   if (!isAuthenticated) {
-    console.log('Dashboard render: Not authenticated');
-    return null;
+    return <Navigate to="/auth" replace />;
   }
 
-  console.log('Dashboard render: Showing content');
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />
