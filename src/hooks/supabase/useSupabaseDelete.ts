@@ -22,7 +22,7 @@ export function useSupabaseDelete<T extends TableName>(
         const { error } = await supabase
           .from(table)
           .delete()
-          .eq('id', id);
+          .match({ id } as any);
 
         if (error) throw error;
       } catch (error) {

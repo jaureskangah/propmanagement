@@ -25,15 +25,15 @@ export function useSupabaseUpdate<T extends TableName>(
       data: Update<T>;
     }) => {
       try {
-        const { data: updatedData, error } = await supabase
+        const { data: returnedData, error } = await supabase
           .from(table)
           .update(data as any)
-          .eq('id', id)
+          .match({ id } as any)
           .select()
           .single();
 
         if (error) throw error;
-        return updatedData as Row<T>;
+        return returnedData as unknown as Row<T>;
       } catch (error) {
         handleError(error);
         throw error;

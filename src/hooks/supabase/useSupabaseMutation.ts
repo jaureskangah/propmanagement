@@ -19,14 +19,14 @@ export function useSupabaseMutation<T extends TableName>(
   return useMutation({
     mutationFn: async (variables: Insert<T>) => {
       try {
-        const { data, error } = await supabase
+        const { data: returnedData, error } = await supabase
           .from(table)
           .insert(variables as any)
           .select()
           .single();
 
         if (error) throw error;
-        return data as Row<T>;
+        return returnedData as unknown as Row<T>;
       } catch (error) {
         handleError(error);
         throw error;
