@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import Properties from "./pages/Properties";
 import Tenants from "./pages/Tenants";
+import Maintenance from "./pages/Maintenance";
 
 export const router = createBrowserRouter([
   {
@@ -21,5 +22,9 @@ export const router = createBrowserRouter([
   {
     path: "/tenants",
     element: <Tenants />,
+  },
+  {
+    path: "/maintenance",
+    element: <Maintenance />,
   },
 ]);
