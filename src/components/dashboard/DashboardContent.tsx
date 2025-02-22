@@ -1,6 +1,5 @@
 
 import { DashboardMetrics } from "./DashboardMetrics";
-import { DashboardCustomization } from "./DashboardCustomization";
 import { useMaintenanceAlerts } from "@/hooks/useMaintenanceAlerts";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useQuery } from "@tanstack/react-query";
@@ -94,8 +93,6 @@ export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
       {!isHidden('activity') && (
         <RecentActivity />
       )}
-
-      <DashboardCustomization />
     </div>
   );
 };
