@@ -13,11 +13,27 @@ import { Loader2 } from "lucide-react";
 import { useRevenueData } from "./hooks/useRevenueData";
 import { RevenueChartTooltip } from "./revenue/RevenueChartTooltip";
 import { processMonthlyData } from "./revenue/revenueUtils";
+import { useEffect } from "react";
 
 export const RevenueChart = () => {
   const { expenses, payments, isLoading } = useRevenueData();
 
+  useEffect(() => {
+    console.log("RevenueChart data state:", {
+      hasExpenses: !!expenses?.length,
+      expensesCount: expenses?.length,
+      hasPayments: !!payments?.length,
+      paymentsCount: payments?.length,
+      isLoading
+    });
+
+    return () => {
+      console.log("RevenueChart unmounting");
+    };
+  }, [expenses, payments, isLoading]);
+
   if (isLoading) {
+    console.log("RevenueChart is loading");
     return (
       <Card className="animate-pulse">
         <CardContent className="flex items-center justify-center h-[400px]">
@@ -28,6 +44,11 @@ export const RevenueChart = () => {
   }
 
   const monthlyData = processMonthlyData(expenses, payments);
+  console.log("RevenueChart processed monthly data:", {
+    dataPoints: monthlyData.length,
+    firstMonth: monthlyData[0]?.month,
+    lastMonth: monthlyData[monthlyData.length - 1]?.month
+  });
 
   return (
     <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in">

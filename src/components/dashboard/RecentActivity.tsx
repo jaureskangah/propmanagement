@@ -71,6 +71,17 @@ export const RecentActivity = () => {
   });
 
   useEffect(() => {
+    console.log("RecentActivity loading state:", {
+      isLoadingTenants,
+      isLoadingPayments,
+      isLoadingMaintenance,
+      hasTenantsData: !!tenants?.length,
+      hasPaymentsData: !!payments?.length,
+      hasMaintenanceData: !!maintenance?.length
+    });
+  }, [isLoadingTenants, isLoadingPayments, isLoadingMaintenance, tenants, payments, maintenance]);
+
+  useEffect(() => {
     if (tenants && payments && maintenance) {
       const combinedActivities: Activity[] = [
         ...(tenants?.map(tenant => ({
@@ -94,6 +105,15 @@ export const RecentActivity = () => {
       ].sort((a, b) => 
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
+
+      console.log("Setting combined activities:", {
+        totalActivities: combinedActivities.length,
+        byType: {
+          tenants: combinedActivities.filter(a => a.type === 'tenant').length,
+          payments: combinedActivities.filter(a => a.type === 'payment').length,
+          maintenance: combinedActivities.filter(a => a.type === 'maintenance').length,
+        }
+      });
 
       setAllActivities(combinedActivities);
     }

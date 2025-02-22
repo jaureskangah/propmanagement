@@ -1,7 +1,9 @@
+
 import { NotificationBell } from "./NotificationBell";
 import { useMetricsData } from "./hooks/useMetricsData";
 import { MetricsGrid } from "./metrics/MetricsGrid";
 import type { DateRange } from "./DashboardDateFilter";
+import { useEffect } from "react";
 
 interface DashboardMetricsProps {
   propertiesData: any[];
@@ -22,6 +24,20 @@ export const DashboardMetrics = ({
     tenantsData,
     dateRange
   );
+
+  useEffect(() => {
+    console.log("DashboardMetrics data received:", {
+      propertiesCount: propertiesData?.length,
+      maintenanceCount: maintenanceData?.length,
+      tenantsCount: tenantsData?.length,
+      hasMetrics: !!metrics,
+      unreadMessages
+    });
+
+    return () => {
+      console.log("DashboardMetrics unmounting");
+    };
+  }, [propertiesData, maintenanceData, tenantsData, metrics, unreadMessages]);
 
   return (
     <div className="relative">
