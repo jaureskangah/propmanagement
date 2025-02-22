@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 
 export const enTranslations: Translations = {
@@ -17,7 +16,7 @@ export const enTranslations: Translations = {
   // Hero Section
   heroTitle: "Simplify Your Property Management",
   heroSubtitle: "A complete solution to manage your properties, tenants, and maintenance with ease.",
-  getStarted: "Get Started Now",
+  heroGetStarted: "Get Started Now",
   learnMore: "Learn More",
 
   // Features Section
@@ -42,6 +41,7 @@ export const enTranslations: Translations = {
   pricingTitle: "Simple and transparent pricing",
   pricingSubtitle: "Choose the plan that best fits your needs",
   pricingStartFree: "Start for free",
+  pricingGetStarted: "Get Started",
 
   // Plan Features
   upTo2Properties: "Up to 2 properties",

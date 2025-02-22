@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 
 export const frTranslations: Translations = {
@@ -17,7 +16,7 @@ export const frTranslations: Translations = {
   // Hero Section
   heroTitle: "Simplifiez votre gestion immobilière",
   heroSubtitle: "Une solution complète pour gérer vos propriétés, locataires et maintenance en toute simplicité.",
-  getStarted: "Commencer maintenant",
+  heroGetStarted: "Commencer maintenant",
   learnMore: "En savoir plus",
 
   // Features Section
@@ -42,6 +41,7 @@ export const frTranslations: Translations = {
   pricingTitle: "Tarification simple et transparente",
   pricingSubtitle: "Choisissez le forfait qui correspond le mieux à vos besoins",
   pricingStartFree: "Commencer gratuitement",
+  pricingGetStarted: "Commencer",
 
   // Plan Features
   upTo2Properties: "Jusqu'à 2 propriétés",

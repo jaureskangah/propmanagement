@@ -1,4 +1,3 @@
-
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -20,7 +19,7 @@ export interface NavigationTranslations {
 export interface HeroTranslations {
   heroTitle: string;
   heroSubtitle: string;
-  getStarted: string;
+  heroGetStarted: string;
   learnMore: string;
 }
 
@@ -49,7 +48,7 @@ export interface PricingTranslations {
   pricingTitle: string;
   pricingSubtitle: string;
   pricingStartFree: string;
-  getStarted: string;
+  pricingGetStarted: string;
 }
 
 // Plan features translations
