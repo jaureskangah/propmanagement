@@ -5,6 +5,10 @@ import { useMaintenanceAlerts } from "@/hooks/useMaintenanceAlerts";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { PrioritySection } from "./PrioritySection";
+import { RevenueChart } from "./RevenueChart";
+import { RecentActivity } from "./RecentActivity";
+import { useDashboardPreferences } from "./hooks/useDashboardPreferences";
 
 interface DashboardContentProps {
   isLoading: boolean;
@@ -12,9 +16,9 @@ interface DashboardContentProps {
 }
 
 export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
-  // Utilisation du hook pour les notifications en temps réel
   useRealtimeNotifications();
   const { notifications, budgetAlerts, paymentAlerts } = useMaintenanceAlerts();
+  const { preferences } = useDashboardPreferences();
 
   // Fetch properties, maintenance, and tenants data
   const { data: propertiesData = [] } = useQuery({
@@ -44,6 +48,15 @@ export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
     }
   });
 
+  const { data: paymentsData = [] } = useQuery({
+    queryKey: ['tenant_payments'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('tenant_payments').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -51,6 +64,8 @@ export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
       </div>
     );
   }
+
+  const isHidden = (sectionId: string) => preferences.hidden_sections.includes(sectionId);
 
   return (
     <div className="space-y-6">
@@ -63,6 +78,23 @@ export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
           endDate: new Date()
         }}
       />
+
+      {!isHidden('priority') && (
+        <PrioritySection
+          maintenanceData={maintenanceData}
+          tenantsData={tenantsData}
+          paymentsData={paymentsData}
+        />
+      )}
+
+      {!isHidden('revenue') && (
+        <RevenueChart />
+      )}
+
+      {!isHidden('activity') && (
+        <RecentActivity />
+      )}
+
       <DashboardCustomization />
     </div>
   );
