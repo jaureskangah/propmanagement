@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState } from 'react';
 
 type Language = 'en' | 'fr';
@@ -48,7 +49,7 @@ const translations = {
     // Pricing Section
     pricingTitle: "Simple and transparent pricing",
     pricingSubtitle: "Choose the plan that best fits your needs",
-    startForFree: "Start for free",
+    pricingStartFree: "Start for free",
     mostPopular: "Most popular",
     month: "/month",
     
@@ -80,7 +81,7 @@ const translations = {
     // Call to Action
     readyToStart: "Ready to Simplify Your Management?",
     joinOthers: "Join thousands of property owners who trust our solution",
-    startForFree: "Try For Free",
+    ctaStartFree: "Try For Free",
 
     // FAQ
     frequentlyAskedQuestions: "Frequently Asked Questions",
@@ -132,7 +133,7 @@ const translations = {
     // Pricing Section
     pricingTitle: "Tarification simple et transparente",
     pricingSubtitle: "Choisissez le forfait qui correspond le mieux à vos besoins",
-    startForFree: "Commencer gratuitement",
+    pricingStartFree: "Commencer gratuitement",
     mostPopular: "Le plus populaire",
     month: "/mois",
 
@@ -164,7 +165,7 @@ const translations = {
     // Call to Action
     readyToStart: "Prêt à simplifier votre gestion ?",
     joinOthers: "Rejoignez des milliers de propriétaires qui nous font confiance",
-    startForFree: "Essayer gratuitement",
+    ctaStartFree: "Essayer gratuitement",
 
     // FAQ
     frequentlyAskedQuestions: "Questions fréquentes",
