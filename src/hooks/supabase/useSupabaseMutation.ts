@@ -21,12 +21,12 @@ export function useSupabaseMutation<T extends TableName>(
       try {
         const { data, error } = await supabase
           .from(table)
-          .insert(variables)
+          .insert(variables as any)
           .select()
           .single();
 
         if (error) throw error;
-        return data as unknown as Row<T>;
+        return data as Row<T>;
       } catch (error) {
         handleError(error);
         throw error;

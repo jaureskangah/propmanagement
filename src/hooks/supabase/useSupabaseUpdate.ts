@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useSupabaseError } from "../useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
-import { Row, TableName, Update } from "./types";
+import { Row, TableName, Update, ColumnName } from "./types";
 
 export function useSupabaseUpdate<T extends TableName>(
   table: T,
@@ -27,13 +27,13 @@ export function useSupabaseUpdate<T extends TableName>(
       try {
         const { data: updatedData, error } = await supabase
           .from(table)
-          .update(data)
-          .eq('id', id)
+          .update(data as any)
+          .eq('id' as ColumnName<T>, id)
           .select()
           .single();
 
         if (error) throw error;
-        return updatedData as unknown as Row<T>;
+        return updatedData as Row<T>;
       } catch (error) {
         handleError(error);
         throw error;
