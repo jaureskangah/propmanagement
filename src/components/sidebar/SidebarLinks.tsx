@@ -8,7 +8,8 @@ import {
   Users,
   Wrench,
   Settings,
-  LayoutDashboard
+  LayoutDashboard,
+  ShieldCheck
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -20,6 +21,10 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const location = useLocation();
   const { user } = useAuth();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
+
+  // Ajouter des logs pour le débogage
+  console.log('Current user:', user);
+  console.log('Is admin:', isAdmin);
 
   const links = [
     {
@@ -58,7 +63,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   if (isAdmin) {
     links.push({
       href: "/admin",
-      icon: LayoutDashboard,
+      icon: ShieldCheck, // Changé pour une icône plus distinctive
       label: "Admin",
     });
   }
@@ -70,7 +75,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
           key={link.href}
           to={link.href}
           className={cn(
-            "flex items-center px-2 py-2 text-sm font-medium rounded-md group",
+            "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
             location.pathname === link.href
               ? "bg-gray-100 text-gray-900"
               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -84,7 +89,9 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
                 : "text-gray-400 group-hover:text-gray-500"
             )}
           />
-          {!collapsed && link.label}
+          {!collapsed && (
+            <span className="truncate">{link.label}</span>
+          )}
         </Link>
       ))}
     </nav>
