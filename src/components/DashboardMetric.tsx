@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
@@ -52,7 +53,7 @@ export function DashboardMetric({
 
   const card = (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing",
+      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing min-h-[200px]",
       "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
       "after:absolute after:inset-0 after:rounded-lg after:border-2 after:border-transparent after:transition-colors hover:after:border-primary/20",
       className
@@ -76,7 +77,7 @@ export function DashboardMetric({
             </div>
           )}
           {chartData.length > 0 && (
-            <div className="h-16 mt-3 transition-transform duration-300 group-hover:scale-[1.02]">
+            <div className="h-16 mt-4 transition-transform duration-300 group-hover:scale-[1.02]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
                   <defs>
