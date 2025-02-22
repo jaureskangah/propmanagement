@@ -8,8 +8,8 @@ export type Row<T extends TableName> = Tables[T]['Row']
 export type Insert<T extends TableName> = Tables[T]['Insert']
 export type Update<T extends TableName> = Tables[T]['Update']
 
-export type IdColumn = 'id'
-export type ColumnName<T extends TableName> = keyof Tables[T]['Row']
+// Using literal type for id column
+export type IdColumn = keyof Tables[TableName]['Row'] & 'id'
 
 export interface QueryOptions {
   select?: string;

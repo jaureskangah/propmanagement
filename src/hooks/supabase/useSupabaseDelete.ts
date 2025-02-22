@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useSupabaseError } from "../useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
-import { TableName, IdColumn } from "./types";
+import { TableName } from "./types";
 
 export function useSupabaseDelete<T extends TableName>(
   table: T,
@@ -22,7 +22,7 @@ export function useSupabaseDelete<T extends TableName>(
         const { error } = await supabase
           .from(table)
           .delete()
-          .eq('id' satisfies IdColumn, id);
+          .eq('id', id);
 
         if (error) throw error;
       } catch (error) {

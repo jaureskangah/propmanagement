@@ -4,7 +4,6 @@ import { supabase } from "@/lib/supabase";
 import { useSupabaseError } from "../useSupabaseError";
 import { useToast } from "@/components/ui/use-toast";
 import { Row, TableName, Insert } from "./types";
-import { PostgrestResponse } from "@supabase/supabase-js";
 
 export function useSupabaseMutation<T extends TableName>(
   table: T,
@@ -22,12 +21,12 @@ export function useSupabaseMutation<T extends TableName>(
       try {
         const { data, error } = await supabase
           .from(table)
-          .insert(variables)
+          .insert(variables as any)
           .select()
           .single();
 
         if (error) throw error;
-        return data as unknown as Row<T>;
+        return data as Row<T>;
       } catch (error) {
         handleError(error);
         throw error;
