@@ -24,7 +24,7 @@ export default function CallToAction({ onShowAuthModal }: CallToActionProps) {
           className="w-full sm:w-auto group bg-white hover:bg-white/90 text-[#ea384c] border border-red-100"
           onClick={onShowAuthModal}
         >
-          {t('startForFree')}
+          {t('ctaStartFree')}
           <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
         </Button>
       </div>
