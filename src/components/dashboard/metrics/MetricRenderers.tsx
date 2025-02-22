@@ -1,3 +1,4 @@
+
 import { ArrowUpRight, ArrowDownRight, Percent, Building2, Users, Wrench, DollarSign, MessageSquare } from "lucide-react";
 import { DashboardMetric } from "@/components/DashboardMetric";
 import { cn } from "@/lib/utils";
@@ -119,14 +120,17 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
         value={unreadMessages.toString()}
         icon={<MessageSquare className="h-4 w-4 text-rose-600" />}
         description={
-          <div className="flex items-center gap-1 text-rose-600">
+          <div className={cn(
+            "flex items-center gap-1",
+            unreadMessages > 0 ? "text-rose-600" : "text-green-600"
+          )}>
             <ArrowUpRight className="h-3 w-3" />
-            <span>Messages requiring attention</span>
+            <span>{unreadMessages === 1 ? "message" : "messages"} requiring attention</span>
           </div>
         }
         chartData={metrics.communications?.chartData || []}
         chartColor="#E11D48"
-        tooltip="Unread messages from your tenants requiring a response."
+        tooltip="Messages from your tenants requiring a response"
       />
     </SortableMetric>
   );
