@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth doit être utilisé à l\'intérieur d\'un AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
@@ -32,21 +32,15 @@ interface AuthProviderProps {
 export function AuthProvider({ children }: AuthProviderProps) {
   const { user, session, loading, isAuthenticated } = useAuthSession();
 
-  // Log pour debug
-  console.log('État AuthProvider:', {
-    hasUser: !!user,
-    hasSession: !!session,
+  const value = {
+    user,
+    session,
     loading,
     isAuthenticated
-  });
+  };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      session, 
-      loading, // Utiliser l'état de chargement réel
-      isAuthenticated
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

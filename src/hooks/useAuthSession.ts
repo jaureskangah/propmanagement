@@ -11,40 +11,28 @@ export function useAuthSession() {
   useEffect(() => {
     let mounted = true;
 
-    const getInitialSession = async () => {
+    async function getInitialSession() {
       try {
         const { data: { session: initialSession } } = await supabase.auth.getSession();
-        
         if (mounted) {
-          console.log('Session initiale récupérée:', {
-            hasSession: !!initialSession,
-            userId: initialSession?.user?.id
-          });
-          
           setSession(initialSession);
           setUser(initialSession?.user ?? null);
-          setLoading(false); // Important: on met loading à false après avoir mis à jour la session
         }
       } catch (error) {
-        console.error('Erreur lors de la récupération de la session:', error);
+        console.error('Error getting initial session:', error);
+      } finally {
         if (mounted) {
-          setLoading(false); // Important: on met aussi loading à false en cas d'erreur
+          setLoading(false);
         }
       }
-    };
+    }
 
     getInitialSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, updatedSession) => {
-      console.log('Changement d\'état d\'authentification:', {
-        event: _event,
-        hasSession: !!updatedSession,
-        userId: updatedSession?.user?.id
-      });
-
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (mounted) {
-        setSession(updatedSession);
-        setUser(updatedSession?.user ?? null);
+        setSession(session);
+        setUser(session?.user ?? null);
       }
     });
 
