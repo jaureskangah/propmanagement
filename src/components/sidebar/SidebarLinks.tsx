@@ -25,7 +25,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     {
       href: "/",
       icon: HomeIcon,
-      label: "Accueil",
+      label: "Home",
     },
     {
       href: "/dashboard",
@@ -35,12 +35,12 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     {
       href: "/properties",
       icon: Building2,
-      label: "Propriétés",
+      label: "Properties",
     },
     {
       href: "/tenants",
       icon: Users,
-      label: "Locataires",
+      label: "Tenants",
     },
     {
       href: "/maintenance",
@@ -50,7 +50,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     {
       href: "/settings",
       icon: Settings,
-      label: "Paramètres",
+      label: "Settings",
     },
   ];
 
