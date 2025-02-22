@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState } from 'react';
 
 type Language = 'en' | 'fr';
@@ -46,13 +45,47 @@ const translations = {
     security: "Security",
     securityDesc: "Your data is secure and protected",
 
-    // Pricing Section
+    // Pricing Plans
+    freemiumPlan: "Freemium",
+    proPlan: "Pro",
+    enterprisePlan: "Enterprise",
+    free: "Free",
+    month: "/month",
+    mostPopular: "Most Popular",
     pricingTitle: "Simple and transparent pricing",
     pricingSubtitle: "Choose the plan that best fits your needs",
     pricingStartFree: "Start for free",
-    mostPopular: "Most popular",
-    month: "/month",
-    
+    getStarted: "Get Started",
+
+    // Plan Features
+    upTo2Properties: "Up to 2 properties",
+    upTo5Properties: "Up to 5 properties",
+    upTo20Properties: "Up to 20 properties",
+    rentManagement: "Rent management",
+    digitalDocuments: "Digital documents",
+    basicPropertyCards: "Basic property cards",
+    emailNotifications: "Email notifications",
+    tenantVerification: "Tenant verification",
+    prioritySupport: "Priority support",
+    advancedDashboard: "Advanced dashboard",
+    financialReports: "Financial reports",
+    maintenanceManagement: "Maintenance management",
+    dedicatedSupport: "24/7 dedicated support",
+    customDashboard: "Custom dashboard",
+    advancedFinancialReports: "Advanced financial reports",
+    userTraining: "User training",
+    dailyBackup: "Daily backup",
+
+    // Toast Messages
+    authRequired: "Authentication required",
+    pleaseSignInToSubscribe: "Please sign in to subscribe to a plan",
+    processing: "Processing",
+    preparingPaymentSession: "Preparing your payment session...",
+    error: "Error",
+    failedToCreateSession: "Failed to create payment session",
+    failedToCreateSessionNoUrl: "Failed to create payment session - no URL received",
+    generalError: "An error occurred while processing your request",
+
     // Contact Section
     contactUs: "Contact Us",
     contactSubtitle: "We're here to help and answer any question you might have",
@@ -130,12 +163,46 @@ const translations = {
     security: "Sécurité",
     securityDesc: "Vos données sont sécurisées et protégées",
 
-    // Pricing Section
+    // Pricing Plans
+    freemiumPlan: "Gratuit",
+    proPlan: "Pro",
+    enterprisePlan: "Entreprise",
+    free: "Gratuit",
+    month: "/mois",
+    mostPopular: "Le plus populaire",
     pricingTitle: "Tarification simple et transparente",
     pricingSubtitle: "Choisissez le forfait qui correspond le mieux à vos besoins",
     pricingStartFree: "Commencer gratuitement",
-    mostPopular: "Le plus populaire",
-    month: "/mois",
+    getStarted: "Commencer",
+
+    // Plan Features
+    upTo2Properties: "Jusqu'à 2 propriétés",
+    upTo5Properties: "Jusqu'à 5 propriétés",
+    upTo20Properties: "Jusqu'à 20 propriétés",
+    rentManagement: "Gestion des loyers",
+    digitalDocuments: "Documents numériques",
+    basicPropertyCards: "Fiches propriétés basiques",
+    emailNotifications: "Notifications par email",
+    tenantVerification: "Vérification des locataires",
+    prioritySupport: "Support prioritaire",
+    advancedDashboard: "Tableau de bord avancé",
+    financialReports: "Rapports financiers",
+    maintenanceManagement: "Gestion de la maintenance",
+    dedicatedSupport: "Support dédié 24/7",
+    customDashboard: "Tableau de bord personnalisé",
+    advancedFinancialReports: "Rapports financiers avancés",
+    userTraining: "Formation utilisateur",
+    dailyBackup: "Sauvegarde quotidienne",
+
+    // Toast Messages
+    authRequired: "Authentification requise",
+    pleaseSignInToSubscribe: "Veuillez vous connecter pour souscrire à un forfait",
+    processing: "Traitement en cours",
+    preparingPaymentSession: "Préparation de votre session de paiement...",
+    error: "Erreur",
+    failedToCreateSession: "Échec de la création de la session de paiement",
+    failedToCreateSessionNoUrl: "Échec de la création de la session de paiement - aucune URL reçue",
+    generalError: "Une erreur est survenue lors du traitement de votre demande",
 
     // Contact Section
     contactUs: "Contactez-nous",
