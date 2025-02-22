@@ -32,7 +32,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       return data;
     },
     enabled: !!user,
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 60 * 5,
     retry: false,
     refetchOnWindowFocus: false,
     refetchInterval: false
@@ -99,19 +99,17 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
       {isAuthenticated ? (
         <>
           <Button 
-            variant="ghost" 
-            size="sm"
+            variant="ghost"
+            className="text-slate-600 hover:text-[#ea384c] hover:bg-slate-100"
             onClick={handleDashboardClick}
-            className="flex items-center gap-2"
           >
-            <LayoutDashboard className="h-4 w-4" />
+            <LayoutDashboard className="h-4 w-4 mr-2" />
             Dashboard
           </Button>
           <Button
             variant="ghost"
-            size="sm"
+            className="text-slate-600 hover:text-[#ea384c] hover:bg-slate-100"
             onClick={handleSignOut}
-            className="text-slate-600 hover:text-[#ea384c]"
           >
             <LogOut className="h-4 w-4 mr-2" />
             Sign Out
