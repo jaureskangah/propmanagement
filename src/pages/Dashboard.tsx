@@ -7,16 +7,20 @@ import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
 
 const Dashboard = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log('Dashboard Auth State:', { isAuthenticated, loading, userId: user?.id });
+    
     if (!loading && !isAuthenticated) {
+      console.log('Redirecting to auth page...');
       navigate('/auth');
     }
-  }, [loading, isAuthenticated, navigate]);
+  }, [loading, isAuthenticated, navigate, user]);
 
   if (loading) {
+    console.log('Dashboard is loading...');
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
@@ -25,9 +29,11 @@ const Dashboard = () => {
   }
 
   if (!isAuthenticated) {
+    console.log('User is not authenticated, rendering null');
     return null;
   }
 
+  console.log('Rendering Dashboard content');
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />
