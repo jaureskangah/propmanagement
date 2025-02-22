@@ -8,6 +8,11 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../providers/LocaleProvider";
 
+const formatPrice = (price: string | number) => {
+  if (price === "Free") return price;
+  return `CA$${price}`;
+};
+
 const getPlans = (t: (key: string) => string) => [
   {
     name: t('freemiumPlan'),
@@ -158,7 +163,7 @@ export default function Pricing() {
                     <span className="text-4xl font-bold tracking-tight">{t('free')}</span>
                   ) : (
                     <>
-                      <span className="text-4xl font-bold tracking-tight">CA${plan.price}</span>
+                      <span className="text-4xl font-bold tracking-tight">{formatPrice(plan.price)}</span>
                       <span className="ml-1 text-sm font-semibold">{t('month')}</span>
                     </>
                   )}
