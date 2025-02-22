@@ -1,77 +1,22 @@
 
-import React, { useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage';
-import Dashboard from './pages/Dashboard';
-import Properties from './pages/Properties';
-import Tenants from './pages/Tenants';
-import Maintenance from './pages/Maintenance';
-import Settings from './pages/Settings';
-import AuthPage from './pages/AuthPage';
-import { useAuth } from '@/components/AuthProvider';
-import AdminDashboard from "@/pages/AdminDashboard";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/components/AuthProvider";
+import { LocaleProvider } from "@/components/providers/LocaleProvider";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./router";
+import { Toaster } from "sonner";
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthenticated, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      navigate('/auth');
-    }
-  }, [loading, isAuthenticated, navigate]);
-
-  // Pendant le chargement, afficher un spinner
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
-      </div>
-    );
-  }
-
-  // Si authentifié, afficher le contenu
-  return isAuthenticated ? <>{children}</> : null;
-};
-
-export default function App() {
+function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/auth" element={<AuthPage />} />
-        <Route path="/dashboard" element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="/properties" element={
-          <ProtectedRoute>
-            <Properties />
-          </ProtectedRoute>
-        } />
-        <Route path="/tenants" element={
-          <ProtectedRoute>
-            <Tenants />
-          </ProtectedRoute>
-        } />
-        <Route path="/maintenance" element={
-          <ProtectedRoute>
-            <Maintenance />
-          </ProtectedRoute>
-        } />
-        <Route path="/settings" element={
-          <ProtectedRoute>
-            <Settings />
-          </ProtectedRoute>
-        } />
-        <Route path="/admin" element={
-          <ProtectedRoute>
-            <AdminDashboard />
-          </ProtectedRoute>
-        } />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
-    </Router>
+    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+      <LocaleProvider>
+        <AuthProvider>
+          <RouterProvider router={router} />
+          <Toaster position="top-right" />
+        </AuthProvider>
+      </LocaleProvider>
+    </ThemeProvider>
   );
 }
+
+export default App;

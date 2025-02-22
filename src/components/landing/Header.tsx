@@ -1,4 +1,3 @@
-
 import { Building2, List, DollarSign, Gift, LogIn, LogOut, X, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
@@ -8,6 +7,9 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
+import { useLocale } from "../providers/LocaleProvider";
+import { LanguageSelector } from "./LanguageSelector";
+import { UnitToggle } from "./UnitToggle";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
@@ -17,6 +19,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const { user, session, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t } = useLocale();
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -79,21 +82,26 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
         onClick={() => scrollToSection('everything-you-need')}
       >
         <List className="h-4 w-4" />
-        <span>Features</span>
+        <span>{t('features')}</span>
       </div>
       <div 
         className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
         onClick={() => scrollToSection('pricing')}
       >
         <DollarSign className="h-4 w-4" />
-        <span>Pricing</span>
+        <span>{t('pricing')}</span>
       </div>
       <div 
         className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
         onClick={() => scrollToSection('pricing')}
       >
         <Gift className="h-4 w-4" />
-        <span>Free Trial</span>
+        <span>{t('freeTrial')}</span>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <LanguageSelector />
+        <UnitToggle />
       </div>
 
       {isAuthenticated ? (
@@ -104,7 +112,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
             onClick={handleDashboardClick}
           >
             <LayoutDashboard className="h-4 w-4 mr-2" />
-            Dashboard
+            {t('dashboard')}
           </Button>
           <Button
             variant="ghost"
@@ -112,7 +120,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
             onClick={handleSignOut}
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Sign Out
+            {t('signOut')}
           </Button>
         </>
       ) : (
@@ -123,7 +131,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
           onClick={onShowAuthModal}
         >
           <LogIn className="h-4 w-4 mr-2" />
-          Sign In
+          {t('signIn')}
         </Button>
       )}
     </>
