@@ -1,4 +1,3 @@
-
 import { Building2, List, DollarSign, Gift, LogIn, LogOut, X, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/AuthProvider";
@@ -53,10 +52,10 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
     try {
       await supabase.auth.signOut();
       navigate("/");
-      toast.success("Déconnexion réussie");
+      toast.success("Successfully signed out");
     } catch (error) {
       console.error("Error during sign out:", error);
-      toast.error("Erreur lors de la déconnexion");
+      toast.error("Error signing out");
     }
   };
 
@@ -119,7 +118,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
             onClick={handleSignOut}
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Déconnexion
+            {t('signOut')}
           </Button>
         </>
       ) : (
