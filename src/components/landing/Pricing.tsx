@@ -8,51 +8,51 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../providers/LocaleProvider";
 
-const plans = [
+const getPlans = (t: (key: string) => string) => [
   {
-    name: "Freemium",
+    name: t('freemiumPlan'),
     price: "Free",
     features: [
-      "Up to 2 properties",
-      "Rent management",
-      "Digital documents",
-      "Basic property cards",
-      "Email notifications",
+      t('upTo2Properties'),
+      t('rentManagement'),
+      t('digitalDocuments'),
+      t('basicPropertyCards'),
+      t('emailNotifications'),
     ],
     buttonText: "pricingStartFree",
     priceId: null,
   },
   {
-    name: "Pro",
+    name: t('proPlan'),
     price: "39.99",
     popular: true,
     features: [
-      "Up to 5 properties",
-      "Rent management",
-      "Digital documents",
-      "Tenant verification",
-      "Priority support",
-      "Advanced dashboard",
-      "Financial reports",
-      "Maintenance management",
+      t('upTo5Properties'),
+      t('rentManagement'),
+      t('digitalDocuments'),
+      t('tenantVerification'),
+      t('prioritySupport'),
+      t('advancedDashboard'),
+      t('financialReports'),
+      t('maintenanceManagement'),
     ],
     buttonText: "getStarted",
     priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
   },
   {
-    name: "Enterprise",
+    name: t('enterprisePlan'),
     price: "99.99",
     features: [
-      "Up to 20 properties",
-      "Rent management",
-      "Digital documents",
-      "Tenant verification",
-      "24/7 dedicated support",
-      "Custom dashboard",
-      "Advanced financial reports",
-      "Maintenance management",
-      "User training",
-      "Daily backup",
+      t('upTo20Properties'),
+      t('rentManagement'),
+      t('digitalDocuments'),
+      t('tenantVerification'),
+      t('dedicatedSupport'),
+      t('customDashboard'),
+      t('advancedFinancialReports'),
+      t('maintenanceManagement'),
+      t('userTraining'),
+      t('dailyBackup'),
     ],
     buttonText: "getStarted",
     priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
@@ -64,6 +64,7 @@ export default function Pricing() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLocale();
+  const plans = getPlans(t);
 
   const handleSubscribe = async (priceId: string | null) => {
     if (!priceId) {
@@ -73,8 +74,8 @@ export default function Pricing() {
 
     if (!user) {
       toast({
-        title: "Authentication required",
-        description: "Please sign in to subscribe to a plan",
+        title: t('authRequired'),
+        description: t('pleaseSignInToSubscribe'),
         variant: "destructive",
       });
       return;
@@ -82,8 +83,8 @@ export default function Pricing() {
 
     try {
       toast({
-        title: "Processing",
-        description: "Preparing your payment session...",
+        title: t('processing'),
+        description: t('preparingPaymentSession'),
       });
 
       console.log('Creating checkout session for price:', priceId);
@@ -94,8 +95,8 @@ export default function Pricing() {
       if (error) {
         console.error('Supabase function error:', error);
         toast({
-          title: "Error",
-          description: error.message || "Failed to create payment session",
+          title: t('error'),
+          description: error.message || t('failedToCreateSession'),
           variant: "destructive",
         });
         return;
@@ -107,16 +108,16 @@ export default function Pricing() {
       } else {
         console.error('No checkout URL received');
         toast({
-          title: "Error",
-          description: "Failed to create payment session - no URL received",
+          title: t('error'),
+          description: t('failedToCreateSessionNoUrl'),
           variant: "destructive",
         });
       }
     } catch (error: any) {
       console.error('Error:', error);
       toast({
-        title: "Error",
-        description: error.message || "An error occurred while processing your request",
+        title: t('error'),
+        description: error.message || t('generalError'),
         variant: "destructive",
       });
     }
@@ -154,7 +155,7 @@ export default function Pricing() {
               <CardContent className="flex-1">
                 <div className="mt-2 flex items-baseline text-gray-900">
                   {plan.price === "Free" ? (
-                    <span className="text-4xl font-bold tracking-tight">{plan.price}</span>
+                    <span className="text-4xl font-bold tracking-tight">{t('free')}</span>
                   ) : (
                     <>
                       <span className="text-4xl font-bold tracking-tight">CA${plan.price}</span>
