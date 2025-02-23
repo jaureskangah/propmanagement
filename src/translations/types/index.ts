@@ -15,6 +15,7 @@ import type { AdminDashboardTranslations } from './admin';
 import type { StatusTranslations } from './status';
 import type { PropertyManagementTranslations } from './property';
 import type { MaintenanceTranslations } from './maintenance';
+import type { TenantTranslations } from './tenant';
 
 export {
   NavigationTranslations,
@@ -30,7 +31,8 @@ export {
   AdminDashboardTranslations,
   MaintenanceTranslations,
   StatusTranslations,
-  PropertyManagementTranslations
+  PropertyManagementTranslations,
+  TenantTranslations
 };
 
 export interface Translations extends 
@@ -47,4 +49,5 @@ export interface Translations extends
   AdminDashboardTranslations,
   MaintenanceTranslations,
   StatusTranslations,
-  PropertyManagementTranslations {}
+  PropertyManagementTranslations,
+  TenantTranslations {}

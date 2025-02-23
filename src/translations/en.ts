@@ -13,6 +13,7 @@ import { enAdmin } from './features/admin';
 import { enStatus } from './features/status';
 import { enProperty } from './features/property';
 import { enMaintenance } from './features/maintenance';
+import { enTenant } from './features/tenant';
 
 export const enTranslations: Translations = {
   ...enNavigation,
@@ -27,5 +28,6 @@ export const enTranslations: Translations = {
   ...enAdmin,
   ...enStatus,
   ...enProperty,
-  ...enMaintenance
+  ...enMaintenance,
+  ...enTenant
 };

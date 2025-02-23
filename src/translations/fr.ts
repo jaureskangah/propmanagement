@@ -13,6 +13,7 @@ import { frAdmin } from './features/admin';
 import { frStatus } from './features/status';
 import { frProperty } from './features/property';
 import { frMaintenance } from './features/maintenance';
+import { frTenant } from './features/tenant';
 
 export const frTranslations: Translations = {
   ...frNavigation,
@@ -27,5 +28,6 @@ export const frTranslations: Translations = {
   ...frAdmin,
   ...frStatus,
   ...frProperty,
-  ...frMaintenance
+  ...frMaintenance,
+  ...frTenant
 };
