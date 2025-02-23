@@ -1,0 +1,36 @@
+
+import { AdminDashboardTranslations } from '../types';
+
+export const enAdmin: AdminDashboardTranslations = {
+  adminDashboard: "Admin Dashboard",
+  totalUsers: "Total Users",
+  activeUsers: "Active Users",
+  properties: "Properties",
+  totalRevenue: "Total Revenue",
+  userGrowth: "User Growth",
+  revenueGrowth: "Revenue Growth",
+  downloadData: "Download",
+  shareData: "Share",
+  downloadSuccess: "Download successful",
+  downloadError: "Error during download",
+  shareSuccess: "Link shared successfully",
+  copySuccess: "Link copied to clipboard",
+  shareError: "Error while sharing"
+};
+
+export const frAdmin: AdminDashboardTranslations = {
+  adminDashboard: "Tableau de Bord Admin",
+  totalUsers: "Utilisateurs Totaux",
+  activeUsers: "Utilisateurs Actifs",
+  properties: "Propriétés",
+  totalRevenue: "Revenu Total",
+  userGrowth: "Croissance Utilisateurs",
+  revenueGrowth: "Croissance Revenus",
+  downloadData: "Télécharger",
+  shareData: "Partager",
+  downloadSuccess: "Téléchargement réussi",
+  downloadError: "Erreur lors du téléchargement",
+  shareSuccess: "Lien partagé avec succès",
+  copySuccess: "Lien copié dans le presse-papiers",
+  shareError: "Erreur lors du partage"
+};
