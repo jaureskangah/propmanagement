@@ -177,8 +177,6 @@ export interface MaintenanceTranslations {
   taskType: string;
   selectType: string;
   addNewTask: string;
-  maintenanceStatus: string;
-  maintenancePriority: string;
   low: string;
   medium: string;
   high: string;

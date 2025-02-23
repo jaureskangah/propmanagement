@@ -158,8 +158,6 @@ export const enTranslations: Translations = {
   taskType: "Task type",
   selectType: "Select a type",
   addNewTask: "Add a new task",
-  maintenanceStatus: "Status",
-  maintenancePriority: "Priority",
   low: "Low",
   medium: "Medium",
   high: "High",

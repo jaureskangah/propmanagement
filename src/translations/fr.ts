@@ -158,8 +158,6 @@ export const frTranslations: Translations = {
   taskType: "Type de tâche",
   selectType: "Sélectionner un type",
   addNewTask: "Ajouter une nouvelle tâche",
-  maintenanceStatus: "Statut",
-  maintenancePriority: "Priorité",
   low: "Basse",
   medium: "Moyenne",
   high: "Haute",
