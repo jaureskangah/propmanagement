@@ -14,6 +14,8 @@ import { enStatus } from './features/status';
 import { enProperty } from './features/property';
 import { enMaintenance } from './features/maintenance';
 import { enTenant } from './features/tenant';
+import { enHowItWorks } from './features/how-it-works';
+import { enFooter } from './features/footer';
 
 export const enTranslations: Translations = {
   ...enNavigation,
@@ -29,5 +31,7 @@ export const enTranslations: Translations = {
   ...enStatus,
   ...enProperty,
   ...enMaintenance,
-  ...enTenant
+  ...enTenant,
+  ...enHowItWorks,
+  ...enFooter
 };

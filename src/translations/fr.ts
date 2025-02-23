@@ -14,6 +14,8 @@ import { frStatus } from './features/status';
 import { frProperty } from './features/property';
 import { frMaintenance } from './features/maintenance';
 import { frTenant } from './features/tenant';
+import { frHowItWorks } from './features/how-it-works';
+import { frFooter } from './features/footer';
 
 export const frTranslations: Translations = {
   ...frNavigation,
@@ -29,5 +31,7 @@ export const frTranslations: Translations = {
   ...frStatus,
   ...frProperty,
   ...frMaintenance,
-  ...frTenant
+  ...frTenant,
+  ...frHowItWorks,
+  ...frFooter
 };

@@ -16,6 +16,8 @@ import type { StatusTranslations } from './status';
 import type { PropertyManagementTranslations } from './property';
 import type { MaintenanceTranslations } from './maintenance';
 import type { TenantTranslations } from './tenant';
+import type { HowItWorksTranslations } from './how-it-works';
+import type { FooterTranslations } from './footer';
 
 export {
   NavigationTranslations,
@@ -32,7 +34,9 @@ export {
   MaintenanceTranslations,
   StatusTranslations,
   PropertyManagementTranslations,
-  TenantTranslations
+  TenantTranslations,
+  HowItWorksTranslations,
+  FooterTranslations
 };
 
 export interface Translations extends 
@@ -50,4 +54,6 @@ export interface Translations extends
   MaintenanceTranslations,
   StatusTranslations,
   PropertyManagementTranslations,
-  TenantTranslations {}
+  TenantTranslations,
+  HowItWorksTranslations,
+  FooterTranslations {}
