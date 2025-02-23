@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 
 export const enTranslations: Translations = {
@@ -56,7 +55,7 @@ export const enTranslations: Translations = {
   prioritySupport: "Priority support",
   advancedDashboard: "Advanced dashboard",
   financialReports: "Financial reports",
-  maintenanceManagement: "Maintenance management",
+  maintenanceManagement: "Maintenance Management",
   dedicatedSupport: "24/7 dedicated support",
   customDashboard: "Custom dashboard",
   advancedFinancialReports: "Advanced financial reports",
@@ -140,6 +139,11 @@ export const enTranslations: Translations = {
   priority: "Priority",
 
   // Maintenance
+  maintenanceManagement: "Maintenance Management",
+  maintenanceDesc: "Track maintenance requests, schedule tasks, and manage vendor relationships",
+  scheduledTasks: "Scheduled Tasks",
+  addTask: "Add",
+  noMaintenanceRequests: "No maintenance requests found",
   maintenanceRequestTitle: "Maintenance Requests",
   maintenanceCalendar: "Maintenance Calendar",
   preventiveMaintenance: "Preventive",
@@ -174,7 +178,23 @@ export const enTranslations: Translations = {
   confirmDelete: "Delete Maintenance Request",
   deleteWarning: "Are you sure you want to delete this maintenance request? This action cannot be undone.",
   createdOn: "Created on",
-  scheduledTasks: "Scheduled Tasks",
-  addTask: "Add",
-  noMaintenanceRequests: "No maintenance requests found"
+  confirmSubmit: "Submit Maintenance Request",
+  confirmEdit: "Edit Maintenance Request",
+  uploadPhotos: "Upload Photos",
+  dropPhotos: "Drop photos here or click to upload",
+  maintenanceType: "Maintenance Type",
+  requiredField: "This field is required",
+  requestSaved: "Maintenance request saved successfully",
+  requestDeleted: "Maintenance request deleted successfully",
+  requestUpdated: "Maintenance request updated successfully",
+  areYouSure: "Are you sure?",
+  viewPhotos: "View Photos",
+  closePhotos: "Close Photos",
+  emergency: "Emergency",
+  routine: "Routine",
+  cosmetic: "Cosmetic",
+  viewHistory: "View History",
+  addNote: "Add Note",
+  saveNote: "Save Note",
+  noteSaved: "Note saved successfully",
 };

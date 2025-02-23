@@ -1,4 +1,3 @@
-
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -198,6 +197,25 @@ export interface MaintenanceTranslations {
   confirmDelete: string;
   deleteWarning: string;
   createdOn: string;
+  confirmSubmit: string;
+  confirmEdit: string;
+  uploadPhotos: string;
+  dropPhotos: string;
+  maintenanceType: string;
+  requiredField: string;
+  requestSaved: string;
+  requestDeleted: string;
+  requestUpdated: string;
+  areYouSure: string;
+  viewPhotos: string;
+  closePhotos: string;
+  emergency: string;
+  routine: string;
+  cosmetic: string;
+  viewHistory: string;
+  addNote: string;
+  saveNote: string;
+  noteSaved: string;
 }
 
 // Status and Priority translations (general use)

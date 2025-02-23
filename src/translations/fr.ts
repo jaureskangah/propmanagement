@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 
 export const frTranslations: Translations = {
@@ -28,9 +27,7 @@ export const frTranslations: Translations = {
   tenantManagement: "Gestion des Locataires",
   tenantManagementDesc: "Gérez vos locataires et documents conformément aux lois provinciales sur la location",
   maintenance: "Maintenance",
-  maintenanceDesc: "Suivez et gérez les demandes d'entretien selon les normes canadiennes",
-  security: "Sécurité",
-  securityDesc: "Vos données sont sécurisées selon les normes canadiennes de protection des données",
+  maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
 
   // Pricing Plans
   freemiumPlan: "Gratuit",
@@ -56,7 +53,7 @@ export const frTranslations: Translations = {
   prioritySupport: "Support prioritaire",
   advancedDashboard: "Tableau de bord avancé",
   financialReports: "Rapports financiers",
-  maintenanceManagement: "Gestion de la maintenance",
+  maintenanceManagement: "Gestion de la Maintenance",
   dedicatedSupport: "Support dédié 24/7",
   customDashboard: "Tableau de bord personnalisé",
   advancedFinancialReports: "Rapports financiers avancés",
@@ -140,6 +137,11 @@ export const frTranslations: Translations = {
   priority: "Priorité",
 
   // Maintenance
+  maintenanceManagement: "Gestion de la Maintenance",
+  maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
+  scheduledTasks: "Tâches Programmées",
+  addTask: "Ajouter",
+  noMaintenanceRequests: "Aucune demande de maintenance trouvée",
   maintenanceRequestTitle: "Demandes de Maintenance",
   maintenanceCalendar: "Calendrier de Maintenance",
   preventiveMaintenance: "Préventive",
@@ -174,7 +176,23 @@ export const frTranslations: Translations = {
   confirmDelete: "Supprimer la demande de maintenance",
   deleteWarning: "Êtes-vous sûr de vouloir supprimer cette demande de maintenance ? Cette action ne peut pas être annulée.",
   createdOn: "Créé le",
-  scheduledTasks: "Tâches Programmées",
-  addTask: "Ajouter",
-  noMaintenanceRequests: "Aucune demande de maintenance trouvée"
+  confirmSubmit: "Soumettre la demande de maintenance",
+  confirmEdit: "Modifier la demande de maintenance",
+  uploadPhotos: "Télécharger des photos",
+  dropPhotos: "Déposez les photos ici ou cliquez pour télécharger",
+  maintenanceType: "Type de maintenance",
+  requiredField: "Ce champ est obligatoire",
+  requestSaved: "Demande de maintenance enregistrée avec succès",
+  requestDeleted: "Demande de maintenance supprimée avec succès",
+  requestUpdated: "Demande de maintenance mise à jour avec succès",
+  areYouSure: "Êtes-vous sûr ?",
+  viewPhotos: "Voir les photos",
+  closePhotos: "Fermer les photos",
+  emergency: "Urgence",
+  routine: "Routine",
+  cosmetic: "Cosmétique",
+  viewHistory: "Voir l'historique",
+  addNote: "Ajouter une note",
+  saveNote: "Enregistrer la note",
+  noteSaved: "Note enregistrée avec succès",
 };
