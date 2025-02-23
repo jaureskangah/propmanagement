@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 
 export const enTranslations: Translations = {
@@ -134,16 +135,11 @@ export const enTranslations: Translations = {
   copySuccess: "Link copied to clipboard",
   shareError: "Error while sharing",
 
-  // Status and Priority (general use)
+  // Status and Priority
   status: "Status",
   priority: "Priority",
 
   // Maintenance
-  maintenanceManagement: "Maintenance Management",
-  maintenanceDesc: "Track maintenance requests, schedule tasks, and manage vendor relationships",
-  scheduledTasks: "Scheduled Tasks",
-  addTask: "Add",
-  noMaintenanceRequests: "No maintenance requests found",
   maintenanceRequestTitle: "Maintenance Requests",
   maintenanceCalendar: "Maintenance Calendar",
   preventiveMaintenance: "Preventive",
@@ -177,5 +173,8 @@ export const enTranslations: Translations = {
   edit: "Edit",
   confirmDelete: "Delete Maintenance Request",
   deleteWarning: "Are you sure you want to delete this maintenance request? This action cannot be undone.",
-  createdOn: "Created on"
+  createdOn: "Created on",
+  scheduledTasks: "Scheduled Tasks",
+  addTask: "Add",
+  noMaintenanceRequests: "No maintenance requests found"
 };

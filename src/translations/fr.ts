@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 
 export const frTranslations: Translations = {
@@ -134,16 +135,11 @@ export const frTranslations: Translations = {
   copySuccess: "Lien copié dans le presse-papiers",
   shareError: "Erreur lors du partage",
 
-  // Status and Priority (general use)
+  // Status and Priority
   status: "Statut",
   priority: "Priorité",
 
   // Maintenance
-  maintenanceManagement: "Gestion de la Maintenance",
-  maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
-  scheduledTasks: "Tâches Programmées",
-  addTask: "Ajouter",
-  noMaintenanceRequests: "Aucune demande de maintenance trouvée",
   maintenanceRequestTitle: "Demandes de Maintenance",
   maintenanceCalendar: "Calendrier de Maintenance",
   preventiveMaintenance: "Préventive",
@@ -177,5 +173,8 @@ export const frTranslations: Translations = {
   edit: "Modifier",
   confirmDelete: "Supprimer la demande de maintenance",
   deleteWarning: "Êtes-vous sûr de vouloir supprimer cette demande de maintenance ? Cette action ne peut pas être annulée.",
-  createdOn: "Créé le"
+  createdOn: "Créé le",
+  scheduledTasks: "Tâches Programmées",
+  addTask: "Ajouter",
+  noMaintenanceRequests: "Aucune demande de maintenance trouvée"
 };
