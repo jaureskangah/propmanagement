@@ -1,8 +1,9 @@
-
 import { Translations } from './types';
+import { frNavigation } from './features/navigation';
+// Import other french translations
 
 export const frTranslations: Translations = {
-  // Navigation
+  ...frNavigation,
   features: "Fonctionnalités",
   pricing: "Tarification",
   freeTrial: "Essai gratuit",
