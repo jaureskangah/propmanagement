@@ -175,7 +175,5 @@ export const enTranslations: Translations = {
   edit: "Edit",
   confirmDelete: "Delete Maintenance Request",
   deleteWarning: "Are you sure you want to delete this maintenance request? This action cannot be undone.",
-  createdOn: "Created on",
-  status: "Status",
-  priority: "Priority",
+  createdOn: "Created on"
 };

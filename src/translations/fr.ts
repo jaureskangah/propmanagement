@@ -175,7 +175,5 @@ export const frTranslations: Translations = {
   edit: "Modifier",
   confirmDelete: "Supprimer la demande de maintenance",
   deleteWarning: "Êtes-vous sûr de vouloir supprimer cette demande de maintenance ? Cette action ne peut pas être annulée.",
-  createdOn: "Créé le",
-  status: "Statut",
-  priority: "Priorité",
+  createdOn: "Créé le"
 };
