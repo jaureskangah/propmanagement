@@ -199,6 +199,10 @@ export interface MaintenanceTranslations {
   confirmDelete: string;
   deleteWarning: string;
   createdOn: string;
+}
+
+// Status and Priority translations (general use)
+export interface StatusTranslations {
   status: string;
   priority: string;
 }
@@ -215,4 +219,5 @@ export interface Translations extends
   CTATranslations,
   FAQTranslations,
   AdminDashboardTranslations,
-  MaintenanceTranslations {}
+  MaintenanceTranslations,
+  StatusTranslations {}

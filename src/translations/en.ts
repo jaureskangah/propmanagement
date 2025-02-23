@@ -134,6 +134,10 @@ export const enTranslations: Translations = {
   copySuccess: "Link copied to clipboard",
   shareError: "Error while sharing",
 
+  // General Status
+  status: "Status",
+  priority: "Priority",
+
   // Maintenance
   maintenanceManagement: "Maintenance Management",
   maintenanceDesc: "Track maintenance requests, schedule tasks, and manage vendor relationships",

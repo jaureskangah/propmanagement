@@ -134,6 +134,10 @@ export const frTranslations: Translations = {
   copySuccess: "Lien copié dans le presse-papiers",
   shareError: "Erreur lors du partage",
 
+  // General Status
+  status: "Statut",
+  priority: "Priorité",
+
   // Maintenance
   maintenanceManagement: "Gestion de la Maintenance",
   maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
