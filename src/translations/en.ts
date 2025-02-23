@@ -116,5 +116,21 @@ export const enTranslations: Translations = {
   faqSecurity: "Is my data secure?",
   faqSecurityAnswer: "Security is our priority. All data is encrypted and securely stored. We use the latest security technologies to protect your information and that of your tenants.",
   faqExport: "Can I export my data?",
-  faqExportAnswer: "Yes, you can export your data at any time in different formats (PDF, Excel). This allows you to keep track of your activity and generate customized reports."
+  faqExportAnswer: "Yes, you can export your data at any time in different formats (PDF, Excel). This allows you to keep track of your activity and generate customized reports.",
+
+  // Admin Dashboard
+  adminDashboard: "Admin Dashboard",
+  totalUsers: "Total Users",
+  activeUsers: "Active Users",
+  properties: "Properties",
+  totalRevenue: "Total Revenue",
+  userGrowth: "User Growth",
+  revenueGrowth: "Revenue Growth",
+  downloadData: "Download",
+  shareData: "Share",
+  downloadSuccess: "Download successful",
+  downloadError: "Error during download",
+  shareSuccess: "Link shared successfully",
+  copySuccess: "Link copied to clipboard",
+  shareError: "Error while sharing"
 };

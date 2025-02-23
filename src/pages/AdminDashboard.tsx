@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { format } from "date-fns";
 import { useToast } from "@/components/ui/use-toast";
 import AppSidebar from "@/components/AppSidebar";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface AdminMetrics {
   total_users: number;
@@ -23,6 +23,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   useEffect(() => {
     fetchMetrics();
@@ -56,7 +57,7 @@ export default function AdminDashboard() {
 
   const handleDownload = async () => {
     try {
-      const headers = ["Date", "Total Users", "Active Users", "Total Revenue", "Total Properties", "Total Tenants"];
+      const headers = ["Date", t('totalUsers'), t('activeUsers'), t('totalRevenue'), t('properties'), "Total Tenants"];
       const csvData = [
         headers.join(","),
         ...metrics.map(metric => [
@@ -80,14 +81,14 @@ export default function AdminDashboard() {
       window.URL.revokeObjectURL(url);
 
       toast({
-        title: "Téléchargement réussi",
-        description: "Les données ont été téléchargées avec succès",
+        title: t('downloadSuccess'),
+        description: t('downloadSuccess'),
       });
     } catch (err) {
       console.error('Error downloading data:', err);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du téléchargement",
+        title: t('error'),
+        description: t('downloadError'),
         variant: "destructive",
       });
     }
@@ -99,29 +100,28 @@ export default function AdminDashboard() {
       
       if (navigator.share && /mobile|android|iphone/i.test(navigator.userAgent)) {
         await navigator.share({
-          title: 'Tableau de bord administrateur',
-          text: 'Consultez les métriques administrateur',
+          title: t('adminDashboard'),
+          text: t('adminDashboard'),
           url: shareUrl
         });
         
         toast({
-          title: "Partage réussi",
-          description: "Le lien a été partagé avec succès",
+          title: t('shareSuccess'),
+          description: t('shareSuccess'),
         });
       } else {
         await navigator.clipboard.writeText(shareUrl);
         
         toast({
-          title: "Lien copié",
-          description: "Le lien a été copié dans votre presse-papiers",
-          duration: 3000,
+          title: t('copySuccess'),
+          description: t('copySuccess'),
         });
       }
     } catch (err) {
       console.error('Error sharing:', err);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors du partage",
+        title: t('error'),
+        description: t('shareError'),
         variant: "destructive",
       });
     }
@@ -144,15 +144,15 @@ export default function AdminDashboard() {
       <div className="flex-1">
         <div className="container mx-auto px-4 py-6 sm:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">{t('adminDashboard')}</h1>
             <div className="flex flex-wrap gap-2 sm:gap-4 w-full sm:w-auto">
               <Button className="flex-1 sm:flex-none" variant="outline" onClick={handleDownload}>
                 <Download className="h-4 w-4 mr-2" />
-                <span className="whitespace-nowrap">Télécharger</span>
+                <span className="whitespace-nowrap">{t('downloadData')}</span>
               </Button>
               <Button className="flex-1 sm:flex-none" variant="outline" onClick={handleShare}>
                 <Share2 className="h-4 w-4 mr-2" />
-                <span className="whitespace-nowrap">Partager</span>
+                <span className="whitespace-nowrap">{t('shareData')}</span>
               </Button>
             </div>
           </div>
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('totalUsers')}</CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -170,7 +170,7 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Active Users</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('activeUsers')}</CardTitle>
                 <Users className="h-4 w-4 text-green-500" />
               </CardHeader>
               <CardContent>
@@ -180,7 +180,7 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Properties</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('properties')}</CardTitle>
                 <Building2 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+                <CardTitle className="text-sm font-medium">{t('totalRevenue')}</CardTitle>
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -202,7 +202,7 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>User Growth</CardTitle>
+                <CardTitle>{t('userGrowth')}</CardTitle>
               </CardHeader>
               <CardContent className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -221,14 +221,14 @@ export default function AdminDashboard() {
                       type="monotone" 
                       dataKey="total_users" 
                       stroke="#8884d8" 
-                      name="Total Users"
+                      name={t('totalUsers')}
                       strokeWidth={2}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="active_users" 
                       stroke="#82ca9d" 
-                      name="Active Users"
+                      name={t('activeUsers')}
                       strokeWidth={2}
                     />
                   </LineChart>
@@ -238,7 +238,7 @@ export default function AdminDashboard() {
 
             <Card className="col-span-1">
               <CardHeader>
-                <CardTitle>Revenue Growth</CardTitle>
+                <CardTitle>{t('revenueGrowth')}</CardTitle>
               </CardHeader>
               <CardContent className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
@@ -253,13 +253,13 @@ export default function AdminDashboard() {
                     />
                     <YAxis />
                     <Tooltip 
-                      formatter={(value) => [`$${Number(value).toLocaleString()}`, "Total Revenue"]}
+                      formatter={(value) => [`$${Number(value).toLocaleString()}`, t('totalRevenue')]}
                     />
                     <Line 
                       type="monotone" 
                       dataKey="total_revenue" 
                       stroke="#82ca9d" 
-                      name="Total Revenue"
+                      name={t('totalRevenue')}
                       strokeWidth={2}
                     />
                   </LineChart>
