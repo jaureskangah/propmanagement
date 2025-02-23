@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 
 export const frTranslations: Translations = {
@@ -139,7 +140,6 @@ export const frTranslations: Translations = {
   priority: "Priorité",
 
   // Maintenance
-  maintenanceManagement: "Gestion de la Maintenance",
   maintenanceRequestTitle: "Demandes de Maintenance",
   maintenanceCalendar: "Calendrier de Maintenance",
   preventiveMaintenance: "Préventive",

@@ -140,7 +140,6 @@ export const enTranslations: Translations = {
   priority: "Priority",
 
   // Maintenance
-  maintenanceManagement: "Maintenance Management",
   maintenanceRequestTitle: "Maintenance Requests",
   maintenanceCalendar: "Maintenance Calendar",
   preventiveMaintenance: "Preventive",
