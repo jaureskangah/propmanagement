@@ -82,6 +82,20 @@ export interface ToastTranslations {
   failedToCreateSession: string;
   failedToCreateSessionNoUrl: string;
   generalError: string;
+  success: string;
+  warning: string;
+  info: string;
+  deleteConfirmation: string;
+  saveSuccess: string;
+  updateSuccess: string;
+  deleteSuccess: string;
+  operationCanceled: string;
+  invalidOperation: string;
+  networkError: string;
+  sessionExpired: string;
+  tryAgain: string;
+  missingInformation: string;
+  close: string;
 }
 
 // Contact translations
