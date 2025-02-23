@@ -1,4 +1,3 @@
-
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -157,6 +156,53 @@ export interface AdminDashboardTranslations {
   shareError: string;
 }
 
+// Maintenance translations
+export interface MaintenanceTranslations {
+  maintenanceManagement: string;
+  maintenanceDesc: string;
+  scheduledTasks: string;
+  addTask: string;
+  noMaintenanceRequests: string;
+  maintenanceRequestTitle: string;
+  maintenanceCalendar: string;
+  preventiveMaintenance: string;
+  workOrders: string;
+  costs: string;
+  vendors: string;
+  regularTask: string;
+  inspection: string;
+  seasonalTask: string;
+  taskTitle: string;
+  deadline: string;
+  taskType: string;
+  selectType: string;
+  addNewTask: string;
+  maintenanceStatus: string;
+  maintenancePriority: string;
+  low: string;
+  medium: string;
+  high: string;
+  urgent: string;
+  completed: string;
+  pending: string;
+  inProgress: string;
+  maintenanceTitle: string;
+  maintenanceDescription: string;
+  maintenancePrioritySelect: string;
+  maintenancePhotos: string;
+  photosSelected: string;
+  submit: string;
+  cancel: string;
+  submitting: string;
+  delete: string;
+  edit: string;
+  confirmDelete: string;
+  deleteWarning: string;
+  createdOn: string;
+  status: string;
+  priority: string;
+}
+
 export interface Translations extends 
   NavigationTranslations,
   HeroTranslations,
@@ -168,4 +214,5 @@ export interface Translations extends
   AuthTranslations,
   CTATranslations,
   FAQTranslations,
-  AdminDashboardTranslations {}
+  AdminDashboardTranslations,
+  MaintenanceTranslations {}
