@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 
 export const frTranslations: Translations = {
@@ -97,6 +96,17 @@ export const frTranslations: Translations = {
   register: "S'inscrire",
   processingRegistration: "Inscription en cours...",
   processingLogin: "Connexion en cours...",
+  emailLabel: "Email",
+  emailPlaceholder: "nom@exemple.com",
+  passwordLabel: "Mot de passe",
+  passwordPlaceholder: "••••••••",
+  signInCta: "Se connecter",
+  signUpCta: "Créer un compte",
+  processingCta: "Traitement en cours...",
+  authErrorTitle: "Erreur d'authentification",
+  invalidCredentials: "Email ou mot de passe incorrect",
+  emailNotConfirmed: "Veuillez confirmer votre email avant de vous connecter",
+  generalAuthError: "Une erreur s'est produite lors de l'authentification",
 
   // Call to Action
   readyToStart: "Prêt à simplifier votre gestion ?",

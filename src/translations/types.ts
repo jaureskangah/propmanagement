@@ -1,4 +1,3 @@
-
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -112,6 +111,17 @@ export interface AuthTranslations {
   register: string;
   processingRegistration: string;
   processingLogin: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  passwordLabel: string;
+  passwordPlaceholder: string;
+  signInCta: string;
+  signUpCta: string;
+  processingCta: string;
+  authErrorTitle: string;
+  invalidCredentials: string;
+  emailNotConfirmed: string;
+  generalAuthError: string;
 }
 
 // Call to action translations
