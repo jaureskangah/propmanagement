@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 
 export const enTranslations: Translations = {
@@ -140,10 +141,6 @@ export const enTranslations: Translations = {
 
   // Maintenance
   maintenanceManagement: "Maintenance Management",
-  maintenanceDesc: "Track maintenance requests, schedule tasks, and manage vendor relationships",
-  scheduledTasks: "Scheduled Tasks",
-  addTask: "Add",
-  noMaintenanceRequests: "No maintenance requests found",
   maintenanceRequestTitle: "Maintenance Requests",
   maintenanceCalendar: "Maintenance Calendar",
   preventiveMaintenance: "Preventive",
@@ -197,4 +194,7 @@ export const enTranslations: Translations = {
   addNote: "Add Note",
   saveNote: "Save Note",
   noteSaved: "Note saved successfully",
+  scheduledTasks: "Scheduled Tasks",
+  addTask: "Add",
+  noMaintenanceRequests: "No maintenance requests found"
 };

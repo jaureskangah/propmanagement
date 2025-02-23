@@ -1,3 +1,4 @@
+
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -158,11 +159,6 @@ export interface AdminDashboardTranslations {
 
 // Maintenance translations
 export interface MaintenanceTranslations {
-  maintenanceManagement: string;
-  maintenanceDesc: string;
-  scheduledTasks: string;
-  addTask: string;
-  noMaintenanceRequests: string;
   maintenanceRequestTitle: string;
   maintenanceCalendar: string;
   preventiveMaintenance: string;
@@ -216,9 +212,13 @@ export interface MaintenanceTranslations {
   addNote: string;
   saveNote: string;
   noteSaved: string;
+  scheduledTasks: string;
+  addTask: string;
+  noMaintenanceRequests: string;
+  maintenanceManagement: string;
 }
 
-// Status and Priority translations (general use)
+// Status translations
 export interface StatusTranslations {
   status: string;
   priority: string;

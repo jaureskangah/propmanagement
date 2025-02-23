@@ -28,6 +28,8 @@ export const frTranslations: Translations = {
   tenantManagementDesc: "Gérez vos locataires et documents conformément aux lois provinciales sur la location",
   maintenance: "Maintenance",
   maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
+  security: "Sécurité",
+  securityDesc: "Vos données sont sécurisées selon les normes canadiennes de protection des données",
 
   // Pricing Plans
   freemiumPlan: "Gratuit",
@@ -138,10 +140,6 @@ export const frTranslations: Translations = {
 
   // Maintenance
   maintenanceManagement: "Gestion de la Maintenance",
-  maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
-  scheduledTasks: "Tâches Programmées",
-  addTask: "Ajouter",
-  noMaintenanceRequests: "Aucune demande de maintenance trouvée",
   maintenanceRequestTitle: "Demandes de Maintenance",
   maintenanceCalendar: "Calendrier de Maintenance",
   preventiveMaintenance: "Préventive",
@@ -195,4 +193,7 @@ export const frTranslations: Translations = {
   addNote: "Ajouter une note",
   saveNote: "Enregistrer la note",
   noteSaved: "Note enregistrée avec succès",
+  scheduledTasks: "Tâches Programmées",
+  addTask: "Ajouter",
+  noMaintenanceRequests: "Aucune demande de maintenance trouvée"
 };
