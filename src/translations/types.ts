@@ -1,3 +1,4 @@
+
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
@@ -177,13 +178,13 @@ export interface MaintenanceTranslations {
   taskType: string;
   selectType: string;
   addNewTask: string;
-  low: string;
-  medium: string;
-  high: string;
-  urgent: string;
-  completed: string;
-  pending: string;
-  inProgress: string;
+  priorityLow: string;
+  priorityMedium: string;
+  priorityHigh: string;
+  priorityUrgent: string;
+  statusCompleted: string;
+  statusPending: string;
+  statusInProgress: string;
   maintenanceTitle: string;
   maintenanceDescription: string;
   maintenancePrioritySelect: string;

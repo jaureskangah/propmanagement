@@ -134,7 +134,7 @@ export const enTranslations: Translations = {
   copySuccess: "Link copied to clipboard",
   shareError: "Error while sharing",
 
-  // General Status
+  // Status and Priority (general use)
   status: "Status",
   priority: "Priority",
 
@@ -158,13 +158,13 @@ export const enTranslations: Translations = {
   taskType: "Task type",
   selectType: "Select a type",
   addNewTask: "Add a new task",
-  low: "Low",
-  medium: "Medium",
-  high: "High",
-  urgent: "Urgent",
-  completed: "Completed",
-  pending: "Pending",
-  inProgress: "In Progress",
+  priorityLow: "Low",
+  priorityMedium: "Medium",
+  priorityHigh: "High",
+  priorityUrgent: "Urgent",
+  statusCompleted: "Completed",
+  statusPending: "Pending",
+  statusInProgress: "In Progress",
   maintenanceTitle: "Title",
   maintenanceDescription: "Description",
   maintenancePrioritySelect: "Select priority",
