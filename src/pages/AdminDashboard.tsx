@@ -1,13 +1,13 @@
+
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Users, Building2, HomeIcon, DollarSign, Download, Share2 } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { format } from "date-fns";
+import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
-import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import AppSidebar from "@/components/AppSidebar";
+import { MetricsGrid } from "@/components/admin/MetricsGrid";
+import { GrowthChart } from "@/components/admin/GrowthChart";
+import { AdminHeader } from "@/components/admin/AdminHeader";
 
 interface AdminMetrics {
   total_users: number;
@@ -143,129 +143,32 @@ export default function AdminDashboard() {
       <AppSidebar />
       <div className="flex-1">
         <div className="container mx-auto px-4 py-6 sm:px-6">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('adminDashboard')}</h1>
-            <div className="flex flex-wrap gap-2 sm:gap-4 w-full sm:w-auto">
-              <Button className="flex-1 sm:flex-none" variant="outline" onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                <span className="whitespace-nowrap">{t('downloadData')}</span>
-              </Button>
-              <Button className="flex-1 sm:flex-none" variant="outline" onClick={handleShare}>
-                <Share2 className="h-4 w-4 mr-2" />
-                <span className="whitespace-nowrap">{t('shareData')}</span>
-              </Button>
-            </div>
-          </div>
+          <AdminHeader onDownload={handleDownload} onShare={handleShare} />
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t('totalUsers')}</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{latestMetrics.total_users}</div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t('activeUsers')}</CardTitle>
-                <Users className="h-4 w-4 text-green-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{latestMetrics.active_users}</div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t('properties')}</CardTitle>
-                <Building2 className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{latestMetrics.total_properties}</div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{t('totalRevenue')}</CardTitle>
-                <DollarSign className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">${latestMetrics.total_revenue.toLocaleString()}</div>
-              </CardContent>
-            </Card>
-          </div>
+          <MetricsGrid
+            totalUsers={latestMetrics.total_users}
+            activeUsers={latestMetrics.active_users}
+            totalProperties={latestMetrics.total_properties}
+            totalRevenue={latestMetrics.total_revenue}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <Card className="col-span-1">
-              <CardHeader>
-                <CardTitle>{t('userGrowth')}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={metrics}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="metric_date" 
-                      tick={{ fontSize: 12 }}
-                      angle={-45}
-                      textAnchor="end"
-                      height={60}
-                    />
-                    <YAxis />
-                    <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="total_users" 
-                      stroke="#8884d8" 
-                      name={t('totalUsers')}
-                      strokeWidth={2}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="active_users" 
-                      stroke="#82ca9d" 
-                      name={t('activeUsers')}
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
-
-            <Card className="col-span-1">
-              <CardHeader>
-                <CardTitle>{t('revenueGrowth')}</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={metrics}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis 
-                      dataKey="metric_date" 
-                      tick={{ fontSize: 12 }}
-                      angle={-45}
-                      textAnchor="end"
-                      height={60}
-                    />
-                    <YAxis />
-                    <Tooltip 
-                      formatter={(value) => [`$${Number(value).toLocaleString()}`, t('totalRevenue')]}
-                    />
-                    <Line 
-                      type="monotone" 
-                      dataKey="total_revenue" 
-                      stroke="#82ca9d" 
-                      name={t('totalRevenue')}
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
+            <GrowthChart
+              title={t('userGrowth')}
+              data={metrics}
+              lines={[
+                { key: 'total_users', name: t('totalUsers'), color: '#8884d8' },
+                { key: 'active_users', name: t('activeUsers'), color: '#82ca9d' }
+              ]}
+            />
+            <GrowthChart
+              title={t('revenueGrowth')}
+              data={metrics}
+              lines={[
+                { key: 'total_revenue', name: t('totalRevenue'), color: '#82ca9d' }
+              ]}
+              tooltipFormatter={(value) => [`$${Number(value).toLocaleString()}`, t('totalRevenue')]}
+            />
           </div>
         </div>
       </div>
