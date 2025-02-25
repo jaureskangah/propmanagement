@@ -22,55 +22,75 @@ const translations: Record<Language, Translations> = {
 const LANGUAGE_STORAGE_KEY = 'app-language';
 const UNIT_SYSTEM_STORAGE_KEY = 'app-unit-system';
 
-// Fonction d'initialisation de la langue
-const initializeLanguage = (): Language => {
-  const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-  if (savedLanguage === 'fr' || savedLanguage === 'en') {
-    return savedLanguage;
+const getInitialLanguage = (): Language => {
+  try {
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (savedLanguage === 'fr' || savedLanguage === 'en') {
+      return savedLanguage;
+    }
+    const browserLang = navigator.language.split('-')[0];
+    const defaultLang: Language = browserLang === 'fr' ? 'fr' : 'en';
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, defaultLang);
+    return defaultLang;
+  } catch (error) {
+    console.error('Error getting initial language:', error);
+    return 'en';
   }
-  // Si pas de langue sauvegardée, utiliser la langue du navigateur
-  const browserLang = navigator.language.split('-')[0];
-  const defaultLang: Language = browserLang === 'fr' ? 'fr' : 'en';
-  localStorage.setItem(LANGUAGE_STORAGE_KEY, defaultLang);
-  return defaultLang;
 };
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(initializeLanguage);
+  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
   const [unitSystem, setUnitSystemState] = useState<UnitSystem>(() => {
-    const savedUnitSystem = localStorage.getItem(UNIT_SYSTEM_STORAGE_KEY);
-    return (savedUnitSystem === 'metric' || savedUnitSystem === 'imperial') ? savedUnitSystem : 'metric';
+    try {
+      const savedUnitSystem = localStorage.getItem(UNIT_SYSTEM_STORAGE_KEY);
+      return (savedUnitSystem === 'metric' || savedUnitSystem === 'imperial') ? savedUnitSystem : 'metric';
+    } catch {
+      return 'metric';
+    }
   });
 
+  // Force document lang attribute to match current language
   useEffect(() => {
-    // Réinitialiser la langue si elle n'est pas dans localStorage
-    const currentLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (!currentLanguage) {
-      const newLang = initializeLanguage();
-      setLanguageState(newLang);
-    }
-  }, []);
+    document.documentElement.lang = language;
+  }, [language]);
 
-  // Persist language changes to localStorage
   const setLanguage = (newLanguage: Language) => {
-    console.log('Setting language to:', newLanguage); // Debug log
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-    setLanguageState(newLanguage);
+    try {
+      console.log('Setting language to:', newLanguage);
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
+      setLanguageState(newLanguage);
+      // Force document reload to update all translations
+      window.location.reload();
+    } catch (error) {
+      console.error('Error setting language:', error);
+    }
   };
 
-  // Persist unit system changes to localStorage
   const setUnitSystem = (newUnitSystem: UnitSystem) => {
-    localStorage.setItem(UNIT_SYSTEM_STORAGE_KEY, newUnitSystem);
-    setUnitSystemState(newUnitSystem);
+    try {
+      localStorage.setItem(UNIT_SYSTEM_STORAGE_KEY, newUnitSystem);
+      setUnitSystemState(newUnitSystem);
+    } catch (error) {
+      console.error('Error setting unit system:', error);
+    }
   };
 
-  // Translation function
   const t = (key: string): string => {
-    return translations[language][key as keyof Translations] || key;
+    try {
+      const translation = translations[language][key as keyof Translations];
+      if (!translation) {
+        console.warn(`Missing translation for key: ${key} in language: ${language}`);
+        return key;
+      }
+      return translation;
+    } catch (error) {
+      console.error(`Error getting translation for key: ${key}`, error);
+      return key;
+    }
   };
 
-  // Debug log pour suivre les changements de langue
   useEffect(() => {
+    console.log('LocaleProvider mounted/updated');
     console.log('Current language:', language);
     console.log('Stored language:', localStorage.getItem(LANGUAGE_STORAGE_KEY));
   }, [language]);
