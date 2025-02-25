@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 import { frNavigation } from './features/navigation';
 import { frHero } from './features/hero';
@@ -34,7 +33,6 @@ export const frTranslations: Translations = {
   ...frTenant,
   ...frHowItWorks,
   ...frFooter,
-  // Add missing maintenance translations
   maintenanceRequestTitle: "Demande de Maintenance",
   maintenanceCalendar: "Calendrier de Maintenance",
   preventiveMaintenance: "Maintenance Préventive",
@@ -49,18 +47,15 @@ export const frTranslations: Translations = {
   taskType: "Type de Tâche",
   selectType: "Sélectionner le Type",
   addNewTask: "Ajouter une Nouvelle Tâche",
-  // Add missing priority translations
   priorityLow: "Priorité Basse",
   priorityMedium: "Priorité Moyenne",
   priorityHigh: "Priorité Haute",
   priorityUrgent: "Priorité Urgente",
-  // Add missing status translations
   statusCompleted: "Terminé",
   statusPending: "En Attente",
   statusInProgress: "En Cours",
-  // Add missing maintenance fields
   maintenanceTitle: "Titre de la Demande de Maintenance",
-  maintenanceDescription: "Description",
+  maintenanceDescription: "Décrivez le problème ou la tâche de maintenance",
   maintenancePrioritySelect: "Sélectionner la Priorité",
   maintenancePhotos: "Ajouter des Photos",
   photosSelected: "Photos Sélectionnées",
@@ -92,5 +87,20 @@ export const frTranslations: Translations = {
   noteSaved: "Note enregistrée avec succès",
   scheduledTasks: "Tâches Programmées",
   addTask: "Ajouter une Tâche",
-  noMaintenanceRequests: "Aucune demande de maintenance trouvée"
+  noMaintenanceRequests: "Aucune demande de maintenance trouvée",
+  maintenanceManagement: "Gestion de la Maintenance",
+  maintenanceDescription: "Suivez les demandes de maintenance, planifiez les tâches et gérez les interventions",
+  totalRequests: "Demandes Totales",
+  pendingRequests: "Demandes en Attente",
+  resolvedRequests: "Demandes Résolues",
+  urgentRequests: "Demandes Urgentes",
+  schedule: "Planification",
+  history: "Historique",
+  tasks: "Tâches",
+  startDate: "Date de Début",
+  endDate: "Date de Fin",
+  priority: "Priorité",
+  status: "Statut",
+  type: "Type",
+  description: "Description"
 };

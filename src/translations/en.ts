@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 import { enNavigation } from './features/navigation';
 import { enHero } from './features/hero';
@@ -34,7 +33,6 @@ export const enTranslations: Translations = {
   ...enTenant,
   ...enHowItWorks,
   ...enFooter,
-  // Add missing maintenance translations
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
   preventiveMaintenance: "Preventive Maintenance",
@@ -49,18 +47,15 @@ export const enTranslations: Translations = {
   taskType: "Task Type",
   selectType: "Select Type",
   addNewTask: "Add New Task",
-  // Add missing priority translations
   priorityLow: "Low Priority",
   priorityMedium: "Medium Priority",
   priorityHigh: "High Priority",
   priorityUrgent: "Urgent Priority",
-  // Add missing status translations
   statusCompleted: "Completed",
   statusPending: "Pending",
   statusInProgress: "In Progress",
-  // Add missing maintenance fields
   maintenanceTitle: "Maintenance Request Title",
-  maintenanceDescription: "Description",
+  maintenanceDescription: "Describe the maintenance issue or task",
   maintenancePrioritySelect: "Select Priority",
   maintenancePhotos: "Add Photos",
   photosSelected: "Photos Selected",
@@ -92,5 +87,20 @@ export const enTranslations: Translations = {
   noteSaved: "Note saved successfully",
   scheduledTasks: "Scheduled Tasks",
   addTask: "Add Task",
-  noMaintenanceRequests: "No maintenance requests found"
+  noMaintenanceRequests: "No maintenance requests found",
+  maintenanceManagement: "Maintenance Management",
+  maintenanceDescription: "Track maintenance requests, schedule tasks, and manage interventions",
+  totalRequests: "Total Requests",
+  pendingRequests: "Pending Requests",
+  resolvedRequests: "Resolved Requests",
+  urgentRequests: "Urgent Requests",
+  schedule: "Schedule",
+  history: "History",
+  tasks: "Tasks",
+  startDate: "Start Date",
+  endDate: "End Date",
+  priority: "Priority",
+  status: "Status",
+  type: "Type",
+  description: "Description"
 };
