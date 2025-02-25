@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { ActivityCard } from "./activity/ActivityCard";
 import { TenantActivity } from "./activity/TenantActivity";
@@ -105,7 +106,7 @@ export const RecentActivity = () => {
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
   return (
-    <ActivityCard title={t('recentActivities')} isLoading={isLoading}>
+    <ActivityCard title={t('recentActivity')} isLoading={isLoading}>
       {allActivities.map(activity => (
         <div key={`${activity.type}-${activity.id}`}>
           {activity.component}

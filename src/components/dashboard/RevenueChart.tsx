@@ -14,8 +14,10 @@ import { useRevenueData } from "./hooks/useRevenueData";
 import { RevenueChartTooltip } from "./revenue/RevenueChartTooltip";
 import { processMonthlyData } from "./revenue/revenueUtils";
 import { useEffect } from "react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const RevenueChart = () => {
+  const { t } = useLocale();
   const { expenses, payments, isLoading } = useRevenueData();
 
   useEffect(() => {
@@ -54,16 +56,16 @@ export const RevenueChart = () => {
     <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in">
       <CardHeader className="flex flex-row items-center justify-between pb-8">
         <CardTitle className="text-lg font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          Revenue & Expenses
+          {t('revenue')} & {t('expenses')}
         </CardTitle>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
             <div className="h-3 w-3 rounded-full bg-blue-500 animate-pulse" />
-            <span className="text-sm text-muted-foreground">Revenue</span>
+            <span className="text-sm text-muted-foreground">{t('revenue')}</span>
           </div>
           <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
             <div className="h-3 w-3 rounded-full bg-blue-200 animate-pulse" />
-            <span className="text-sm text-muted-foreground">Expenses</span>
+            <span className="text-sm text-muted-foreground">{t('expenses')}</span>
           </div>
         </div>
       </CardHeader>
