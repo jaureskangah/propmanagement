@@ -1,7 +1,9 @@
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PropertyForm } from "@/components/PropertyForm";
 import { useProperties, Property, PropertyFormData } from "@/hooks/useProperties";
 import { toast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface EditPropertyModalProps {
   isOpen: boolean;
@@ -11,15 +13,20 @@ interface EditPropertyModalProps {
 
 export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyModalProps) {
   const { updateProperty } = useProperties();
+  const { t } = useLocale();
 
   const handleSubmit = async (data: PropertyFormData) => {
     try {
       await updateProperty({ id: property.id, data });
       onClose();
+      toast({
+        title: t('success'),
+        description: t('propertyUpdated'),
+      });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to update property",
+        title: t('error'),
+        description: t('errorUpdatingProperty'),
         variant: "destructive",
       });
     }
@@ -37,7 +44,7 @@ export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyMod
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Property</DialogTitle>
+          <DialogTitle>{t('editProperty')}</DialogTitle>
         </DialogHeader>
         <PropertyForm
           onSubmit={handleSubmit}

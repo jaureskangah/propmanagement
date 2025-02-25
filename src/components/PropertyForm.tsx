@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -7,13 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
-
-interface PropertyFormProps {
-  onSubmit: (data: PropertyFormData) => Promise<void>;
-  onCancel: () => void;
-  isSubmitting: boolean;
-  initialData?: PropertyFormData;
-}
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const PROPERTY_TYPES = [
   "Apartment",
@@ -24,8 +19,17 @@ const PROPERTY_TYPES = [
   "Commercial Space"
 ] as const;
 
+interface PropertyFormProps {
+  onSubmit: (data: PropertyFormData) => Promise<void>;
+  onCancel: () => void;
+  isSubmitting: boolean;
+  initialData?: PropertyFormData;
+}
+
 export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: PropertyFormProps) {
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const { t } = useLocale();
+  
   const form = useForm<PropertyFormData>({
     defaultValues: initialData || {
       name: "",
@@ -62,21 +66,17 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
     }
   };
 
-  const handleSubmit = async (data: PropertyFormData) => {
-    await onSubmit(data);
-  };
-
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Property Name</FormLabel>
+              <FormLabel>{t('propertyName')}</FormLabel>
               <FormControl>
-                <Input placeholder="Maple Heights" {...field} />
+                <Input placeholder={t('enterName')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -87,9 +87,9 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Address</FormLabel>
+              <FormLabel>{t('propertyAddress')}</FormLabel>
               <FormControl>
-                <Input placeholder="123 Main Street" {...field} />
+                <Input placeholder={t('enterAddress')} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,7 +100,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
           name="units"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Number of Units</FormLabel>
+              <FormLabel>{t('propertyUnits')}</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 
@@ -118,17 +118,17 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
           name="type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Property Type</FormLabel>
+              <FormLabel>{t('propertyType')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a property type" />
+                    <SelectValue placeholder={t('selectPropertyType')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   {PROPERTY_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type}
+                      {t(type.toLowerCase())}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -142,7 +142,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Property Image</FormLabel>
+              <FormLabel>{t('propertyImage')}</FormLabel>
               <FormControl>
                 <div className="space-y-4">
                   <Input
@@ -154,13 +154,13 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
                   {isUploadingImage && (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Uploading image...</span>
+                      <span>{t('uploadingImage')}</span>
                     </div>
                   )}
                   {field.value && (
                     <img
                       src={field.value}
-                      alt="Property preview"
+                      alt={t('propertyImage')}
                       className="w-full h-40 object-cover rounded-md"
                     />
                   )}
@@ -172,10 +172,10 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
         />
         <div className="flex justify-end gap-2">
           <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting || isUploadingImage}>
-            {isSubmitting ? "Saving..." : initialData ? "Update Property" : "Add Property"}
+            {isSubmitting ? t('saving') : initialData ? t('update') : t('add')}
           </Button>
         </div>
       </form>
