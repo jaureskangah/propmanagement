@@ -36,7 +36,7 @@ export const frMaintenance = {
   vendors: "Fournisseurs",
   addVendor: "Ajouter un Fournisseur",
   noVendors: "Aucun fournisseur trouvé",
-  schedule: "Calendrier",
+  schedule: "Planification",
   history: "Historique",
   tasks: "Tâches",
   addTask: "Ajouter une Tâche",
