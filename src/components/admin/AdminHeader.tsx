@@ -11,12 +11,6 @@ interface AdminHeaderProps {
 export function AdminHeader({ onDownload, onShare }: AdminHeaderProps) {
   const { t } = useLocale();
 
-  console.log('AdminHeader translations:', {
-    adminDashboard: t('adminDashboard'),
-    downloadData: t('downloadData'),
-    shareData: t('shareData')
-  });
-
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
       <h1 className="text-2xl sm:text-3xl font-bold">{t('adminDashboard')}</h1>
