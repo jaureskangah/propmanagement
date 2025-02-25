@@ -14,4 +14,6 @@ export interface AdminDashboardTranslations {
   shareSuccess: string;
   copySuccess: string;
   shareError: string;
+  totalTenants: string;
+  loading: string;
 }

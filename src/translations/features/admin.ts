@@ -15,7 +15,9 @@ export const enAdmin: AdminDashboardTranslations = {
   downloadError: "Error during download",
   shareSuccess: "Link shared successfully",
   copySuccess: "Link copied to clipboard",
-  shareError: "Error while sharing"
+  shareError: "Error while sharing",
+  totalTenants: "Total Tenants",
+  loading: "Loading..."
 };
 
 export const frAdmin: AdminDashboardTranslations = {
@@ -32,5 +34,7 @@ export const frAdmin: AdminDashboardTranslations = {
   downloadError: "Erreur lors du téléchargement",
   shareSuccess: "Lien partagé avec succès",
   copySuccess: "Lien copié dans le presse-papiers",
-  shareError: "Erreur lors du partage"
+  shareError: "Erreur lors du partage",
+  totalTenants: "Total Locataires",
+  loading: "Chargement..."
 };
