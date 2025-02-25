@@ -21,7 +21,7 @@ export const ActivityItem = ({
   description,
   date 
 }: ActivityItemProps) => {
-  const { locale } = useLocale();
+  const { language } = useLocale();
 
   return (
     <div className="flex items-center gap-4 rounded-lg border p-4 transition-all hover:bg-muted/50">
@@ -37,7 +37,7 @@ export const ActivityItem = ({
       <p className="text-sm text-muted-foreground">
         {formatDistanceToNow(new Date(date), { 
           addSuffix: true,
-          locale: locale === 'fr' ? fr : undefined
+          locale: language === 'fr' ? fr : undefined
         })}
       </p>
     </div>
