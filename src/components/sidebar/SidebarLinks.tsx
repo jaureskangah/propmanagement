@@ -2,6 +2,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
+import { useLocale } from "@/components/providers/LocaleProvider";
 import {
   HomeIcon,
   Building2,
@@ -20,51 +21,47 @@ interface SidebarLinksProps {
 export default function SidebarLinks({ isTenant = false, collapsed = false }: SidebarLinksProps) {
   const location = useLocation();
   const { user } = useAuth();
+  const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
-
-  // Ajouter des logs pour le débogage
-  console.log('Current user:', user);
-  console.log('Is admin:', isAdmin);
 
   const links = [
     {
       href: "/",
       icon: HomeIcon,
-      label: "Home",
+      label: t('home'),
     },
     {
       href: "/dashboard",
       icon: LayoutDashboard,
-      label: "Dashboard",
+      label: t('dashboard'),
     },
     {
       href: "/properties",
       icon: Building2,
-      label: "Properties",
+      label: t('properties'),
     },
     {
       href: "/tenants",
       icon: Users,
-      label: "Tenants",
+      label: t('tenants'),
     },
     {
       href: "/maintenance",
       icon: Wrench,
-      label: "Maintenance",
+      label: t('maintenance'),
     },
     {
       href: "/settings",
       icon: Settings,
-      label: "Settings",
+      label: t('settings'),
     },
   ];
 
-  // Add admin link if user is admin
   if (isAdmin) {
     links.push({
       href: "/admin",
-      icon: ShieldCheck, // Changé pour une icône plus distinctive
-      label: "Admin",
+      icon: ShieldCheck,
+      label: t('admin'),
     });
   }
 

@@ -6,6 +6,7 @@ import { SidebarNavLink } from "./SidebarNavLink";
 import { SidebarLogo } from "./SidebarLogo";
 import { SidebarToggle } from "./SidebarToggle";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import SidebarLinks from "./SidebarLinks";
 
 interface DesktopSidebarProps {
@@ -21,6 +22,8 @@ export const DesktopSidebar = ({
   handleSupportClick,
   toggleCollapse
 }: DesktopSidebarProps) => {
+  const { t } = useLocale();
+
   return (
     <aside
       className={cn(
@@ -50,10 +53,10 @@ export const DesktopSidebar = ({
             isCollapsed && "w-10 h-10 p-0 justify-center"
           )}
           onClick={handleSupportClick}
-          title={isCollapsed ? "Get Support" : undefined}
+          title={isCollapsed ? t('getSupport') : undefined}
         >
           <HelpCircle className="h-4 w-4" />
-          {!isCollapsed && "Get Support"}
+          {!isCollapsed && t('getSupport')}
         </Button>
         <div className="mt-2">
           <SidebarToggle isCollapsed={isCollapsed} onToggle={toggleCollapse} />
@@ -61,4 +64,4 @@ export const DesktopSidebar = ({
       </div>
     </aside>
   );
-}
+};
