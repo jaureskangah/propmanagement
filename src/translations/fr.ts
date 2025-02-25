@@ -33,6 +33,20 @@ export const frTranslations: Translations = {
   ...frMaintenance,
   ...frTenant,
   ...frHowItWorks,
-  ...frFooter
+  ...frFooter,
+  // Add missing maintenance translations
+  maintenanceRequestTitle: "Demande de Maintenance",
+  maintenanceCalendar: "Calendrier de Maintenance",
+  preventiveMaintenance: "Maintenance Préventive",
+  workOrders: "Ordres de Travail",
+  costs: "Coûts",
+  vendors: "Fournisseurs",
+  regularTask: "Tâche Régulière",
+  inspection: "Inspection",
+  seasonalTask: "Tâche Saisonnière",
+  taskTitle: "Titre de la Tâche",
+  deadline: "Date Limite",
+  taskType: "Type de Tâche",
+  selectType: "Sélectionner le Type",
+  addNewTask: "Ajouter une Nouvelle Tâche"
 };
-

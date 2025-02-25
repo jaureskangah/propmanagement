@@ -1,60 +1,38 @@
 
+import { NavigationTranslations } from './navigation';
+import { HeroTranslations } from './hero';
+import { FeaturesTranslations } from './features';
+import { PricingTranslations } from './pricing';
+import { ToastTranslations } from './toasts';
+import { ContactTranslations } from './contact';
+import { AuthTranslations } from './auth';
+import { CTATranslations } from './cta';
+import { FAQTranslations } from './faq';
+import { AdminTranslations } from './admin';
+import { StatusTranslations } from './status';
+import { PropertyTranslations } from './property';
+import { MaintenanceTranslations } from '../types/maintenance';
+import { TenantTranslations } from './tenant';
+import { HowItWorksTranslations } from './how-it-works';
+import { FooterTranslations } from './footer';
+
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
-import { AdminDashboardTranslations } from './admin';
-import { MaintenanceTranslations } from './maintenance';
-import { TenantTranslations } from './tenant';
-import { PropertyManagementTranslations } from './property';
-import type { NavigationTranslations } from './navigation';
-import type { HeroTranslations } from './hero';
-import type { FeaturesTranslations } from './features';
-import type { PricingTranslations, PlanFeaturesTranslations } from './pricing';
-import type { ToastTranslations } from './toasts';
-import type { ContactTranslations } from './contact';
-import type { AuthTranslations } from './auth';
-import type { CTATranslations } from './cta';
-import type { FAQTranslations } from './faq';
-import type { StatusTranslations } from './status';
-import type { HowItWorksTranslations } from './how-it-works';
-import type { FooterTranslations } from './footer';
-
-export interface Translations 
-  extends NavigationTranslations,
-    HeroTranslations,
-    FeaturesTranslations,
-    PricingTranslations,
-    PlanFeaturesTranslations,
-    ToastTranslations,
-    ContactTranslations,
-    AuthTranslations,
-    CTATranslations,
-    FAQTranslations,
-    AdminDashboardTranslations,
-    MaintenanceTranslations,
-    StatusTranslations,
-    PropertyManagementTranslations,
-    TenantTranslations,
-    HowItWorksTranslations,
-    FooterTranslations {}
-
-export type {
+export interface Translations extends 
   NavigationTranslations,
   HeroTranslations,
   FeaturesTranslations,
   PricingTranslations,
-  PlanFeaturesTranslations,
   ToastTranslations,
   ContactTranslations,
   AuthTranslations,
   CTATranslations,
   FAQTranslations,
-  AdminDashboardTranslations,
-  MaintenanceTranslations,
+  AdminTranslations,
   StatusTranslations,
-  PropertyManagementTranslations,
+  PropertyTranslations,
+  MaintenanceTranslations,
   TenantTranslations,
   HowItWorksTranslations,
-  FooterTranslations
-};
-
+  FooterTranslations {}

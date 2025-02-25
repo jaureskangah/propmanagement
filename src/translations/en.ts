@@ -33,5 +33,20 @@ export const enTranslations: Translations = {
   ...enMaintenance,
   ...enTenant,
   ...enHowItWorks,
-  ...enFooter
+  ...enFooter,
+  // Add missing maintenance translations
+  maintenanceRequestTitle: "Maintenance Request",
+  maintenanceCalendar: "Maintenance Calendar",
+  preventiveMaintenance: "Preventive Maintenance",
+  workOrders: "Work Orders",
+  costs: "Costs",
+  vendors: "Vendors",
+  regularTask: "Regular Task",
+  inspection: "Inspection",
+  seasonalTask: "Seasonal Task",
+  taskTitle: "Task Title",
+  deadline: "Deadline",
+  taskType: "Task Type",
+  selectType: "Select Type",
+  addNewTask: "Add New Task"
 };
