@@ -29,9 +29,7 @@ export interface DashboardTranslations {
   occupied: string;
   vacant: string;
   total: string;
-  chart: {
-    revenue: string;
-    expenses: string;
-    profit: string;
-  };
+  chartRevenue: string;  // Changed from nested object to flat structure
+  chartExpenses: string;
+  chartProfit: string;
 }

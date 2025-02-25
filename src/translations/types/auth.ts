@@ -21,4 +21,14 @@ export interface AuthTranslations {
   invalidCredentials: string;
   emailNotConfirmed: string;
   generalAuthError: string;
+  loginRequired: string;  // Added this property
+  validation: {
+    emailRequired: string;
+    emailInvalid: string;
+    passwordRequired: string;
+    passwordMinLength: string;
+    passwordsDoNotMatch: string;
+    firstNameRequired: string;
+    lastNameRequired: string;
+  };
 }

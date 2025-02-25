@@ -29,11 +29,9 @@ export const enDashboard = {
   occupied: "Occupied",
   vacant: "Vacant",
   total: "Total",
-  chart: {
-    revenue: "Revenue",
-    expenses: "Expenses",
-    profit: "Profit"
-  }
+  chartRevenue: "Revenue",
+  chartExpenses: "Expenses",
+  chartProfit: "Profit"
 };
 
 export const frDashboard = {
@@ -66,9 +64,7 @@ export const frDashboard = {
   occupied: "Occupé",
   vacant: "Vacant",
   total: "Total",
-  chart: {
-    revenue: "Revenus",
-    expenses: "Dépenses",
-    profit: "Bénéfice"
-  }
+  chartRevenue: "Revenus",
+  chartExpenses: "Dépenses",
+  chartProfit: "Bénéfice"
 };

@@ -10,4 +10,12 @@ export interface NavigationTranslations {
   units: string;
   metric: string;
   imperial: string;
+  home: string;  // Added this property
+  tenants: string;  // Added missing properties
+  maintenance: string;
+  settings: string;
+  admin: string;
+  loading: string;
+  error: string;
+  properties: string;
 }
