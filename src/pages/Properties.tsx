@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import PropertyCard from "@/components/PropertyCard";
 import PropertyFinancials from "@/components/PropertyFinancials";
@@ -13,6 +14,7 @@ import { supabase } from "@/lib/supabase";
 import EmptyState from "@/components/properties/EmptyState";
 import PropertyFilters from "@/components/properties/PropertyFilters";
 import AppSidebar from "@/components/AppSidebar";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const PROPERTY_TYPES = [
   "All",
@@ -32,6 +34,7 @@ const Properties = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const { properties, isLoading, error } = useProperties();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const handleEdit = (id: string) => {
     const property = properties.find(p => p.id === id);
@@ -54,15 +57,15 @@ const Properties = () => {
       }
 
       toast({
-        title: "Property deleted",
-        description: "The property has been successfully deleted.",
+        title: t('propertyDeleted'),
+        description: t('propertyDeleteSuccess'),
       });
     } catch (error) {
       console.error("Error deleting property:", error);
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Unable to delete the property.",
+        title: t('error'),
+        description: t('propertyDeleteError'),
       });
     }
   };
@@ -98,20 +101,20 @@ const Properties = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
               <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
-                Properties Management
+                {t('propertiesManagement')}
               </h1>
               <p className="text-muted-foreground mt-1">
-                Manage and track all your real estate properties in one place
+                {t('propertiesSubtitle')}
               </p>
             </div>
             <div className="flex items-center justify-end gap-4">
               <Badge variant="secondary" className="text-sm px-3 py-1.5">
                 <Info className="h-4 w-4 mr-1.5" />
-                {properties.length} {properties.length === 1 ? 'Property' : 'Properties'}
+                {properties.length} {properties.length === 1 ? t('property') : t('properties')}
               </Badge>
               <div className="animate-fade-in">
                 <Button size="sm" onClick={() => setIsAddModalOpen(true)}>
-                  Add Property
+                  {t('addProperty')}
                 </Button>
               </div>
             </div>
@@ -146,7 +149,7 @@ const Properties = () => {
         {selectedPropertyId && (
           <div className="mt-8 animate-fade-in">
             <h2 className="text-xl font-bold mb-4">
-              Financial Overview - {selectedProperty?.name}
+              {t('financialOverview')} - {selectedProperty?.name}
             </h2>
             <PropertyFinancials propertyId={selectedPropertyId} />
           </div>
