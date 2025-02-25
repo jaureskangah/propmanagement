@@ -1,6 +1,8 @@
+
 import { formatDistanceToNow } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { fr } from "date-fns/locale";
 import { LucideIcon } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ActivityItemProps {
   icon: LucideIcon;
@@ -19,6 +21,8 @@ export const ActivityItem = ({
   description,
   date 
 }: ActivityItemProps) => {
+  const { locale } = useLocale();
+
   return (
     <div className="flex items-center gap-4 rounded-lg border p-4 transition-all hover:bg-muted/50">
       <div className={`rounded-full ${iconBgColor} p-2`}>
@@ -33,7 +37,7 @@ export const ActivityItem = ({
       <p className="text-sm text-muted-foreground">
         {formatDistanceToNow(new Date(date), { 
           addSuffix: true,
-          locale: enUS 
+          locale: locale === 'fr' ? fr : undefined
         })}
       </p>
     </div>

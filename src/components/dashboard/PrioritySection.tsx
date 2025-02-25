@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
@@ -5,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle } from "lucide-react";
 import { format, isSameDay } from "date-fns";
 import { useState } from "react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PrioritySectionProps {
   maintenanceData: any[];
@@ -14,31 +16,27 @@ interface PrioritySectionProps {
 
 export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: PrioritySectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const { t } = useLocale();
 
-  // Filtrer les maintenances urgentes
   const urgentMaintenance = maintenanceData?.filter(
     req => req.priority === "Urgent" && req.status !== "Resolved"
   ) || [];
 
-  // Créer les événements du calendrier
   const calendarEvents = [
-    // Événements de paiement
     ...(paymentsData?.map(payment => ({
       date: new Date(payment.payment_date),
       type: 'payment',
-      title: `Payment due: $${payment.amount}`,
+      title: `${t('paymentDue')}: $${payment.amount}`,
       tenant: payment.tenants?.name
     })) || []),
-    // Fins de bail
     ...(tenantsData?.map(tenant => ({
       date: new Date(tenant.lease_end),
       type: 'lease',
-      title: `Lease ending: ${tenant.name}`,
+      title: `${t('leaseEnding')}: ${tenant.name}`,
       unit: tenant.unit_number
     })) || [])
   ];
 
-  // Obtenir les événements pour la date sélectionnée
   const selectedDateEvents = calendarEvents.filter(
     event => selectedDate && isSameDay(event.date, selectedDate)
   );
@@ -49,14 +47,14 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <AlertOctagon className="h-5 w-5 text-red-500" />
-            Priority Tasks
+            {t('priorityTasks')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[300px] pr-4">
             {urgentMaintenance.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
-                No urgent maintenance requests
+                {t('noUrgentTasks')}
               </p>
             ) : (
               <div className="space-y-4">
@@ -69,14 +67,14 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                     <div>
                       <h4 className="font-medium">{task.title || task.issue}</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        {task.description || "No description provided"}
+                        {task.description || t('urgentMaintenanceRequest')}
                       </p>
                       <div className="flex gap-2 mt-2">
                         <Badge variant="secondary" className="text-xs">
-                          Unit: {task.unit_number || "N/A"}
+                          {t('unitLabel')} {task.unit_number || "N/A"}
                         </Badge>
                         <Badge variant="destructive" className="text-xs">
-                          Urgent
+                          {t('emergency')}
                         </Badge>
                       </div>
                     </div>
@@ -92,7 +90,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <CalendarIcon className="h-5 w-5 text-blue-500" />
-            Important Events
+            {t('importantEvents')}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -117,13 +115,13 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
 
             <div className="mt-4">
               <h4 className="font-medium mb-2">
-                Events on {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'selected date'}
+                {t('eventsOn')} {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}
               </h4>
               <ScrollArea className="h-[100px]">
                 <div className="space-y-2">
                   {selectedDateEvents.length === 0 ? (
                     <p className="text-muted-foreground text-sm">
-                      No events scheduled for this date
+                      {t('noEvents')}
                     </p>
                   ) : (
                     selectedDateEvents.map((event, index) => (
@@ -135,7 +133,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                           <Badge
                             variant={event.type === 'payment' ? 'default' : 'secondary'}
                           >
-                            {event.type === 'payment' ? 'Payment' : 'Lease'}
+                            {t(event.type)}
                           </Badge>
                           <span>{event.title}</span>
                         </div>
