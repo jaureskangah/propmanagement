@@ -49,9 +49,10 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  // Force document lang attribute to match current language
   useEffect(() => {
     document.documentElement.lang = language;
+    console.log('Language changed to:', language);
+    console.log('Available translations:', Object.keys(translations[language]));
   }, [language]);
 
   const setLanguage = (newLanguage: Language) => {
@@ -59,8 +60,6 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       console.log('Setting language to:', newLanguage);
       localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
       setLanguageState(newLanguage);
-      // Force document reload to update all translations
-      window.location.reload();
     } catch (error) {
       console.error('Error setting language:', error);
     }
@@ -77,7 +76,15 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
 
   const t = (key: string): string => {
     try {
-      const translation = translations[language][key as keyof Translations];
+      const currentTranslations = translations[language];
+      console.log('Translation request:', {
+        key,
+        language,
+        hasTranslation: key in currentTranslations,
+        availableKeys: Object.keys(currentTranslations)
+      });
+      
+      const translation = currentTranslations[key as keyof Translations];
       if (!translation) {
         console.warn(`Missing translation for key: ${key} in language: ${language}`);
         return key;
@@ -89,20 +96,16 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  useEffect(() => {
-    console.log('LocaleProvider mounted/updated');
-    console.log('Current language:', language);
-    console.log('Stored language:', localStorage.getItem(LANGUAGE_STORAGE_KEY));
-  }, [language]);
+  const value = {
+    language,
+    setLanguage,
+    unitSystem,
+    setUnitSystem,
+    t
+  };
 
   return (
-    <LocaleContext.Provider value={{
-      language,
-      setLanguage,
-      unitSystem,
-      setUnitSystem,
-      t
-    }}>
+    <LocaleContext.Provider value={value}>
       {children}
     </LocaleContext.Provider>
   );
