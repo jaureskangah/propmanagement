@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useTenants } from "@/hooks/useTenants";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +12,7 @@ import { TenantModals } from "@/components/tenant/TenantModals";
 import AppSidebar from "@/components/AppSidebar";
 import { Badge } from "@/components/ui/badge";
 import { Info } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -25,6 +27,7 @@ const Tenants = () => {
   const { tenants, isLoading, updateTenant, deleteTenant } = useTenants();
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLocale();
 
   const mapTenantData = (tenant: any): Tenant => ({
     ...tenant,
@@ -64,8 +67,8 @@ const Tenants = () => {
   const handleAddTenant = async (data: any) => {
     if (!user) {
       toast({
-        title: "Error",
-        description: "You must be logged in to add a tenant",
+        title: t('error'),
+        description: t('loginRequired'),
         variant: "destructive",
       });
       return;
@@ -97,7 +100,7 @@ const Tenants = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('loading')}</div>;
   }
 
   return (
@@ -108,16 +111,16 @@ const Tenants = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-foreground">
-                Tenants
+                {t('tenantsList')}
               </h1>
               <p className="text-muted-foreground mt-1">
-                Manage your tenants, track payments, and handle maintenance requests
+                {t('tenantsSubtitle')}
               </p>
             </div>
             <div className="flex items-center justify-end gap-4">
               <Badge variant="secondary" className="text-sm px-3 py-1.5">
                 <Info className="h-4 w-4 mr-1.5" />
-                {tenants?.length} {tenants?.length === 1 ? 'Tenant' : 'Tenants'}
+                {tenants?.length} {tenants?.length === 1 ? t('tenant') : t('tenants')}
               </Badge>
               <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
             </div>

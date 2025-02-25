@@ -13,11 +13,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export default function Settings() {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const { data: profile, isLoading, refetch } = useQuery({
     queryKey: ['profile', user?.id],
@@ -46,15 +48,15 @@ export default function Settings() {
       if (error) throw error;
 
       toast({
-        title: "Preferences updated",
-        description: "Your notification preferences have been saved."
+        title: t('preferencesUpdated'),
+        description: t('preferencesUpdatedMessage')
       });
 
       refetch();
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An error occurred while updating preferences.",
+        title: t('error'),
+        description: t('preferencesUpdateError'),
         variant: "destructive"
       });
     }
@@ -66,7 +68,7 @@ export default function Settings() {
       <div className="flex-1 overflow-y-auto">
         <div className="space-y-6 p-8 pb-16">
           <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">Settings</h1>
+            <h1 className="text-3xl font-bold">{t('settings')}</h1>
           </div>
 
           <div className="grid gap-6">
@@ -75,10 +77,10 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="h-5 w-5" />
-                  Profile
+                  {t('profile')}
                 </CardTitle>
                 <CardDescription>
-                  Manage your personal information
+                  {t('profileDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -90,20 +92,20 @@ export default function Settings() {
                   <>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="font-medium">First Name</p>
+                        <p className="font-medium">{t('firstName')}</p>
                         <p className="text-sm text-muted-foreground">
                           {profile?.first_name || '-'}
                         </p>
                       </div>
                       <div>
-                        <p className="font-medium">Last Name</p>
+                        <p className="font-medium">{t('lastName')}</p>
                         <p className="text-sm text-muted-foreground">
                           {profile?.last_name || '-'}
                         </p>
                       </div>
                     </div>
                     <div>
-                      <p className="font-medium">Email</p>
+                      <p className="font-medium">{t('email')}</p>
                       <p className="text-sm text-muted-foreground">{user?.email}</p>
                     </div>
                     <div className="flex justify-end">
@@ -125,10 +127,10 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Lock className="h-5 w-5" />
-                  Security
+                  {t('security')}
                 </CardTitle>
                 <CardDescription>
-                  Manage your security settings
+                  {t('securityDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -141,17 +143,17 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Bell className="h-5 w-5" />
-                  Notifications
+                  {t('notifications')}
                 </CardTitle>
                 <CardDescription>
-                  Configure your notification preferences
+                  {t('notificationsDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Push notifications</p>
-                    <p className="text-sm text-muted-foreground">Receive push notifications</p>
+                    <p className="font-medium">{t('pushNotifications')}</p>
+                    <p className="text-sm text-muted-foreground">{t('pushNotificationsDescription')}</p>
                   </div>
                   <Switch 
                     checked={profile?.push_notifications ?? true}
@@ -161,8 +163,8 @@ export default function Settings() {
                 </div>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Email updates</p>
-                    <p className="text-sm text-muted-foreground">Receive email updates</p>
+                    <p className="font-medium">{t('emailUpdates')}</p>
+                    <p className="text-sm text-muted-foreground">{t('emailUpdatesDescription')}</p>
                   </div>
                   <Switch 
                     checked={profile?.email_updates ?? true}
@@ -178,17 +180,17 @@ export default function Settings() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Moon className="h-5 w-5" />
-                  Appearance
+                  {t('appearance')}
                 </CardTitle>
                 <CardDescription>
-                  Customize the application appearance
+                  {t('appearanceDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex justify-between items-center">
                   <div>
-                    <p className="font-medium">Dark theme</p>
-                    <p className="text-sm text-muted-foreground">Toggle between light and dark theme</p>
+                    <p className="font-medium">{t('darkTheme')}</p>
+                    <p className="text-sm text-muted-foreground">{t('darkThemeDescription')}</p>
                   </div>
                   <Switch 
                     checked={theme === "dark"} 
