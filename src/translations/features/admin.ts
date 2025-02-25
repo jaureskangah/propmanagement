@@ -17,12 +17,18 @@ export const enAdmin: AdminDashboardTranslations = {
   copySuccess: "Link copied to clipboard",
   shareError: "Error while sharing",
   totalTenants: "Total Tenants",
-  loading: "Loading..."
+  loading: "Loading...",
+  error: "Error",
+  metrics: "Metrics",
+  export: "Export",
+  share: "Share",
+  overview: "Overview",
+  statistics: "Statistics"
 };
 
 export const frAdmin: AdminDashboardTranslations = {
   adminDashboard: "Tableau de Bord Admin",
-  totalUsers: "Utilisateurs Totaux",
+  totalUsers: "Nombre d'Utilisateurs",
   activeUsers: "Utilisateurs Actifs",
   properties: "Propriétés",
   totalRevenue: "Revenu Total",
@@ -36,5 +42,12 @@ export const frAdmin: AdminDashboardTranslations = {
   copySuccess: "Lien copié dans le presse-papiers",
   shareError: "Erreur lors du partage",
   totalTenants: "Total Locataires",
-  loading: "Chargement..."
+  loading: "Chargement...",
+  error: "Erreur",
+  metrics: "Métriques",
+  export: "Exporter",
+  share: "Partager",
+  overview: "Vue d'ensemble",
+  statistics: "Statistiques"
 };
+
