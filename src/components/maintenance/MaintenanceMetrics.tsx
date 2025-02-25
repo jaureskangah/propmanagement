@@ -9,6 +9,7 @@ import {
   TrendingDown,
   Percent
 } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceMetricsProps {
   total: number;
@@ -17,6 +18,8 @@ interface MaintenanceMetricsProps {
 }
 
 export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetricsProps) => {
+  const { t } = useLocale();
+  
   // Calculate percentages and variations (mock data for previous month)
   const pendingPercent = Math.round((pending / total) * 100) || 0;
   const resolvedPercent = Math.round((resolved / total) * 100) || 0;
@@ -30,7 +33,7 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
 
   const metrics = [
     {
-      title: "Total Requests",
+      title: t('totalRequests'),
       value: total,
       icon: ClipboardList,
       color: "text-blue-500",
@@ -38,7 +41,7 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
       progressColor: "bg-blue-500",
     },
     {
-      title: "Pending",
+      title: t('pendingRequests'),
       value: pending,
       icon: Clock,
       color: "text-yellow-500",
@@ -47,7 +50,7 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
       variation: pendingVariation,
     },
     {
-      title: "Resolved",
+      title: t('resolvedRequests'),
       value: resolved,
       icon: CheckCircle,
       color: "text-green-500",
@@ -101,4 +104,3 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
     </>
   );
 };
-
