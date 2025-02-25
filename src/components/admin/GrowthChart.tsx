@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface GrowthChartProps {
   title: string;
@@ -14,10 +15,12 @@ interface GrowthChartProps {
 }
 
 export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChartProps) {
+  const { t } = useLocale();
+  
   return (
     <Card className="col-span-1">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle>{t(title)}</CardTitle>
       </CardHeader>
       <CardContent className="h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
@@ -38,7 +41,7 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
                 type="monotone"
                 dataKey={line.key}
                 stroke={line.color}
-                name={line.name}
+                name={t(line.name)}
                 strokeWidth={2}
               />
             ))}

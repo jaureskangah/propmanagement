@@ -57,7 +57,14 @@ export default function AdminDashboard() {
 
   const handleDownload = async () => {
     try {
-      const headers = ["Date", t('totalUsers'), t('activeUsers'), t('totalRevenue'), t('properties'), "Total Tenants"];
+      const headers = [
+        "Date",
+        t('totalUsers'),
+        t('activeUsers'),
+        t('totalRevenue'),
+        t('properties'),
+        "Total Tenants"
+      ];
       const csvData = [
         headers.join(","),
         ...metrics.map(metric => [
