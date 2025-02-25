@@ -3,28 +3,28 @@ import { ContactTranslations } from '../types';
 
 export const enContact: ContactTranslations = {
   contactUs: "Contact Us",
-  contactSubtitle: "We're here to help and answer any question you might have",
+  contactSubtitle: "Get in touch with our team",
   phone: "Phone",
   email: "Email",
   office: "Office",
-  sendMessage: "Send us a message",
-  yourName: "Your name",
-  yourEmail: "your@email.com",
-  message: "How can we help you?",
+  sendMessage: "Send us a Message",
+  yourName: "Your Name",
+  yourEmail: "Your Email",
+  message: "Message",
   sending: "Sending...",
-  send: "Send message"
+  send: "Send Message"
 };
 
 export const frContact: ContactTranslations = {
   contactUs: "Contactez-nous",
-  contactSubtitle: "Nous sommes là pour vous aider et répondre à toutes vos questions",
+  contactSubtitle: "Entrez en contact avec notre équipe",
   phone: "Téléphone",
   email: "Email",
   office: "Bureau",
   sendMessage: "Envoyez-nous un message",
   yourName: "Votre nom",
-  yourEmail: "votre@email.com",
-  message: "Comment pouvons-nous vous aider ?",
+  yourEmail: "Votre email",
+  message: "Message",
   sending: "Envoi en cours...",
   send: "Envoyer le message"
 };

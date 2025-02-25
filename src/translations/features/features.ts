@@ -2,27 +2,27 @@
 import { FeaturesTranslations } from '../types';
 
 export const enFeatures: FeaturesTranslations = {
-  everythingYouNeed: "Everything You Need",
-  featuresSubtitle: "Powerful tools tailored for the Canadian real estate market",
+  everythingYouNeed: "Everything You Need to Manage Your Properties",
+  featuresSubtitle: "Comprehensive tools for property management",
   propertyManagement: "Property Management",
-  propertyManagementDesc: "Manage your properties according to Canadian standards with province-specific tools",
+  propertyManagementDesc: "Efficiently manage all your properties in one place",
   tenantManagement: "Tenant Management",
-  tenantManagementDesc: "Manage tenants and documents in compliance with provincial rental laws",
+  tenantManagementDesc: "Handle tenant relationships and communications easily",
   maintenance: "Maintenance",
-  maintenanceDesc: "Track maintenance requests, schedule tasks, and manage vendor relationships",
+  maintenanceDesc: "Track and manage maintenance requests and repairs",
   security: "Security",
-  securityDesc: "Your data is secured according to Canadian data protection standards"
+  securityDesc: "Keep your data safe with advanced security measures"
 };
 
 export const frFeatures: FeaturesTranslations = {
-  everythingYouNeed: "Tout ce dont vous avez besoin",
-  featuresSubtitle: "Des outils puissants adaptés au marché immobilier canadien",
-  propertyManagement: "Gestion Immobilière",
-  propertyManagementDesc: "Gérez vos propriétés selon les normes canadiennes avec des outils adaptés à chaque province",
-  tenantManagement: "Gestion des Locataires",
-  tenantManagementDesc: "Gérez vos locataires et documents conformément aux lois provinciales sur la location",
+  everythingYouNeed: "Tout ce dont vous avez besoin pour gérer vos propriétés",
+  featuresSubtitle: "Des outils complets pour la gestion immobilière",
+  propertyManagement: "Gestion immobilière",
+  propertyManagementDesc: "Gérez efficacement toutes vos propriétés en un seul endroit",
+  tenantManagement: "Gestion des locataires",
+  tenantManagementDesc: "Gérez facilement les relations et communications avec les locataires",
   maintenance: "Maintenance",
-  maintenanceDesc: "Suivez les demandes de maintenance, planifiez les tâches et gérez les relations avec les fournisseurs",
+  maintenanceDesc: "Suivez et gérez les demandes de maintenance et les réparations",
   security: "Sécurité",
-  securityDesc: "Vos données sont sécurisées selon les normes canadiennes de protection des données"
+  securityDesc: "Gardez vos données en sécurité avec des mesures de sécurité avancées"
 };

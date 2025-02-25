@@ -1,17 +1,33 @@
 
 import { PricingTranslations, PlanFeaturesTranslations } from '../types';
 
-export const enPricing: PricingTranslations & PlanFeaturesTranslations = {
-  freemiumPlan: "Freemium",
-  proPlan: "Pro",
+export const enPricing: PricingTranslations = {
+  freemiumPlan: "Starter",
+  proPlan: "Professional",
   enterprisePlan: "Enterprise",
   free: "Free",
-  month: "/month",
+  month: "month",
   mostPopular: "Most Popular",
-  pricingTitle: "Simple and transparent pricing",
-  pricingSubtitle: "Choose the plan that best fits your needs",
-  pricingStartFree: "Start for free",
-  pricingGetStarted: "Get Started",
+  pricingTitle: "Simple, Transparent Pricing",
+  pricingSubtitle: "Choose the plan that works best for you",
+  pricingStartFree: "Start for Free",
+  pricingGetStarted: "Get Started"
+};
+
+export const frPricing: PricingTranslations = {
+  freemiumPlan: "Démarrage",
+  proPlan: "Professionnel",
+  enterprisePlan: "Entreprise",
+  free: "Gratuit",
+  month: "mois",
+  mostPopular: "Le plus populaire",
+  pricingTitle: "Tarification simple et transparente",
+  pricingSubtitle: "Choisissez le plan qui vous convient le mieux",
+  pricingStartFree: "Commencer gratuitement",
+  pricingGetStarted: "Commencer"
+};
+
+export const enPlanFeatures: PlanFeaturesTranslations = {
   upTo2Properties: "Up to 2 properties",
   upTo5Properties: "Up to 5 properties",
   upTo20Properties: "Up to 20 properties",
@@ -23,25 +39,15 @@ export const enPricing: PricingTranslations & PlanFeaturesTranslations = {
   prioritySupport: "Priority support",
   advancedDashboard: "Advanced dashboard",
   financialReports: "Financial reports",
-  maintenanceManagement: "Maintenance Management",
-  dedicatedSupport: "24/7 dedicated support",
+  maintenanceManagement: "Maintenance management",
+  dedicatedSupport: "Dedicated support",
   customDashboard: "Custom dashboard",
   advancedFinancialReports: "Advanced financial reports",
   userTraining: "User training",
   dailyBackup: "Daily backup"
 };
 
-export const frPricing: PricingTranslations & PlanFeaturesTranslations = {
-  freemiumPlan: "Gratuit",
-  proPlan: "Pro",
-  enterprisePlan: "Entreprise",
-  free: "Gratuit",
-  month: "/mois",
-  mostPopular: "Le plus populaire",
-  pricingTitle: "Tarification simple et transparente",
-  pricingSubtitle: "Choisissez le forfait qui correspond le mieux à vos besoins",
-  pricingStartFree: "Commencer gratuitement",
-  pricingGetStarted: "Commencer",
+export const frPlanFeatures: PlanFeaturesTranslations = {
   upTo2Properties: "Jusqu'à 2 propriétés",
   upTo5Properties: "Jusqu'à 5 propriétés",
   upTo20Properties: "Jusqu'à 20 propriétés",
@@ -53,8 +59,8 @@ export const frPricing: PricingTranslations & PlanFeaturesTranslations = {
   prioritySupport: "Support prioritaire",
   advancedDashboard: "Tableau de bord avancé",
   financialReports: "Rapports financiers",
-  maintenanceManagement: "Gestion de la Maintenance",
-  dedicatedSupport: "Support dédié 24/7",
+  maintenanceManagement: "Gestion de la maintenance",
+  dedicatedSupport: "Support dédié",
   customDashboard: "Tableau de bord personnalisé",
   advancedFinancialReports: "Rapports financiers avancés",
   userTraining: "Formation utilisateur",
