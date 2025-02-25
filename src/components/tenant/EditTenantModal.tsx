@@ -1,3 +1,4 @@
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
@@ -5,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { TenantForm } from "./TenantForm";
 import type { TenantFormValues } from "./tenantValidation";
 import type { Tenant } from "@/types/tenant";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface EditTenantModalProps {
   isOpen: boolean;
@@ -15,19 +17,20 @@ interface EditTenantModalProps {
 
 export function EditTenantModal({ isOpen, onClose, tenant, onSubmit }: EditTenantModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLocale();
 
   const handleSubmit = async (data: TenantFormValues) => {
     try {
       setIsSubmitting(true);
       await onSubmit(data);
       toast({
-        title: "Success",
-        description: "Tenant updated successfully",
+        title: t('success'),
+        description: t('tenantUpdated'),
       });
       onClose();
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: t('error'),
         description: error.message,
         variant: "destructive",
       });
@@ -40,7 +43,7 @@ export function EditTenantModal({ isOpen, onClose, tenant, onSubmit }: EditTenan
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Edit Tenant</DialogTitle>
+          <DialogTitle>{t('editTenant')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="flex-grow pr-4">
           <TenantForm 

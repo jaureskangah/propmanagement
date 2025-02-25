@@ -1,7 +1,9 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface InviteTenantFormProps {
   email: string;
@@ -18,14 +20,16 @@ export const InviteTenantForm = ({
   onSubmit,
   onClose,
 }: InviteTenantFormProps) => {
+  const { t } = useLocale();
+
   return (
     <form onSubmit={onSubmit} className="space-y-4 pt-4">
       <div className="space-y-2">
-        <Label htmlFor="email">Tenant Email</Label>
+        <Label htmlFor="email">{t('email')}</Label>
         <Input
           id="email"
           type="email"
-          placeholder="tenant@example.com"
+          placeholder={t('enterEmail')}
           value={email}
           onChange={(e) => onEmailChange(e.target.value)}
           required
@@ -34,12 +38,12 @@ export const InviteTenantForm = ({
 
       <div className="flex justify-end gap-2">
         <Button type="button" variant="outline" onClick={onClose}>
-          Cancel
+          {t('cancel')}
         </Button>
         <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Sending..." : "Send Invitation"}
+          {isLoading ? t('sending') : t('inviteTenant')}
         </Button>
       </div>
     </form>
   );
-};
+}
