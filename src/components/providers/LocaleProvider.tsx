@@ -10,7 +10,7 @@ interface LocaleContextType {
   setLanguage: (lang: Language) => void;
   unitSystem: UnitSystem;
   setUnitSystem: (system: UnitSystem) => void;
-  t: (key: string) => string;
+  t: (key: string, nested?: boolean) => any;
 }
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
@@ -55,9 +55,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     try {
       localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
       setLanguageState(newLanguage);
-      setUpdateKey(prevKey => prevKey + 1); // Force re-render
+      setUpdateKey(prevKey => prevKey + 1);
       
-      // Afficher une notification de confirmation
       toast({
         title: "Langue modifiée",
         description: newLanguage === 'fr' ? "La langue a été changée en français" : "Language has been changed to English",
@@ -85,15 +84,26 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.lang = language;
   }, [language]);
 
-  const t = (key: string): string => {
+  const t = (key: string, nested: boolean = false): any => {
     const currentTranslations = translations[language];
-    const translation = currentTranslations[key as keyof Translations];
+    const keys = key.split('.');
+    let translation = currentTranslations;
     
-    if (!translation) {
-      console.warn(`Missing translation for key: ${key} in language: ${language}`);
-      return key;
+    for (const k of keys) {
+      if (translation && typeof translation === 'object' && k in translation) {
+        translation = (translation as any)[k];
+      } else {
+        console.warn(`Missing translation for key: ${key} in language: ${language}`);
+        return key;
+      }
     }
-    return translation;
+    
+    if (nested || typeof translation !== 'object') {
+      return translation;
+    }
+    
+    console.warn(`Unexpected object for non-nested translation key: ${key}`);
+    return key;
   };
 
   const value = {
