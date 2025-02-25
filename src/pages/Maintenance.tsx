@@ -1,3 +1,4 @@
+
 import React from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
@@ -5,6 +6,7 @@ import { MaintenanceHeader } from "@/components/maintenance/header/MaintenanceHe
 import { MaintenanceMetricsSection } from "@/components/maintenance/metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "@/components/maintenance/tabs/MaintenanceTabs";
 import AppSidebar from "@/components/AppSidebar";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const fetchMaintenanceRequests = async () => {
   const { data, error } = await supabase
@@ -16,6 +18,7 @@ const fetchMaintenanceRequests = async () => {
 };
 
 const Maintenance = () => {
+  const { t } = useLocale();
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: fetchMaintenanceRequests,
@@ -46,10 +49,10 @@ const Maintenance = () => {
       <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 font-sans">
         <div className="mb-4">
           <h1 className="text-3xl font-bold text-foreground">
-            Maintenance Management
+            {t('maintenanceManagement')}
           </h1>
           <p className="text-muted-foreground mt-1">
-            Track maintenance requests, schedule tasks, and manage vendor relationships
+            {t('maintenanceDescription')}
           </p>
         </div>
         
