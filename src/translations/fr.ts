@@ -35,3 +35,4 @@ export const frTranslations: Translations = {
   ...frHowItWorks,
   ...frFooter
 };
+
