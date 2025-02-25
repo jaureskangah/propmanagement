@@ -23,4 +23,3 @@ export interface AdminDashboardTranslations {
   overview: string;
   statistics: string;
 }
-
