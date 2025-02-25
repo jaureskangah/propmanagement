@@ -22,20 +22,38 @@ const translations: Record<Language, Translations> = {
 const LANGUAGE_STORAGE_KEY = 'app-language';
 const UNIT_SYSTEM_STORAGE_KEY = 'app-unit-system';
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  // Initialize from localStorage or default to 'en'
-  const [language, setLanguageState] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return (savedLanguage === 'fr' || savedLanguage === 'en') ? savedLanguage : 'en';
-  });
+// Fonction d'initialisation de la langue
+const initializeLanguage = (): Language => {
+  const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+  if (savedLanguage === 'fr' || savedLanguage === 'en') {
+    return savedLanguage;
+  }
+  // Si pas de langue sauvegardée, utiliser la langue du navigateur
+  const browserLang = navigator.language.split('-')[0];
+  const defaultLang: Language = browserLang === 'fr' ? 'fr' : 'en';
+  localStorage.setItem(LANGUAGE_STORAGE_KEY, defaultLang);
+  return defaultLang;
+};
 
+export function LocaleProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguageState] = useState<Language>(initializeLanguage);
   const [unitSystem, setUnitSystemState] = useState<UnitSystem>(() => {
     const savedUnitSystem = localStorage.getItem(UNIT_SYSTEM_STORAGE_KEY);
     return (savedUnitSystem === 'metric' || savedUnitSystem === 'imperial') ? savedUnitSystem : 'metric';
   });
 
+  useEffect(() => {
+    // Réinitialiser la langue si elle n'est pas dans localStorage
+    const currentLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (!currentLanguage) {
+      const newLang = initializeLanguage();
+      setLanguageState(newLang);
+    }
+  }, []);
+
   // Persist language changes to localStorage
   const setLanguage = (newLanguage: Language) => {
+    console.log('Setting language to:', newLanguage); // Debug log
     localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
     setLanguageState(newLanguage);
   };
@@ -50,6 +68,12 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const t = (key: string): string => {
     return translations[language][key as keyof Translations] || key;
   };
+
+  // Debug log pour suivre les changements de langue
+  useEffect(() => {
+    console.log('Current language:', language);
+    console.log('Stored language:', localStorage.getItem(LANGUAGE_STORAGE_KEY));
+  }, [language]);
 
   return (
     <LocaleContext.Provider value={{
