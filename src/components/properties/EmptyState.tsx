@@ -1,7 +1,9 @@
+
 import React, { useState } from "react";
 import { Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddPropertyModal } from "@/components/AddPropertyModal";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface EmptyStateProps {
   isFiltering: boolean;
@@ -9,6 +11,7 @@ interface EmptyStateProps {
 
 const EmptyState = ({ isFiltering }: EmptyStateProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { t } = useLocale();
 
   return (
     <div className="text-center py-16 bg-slate-50 rounded-xl animate-fade-in">
@@ -20,23 +23,23 @@ const EmptyState = ({ isFiltering }: EmptyStateProps) => {
         {isFiltering ? (
           <>
             <h3 className="text-lg font-semibold text-slate-700">
-              No properties match your criteria
+              {t('noPropertiesFiltered')}
             </h3>
             <p className="text-slate-500">
-              Try adjusting your filters or search to see more results.
+              {t('filterByType')}
             </p>
           </>
         ) : (
           <>
             <h3 className="text-lg font-semibold text-slate-700">
-              Start Managing Your Properties
+              {t('noProperties')}
             </h3>
             <p className="text-slate-500">
-              Add your first property to begin tracking your real estate assets.
+              {t('propertiesSubtitle')}
             </p>
             <div className="pt-4">
               <Button onClick={() => setIsAddModalOpen(true)}>
-                Add Property
+                {t('addProperty')}
               </Button>
               <AddPropertyModal 
                 isOpen={isAddModalOpen}

@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -10,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Building2, Edit, Trash2, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PropertyCardProps {
   property: {
@@ -27,6 +29,7 @@ interface PropertyCardProps {
 
 const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: PropertyCardProps) => {
   const [imageLoaded, setImageLoaded] = React.useState(false);
+  const { t } = useLocale();
   
   const getDefaultImageByType = (type: string) => {
     switch (type.toLowerCase()) {
@@ -80,7 +83,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               {property.name}
             </CardTitle>
             <Badge variant="secondary" className="text-sm animate-fade-in">
-              {property.type}
+              {t(property.type.toLowerCase())}
             </Badge>
           </div>
           <div className="flex sm:flex-col gap-2 animate-fade-in">
@@ -89,6 +92,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               size="icon"
               onClick={() => onViewFinancials(property.id)}
               className="hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              title={t('viewFinancials')}
             >
               <DollarSign className="h-4 w-4" />
             </Button>
@@ -97,6 +101,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               size="icon"
               onClick={() => onEdit(property.id)}
               className="hover:bg-green-100 dark:hover:bg-green-900 hover:text-green-600 dark:hover:text-green-400 transition-colors"
+              title={t('editProperty')}
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -105,6 +110,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
               size="icon"
               onClick={() => onDelete(property.id)}
               className="hover:bg-red-100 dark:hover:bg-red-900 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+              title={t('deleteProperty')}
             >
               <Trash2 className="h-4 w-4" />
             </Button>
@@ -118,12 +124,12 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
       <CardContent className="p-4 sm:p-6">
         <div className="grid grid-cols-2 gap-3 sm:gap-4 animate-fade-in">
           <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
-            <p className="text-xs sm:text-sm font-medium text-muted-foreground">Units</p>
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">{t('propertyUnits')}</p>
             <p className="text-base sm:text-lg font-semibold">{property.units}</p>
           </div>
           <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
-            <p className="text-xs sm:text-sm font-medium text-muted-foreground">Type</p>
-            <p className="text-base sm:text-lg font-semibold capitalize">{property.type}</p>
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground">{t('propertyType')}</p>
+            <p className="text-base sm:text-lg font-semibold capitalize">{t(property.type.toLowerCase())}</p>
           </div>
         </div>
       </CardContent>
