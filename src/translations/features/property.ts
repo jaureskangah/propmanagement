@@ -1,5 +1,5 @@
 
-import { PropertyManagementTranslations } from '../types';
+import type { PropertyManagementTranslations } from '../types';
 
 export const enProperty: PropertyManagementTranslations = {
   propertiesManagement: "Properties Management",
