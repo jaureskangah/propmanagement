@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Language, UnitSystem, Translations } from '@/translations/types';
 import { enTranslations } from '@/translations/en';
 import { frTranslations } from '@/translations/fr';
@@ -49,60 +49,53 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  // Force re-render of all components using translations
-  const [translationVersion, setTranslationVersion] = useState(0);
+  // Utiliser useCallback pour mémoriser la fonction t
+  const t = useCallback((key: string): string => {
+    const currentTranslations = translations[language];
+    const translation = currentTranslations[key as keyof Translations];
+    
+    if (!translation) {
+      console.warn(`Missing translation for key: ${key} in language: ${language}`);
+      return key;
+    }
+    return translation;
+  }, [language]); // Dépendance uniquement sur language
 
-  useEffect(() => {
-    document.documentElement.lang = language;
-    console.log('Language changed to:', language);
-    console.log('Available translations:', Object.keys(translations[language]));
-    // Increment version to force re-render
-    setTranslationVersion(prev => prev + 1);
-  }, [language]);
-
-  const setLanguage = (newLanguage: Language) => {
+  const setLanguage = useCallback((newLanguage: Language) => {
     try {
       console.log('Setting language to:', newLanguage);
       localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
       setLanguageState(newLanguage);
+      // Forcer un rechargement de la page pour mettre à jour tous les composants
+      window.location.reload();
     } catch (error) {
       console.error('Error setting language:', error);
     }
-  };
+  }, []);
 
-  const setUnitSystem = (newUnitSystem: UnitSystem) => {
+  const setUnitSystem = useCallback((newUnitSystem: UnitSystem) => {
     try {
       localStorage.setItem(UNIT_SYSTEM_STORAGE_KEY, newUnitSystem);
       setUnitSystemState(newUnitSystem);
     } catch (error) {
       console.error('Error setting unit system:', error);
     }
-  };
+  }, []);
 
-  const t = (key: string): string => {
-    try {
-      const currentTranslations = translations[language];
-      
-      // Include translationVersion in dependency to force re-evaluation
-      const translation = currentTranslations[key as keyof Translations];
-      if (!translation) {
-        console.warn(`Missing translation for key: ${key} in language: ${language}`);
-        return key;
-      }
-      return translation;
-    } catch (error) {
-      console.error(`Error getting translation for key: ${key}`, error);
-      return key;
-    }
-  };
+  useEffect(() => {
+    document.documentElement.lang = language;
+    console.log('Language changed to:', language);
+    console.log('Available translations:', Object.keys(translations[language]));
+  }, [language]);
 
+  // Mémoriser la valeur du contexte
   const contextValue = React.useMemo(() => ({
     language,
     setLanguage,
     unitSystem,
     setUnitSystem,
     t
-  }), [language, unitSystem, translationVersion]); // Include translationVersion in dependencies
+  }), [language, unitSystem, t, setLanguage, setUnitSystem]);
 
   return (
     <LocaleContext.Provider value={contextValue}>
