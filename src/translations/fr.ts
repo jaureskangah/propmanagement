@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { frNavigation } from './features/navigation';
 import { frHero } from './features/hero';
@@ -89,7 +90,6 @@ export const frTranslations: Translations = {
   addTask: "Ajouter une Tâche",
   noMaintenanceRequests: "Aucune demande de maintenance trouvée",
   maintenanceManagement: "Gestion de la Maintenance",
-  maintenanceDescription: "Suivez les demandes de maintenance, planifiez les tâches et gérez les interventions",
   totalRequests: "Demandes Totales",
   pendingRequests: "Demandes en Attente",
   resolvedRequests: "Demandes Résolues",

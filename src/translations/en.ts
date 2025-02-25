@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { enNavigation } from './features/navigation';
 import { enHero } from './features/hero';
@@ -89,7 +90,6 @@ export const enTranslations: Translations = {
   addTask: "Add Task",
   noMaintenanceRequests: "No maintenance requests found",
   maintenanceManagement: "Maintenance Management",
-  maintenanceDescription: "Track maintenance requests, schedule tasks, and manage interventions",
   totalRequests: "Total Requests",
   pendingRequests: "Pending Requests",
   resolvedRequests: "Resolved Requests",

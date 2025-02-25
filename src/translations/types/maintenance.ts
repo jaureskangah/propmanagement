@@ -55,4 +55,18 @@ export interface MaintenanceTranslations {
   scheduledTasks: string;
   addTask: string;
   noMaintenanceRequests: string;
+  maintenanceManagement: string;
+  totalRequests: string;
+  pendingRequests: string;
+  resolvedRequests: string;
+  urgentRequests: string;
+  schedule: string;
+  history: string;
+  tasks: string;
+  startDate: string;
+  endDate: string;
+  priority: string;
+  status: string;
+  type: string;
+  description: string;
 }
