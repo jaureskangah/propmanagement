@@ -1,5 +1,3 @@
-
-// Importer et réexporter toutes les interfaces de traduction
 import type { AdminDashboardTranslations } from './admin';
 import type { AuthTranslations } from './auth';
 import type { ContactTranslations } from './contact';
@@ -16,8 +14,11 @@ import type { PropertyManagementTranslations } from './property';
 import type { StatusTranslations } from './status';
 import type { TenantTranslations } from './tenant';
 import type { ToastTranslations } from './toasts';
+import type { CommonTranslations } from './common';
+import type { DashboardTranslations } from './dashboard';
+import type { SettingsTranslations } from './settings';
+import type { ModalTranslations } from './modal';
 
-// Exporter tous les types
 export type { AdminDashboardTranslations as AdminTranslations };
 export type { AuthTranslations };
 export type { ContactTranslations };
@@ -35,11 +36,14 @@ export type { PropertyManagementTranslations };
 export type { StatusTranslations };
 export type { TenantTranslations };
 export type { ToastTranslations };
+export type { CommonTranslations };
+export type { DashboardTranslations };
+export type { SettingsTranslations };
+export type { ModalTranslations };
 
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
-// Interface principale qui combine toutes les traductions
 export interface Translations extends 
   AdminDashboardTranslations,
   AuthTranslations,
@@ -57,4 +61,8 @@ export interface Translations extends
   PropertyManagementTranslations,
   StatusTranslations,
   TenantTranslations,
-  ToastTranslations {}
+  ToastTranslations,
+  CommonTranslations,
+  DashboardTranslations,
+  SettingsTranslations,
+  ModalTranslations {}

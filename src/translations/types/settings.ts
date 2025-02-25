@@ -1,0 +1,31 @@
+
+export interface SettingsTranslations {
+  settings: string;
+  profile: string;
+  profileDescription: string;
+  security: string;
+  securityDescription: string;
+  notifications: string;
+  notificationsDescription: string;
+  appearance: string;
+  appearanceDescription: string;
+  darkTheme: string;
+  darkThemeDescription: string;
+  pushNotifications: string;
+  pushNotificationsDescription: string;
+  emailUpdates: string;
+  emailUpdatesDescription: string;
+  preferencesUpdated: string;
+  preferencesUpdatedMessage: string;
+  preferencesUpdateError: string;
+  passwordChanged: string;
+  passwordChangedMessage: string;
+  passwordChangeError: string;
+  currentPassword: string;
+  newPassword: string;
+  confirmNewPassword: string;
+  changePassword: string;
+  updateProfile: string;
+  profileUpdated: string;
+  profileUpdateError: string;
+}

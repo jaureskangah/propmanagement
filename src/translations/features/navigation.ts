@@ -12,6 +12,14 @@ export const enNavigation: NavigationTranslations = {
   units: "Units",
   metric: "Metric",
   imperial: "Imperial",
+  home: "Home",
+  tenants: "Tenants",
+  maintenance: "Maintenance",
+  settings: "Settings",
+  admin: "Admin",
+  loading: "Loading...",
+  error: "Error",
+  properties: "Properties"
 };
 
 export const frNavigation: NavigationTranslations = {
@@ -25,4 +33,12 @@ export const frNavigation: NavigationTranslations = {
   units: "Unités",
   metric: "Métrique",
   imperial: "Impérial",
+  home: "Accueil",
+  tenants: "Locataires",
+  maintenance: "Maintenance",
+  settings: "Paramètres",
+  admin: "Administration",
+  loading: "Chargement...",
+  error: "Erreur",
+  properties: "Propriétés"
 };
