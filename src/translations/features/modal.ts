@@ -1,4 +1,3 @@
-
 export const enModal = {
   // Form Common
   required: "Required field",
@@ -13,6 +12,7 @@ export const enModal = {
   confirm: "Confirm",
   loading: "Loading...",
   saving: "Saving...",
+  creating: "Creating...",
   deleting: "Deleting...",
   updating: "Updating...",
   adding: "Adding...",
@@ -20,6 +20,10 @@ export const enModal = {
   processing: "Processing...",
   success: "Success",
   error: "Error",
+  warning: "Warning",
+  info: "Info",
+  deleteConfirmation: "Are you sure you want to delete this?",
+  deleteWarning: "This action cannot be undone",
   
   // Form Fields
   firstName: "First Name",
@@ -111,6 +115,7 @@ export const frModal = {
   confirm: "Confirmer",
   loading: "Chargement...",
   saving: "Enregistrement...",
+  creating: "Création...",
   deleting: "Suppression...",
   updating: "Mise à jour...",
   adding: "Ajout...",
@@ -118,6 +123,10 @@ export const frModal = {
   processing: "Traitement...",
   success: "Succès",
   error: "Erreur",
+  warning: "Attention",
+  info: "Info",
+  deleteConfirmation: "Êtes-vous sûr de vouloir supprimer ceci ?",
+  deleteWarning: "Cette action ne peut pas être annulée",
   
   // Form Fields
   firstName: "Prénom",

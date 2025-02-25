@@ -10,7 +10,7 @@ export interface ModalTranslations {
   saving: string;
   edit: string;
   add: string;
-  creating: string;
+  creating: string; // Ajout de la propriété manquante
   updating: string;
   deleting: string;
   success: string;
