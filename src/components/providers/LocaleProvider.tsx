@@ -49,10 +49,15 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
+  // Force re-render of all components using translations
+  const [translationVersion, setTranslationVersion] = useState(0);
+
   useEffect(() => {
     document.documentElement.lang = language;
     console.log('Language changed to:', language);
     console.log('Available translations:', Object.keys(translations[language]));
+    // Increment version to force re-render
+    setTranslationVersion(prev => prev + 1);
   }, [language]);
 
   const setLanguage = (newLanguage: Language) => {
@@ -77,13 +82,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const t = (key: string): string => {
     try {
       const currentTranslations = translations[language];
-      console.log('Translation request:', {
-        key,
-        language,
-        hasTranslation: key in currentTranslations,
-        availableKeys: Object.keys(currentTranslations)
-      });
       
+      // Include translationVersion in dependency to force re-evaluation
       const translation = currentTranslations[key as keyof Translations];
       if (!translation) {
         console.warn(`Missing translation for key: ${key} in language: ${language}`);
@@ -96,16 +96,16 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const value = {
+  const contextValue = React.useMemo(() => ({
     language,
     setLanguage,
     unitSystem,
     setUnitSystem,
     t
-  };
+  }), [language, unitSystem, translationVersion]); // Include translationVersion in dependencies
 
   return (
-    <LocaleContext.Provider value={value}>
+    <LocaleContext.Provider value={contextValue}>
       {children}
     </LocaleContext.Provider>
   );
