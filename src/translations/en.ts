@@ -3,7 +3,7 @@ import { Translations } from './types';
 import { enNavigation } from './features/navigation';
 import { enHero } from './features/hero';
 import { enFeatures } from './features/features';
-import { enPricing } from './features/pricing';
+import { enPricing, enPlanFeatures } from './features/pricing';
 import { enToasts } from './features/toasts';
 import { enContact } from './features/contact';
 import { enAuth } from './features/auth';
@@ -26,6 +26,7 @@ export const enTranslations: Translations = {
   ...enHero,
   ...enFeatures,
   ...enPricing,
+  ...enPlanFeatures,  // Important: ajouter les traductions des fonctionnalités des plans
   ...enToasts,
   ...enContact,
   ...enAuth,

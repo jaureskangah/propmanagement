@@ -3,7 +3,7 @@ import { Translations } from './types';
 import { frNavigation } from './features/navigation';
 import { frHero } from './features/hero';
 import { frFeatures } from './features/features';
-import { frPricing } from './features/pricing';
+import { frPricing, frPlanFeatures } from './features/pricing';
 import { frToasts } from './features/toasts';
 import { frContact } from './features/contact';
 import { frAuth } from './features/auth';
@@ -26,6 +26,7 @@ export const frTranslations: Translations = {
   ...frHero,
   ...frFeatures,
   ...frPricing,
+  ...frPlanFeatures,  // Important: ajouter les traductions des fonctionnalités des plans
   ...frToasts,
   ...frContact,
   ...frAuth,
