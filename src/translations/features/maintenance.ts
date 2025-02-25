@@ -1,4 +1,3 @@
-
 export const enMaintenance = {
   maintenanceManagement: "Maintenance Management",
   maintenanceDescription: "Track maintenance requests, schedule tasks, and manage vendor relationships",
@@ -41,7 +40,25 @@ export const enMaintenance = {
   cancel: "Cancel",
   export: "Export",
   print: "Print",
-  analytics: "Analytics"
+  analytics: "Analytics",
+  unreadMessages: "Unread Messages",
+  messageRequiringAttention: "message requiring attention",
+  messagesRequiringAttention: "messages requiring attention",
+  globalOccupancy: "Global Occupancy",
+  occupancyRate: "occupancy rate",
+  fromLastMonth: "from last month",
+  newThisMonth: "new this month",
+  pendingRequest: "pending request",
+  pendingRequests: "pending requests",
+  basedOnCurrentLeases: "Based on current leases",
+  monthlyRevenue: "Monthly Revenue",
+  recentActivities: "Recent Activities",
+  tenantAdded: "New tenant added",
+  paymentReceived: "Payment received",
+  maintenanceRequested: "Maintenance requested",
+  unit: "Unit",
+  amount: "Amount",
+  priority: "Priority",
 };
 
 export const frMaintenance = {
@@ -86,5 +103,23 @@ export const frMaintenance = {
   cancel: "Annuler",
   export: "Exporter",
   print: "Imprimer",
-  analytics: "Analytique"
+  analytics: "Analytique",
+  unreadMessages: "Messages Non Lus",
+  messageRequiringAttention: "message nécessitant une attention",
+  messagesRequiringAttention: "messages nécessitant une attention",
+  globalOccupancy: "Occupation Globale",
+  occupancyRate: "taux d'occupation",
+  fromLastMonth: "par rapport au mois dernier",
+  newThisMonth: "nouveau ce mois-ci",
+  pendingRequest: "demande en attente",
+  pendingRequests: "demandes en attente",
+  basedOnCurrentLeases: "Basé sur les baux actuels",
+  monthlyRevenue: "Revenu Mensuel",
+  recentActivities: "Activités Récentes",
+  tenantAdded: "Nouveau locataire ajouté",
+  paymentReceived: "Paiement reçu",
+  maintenanceRequested: "Maintenance demandée",
+  unit: "Unité",
+  amount: "Montant",
+  priority: "Priorité",
 };

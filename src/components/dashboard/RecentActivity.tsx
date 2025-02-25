@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { ActivityCard } from "./activity/ActivityCard";
 import { TenantActivity } from "./activity/TenantActivity";
@@ -6,6 +5,7 @@ import { PaymentActivity } from "./activity/PaymentActivity";
 import { MaintenanceActivity } from "./activity/MaintenanceActivity";
 import { useMemo } from "react";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface Activity {
   id: string;
@@ -15,6 +15,8 @@ interface Activity {
 }
 
 export const RecentActivity = () => {
+  const { t } = useLocale();
+
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ["recent_tenants"],
     queryFn: async () => {
@@ -103,7 +105,7 @@ export const RecentActivity = () => {
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
   return (
-    <ActivityCard title="Recent Activities" isLoading={isLoading}>
+    <ActivityCard title={t('recentActivities')} isLoading={isLoading}>
       {allActivities.map(activity => (
         <div key={`${activity.type}-${activity.id}`}>
           {activity.component}
