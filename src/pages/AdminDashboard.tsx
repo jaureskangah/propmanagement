@@ -63,7 +63,7 @@ export default function AdminDashboard() {
         t('activeUsers'),
         t('totalRevenue'),
         t('properties'),
-        "Total Tenants"
+        t('totalTenants')
       ];
       const csvData = [
         headers.join(","),
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
     total_tenants: 0
   };
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen">{t('loading')}</div>;
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
@@ -161,18 +161,18 @@ export default function AdminDashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <GrowthChart
-              title={t('userGrowth')}
+              title="userGrowth"
               data={metrics}
               lines={[
-                { key: 'total_users', name: t('totalUsers'), color: '#8884d8' },
-                { key: 'active_users', name: t('activeUsers'), color: '#82ca9d' }
+                { key: 'total_users', name: 'totalUsers', color: '#8884d8' },
+                { key: 'active_users', name: 'activeUsers', color: '#82ca9d' }
               ]}
             />
             <GrowthChart
-              title={t('revenueGrowth')}
+              title="revenueGrowth"
               data={metrics}
               lines={[
-                { key: 'total_revenue', name: t('totalRevenue'), color: '#82ca9d' }
+                { key: 'total_revenue', name: 'totalRevenue', color: '#82ca9d' }
               ]}
               tooltipFormatter={(value) => [`$${Number(value).toLocaleString()}`, t('totalRevenue')]}
             />
