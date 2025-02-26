@@ -19,6 +19,7 @@ import {
   DollarSign
 } from "lucide-react";
 import { WorkOrder } from "@/types/workOrder";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface WorkOrderListProps {
   workOrders: WorkOrder[];
@@ -58,6 +59,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "cost">("date");
+  const { t } = useLocale();
 
   const filteredAndSortedOrders = React.useMemo(() => {
     if (!workOrders) return [];
@@ -82,13 +84,13 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   return (
     <div className="animate-fade-in space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-card-foreground">Work Orders</h2>
+        <h2 className="text-xl font-semibold text-card-foreground">{t('workOrders')}</h2>
         <Button 
           onClick={onCreateWorkOrder} 
           className="flex items-center gap-2 transition-all duration-300 hover:scale-105 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md hover:shadow-lg"
         >
           <Plus className="h-4 w-4" />
-          Create Order
+          {t('createOrder')}
         </Button>
       </div>
 
@@ -98,7 +100,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
             <div className="relative">
               <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500 dark:text-gray-400" />
               <Input
-                placeholder="Search by title or property..."
+                placeholder={t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-8 transition-all duration-300 hover:border-primary focus:ring-2 focus:ring-primary/20 bg-background"
@@ -108,23 +110,23 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
 
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-background">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t('filterByStatus')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All statuses</SelectItem>
-              <SelectItem value="In Progress">In Progress</SelectItem>
-              <SelectItem value="Scheduled">Scheduled</SelectItem>
-              <SelectItem value="Completed">Completed</SelectItem>
+              <SelectItem value="all">{t('allStatuses')}</SelectItem>
+              <SelectItem value="In Progress">{t('statusInProgress')}</SelectItem>
+              <SelectItem value="Scheduled">{t('statusPending')}</SelectItem>
+              <SelectItem value="Completed">{t('statusCompleted')}</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
             <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-background">
-              <SelectValue placeholder="Sort by" />
+              <SelectValue placeholder={t('sortBy')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date">Date</SelectItem>
-              <SelectItem value="cost">Cost</SelectItem>
+              <SelectItem value="date">{t('date')}</SelectItem>
+              <SelectItem value="cost">{t('cost')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -144,13 +146,13 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                   {order.property && (
                     <div className="flex items-center gap-2">
                       <Building className="h-4 w-4 text-muted-foreground" />
-                      <p><strong>Property:</strong> {order.property}</p>
+                      <p><strong>{t('property')}:</strong> {order.property}</p>
                     </div>
                   )}
                   {order.unit && (
                     <div className="flex items-center gap-2">
                       <Home className="h-4 w-4 text-muted-foreground" />
-                      <p><strong>Unit:</strong> {order.unit}</p>
+                      <p><strong>{t('unit')}:</strong> {order.unit}</p>
                     </div>
                   )}
                   <div className="flex items-center gap-2 mt-2">
@@ -163,11 +165,11 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                   </div>
                   <div className="flex items-center gap-2">
                     <Wrench className="h-4 w-4 text-muted-foreground" />
-                    <p><strong>Vendor:</strong> {order.vendor}</p>
+                    <p><strong>{t('vendor')}:</strong> {order.vendor}</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
-                    <p><strong>Cost:</strong> ${order.cost}</p>
+                    <p><strong>{t('cost')}:</strong> ${order.cost}</p>
                   </div>
                   <div className="flex gap-2 mt-4">
                     <Button 
@@ -176,7 +178,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                       className="transition-all duration-300 hover:scale-105"
                     >
                       <FileImage className="h-4 w-4 mr-2" />
-                      Photos
+                      {t('photos')}
                     </Button>
                     <Button 
                       variant="outline" 
@@ -184,7 +186,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
                       className="transition-all duration-300 hover:scale-105"
                     >
                       <CheckSquare className="h-4 w-4 mr-2" />
-                      Update
+                      {t('update')}
                     </Button>
                   </div>
                 </div>
