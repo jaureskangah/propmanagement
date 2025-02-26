@@ -78,7 +78,7 @@ export const TenantLayout = ({
             <TenantProfile tenant={selectedTenantData} />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-muted-foreground">{t('selectTenantToViewDetails')}</p>
+              <p className="text-muted-foreground">{t('selectTenantToView')}</p>
             </Card>
           )}
         </div>

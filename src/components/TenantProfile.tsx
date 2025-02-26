@@ -7,6 +7,7 @@ import { TenantTabs } from "./tenant/profile/TenantTabs";
 import type { Tenant } from "@/types/tenant";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/components/AuthProvider";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantProfileProps {
   tenant: Tenant;
@@ -15,6 +16,7 @@ interface TenantProfileProps {
 const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { t } = useLocale();
   const isTenantUser = user?.id === tenant.tenant_profile_id;
 
   // Préchargement des données
@@ -40,7 +42,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   if (!tenant) {
     return (
       <Card className="h-[300px] flex items-center justify-center">
-        <p className="text-muted-foreground">No tenant selected</p>
+        <p className="text-muted-foreground">{t('noTenantSelected')}</p>
       </Card>
     );
   }
