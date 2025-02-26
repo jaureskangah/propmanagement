@@ -1,15 +1,18 @@
+
 import React from "react";
 import { MetricsCards } from "./maintenance/financials/MetricsCards";
 import { DataTables } from "./maintenance/financials/DataTables";
 import { ChartsSection } from "./maintenance/financials/ChartsSection";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PropertyFinancialsProps {
   propertyId: string;
 }
 
 const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
+  const { t } = useLocale();
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
   // Fetch expenses data
@@ -23,11 +26,11 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
         .order("date", { ascending: false });
 
       if (error) {
-        console.error("Error fetching expenses:", error);
+        console.error(t('error') + ":", error);
         throw error;
       }
 
-      console.log("Fetched expenses:", data);
+      console.log(t('loadingData') + ":", data);
       return data;
     },
   });
@@ -49,11 +52,11 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
         .order("date", { ascending: false });
 
       if (error) {
-        console.error("Error fetching maintenance interventions:", error);
+        console.error(t('error') + ":", error);
         throw error;
       }
 
-      console.log("Fetched maintenance interventions:", data);
+      console.log(t('loadingInterventions') + ":", data);
       return data;
     },
   });
