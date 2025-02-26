@@ -124,14 +124,14 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
               selected={selectedDate}
               onSelect={setSelectedDate}
               className="rounded-md border"
-              locale={fr}
+              locale={language === 'fr' ? fr : undefined}
               modifiers={calendarModifiers}
               modifiersStyles={calendarModifiersStyles}
             />
 
             <div className="mt-4">
               <h4 className="font-medium mb-2">
-                {t('eventsOn')} {selectedDate ? format(selectedDate, 'MMMM d, yyyy', { locale: fr }) : ''}
+                {t('eventsOn')} {selectedDate ? format(selectedDate, 'MMMM d, yyyy', { locale: language === 'fr' ? fr : undefined }) : ''}
               </h4>
               <ScrollArea className="h-[100px]">
                 <div className="space-y-2">
