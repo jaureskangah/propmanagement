@@ -55,7 +55,28 @@ export const enMaintenance = {
   scheduledTasks: "Scheduled Tasks",
   addTask: "Add Task",
   noMaintenanceRequests: "No maintenance requests found",
-  maintenanceManagement: "Maintenance Management"
+  maintenanceManagement: "Maintenance Management",
+  loading: "Loading...",
+  allVendors: "All Vendors",
+  emergencyContacts: "Emergency Contacts",
+  reviews: "Reviews",
+  history: "History",
+  searchPlaceholder: "Search by title or property...",
+  filterByStatus: "Filter by status",
+  sortBy: "Sort by",
+  allStatuses: "All statuses",
+  update: "Update",
+  createOrder: "Create Order",
+  vendorDeleted: "Vendor deleted successfully",
+  vendorDeleteError: "Failed to delete vendor",
+  date: "Date",
+  cost: "Cost",
+  noEvents: "No events",
+  noTasks: "No tasks found",
+  property: "Property",
+  unit: "Unit",
+  vendor: "Vendor",
+  photos: "Photos"
 };
 
 export const frMaintenance = {
@@ -114,5 +135,27 @@ export const frMaintenance = {
   scheduledTasks: "Tâches planifiées",
   addTask: "Ajouter une tâche",
   noMaintenanceRequests: "Aucune demande de maintenance trouvée",
-  maintenanceManagement: "Gestion de la maintenance"
+  maintenanceManagement: "Gestion de la maintenance",
+  loading: "Chargement...",
+  allVendors: "Tous les fournisseurs",
+  emergencyContacts: "Contacts d'urgence",
+  reviews: "Avis",
+  history: "Historique",
+  searchPlaceholder: "Rechercher par titre ou propriété...",
+  filterByStatus: "Filtrer par statut",
+  sortBy: "Trier par",
+  allStatuses: "Tous les statuts",
+  update: "Mettre à jour",
+  createOrder: "Créer un ordre",
+  vendorDeleted: "Fournisseur supprimé avec succès",
+  vendorDeleteError: "Échec de la suppression du fournisseur",
+  date: "Date",
+  cost: "Coût",
+  noEvents: "Aucun événement",
+  noTasks: "Aucune tâche trouvée",
+  property: "Propriété",
+  unit: "Unité",
+  vendor: "Fournisseur",
+  photos: "Photos"
 };
+

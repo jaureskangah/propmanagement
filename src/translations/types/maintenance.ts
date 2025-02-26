@@ -56,4 +56,26 @@ export interface MaintenanceTranslations {
   addTask: string;
   noMaintenanceRequests: string;
   maintenanceManagement: string;
+  loading: string;
+  allVendors: string;
+  emergencyContacts: string;
+  reviews: string;
+  history: string;
+  searchPlaceholder: string;
+  filterByStatus: string;
+  sortBy: string;
+  allStatuses: string;
+  update: string;
+  createOrder: string;
+  vendorDeleted: string;
+  vendorDeleteError: string;
+  date: string;
+  cost: string;
+  noEvents: string;
+  noTasks: string;
+  property: string;
+  unit: string;
+  vendor: string;
+  photos: string;
 }
+
