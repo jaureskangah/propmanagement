@@ -1,4 +1,3 @@
-
 export const enMaintenance = {
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
@@ -83,7 +82,6 @@ export const enMaintenance = {
   paymentNotification: "Payment Notification",
   maintenanceNotification: "Maintenance Notification",
   notificationsAndAlerts: "Notifications and Alerts",
-  // Ajout des nouvelles clés
   totalRequests: "Total Requests",
   resolvedRequests: "Resolved Requests",
   pendingRequests: "Pending Requests"
@@ -173,8 +171,7 @@ export const frMaintenance = {
   paymentNotification: "Notification de paiement",
   maintenanceNotification: "Notification de maintenance",
   notificationsAndAlerts: "Notifications et alertes",
-  // Ajout des nouvelles clés
   totalRequests: "Demandes totales",
   resolvedRequests: "Demandes résolues",
-  pendingRequests: "Demandes en attente"
+  pendingRequests: "Demandes En Attente"
 };
