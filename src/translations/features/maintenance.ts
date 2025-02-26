@@ -85,7 +85,8 @@ export const enMaintenance = {
   notificationsAndAlerts: "Notifications and Alerts",
   // Ajout des nouvelles clés
   totalRequests: "Total Requests",
-  resolvedRequests: "Resolved Requests"
+  resolvedRequests: "Resolved Requests",
+  pendingRequests: "Pending Requests"
 };
 
 export const frMaintenance = {
@@ -174,5 +175,6 @@ export const frMaintenance = {
   notificationsAndAlerts: "Notifications et alertes",
   // Ajout des nouvelles clés
   totalRequests: "Demandes totales",
-  resolvedRequests: "Demandes résolues"
+  resolvedRequests: "Demandes résolues",
+  pendingRequests: "Demandes en attente"
 };
