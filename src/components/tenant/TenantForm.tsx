@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { TenantFormValues, tenantFormSchema } from "./tenantValidation";
+import { TenantFormValues, createTenantFormSchema } from "./tenantValidation";
 import { PersonalInfoFields } from "./form/PersonalInfoFields";
 import { PropertyFields } from "./form/PropertyFields";
 import { LeaseFields } from "./form/LeaseFields";
@@ -18,8 +18,9 @@ interface TenantFormProps {
 
 export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: TenantFormProps) {
   const { t } = useLocale();
+  
   const form = useForm<TenantFormValues>({
-    resolver: zodResolver(tenantFormSchema),
+    resolver: zodResolver(createTenantFormSchema(t)),
     defaultValues: defaultValues || {
       name: "",
       email: "",
