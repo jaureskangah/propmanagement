@@ -61,7 +61,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
         />
         <img
           src={property.image || getDefaultImageByType(property.type)}
-          alt={property.name}
+          alt={`${property.name} - ${t('propertyImage')}`}
           className={cn(
             "w-full h-full object-cover transition-all duration-500",
             "group-hover:scale-105",
