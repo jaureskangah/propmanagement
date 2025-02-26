@@ -17,7 +17,7 @@ interface PrioritySectionProps {
 
 export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: PrioritySectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const { t, locale } = useLocale();
+  const { t, language } = useLocale();
 
   // Mémoriser les données filtrées pour éviter des recalculs inutiles
   const urgentMaintenance = useMemo(() => 
