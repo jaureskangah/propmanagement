@@ -77,13 +77,15 @@ export const enMaintenance = {
   unit: "Unit",
   vendor: "Vendor",
   photos: "Photos",
-  // Add the new English translations
   budgetAlert: "Budget Alert",
   paymentAlert: "Payment Alert",
   trendAlert: "Trend Alert",
   paymentNotification: "Payment Notification",
   maintenanceNotification: "Maintenance Notification",
-  notificationsAndAlerts: "Notifications and Alerts"
+  notificationsAndAlerts: "Notifications and Alerts",
+  // Ajout des nouvelles clés
+  totalRequests: "Total Requests",
+  resolvedRequests: "Resolved Requests"
 };
 
 export const frMaintenance = {
@@ -169,5 +171,8 @@ export const frMaintenance = {
   trendAlert: "Alerte tendance",
   paymentNotification: "Notification de paiement",
   maintenanceNotification: "Notification de maintenance",
-  notificationsAndAlerts: "Notifications et alertes"
+  notificationsAndAlerts: "Notifications et alertes",
+  // Ajout des nouvelles clés
+  totalRequests: "Demandes totales",
+  resolvedRequests: "Demandes résolues"
 };
