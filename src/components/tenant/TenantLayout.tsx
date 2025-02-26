@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import TenantProfile from "@/components/TenantProfile";
 import { TenantList } from "@/components/tenant/TenantList";
@@ -6,6 +7,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ChevronLeft } from "lucide-react";
 import type { Tenant } from "@/types/tenant";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantLayoutProps {
   filteredTenants: Tenant[];
@@ -35,6 +37,7 @@ export const TenantLayout = ({
   const isMobile = useIsMobile();
   const showList = !isMobile || !selectedTenant;
   const showDetails = !isMobile || selectedTenant;
+  const { t } = useLocale();
 
   return (
     <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-3'} gap-6`}>
@@ -67,7 +70,7 @@ export const TenantLayout = ({
               onClick={() => onTenantSelect("")}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
-              Back to list
+              {t('back')}
             </Button>
           )}
           
@@ -75,7 +78,7 @@ export const TenantLayout = ({
             <TenantProfile tenant={selectedTenantData} />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-muted-foreground">Select a tenant to view details</p>
+              <p className="text-muted-foreground">{t('selectTenantToViewDetails')}</p>
             </Card>
           )}
         </div>
