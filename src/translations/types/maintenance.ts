@@ -77,11 +77,13 @@ export interface MaintenanceTranslations {
   unit: string;
   vendor: string;
   photos: string;
-  // Ajout des nouvelles clés
   budgetAlert: string;
   paymentAlert: string;
   trendAlert: string;
   paymentNotification: string;
   maintenanceNotification: string;
   notificationsAndAlerts: string;
+  totalRequests: string;
+  resolvedRequests: string;
+  pendingRequests: string;
 }

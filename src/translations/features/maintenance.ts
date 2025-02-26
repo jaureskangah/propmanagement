@@ -1,3 +1,4 @@
+
 export const enMaintenance = {
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
@@ -171,7 +172,7 @@ export const frMaintenance = {
   paymentNotification: "Notification de paiement",
   maintenanceNotification: "Notification de maintenance",
   notificationsAndAlerts: "Notifications et alertes",
-  totalRequests: "Demandes totales",
-  resolvedRequests: "Demandes résolues",
+  totalRequests: "Demandes Totales",
+  resolvedRequests: "Demandes Résolues",
   pendingRequests: "Demandes En Attente"
 };
