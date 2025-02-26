@@ -37,16 +37,33 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <PersonalInfoFields form={form} />
-        <PropertyFields form={form} />
-        <LeaseFields form={form} />
+        <div>
+          <h3 className="text-lg font-medium mb-4">{t('personalInfo')}</h3>
+          <PersonalInfoFields form={form} />
+        </div>
+
+        <div>
+          <h3 className="text-lg font-medium mb-4">{t('propertyInfo')}</h3>
+          <PropertyFields form={form} />
+        </div>
+
+        <div>
+          <h3 className="text-lg font-medium mb-4">{t('leaseInfo')}</h3>
+          <LeaseFields form={form} />
+        </div>
         
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
             {t('cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? t('saving') : isEditMode ? t('update') : t('add')}
+            {isSubmitting ? (
+              t('saving')
+            ) : isEditMode ? (
+              t('saveTenant')
+            ) : (
+              t('addTenant')
+            )}
           </Button>
         </div>
       </form>
