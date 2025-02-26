@@ -1,10 +1,10 @@
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, X, HelpCircle } from "lucide-react";
 import { SidebarNavLink } from "./SidebarNavLink";
 import { SidebarLogo } from "./SidebarLogo";
 import SidebarLinks from "./SidebarLinks";
+import { useLocale } from "@/context/locale";
 
 interface MobileSidebarProps {
   isMobileOpen: boolean;
@@ -19,6 +19,8 @@ export const MobileSidebar = ({
   isTenant,
   handleSupportClick
 }: MobileSidebarProps) => {
+  const { t } = useLocale();
+
   return (
     <div className="fixed top-4 left-4 z-50 md:hidden">
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
@@ -42,7 +44,7 @@ export const MobileSidebar = ({
                 onClick={handleSupportClick}
               >
                 <HelpCircle className="h-4 w-4" />
-                Get Support
+                {t('getSupport')}
               </Button>
             </div>
           </div>

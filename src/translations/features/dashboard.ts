@@ -57,7 +57,11 @@ export const enDashboard = {
   pendingRequests: "pending requests",
   properties: "Properties",
   maintenance: "Maintenance",
-  tenants: "Tenants"
+  tenants: "Tenants",
+  getSupport: "Get Support",
+  payment: "Payment",
+  lease: "Lease",
+  calendarEvents: "Calendar Events"
 };
 
 export const frDashboard = {
@@ -118,5 +122,9 @@ export const frDashboard = {
   pendingRequests: "demandes en attente",
   properties: "Propriétés",
   maintenance: "Maintenance",
-  tenants: "Locataires"
+  tenants: "Locataires",
+  getSupport: "Obtenir de l'aide",
+  payment: "Paiement",
+  lease: "Bail",
+  calendarEvents: "Événements du calendrier"
 };
