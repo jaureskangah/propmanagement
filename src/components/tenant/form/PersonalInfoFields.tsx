@@ -1,7 +1,7 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import type { TenantFormValues } from "../tenantValidation";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -9,37 +9,39 @@ interface PersonalInfoFieldsProps {
   form: UseFormReturn<TenantFormValues>;
 }
 
-export function PersonalInfoFields({ form }: PersonalInfoFieldsProps) {
+export const PersonalInfoFields = ({ form }: PersonalInfoFieldsProps) => {
   const { t } = useLocale();
 
   return (
-    <>
+    <div className="space-y-4">
       <FormField
         control={form.control}
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('name')} *</FormLabel>
+            <FormLabel>{t('name')}</FormLabel>
             <FormControl>
-              <Input placeholder={t('enterName')} {...field} />
+              <Input {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('email')} *</FormLabel>
+            <FormLabel>{t('email')}</FormLabel>
             <FormControl>
-              <Input type="email" placeholder={t('enterEmail')} {...field} />
+              <Input type="email" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
+
       <FormField
         control={form.control}
         name="phone"
@@ -47,12 +49,12 @@ export function PersonalInfoFields({ form }: PersonalInfoFieldsProps) {
           <FormItem>
             <FormLabel>{t('phone')}</FormLabel>
             <FormControl>
-              <Input placeholder={t('enterPhone')} {...field} />
+              <Input type="tel" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-    </>
+    </div>
   );
-}
+};
