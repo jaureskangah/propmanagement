@@ -3,9 +3,11 @@ import { Bell, AlertTriangle, CreditCard, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NotificationsList } from "./NotificationsList";
 import { useMaintenanceAlerts } from "@/hooks/useMaintenanceAlerts";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const MaintenanceNotifications = () => {
   const { notifications, budgetAlerts, paymentAlerts } = useMaintenanceAlerts();
+  const { t } = useLocale();
 
   // Combine notifications and alerts with their respective icons
   const allNotifications = [
@@ -29,7 +31,7 @@ export const MaintenanceNotifications = () => {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
           <Bell className="h-4 w-4" />
-          Notifications and Alerts
+          {t('notificationsAndAlerts')}
         </CardTitle>
       </CardHeader>
       <CardContent>
