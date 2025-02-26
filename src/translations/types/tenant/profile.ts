@@ -6,12 +6,12 @@ export interface TenantProfileTranslations {
   contactManager: string;
   linkAccountRequired: string;
   profileSection: string;
-  emailLabel: string;
-  phoneLabel: string;
-  unitLabel: string;
+  emailProfileLabel: string;
+  phoneProfileLabel: string;
+  unitProfileLabel: string;
   rentAmountLabel: string;
-  leaseStartLabel: string;
-  leaseEndLabel: string;
+  leaseStartProfileLabel: string;
+  leaseEndProfileLabel: string;
   notAvailable: string;
   perMonth: string;
 }
