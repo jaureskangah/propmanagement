@@ -70,6 +70,31 @@ export interface TenantTranslations {
   pending: string;
   completed: string;
   failed: string;
+  paid: string;
+  overdue: string;
+  confirmDeletePayment: string;
+  paymentDeleteWarning: string;
+  paymentDeleted: string;
+  paymentAdded: string;
+  paymentUpdated: string;
+  paymentError: string;
+  selectPaymentStatus: string;
+
+  // Profile
+  noTenantSelected: string;
+  selectTenantToView: string;
+  notLinkedToTenant: string;
+  contactManager: string;
+  linkAccountRequired: string;
+  profileSection: string;
+  emailLabel: string;
+  phoneLabel: string;
+  unitLabel: string;
+  rentAmountLabel: string;
+  leaseStartLabel: string;
+  leaseEndLabel: string;
+  notAvailable: string;
+  perMonth: string;
 
   // Messages de confirmation/succès
   tenantAdded: string;
@@ -79,7 +104,6 @@ export interface TenantTranslations {
   deleteWarning: string;
   invitationSent: string;
   messageSent: string;
-  paymentAdded: string;
-  paymentUpdated: string;
   paymentDeleted: string;
 }
+

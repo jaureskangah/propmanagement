@@ -1,4 +1,3 @@
-
 import { TenantTranslations } from '../types/tenant';
 
 export const enTenant: TenantTranslations = {
@@ -72,6 +71,31 @@ export const enTenant: TenantTranslations = {
   pending: "Pending",
   completed: "Completed",
   failed: "Failed",
+  paid: "Paid",
+  overdue: "Overdue",
+  confirmDeletePayment: "Delete Payment",
+  paymentDeleteWarning: "Are you sure you want to delete this payment?",
+  paymentDeleted: "Payment deleted successfully",
+  paymentAdded: "Payment added successfully",
+  paymentUpdated: "Payment updated successfully",
+  paymentError: "An error occurred while processing the payment",
+  selectPaymentStatus: "Select a status",
+
+  // Profile
+  noTenantSelected: "No tenant selected",
+  selectTenantToView: "Select a tenant to view details",
+  notLinkedToTenant: "Not linked to a tenant profile",
+  contactManager: "Please contact your property manager",
+  linkAccountRequired: "Your account needs to be linked to a tenant profile",
+  profileSection: "Profile",
+  emailLabel: "Email",
+  phoneLabel: "Phone",
+  unitLabel: "Unit",
+  rentAmountLabel: "Rent Amount",
+  leaseStartLabel: "Lease Start",
+  leaseEndLabel: "Lease End",
+  notAvailable: "N/A",
+  perMonth: "/month",
 
   // Messages de confirmation/succès
   tenantAdded: "Tenant added successfully",
@@ -157,6 +181,31 @@ export const frTenant: TenantTranslations = {
   pending: "En Attente",
   completed: "Complété",
   failed: "Échoué",
+  paid: "Payé",
+  overdue: "En Retard",
+  confirmDeletePayment: "Supprimer le Paiement",
+  paymentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce paiement ?",
+  paymentDeleted: "Paiement supprimé avec succès",
+  paymentAdded: "Paiement ajouté avec succès",
+  paymentUpdated: "Paiement mis à jour avec succès",
+  paymentError: "Une erreur est survenue lors du traitement du paiement",
+  selectPaymentStatus: "Sélectionner un statut",
+
+  // Profile
+  noTenantSelected: "Aucun locataire sélectionné",
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
+  notLinkedToTenant: "Non lié à un profil de locataire",
+  contactManager: "Veuillez contacter votre gestionnaire",
+  linkAccountRequired: "Votre compte doit être lié à un profil de locataire",
+  profileSection: "Profil",
+  emailLabel: "Email",
+  phoneLabel: "Téléphone",
+  unitLabel: "Unité",
+  rentAmountLabel: "Montant du Loyer",
+  leaseStartLabel: "Début du Bail",
+  leaseEndLabel: "Fin du Bail",
+  notAvailable: "N/D",
+  perMonth: "/mois",
 
   // Messages de confirmation/succès
   tenantAdded: "Locataire ajouté avec succès",
