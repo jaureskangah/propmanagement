@@ -1,4 +1,3 @@
-
 export const enMaintenance = {
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
@@ -156,6 +155,11 @@ export const frMaintenance = {
   property: "Propriété",
   unit: "Unité",
   vendor: "Fournisseur",
-  photos: "Photos"
+  photos: "Photos",
+  budgetAlert: "Alerte budget",
+  paymentAlert: "Alerte paiement",
+  trendAlert: "Alerte tendance",
+  paymentNotification: "Notification de paiement",
+  maintenanceNotification: "Notification de maintenance",
+  notificationsAndAlerts: "Notifications et alertes"
 };
-
