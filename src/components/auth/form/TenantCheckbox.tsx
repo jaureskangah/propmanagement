@@ -3,6 +3,7 @@ import { FormField, FormItem, FormLabel, FormControl } from "@/components/ui/for
 import { Checkbox } from "@/components/ui/checkbox";
 import { UseFormReturn } from "react-hook-form";
 import { SignUpFormValues } from "../signUpValidation";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantCheckboxProps {
   form: UseFormReturn<SignUpFormValues>;
@@ -10,6 +11,8 @@ interface TenantCheckboxProps {
 }
 
 export function TenantCheckbox({ form, disabled }: TenantCheckboxProps) {
+  const { t } = useLocale();
+
   return (
     <FormField
       control={form.control}
@@ -25,7 +28,7 @@ export function TenantCheckbox({ form, disabled }: TenantCheckboxProps) {
           </FormControl>
           <div className="space-y-1 leading-none">
             <FormLabel>
-              I am a tenant
+              {t('iAmATenant')}
             </FormLabel>
           </div>
         </FormItem>

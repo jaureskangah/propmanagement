@@ -1,13 +1,17 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import type { TenantFormValues } from "../tenantValidation";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PersonalInfoFieldsProps {
   form: UseFormReturn<TenantFormValues>;
 }
 
 export function PersonalInfoFields({ form }: PersonalInfoFieldsProps) {
+  const { t } = useLocale();
+
   return (
     <>
       <FormField
@@ -15,9 +19,9 @@ export function PersonalInfoFields({ form }: PersonalInfoFieldsProps) {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Name *</FormLabel>
+            <FormLabel>{t('name')} *</FormLabel>
             <FormControl>
-              <Input placeholder="John Doe" {...field} />
+              <Input placeholder={t('enterName')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -28,9 +32,9 @@ export function PersonalInfoFields({ form }: PersonalInfoFieldsProps) {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email *</FormLabel>
+            <FormLabel>{t('email')} *</FormLabel>
             <FormControl>
-              <Input type="email" placeholder="john@example.com" {...field} />
+              <Input type="email" placeholder={t('enterEmail')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -41,9 +45,9 @@ export function PersonalInfoFields({ form }: PersonalInfoFieldsProps) {
         name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Phone</FormLabel>
+            <FormLabel>{t('phone')}</FormLabel>
             <FormControl>
-              <Input placeholder="+1 234 567 8900" {...field} />
+              <Input placeholder={t('enterPhone')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

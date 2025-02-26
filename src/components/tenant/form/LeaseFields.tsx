@@ -1,13 +1,17 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import type { TenantFormValues } from "../tenantValidation";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface LeaseFieldsProps {
   form: UseFormReturn<TenantFormValues>;
 }
 
 export function LeaseFields({ form }: LeaseFieldsProps) {
+  const { t } = useLocale();
+
   return (
     <>
       <FormField
@@ -15,7 +19,7 @@ export function LeaseFields({ form }: LeaseFieldsProps) {
         name="lease_start"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Lease Start Date *</FormLabel>
+            <FormLabel>{t('leaseStart')} *</FormLabel>
             <FormControl>
               <Input type="date" {...field} />
             </FormControl>
@@ -28,7 +32,7 @@ export function LeaseFields({ form }: LeaseFieldsProps) {
         name="lease_end"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Lease End Date *</FormLabel>
+            <FormLabel>{t('leaseEnd')} *</FormLabel>
             <FormControl>
               <Input type="date" {...field} />
             </FormControl>
@@ -41,7 +45,7 @@ export function LeaseFields({ form }: LeaseFieldsProps) {
         name="rent_amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Monthly Rent *</FormLabel>
+            <FormLabel>{t('rentAmount')} *</FormLabel>
             <FormControl>
               <Input 
                 type="number" 

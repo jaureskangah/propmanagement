@@ -8,12 +8,13 @@ import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { Mail, Lock, Loader2 } from 'lucide-react';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const formSchema = z.object({
-  email: z.string().email('Adresse email invalide'),
-  password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
 interface SignInFormProps {
@@ -24,6 +25,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useLocale();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -37,7 +39,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
     try {
       setLoading(true);
       
-      const { error, data } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
@@ -45,8 +47,8 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
       if (error) throw error;
 
       toast({
-        title: "Connexion réussie",
-        description: "Vous êtes maintenant connecté.",
+        title: t('success'),
+        description: t('signInSuccess'),
       });
 
       if (onSuccess) {
@@ -56,17 +58,16 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
       navigate('/dashboard');
 
     } catch (error: any) {
-      let errorMessage = "Une erreur s'est produite lors de la connexion";
+      let errorMessage = t('signInError');
       
-      // Gestion des erreurs spécifiques de Supabase
       if (error.message === 'Invalid login credentials') {
-        errorMessage = "Email ou mot de passe incorrect";
+        errorMessage = t('invalidCredentials');
       } else if (error.message === 'Email not confirmed') {
-        errorMessage = "Veuillez confirmer votre email avant de vous connecter";
+        errorMessage = t('emailNotConfirmed');
       }
 
       toast({
-        title: "Erreur",
+        title: t('error'),
         description: errorMessage,
         variant: 'destructive',
       });
@@ -83,12 +84,12 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t('email')}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                   <Input 
-                    placeholder="nom@exemple.com" 
+                    placeholder={t('enterEmail')} 
                     className="pl-10" 
                     {...field}
                     disabled={loading}
@@ -104,13 +105,13 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Mot de passe</FormLabel>
+              <FormLabel>{t('password')}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
                   <Input 
                     type="password" 
-                    placeholder="••••••••" 
+                    placeholder={t('enterPassword')}
                     className="pl-10" 
                     {...field}
                     disabled={loading}
@@ -129,10 +130,10 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Connexion en cours...
+              {t('signingIn')}
             </>
           ) : (
-            'Se connecter'
+            t('signIn')
           )}
         </Button>
       </form>

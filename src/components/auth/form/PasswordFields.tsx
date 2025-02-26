@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Lock } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 import { SignUpFormValues } from "../signUpValidation";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PasswordFieldsProps {
   form: UseFormReturn<SignUpFormValues>;
@@ -11,6 +12,8 @@ interface PasswordFieldsProps {
 }
 
 export function PasswordFields({ form, disabled }: PasswordFieldsProps) {
+  const { t } = useLocale();
+
   return (
     <>
       <FormField
@@ -18,11 +21,17 @@ export function PasswordFields({ form, disabled }: PasswordFieldsProps) {
         name="password"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Password</FormLabel>
+            <FormLabel>{t('password')}</FormLabel>
             <FormControl>
               <div className="relative">
                 <Lock className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input type="password" placeholder="••••••" className="pl-8" disabled={disabled} {...field} />
+                <Input 
+                  type="password" 
+                  placeholder={t('enterPassword')} 
+                  className="pl-8" 
+                  disabled={disabled} 
+                  {...field} 
+                />
               </div>
             </FormControl>
             <FormMessage />
@@ -34,11 +43,17 @@ export function PasswordFields({ form, disabled }: PasswordFieldsProps) {
         name="confirmPassword"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Confirm Password</FormLabel>
+            <FormLabel>{t('confirmPassword')}</FormLabel>
             <FormControl>
               <div className="relative">
                 <Lock className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input type="password" placeholder="••••••" className="pl-8" disabled={disabled} {...field} />
+                <Input 
+                  type="password" 
+                  placeholder={t('confirmYourPassword')} 
+                  className="pl-8" 
+                  disabled={disabled} 
+                  {...field} 
+                />
               </div>
             </FormControl>
             <FormMessage />

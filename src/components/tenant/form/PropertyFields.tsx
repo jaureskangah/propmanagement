@@ -1,9 +1,11 @@
+
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { useProperties } from "@/hooks/useProperties";
 import type { TenantFormValues } from "../tenantValidation";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PropertyFieldsProps {
   form: UseFormReturn<TenantFormValues>;
@@ -11,10 +13,10 @@ interface PropertyFieldsProps {
 
 export function PropertyFields({ form }: PropertyFieldsProps) {
   const { properties } = useProperties();
+  const { t } = useLocale();
   
   console.log("Properties data:", properties);
 
-  // Ensure we have valid properties with both id and name
   const validProperties = properties?.filter(property => 
     property.id && 
     property.name && 
@@ -31,7 +33,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
         name="property_id"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Property *</FormLabel>
+            <FormLabel>{t('selectProperty')} *</FormLabel>
             <Select 
               onValueChange={(value) => {
                 console.log("Selected value:", value);
@@ -41,7 +43,7 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a property" />
+                  <SelectValue placeholder={t('selectProperty')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -64,9 +66,9 @@ export function PropertyFields({ form }: PropertyFieldsProps) {
         name="unit_number"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Unit Number</FormLabel>
+            <FormLabel>{t('unitNumber')}</FormLabel>
             <FormControl>
-              <Input placeholder="A1" {...field} />
+              <Input placeholder={t('enterUnitNumber')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { useToast } from '@/components/ui/use-toast';
+import { toast } from '@/components/ui/use-toast';
 import { NameFields } from './form/NameFields';
 import { EmailField } from './form/EmailField';
 import { PasswordFields } from './form/PasswordFields';
@@ -13,6 +13,7 @@ import { TenantCheckbox } from './form/TenantCheckbox';
 import { SignUpFormValues, signUpFormSchema } from './signUpValidation';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface SignUpFormProps {
   onSuccess: () => void;
@@ -22,6 +23,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { t } = useLocale();
 
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpFormSchema),
@@ -54,34 +56,33 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       if (error) throw error;
 
       if (!data.user) {
-        throw new Error('Aucune donnée utilisateur retournée');
+        throw new Error(t('noUserDataReturned'));
       }
 
       toast({
-        title: 'Inscription réussie',
+        title: t('signUpSuccess'),
         description: data.session ? 
-          'Votre compte a été créé avec succès.' : 
-          'Veuillez vérifier votre email pour confirmer votre compte.',
+          t('accountCreatedSuccess') : 
+          t('verifyEmailPrompt'),
       });
 
       if (onSuccess) {
         onSuccess();
       }
 
-      // Si l'utilisateur est directement connecté (pas de confirmation email requise)
       if (data.session) {
         navigate('/dashboard');
       }
 
     } catch (error: any) {
-      let errorMessage = "Une erreur s'est produite lors de l'inscription";
+      let errorMessage = t('signUpError');
       
       if (error.message.includes('already registered')) {
-        errorMessage = "Cette adresse email est déjà utilisée";
+        errorMessage = t('emailAlreadyRegistered');
       }
 
       toast({
-        title: "Erreur",
+        title: t('error'),
         description: errorMessage,
         variant: 'destructive',
       });
@@ -102,10 +103,10 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Inscription en cours...
+              {t('signingUp')}
             </>
           ) : (
-            "S'inscrire"
+            t('signUp')
           )}
         </Button>
       </form>
