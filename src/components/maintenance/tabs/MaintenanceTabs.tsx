@@ -25,7 +25,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData }: MaintenanceTa
               className="flex items-center gap-2 px-4 sm:px-6 py-3 text-slate-600 dark:text-slate-300 rounded-none transition-all duration-300 hover:bg-red-50/50 dark:hover:bg-red-500/10 data-[state=active]:border-b-2 data-[state=active]:border-red-500 data-[state=active]:text-red-500 dark:data-[state=active]:text-red-400 whitespace-nowrap group"
             >
               <Calendar className="h-4 w-4 hidden sm:block transition-transform duration-300 group-hover:scale-110" />
-              <span>{t('schedule')}</span>
+              <span>{t('preventiveMaintenance')}</span>
             </TabsTrigger>
             
             <TabsTrigger 
