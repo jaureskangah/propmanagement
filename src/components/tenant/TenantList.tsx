@@ -1,6 +1,8 @@
+
 import type { Tenant } from "@/types/tenant";
 import { EmptyTenantState } from "./EmptyTenantState";
 import { TenantCard } from "./TenantCard";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantListProps {
   tenants: Tenant[];
@@ -17,12 +19,14 @@ export const TenantList = ({
   onEditClick,
   onDeleteClick,
 }: TenantListProps) => {
+  const { t } = useLocale();
+
   if (!tenants?.length) {
     return <EmptyTenantState />;
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" role="list" aria-label={t('tenantsList')}>
       {tenants.map((tenant) => (
         <TenantCard
           key={tenant.id}
