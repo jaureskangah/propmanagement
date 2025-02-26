@@ -1,5 +1,7 @@
+
 import { Wrench } from "lucide-react";
 import { ActivityItem } from "./ActivityItem";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceActivityProps {
   request: {
@@ -10,13 +12,15 @@ interface MaintenanceActivityProps {
 }
 
 export const MaintenanceActivity = ({ request }: MaintenanceActivityProps) => {
+  const { t } = useLocale();
+  
   return (
     <ActivityItem
       key={request.id}
       icon={Wrench}
       iconColor="text-amber-600"
       iconBgColor="bg-amber-100"
-      title="Maintenance Completed"
+      title={t('maintenanceCompleted')}
       description={request.issue}
       date={request.created_at}
     />

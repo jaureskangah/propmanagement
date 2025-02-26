@@ -86,4 +86,16 @@ export interface MaintenanceTranslations {
   totalRequests: string;
   resolvedRequests: string;
   pendingRequests: string;
+  scheduledIntervention: string;
+  interventionCalendar: string;
+  interventionHistory: string;
+  maintenanceCompleted: string;
+  existingFiles: string;
+  searchEmergencyContacts: string;
+  numberCopied: string;
+  maintenanceAndRepairs: string;
+  columnTitle: string;
+  columnDescription: string;
+  columnCost: string;
+  columnDate: string;
 }

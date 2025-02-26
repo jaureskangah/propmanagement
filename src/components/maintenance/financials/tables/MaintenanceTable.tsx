@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Card,
@@ -7,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceTableProps {
   maintenance: {
@@ -18,20 +20,22 @@ interface MaintenanceTableProps {
 }
 
 export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
+  const { t } = useLocale();
+  
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Maintenance</CardTitle>
-        <CardDescription>Maintenance and repairs tracking</CardDescription>
+        <CardTitle>{t('maintenanceTitle')}</CardTitle>
+        <CardDescription>{t('maintenanceAndRepairs')}</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead>Cost</TableHead>
-              <TableHead>Date</TableHead>
+              <TableHead>{t('columnTitle')}</TableHead>
+              <TableHead>{t('columnDescription')}</TableHead>
+              <TableHead>{t('columnCost')}</TableHead>
+              <TableHead>{t('columnDate')}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -85,7 +85,19 @@ export const enMaintenance = {
   notificationsAndAlerts: "Notifications and Alerts",
   totalRequests: "Total Requests",
   resolvedRequests: "Resolved Requests",
-  pendingRequests: "Pending Requests"
+  pendingRequests: "Pending Requests",
+  scheduledIntervention: "Scheduled intervention",
+  interventionCalendar: "Intervention Calendar",
+  interventionHistory: "Intervention History",
+  maintenanceCompleted: "Maintenance Completed",
+  existingFiles: "Existing files",
+  searchEmergencyContacts: "Search emergency contacts...",
+  numberCopied: "Phone number copied to clipboard",
+  maintenanceAndRepairs: "Maintenance and repairs tracking",
+  columnTitle: "Title",
+  columnDescription: "Description",
+  columnCost: "Cost",
+  columnDate: "Date"
 };
 
 export const frMaintenance = {
@@ -174,5 +186,17 @@ export const frMaintenance = {
   notificationsAndAlerts: "Notifications et alertes",
   totalRequests: "Demandes Totales",
   resolvedRequests: "Demandes Résolues",
-  pendingRequests: "Demandes En Attente"
+  pendingRequests: "Demandes En Attente",
+  scheduledIntervention: "Intervention planifiée",
+  interventionCalendar: "Calendrier des interventions",
+  interventionHistory: "Historique des interventions",
+  maintenanceCompleted: "Maintenance terminée",
+  existingFiles: "Fichiers existants",
+  searchEmergencyContacts: "Rechercher des contacts d'urgence...",
+  numberCopied: "Numéro de téléphone copié dans le presse-papiers",
+  maintenanceAndRepairs: "Suivi des maintenances et réparations",
+  columnTitle: "Titre",
+  columnDescription: "Description",
+  columnCost: "Coût",
+  columnDate: "Date"
 };
