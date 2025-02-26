@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle } from "lucide-react";
 import { format, isSameDay } from "date-fns";
+import { fr } from 'date-fns/locale';
 import { useState } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -71,7 +72,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                       </p>
                       <div className="flex gap-2 mt-2">
                         <Badge variant="secondary" className="text-xs">
-                          {t('unitLabel')} {task.unit_number || "N/A"}
+                          {t('unit')} {task.unit_number || "N/A"}
                         </Badge>
                         <Badge variant="destructive" className="text-xs">
                           {t('emergency')}
@@ -100,6 +101,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
               selected={selectedDate}
               onSelect={setSelectedDate}
               className="rounded-md border"
+              locale={fr}
               modifiers={{
                 hasEvent: (date) =>
                   calendarEvents.some(event => isSameDay(date, event.date)),
@@ -115,7 +117,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
 
             <div className="mt-4">
               <h4 className="font-medium mb-2">
-                {t('eventsOn')} {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : ''}
+                {t('eventsOn')} {selectedDate ? format(selectedDate, 'MMMM d, yyyy', { locale: fr }) : ''}
               </h4>
               <ScrollArea className="h-[100px]">
                 <div className="space-y-2">
