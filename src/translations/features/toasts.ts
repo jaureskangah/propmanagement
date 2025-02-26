@@ -1,19 +1,19 @@
 
-import { ToastTranslations } from '../types';
+import { ToastTranslations } from '../types/toasts';
 
 export const enToasts: ToastTranslations = {
-  authRequired: "Authentication Required",
+  authRequired: "Authentication required",
   pleaseSignInToSubscribe: "Please sign in to subscribe",
-  processing: "Processing",
+  processing: "Processing...",
   preparingPaymentSession: "Preparing payment session...",
   error: "Error",
   failedToCreateSession: "Failed to create session",
   failedToCreateSessionNoUrl: "Failed to create session: No URL returned",
   generalError: "An error occurred",
-  success: "Success",
+  success: "Success!",
   warning: "Warning",
   info: "Information",
-  deleteConfirmation: "Are you sure you want to delete this?",
+  deleteConfirmation: "Are you sure you want to delete this item?",
   saveSuccess: "Successfully saved",
   updateSuccess: "Successfully updated",
   deleteSuccess: "Successfully deleted",
@@ -22,23 +22,23 @@ export const enToasts: ToastTranslations = {
   networkError: "Network error",
   sessionExpired: "Session expired",
   tryAgain: "Please try again",
-  missingInformation: "Missing information",
-  close: "Close"
+  missingInformation: "Missing required information",
+  close: "Close",
 };
 
 export const frToasts: ToastTranslations = {
   authRequired: "Authentification requise",
   pleaseSignInToSubscribe: "Veuillez vous connecter pour vous abonner",
-  processing: "Traitement en cours",
+  processing: "Traitement en cours...",
   preparingPaymentSession: "Préparation de la session de paiement...",
   error: "Erreur",
   failedToCreateSession: "Échec de la création de la session",
-  failedToCreateSessionNoUrl: "Échec de la création de la session : Aucune URL retournée",
-  generalError: "Une erreur est survenue",
-  success: "Succès",
-  warning: "Avertissement",
+  failedToCreateSessionNoUrl: "Échec de la création de la session : URL non retournée",
+  generalError: "Une erreur s'est produite",
+  success: "Succès !",
+  warning: "Attention",
   info: "Information",
-  deleteConfirmation: "Êtes-vous sûr de vouloir supprimer ceci ?",
+  deleteConfirmation: "Êtes-vous sûr de vouloir supprimer cet élément ?",
   saveSuccess: "Enregistré avec succès",
   updateSuccess: "Mis à jour avec succès",
   deleteSuccess: "Supprimé avec succès",
@@ -47,6 +47,6 @@ export const frToasts: ToastTranslations = {
   networkError: "Erreur réseau",
   sessionExpired: "Session expirée",
   tryAgain: "Veuillez réessayer",
-  missingInformation: "Information manquante",
-  close: "Fermer"
+  missingInformation: "Informations requises manquantes",
+  close: "Fermer",
 };
