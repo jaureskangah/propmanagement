@@ -1,0 +1,32 @@
+
+import type { ModalFieldsTranslations } from '../../../types/modal/fields';
+
+export const enModalFields: ModalFieldsTranslations = {
+  firstName: "First Name",
+  lastName: "Last Name",
+  email: "Email",
+  phone: "Phone",
+  password: "Password",
+  confirmPassword: "Confirm Password",
+  address: "Address",
+  city: "City",
+  state: "State",
+  zipCode: "Zip Code",
+  country: "Country",
+  company: "Company",
+  website: "Website",
+  notes: "Notes",
+  description: "Description",
+  title: "Title",
+  name: "Name",
+  type: "Type",
+  status: "Status",
+  date: "Date",
+  time: "Time",
+  amount: "Amount",
+  category: "Category",
+  priority: "Priority",
+  dueDate: "Due Date",
+  startDate: "Start Date",
+  endDate: "End Date",
+};

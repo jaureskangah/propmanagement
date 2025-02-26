@@ -1,0 +1,32 @@
+
+import type { ModalFieldsTranslations } from '../../../types/modal/fields';
+
+export const frModalFields: ModalFieldsTranslations = {
+  firstName: "Prénom",
+  lastName: "Nom",
+  email: "Email",
+  phone: "Téléphone",
+  password: "Mot de passe",
+  confirmPassword: "Confirmer le mot de passe",
+  address: "Adresse",
+  city: "Ville",
+  state: "État/Province",
+  zipCode: "Code postal",
+  country: "Pays",
+  company: "Entreprise",
+  website: "Site web",
+  notes: "Notes",
+  description: "Description",
+  title: "Titre",
+  name: "Nom",
+  type: "Type",
+  status: "Statut",
+  date: "Date",
+  time: "Heure",
+  amount: "Montant",
+  category: "Catégorie",
+  priority: "Priorité",
+  dueDate: "Date d'échéance",
+  startDate: "Date de début",
+  endDate: "Date de fin",
+};
