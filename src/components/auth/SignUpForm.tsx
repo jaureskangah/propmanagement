@@ -5,7 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { NameFields } from './form/NameFields';
 import { EmailField } from './form/EmailField';
 import { PasswordFields } from './form/PasswordFields';
