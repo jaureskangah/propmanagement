@@ -17,6 +17,13 @@ export const enTenant: TenantTranslations = {
   expiring: "Expiring Soon",
   expired: "Expired",
 
+  // Statut du bail détaillé
+  leaseStatusActive: "Active lease",
+  leaseStatusExpiringDays: "Expires in {days} days",
+  leaseStatusExpired: "Expired {days} days ago",
+  daysLeft: "{days} days left",
+  daysAgo: "{days} days ago",
+
   // Formulaire locataire
   personalInfo: "Personal Information",
   propertyInfo: "Property Information",
@@ -128,6 +135,13 @@ export const frTenant: TenantTranslations = {
   active: "Actif",
   expiring: "Expire Bientôt",
   expired: "Expiré",
+
+  // Statut du bail détaillé
+  leaseStatusActive: "Bail actif",
+  leaseStatusExpiringDays: "Expire dans {days} jours",
+  leaseStatusExpired: "Expiré depuis {days} jours",
+  daysLeft: "{days} jours restants",
+  daysAgo: "il y a {days} jours",
 
   // Formulaire locataire
   personalInfo: "Informations Personnelles",

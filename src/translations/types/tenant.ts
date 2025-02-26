@@ -1,3 +1,4 @@
+
 export interface TenantTranslations {
   // Liste des locataires
   tenantsList: string;
@@ -14,6 +15,13 @@ export interface TenantTranslations {
   active: string;
   expiring: string;
   expired: string;
+
+  // Statut du bail détaillé
+  leaseStatusActive: string;
+  leaseStatusExpiringDays: string;
+  leaseStatusExpired: string;
+  daysLeft: string;
+  daysAgo: string;
 
   // Formulaire locataire
   personalInfo: string;
