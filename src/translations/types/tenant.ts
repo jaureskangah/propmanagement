@@ -1,4 +1,3 @@
-
 export interface TenantTranslations {
   // Liste des locataires
   tenantsList: string;
@@ -28,15 +27,32 @@ export interface TenantTranslations {
   propertyInfo: string;
   leaseInfo: string;
   name: string;
+  nameLabel: string;
+  namePlaceholder: string;
   email: string;
+  emailLabel: string;
+  emailPlaceholder: string;
   phone: string;
+  phoneLabel: string;
+  phonePlaceholder: string;
   selectProperty: string;
+  propertyLabel: string;
+  propertyPlaceholder: string;
   unitNumber: string;
+  unitLabel: string;
+  unitPlaceholder: string;
   leaseStart: string;
+  leaseStartLabel: string;
   leaseEnd: string;
+  leaseEndLabel: string;
   rentAmount: string;
+  rentLabel: string;
+  rentPlaceholder: string;
   saveTenant: string;
+  saveChanges: string;
   cancel: string;
+  required: string;
+  optional: string;
 
   // Documents
   documents: string;
