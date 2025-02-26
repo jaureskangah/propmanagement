@@ -14,15 +14,19 @@ export const MaintenanceNotifications = () => {
     ...budgetAlerts.map(alert => ({
       ...alert,
       icon: alert.type === 'budget' ? AlertTriangle : 
-            alert.type === 'payment' ? CreditCard : TrendingUp
+            alert.type === 'payment' ? CreditCard : TrendingUp,
+      title: alert.type === 'budget' ? t('budgetAlert') :
+             alert.type === 'payment' ? t('paymentAlert') : t('trendAlert')
     })),
     ...paymentAlerts.map(alert => ({
       ...alert,
-      icon: CreditCard
+      icon: CreditCard,
+      title: t('paymentNotification')
     })),
     ...notifications.map(notif => ({
       ...notif,
-      icon: Bell
+      icon: Bell,
+      title: t('maintenanceNotification')
     }))
   ];
 
