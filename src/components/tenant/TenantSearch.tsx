@@ -1,8 +1,10 @@
+
 import { Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantSearchProps {
   value: string;
@@ -21,6 +23,7 @@ export const TenantSearch = ({ value, onChange, onFilterChange }: TenantSearchPr
     propertyId: null,
     leaseStatus: "all",
   });
+  const { t } = useLocale();
 
   const handleFilterChange = (newFilters: Partial<SearchFilters>) => {
     const updatedFilters = { ...filters, ...newFilters };
@@ -34,7 +37,7 @@ export const TenantSearch = ({ value, onChange, onFilterChange }: TenantSearchPr
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors duration-200" />
           <Input
-            placeholder="Search tenants..."
+            placeholder={t('searchTenants')}
             className="pl-9 pr-4 transition-all duration-200 focus-within:ring-2 focus-within:ring-primary/20"
             value={value}
             onChange={(e) => onChange(e.target.value)}
@@ -64,13 +67,13 @@ export const TenantSearch = ({ value, onChange, onFilterChange }: TenantSearchPr
       {showFilters && (
         <div className="p-4 border rounded-lg bg-background shadow-sm animate-fade-in space-y-4">
           <div className="space-y-2">
-            <h4 className="text-sm font-medium">Lease Status</h4>
+            <h4 className="text-sm font-medium">{t('leaseStatus')}</h4>
             <div className="flex flex-wrap gap-2">
               {[
-                { value: "all", label: "All" },
-                { value: "active", label: "Active" },
-                { value: "expiring", label: "Expiring Soon" },
-                { value: "expired", label: "Expired" },
+                { value: "all", label: t('allStatuses') },
+                { value: "active", label: t('active') },
+                { value: "expiring", label: t('expiring') },
+                { value: "expired", label: t('expired') },
               ].map((status) => (
                 <Badge
                   key={status.value}

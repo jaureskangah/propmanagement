@@ -1,3 +1,4 @@
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DeleteTenantDialogProps {
   isOpen: boolean;
@@ -20,22 +22,24 @@ export const DeleteTenantDialog = ({
   onClose,
   onConfirm,
 }: DeleteTenantDialogProps) => {
+  const { t } = useLocale();
+  
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you sure you want to delete this tenant?</AlertDialogTitle>
+          <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. All data associated with this tenant will be permanently deleted.
+            {t('deleteWarning')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={onConfirm}
           >
-            Delete
+            {t('deleteTenant')}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
