@@ -1,4 +1,3 @@
-
 export interface TenantTranslations {
   // Liste des locataires
   tenantsList: string;
@@ -104,4 +103,9 @@ export interface TenantTranslations {
   deleteWarning: string;
   invitationSent: string;
   messageSent: string;
+
+  // Messages de validation
+  fieldRequired: string;
+  invalidEmail: string;
+  invalidAmount: string;
 }

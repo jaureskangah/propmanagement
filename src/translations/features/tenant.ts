@@ -1,4 +1,3 @@
-
 import { TenantTranslations } from '../types/tenant';
 
 export const enTenant: TenantTranslations = {
@@ -105,7 +104,12 @@ export const enTenant: TenantTranslations = {
   confirmDelete: "Delete Tenant",
   deleteWarning: "Are you sure you want to delete this tenant? All associated data will be permanently deleted.",
   invitationSent: "Invitation sent successfully",
-  messageSent: "Message sent successfully"
+  messageSent: "Message sent successfully",
+
+  // Messages de validation
+  fieldRequired: "This field is required",
+  invalidEmail: "Invalid email address",
+  invalidAmount: "Amount must be positive",
 };
 
 export const frTenant: TenantTranslations = {
@@ -212,5 +216,10 @@ export const frTenant: TenantTranslations = {
   confirmDelete: "Supprimer le Locataire",
   deleteWarning: "Êtes-vous sûr de vouloir supprimer ce locataire ? Toutes les données associées seront définitivement supprimées.",
   invitationSent: "Invitation envoyée avec succès",
-  messageSent: "Message envoyé avec succès"
+  messageSent: "Message envoyé avec succès",
+
+  // Messages de validation
+  fieldRequired: "Ce champ est requis",
+  invalidEmail: "Adresse email invalide",
+  invalidAmount: "Le montant doit être positif",
 };
