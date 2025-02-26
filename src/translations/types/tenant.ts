@@ -104,6 +104,4 @@ export interface TenantTranslations {
   deleteWarning: string;
   invitationSent: string;
   messageSent: string;
-  paymentDeleted: string;
 }
-
