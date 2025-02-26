@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle } from "lucide-react";
 import { format, isSameDay } from "date-fns";
 import { fr } from 'date-fns/locale';
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PrioritySectionProps {
@@ -17,13 +17,18 @@ interface PrioritySectionProps {
 
 export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: PrioritySectionProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
-  const urgentMaintenance = maintenanceData?.filter(
-    req => req.priority === "Urgent" && req.status !== "Resolved"
-  ) || [];
+  // Mémoriser les données filtrées pour éviter des recalculs inutiles
+  const urgentMaintenance = useMemo(() => 
+    maintenanceData?.filter(
+      req => req.priority === "Urgent" && req.status !== "Resolved"
+    ) || [], 
+    [maintenanceData]
+  );
 
-  const calendarEvents = [
+  // Mémoriser les événements du calendrier
+  const calendarEvents = useMemo(() => [
     ...(paymentsData?.map(payment => ({
       date: new Date(payment.payment_date),
       type: 'payment',
@@ -36,11 +41,29 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
       title: `${t('leaseEnding')}: ${tenant.name}`,
       unit: tenant.unit_number
     })) || [])
-  ];
+  ], [paymentsData, tenantsData, t]);
 
-  const selectedDateEvents = calendarEvents.filter(
-    event => selectedDate && isSameDay(event.date, selectedDate)
+  // Mémoriser les événements sélectionnés
+  const selectedDateEvents = useMemo(() => 
+    calendarEvents.filter(
+      event => selectedDate && isSameDay(event.date, selectedDate)
+    ),
+    [calendarEvents, selectedDate]
   );
+
+  // Mémoriser les fonctions de modification du calendrier
+  const calendarModifiers = useMemo(() => ({
+    hasEvent: (date: Date) =>
+      calendarEvents.some(event => isSameDay(date, event.date)),
+  }), [calendarEvents]);
+
+  const calendarModifiersStyles = useMemo(() => ({
+    hasEvent: {
+      backgroundColor: "#3b82f6",
+      color: "white",
+      borderRadius: "100%",
+    },
+  }), []);
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -102,17 +125,8 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
               onSelect={setSelectedDate}
               className="rounded-md border"
               locale={fr}
-              modifiers={{
-                hasEvent: (date) =>
-                  calendarEvents.some(event => isSameDay(date, event.date)),
-              }}
-              modifiersStyles={{
-                hasEvent: {
-                  backgroundColor: "#3b82f6",
-                  color: "white",
-                  borderRadius: "100%",
-                },
-              }}
+              modifiers={calendarModifiers}
+              modifiersStyles={calendarModifiersStyles}
             />
 
             <div className="mt-4">
