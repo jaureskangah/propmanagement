@@ -1,3 +1,4 @@
+
 export const enMaintenance = {
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
@@ -75,7 +76,14 @@ export const enMaintenance = {
   property: "Property",
   unit: "Unit",
   vendor: "Vendor",
-  photos: "Photos"
+  photos: "Photos",
+  // Add the new English translations
+  budgetAlert: "Budget Alert",
+  paymentAlert: "Payment Alert",
+  trendAlert: "Trend Alert",
+  paymentNotification: "Payment Notification",
+  maintenanceNotification: "Maintenance Notification",
+  notificationsAndAlerts: "Notifications and Alerts"
 };
 
 export const frMaintenance = {
