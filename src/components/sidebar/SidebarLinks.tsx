@@ -10,7 +10,8 @@ import {
   Wrench,
   Settings,
   LayoutDashboard,
-  ShieldCheck
+  ShieldCheck,
+  MessageCircle
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -23,8 +24,38 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const { user } = useAuth();
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
+  
+  // Liens pour les locataires - accès limité
+  const tenantLinks = [
+    {
+      href: "/",
+      icon: HomeIcon,
+      label: t('home'),
+    },
+    {
+      href: "/dashboard",
+      icon: LayoutDashboard,
+      label: t('dashboard'),
+    },
+    {
+      href: "/maintenance",
+      icon: Wrench,
+      label: t('maintenance'),
+    },
+    {
+      href: "/communications",
+      icon: MessageCircle,
+      label: t('communications'),
+    },
+    {
+      href: "/settings",
+      icon: Settings,
+      label: t('settings'),
+    },
+  ];
 
-  const links = [
+  // Liens pour les propriétaires - accès complet
+  const ownerLinks = [
     {
       href: "/",
       icon: HomeIcon,
@@ -57,6 +88,12 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     },
   ];
 
+  // Déterminer les liens à afficher en fonction du rôle de l'utilisateur
+  const links = user?.user_metadata?.is_tenant_user || isTenant 
+    ? tenantLinks 
+    : ownerLinks;
+
+  // Ajouter le lien Admin si l'utilisateur est un admin
   if (isAdmin) {
     links.push({
       href: "/admin",
