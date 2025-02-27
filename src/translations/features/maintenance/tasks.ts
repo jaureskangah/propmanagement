@@ -11,7 +11,8 @@ export const enTasks = {
   scheduledTasks: "Scheduled Tasks",
   addTask: "Add Task",
   noTasks: "No tasks found",
-  existingFiles: "Existing files"
+  existingFiles: "Existing files",
+  add: "Add"
 };
 
 export const frTasks = {
@@ -26,5 +27,6 @@ export const frTasks = {
   scheduledTasks: "Tâches planifiées",
   addTask: "Ajouter une tâche",
   noTasks: "Aucune tâche trouvée",
-  existingFiles: "Fichiers existants"
+  existingFiles: "Fichiers existants",
+  add: "Ajouter"
 };
