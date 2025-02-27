@@ -1,6 +1,7 @@
 
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -18,7 +19,7 @@ export const MaintenanceCalendar = ({
   tasks,
   selectedType,
 }: MaintenanceCalendarProps) => {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
 
   const getTasksForDate = (date: Date) => {
     return tasks.filter(
@@ -58,6 +59,9 @@ export const MaintenanceCalendar = ({
     }
   };
 
+  // Obtenir la locale appropriée pour date-fns
+  const dateFnsLocale = locale === 'fr' ? fr : undefined;
+
   return (
     <TooltipProvider>
       <Calendar
@@ -69,6 +73,13 @@ export const MaintenanceCalendar = ({
           hasTasks: (date) => getTasksForDate(date).length > 0,
         }}
         modifiersStyles={modifiersStyles}
+        locale={dateFnsLocale}
+        // Personnaliser les textes du calendrier (jours de la semaine, mois, etc.)
+        formatters={{
+          formatCaption: (date, options) => {
+            return format(date, 'MMMM yyyy', { locale: dateFnsLocale });
+          }
+        }}
       />
     </TooltipProvider>
   );
