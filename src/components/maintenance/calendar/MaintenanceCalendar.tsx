@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { DayProps } from "react-day-picker";
 
 interface MaintenanceCalendarProps {
   selectedDate: Date | undefined;
@@ -70,16 +71,14 @@ export const MaintenanceCalendar = ({
         }}
         modifiersStyles={modifiersStyles}
         components={{
-          Day: ({ date, ...props }) => {
-            const tasksForDate = getTasksForDate(date);
+          Day: (props: DayProps) => {
+            const tasksForDate = getTasksForDate(props.date);
             if (tasksForDate.length === 0) return <div {...props} />;
 
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div {...props}>
-                    {props.children}
-                  </div>
+                  <button {...props} />
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
