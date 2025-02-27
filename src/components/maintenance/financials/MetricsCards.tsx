@@ -14,7 +14,7 @@ interface MetricsCardsProps {
 }
 
 export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }: MetricsCardsProps) => {
-  const { t, language } = useLocale();
+  const { t } = useLocale();
   
   const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
@@ -56,37 +56,27 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
     },
   });
 
-  // Déterminer les textes à afficher selon la langue
-  const titles = {
-    totalExpenses: language === 'fr' ? "Dépenses Totales" : "Total Expenses",
-    roi: "ROI",  // Acronyme universel
-    totalRentPaid: language === 'fr' ? "Loyers Perçus" : "Total Rent Paid",
-    yearToDate: language === 'fr' ? "Année en cours" : "Year to date",
-    annualReturn: language === 'fr' ? "Rendement annuel" : "Annual return",
-    allTime: language === 'fr' ? "Au total" : "All time"
-  };
-
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <DashboardMetric
-        title={titles.totalExpenses}
+        title={t('totalExpenses')}
         value={`$${(totalExpenses + totalMaintenance).toLocaleString()}`}
         icon={<FileText className="h-4 w-4" />}
-        description={titles.yearToDate}
+        description={t('yearToDate')}
       />
 
       <DashboardMetric
-        title={titles.roi}
+        title="ROI"
         value={`${calculateROI()}%`}
         icon={<TrendingUp className="h-4 w-4" />}
-        description={titles.annualReturn}
+        description={t('annualReturn')}
       />
 
       <DashboardMetric
-        title={titles.totalRentPaid}
+        title={t('totalRentPaid')}
         value={`$${totalRentPaid.toLocaleString()}`}
         icon={<Wallet className="h-4 w-4" />}
-        description={titles.allTime}
+        description={t('allTime')}
         chartColor="#22C55E"
       />
     </div>
