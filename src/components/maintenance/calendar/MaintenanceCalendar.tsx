@@ -19,7 +19,7 @@ export const MaintenanceCalendar = ({
   tasks,
   selectedType,
 }: MaintenanceCalendarProps) => {
-  const { t, locale } = useLocale();
+  const { t, language } = useLocale();
 
   const getTasksForDate = (date: Date) => {
     return tasks.filter(
@@ -60,7 +60,7 @@ export const MaintenanceCalendar = ({
   };
 
   // Obtenir la locale appropriée pour date-fns
-  const dateFnsLocale = locale === 'fr' ? fr : undefined;
+  const dateFnsLocale = language === 'fr' ? fr : undefined;
 
   return (
     <TooltipProvider>
