@@ -7,9 +7,11 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export function ChangePasswordDialog() {
   const { toast } = useToast();
+  const { t } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -23,7 +25,7 @@ export function ChangePasswordDialog() {
     
     if (formData.newPassword !== formData.confirmPassword) {
       toast({
-        title: "Error",
+        title: t('error'),
         description: "New passwords do not match.",
         variant: "destructive"
       });
@@ -32,7 +34,7 @@ export function ChangePasswordDialog() {
 
     if (formData.newPassword.length < 6) {
       toast({
-        title: "Error",
+        title: t('error'),
         description: "Password must be at least 6 characters long.",
         variant: "destructive"
       });
@@ -48,8 +50,8 @@ export function ChangePasswordDialog() {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: "Your password has been successfully changed."
+        title: t('passwordChanged'),
+        description: t('passwordChangedMessage')
       });
       
       setFormData({
@@ -60,8 +62,8 @@ export function ChangePasswordDialog() {
       setIsOpen(false);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An error occurred while changing the password.",
+        title: t('error'),
+        description: t('passwordChangeError'),
         variant: "destructive"
       });
     } finally {
@@ -72,15 +74,15 @@ export function ChangePasswordDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Change Password</Button>
+        <Button variant="outline">{t('changePassword')}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Change Password</DialogTitle>
+          <DialogTitle>{t('changePassword')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="currentPassword">Current Password</Label>
+            <Label htmlFor="currentPassword">{t('currentPassword')}</Label>
             <Input
               id="currentPassword"
               type="password"
@@ -89,7 +91,7 @@ export function ChangePasswordDialog() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="newPassword">New Password</Label>
+            <Label htmlFor="newPassword">{t('newPassword')}</Label>
             <Input
               id="newPassword"
               type="password"
@@ -98,7 +100,7 @@ export function ChangePasswordDialog() {
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="confirmPassword">Confirm New Password</Label>
+            <Label htmlFor="confirmPassword">{t('confirmNewPassword')}</Label>
             <Input
               id="confirmPassword"
               type="password"
@@ -108,16 +110,16 @@ export function ChangePasswordDialog() {
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Updating...
+                  {t('updating')}
                 </>
               ) : (
-                "Update"
+                t('update')
               )}
             </Button>
           </div>

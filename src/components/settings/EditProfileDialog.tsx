@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ProfileFormData {
   first_name: string;
@@ -23,6 +24,7 @@ export function EditProfileDialog({
 }) {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLocale();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<ProfileFormData>(initialData);
@@ -44,16 +46,16 @@ export function EditProfileDialog({
       if (error) throw error;
 
       toast({
-        title: "Profile updated",
-        description: "Your information has been successfully saved."
+        title: t('profileUpdated'),
+        description: t('preferencesUpdatedMessage')
       });
       
       onProfileUpdate();
       setIsOpen(false);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An error occurred while updating the profile.",
+        title: t('error'),
+        description: t('profileUpdateError'),
         variant: "destructive"
       });
     } finally {
@@ -64,16 +66,16 @@ export function EditProfileDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit</Button>
+        <Button variant="outline">{t('edit')}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit Profile</DialogTitle>
+          <DialogTitle>{t('updateProfile')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name</Label>
+              <Label htmlFor="firstName">{t('firstName')}</Label>
               <Input
                 id="firstName"
                 value={formData.first_name}
@@ -81,7 +83,7 @@ export function EditProfileDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name</Label>
+              <Label htmlFor="lastName">{t('lastName')}</Label>
               <Input
                 id="lastName"
                 value={formData.last_name}
@@ -91,16 +93,16 @@ export function EditProfileDialog({
           </div>
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
-              Cancel
+              {t('cancel')}
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  {t('saving')}
                 </>
               ) : (
-                "Save"
+                t('save')
               )}
             </Button>
           </div>

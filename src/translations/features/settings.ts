@@ -27,7 +27,14 @@ export const enSettings = {
   changePassword: "Change Password",
   updateProfile: "Update Profile",
   profileUpdated: "Profile Updated",
-  profileUpdateError: "Failed to update profile"
+  profileUpdateError: "Failed to update profile",
+  firstName: "First Name",
+  lastName: "Last Name",
+  edit: "Edit",
+  cancel: "Cancel",
+  save: "Save",
+  saving: "Saving...",
+  updating: "Updating..."
 };
 
 export const frSettings = {
@@ -58,5 +65,12 @@ export const frSettings = {
   changePassword: "Modifier le mot de passe",
   updateProfile: "Mettre à jour le profil",
   profileUpdated: "Profil mis à jour",
-  profileUpdateError: "Échec de la mise à jour du profil"
+  profileUpdateError: "Échec de la mise à jour du profil",
+  firstName: "Prénom",
+  lastName: "Nom",
+  edit: "Modifier",
+  cancel: "Annuler",
+  save: "Enregistrer",
+  saving: "Enregistrement...",
+  updating: "Mise à jour..."
 };

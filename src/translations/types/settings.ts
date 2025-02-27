@@ -28,4 +28,11 @@ export interface SettingsTranslations {
   updateProfile: string;
   profileUpdated: string;
   profileUpdateError: string;
+  firstName: string;
+  lastName: string;
+  edit: string;
+  cancel: string;
+  save: string;
+  saving: string;
+  updating: string;
 }
