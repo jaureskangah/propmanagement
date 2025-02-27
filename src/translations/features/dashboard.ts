@@ -1,3 +1,4 @@
+
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -20,7 +21,7 @@ export const enDashboard = {
   status: "Status",
   tenant: "Tenant",
   property: "Property",
-  unit: "Unit",
+  unit: "Apartment",
   dueDate: "Due Date",
   paid: "Paid",
   pending: "Pending",
@@ -66,9 +67,7 @@ export const enDashboard = {
   visibleSections: "Visible Sections",
   metricsOverview: "Metrics Overview",
   prioritySection: "Priority Section",
-  revenueChart: "Revenue Chart",
-  recentActivity: "Recent Activity",
-  unit: "Apartment"
+  revenueChart: "Revenue Chart"
 };
 
 export const frDashboard = {
@@ -93,7 +92,7 @@ export const frDashboard = {
   status: "Statut",
   tenant: "Locataire",
   property: "Propriété",
-  unit: "Unité",
+  unit: "Appartement",
   dueDate: "Date d'échéance",
   paid: "Payé",
   pending: "En attente",
@@ -139,7 +138,5 @@ export const frDashboard = {
   visibleSections: "Sections visibles",
   metricsOverview: "Aperçu des métriques",
   prioritySection: "Section prioritaire",
-  revenueChart: "Graphique des revenus",
-  recentActivity: "Activité récente",
-  unit: "Appartement"
+  revenueChart: "Graphique des revenus"
 };
