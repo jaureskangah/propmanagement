@@ -98,10 +98,14 @@ export interface MaintenanceTranslations {
   columnDescription: string;
   columnCost: string;
   columnDate: string;
-  // Ajout des nouvelles clés pour les métriques financières
   totalExpenses: string;
   yearToDate: string;
   annualReturn: string;
   totalRentPaid: string;
   allTime: string;
+  clickForDetails: string;
+  comparedToPreviousMonth: string;
+  totalRequestsDesc: string;
+  pendingRequestsDesc: string;
+  resolvedRequestsDesc: string;
 }

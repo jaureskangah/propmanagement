@@ -7,7 +7,7 @@ import {
   CheckCircle,
   TrendingUp,
   TrendingDown,
-  Percent
+  Info
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -107,16 +107,17 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
                     />
                   </div>
                 )}
-                <Tooltip>
-                  <TooltipTrigger>
-                    <div className="text-xs text-muted-foreground mt-2">
-                      {t('clickForDetails')}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{metric.description}</p>
-                  </TooltipContent>
-                </Tooltip>
+                <div className="flex items-center justify-center mt-2 pt-2 border-t border-gray-100">
+                  <Tooltip>
+                    <TooltipTrigger className="flex items-center gap-1 text-xs text-primary hover:underline cursor-pointer">
+                      <Info className="h-3.5 w-3.5" />
+                      <span>{t('clickForDetails')}</span>
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p>{metric.description}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </div>
             </CardContent>
           </Card>
