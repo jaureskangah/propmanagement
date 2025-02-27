@@ -1,5 +1,7 @@
+
 import { DollarSign } from "lucide-react";
 import { ActivityItem } from "./ActivityItem";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PaymentActivityProps {
   payment: {
@@ -13,14 +15,16 @@ interface PaymentActivityProps {
 }
 
 export const PaymentActivity = ({ payment }: PaymentActivityProps) => {
+  const { t } = useLocale();
+  
   return (
     <ActivityItem
       key={payment.id}
       icon={DollarSign}
       iconColor="text-emerald-600"
       iconBgColor="bg-emerald-100"
-      title="Payment Received"
-      description={`$${payment.amount.toLocaleString()} - Studio ${payment.tenants?.unit_number}`}
+      title={t('paymentReceived')}
+      description={`$${payment.amount.toLocaleString()} - ${t('unit')} ${payment.tenants?.unit_number}`}
       date={payment.created_at}
     />
   );

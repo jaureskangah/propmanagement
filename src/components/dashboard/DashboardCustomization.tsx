@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -11,16 +12,18 @@ import {
 } from "@/components/ui/sheet";
 import { Settings } from "lucide-react";
 import { useDashboardPreferences } from "./hooks/useDashboardPreferences";
-
-const AVAILABLE_SECTIONS = [
-  { id: "metrics", label: "Metrics Overview" },
-  { id: "priority", label: "Priority Section" },
-  { id: "revenue", label: "Revenue Chart" },
-  { id: "activity", label: "Recent Activity" },
-];
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export function DashboardCustomization() {
   const { preferences, updatePreferences } = useDashboardPreferences();
+  const { t } = useLocale();
+
+  const AVAILABLE_SECTIONS = [
+    { id: "metrics", label: t('metricsOverview') },
+    { id: "priority", label: t('prioritySection') },
+    { id: "revenue", label: t('revenueChart') },
+    { id: "activity", label: t('recentActivity') },
+  ];
 
   const toggleSection = (sectionId: string) => {
     const newHiddenSections = preferences.hidden_sections.includes(sectionId)
@@ -39,14 +42,14 @@ export function DashboardCustomization() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Dashboard Customization</SheetTitle>
+          <SheetTitle>{t('dashboardCustomization')}</SheetTitle>
           <SheetDescription>
-            Customize your dashboard layout and visible sections
+            {t('customizeDescription')}
           </SheetDescription>
         </SheetHeader>
 
         <div className="mt-6">
-          <h3 className="text-sm font-medium mb-4">Visible Sections</h3>
+          <h3 className="text-sm font-medium mb-4">{t('visibleSections')}</h3>
           <div className="space-y-4">
             {AVAILABLE_SECTIONS.map((section) => (
               <div

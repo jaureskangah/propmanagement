@@ -1,4 +1,3 @@
-
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -61,7 +60,15 @@ export const enDashboard = {
   getSupport: "Get Support",
   payment: "Payment",
   lease: "Lease",
-  calendarEvents: "Calendar Events"
+  calendarEvents: "Calendar Events",
+  dashboardCustomization: "Dashboard Customization",
+  customizeDescription: "Customize your dashboard layout and visible sections",
+  visibleSections: "Visible Sections",
+  metricsOverview: "Metrics Overview",
+  prioritySection: "Priority Section",
+  revenueChart: "Revenue Chart",
+  recentActivity: "Recent Activity",
+  unit: "Apartment"
 };
 
 export const frDashboard = {
@@ -126,5 +133,13 @@ export const frDashboard = {
   getSupport: "Obtenir de l'aide",
   payment: "Paiement",
   lease: "Bail",
-  calendarEvents: "Événements du calendrier"
+  calendarEvents: "Événements du calendrier",
+  dashboardCustomization: "Personnalisation du tableau de bord",
+  customizeDescription: "Personnalisez la disposition et les sections visibles de votre tableau de bord",
+  visibleSections: "Sections visibles",
+  metricsOverview: "Aperçu des métriques",
+  prioritySection: "Section prioritaire",
+  revenueChart: "Graphique des revenus",
+  recentActivity: "Activité récente",
+  unit: "Appartement"
 };
