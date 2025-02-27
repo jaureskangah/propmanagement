@@ -26,7 +26,7 @@ export const enTranslations: Translations = {
   ...enHero,
   ...enFeatures,
   ...enPricing,
-  ...enPlanFeatures,  // Important: ajouter les traductions des fonctionnalités des plans
+  ...enPlanFeatures,
   ...enToasts,
   ...enContact,
   ...enAuth,

@@ -26,7 +26,7 @@ export const frTranslations: Translations = {
   ...frHero,
   ...frFeatures,
   ...frPricing,
-  ...frPlanFeatures,  // Important: ajouter les traductions des fonctionnalités des plans
+  ...frPlanFeatures,
   ...frToasts,
   ...frContact,
   ...frAuth,
