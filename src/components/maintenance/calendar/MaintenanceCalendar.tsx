@@ -4,8 +4,7 @@ import { format } from "date-fns";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { DayProps } from "react-day-picker";
-import type { ButtonHTMLAttributes } from "react";
+import { DayContent, DayProps } from "react-day-picker";
 
 interface MaintenanceCalendarProps {
   selectedDate: Date | undefined;
@@ -13,11 +12,6 @@ interface MaintenanceCalendarProps {
   tasks: Task[];
   selectedType: string;
 }
-
-type DayButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: React.ReactNode;
-  "aria-selected"?: boolean;
-};
 
 export const MaintenanceCalendar = ({
   selectedDate,
@@ -77,30 +71,17 @@ export const MaintenanceCalendar = ({
         }}
         modifiersStyles={modifiersStyles}
         components={{
-          Day: ({ date, displayMonth, ...props }: DayProps) => {
-            const tasksForDate = getTasksForDate(date);
+          Day: (props: DayProps) => {
+            const tasksForDate = getTasksForDate(props.date);
             
-            // Assurez-vous que ces props existent
-            if (!props.className || !props.onClick || props.children === undefined) {
-              return null;
-            }
-            
-            const buttonProps = {
-              className: props.className,
-              onClick: props.onClick,
-              disabled: props.disabled,
-              "aria-selected": props["aria-selected"],
-              type: "button" as const
-            };
-
             if (tasksForDate.length === 0) {
-              return <button {...buttonProps}>{props.children}</button>;
+              return <DayContent {...props} />;
             }
 
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button {...buttonProps}>{props.children}</button>
+                  <DayContent {...props} />
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
