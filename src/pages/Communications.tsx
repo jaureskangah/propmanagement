@@ -7,7 +7,6 @@ import { UnlinkedTenantMessage } from "@/components/tenant/communications/Unlink
 const Communications = () => {
   const {
     tenantId,
-    tenant,
     communications,
     handleCreateCommunication,
     refreshCommunications
@@ -23,7 +22,6 @@ const Communications = () => {
           <TenantCommunicationsComponent
             communications={communications}
             tenantId={tenantId}
-            tenant={tenant}
             onCommunicationUpdate={refreshCommunications}
           />
         )}
