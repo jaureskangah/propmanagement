@@ -71,16 +71,14 @@ export const MaintenanceCalendar = ({
         }}
         modifiersStyles={modifiersStyles}
         components={{
-          Day: ({ date, ...props }: DayProps) => {
+          Day: ({ date, ...props }: DayProps & { date: Date }) => {
             const tasksForDate = getTasksForDate(date);
             if (tasksForDate.length === 0) return <button {...props} />;
 
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button className={props.className} onClick={props.onClick} onMouseEnter={props.onMouseEnter} onMouseLeave={props.onMouseLeave}>
-                    {props.children}
-                  </button>
+                  <button {...props} />
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
