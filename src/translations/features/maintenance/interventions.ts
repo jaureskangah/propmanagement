@@ -7,7 +7,11 @@ export const enInterventions = {
   columnTitle: "Title",
   columnDescription: "Description",
   columnCost: "Cost",
-  columnDate: "Date"
+  columnDate: "Date",
+  maintenanceCompleted: "Maintenance Completed",
+  existingFiles: "Existing files",
+  searchEmergencyContacts: "Search emergency contacts...",
+  numberCopied: "Phone number copied to clipboard"
 };
 
 export const frInterventions = {
@@ -18,5 +22,9 @@ export const frInterventions = {
   columnTitle: "Titre",
   columnDescription: "Description",
   columnCost: "Coût",
-  columnDate: "Date"
+  columnDate: "Date",
+  maintenanceCompleted: "Maintenance terminée",
+  existingFiles: "Fichiers existants",
+  searchEmergencyContacts: "Rechercher des contacts d'urgence...",
+  numberCopied: "Numéro de téléphone copié dans le presse-papiers"
 };
