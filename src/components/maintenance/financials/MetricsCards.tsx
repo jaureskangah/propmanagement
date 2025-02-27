@@ -1,8 +1,10 @@
+
 import React from "react";
 import { DashboardMetric } from "@/components/DashboardMetric";
 import { FileText, TrendingUp, Wallet } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MetricsCardsProps {
   propertyId: string;
@@ -12,6 +14,8 @@ interface MetricsCardsProps {
 }
 
 export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }: MetricsCardsProps) => {
+  const { t, language } = useLocale();
+  
   const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
 
@@ -52,27 +56,37 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
     },
   });
 
+  // Déterminer les textes à afficher selon la langue
+  const titles = {
+    totalExpenses: language === 'fr' ? "Dépenses Totales" : "Total Expenses",
+    roi: "ROI",  // Acronyme universel
+    totalRentPaid: language === 'fr' ? "Loyers Perçus" : "Total Rent Paid",
+    yearToDate: language === 'fr' ? "Année en cours" : "Year to date",
+    annualReturn: language === 'fr' ? "Rendement annuel" : "Annual return",
+    allTime: language === 'fr' ? "Au total" : "All time"
+  };
+
   return (
     <div className="grid gap-4 md:grid-cols-3">
       <DashboardMetric
-        title="Total Expenses"
+        title={titles.totalExpenses}
         value={`$${(totalExpenses + totalMaintenance).toLocaleString()}`}
         icon={<FileText className="h-4 w-4" />}
-        description="Year to date"
+        description={titles.yearToDate}
       />
 
       <DashboardMetric
-        title="ROI"
+        title={titles.roi}
         value={`${calculateROI()}%`}
         icon={<TrendingUp className="h-4 w-4" />}
-        description="Annual return"
+        description={titles.annualReturn}
       />
 
       <DashboardMetric
-        title="Total Rent Paid"
+        title={titles.totalRentPaid}
         value={`$${totalRentPaid.toLocaleString()}`}
         icon={<Wallet className="h-4 w-4" />}
-        description="All time"
+        description={titles.allTime}
         chartColor="#22C55E"
       />
     </div>
