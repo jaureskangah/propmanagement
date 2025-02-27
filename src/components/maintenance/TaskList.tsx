@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -5,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface Task {
   id: string;
@@ -22,10 +24,13 @@ interface TaskListProps {
 }
 
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
+  const { t, language } = useLocale();
+  const dateLocale = language === 'fr' ? fr : undefined;
+  
   return (
     <ScrollArea className="h-[200px]">
       {tasks.length === 0 ? (
-        <p className="text-center text-muted-foreground py-4">No tasks found</p>
+        <p className="text-center text-muted-foreground py-4">{t('noTasks')}</p>
       ) : (
         tasks.map((task) => (
           <div
@@ -52,9 +57,9 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                 variant={task.completed ? "default" : "secondary"}
                 className={task.completed ? "bg-green-500" : ""}
               >
-                {format(task.date, "dd/MM/yyyy", { locale: fr })}
+                {format(task.date, "dd/MM/yyyy", { locale: dateLocale })}
               </Badge>
-              <Badge variant="outline">{task.type}</Badge>
+              <Badge variant="outline">{t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}</Badge>
               <Button
                 variant="ghost"
                 size="icon"

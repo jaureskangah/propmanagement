@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { CalendarIcon } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,10 +7,12 @@ import { TypeFilter } from "./calendar/TypeFilter";
 import { AddTaskDialog } from "./AddTaskDialog";
 import { TaskList } from "./TaskList";
 import { useMaintenanceTasks } from "./tasks/useMaintenanceTasks";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedType, setSelectedType] = useState<string>("all");
+  const { t } = useLocale();
   
   const {
     tasks,
@@ -24,7 +27,7 @@ export const PreventiveMaintenance = () => {
   );
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>{t('loading')}</div>;
   }
 
   return (
@@ -33,7 +36,7 @@ export const PreventiveMaintenance = () => {
         <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
           <CardTitle className="flex items-center gap-2">
             <CalendarIcon className="h-5 w-5" />
-            Maintenance Calendar
+            {t('maintenanceCalendar')}
           </CardTitle>
           <TypeFilter
             selectedType={selectedType}
@@ -49,7 +52,7 @@ export const PreventiveMaintenance = () => {
           />
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-medium">Scheduled Tasks</h3>
+              <h3 className="font-medium">{t('scheduledTasks')}</h3>
               <AddTaskDialog onAddTask={handleAddTask} />
             </div>
             <TaskList 
