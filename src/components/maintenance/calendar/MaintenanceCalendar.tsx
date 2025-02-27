@@ -4,7 +4,8 @@ import { format } from "date-fns";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { DayProps } from "react-day-picker";
+import { DayProps, DayContent } from "react-day-picker";
+import type { ButtonHTMLAttributes } from "react";
 
 interface MaintenanceCalendarProps {
   selectedDate: Date | undefined;
@@ -71,14 +72,22 @@ export const MaintenanceCalendar = ({
         }}
         modifiersStyles={modifiersStyles}
         components={{
-          Day: ({ date, ...props }: DayProps & { date: Date }) => {
+          Day: ({ date, displayMonth, ...dayProps }: DayProps) => {
             const tasksForDate = getTasksForDate(date);
-            if (tasksForDate.length === 0) return <button {...props} />;
+            const buttonProps: ButtonHTMLAttributes<HTMLButtonElement> = {
+              className: dayProps.className,
+              onClick: dayProps.onClick,
+              disabled: dayProps.disabled,
+              "aria-selected": dayProps["aria-selected"],
+              type: "button"
+            };
+
+            if (tasksForDate.length === 0) return <button {...buttonProps}>{dayProps.children}</button>;
 
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button {...props} />
+                  <button {...buttonProps}>{dayProps.children}</button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
