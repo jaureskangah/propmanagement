@@ -40,7 +40,13 @@ export const enCommon = {
   yearToDate: "Year to date",
   annualReturn: "Annual return",
   totalRentPaid: "Total Rent Paid",
-  allTime: "All time"
+  allTime: "All time",
+  // Nouvelles traductions pour les métriques
+  clickForDetails: "Click for details",
+  comparedToPreviousMonth: "Compared to previous month",
+  totalRequestsDesc: "The total number of maintenance requests across all properties",
+  pendingRequestsDesc: "The number of maintenance requests awaiting attention",
+  resolvedRequestsDesc: "The number of maintenance requests successfully completed"
 };
 
 export const frCommon = {
@@ -84,5 +90,11 @@ export const frCommon = {
   yearToDate: "Année en cours",
   annualReturn: "Rendement annuel",
   totalRentPaid: "Loyers Perçus",
-  allTime: "Au total"
+  allTime: "Au total",
+  // Nouvelles traductions pour les métriques
+  clickForDetails: "Cliquer pour détails",
+  comparedToPreviousMonth: "Par rapport au mois précédent",
+  totalRequestsDesc: "Le nombre total de demandes de maintenance pour toutes les propriétés",
+  pendingRequestsDesc: "Le nombre de demandes de maintenance en attente d'attention",
+  resolvedRequestsDesc: "Le nombre de demandes de maintenance terminées avec succès"
 };
