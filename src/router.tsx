@@ -7,6 +7,7 @@ import Tenants from "./pages/Tenants";
 import Maintenance from "./pages/Maintenance";
 import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
+import Communications from "./pages/Communications";
 
 export const router = createBrowserRouter([
   {
@@ -36,5 +37,9 @@ export const router = createBrowserRouter([
   {
     path: "/admin",
     element: <AdminDashboard />,
+  },
+  {
+    path: "/communications",
+    element: <Communications />,
   },
 ]);
