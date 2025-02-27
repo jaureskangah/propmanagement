@@ -36,10 +36,10 @@ export const MaintenanceCalendar = ({
       low: tasks.some(task => task.priority === 'low')
     };
 
-    if (hasPriority.urgent) return "#ea384c"; // Rouge pour urgent
-    if (hasPriority.high) return "#f97316"; // Orange pour haute priorité
-    if (hasPriority.medium) return "#facc15"; // Jaune pour priorité moyenne
-    return "#22c55e"; // Vert pour basse priorité
+    if (hasPriority.urgent) return "#ea384c";
+    if (hasPriority.high) return "#f97316";
+    if (hasPriority.medium) return "#facc15";
+    return "#22c55e";
   };
 
   const modifiersStyles = {
@@ -77,7 +77,9 @@ export const MaintenanceCalendar = ({
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <div {...props} />
+                  <div {...props}>
+                    {props.children}
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
