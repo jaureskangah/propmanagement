@@ -64,62 +64,64 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
 
   return (
     <TooltipProvider>
-      {metrics.map((metric) => (
-        <Card key={metric.title} className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              {metric.title}
-            </CardTitle>
-            <metric.icon className={`h-4 w-4 ${metric.color}`} />
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="text-2xl font-bold">{metric.value}</div>
-              
-              {metric.progress !== undefined && (
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{metric.progress}%</span>
-                    {metric.variation !== undefined && (
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <div className={`flex items-center gap-1 ${
-                            metric.variation > 0 ? 'text-green-500' : 'text-red-500'
-                          }`}>
-                            {metric.variation > 0 ? (
-                              <TrendingUp className="h-3 w-3" />
-                            ) : (
-                              <TrendingDown className="h-3 w-3" />
-                            )}
-                            <span>{Math.abs(metric.variation)}%</span>
-                          </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{t('comparedToPreviousMonth')}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {metrics.map((metric) => (
+          <Card key={metric.title} className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">
+                {metric.title}
+              </CardTitle>
+              <metric.icon className={`h-4 w-4 ${metric.color}`} />
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="text-2xl font-bold">{metric.value}</div>
+                
+                {metric.progress !== undefined && (
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <span>{metric.progress}%</span>
+                      {metric.variation !== undefined && (
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <div className={`flex items-center gap-1 ${
+                              metric.variation > 0 ? 'text-green-500' : 'text-red-500'
+                            }`}>
+                              {metric.variation > 0 ? (
+                                <TrendingUp className="h-3 w-3" />
+                              ) : (
+                                <TrendingDown className="h-3 w-3" />
+                              )}
+                              <span>{Math.abs(metric.variation)}%</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{t('comparedToPreviousMonth')}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      )}
+                    </div>
+                    <Progress 
+                      value={metric.progress} 
+                      className={`h-1.5 transition-all duration-300 ${metric.progressColor}`}
+                    />
                   </div>
-                  <Progress 
-                    value={metric.progress} 
-                    className={`h-1.5 transition-all duration-300 ${metric.progressColor}`}
-                  />
-                </div>
-              )}
-              <Tooltip>
-                <TooltipTrigger>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    {t('clickForDetails')}
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{metric.description}</p>
-                </TooltipContent>
-              </Tooltip>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+                )}
+                <Tooltip>
+                  <TooltipTrigger>
+                    <div className="text-xs text-muted-foreground mt-2">
+                      {t('clickForDetails')}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{metric.description}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </TooltipProvider>
   );
 };
