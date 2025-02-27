@@ -16,7 +16,7 @@ export const enRequests = {
   maintenanceDescription: "Maintenance Description",
   maintenancePrioritySelect: "Select Priority",
   maintenancePhotos: "Photos",
-  photosSelected: "Photos Selected", // Added missing translation
+  photosSelected: "Photos Selected",
   noMaintenanceRequests: "No maintenance requests found",
   maintenanceManagement: "Maintenance Management",
   totalRequests: "Total Requests",
@@ -76,7 +76,7 @@ export const frRequests = {
   maintenanceDescription: "Description de la maintenance",
   maintenancePrioritySelect: "Sélectionner la priorité",
   maintenancePhotos: "Photos",
-  photosSelected: "Photos sélectionnées", // Added missing translation
+  photosSelected: "Photos sélectionnées",
   noMaintenanceRequests: "Aucune demande de maintenance trouvée",
   maintenanceManagement: "Gestion de la maintenance",
   totalRequests: "Demandes Totales",
