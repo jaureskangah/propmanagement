@@ -16,4 +16,6 @@ export const enProfile: TenantProfileTranslations = {
   leaseEndProfileLabel: "Lease End",
   notAvailable: "N/A",
   perMonth: "/month",
+  unitLabel: "Unit",
+  saving: "Saving...",
 };

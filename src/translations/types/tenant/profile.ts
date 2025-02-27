@@ -14,4 +14,6 @@ export interface TenantProfileTranslations {
   leaseEndProfileLabel: string;
   notAvailable: string;
   perMonth: string;
+  unitLabel: string;
+  saving: string;
 }

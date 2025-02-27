@@ -16,4 +16,6 @@ export const frProfile: TenantProfileTranslations = {
   leaseEndProfileLabel: "Fin du Bail",
   notAvailable: "N/D",
   perMonth: "/mois",
+  unitLabel: "Unité",
+  saving: "Enregistrement...",
 };
