@@ -81,7 +81,9 @@ export const MaintenanceCalendar = ({
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <DayContent {...props} />
+                  <div className="flex justify-center">
+                    <DayContent {...props} />
+                  </div>
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
