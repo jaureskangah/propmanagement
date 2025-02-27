@@ -77,23 +77,30 @@ export const MaintenanceCalendar = ({
         }}
         modifiersStyles={modifiersStyles}
         components={{
-          Day: ({ date, displayMonth, ...props }: DayProps & DayButtonProps) => {
+          Day: ({ date, displayMonth, ...props }: DayProps) => {
             const tasksForDate = getTasksForDate(date);
-            const buttonProps: DayButtonProps = {
+            
+            // Assurez-vous que ces props existent
+            if (!props.className || !props.onClick || props.children === undefined) {
+              return null;
+            }
+            
+            const buttonProps = {
               className: props.className,
               onClick: props.onClick,
               disabled: props.disabled,
               "aria-selected": props["aria-selected"],
-              children: props.children,
-              type: "button"
+              type: "button" as const
             };
 
-            if (tasksForDate.length === 0) return <button {...buttonProps} />;
+            if (tasksForDate.length === 0) {
+              return <button {...buttonProps}>{props.children}</button>;
+            }
 
             return (
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <button {...buttonProps} />
+                  <button {...buttonProps}>{props.children}</button>
                 </TooltipTrigger>
                 <TooltipContent>
                   <div className="text-sm">
