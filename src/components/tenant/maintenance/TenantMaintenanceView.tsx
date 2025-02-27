@@ -9,6 +9,7 @@ import { MaintenanceRequest } from "@/types/tenant";
 import { useAuth } from '@/components/AuthProvider';
 import { MaintenanceList } from "./components/MaintenanceList";
 import { AddMaintenanceDialog } from "../maintenance/AddMaintenanceDialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const TenantMaintenanceView = () => {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
@@ -16,6 +17,7 @@ export const TenantMaintenanceView = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const { session } = useAuth();
   const { toast } = useToast();
+  const { t } = useLocale();
 
   useEffect(() => {
     if (session?.user) {
@@ -46,16 +48,16 @@ export const TenantMaintenanceView = () => {
       } else {
         console.log("No tenant found for user:", session?.user?.id);
         toast({
-          title: "Not linked to a tenant profile",
-          description: "Please contact your property manager to link your account.",
+          title: t('error'),
+          description: t('notLinkedToTenant'),
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error('Error fetching tenant ID:', error);
       toast({
-        title: "Error",
-        description: "Failed to load tenant information",
+        title: t('error'),
+        description: t('errorLoadingTenant'),
         variant: "destructive",
       });
     }
@@ -76,8 +78,8 @@ export const TenantMaintenanceView = () => {
     } catch (error) {
       console.error('Error fetching maintenance requests:', error);
       toast({
-        title: "Error",
-        description: "Failed to load maintenance requests",
+        title: t('error'),
+        description: t('errorLoadingRequests'),
         variant: "destructive",
       });
     }
@@ -114,8 +116,7 @@ export const TenantMaintenanceView = () => {
       <Card>
         <CardContent className="pt-6">
           <p className="text-center text-muted-foreground">
-            Your account needs to be linked to a tenant profile.
-            Please contact your property manager.
+            {t('notLinkedToTenant')}
           </p>
         </CardContent>
       </Card>
@@ -125,13 +126,13 @@ export const TenantMaintenanceView = () => {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Maintenance Requests</CardTitle>
+        <CardTitle className="text-lg">{t('maintenanceRequestTitle')}</CardTitle>
         <Button 
           onClick={() => setIsAddDialogOpen(true)}
           className="bg-[#ea384c] hover:bg-[#ea384c]/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          New Request
+          {t('addNewTask')}
         </Button>
       </CardHeader>
       <CardContent>

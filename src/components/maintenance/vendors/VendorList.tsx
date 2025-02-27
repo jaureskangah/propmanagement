@@ -14,6 +14,7 @@ import { VendorSearchFilters } from "./filters/VendorSearchFilters";
 import { VendorSpecialtyFilters } from "./filters/VendorSpecialtyFilters";
 import { Vendor, VendorReview } from "@/types/vendor";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const VendorList = () => {
   const [selectedSpecialty, setSelectedSpecialty] = useState<string | null>(null);
@@ -28,6 +29,7 @@ export const VendorList = () => {
     name: string;
   } | null>(null);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const { data: vendors = [], refetch } = useQuery({
     queryKey: ['vendors'],
@@ -84,16 +86,16 @@ export const VendorList = () => {
       if (error) throw error;
 
       toast({
-        title: "Vendor deleted",
-        description: `${vendor.name} has been removed successfully.`,
+        title: t('success'),
+        description: t('vendorDeleted'),
       });
 
       refetch();
     } catch (error) {
       console.error('Error deleting vendor:', error);
       toast({
-        title: "Error",
-        description: "Failed to delete vendor. Please try again.",
+        title: t('error'),
+        description: t('vendorDeleteError'),
         variant: "destructive",
       });
     }
@@ -105,10 +107,10 @@ export const VendorList = () => {
 
       <Tabs defaultValue="all" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="all">All Vendors</TabsTrigger>
-          <TabsTrigger value="emergency">Emergency Contacts</TabsTrigger>
-          <TabsTrigger value="reviews">Reviews</TabsTrigger>
-          <TabsTrigger value="history">History</TabsTrigger>
+          <TabsTrigger value="all">{t('allVendors')}</TabsTrigger>
+          <TabsTrigger value="emergency">{t('emergencyContacts')}</TabsTrigger>
+          <TabsTrigger value="reviews">{t('reviews')}</TabsTrigger>
+          <TabsTrigger value="history">{t('history')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">

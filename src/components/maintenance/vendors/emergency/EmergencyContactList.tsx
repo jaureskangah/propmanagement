@@ -1,9 +1,11 @@
+
 import React from "react";
 import { EmergencyContactCard } from "./EmergencyContactCard";
 import { Vendor } from "@/types/vendor";
 import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface EmergencyContactListProps {
   vendors: Vendor[];
@@ -14,6 +16,7 @@ interface EmergencyContactListProps {
 export const EmergencyContactList = ({ vendors, onEdit, onDelete }: EmergencyContactListProps) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const filteredVendors = vendors.filter(vendor => 
     vendor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -27,8 +30,8 @@ export const EmergencyContactList = ({ vendors, onEdit, onDelete }: EmergencyCon
     } else {
       navigator.clipboard.writeText(phone);
       toast({
-        title: "Phone number copied!",
-        description: `The number ${phone} has been copied to your clipboard.`,
+        title: t('success'),
+        description: t('numberCopied')
       });
     }
   };
@@ -38,7 +41,7 @@ export const EmergencyContactList = ({ vendors, onEdit, onDelete }: EmergencyCon
       <div className="relative">
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
         <Input
-          placeholder="Search emergency contacts..."
+          placeholder={t('searchEmergencyContacts')}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-10"

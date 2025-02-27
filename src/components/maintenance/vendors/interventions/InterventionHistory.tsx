@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { InterventionStats } from "./InterventionStats";
@@ -7,8 +8,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { VendorIntervention } from "@/types/vendor";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const InterventionHistory = () => {
+  const { t } = useLocale();
+  
   const { data: interventions = [] } = useQuery({
     queryKey: ['vendor_interventions'],
     queryFn: async () => {
@@ -34,14 +38,14 @@ export const InterventionHistory = () => {
       
       <Tabs defaultValue="calendar" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="calendar">Calendar</TabsTrigger>
-          <TabsTrigger value="timeline">Timeline</TabsTrigger>
+          <TabsTrigger value="calendar">{t('interventionCalendar')}</TabsTrigger>
+          <TabsTrigger value="timeline">{t('interventionHistory')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="calendar">
           <Card>
             <CardHeader>
-              <CardTitle>Intervention Calendar</CardTitle>
+              <CardTitle>{t('interventionCalendar')}</CardTitle>
             </CardHeader>
             <CardContent>
               <InterventionCalendar interventions={interventions} />
@@ -52,7 +56,7 @@ export const InterventionHistory = () => {
         <TabsContent value="timeline">
           <Card>
             <CardHeader>
-              <CardTitle>Intervention History</CardTitle>
+              <CardTitle>{t('interventionHistory')}</CardTitle>
             </CardHeader>
             <CardContent>
               <InterventionTimeline interventions={interventions} />
