@@ -61,9 +61,9 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
             {isSubmitting ? (
               t('saving')
             ) : isEditMode ? (
-              t('saveTenant')
+              t('saveChanges')
             ) : (
-              t('addTenant')
+              t('saveTenant')
             )}
           </Button>
         </div>
