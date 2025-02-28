@@ -8,6 +8,9 @@ import Maintenance from "./pages/Maintenance";
 import Settings from "./pages/Settings";
 import AdminDashboard from "./pages/AdminDashboard";
 import Communications from "./pages/Communications";
+import TenantProfile from "./pages/TenantProfile";
+import TenantPayments from "./pages/TenantPayments";
+import TenantDocuments from "./pages/TenantDocuments";
 
 export const router = createBrowserRouter([
   {
@@ -41,5 +44,17 @@ export const router = createBrowserRouter([
   {
     path: "/communications",
     element: <Communications />,
+  },
+  {
+    path: "/profile",
+    element: <TenantProfile />,
+  },
+  {
+    path: "/payments",
+    element: <TenantPayments />,
+  },
+  {
+    path: "/documents",
+    element: <TenantDocuments />,
   },
 ]);

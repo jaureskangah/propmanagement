@@ -11,7 +11,10 @@ import {
   Settings,
   LayoutDashboard,
   ShieldCheck,
-  MessageCircle
+  MessageCircle,
+  CreditCard,
+  FileText,
+  User
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -25,7 +28,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
   
-  // Liens pour les locataires - accès limité
+  // Liens pour les locataires - redessinés pour être plus pertinents
   const tenantLinks = [
     {
       href: "/",
@@ -33,9 +36,19 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       label: t('home'),
     },
     {
-      href: "/dashboard",
-      icon: LayoutDashboard,
-      label: t('dashboard'),
+      href: "/profile",
+      icon: User,
+      label: t('profile'),
+    },
+    {
+      href: "/payments",
+      icon: CreditCard,
+      label: t('payments'),
+    },
+    {
+      href: "/documents",
+      icon: FileText,
+      label: t('documents'),
     },
     {
       href: "/maintenance",
