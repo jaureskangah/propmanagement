@@ -30,4 +30,13 @@ export interface TenantCommunicationsTranslations {
   replyPlaceholder: string;
   confirmDelete: string;
   attachments: string;
+  clearFilter: string;
+  enterSubject: string;
+  enterMessage: string;
+  selectCategory: string;
+  noContent: string;
+  replySuccess: string;
+  messageCantBeEmpty: string;
+  cantReply: string;
+  sendReplyError: string;
 }

@@ -31,5 +31,14 @@ export const enCommunications: TenantCommunicationsTranslations = {
   writeReply: "Write your reply",
   replyPlaceholder: "Type your reply here...",
   confirmDelete: "Are you sure you want to delete this message?",
-  attachments: "Attachments"
+  attachments: "Attachments",
+  clearFilter: "Clear filter",
+  enterSubject: "Enter subject",
+  enterMessage: "Enter your message",
+  selectCategory: "Select category",
+  noContent: "No content",
+  replySuccess: "Reply sent successfully",
+  messageCantBeEmpty: "Message cannot be empty",
+  cantReply: "Cannot reply to this message",
+  sendReplyError: "Error sending reply"
 };

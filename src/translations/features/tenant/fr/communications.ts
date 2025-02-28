@@ -31,5 +31,14 @@ export const frCommunications: TenantCommunicationsTranslations = {
   writeReply: "Écrire votre réponse",
   replyPlaceholder: "Écrivez votre réponse ici...",
   confirmDelete: "Êtes-vous sûr de vouloir supprimer ce message ?",
-  attachments: "Pièces jointes"
+  attachments: "Pièces jointes",
+  clearFilter: "Effacer le filtre",
+  enterSubject: "Entrez le sujet",
+  enterMessage: "Entrez votre message",
+  selectCategory: "Sélectionnez une catégorie",
+  noContent: "Pas de contenu",
+  replySuccess: "Réponse envoyée avec succès",
+  messageCantBeEmpty: "Le message ne peut pas être vide",
+  cantReply: "Impossible de répondre à ce message",
+  sendReplyError: "Erreur lors de l'envoi de la réponse"
 };
