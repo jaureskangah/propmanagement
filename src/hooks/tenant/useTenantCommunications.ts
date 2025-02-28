@@ -83,6 +83,7 @@ export const useTenantCommunications = () => {
 
   const fetchCommunications = async () => {
     try {
+      console.log("Fetching communications for tenant:", tenantId);
       const { data, error } = await supabase
         .from('tenant_communications')
         .select('*')
@@ -93,6 +94,7 @@ export const useTenantCommunications = () => {
       
       console.log("Fetched communications:", data);
       setCommunications(data || []);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching communications:', error);
       toast({
@@ -100,7 +102,6 @@ export const useTenantCommunications = () => {
         description: "Impossible de charger les communications",
         variant: "destructive",
       });
-    } finally {
       setIsLoading(false);
     }
   };
@@ -117,6 +118,7 @@ export const useTenantCommunications = () => {
           filter: `tenant_id=eq.${tenantId}`
         },
         () => {
+          console.log("Realtime update received, refreshing communications");
           fetchCommunications();
         }
       )
