@@ -1,3 +1,4 @@
+
 import { CommunicationFilters } from "../CommunicationFilters";
 
 interface CommunicationsFilterBarProps {

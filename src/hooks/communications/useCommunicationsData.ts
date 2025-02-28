@@ -6,7 +6,7 @@ import { startOfDay, parseISO, isAfter } from "date-fns";
 export const useCommunicationsData = (
   communications: Communication[],
   searchQuery: string,
-  selectedCategory: string | null,
+  selectedType: string | null,
   startDate: Date | null
 ) => {
   // Group communications by type
@@ -48,7 +48,7 @@ export const useCommunicationsData = (
     console.log("Starting filtering with:", {
       total: communications.length,
       searchQuery,
-      selectedCategory,
+      selectedType,
       startDate: startDate?.toISOString()
     });
 
@@ -65,12 +65,10 @@ export const useCommunicationsData = (
       console.log("After search filter:", filtered.length);
     }
 
-    // Category filter
-    if (selectedCategory) {
-      filtered = filtered.filter(comm => 
-        comm.category?.toLowerCase() === selectedCategory.toLowerCase()
-      );
-      console.log("After category filter:", filtered.length);
+    // Type filter
+    if (selectedType) {
+      filtered = filtered.filter(comm => comm.type === selectedType);
+      console.log("After type filter:", filtered.length);
     }
 
     // Date filter
@@ -86,7 +84,7 @@ export const useCommunicationsData = (
     }
 
     return filtered;
-  }, [communications, searchQuery, selectedCategory, startDate]);
+  }, [communications, searchQuery, selectedType, startDate]);
 
   return {
     groupedCommunications,
