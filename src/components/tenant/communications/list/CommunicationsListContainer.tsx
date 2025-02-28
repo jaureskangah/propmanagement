@@ -1,3 +1,4 @@
+
 import { Communication } from "@/types/tenant";
 import { CommunicationsList } from "../CommunicationsList";
 
