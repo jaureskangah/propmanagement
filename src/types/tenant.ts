@@ -1,3 +1,4 @@
+
 export interface Tenant {
   id: string;
   name: string;
@@ -26,6 +27,7 @@ export interface TenantDocument {
   name: string;
   file_url?: string;
   created_at: string;
+  uploaded_at?: string;
 }
 
 export interface TenantPayment {
@@ -34,6 +36,8 @@ export interface TenantPayment {
   status: string;
   payment_date: string;
   created_at: string;
+  description?: string;
+  date?: string;
 }
 
 export interface MaintenanceRequest {
@@ -59,3 +63,7 @@ export interface Communication {
   tenant_notified?: boolean;
   tenant_id?: string;
 }
+
+// Pour la compatibilité avec les composants existants
+export type Document = TenantDocument;
+export type Payment = TenantPayment;

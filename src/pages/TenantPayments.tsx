@@ -5,14 +5,14 @@ import { useAuth } from "@/components/AuthProvider";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { Payment } from "@/types/tenant";
+import { TenantPayment } from "@/types/tenant";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
 const TenantPayments = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [payments, setPayments] = useState<Payment[]>([]);
+  const [payments, setPayments] = useState<TenantPayment[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -66,7 +66,7 @@ const TenantPayments = () => {
         .from('tenant_payments')
         .select('*')
         .eq('tenant_id', tenantId)
-        .order('date', { ascending: false });
+        .order('payment_date', { ascending: false });
 
       if (error) throw error;
       
@@ -128,7 +128,7 @@ const TenantPayments = () => {
                     <div>
                       <p className="font-medium">{payment.description || "Paiement de loyer"}</p>
                       <p className="text-sm text-muted-foreground">
-                        {format(new Date(payment.date), 'dd/MM/yyyy')}
+                        {format(new Date(payment.payment_date), 'dd/MM/yyyy')}
                       </p>
                     </div>
                     <div className="flex items-center gap-4">

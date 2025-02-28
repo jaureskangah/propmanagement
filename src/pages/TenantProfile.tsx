@@ -73,7 +73,11 @@ const TenantProfile = () => {
               communications: [],
               documents: [],
               maintenanceRequests: [],
-              paymentHistory: []
+              paymentHistory: [],
+              user_id: user?.id || '',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              tenant_profile_id: null
             }}
             onProfileLinked={handleProfileLinked}
           />

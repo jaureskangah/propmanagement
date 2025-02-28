@@ -5,15 +5,15 @@ import { useAuth } from "@/components/AuthProvider";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { Document } from "@/types/tenant";
-import { FileIcon, DownloadIcon } from "lucide-react";
+import { TenantDocument } from "@/types/tenant";
+import { FileIcon, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
 const TenantDocuments = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<TenantDocument[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -67,7 +67,7 @@ const TenantDocuments = () => {
         .from('tenant_documents')
         .select('*')
         .eq('tenant_id', tenantId)
-        .order('uploaded_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       
@@ -84,7 +84,7 @@ const TenantDocuments = () => {
     }
   };
 
-  const handleDownload = (document: Document) => {
+  const handleDownload = (document: TenantDocument) => {
     if (document.file_url) {
       window.open(document.file_url, '_blank');
     } else {
@@ -127,7 +127,7 @@ const TenantDocuments = () => {
                       <div>
                         <p className="font-medium">{document.name}</p>
                         <p className="text-sm text-muted-foreground">
-                          {document.uploaded_at && format(new Date(document.uploaded_at), 'dd/MM/yyyy')}
+                          {format(new Date(document.created_at), 'dd/MM/yyyy')}
                         </p>
                       </div>
                     </div>
@@ -137,7 +137,7 @@ const TenantDocuments = () => {
                       onClick={() => handleDownload(document)}
                       title="Télécharger"
                     >
-                      <DownloadIcon className="h-5 w-5" />
+                      <Download className="h-5 w-5" />
                     </Button>
                   </div>
                 ))}
