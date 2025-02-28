@@ -7,6 +7,8 @@ import { MaintenanceMetricsSection } from "@/components/maintenance/metrics/Main
 import { MaintenanceTabs } from "@/components/maintenance/tabs/MaintenanceTabs";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
+import { useAuth } from "@/components/AuthProvider";
 
 const fetchMaintenanceRequests = async () => {
   const { data, error } = await supabase
@@ -19,6 +21,9 @@ const fetchMaintenanceRequests = async () => {
 
 const Maintenance = () => {
   const { t } = useLocale();
+  const { user } = useAuth();
+  const isTenantUser = user?.user_metadata?.is_tenant_user;
+  
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: fetchMaintenanceRequests,
@@ -45,28 +50,44 @@ const Maintenance = () => {
 
   return (
     <div className="flex h-screen">
-      <AppSidebar />
+      <AppSidebar isTenant={isTenantUser} />
       <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 font-sans">
-        <div className="mb-4">
-          <h1 className="text-3xl font-bold text-foreground">
-            {t('maintenanceManagement')}
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            {t('maintenanceDescription')}
-          </p>
-        </div>
-        
-        <MaintenanceMetricsSection
-          totalRequests={totalRequests}
-          pendingRequests={pendingRequests}
-          resolvedRequests={resolvedRequests}
-          urgentRequests={urgentRequests}
-        />
-
-        <MaintenanceTabs 
-          propertyId={mockFinancialData.propertyId}
-          mockFinancialData={mockFinancialData}
-        />
+        {isTenantUser ? (
+          // Interface simplifiée pour les locataires
+          <div className="space-y-6">
+            <div className="mb-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                {t('maintenanceRequestTitle')}
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                {t('maintenanceDescription')}
+              </p>
+            </div>
+            <TenantMaintenanceView />
+          </div>
+        ) : (
+          // Interface complète pour les propriétaires
+          <>
+            <div className="mb-4">
+              <h1 className="text-3xl font-bold text-foreground">
+                {t('maintenanceManagement')}
+              </h1>
+              <p className="text-muted-foreground mt-1">
+                {t('maintenanceDescription')}
+              </p>
+            </div>
+            <MaintenanceMetricsSection
+              totalRequests={totalRequests}
+              pendingRequests={pendingRequests}
+              resolvedRequests={resolvedRequests}
+              urgentRequests={urgentRequests}
+            />
+            <MaintenanceTabs 
+              propertyId={mockFinancialData.propertyId}
+              mockFinancialData={mockFinancialData}
+            />
+          </>
+        )}
       </div>
     </div>
   );
