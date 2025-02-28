@@ -12,19 +12,21 @@ interface CommunicationsContentProps {
   onToggleStatus: (comm: Communication) => void;
   onCommunicationSelect: (comm: Communication | null) => void;
   onCommunicationUpdate?: () => void;
+  tenantId?: string;
 }
 
 export const CommunicationsContent = ({
   communications,
   onToggleStatus,
   onCommunicationSelect,
-  onCommunicationUpdate
+  onCommunicationUpdate,
+  tenantId
 }: CommunicationsContentProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>("");
 
-  const { handleDeleteCommunication } = useCommunicationActions();
+  const { handleDeleteCommunication } = useCommunicationActions(tenantId);
 
   const {
     groupedCommunications,
@@ -42,7 +44,9 @@ export const CommunicationsContent = ({
     const success = await handleDeleteCommunication(comm.id);
     if (success) {
       console.log("Communication deleted successfully");
-      onCommunicationUpdate?.();
+      if (onCommunicationUpdate) {
+        onCommunicationUpdate();
+      }
     }
   };
 

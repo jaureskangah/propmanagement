@@ -102,6 +102,7 @@ export const CommunicationItem = ({
               size="sm"
               className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
               onClick={(e) => {
+                console.log("Delete button clicked in CommunicationItem");
                 e.stopPropagation();
                 onDelete();
               }}

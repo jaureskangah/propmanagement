@@ -72,6 +72,7 @@ export const TenantCommunications = ({
         onToggleStatus={handleToggleStatusAndUpdate}
         onCommunicationSelect={handleOpenCommunication}
         onCommunicationUpdate={onCommunicationUpdate}
+        tenantId={tenantId}
       />
 
       <NewCommunicationDialog

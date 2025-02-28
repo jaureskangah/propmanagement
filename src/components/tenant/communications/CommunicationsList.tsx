@@ -62,7 +62,10 @@ export const CommunicationsList = ({
               communication={comm}
               onClick={() => onCommunicationClick(comm)}
               onToggleStatus={() => onToggleStatus(comm)}
-              onDelete={() => onDeleteCommunication(comm)}
+              onDelete={() => {
+                console.log("Delete button clicked for communication:", comm.id);
+                onDeleteCommunication(comm);
+              }}
             />
           </div>
         ))}
