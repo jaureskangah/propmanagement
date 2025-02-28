@@ -1,6 +1,7 @@
+
 import { useMemo } from "react";
 import { Communication } from "@/types/tenant";
-import { startOfDay, parseISO } from "date-fns";
+import { startOfDay, parseISO, isAfter } from "date-fns";
 
 export const useCommunicationsData = (
   communications: Communication[],
@@ -16,6 +17,8 @@ export const useCommunicationsData = (
     });
 
     return sortedCommunications.reduce((acc, comm) => {
+      if (!comm) return acc;
+      
       const type = comm.type || 'other';
       if (!acc[type]) {
         acc[type] = [];
@@ -30,11 +33,22 @@ export const useCommunicationsData = (
     return Array.from(new Set(communications.map(comm => comm.type)));
   }, [communications]);
 
-  // Filter communications based on search and date
+  // Get unique communication categories
+  const communicationCategories = useMemo(() => {
+    return Array.from(new Set(communications.map(comm => comm.category).filter(Boolean)));
+  }, [communications]);
+
+  // Count unread communications
+  const unreadCount = useMemo(() => {
+    return communications.filter(comm => comm.status === 'unread').length;
+  }, [communications]);
+
+  // Filter communications based on search, category and date
   const filteredCommunications = useMemo(() => {
     console.log("Starting filtering with:", {
       total: communications.length,
       searchQuery,
+      selectedCategory,
       startDate: startDate?.toISOString()
     });
 
@@ -45,9 +59,18 @@ export const useCommunicationsData = (
     // Search filter
     if (searchQuery) {
       filtered = filtered.filter(comm => 
-        comm.subject?.toLowerCase().includes(searchQuery.toLowerCase())
+        comm.subject?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        comm.content?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       console.log("After search filter:", filtered.length);
+    }
+
+    // Category filter
+    if (selectedCategory) {
+      filtered = filtered.filter(comm => 
+        comm.category?.toLowerCase() === selectedCategory.toLowerCase()
+      );
+      console.log("After category filter:", filtered.length);
     }
 
     // Date filter
@@ -57,26 +80,19 @@ export const useCommunicationsData = (
       filtered = filtered.filter(comm => {
         const commDate = parseISO(comm.created_at);
         const commStartOfDay = startOfDay(commDate);
-        const isAfter = commStartOfDay >= filterStartOfDay;
-
-        console.log("Date comparison:", {
-          commDate: commDate.toISOString(),
-          commStartOfDay: commStartOfDay.toISOString(),
-          filterStartOfDay: filterStartOfDay.toISOString(),
-          isAfter
-        });
-
-        return isAfter;
+        return isAfter(commStartOfDay, filterStartOfDay) || commStartOfDay.getTime() === filterStartOfDay.getTime();
       });
       console.log("After date filter:", filtered.length);
     }
 
     return filtered;
-  }, [communications, searchQuery, startDate]);
+  }, [communications, searchQuery, selectedCategory, startDate]);
 
   return {
     groupedCommunications,
     communicationTypes,
-    filteredCommunications
+    communicationCategories,
+    filteredCommunications,
+    unreadCount
   };
 };

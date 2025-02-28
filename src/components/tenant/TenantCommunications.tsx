@@ -1,3 +1,4 @@
+
 import { Card, CardHeader } from "@/components/ui/card";
 import { Communication } from "@/types/tenant";
 import { NewCommunicationDialog } from "./communications/NewCommunicationDialog";
@@ -10,6 +11,7 @@ import { CommunicationsContent } from "./communications/CommunicationsContent";
 import { useInviteDialog } from "@/hooks/communications/useInviteDialog";
 import { useCreateCommunication } from "@/hooks/communications/useCreateCommunication";
 import { useSelectCommunication } from "@/hooks/communications/useSelectCommunication";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -24,6 +26,7 @@ export const TenantCommunications = ({
   onCommunicationUpdate,
   tenant 
 }: TenantCommunicationsProps) => {
+  const { t } = useLocale();
   const { isInviteDialogOpen, openInviteDialog, closeInviteDialog } = useInviteDialog();
   const {
     isNewCommDialogOpen,
@@ -52,15 +55,11 @@ export const TenantCommunications = ({
   };
 
   const handleOpenCommunication = async (comm: Communication) => {
-    console.log("Opening communication:", comm.id);
     await handleCommunicationSelect(comm);
   };
 
-  console.log("Current selected communication:", selectedComm?.id);
-  console.log("Dialog open state:", !!selectedComm);
-
   return (
-    <Card>
+    <Card className="shadow-sm border-gray-200 dark:border-gray-800">
       <CardHeader>
         <CommunicationsHeader 
           onNewClick={() => setIsNewCommDialogOpen(true)}
@@ -88,6 +87,7 @@ export const TenantCommunications = ({
           communication={selectedComm}
           isOpen={true}
           onClose={() => setSelectedComm(null)}
+          onUpdate={onCommunicationUpdate}
         />
       )}
 

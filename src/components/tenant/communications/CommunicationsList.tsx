@@ -1,7 +1,9 @@
+
 import { Communication } from "@/types/tenant";
-import { MessageSquare, Mail, AlertTriangle, Clock } from "lucide-react";
+import { MessageSquare, Mail, AlertTriangle, Clock, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CommunicationItem } from "./items/CommunicationItem";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface CommunicationsListProps {
   filteredCommunications: Communication[];
@@ -11,36 +13,6 @@ interface CommunicationsListProps {
   onDeleteCommunication: (comm: Communication) => void;
 }
 
-const getCategoryIcon = (category: string | undefined) => {
-  if (!category) return <MessageSquare className="h-4 w-4 text-blue-500" />;
-  
-  switch (category.toLowerCase()) {
-    case 'urgent':
-      return <AlertTriangle className="h-4 w-4 text-red-500" />;
-    case 'maintenance':
-      return <Clock className="h-4 w-4 text-yellow-500" />;
-    case 'payment':
-      return <Mail className="h-4 w-4 text-green-500" />;
-    default:
-      return <MessageSquare className="h-4 w-4 text-blue-500" />;
-  }
-};
-
-const getCategoryColor = (category: string | undefined) => {
-  if (!category) return 'bg-blue-100 text-blue-800';
-  
-  switch (category.toLowerCase()) {
-    case 'urgent':
-      return 'bg-red-100 text-red-800';
-    case 'maintenance':
-      return 'bg-yellow-100 text-yellow-800';
-    case 'payment':
-      return 'bg-green-100 text-green-800';
-    default:
-      return 'bg-blue-100 text-blue-800';
-  }
-};
-
 export const CommunicationsList = ({
   filteredCommunications,
   groupedCommunications,
@@ -48,12 +20,14 @@ export const CommunicationsList = ({
   onToggleStatus,
   onDeleteCommunication,
 }: CommunicationsListProps) => {
+  const { t } = useLocale();
+  
   if (!filteredCommunications?.length) {
     return (
-      <div className="text-center py-8 border-2 border-dashed rounded-lg">
-        <MessageSquare className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+      <div className="text-center py-8 border-2 border-dashed rounded-lg dark:border-gray-700">
+        <MessageCircle className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
         <p className="text-sm text-muted-foreground">
-          Aucune communication trouvée
+          {t('noCommunications')}
         </p>
       </div>
     );
@@ -78,19 +52,17 @@ export const CommunicationsList = ({
     }, {} as Record<string, Communication[]>);
 
     return Object.entries(threads).map(([parentId, thread]) => (
-      <div key={parentId} className="space-y-2">
+      <div key={parentId} className="space-y-1 mb-4">
         {thread.map((comm, index) => (
           <div
             key={comm.id}
-            className={`${index > 0 ? 'ml-8 border-l-2 pl-4' : ''}`}
+            className={`${index > 0 ? 'ml-8 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}
           >
             <CommunicationItem
               communication={comm}
               onClick={() => onCommunicationClick(comm)}
               onToggleStatus={() => onToggleStatus(comm)}
               onDelete={() => onDeleteCommunication(comm)}
-              icon={getCategoryIcon(comm.category)}
-              categoryColor={getCategoryColor(comm.category)}
             />
           </div>
         ))}
@@ -98,8 +70,19 @@ export const CommunicationsList = ({
     ));
   };
 
+  const getTypeIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'email':
+        return <Mail className="h-4 w-4 mr-1" />;
+      case 'notification':
+        return <AlertTriangle className="h-4 w-4 mr-1" />;
+      default:
+        return <MessageSquare className="h-4 w-4 mr-1" />;
+    }
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {Object.entries(groupedCommunications).map(([type, comms]) => {
         if (!type || !comms) return null;
         
@@ -109,11 +92,16 @@ export const CommunicationsList = ({
 
         if (filteredComms.length === 0) return null;
 
+        const typeDisplayName = type.charAt(0).toUpperCase() + type.slice(1);
+
         return (
           <div key={type} className="space-y-2">
-            <h3 className="font-medium flex items-center gap-2">
-              {type}
-              <Badge variant="secondary" className="ml-2">
+            <h3 className="font-medium flex items-center gap-1 text-foreground dark:text-gray-200 pt-2 pb-1 border-b border-gray-200 dark:border-gray-700">
+              <div className="flex items-center">
+                {getTypeIcon(type)}
+                {typeDisplayName}
+              </div>
+              <Badge variant="secondary" className="ml-2 text-xs">
                 {filteredComms.length}
               </Badge>
             </h3>

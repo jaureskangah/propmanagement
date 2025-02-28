@@ -50,12 +50,12 @@ export interface MaintenanceRequest {
 
 export interface Communication {
   id: string;
-  type: string;
+  type: string; // 'message', 'email', 'notification'
   subject: string;
   content?: string;
   created_at: string;
-  status: string;
-  category: string;
+  status: string; // 'read', 'unread'
+  category: string; // 'general', 'maintenance', 'urgent', 'payment'
   attachments?: string[];
   parent_id?: string;
   is_from_tenant?: boolean;

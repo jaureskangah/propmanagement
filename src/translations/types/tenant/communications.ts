@@ -13,4 +13,21 @@ export interface TenantCommunicationsTranslations {
   urgent: string;
   maintenance: string;
   noCommunications: string;
+  replyToMessage: string;
+  messageFrom: string;
+  markAsRead: string;
+  markAsUnread: string;
+  deleteMessage: string;
+  messageDeleted: string;
+  filter: string;
+  searchMessages: string;
+  filterByDate: string;
+  reply: string;
+  cancel: string;
+  messageByCategory: string;
+  allMessages: string;
+  writeReply: string;
+  replyPlaceholder: string;
+  confirmDelete: string;
+  attachments: string;
 }
