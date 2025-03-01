@@ -45,13 +45,13 @@ export const DocumentsTabs = ({
   
   // Logs de débogage
   useEffect(() => {
-    console.log("DocumentsTabs - Documents disponibles:", documents.length, documents);
-    console.log("DocumentsTabs - Documents filtrés:", filteredDocuments.length, filteredDocuments);
+    console.log("DocumentsTabs - Documents disponibles:", documents);
+    console.log("DocumentsTabs - Documents filtrés:", filteredDocuments);
   }, [documents, filteredDocuments]);
 
   // Récents: les 5 documents les plus récents
-  const recentDocuments = [...documents].slice(0, 5);
-  console.log("Recent documents:", recentDocuments.length);
+  const recentDocuments = [...(documents || [])].slice(0, 5);
+  console.log("Recent documents:", recentDocuments);
 
   return (
     <Tabs defaultValue="all" className="mt-6">

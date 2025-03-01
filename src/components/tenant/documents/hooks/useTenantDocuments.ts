@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantDocument } from "@/types/tenant";
 
@@ -22,13 +22,13 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
 
       if (error) throw error;
       
-      console.log("Documents received:", data?.length || 0, data);
+      console.log("Raw documents received:", data);
       
-      // Traiter les documents pour s'assurer qu'ils ont tous un document_type
+      // S'assurer que chaque document a un document_type
       const processedData = data?.map(doc => {
-        if (!doc.document_type) {
+        if (!doc.document_type || doc.document_type === '') {
           // Déterminer le type de document s'il n'est pas spécifié
-          const name = doc.name.toLowerCase();
+          const name = (doc.name || '').toLowerCase();
           let document_type: 'lease' | 'receipt' | 'other' = 'other';
           
           if (name.includes('lease') || name.includes('bail')) {
@@ -37,7 +37,8 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
             document_type = 'receipt';
           }
           
-          // Update the document type in the database
+          // Mettre à jour le type de document dans la base de données
+          console.log("Updating document type for doc:", doc.id, "to:", document_type);
           supabase
             .from('tenant_documents')
             .update({ document_type })
@@ -64,6 +65,13 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       setIsLoading(false);
     }
   }, [toast]);
+
+  // Polling pour vérifier si de nouveaux documents ont été ajoutés
+  useEffect(() => {
+    if (tenantId) {
+      fetchDocuments(tenantId);
+    }
+  }, [tenantId, fetchDocuments]);
 
   return {
     documents,

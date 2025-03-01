@@ -14,9 +14,34 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     }
 
     setIsUploading(true);
-    console.log("Starting upload for file:", file.name, "type:", documentType);
+    console.log("Starting upload for file:", file.name, "type:", documentType, "for tenant:", tenantId);
 
     try {
+      // Vérifier si le bucket existe
+      const { data: buckets, error: bucketsError } = await supabase
+        .storage
+        .listBuckets();
+      
+      console.log("Available buckets:", buckets);
+      
+      if (bucketsError) {
+        console.error("Error checking buckets:", bucketsError);
+        throw bucketsError;
+      }
+      
+      const bucketExists = buckets?.some(b => b.name === 'tenant_documents');
+      
+      if (!bucketExists) {
+        console.error("Bucket 'tenant_documents' does not exist");
+        toast({
+          title: "Erreur de configuration",
+          description: "Le bucket de stockage n'existe pas. Veuillez contacter l'administrateur.",
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        return;
+      }
+
       // 1. Upload file to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
@@ -31,16 +56,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         });
 
       if (uploadError) {
-        if (uploadError.message.includes('does not exist')) {
-          console.error("Bucket 'tenant_documents' does not exist:", uploadError);
-          toast({
-            title: "Erreur de configuration",
-            description: "Le bucket de stockage n'existe pas. Veuillez contacter l'administrateur.",
-            variant: "destructive",
-          });
-          setIsUploading(false);
-          return;
-        }
+        console.error("Upload error:", uploadError);
         throw uploadError;
       }
 
@@ -81,11 +97,20 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       });
 
       onUploadComplete();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Upload error:', error);
+      
+      let errorMessage = "Une erreur est survenue lors du chargement";
+      
+      if (error.message && error.message.includes("duplicate key")) {
+        errorMessage = "Un document avec ce nom existe déjà";
+      } else if (error.message && error.message.includes("storage")) {
+        errorMessage = "Erreur de stockage: " + error.message;
+      }
+      
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors du chargement",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

@@ -10,14 +10,16 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
-    console.log("useDocumentFilters - Documents à filtrer:", documents.length, documents);
+    console.log("useDocumentFilters - Documents à filtrer:", documents);
     
     // Toujours définir les documents filtrés, même si le tableau est vide
-    if (documents.length === 0) {
+    if (!documents || documents.length === 0) {
+      console.log("No documents to filter");
       setFilteredDocuments([]);
-    } else {
-      applyFilters();
+      return;
     }
+    
+    applyFilters();
   }, [documents, searchQuery, selectedDocType, sortBy, sortOrder]);
 
   const applyFilters = () => {
@@ -28,7 +30,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
     // Filtre par recherche
     if (searchQuery.trim()) {
       filtered = filtered.filter(doc => 
-        doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+        doc.name?.toLowerCase().includes(searchQuery.toLowerCase())
       );
       console.log("After search filter:", filtered.length);
     }
@@ -44,13 +46,15 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
     // Appliquer le tri
     filtered.sort((a, b) => {
       if (sortBy === "date") {
-        const dateA = new Date(a.created_at).getTime();
-        const dateB = new Date(b.created_at).getTime();
+        const dateA = new Date(a.created_at || 0).getTime();
+        const dateB = new Date(b.created_at || 0).getTime();
         return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
       } else {
+        const nameA = a.name || '';
+        const nameB = b.name || '';
         return sortOrder === "asc"
-          ? a.name.localeCompare(b.name)
-          : b.name.localeCompare(a.name);
+          ? nameA.localeCompare(nameB)
+          : nameB.localeCompare(nameA);
       }
     });
     
