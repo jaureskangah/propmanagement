@@ -67,6 +67,8 @@ export const MaintenanceDetailSheet = ({
     
     setIsSubmitting(true);
     try {
+      console.log("Submitting feedback:", { id: request.id, feedback, rating });
+      
       const { error } = await supabase
         .from('maintenance_requests')
         .update({
@@ -75,7 +77,10 @@ export const MaintenanceDetailSheet = ({
         })
         .eq('id', request.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error details:', error);
+        throw error;
+      }
 
       toast({
         title: t('success'),

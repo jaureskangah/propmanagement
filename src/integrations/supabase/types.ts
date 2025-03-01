@@ -234,8 +234,10 @@ export type Database = {
           photos: string[] | null
           priority: string
           status: string
+          tenant_feedback: string | null
           tenant_id: string | null
           tenant_notified: boolean | null
+          tenant_rating: number | null
           title: string
           updated_at: string
         }
@@ -250,8 +252,10 @@ export type Database = {
           photos?: string[] | null
           priority?: string
           status?: string
+          tenant_feedback?: string | null
           tenant_id?: string | null
           tenant_notified?: boolean | null
+          tenant_rating?: number | null
           title?: string
           updated_at?: string
         }
@@ -266,8 +270,10 @@ export type Database = {
           photos?: string[] | null
           priority?: string
           status?: string
+          tenant_feedback?: string | null
           tenant_id?: string | null
           tenant_notified?: boolean | null
+          tenant_rating?: number | null
           title?: string
           updated_at?: string
         }
