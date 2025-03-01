@@ -160,7 +160,7 @@ export const TenantDashboard = () => {
     <div className="space-y-4 relative">
       <div className="flex items-center justify-between">
         <h2 className="text-3xl font-bold tracking-tight">
-          {t('welcomeTenant', { name: tenant.name.split(' ')[0] })}
+          {t('welcomeTenant', { name: tenant.name.split(' ')[0] + "" })}
         </h2>
         <Button 
           variant="outline" 

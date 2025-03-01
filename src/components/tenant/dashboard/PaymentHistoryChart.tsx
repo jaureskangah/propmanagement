@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartLineUp, Calendar } from "lucide-react";
+import { LineChart, Calendar } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import type { Payment } from "@/types/tenant";
@@ -49,7 +49,7 @@ export const PaymentHistoryChart = ({ payments }: PaymentHistoryChartProps) => {
     <Card className="shadow-sm transition-all hover:shadow-md">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <ChartLineUp className="h-5 w-5 text-primary" />
+          <LineChart className="h-5 w-5 text-primary" />
           {t('paymentHistory')}
         </CardTitle>
       </CardHeader>

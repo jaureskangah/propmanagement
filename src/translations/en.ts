@@ -21,7 +21,7 @@ import { enDashboard } from './features/dashboard';
 import { enSettings } from './features/settings';
 import { enModal } from './features/modal';
 
-export const enTranslations: Translations = {
+export const enTranslations = {
   ...enNavigation,
   ...enHero,
   ...enFeatures,
@@ -43,4 +43,4 @@ export const enTranslations: Translations = {
   ...enDashboard,
   ...enSettings,
   ...enModal
-};
+} as unknown as Translations;

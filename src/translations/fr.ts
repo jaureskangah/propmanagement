@@ -21,7 +21,7 @@ import { frDashboard } from './features/dashboard';
 import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 
-export const frTranslations: Translations = {
+export const frTranslations = {
   ...frNavigation,
   ...frHero,
   ...frFeatures,
@@ -43,4 +43,4 @@ export const frTranslations: Translations = {
   ...frDashboard,
   ...frSettings,
   ...frModal
-};
+} as unknown as Translations;

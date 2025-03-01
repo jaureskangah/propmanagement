@@ -79,7 +79,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             
             {communications.length > 3 && (
               <div className="text-sm text-center text-muted-foreground">
-                {t('andMoreMessages', { count: communications.length - 3 })}
+                {t('andMoreMessages', { count: communications.length - 3 + "" })}
               </div>
             )}
           </div>

@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/AuthProvider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./router";
+import router from "./router";
 import { Toaster } from "sonner";
 
 // Assurons-nous que la langue est initialisée au démarrage de l'application

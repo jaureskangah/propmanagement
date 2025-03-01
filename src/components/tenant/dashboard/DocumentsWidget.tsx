@@ -45,7 +45,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
             
             {documents.length > 3 && (
               <div className="text-sm text-center text-muted-foreground">
-                {t('andMoreDocuments', { count: documents.length - 3 })}
+                {t('andMoreDocuments', { count: documents.length - 3 + "" })}
               </div>
             )}
           </div>
