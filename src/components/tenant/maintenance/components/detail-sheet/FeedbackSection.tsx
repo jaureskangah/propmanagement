@@ -8,6 +8,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { MaintenanceRequest } from "@/types/tenant";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface FeedbackSectionProps {
   request: MaintenanceRequest;
@@ -21,9 +22,25 @@ export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => 
   const [feedback, setFeedback] = useState<string>(request.tenant_feedback || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(!!request.tenant_feedback || !!request.tenant_rating);
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  const validateForm = (): boolean => {
+    if (rating === 0) {
+      setValidationError(t('ratingRequired'));
+      return false;
+    }
+    
+    setValidationError(null);
+    return true;
+  };
 
   const handleSubmitFeedback = async () => {
     if (isSubmitting) return;
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
     
     setIsSubmitting(true);
     try {
@@ -69,10 +86,19 @@ export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => 
           <p className="text-sm text-gray-500 mb-1">{t('rating')}</p>
           <Rating 
             value={rating} 
-            onChange={setRating} 
+            onChange={(value) => {
+              setRating(value);
+              if (validationError) validateForm();
+            }} 
             max={5} 
             className="mb-3"
           />
+          
+          {validationError && (
+            <Alert variant="destructive" className="mt-2 py-2">
+              <AlertDescription className="text-sm">{validationError}</AlertDescription>
+            </Alert>
+          )}
         </div>
         
         <div>

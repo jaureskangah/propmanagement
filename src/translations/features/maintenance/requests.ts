@@ -81,7 +81,9 @@ export const enRequests = {
   edit: "Edit",
   // Nouvelles traductions pour les notifications
   tenantFeedbackReceived: "Tenant Feedback Received",
-  feedbackReceivedFor: "Feedback received for request"
+  feedbackReceivedFor: "Feedback received for request",
+  // Validation messages
+  ratingRequired: "Please select a rating before submitting"
 };
 
 export const frRequests = {
@@ -166,5 +168,7 @@ export const frRequests = {
   edit: "Modifier",
   // Nouvelles traductions pour les notifications
   tenantFeedbackReceived: "Avis du locataire reçu",
-  feedbackReceivedFor: "Avis reçu pour la demande"
+  feedbackReceivedFor: "Avis reçu pour la demande",
+  // Validation messages
+  ratingRequired: "Veuillez sélectionner une évaluation avant de soumettre"
 };
