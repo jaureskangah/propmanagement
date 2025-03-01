@@ -33,6 +33,7 @@ export const useTenantData = () => {
 
   const fetchTenantData = async () => {
     try {
+      setIsLoading(true);
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
@@ -51,21 +52,20 @@ export const useTenantData = () => {
       if (error) throw error;
 
       if (tenant) {
-        setTenant(tenant);
-      } else {
-        setIsLoading(false);
-        toast({
-          title: "Profil non lié",
-          description: "Veuillez contacter votre gestionnaire pour lier votre compte.",
-          variant: "destructive",
+        // Fix the properties type to match TenantData interface
+        setTenant({
+          ...tenant,
+          properties: tenant.properties as { name: string }
         });
       }
+      
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
       toast({
-        title: "Erreur",
-        description: "Impossible de charger les données du locataire",
+        title: "Error",
+        description: "Could not load tenant data",
         variant: "destructive",
       });
     }
