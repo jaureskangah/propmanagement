@@ -34,5 +34,12 @@ export const frDocuments: TenantDocumentsTranslations = {
   closeViewer: "Fermer la visionneuse",
   editDocument: "Modifier le document",
   saveChanges: "Enregistrer les modifications",
-  actions: "Actions"
+  actions: "Actions",
+  previewNotAvailable: "Aperçu non disponible pour ce type de fichier",
+  sending: "Envoi en cours...",
+  sent: "Envoyé",
+  message: "Message",
+  cancel: "Annuler",
+  success: "Succès",
+  error: "Erreur"
 };

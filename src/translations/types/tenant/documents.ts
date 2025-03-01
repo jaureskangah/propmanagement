@@ -33,4 +33,11 @@ export interface TenantDocumentsTranslations {
   editDocument: string;
   saveChanges: string;
   actions: string;
+  previewNotAvailable: string;
+  sending: string;
+  sent: string;
+  message: string;
+  cancel: string;
+  success: string;
+  error: string;
 }

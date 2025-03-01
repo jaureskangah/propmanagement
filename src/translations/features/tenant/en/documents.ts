@@ -29,10 +29,17 @@ export const enDocuments: TenantDocumentsTranslations = {
   allDocuments: "All Documents",
   docDeleteSuccess: "Document successfully deleted",
   docUploadSuccess: "Document successfully uploaded",
-  shareDocument: "Share document",
+  shareDocument: "Share Document",
   documentViewer: "Document Viewer",
   closeViewer: "Close viewer",
   editDocument: "Edit document",
   saveChanges: "Save changes",
-  actions: "Actions"
+  actions: "Actions",
+  previewNotAvailable: "Preview not available for this file type",
+  sending: "Sending...",
+  sent: "Sent",
+  message: "Message",
+  cancel: "Cancel",
+  success: "Success",
+  error: "Error"
 };
