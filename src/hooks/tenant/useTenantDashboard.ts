@@ -12,7 +12,7 @@ export const useTenantDashboard = () => {
   const { tenant, isLoading: isLoadingTenant, fetchTenantData } = useTenantData();
   const { communications, isLoading: isLoadingComms, fetchCommunications } = useCommunicationsData();
   const { maintenanceRequests, isLoading: isLoadingMaintenance, fetchMaintenanceRequests } = useMaintenanceData();
-  const { payments, documents, isLoading: isLoadingPayments, fetchPayments, fetchDocuments } = usePaymentsAndDocuments();
+  const { payments, documents, isLoading: isLoadingPayments, fetchPaymentsAndDocuments } = usePaymentsAndDocuments();
   const leaseStatus = useLeaseStatus(tenant?.lease_end);
   const { toast } = useToast();
 
@@ -25,8 +25,7 @@ export const useTenantDashboard = () => {
           await Promise.all([
             fetchCommunications(),
             fetchMaintenanceRequests(),
-            fetchPayments(),
-            fetchDocuments()
+            fetchPaymentsAndDocuments()
           ]);
         } catch (error) {
           console.error('Error fetching dashboard data:', error);
@@ -49,8 +48,7 @@ export const useTenantDashboard = () => {
       await Promise.all([
         fetchCommunications(),
         fetchMaintenanceRequests(),
-        fetchPayments(),
-        fetchDocuments()
+        fetchPaymentsAndDocuments()
       ]);
       toast({
         title: "Dashboard refreshed",

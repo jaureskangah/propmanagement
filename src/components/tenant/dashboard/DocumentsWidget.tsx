@@ -59,11 +59,12 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
         )}
         
         <Button 
-          className="w-full mt-2 bg-purple-600 hover:bg-purple-700 text-white"
+          className="w-full mt-2 text-xs md:text-sm bg-purple-600 hover:bg-purple-700 text-white"
           onClick={() => navigate('/tenant/documents')}
+          size="sm"
         >
           {t('viewAllDocuments')}
-          <ArrowUpRight className="h-4 w-4 ml-1" />
+          <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
         </Button>
       </div>
     </motion.div>

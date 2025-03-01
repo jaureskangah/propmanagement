@@ -72,19 +72,21 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
         
         <div className="flex gap-2 mt-4">
           <Button 
-            className="flex-1 border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            className="flex-1 text-xs md:text-sm border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
             variant="outline"
             onClick={() => navigate('/tenant/maintenance')}
+            size="sm"
           >
             {t('viewAll')}
-            <ArrowUpRight className="h-4 w-4 ml-1" />
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
-            className="flex-1 bg-amber-600 hover:bg-amber-700 text-white"
+            className="flex-1 text-xs md:text-sm bg-amber-600 hover:bg-amber-700 text-white"
             onClick={() => navigate('/tenant/maintenance/new')}
+            size="sm"
           >
             {t('newRequest')}
-            <PlusCircle className="h-4 w-4 ml-1" />
+            <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
       </div>

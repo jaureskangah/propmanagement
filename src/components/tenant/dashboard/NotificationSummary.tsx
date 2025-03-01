@@ -90,19 +90,19 @@ export const NotificationSummary = ({ communications, maintenanceRequests }: Not
           <Button 
             variant="outline" 
             size="sm" 
-            className="w-full justify-start bg-white/80 hover:bg-blue-50 text-blue-700 hover:text-blue-800 border-blue-100" 
+            className="w-full justify-start text-xs md:text-sm bg-white/80 hover:bg-blue-50 text-blue-700 hover:text-blue-800 border-blue-100" 
             onClick={() => navigate('/tenant/communications')}
           >
-            <MessageSquare className="h-4 w-4 mr-2" /> 
+            <MessageSquare className="h-3.5 w-3.5 mr-2" /> 
             {t('viewMessages')}
           </Button>
           <Button 
             variant="outline" 
             size="sm" 
-            className="w-full justify-start bg-white/80 hover:bg-amber-50 text-amber-700 hover:text-amber-800 border-amber-100"
+            className="w-full justify-start text-xs md:text-sm bg-white/80 hover:bg-amber-50 text-amber-700 hover:text-amber-800 border-amber-100"
             onClick={() => navigate('/tenant/maintenance')}
           >
-            <Wrench className="h-4 w-4 mr-2" /> 
+            <Wrench className="h-3.5 w-3.5 mr-2" /> 
             {t('viewMaintenanceRequests')}
           </Button>
         </div>
