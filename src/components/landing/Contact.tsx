@@ -91,7 +91,10 @@ export default function Contact() {
         <div className="mt-12 text-center">
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-              <Button className="bg-[#ea384c] hover:bg-[#d41f32] text-white">
+              <Button 
+                className="bg-[#ea384c] hover:bg-[#d41f32] text-white px-6 h-11"
+                size="lg"
+              >
                 {t('sendMessage')}
               </Button>
             </DialogTrigger>
