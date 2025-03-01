@@ -32,4 +32,5 @@ export interface TenantDocumentsTranslations {
   closeViewer: string;
   editDocument: string;
   saveChanges: string;
+  actions: string;
 }

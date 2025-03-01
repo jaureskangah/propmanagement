@@ -1,5 +1,5 @@
 
-import { Download, Eye, Trash2, FileText, FilePdf, FileImage } from "lucide-react";
+import { Download, Eye, Trash2, FileText, File, FileImage } from "lucide-react";
 import { TenantDocument } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -44,7 +44,7 @@ export const DocumentsList = ({
     const lowerName = name.toLowerCase();
     
     if (lowerName.endsWith('.pdf')) {
-      return <FilePdf className="h-5 w-5 text-red-500" />;
+      return <File className="h-5 w-5 text-red-500" />;
     } else if (lowerName.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
       return <FileImage className="h-5 w-5 text-blue-500" />;
     } else {

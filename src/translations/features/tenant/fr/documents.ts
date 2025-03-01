@@ -34,4 +34,5 @@ export const frDocuments: TenantDocumentsTranslations = {
   closeViewer: "Fermer la visionneuse",
   editDocument: "Modifier le document",
   saveChanges: "Enregistrer les modifications",
+  actions: "Actions"
 };

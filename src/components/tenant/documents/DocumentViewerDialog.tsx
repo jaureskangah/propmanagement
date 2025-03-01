@@ -20,6 +20,7 @@ export const DocumentViewerDialog = ({
 
   const handleDownload = () => {
     if (document?.file_url) {
+      // Create a temporary anchor element for download
       const link = document.createElement('a');
       link.href = document.file_url;
       link.setAttribute('download', document.name);
