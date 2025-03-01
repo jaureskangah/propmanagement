@@ -8,11 +8,24 @@ import { CommunicationsWidget } from "./widgets/CommunicationsWidget";
 import { DocumentsWidget } from "./widgets/DocumentsWidget";
 import { PaymentHistoryChart } from "./widgets/PaymentHistoryChart";
 import { motion } from "framer-motion";
-import type { Tenant } from "@/types/tenant";
 import type { Communication, MaintenanceRequest, Payment, TenantDocument } from "@/types/tenant";
 
+// Define interface matching the structure provided by useTenantData
+interface TenantData {
+  id: string;
+  name: string;
+  email: string;
+  unit_number: string;
+  lease_start: string;
+  lease_end: string;
+  rent_amount: number;
+  properties?: {
+    name: string;
+  };
+}
+
 interface DashboardWidgetsProps {
-  tenant: Tenant;
+  tenant: TenantData;
   communications: Communication[];
   maintenanceRequests: MaintenanceRequest[];
   payments: Payment[];
