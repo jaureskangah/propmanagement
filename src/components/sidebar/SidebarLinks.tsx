@@ -36,6 +36,11 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       label: t('home'),
     },
     {
+      href: "/tenant/dashboard",
+      icon: LayoutDashboard,
+      label: t('dashboard'),
+    },
+    {
       href: "/profile",
       icon: User,
       label: t('profile'),
