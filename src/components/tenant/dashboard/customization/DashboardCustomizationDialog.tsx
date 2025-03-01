@@ -1,23 +1,18 @@
 
-import { useState } from "react";
-import { Settings, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogDescription, 
-  DialogFooter, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
-import { DragEndEvent } from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Settings } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useDashboardPreferences } from "@/components/dashboard/hooks/useDashboardPreferences";
-import { Separator } from "@/components/ui/separator";
-import { VisibleSectionsControl } from "./VisibleSectionsControl";
-import { SortableSectionsList } from "./SortableSectionsList";
+import { useState, useEffect } from "react";
 
 interface DashboardCustomizationDialogProps {
   onOrderChange: (order: string[]) => void;
@@ -26,110 +21,92 @@ interface DashboardCustomizationDialogProps {
   hiddenSections: string[];
 }
 
-export const DashboardCustomizationDialog = ({ 
-  onOrderChange, 
+export const DashboardCustomizationDialog = ({
+  onOrderChange,
   onVisibilityChange,
   currentOrder,
   hiddenSections
 }: DashboardCustomizationDialogProps) => {
   const { t } = useLocale();
-  const [isOpen, setIsOpen] = useState(false);
-  const [tempOrder, setTempOrder] = useState<string[]>(currentOrder);
-  const [tempHidden, setTempHidden] = useState<string[]>(hiddenSections);
-  const { updatePreferences } = useDashboardPreferences();
+  const [open, setOpen] = useState(false);
+  const [localHidden, setLocalHidden] = useState<string[]>([...hiddenSections]);
   
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    
-    if (over && active.id !== over.id) {
-      setTempOrder((items) => {
-        const oldIndex = items.indexOf(active.id.toString());
-        const newIndex = items.indexOf(over.id.toString());
-        
-        return arrayMove(items, oldIndex, newIndex);
-      });
+  // Reset local state when props change
+  useEffect(() => {
+    setLocalHidden([...hiddenSections]);
+  }, [hiddenSections]);
+  
+  const handleCheckboxChange = (widgetId: string) => {
+    if (localHidden.includes(widgetId)) {
+      setLocalHidden(localHidden.filter(id => id !== widgetId));
+    } else {
+      setLocalHidden([...localHidden, widgetId]);
     }
-  };
-  
-  const handleToggleVisibility = (id: string) => {
-    setTempHidden(prev => {
-      if (prev.includes(id)) {
-        return prev.filter(item => item !== id);
-      } else {
-        return [...prev, id];
-      }
-    });
   };
   
   const handleSave = () => {
-    onOrderChange(tempOrder);
-    onVisibilityChange(tempHidden);
-    
-    updatePreferences.mutate({
-      widget_order: tempOrder,
-      hidden_sections: tempHidden
-    });
-    
-    setIsOpen(false);
+    onVisibilityChange(localHidden);
+    setOpen(false);
   };
-
-  // Reset temporary state when dialog opens
-  const handleOpenChange = (open: boolean) => {
-    if (open) {
-      setTempOrder(currentOrder);
-      setTempHidden(hiddenSections);
-    }
-    setIsOpen(open);
+  
+  const widgetNames: Record<string, string> = {
+    'lease': t('lease') || 'Lease',
+    'notifications': t('notifications') || 'Notifications',
+    'payments': t('payments') || 'Payments',
+    'maintenance': t('maintenance') || 'Maintenance',
+    'communications': t('communications') || 'Communications',
+    'documents': t('documents') || 'Documents',
+    'chart': t('paymentHistory') || 'Payment History'
   };
-
+  
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Settings className="h-4 w-4 mr-1" />
-          {t('customizeDashboard')}
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-1 hover:bg-blue-50 hover:text-blue-700 transition-all"
+        >
+          <Settings className="h-4 w-4" />
+          {t('customize')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t('customizeDashboard')}</DialogTitle>
+          <DialogTitle>{t('dashboardCustomization')}</DialogTitle>
           <DialogDescription>
-            {t('customizeDashboardDescription')}
+            {t('customizeDescription')}
           </DialogDescription>
         </DialogHeader>
         
-        <div className="py-4 space-y-4">
-          <div className="space-y-4">
-            <h3 className="font-medium">{t('visibleSections')}</h3>
-            <VisibleSectionsControl 
-              tempHidden={tempHidden} 
-              handleToggleVisibility={handleToggleVisibility} 
-            />
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <h4 className="font-medium text-sm">{t('visibleSections')}</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {currentOrder.map(widgetId => (
+                <div key={widgetId} className="flex items-center space-x-2">
+                  <Checkbox 
+                    id={`widget-${widgetId}`} 
+                    checked={!localHidden.includes(widgetId)}
+                    onCheckedChange={() => handleCheckboxChange(widgetId)}
+                  />
+                  <Label htmlFor={`widget-${widgetId}`} className="text-sm cursor-pointer">
+                    {widgetNames[widgetId] || widgetId}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
           
-          <Separator />
-          
-          <div className="space-y-4">
-            <h3 className="font-medium">{t('rearrangeSections')}</h3>
-            <p className="text-sm text-muted-foreground">{t('dragToRearrange')}</p>
-            
-            <SortableSectionsList 
-              tempOrder={tempOrder}
-              onDragEnd={handleDragEnd}
-            />
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button variant="outline" onClick={() => setOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button onClick={handleSave}>
+              {t('save')}
+            </Button>
           </div>
         </div>
-        
-        <DialogFooter>
-          <Button variant="ghost" onClick={() => setIsOpen(false)}>
-            <X className="h-4 w-4 mr-1" />
-            {t('cancel')}
-          </Button>
-          <Button onClick={handleSave}>
-            <Save className="h-4 w-4 mr-1" />
-            {t('saveChanges')}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

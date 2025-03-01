@@ -86,7 +86,7 @@ export const TenantDashboard = () => {
       )}
       
       <DashboardWidgets
-        tenant={tenant}
+        tenant={tenant as any}
         communications={communications}
         maintenanceRequests={maintenanceRequests}
         payments={payments}

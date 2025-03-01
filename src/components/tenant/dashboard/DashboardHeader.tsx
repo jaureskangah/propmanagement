@@ -2,7 +2,7 @@
 import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { DashboardCustomization } from "./customization/DashboardCustomizationDialog";
+import { DashboardCustomizationDialog } from "./customization/DashboardCustomizationDialog";
 import { motion } from "framer-motion";
 
 interface DashboardHeaderProps {
@@ -44,7 +44,7 @@ export const DashboardHeader = ({
           <RefreshCw className="h-4 w-4" />
           {t('refresh')}
         </Button>
-        <DashboardCustomization 
+        <DashboardCustomizationDialog 
           onOrderChange={onOrderChange}
           onVisibilityChange={onVisibilityChange}
           currentOrder={currentOrder}

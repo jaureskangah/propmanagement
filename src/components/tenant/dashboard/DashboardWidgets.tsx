@@ -1,13 +1,12 @@
 
-import { useState, useEffect } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { LeaseStatusCard } from "./LeaseStatusCard";
-import { NotificationSummary } from "./NotificationSummary";
-import { PaymentWidget } from "./PaymentWidget";
-import { DocumentsWidget } from "./DocumentsWidget";
-import { MaintenanceWidget } from "./MaintenanceWidget";
-import { CommunicationsWidget } from "./CommunicationsWidget";
-import { PaymentHistoryChart } from "./PaymentHistoryChart";
+import { LeaseWidget } from "./widgets/LeaseWidget";
+import { NotificationWidget } from "./widgets/NotificationWidget";
+import { PaymentWidget } from "./widgets/PaymentWidget";
+import { MaintenanceWidget } from "./widgets/MaintenanceWidget";
+import { CommunicationsWidget } from "./widgets/CommunicationsWidget";
+import { DocumentsWidget } from "./widgets/DocumentsWidget";
+import { PaymentHistoryChart } from "./widgets/PaymentHistoryChart";
 import { motion } from "framer-motion";
 import type { Tenant } from "@/types/tenant";
 import type { Communication, MaintenanceRequest, Payment, TenantDocument } from "@/types/tenant";
@@ -41,93 +40,50 @@ export const DashboardWidgets = ({
     switch (widgetId) {
       case 'lease':
         return tenant && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <LeaseStatusCard 
-              leaseStart={tenant.lease_start}
-              leaseEnd={tenant.lease_end}
-              daysLeft={leaseStatus.daysLeft}
-              status={leaseStatus.status}
-            />
-          </motion.div>
+          <LeaseWidget 
+            leaseStart={tenant.lease_start}
+            leaseEnd={tenant.lease_end}
+            daysLeft={leaseStatus.daysLeft}
+            status={leaseStatus.status}
+          />
         );
       case 'notifications':
         return (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-          >
-            <NotificationSummary
-              communications={communications}
-              maintenanceRequests={maintenanceRequests}
-            />
-          </motion.div>
+          <NotificationWidget
+            communications={communications}
+            maintenanceRequests={maintenanceRequests}
+          />
         );
       case 'payments':
         return tenant && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.3 }}
-          >
-            <PaymentWidget
-              rentAmount={tenant.rent_amount}
-              payments={payments}
-            />
-          </motion.div>
+          <PaymentWidget
+            rentAmount={tenant.rent_amount}
+            payments={payments}
+          />
         );
       case 'maintenance':
         return (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.4 }}
-          >
-            <MaintenanceWidget
-              requests={maintenanceRequests}
-            />
-          </motion.div>
+          <MaintenanceWidget
+            requests={maintenanceRequests}
+          />
         );
       case 'communications':
         return (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.5 }}
-          >
-            <CommunicationsWidget
-              communications={communications}
-            />
-          </motion.div>
+          <CommunicationsWidget
+            communications={communications}
+          />
         );
       case 'documents':
         return (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.6 }}
-          >
-            <DocumentsWidget
-              documents={documents}
-            />
-          </motion.div>
+          <DocumentsWidget
+            documents={documents}
+          />
         );
       case 'chart':
         return (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: 0.7 }}
-            className="col-span-full"
-          >
-            <PaymentHistoryChart
-              payments={payments}
-            />
-          </motion.div>
+          <PaymentHistoryChart
+            payments={payments}
+          />
         );
       default:
         return null;
