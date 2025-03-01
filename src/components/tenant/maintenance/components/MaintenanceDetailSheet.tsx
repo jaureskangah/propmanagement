@@ -7,7 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { MaintenancePhotoGallery } from "./MaintenancePhotoGallery";
 import { Clock, CheckCircle2, AlertCircle, Calendar, MessageSquare } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Rating } from "@/components/ui/rating";
 import { supabase } from "@/lib/supabase";
@@ -33,6 +33,16 @@ export const MaintenanceDetailSheet = ({
   const [rating, setRating] = useState<number>(request.tenant_rating || 0);
   const [feedback, setFeedback] = useState<string>(request.tenant_feedback || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+
+  // Reset state when the request changes or sheet opens
+  useEffect(() => {
+    if (isOpen) {
+      setRating(request.tenant_rating || 0);
+      setFeedback(request.tenant_feedback || "");
+      setFeedbackSubmitted(!!request.tenant_feedback || !!request.tenant_rating);
+    }
+  }, [isOpen, request]);
 
   const getStatusIcon = (status: string) => {
     switch(status) {
@@ -87,6 +97,7 @@ export const MaintenanceDetailSheet = ({
         description: t('feedbackSaved'),
       });
       
+      setFeedbackSubmitted(true);
       onUpdate();
     } catch (error) {
       console.error('Error saving feedback:', error);
@@ -158,35 +169,66 @@ export const MaintenanceDetailSheet = ({
                 <MessageSquare className="h-4 w-4" /> {t('provideFeedback')}
               </h3>
               
-              <div className="space-y-3">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">{t('rating')}</p>
-                  <Rating 
-                    value={rating} 
-                    onChange={setRating} 
-                    max={5} 
-                    className="mb-3"
-                  />
+              {!feedbackSubmitted ? (
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">{t('rating')}</p>
+                    <Rating 
+                      value={rating} 
+                      onChange={setRating} 
+                      max={5} 
+                      className="mb-3"
+                    />
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">{t('comments')}</p>
+                    <Textarea
+                      value={feedback}
+                      onChange={(e) => setFeedback(e.target.value)}
+                      placeholder={t('feedbackPlaceholder')}
+                      className="resize-none h-24"
+                    />
+                  </div>
+                  
+                  <Button 
+                    onClick={handleSubmitFeedback} 
+                    disabled={isSubmitting}
+                    className="mt-2 w-full"
+                  >
+                    {isSubmitting ? t('submitting') : t('submit')}
+                  </Button>
                 </div>
-                
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">{t('comments')}</p>
-                  <Textarea
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    placeholder={t('feedbackPlaceholder')}
-                    className="resize-none h-24"
-                  />
+              ) : (
+                <div className="space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-md">
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">{t('rating')}</p>
+                    <Rating 
+                      value={rating} 
+                      onChange={setRating} 
+                      max={5}
+                      className="mb-3" 
+                    />
+                  </div>
+                  
+                  {feedback && (
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">{t('comments')}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap bg-white dark:bg-gray-700 p-3 rounded-md">
+                        {feedback}
+                      </p>
+                    </div>
+                  )}
+                  
+                  <Button 
+                    onClick={() => setFeedbackSubmitted(false)} 
+                    variant="outline"
+                    className="mt-2"
+                  >
+                    {t('edit')}
+                  </Button>
                 </div>
-                
-                <Button 
-                  onClick={handleSubmitFeedback} 
-                  disabled={isSubmitting}
-                  className="mt-2 w-full"
-                >
-                  {isSubmitting ? t('submitting') : t('submit')}
-                </Button>
-              </div>
+              )}
             </div>
           )}
         </div>

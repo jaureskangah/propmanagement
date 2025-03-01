@@ -77,7 +77,8 @@ export const enRequests = {
   sortNewest: "Newest First",
   sortOldest: "Oldest First",
   sortByPriority: "By Priority",
-  deadline: "Deadline"
+  deadline: "Deadline",
+  edit: "Edit"
 };
 
 export const frRequests = {
@@ -158,5 +159,6 @@ export const frRequests = {
   sortNewest: "Plus récent d'abord",
   sortOldest: "Plus ancien d'abord",
   sortByPriority: "Par priorité",
-  deadline: "Date limite"
+  deadline: "Date limite",
+  edit: "Modifier"
 };
