@@ -1,5 +1,4 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   DollarSign, 
   ArrowUpRight, 
@@ -14,6 +13,7 @@ import { format, isAfter, isBefore, startOfMonth, addMonths } from "date-fns";
 import type { Payment } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface PaymentWidgetProps {
   rentAmount: number;
@@ -41,22 +41,30 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
   const lastPayment = payments[0];
   
   return (
-    <Card className="shadow-sm transition-all hover:shadow-md">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <DollarSign className="h-5 w-5 text-primary" />
-          {t('payments')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex flex-col">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-sm text-muted-foreground">{t('currentMonthRent')}</span>
-            <span className="text-xl font-bold">${rentAmount}</span>
+    <motion.div 
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 p-5"
+    >
+      <div className="flex items-center mb-4">
+        <DollarSign className="h-5 w-5 mr-2 text-emerald-600" />
+        <h3 className="font-semibold text-emerald-700">{t('payments')}</h3>
+      </div>
+      
+      <div className="space-y-5">
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="bg-white/70 rounded-lg p-4 shadow-sm"
+        >
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-sm text-gray-500">{t('currentMonthRent')}</span>
+            <span className="text-2xl font-bold text-emerald-700">${rentAmount}</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">{t('status')}</span>
+            <span className="text-sm text-gray-500">{t('status')}</span>
             <div>
               {isPaid && (
                 <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
@@ -80,15 +88,20 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
               )}
             </div>
           </div>
-        </div>
+        </motion.div>
         
         {lastPayment && (
-          <div className="pt-2 border-t">
-            <span className="text-sm text-muted-foreground block mb-1">{t('lastPayment')}</span>
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="bg-white/70 rounded-lg p-4 shadow-sm"
+          >
+            <span className="text-sm text-gray-500 block mb-3">{t('lastPayment')}</span>
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-medium">${lastPayment.amount}</span>
-                <span className="text-xs text-muted-foreground ml-2">
+                <span className="font-medium text-gray-800">${lastPayment.amount}</span>
+                <span className="text-xs text-gray-500 ml-2">
                   {format(new Date(lastPayment.payment_date), 'PP')}
                 </span>
               </div>
@@ -105,17 +118,17 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
                 {lastPayment.status}
               </Badge>
             </div>
-          </div>
+          </motion.div>
         )}
         
         <Button 
-          className="w-full mt-2"
+          className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white"
           onClick={() => navigate('/tenant/payments')}
         >
           {isPaid ? t('viewPaymentHistory') : t('makePayment')}
           <ArrowUpRight className="h-4 w-4 ml-1" />
         </Button>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 };

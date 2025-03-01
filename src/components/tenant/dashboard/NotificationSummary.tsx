@@ -1,12 +1,12 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Bell, MessageSquare, Wrench, FileText, CreditCard } from "lucide-react";
+import { Bell, MessageSquare, Wrench } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Communication, MaintenanceRequest } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 interface NotificationSummaryProps {
   communications: Communication[];
@@ -23,59 +23,74 @@ export const NotificationSummary = ({ communications, maintenanceRequests }: Not
   const hasNotifications = unreadMessages > 0 || pendingMaintenance > 0;
   
   return (
-    <Card className="shadow-sm transition-all hover:shadow-md">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <Bell className="h-5 w-5 text-primary" />
-          {t('notifications')}
+    <motion.div 
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-rose-50 to-pink-50 border border-rose-100 p-5"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Bell className="h-5 w-5 mr-2 text-rose-600" />
+          <h3 className="font-semibold text-rose-700">{t('notifications')}</h3>
           {hasNotifications && (
-            <Badge variant="default" className="ml-2 bg-red-500 hover:bg-red-600">
+            <Badge variant="default" className="ml-2 bg-rose-500 hover:bg-rose-600">
               {unreadMessages + pendingMaintenance}
             </Badge>
           )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+        </div>
+      </div>
+      
+      <div className="space-y-4">
         {!hasNotifications ? (
           <div className="text-center py-6">
-            <Bell className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-muted-foreground">{t('noNotifications')}</p>
+            <Bell className="h-10 w-10 text-rose-300 mx-auto mb-2 opacity-50" />
+            <p className="text-sm text-gray-500">{t('noNotifications')}</p>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {unreadMessages > 0 && (
-              <div className="flex items-center justify-between">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="flex items-center justify-between p-3 bg-white/60 rounded-lg"
+              >
                 <div className="flex items-center">
-                  <MessageSquare className="h-4 w-4 mr-2 text-blue-500" />
-                  <span>{t('unreadMessages')}</span>
+                  <MessageSquare className="h-4 w-4 mr-2 text-blue-600" />
+                  <span className="text-gray-700">{t('unreadMessages')}</span>
                 </div>
-                <Badge variant="outline" className="ml-auto">
+                <Badge variant="outline" className="ml-auto bg-blue-50 text-blue-700 border-blue-200">
                   {unreadMessages}
                 </Badge>
-              </div>
+              </motion.div>
             )}
             
             {pendingMaintenance > 0 && (
-              <div className="flex items-center justify-between">
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="flex items-center justify-between p-3 bg-white/60 rounded-lg"
+              >
                 <div className="flex items-center">
-                  <Wrench className="h-4 w-4 mr-2 text-amber-500" />
-                  <span>{t('pendingMaintenanceRequests')}</span>
+                  <Wrench className="h-4 w-4 mr-2 text-amber-600" />
+                  <span className="text-gray-700">{t('pendingMaintenanceRequests')}</span>
                 </div>
-                <Badge variant="outline" className="ml-auto">
+                <Badge variant="outline" className="ml-auto bg-amber-50 text-amber-700 border-amber-200">
                   {pendingMaintenance}
                 </Badge>
-              </div>
+              </motion.div>
             )}
           </div>
         )}
         
-        <Separator className="my-2" />
+        <Separator className="my-4 bg-rose-100/50" />
         
         <div className="flex flex-col gap-2">
           <Button 
             variant="outline" 
             size="sm" 
-            className="w-full justify-start" 
+            className="w-full justify-start bg-white/80 hover:bg-blue-50 text-blue-700 hover:text-blue-800 border-blue-100" 
             onClick={() => navigate('/tenant/communications')}
           >
             <MessageSquare className="h-4 w-4 mr-2" /> 
@@ -84,14 +99,14 @@ export const NotificationSummary = ({ communications, maintenanceRequests }: Not
           <Button 
             variant="outline" 
             size="sm" 
-            className="w-full justify-start"
+            className="w-full justify-start bg-white/80 hover:bg-amber-50 text-amber-700 hover:text-amber-800 border-amber-100"
             onClick={() => navigate('/tenant/maintenance')}
           >
             <Wrench className="h-4 w-4 mr-2" /> 
             {t('viewMaintenanceRequests')}
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 };

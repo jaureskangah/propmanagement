@@ -1,9 +1,9 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import { BarChart3 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Payment } from "@/types/tenant";
+import { motion } from "framer-motion";
 
 interface PaymentHistoryChartProps {
   payments: Payment[];
@@ -49,38 +49,78 @@ export const PaymentHistoryChart = ({ payments }: PaymentHistoryChartProps) => {
   };
   
   return (
-    <Card className="shadow-sm transition-all hover:shadow-md col-span-1 md:col-span-2">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <BarChart3 className="h-5 w-5 text-primary" />
-          {t('paymentHistory')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {chartData.length > 0 ? (
-          <div className="h-[200px] w-full">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-sky-50 to-cyan-50 border border-sky-100 p-5"
+    >
+      <div className="flex items-center mb-4">
+        <BarChart3 className="h-5 w-5 mr-2 text-sky-600" />
+        <h3 className="font-semibold text-sky-700">{t('paymentHistory')}</h3>
+      </div>
+      
+      {chartData.length > 0 ? (
+        <div className="bg-white/80 rounded-lg p-4 shadow-sm">
+          <div className="h-[240px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 20, right: 10, left: 10, bottom: 0 }}>
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="amount" radius={[4, 4, 0, 0]}>
+              <BarChart data={chartData} margin={{ top: 20, right: 0, left: 0, bottom: 5 }}>
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#6b7280', fontSize: 12 }}
+                />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    borderRadius: '8px',
+                    border: 'none',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
+                  }}
+                  itemStyle={{ padding: '5px 0' }}
+                  formatter={(value) => [`$${value}`, t('amount')]}
+                />
+                <Bar dataKey="amount" radius={[8, 8, 0, 0]}>
                   {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={getBarColor(entry.status)} />
+                    <Cell 
+                      key={`cell-${index}`} 
+                      fill={getBarColor(entry.status)} 
+                      fillOpacity={0.8}
+                    />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
-        ) : (
-          <div className="text-center py-16">
-            <BarChart3 className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-muted-foreground">
-              {t('noPaymentHistory')}
-            </p>
+          
+          <div className="flex justify-center mt-4 space-x-4">
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+              <span className="text-xs text-gray-600">{t('paid')}</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-amber-500 rounded-full mr-2"></div>
+              <span className="text-xs text-gray-600">{t('pending')}</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+              <span className="text-xs text-gray-600">{t('overdue')}</span>
+            </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+        </div>
+      ) : (
+        <div className="text-center py-16 bg-white/60 rounded-lg">
+          <BarChart3 className="h-10 w-10 text-sky-300 mx-auto mb-2 opacity-50" />
+          <p className="text-sm text-gray-500">
+            {t('noPaymentHistory')}
+          </p>
+        </div>
+      )}
+    </motion.div>
   );
 };

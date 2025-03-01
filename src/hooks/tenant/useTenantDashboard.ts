@@ -1,48 +1,70 @@
 
-import { useState } from "react";
-import { useLeaseStatus } from "./dashboard/useLeaseStatus";
-import { useCommunicationsData } from "./dashboard/useCommunicationsData";
-import { useMaintenanceData } from "./dashboard/useMaintenanceData";
-import { usePaymentsAndDocuments } from "./dashboard/usePaymentsAndDocuments";
-import { useTenantData } from "./dashboard/useTenantData";
-import { useToast } from "@/hooks/use-toast";
-import { useDashboardPreferences } from "@/components/dashboard/hooks/useDashboardPreferences";
+import { useState, useEffect } from 'react';
+import { useTenantData } from '@/hooks/tenant/dashboard/useTenantData';
+import { useCommunicationsData } from '@/hooks/tenant/dashboard/useCommunicationsData';
+import { useMaintenanceData } from '@/hooks/tenant/dashboard/useMaintenanceData';
+import { usePaymentsAndDocuments } from '@/hooks/tenant/dashboard/usePaymentsAndDocuments';
+import { useLeaseStatus } from '@/hooks/tenant/dashboard/useLeaseStatus';
+import { useToast } from '@/hooks/use-toast';
 
 export const useTenantDashboard = () => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const { tenant, isLoading: isTenantLoading, fetchTenantData } = useTenantData();
-  const { communications, isLoading: isCommLoading, fetchCommunications } = useCommunicationsData();
-  const { maintenanceRequests, isLoading: isMaintenanceLoading, fetchMaintenanceRequests } = useMaintenanceData();
-  const { payments, documents, isLoading: isPaymentsDocsLoading, fetchPaymentsAndDocuments } = usePaymentsAndDocuments();
-  const { daysLeft, status } = useLeaseStatus(tenant?.lease_end);
+  const [isLoading, setIsLoading] = useState(true);
+  const { tenant, isLoading: isLoadingTenant, fetchTenantData } = useTenantData();
+  const { communications, isLoading: isLoadingComms, fetchCommunications } = useCommunicationsData();
+  const { maintenanceRequests, isLoading: isLoadingMaintenance, fetchMaintenanceRequests } = useMaintenanceData();
+  const { payments, documents, isLoading: isLoadingPayments, fetchPayments, fetchDocuments } = usePaymentsAndDocuments();
+  const leaseStatus = useLeaseStatus(tenant?.lease_end);
   const { toast } = useToast();
-  const { preferences } = useDashboardPreferences();
 
-  const isLoading = isTenantLoading || isCommLoading || isMaintenanceLoading || isPaymentsDocsLoading || isRefreshing;
+  // Fetch all data when tenant is available
+  useEffect(() => {
+    if (tenant) {
+      // Refresh all data
+      const loadData = async () => {
+        try {
+          await Promise.all([
+            fetchCommunications(),
+            fetchMaintenanceRequests(),
+            fetchPayments(),
+            fetchDocuments()
+          ]);
+        } catch (error) {
+          console.error('Error fetching dashboard data:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      
+      loadData();
+    } else {
+      setIsLoading(isLoadingTenant);
+    }
+  }, [tenant]);
 
+  // Refresh all data
   const refreshDashboard = async () => {
-    setIsRefreshing(true);
+    setIsLoading(true);
     try {
+      await fetchTenantData();
       await Promise.all([
-        fetchTenantData(),
         fetchCommunications(),
         fetchMaintenanceRequests(),
-        fetchPaymentsAndDocuments()
+        fetchPayments(),
+        fetchDocuments()
       ]);
-      
       toast({
         title: "Dashboard refreshed",
-        description: "The latest data has been loaded",
+        description: "All data has been successfully updated.",
       });
     } catch (error) {
-      console.error("Error refreshing dashboard:", error);
+      console.error('Error refreshing dashboard:', error);
       toast({
         title: "Refresh failed",
-        description: "Could not refresh dashboard data",
+        description: "Could not refresh dashboard data. Please try again.",
         variant: "destructive",
       });
     } finally {
-      setIsRefreshing(false);
+      setIsLoading(false);
     }
   };
 
@@ -52,8 +74,8 @@ export const useTenantDashboard = () => {
     maintenanceRequests,
     payments,
     documents,
-    leaseStatus: { daysLeft, status },
-    isLoading,
+    leaseStatus,
+    isLoading: isLoading || isLoadingTenant || isLoadingComms || isLoadingMaintenance || isLoadingPayments,
     refreshDashboard
   };
 };

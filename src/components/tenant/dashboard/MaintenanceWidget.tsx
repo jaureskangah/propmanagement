@@ -1,5 +1,4 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wrench, ArrowUpRight, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +6,7 @@ import type { MaintenanceRequest } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useNavigate } from "react-router-dom";
 import { formatDate } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 interface MaintenanceWidgetProps {
   requests: MaintenanceRequest[];
@@ -17,29 +17,35 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
   const navigate = useNavigate();
   
   return (
-    <Card className="shadow-sm transition-all hover:shadow-md">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium flex items-center gap-2">
-          <Wrench className="h-5 w-5 text-primary" />
-          {t('maintenanceRequests')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <motion.div 
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.2 }}
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 p-5"
+    >
+      <div className="flex items-center mb-4">
+        <Wrench className="h-5 w-5 mr-2 text-amber-600" />
+        <h3 className="font-semibold text-amber-700">{t('maintenanceRequests')}</h3>
+      </div>
+      
+      <div className="space-y-4">
         {requests.length === 0 ? (
-          <div className="text-center py-6">
-            <Wrench className="h-10 w-10 text-muted-foreground mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-muted-foreground">{t('noMaintenanceRequests')}</p>
+          <div className="text-center py-6 bg-white/60 rounded-lg">
+            <Wrench className="h-10 w-10 text-amber-300 mx-auto mb-2 opacity-50" />
+            <p className="text-sm text-gray-500">{t('noMaintenanceRequests')}</p>
           </div>
         ) : (
-          <div className="space-y-2">
-            {requests.slice(0, 3).map((request) => (
-              <div 
+          <div className="space-y-3">
+            {requests.slice(0, 3).map((request, index) => (
+              <motion.div 
                 key={request.id} 
-                className="flex items-center justify-between p-2 rounded-md hover:bg-muted transition-colors"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="flex items-center justify-between p-3 bg-white/70 rounded-lg shadow-sm hover:shadow transition-shadow"
               >
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium truncate">{request.issue}</span>
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-sm font-medium truncate text-gray-800">{request.issue}</span>
+                  <span className="text-xs text-gray-500">
                     {formatDate(request.created_at)}
                   </span>
                 </div>
@@ -48,25 +54,25 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                   className={
                     request.status === "Resolved"
                       ? "bg-green-500 hover:bg-green-600 text-white"
-                      : "bg-yellow-500 hover:bg-yellow-600 text-white"
+                      : "bg-amber-500 hover:bg-amber-600 text-white"
                   }
                 >
                   {request.status}
                 </Badge>
-              </div>
+              </motion.div>
             ))}
             
             {requests.length > 3 && (
-              <div className="text-sm text-center text-muted-foreground">
+              <div className="text-sm text-center text-gray-500 mt-2">
                 {t('andMoreRequests', { count: (requests.length - 3).toString() })}
               </div>
             )}
           </div>
         )}
         
-        <div className="flex gap-2 mt-2">
+        <div className="flex gap-2 mt-4">
           <Button 
-            className="flex-1"
+            className="flex-1 border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
             variant="outline"
             onClick={() => navigate('/tenant/maintenance')}
           >
@@ -74,14 +80,14 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             <ArrowUpRight className="h-4 w-4 ml-1" />
           </Button>
           <Button 
-            className="flex-1"
+            className="flex-1 bg-amber-600 hover:bg-amber-700 text-white"
             onClick={() => navigate('/tenant/maintenance/new')}
           >
             {t('newRequest')}
             <PlusCircle className="h-4 w-4 ml-1" />
           </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </motion.div>
   );
 };

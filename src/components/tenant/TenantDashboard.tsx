@@ -12,9 +12,10 @@ import { PaymentHistoryChart } from "./dashboard/PaymentHistoryChart";
 import { DashboardCustomization } from "./dashboard/DashboardCustomization";
 import { useDashboardPreferences } from "@/components/dashboard/hooks/useDashboardPreferences";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Home, RefreshCw, X } from "lucide-react";
+import { Home, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DashboardMetric } from "@/components/DashboardMetric";
+import { motion } from "framer-motion";
 
 export const TenantDashboard = () => {
   const { t } = useLocale();
@@ -75,99 +76,93 @@ export const TenantDashboard = () => {
     switch (widgetId) {
       case 'lease':
         return tenant && (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('leaseStatus')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <LeaseStatusCard 
-                leaseStart={tenant.lease_start}
-                leaseEnd={tenant.lease_end}
-                daysLeft={leaseStatus.daysLeft}
-                status={leaseStatus.status}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <LeaseStatusCard 
+              leaseStart={tenant.lease_start}
+              leaseEnd={tenant.lease_end}
+              daysLeft={leaseStatus.daysLeft}
+              status={leaseStatus.status}
+            />
+          </motion.div>
         );
       case 'notifications':
         return (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('notifications')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <NotificationSummary
-                communications={communications}
-                maintenanceRequests={maintenanceRequests}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <NotificationSummary
+              communications={communications}
+              maintenanceRequests={maintenanceRequests}
+            />
+          </motion.div>
         );
       case 'payments':
         return tenant && (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('payments')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <PaymentWidget
-                rentAmount={tenant.rent_amount}
-                payments={payments}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.3 }}
+          >
+            <PaymentWidget
+              rentAmount={tenant.rent_amount}
+              payments={payments}
+            />
+          </motion.div>
         );
       case 'maintenance':
         return (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('maintenance')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <MaintenanceWidget
-                requests={maintenanceRequests}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.4 }}
+          >
+            <MaintenanceWidget
+              requests={maintenanceRequests}
+            />
+          </motion.div>
         );
       case 'communications':
         return (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('communications')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <CommunicationsWidget
-                communications={communications}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.5 }}
+          >
+            <CommunicationsWidget
+              communications={communications}
+            />
+          </motion.div>
         );
       case 'documents':
         return (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('documents')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <DocumentsWidget
-                documents={documents}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
+          >
+            <DocumentsWidget
+              documents={documents}
+            />
+          </motion.div>
         );
       case 'chart':
         return (
-          <Card className="shadow-sm hover:shadow transition-shadow duration-200 col-span-full">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">{t('paymentHistory')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <PaymentHistoryChart
-                payments={payments}
-              />
-            </CardContent>
-          </Card>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.7 }}
+            className="col-span-full"
+          >
+            <PaymentHistoryChart
+              payments={payments}
+            />
+          </motion.div>
         );
       default:
         return null;
@@ -185,7 +180,7 @@ export const TenantDashboard = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-[200px] w-full" />
+            <Skeleton key={i} className="h-[200px] w-full rounded-xl" />
           ))}
         </div>
       </div>
@@ -194,30 +189,49 @@ export const TenantDashboard = () => {
   
   if (!tenant) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <Home className="h-16 w-16 text-muted-foreground mb-4" />
-        <h2 className="text-2xl font-semibold text-center mb-2">
-          {t('noTenantProfile')}
-        </h2>
-        <p className="text-muted-foreground text-center max-w-md mb-6">
-          {t('noTenantProfileDescription')}
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-[60vh] bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-8 shadow-sm">
+        <motion.div 
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="text-center"
+        >
+          <Home className="h-20 w-20 text-blue-300 mx-auto mb-6" />
+          <h2 className="text-2xl font-semibold text-center mb-4 text-blue-800">
+            {t('noTenantProfile')}
+          </h2>
+          <p className="text-muted-foreground text-center max-w-md mb-8 text-lg">
+            {t('noTenantProfileDescription')}
+          </p>
+          <Button 
+            size="lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-medium"
+            onClick={() => window.location.href = '/tenant/profile'}
+          >
+            Configurer votre profil
+          </Button>
+        </motion.div>
       </div>
     );
   }
   
   return (
     <div className="space-y-6 relative pb-8">
-      <div className="flex items-center justify-between mb-2 bg-background sticky top-0 z-10 pt-2 pb-4">
-        <h2 className="text-3xl font-bold tracking-tight text-primary">
+      <div className="flex items-center justify-between mb-6 bg-background sticky top-0 z-10 pt-2 pb-4 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
+        <motion.h2 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-3xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600"
+        >
           {t('welcomeTenant', { name: tenant.name.split(' ')[0] })}
-        </h2>
+        </motion.h2>
         <div className="flex items-center gap-2">
           <Button 
             variant="outline" 
             size="sm" 
             onClick={refreshDashboard}
-            className="flex items-center gap-1"
+            className="flex items-center gap-1 hover:bg-blue-50 hover:text-blue-700 transition-all"
           >
             <RefreshCw className="h-4 w-4" />
             {t('refresh')}
@@ -230,6 +244,23 @@ export const TenantDashboard = () => {
           />
         </div>
       </div>
+      
+      {tenant.properties && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-6"
+        >
+          <DashboardMetric
+            title={t('property')}
+            value={tenant.properties.name}
+            description={`Appartement ${tenant.unit_number}`}
+            icon={<Home className="h-5 w-5" />}
+            className="bg-gradient-to-br from-blue-50 to-indigo-50 border-none shadow-md"
+          />
+        </motion.div>
+      )}
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {widgetOrder.map(widgetId => (

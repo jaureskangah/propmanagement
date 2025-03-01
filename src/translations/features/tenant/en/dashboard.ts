@@ -39,9 +39,16 @@ export const enDashboard = {
   saveChanges: "Save Changes",
   cancel: "Cancel",
   leaseStatus: "Lease Status",
+  leaseStatusActive: "Lease Active",
+  leaseStatusExpiringDays: "Lease Expiring in {days} days",
+  leaseStatusExpired: "Lease Expired {days} days ago",
+  daysLeft: "{days} days left",
+  daysAgo: "{days} days ago",
   refresh: "Refresh",
   payments: "Payments",
   documents: "Documents",
   maintenance: "Maintenance",
-  chart: "Chart"
+  chart: "Chart",
+  property: "Property",
+  noPaymentHistory: "No payment history available"
 };

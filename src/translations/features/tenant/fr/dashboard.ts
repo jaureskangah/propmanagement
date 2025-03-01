@@ -39,9 +39,16 @@ export const frDashboard = {
   saveChanges: "Enregistrer les modifications",
   cancel: "Annuler",
   leaseStatus: "Statut du bail",
+  leaseStatusActive: "Bail actif",
+  leaseStatusExpiringDays: "Bail expirant dans {days} jours",
+  leaseStatusExpired: "Bail expiré il y a {days} jours",
+  daysLeft: "{days} jours restants",
+  daysAgo: "il y a {days} jours",
   refresh: "Actualiser",
   payments: "Paiements",
   documents: "Documents",
   maintenance: "Maintenance",
-  chart: "Graphique"
+  chart: "Graphique",
+  property: "Propriété",
+  noPaymentHistory: "Aucun historique de paiement disponible"
 };
