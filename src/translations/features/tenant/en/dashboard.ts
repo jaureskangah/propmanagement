@@ -50,6 +50,5 @@ export const enDashboard = {
   documents: "Documents",
   chart: "Chart",
   property: "Property",
-  unit: "Unit",
   noPaymentHistory: "No payment history available"
 };

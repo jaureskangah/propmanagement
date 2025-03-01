@@ -50,6 +50,5 @@ export const frDashboard = {
   documents: "Documents",
   chart: "Graphique",
   property: "Propriété",
-  unit: "Unité",
   noPaymentHistory: "Aucun historique de paiement disponible"
 };

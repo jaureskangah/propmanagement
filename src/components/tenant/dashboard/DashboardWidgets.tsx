@@ -47,24 +47,12 @@ export const DashboardWidgets = ({
 }: DashboardWidgetsProps) => {
   
   // Render widgets based on order and visibility
-  const renderWidget = (widgetId: string, index: number) => {
+  const renderWidget = (widgetId: string) => {
     if (hiddenSections.includes(widgetId)) return null;
-    
-    const animationDelay = index * 0.1;
-    
-    const wrapWithAnimation = (content: React.ReactNode) => (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: animationDelay }}
-      >
-        {content}
-      </motion.div>
-    );
     
     switch (widgetId) {
       case 'lease':
-        return tenant && wrapWithAnimation(
+        return tenant && (
           <LeaseWidget 
             leaseStart={tenant.lease_start}
             leaseEnd={tenant.lease_end}
@@ -73,39 +61,39 @@ export const DashboardWidgets = ({
           />
         );
       case 'notifications':
-        return wrapWithAnimation(
+        return (
           <NotificationWidget
             communications={communications}
             maintenanceRequests={maintenanceRequests}
           />
         );
       case 'payments':
-        return tenant && wrapWithAnimation(
+        return tenant && (
           <PaymentWidget
             rentAmount={tenant.rent_amount}
             payments={payments}
           />
         );
       case 'maintenance':
-        return wrapWithAnimation(
+        return (
           <MaintenanceWidget
             requests={maintenanceRequests}
           />
         );
       case 'communications':
-        return wrapWithAnimation(
+        return (
           <CommunicationsWidget
             communications={communications}
           />
         );
       case 'documents':
-        return wrapWithAnimation(
+        return (
           <DocumentsWidget
             documents={documents}
           />
         );
       case 'chart':
-        return wrapWithAnimation(
+        return (
           <PaymentHistoryChart
             payments={payments}
           />
@@ -117,9 +105,9 @@ export const DashboardWidgets = ({
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {widgetOrder.map((widgetId, index) => (
+      {widgetOrder.map(widgetId => (
         <div key={widgetId} className={widgetId === 'chart' ? 'col-span-full' : ''}>
-          {renderWidget(widgetId, index)}
+          {renderWidget(widgetId)}
         </div>
       ))}
     </div>

@@ -25,7 +25,7 @@ export const DashboardHeader = ({
   const { t } = useLocale();
   
   return (
-    <div className="flex items-center justify-between mb-10 bg-background sticky top-0 z-10 pt-6 pb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
+    <div className="flex items-center justify-between mb-8 bg-background sticky top-0 z-10 pt-4 pb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
       <motion.h2 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
