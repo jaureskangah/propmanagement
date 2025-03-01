@@ -58,15 +58,15 @@ export const DocumentsFilters = ({
       
       <div className="flex gap-2">
         <Select
-          value={selectedDocType || ""}
-          onValueChange={(value) => setSelectedDocType(value || null)}
+          value={selectedDocType || "all"}
+          onValueChange={(value) => setSelectedDocType(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[180px]">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue placeholder={t("filterDocuments")} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">
+            <SelectItem value="all">
               {t("allDocuments")}
             </SelectItem>
             <SelectItem value="lease">
