@@ -6,7 +6,6 @@ import { CommunicationDetailsDialog } from "./communications/CommunicationDetail
 import { CommunicationsHeader } from "./communications/header/CommunicationsHeader";
 import { InviteTenantDialog } from "./communications/InviteTenantDialog";
 import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
-import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
 import { CommunicationsContent } from "./communications/CommunicationsContent";
 import { useInviteDialog } from "@/hooks/communications/useInviteDialog";
 import { useCreateCommunication } from "@/hooks/communications/useCreateCommunication";
@@ -17,13 +16,17 @@ interface TenantCommunicationsProps {
   communications: Communication[];
   tenantId: string;
   onCommunicationUpdate?: () => void;
-  tenant?: { email: string };
+  onToggleStatus: (comm: Communication) => void;
+  onDeleteCommunication: (comm: Communication) => void;
+  tenant?: { email: string; name?: string } | null;
 }
 
 export const TenantCommunications = ({ 
   communications, 
   tenantId,
   onCommunicationUpdate,
+  onToggleStatus,
+  onDeleteCommunication,
   tenant 
 }: TenantCommunicationsProps) => {
   const { t } = useLocale();
@@ -35,7 +38,6 @@ export const TenantCommunications = ({
     setNewCommData
   } = useCommunicationState();
 
-  const { handleToggleStatus } = useCommunicationActions(tenantId);
   const { handleCreateCommunication } = useCreateCommunication(tenantId, onCommunicationUpdate);
   const { selectedComm, setSelectedComm, handleCommunicationSelect } = useSelectCommunication(onCommunicationUpdate);
 
@@ -44,13 +46,6 @@ export const TenantCommunications = ({
     if (success) {
       setIsNewCommDialogOpen(false);
       setNewCommData({ type: "message", subject: "", content: "", category: "general" });
-    }
-  };
-
-  const handleToggleStatusAndUpdate = async (comm: Communication) => {
-    const success = await handleToggleStatus(comm);
-    if (success) {
-      onCommunicationUpdate?.();
     }
   };
 
@@ -69,9 +64,10 @@ export const TenantCommunications = ({
 
       <CommunicationsContent
         communications={communications}
-        onToggleStatus={handleToggleStatusAndUpdate}
+        onToggleStatus={onToggleStatus}
         onCommunicationSelect={handleOpenCommunication}
         onCommunicationUpdate={onCommunicationUpdate}
+        onDeleteCommunication={onDeleteCommunication}
         tenantId={tenantId}
       />
 
