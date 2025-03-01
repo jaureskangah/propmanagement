@@ -27,20 +27,11 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
       );
     }
     
-    // Apply document type filter
+    // Apply document type filter using document_type field
     if (selectedDocType) {
-      filtered = filtered.filter(doc => {
-        const lowerName = doc.name.toLowerCase();
-        if (selectedDocType === "lease") {
-          return lowerName.includes("lease") || lowerName.includes("bail");
-        } else if (selectedDocType === "receipt") {
-          return lowerName.includes("receipt") || lowerName.includes("reçu") || lowerName.includes("payment");
-        } else {
-          return !lowerName.includes("lease") && !lowerName.includes("bail") && 
-                 !lowerName.includes("receipt") && !lowerName.includes("reçu") && 
-                 !lowerName.includes("payment");
-        }
-      });
+      filtered = filtered.filter(doc => 
+        doc.document_type === selectedDocType
+      );
     }
     
     // Apply sorting

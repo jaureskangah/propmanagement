@@ -20,7 +20,25 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
 
       if (error) throw error;
       
-      setDocuments(data || []);
+      // Handle documents that don't have document_type field yet
+      const processedData = data?.map(doc => {
+        if (!doc.document_type) {
+          // Determine document type if not specified
+          const name = doc.name.toLowerCase();
+          let document_type: 'lease' | 'receipt' | 'other' = 'other';
+          
+          if (name.includes('lease') || name.includes('bail')) {
+            document_type = 'lease';
+          } else if (name.includes('receipt') || name.includes('reçu') || name.includes('payment')) {
+            document_type = 'receipt';
+          }
+          
+          return { ...doc, document_type };
+        }
+        return doc;
+      }) || [];
+      
+      setDocuments(processedData);
     } catch (error) {
       console.error('Error fetching documents:', error);
       toast({

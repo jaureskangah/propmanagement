@@ -28,6 +28,7 @@ export interface TenantDocument {
   file_url?: string;
   created_at: string;
   uploaded_at?: string;
+  document_type?: 'lease' | 'receipt' | 'other';
 }
 
 export interface TenantPayment {

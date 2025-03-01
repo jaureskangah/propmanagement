@@ -40,9 +40,17 @@ export const DocumentsList = ({
 }: DocumentsListProps) => {
   const { t } = useLocale();
 
-  const getDocumentIcon = (name: string) => {
-    const lowerName = name.toLowerCase();
+  const getDocumentIcon = (document: TenantDocument) => {
+    const lowerName = document.name.toLowerCase();
     
+    // First check document_type
+    if (document.document_type === 'lease') {
+      return <FileText className="h-5 w-5 text-blue-500" />;
+    } else if (document.document_type === 'receipt') {
+      return <FileText className="h-5 w-5 text-green-500" />;
+    }
+    
+    // Fallback to file extension
     if (lowerName.endsWith('.pdf')) {
       return <File className="h-5 w-5 text-red-500" />;
     } else if (lowerName.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
@@ -88,7 +96,7 @@ export const DocumentsList = ({
           {documents.map((doc, index) => (
             <TableRow key={doc.id} className="hover:bg-muted/50">
               <TableCell className="flex items-center gap-2 font-medium">
-                {getDocumentIcon(doc.name)}
+                {getDocumentIcon(doc)}
                 <span className="truncate max-w-[300px]" title={doc.name}>
                   {doc.name}
                 </span>
