@@ -1,5 +1,6 @@
+
 import type { Tenant } from "@/types/tenant";
-import { useDocumentState } from "./useDocumentState";
+import { useGenerationDocumentState } from "./useDocumentState";
 import { usePdfActions } from "./usePdfActions";
 
 interface UseDocumentGenerationProps {
@@ -27,7 +28,7 @@ export const useDocumentGeneration = ({
     generatedPdfUrl,
     setGeneratedPdfUrl,
     cleanup,
-  } = useDocumentState();
+  } = useGenerationDocumentState();
 
   const {
     generateDocument,

@@ -5,6 +5,32 @@ import { TenantDocument, Tenant } from "@/types/tenant";
 import { ToastAction } from "@/components/ui/toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
+// For the document generator
+export const useGenerationDocumentState = () => {
+  const [selectedTemplate, setSelectedTemplate] = useState<string>("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedPdfUrl, setGeneratedPdfUrl] = useState<string | null>(null);
+  
+  const cleanup = () => {
+    if (generatedPdfUrl) {
+      URL.revokeObjectURL(generatedPdfUrl);
+      setGeneratedPdfUrl(null);
+    }
+    setSelectedTemplate("");
+  };
+
+  return {
+    selectedTemplate,
+    setSelectedTemplate,
+    isGenerating,
+    setIsGenerating,
+    generatedPdfUrl,
+    setGeneratedPdfUrl,
+    cleanup,
+  };
+};
+
+// For the documents page
 export const useDocumentState = (
   user: any, 
   toast: any
