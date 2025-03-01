@@ -28,7 +28,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
     >
       <div className="flex items-center mb-4">
         <MessageSquare className="h-5 w-5 mr-2 text-blue-600" />
-        <h3 className="font-semibold text-blue-700">{t('communications')}</h3>
+        <h3 className="font-semibold text-blue-700">Communications</h3>
         {unreadCount > 0 && (
           <Badge variant="default" className="ml-2 bg-blue-500 hover:bg-blue-600">
             {unreadCount}
@@ -40,7 +40,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
         {communications.length === 0 ? (
           <div className="text-center py-6 bg-white/60 rounded-lg">
             <MessageSquare className="h-10 w-10 text-blue-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">{t('noCommunications')}</p>
+            <p className="text-sm text-gray-500">No Communications</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -99,7 +99,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             onClick={() => navigate('/tenant/communications')}
             size="sm"
           >
-            <span className="mr-1">{t('viewAll')}</span>
+            <span className="mr-1">View All</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
@@ -107,7 +107,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             onClick={() => navigate('/tenant/communications/new')}
             size="sm"
           >
-            <span className="mr-1">{t('sendMessage')}</span>
+            <span className="mr-1">Send Message</span>
             <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>

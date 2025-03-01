@@ -46,7 +46,7 @@ export const NotificationWidget = ({ communications, maintenanceRequests }: Noti
         {!hasNotifications ? (
           <div className="text-center py-6">
             <Bell className="h-10 w-10 text-rose-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">{t('noNotifications')}</p>
+            <p className="text-sm text-gray-500">No Notifications</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -96,7 +96,7 @@ export const NotificationWidget = ({ communications, maintenanceRequests }: Noti
             onClick={() => navigate('/tenant/communications')}
           >
             <MessageSquare className="h-3.5 w-3.5 mr-2" /> 
-            {t('viewMessages')}
+            <span>View Messages</span>
           </Button>
           <Button 
             variant="outline" 
@@ -105,7 +105,7 @@ export const NotificationWidget = ({ communications, maintenanceRequests }: Noti
             onClick={() => navigate('/tenant/maintenance')}
           >
             <Wrench className="h-3.5 w-3.5 mr-2" /> 
-            {t('viewMaintenanceRequests')}
+            <span>View Maintenance Requests</span>
           </Button>
         </div>
       </div>

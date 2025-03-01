@@ -50,7 +50,7 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
     >
       <div className="flex items-center mb-4">
         <DollarSign className="h-5 w-5 mr-2 text-emerald-600" />
-        <h3 className="font-semibold text-emerald-700">{t('payments')}</h3>
+        <h3 className="font-semibold text-emerald-700">Payments</h3>
       </div>
       
       <div className="space-y-5">
@@ -61,7 +61,7 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
           className="bg-white/70 rounded-lg p-4 shadow-sm"
         >
           <div className="flex justify-between items-center mb-3">
-            <span className="text-sm text-gray-500">{t('currentMonthRent')}</span>
+            <span className="text-sm text-gray-500">Current Month Rent</span>
             <span className="text-2xl font-bold text-emerald-700">${rentAmount}</span>
           </div>
           
@@ -85,7 +85,7 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
               )}
               {!currentMonthPayment && (
                 <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                  <Calendar className="h-3 w-3 mr-1" /> {t('notPaidYet')}
+                  <Calendar className="h-3 w-3 mr-1" /> Not Paid Yet
                 </Badge>
               )}
             </div>
@@ -99,7 +99,7 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
             transition={{ duration: 0.3, delay: 0.1 }}
             className="bg-white/70 rounded-lg p-4 shadow-sm"
           >
-            <span className="text-sm text-gray-500 block mb-3">{t('lastPayment')}</span>
+            <span className="text-sm text-gray-500 block mb-3">Last Payment</span>
             <div className="flex items-center justify-between">
               <div>
                 <span className="font-medium text-gray-800">${lastPayment.amount}</span>
@@ -127,8 +127,8 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
           className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white"
           onClick={() => navigate('/tenant/payments')}
         >
-          {isPaid ? t('viewPaymentHistory') : t('makePayment')}
-          <ArrowUpRight className="h-4 w-4 ml-1" />
+          <span className="mr-1">{isPaid ? "View Payment History" : "Make Payment"}</span>
+          <ArrowUpRight className="h-4 w-4" />
         </Button>
       </div>
     </motion.div>

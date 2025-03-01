@@ -43,7 +43,7 @@ export const frDashboard = {
   leaseStatusExpiringDays: "Bail expirant dans {days} jours",
   leaseStatusExpired: "Bail expiré il y a {days} jours",
   daysLeft: "{days} jours restants",
-  daysAgo: "il y a {days} jours",
+  daysAgo: "Il y a {days} jours",
   refresh: "Actualiser",
   payments: "Paiements",
   documents: "Documents",

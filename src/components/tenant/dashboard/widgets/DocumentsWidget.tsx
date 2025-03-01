@@ -24,14 +24,14 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
     >
       <div className="flex items-center mb-4">
         <FileText className="h-5 w-5 mr-2 text-purple-600" />
-        <h3 className="font-semibold text-purple-700">{t('documents')}</h3>
+        <h3 className="font-semibold text-purple-700">Documents</h3>
       </div>
       
       <div className="space-y-4">
         {documents.length === 0 ? (
           <div className="text-center py-6 bg-white/60 rounded-lg">
             <File className="h-10 w-10 text-purple-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">{t('noDocuments')}</p>
+            <p className="text-sm text-gray-500">No Documents</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -65,7 +65,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
           onClick={() => navigate('/tenant/documents')}
           size="sm"
         >
-          <span className="mr-1">{t('viewAllDocuments')}</span>
+          <span className="mr-1">View All Documents</span>
           <ArrowUpRight className="h-3 w-3" />
         </Button>
       </div>
