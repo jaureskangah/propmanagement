@@ -39,4 +39,8 @@ export interface TenantCommunicationsTranslations {
   messageCantBeEmpty: string;
   cantReply: string;
   sendReplyError: string;
+  unread: string;
+  messages: string;
+  sentByYou: string;
+  payment: string;
 }

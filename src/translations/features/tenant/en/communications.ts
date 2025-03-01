@@ -18,7 +18,7 @@ export const enCommunications: TenantCommunicationsTranslations = {
   replyToMessage: "Reply to message",
   messageFrom: "Message from",
   markAsRead: "Mark as read",
-  markAsUnread: "Mark as unread",
+  markAsUnread: "Unread",
   deleteMessage: "Delete message",
   messageDeleted: "Message deleted",
   filter: "Filter",
@@ -40,5 +40,9 @@ export const enCommunications: TenantCommunicationsTranslations = {
   replySuccess: "Reply sent successfully",
   messageCantBeEmpty: "Message cannot be empty",
   cantReply: "Cannot reply to this message",
-  sendReplyError: "Error sending reply"
+  sendReplyError: "Error sending reply",
+  unread: "Unread",
+  messages: "Messages",
+  sentByYou: "Sent by you",
+  payment: "Payment"
 };

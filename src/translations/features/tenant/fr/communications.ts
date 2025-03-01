@@ -18,7 +18,7 @@ export const frCommunications: TenantCommunicationsTranslations = {
   replyToMessage: "Répondre au message",
   messageFrom: "Message de",
   markAsRead: "Marquer comme lu",
-  markAsUnread: "Marquer comme non lu",
+  markAsUnread: "Non lu",
   deleteMessage: "Supprimer le message",
   messageDeleted: "Message supprimé",
   filter: "Filtrer",
@@ -40,5 +40,9 @@ export const frCommunications: TenantCommunicationsTranslations = {
   replySuccess: "Réponse envoyée avec succès",
   messageCantBeEmpty: "Le message ne peut pas être vide",
   cantReply: "Impossible de répondre à ce message",
-  sendReplyError: "Erreur lors de l'envoi de la réponse"
+  sendReplyError: "Erreur lors de l'envoi de la réponse",
+  unread: "Non lu",
+  messages: "Messages",
+  sentByYou: "Envoyé par vous",
+  payment: "Paiement"
 };
