@@ -23,7 +23,8 @@ export const enDashboard = {
   viewAll: "View all",
   sendMessage: "Send message",
   andMoreMessages: "And {count} more...",
-  maintenanceRequests: "Maintenance",
+  maintenanceRequests: "Maintenance requests",
+  maintenance: "Maintenance",
   noMaintenanceRequests: "No maintenance requests",
   andMoreRequests: "And {count} more...",
   newRequest: "New request",
@@ -47,7 +48,6 @@ export const enDashboard = {
   refresh: "Refresh",
   payments: "Payments",
   documents: "Documents",
-  maintenance: "Maintenance",
   chart: "Chart",
   property: "Property",
   noPaymentHistory: "No payment history available"
