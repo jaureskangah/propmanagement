@@ -9,6 +9,8 @@ export const frMessages: TenantMessagesTranslations = {
   deleteWarning: "Êtes-vous sûr de vouloir supprimer ce locataire ? Toutes les données associées seront définitivement supprimées.",
   invitationSent: "Invitation envoyée avec succès",
   messageSent: "Message envoyé avec succès",
+  messageDeleted: "Message supprimé avec succès",
+  confirmDeleteMessage: "Êtes-vous sûr de vouloir supprimer ce message ? Cette action ne peut pas être annulée.",
   fieldRequired: "Ce champ est requis",
   invalidEmail: "Adresse email invalide",
   invalidAmount: "Le montant doit être positif",

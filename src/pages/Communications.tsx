@@ -35,6 +35,8 @@ const Communications = () => {
   }, [isLoading, communications, tenantId]);
 
   const handleToggleStatusAndRefresh = async (comm: Communication) => {
+    if (!comm) return;
+    console.log("Attempting to toggle status for communication:", comm.id);
     const success = await handleToggleStatus(comm);
     if (success) {
       refreshCommunications();
@@ -44,6 +46,7 @@ const Communications = () => {
   const handleDeleteConfirm = () => {
     if (!communicationToDelete) return;
     
+    console.log("Confirming deletion of communication:", communicationToDelete.id);
     handleDeleteCommunication(communicationToDelete.id)
       .then(success => {
         if (success) {
@@ -84,7 +87,7 @@ const Communications = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDelete')}
+              {t('confirmDeleteMessage') || t('confirmDelete')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

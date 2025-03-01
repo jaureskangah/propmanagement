@@ -8,6 +8,8 @@ export interface TenantMessagesTranslations {
   deleteWarning: string;
   invitationSent: string;
   messageSent: string;
+  messageDeleted: string;
+  confirmDeleteMessage: string;
 
   // Messages de validation
   fieldRequired: string;

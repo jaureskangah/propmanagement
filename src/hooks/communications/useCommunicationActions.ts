@@ -108,13 +108,18 @@ export const useCommunicationActions = (tenantId?: string) => {
 
   const handleToggleStatus = async (comm: Communication) => {
     try {
+      console.log("Toggling status for communication:", comm.id);
       const newStatus = comm.status === 'read' ? 'unread' : 'read';
+      
       const { error } = await supabase
         .from('tenant_communications')
         .update({ status: newStatus })
         .eq('id', comm.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error in handleToggleStatus:", error);
+        throw error;
+      }
 
       toast({
         title: "Success",
@@ -135,7 +140,7 @@ export const useCommunicationActions = (tenantId?: string) => {
 
   const handleDeleteCommunication = async (commId: string) => {
     try {
-      console.log("Attempting to delete communication:", commId);
+      console.log("Starting deletion process for communication:", commId);
       
       // First, fetch all replies to this communication
       const { data: replies, error: fetchError } = await supabase
@@ -153,6 +158,7 @@ export const useCommunicationActions = (tenantId?: string) => {
       // If there are replies, delete them one by one
       if (replies && replies.length > 0) {
         for (const reply of replies) {
+          console.log("Deleting reply:", reply.id);
           const { error: replyError } = await supabase
             .from('tenant_communications')
             .delete()
@@ -166,12 +172,16 @@ export const useCommunicationActions = (tenantId?: string) => {
       }
 
       // Now that all replies are deleted, delete the original communication
+      console.log("Deleting original communication:", commId);
       const { error } = await supabase
         .from('tenant_communications')
         .delete()
         .eq('id', commId);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error deleting communication:", error);
+        throw error;
+      }
 
       toast({
         title: "Success",

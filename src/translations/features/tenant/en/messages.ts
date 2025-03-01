@@ -9,6 +9,8 @@ export const enMessages: TenantMessagesTranslations = {
   deleteWarning: "Are you sure you want to delete this tenant? All associated data will be permanently deleted.",
   invitationSent: "Invitation sent successfully",
   messageSent: "Message sent successfully",
+  messageDeleted: "Message deleted successfully",
+  confirmDeleteMessage: "Are you sure you want to delete this message? This action cannot be undone.",
   fieldRequired: "This field is required",
   invalidEmail: "Invalid email address",
   invalidAmount: "Amount must be positive",

@@ -79,7 +79,7 @@ const TenantCommunications = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDelete')}
+              {t('confirmDeleteMessage')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

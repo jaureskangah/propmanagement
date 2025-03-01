@@ -11,6 +11,8 @@ import { useCommunicationActions } from "@/hooks/communications/useCommunication
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { Communication } from "@/types/tenant";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantTabsProps {
@@ -22,6 +24,7 @@ interface TenantTabsProps {
 export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTabsProps) => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const { t } = useLocale();
   const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenant.id);
   const [communicationToDelete, setCommunicationToDelete] = useState<Communication | null>(null);
 
@@ -32,107 +35,134 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
     }
   };
 
-  const handleDeleteConfirm = async (comm: Communication) => {
-    const success = await handleDeleteCommunication(comm.id);
-    if (success) {
-      toast({
-        title: "Success",
-        description: "Message deleted successfully",
+  const handleDeleteConfirm = () => {
+    if (!communicationToDelete) return;
+    
+    handleDeleteCommunication(communicationToDelete.id)
+      .then(success => {
+        if (success) {
+          toast({
+            title: t('success'),
+            description: t('messageDeleted'),
+          });
+          handleDataUpdate();
+          setCommunicationToDelete(null);
+        }
       });
-      handleDataUpdate();
-    }
   };
 
   return (
-    <Tabs defaultValue={isTenantUser ? "communications" : "documents"} className="w-full">
-      <TabsList className={`grid ${isMobile ? 'grid-cols-2' : isTenantUser ? 'grid-cols-2' : 'grid-cols-5'} w-full`}>
+    <>
+      <Tabs defaultValue={isTenantUser ? "communications" : "documents"} className="w-full">
+        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : isTenantUser ? 'grid-cols-2' : 'grid-cols-5'} w-full`}>
+          {!isTenantUser && (
+            <>
+              <TabsTrigger value="documents">Documents</TabsTrigger>
+              <TabsTrigger value="payments">Payments</TabsTrigger>
+              {!isMobile && (
+                <>
+                  <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+                  <TabsTrigger value="communications">Communications</TabsTrigger>
+                  <TabsTrigger value="reports">Reports</TabsTrigger>
+                </>
+              )}
+            </>
+          )}
+          {isTenantUser && (
+            <>
+              <TabsTrigger value="communications">Communications</TabsTrigger>
+              <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+            </>
+          )}
+        </TabsList>
+
         {!isTenantUser && (
           <>
-            <TabsTrigger value="documents">Documents</TabsTrigger>
-            <TabsTrigger value="payments">Payments</TabsTrigger>
+            <TabsContent value="documents" className="mt-4">
+              <TenantDocuments 
+                documents={tenant.documents} 
+                tenantId={tenant.id}
+                onDocumentUpdate={handleDataUpdate}
+                tenant={tenant}
+              />
+            </TabsContent>
+
+            <TabsContent value="payments" className="mt-4">
+              <TenantPayments 
+                payments={tenant.paymentHistory} 
+                tenantId={tenant.id}
+                onPaymentUpdate={handleDataUpdate}
+              />
+            </TabsContent>
+
             {!isMobile && (
               <>
-                <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-                <TabsTrigger value="communications">Communications</TabsTrigger>
-                <TabsTrigger value="reports">Reports</TabsTrigger>
+                <TabsContent value="maintenance" className="mt-4">
+                  <TenantMaintenance 
+                    requests={tenant.maintenanceRequests} 
+                    tenantId={tenant.id}
+                    onMaintenanceUpdate={handleDataUpdate}
+                  />
+                </TabsContent>
+
+                <TabsContent value="communications" className="mt-4">
+                  <TenantCommunications 
+                    communications={tenant.communications} 
+                    tenantId={tenant.id}
+                    onCommunicationUpdate={handleDataUpdate}
+                    tenant={tenant}
+                    onToggleStatus={handleToggleStatusAndRefresh}
+                    onDeleteCommunication={setCommunicationToDelete}
+                  />
+                </TabsContent>
+
+                <TabsContent value="reports" className="mt-4">
+                  <TenantFinancialReport tenantId={tenant.id} />
+                </TabsContent>
               </>
             )}
           </>
         )}
+
         {isTenantUser && (
           <>
-            <TabsTrigger value="communications">Communications</TabsTrigger>
-            <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+            <TabsContent value="communications" className="mt-4">
+              <TenantCommunications 
+                communications={tenant.communications} 
+                tenantId={tenant.id}
+                onCommunicationUpdate={handleDataUpdate}
+                tenant={tenant}
+                onToggleStatus={handleToggleStatusAndRefresh}
+                onDeleteCommunication={setCommunicationToDelete}
+              />
+            </TabsContent>
+
+            <TabsContent value="maintenance" className="mt-4">
+              <TenantMaintenanceView />
+            </TabsContent>
           </>
         )}
-      </TabsList>
+      </Tabs>
 
-      {!isTenantUser && (
-        <>
-          <TabsContent value="documents" className="mt-4">
-            <TenantDocuments 
-              documents={tenant.documents} 
-              tenantId={tenant.id}
-              onDocumentUpdate={handleDataUpdate}
-              tenant={tenant}
-            />
-          </TabsContent>
-
-          <TabsContent value="payments" className="mt-4">
-            <TenantPayments 
-              payments={tenant.paymentHistory} 
-              tenantId={tenant.id}
-              onPaymentUpdate={handleDataUpdate}
-            />
-          </TabsContent>
-
-          {!isMobile && (
-            <>
-              <TabsContent value="maintenance" className="mt-4">
-                <TenantMaintenance 
-                  requests={tenant.maintenanceRequests} 
-                  tenantId={tenant.id}
-                  onMaintenanceUpdate={handleDataUpdate}
-                />
-              </TabsContent>
-
-              <TabsContent value="communications" className="mt-4">
-                <TenantCommunications 
-                  communications={tenant.communications} 
-                  tenantId={tenant.id}
-                  onCommunicationUpdate={handleDataUpdate}
-                  tenant={tenant}
-                  onToggleStatus={handleToggleStatusAndRefresh}
-                  onDeleteCommunication={handleDeleteConfirm}
-                />
-              </TabsContent>
-
-              <TabsContent value="reports" className="mt-4">
-                <TenantFinancialReport tenantId={tenant.id} />
-              </TabsContent>
-            </>
-          )}
-        </>
-      )}
-
-      {isTenantUser && (
-        <>
-          <TabsContent value="communications" className="mt-4">
-            <TenantCommunications 
-              communications={tenant.communications} 
-              tenantId={tenant.id}
-              onCommunicationUpdate={handleDataUpdate}
-              tenant={tenant}
-              onToggleStatus={handleToggleStatusAndRefresh}
-              onDeleteCommunication={handleDeleteConfirm}
-            />
-          </TabsContent>
-
-          <TabsContent value="maintenance" className="mt-4">
-            <TenantMaintenanceView />
-          </TabsContent>
-        </>
-      )}
-    </Tabs>
+      <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('confirmDeleteMessage') || t('confirmDelete')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('deleteMessage')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
