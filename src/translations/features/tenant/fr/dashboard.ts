@@ -48,7 +48,6 @@ export const frDashboard = {
   refresh: "Actualiser",
   payments: "Paiements",
   documents: "Documents",
-  maintenance: "Maintenance",
   chart: "Graphique",
   property: "Propriété",
   noPaymentHistory: "Aucun historique de paiement disponible"
