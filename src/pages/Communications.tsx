@@ -4,9 +4,14 @@ import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications"
 import { TenantCommunications as TenantCommunicationsComponent } from "@/components/tenant/TenantCommunications";
 import { UnlinkedTenantMessage } from "@/components/tenant/communications/UnlinkedTenantMessage";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Communication } from "@/types/tenant";
+import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const Communications = () => {
+  const { t } = useLocale();
   const { toast } = useToast();
   const {
     tenantId,
@@ -17,6 +22,9 @@ const Communications = () => {
     tenant
   } = useTenantCommunications();
 
+  const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenantId || undefined);
+  const [communicationToDelete, setCommunicationToDelete] = useState<Communication | null>(null);
+
   useEffect(() => {
     if (!isLoading && communications.length === 0 && tenantId) {
       toast({
@@ -25,6 +33,29 @@ const Communications = () => {
       });
     }
   }, [isLoading, communications, tenantId]);
+
+  const handleToggleStatusAndRefresh = async (comm: Communication) => {
+    const success = await handleToggleStatus(comm);
+    if (success) {
+      refreshCommunications();
+    }
+  };
+
+  const handleDeleteConfirm = () => {
+    if (!communicationToDelete) return;
+    
+    handleDeleteCommunication(communicationToDelete.id)
+      .then(success => {
+        if (success) {
+          toast({
+            title: t('success'),
+            description: t('messageDeleted'),
+          });
+          refreshCommunications();
+        }
+        setCommunicationToDelete(null);
+      });
+  };
 
   return (
     <div className="flex">
@@ -42,9 +73,31 @@ const Communications = () => {
             tenantId={tenantId}
             onCommunicationUpdate={refreshCommunications}
             tenant={tenant}
+            onToggleStatus={handleToggleStatusAndRefresh}
+            onDeleteCommunication={setCommunicationToDelete}
           />
         )}
       </div>
+
+      <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('confirmDelete')}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteConfirm}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('deleteMessage')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

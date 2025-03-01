@@ -1,35 +1,34 @@
 
 import { CommunicationFilters } from "../CommunicationFilters";
+import { Dispatch, SetStateAction } from "react";
 
 interface CommunicationsFilterBarProps {
-  searchQuery: string;
-  startDate: string;
+  searchTerm: string;
   selectedType: string | null;
-  communicationTypes: string[];
+  selectedDateRange: [Date | null, Date | null];
   onSearchChange: (value: string) => void;
-  onDateChange: (value: string) => void;
   onTypeChange: (value: string | null) => void;
+  onDateRangeChange: Dispatch<SetStateAction<[Date | null, Date | null]>>;
 }
 
 export const CommunicationsFilterBar = ({
-  searchQuery,
-  startDate,
+  searchTerm,
   selectedType,
-  communicationTypes,
+  selectedDateRange,
   onSearchChange,
-  onDateChange,
-  onTypeChange
+  onTypeChange,
+  onDateRangeChange
 }: CommunicationsFilterBarProps) => {
-  console.log("Rendering CommunicationsFilterBar with:", { searchQuery, selectedType, startDate });
+  console.log("Rendering CommunicationsFilterBar with:", { searchTerm, selectedType, selectedDateRange });
   
   return (
     <CommunicationFilters
-      searchQuery={searchQuery}
-      startDate={startDate}
+      searchQuery={searchTerm}
+      startDate={selectedDateRange[0] ? selectedDateRange[0].toISOString() : ""}
       selectedType={selectedType}
-      communicationTypes={communicationTypes}
+      communicationTypes={["general", "maintenance", "urgent", "payment"]}
       onSearchChange={onSearchChange}
-      onDateChange={onDateChange}
+      onDateChange={() => {}} // This is a placeholder as we're using the date range picker
       onTypeChange={onTypeChange}
     />
   );

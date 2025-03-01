@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { TenantDocuments } from "../TenantDocuments";
@@ -6,6 +7,10 @@ import { TenantMaintenance } from "../TenantMaintenance";
 import { TenantCommunications } from "../TenantCommunications";
 import { TenantFinancialReport } from "../reports/TenantFinancialReport";
 import { TenantMaintenanceView } from "../maintenance/TenantMaintenanceView";
+import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { Communication } from "@/types/tenant";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantTabsProps {
@@ -16,6 +21,27 @@ interface TenantTabsProps {
 
 export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTabsProps) => {
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenant.id);
+  const [communicationToDelete, setCommunicationToDelete] = useState<Communication | null>(null);
+
+  const handleToggleStatusAndRefresh = async (comm: Communication) => {
+    const success = await handleToggleStatus(comm);
+    if (success) {
+      handleDataUpdate();
+    }
+  };
+
+  const handleDeleteConfirm = async (comm: Communication) => {
+    const success = await handleDeleteCommunication(comm.id);
+    if (success) {
+      toast({
+        title: "Success",
+        description: "Message deleted successfully",
+      });
+      handleDataUpdate();
+    }
+  };
 
   return (
     <Tabs defaultValue={isTenantUser ? "communications" : "documents"} className="w-full">
@@ -76,6 +102,8 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
                   tenantId={tenant.id}
                   onCommunicationUpdate={handleDataUpdate}
                   tenant={tenant}
+                  onToggleStatus={handleToggleStatusAndRefresh}
+                  onDeleteCommunication={handleDeleteConfirm}
                 />
               </TabsContent>
 
@@ -95,6 +123,8 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
               tenantId={tenant.id}
               onCommunicationUpdate={handleDataUpdate}
               tenant={tenant}
+              onToggleStatus={handleToggleStatusAndRefresh}
+              onDeleteCommunication={handleDeleteConfirm}
             />
           </TabsContent>
 
