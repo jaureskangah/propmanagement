@@ -22,32 +22,32 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.4 }}
       whileHover={{ y: -5 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 p-5"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 p-6"
     >
-      <div className="flex items-center mb-4">
-        <Wrench className="h-5 w-5 mr-2 text-amber-600" />
-        <h3 className="font-semibold text-amber-700">{t('maintenance')}</h3>
+      <div className="flex items-center mb-5">
+        <Wrench className="h-5 w-5 mr-3 text-amber-600" />
+        <h3 className="font-semibold text-amber-700 text-lg">{t('maintenance')}</h3>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-5">
         {requests.length === 0 ? (
-          <div className="text-center py-6 bg-white/60 rounded-lg">
-            <Wrench className="h-10 w-10 text-amber-300 mx-auto mb-2 opacity-50" />
+          <div className="text-center py-8 bg-white/60 rounded-lg">
+            <Wrench className="h-12 w-12 text-amber-300 mx-auto mb-3 opacity-50" />
             <p className="text-sm text-gray-500">{t('noMaintenanceRequests')}</p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {requests.slice(0, 3).map((request, index) => (
               <motion.div 
                 key={request.id} 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-white/70 rounded-lg shadow-sm hover:shadow transition-shadow"
+                className="flex items-center justify-between p-4 bg-white/70 rounded-lg shadow-sm hover:shadow transition-shadow"
               >
                 <div className="flex flex-col pr-2">
                   <span className="text-sm font-medium truncate text-gray-800">{request.issue}</span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-500 mt-1">
                     {formatDate(request.created_at)}
                   </span>
                 </div>
@@ -65,21 +65,21 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             ))}
             
             {requests.length > 3 && (
-              <div className="text-xs text-center text-gray-500 mt-2">
+              <div className="text-xs text-center text-gray-500 mt-3">
                 {t('andMoreRequests', { count: (requests.length - 3).toString() })}
               </div>
             )}
           </div>
         )}
         
-        <div className="flex gap-2 mt-4">
+        <div className="flex gap-3 mt-5">
           <Button 
             className="flex-1 text-xs bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800 border-amber-200"
             variant="outline"
             onClick={() => navigate('/tenant/maintenance')}
             size="sm"
           >
-            <span className="mr-1">{t('viewAll')}</span>
+            <span className="mr-2">{t('viewAll')}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
@@ -87,7 +87,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             onClick={() => navigate('/tenant/maintenance/new')}
             size="sm"
           >
-            <span className="mr-1">{t('newRequest')}</span>
+            <span className="mr-2">{t('newRequest')}</span>
             <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
