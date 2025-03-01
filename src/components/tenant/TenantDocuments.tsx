@@ -1,8 +1,8 @@
+
 import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DocumentUpload } from "./DocumentUpload";
-import { DocumentGenerator } from "./documents/DocumentGenerator";
 import { TenantDocument } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
@@ -66,8 +66,6 @@ export const TenantDocuments = ({
 
   return (
     <div className="space-y-6">
-      <DocumentGenerator tenant={tenant} onDocumentGenerated={onDocumentUpdate} />
-
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">

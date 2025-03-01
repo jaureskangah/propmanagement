@@ -2,7 +2,6 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DocumentsFilters } from "./DocumentsFilters";
 import { DocumentsList } from "./DocumentsList";
-import { DocumentGenerator } from "./DocumentGenerator";
 import { TenantDocument, Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -48,7 +47,6 @@ export const DocumentsTabs = ({
       <TabsList className="mb-4">
         <TabsTrigger value="all">{t("allDocuments")}</TabsTrigger>
         <TabsTrigger value="recent">{t("recentlyUploaded")}</TabsTrigger>
-        <TabsTrigger value="generate">{t("generateDocument")}</TabsTrigger>
       </TabsList>
       
       <TabsContent value="all" className="space-y-4">
@@ -78,15 +76,6 @@ export const DocumentsTabs = ({
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}
         />
-      </TabsContent>
-      
-      <TabsContent value="generate">
-        {tenant && (
-          <DocumentGenerator 
-            tenant={tenant} 
-            onDocumentGenerated={onDocumentUpdate} 
-          />
-        )}
       </TabsContent>
     </Tabs>
   );
