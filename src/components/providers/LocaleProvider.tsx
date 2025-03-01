@@ -88,11 +88,11 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   const t = (key: string, params?: Record<string, string>): string => {
     const currentTranslations = translations[language];
     const keys = key.split('.');
-    let translation = currentTranslations;
+    let translation: any = currentTranslations;
     
     for (const k of keys) {
       if (translation && typeof translation === 'object' && k in translation) {
-        translation = (translation as any)[k];
+        translation = translation[k];
       } else {
         console.warn(`Missing translation for key: ${key} in language: ${language}`);
         return key;
@@ -106,7 +106,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     
     // Replace parameters in the translation string if provided
     if (params) {
-      let resultStr = translation;
+      let resultStr = translation as string;
       for (const [paramKey, paramValue] of Object.entries(params)) {
         resultStr = resultStr.replace(new RegExp(`{${paramKey}}`, 'g'), paramValue);
       }
