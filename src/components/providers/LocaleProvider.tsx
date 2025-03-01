@@ -106,8 +106,8 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     
     // Replace parameters in the translation string if provided
     if (params) {
-      return Object.entries(params).reduce((str, [key, value]) => {
-        return str.replace(new RegExp(`{${key}}`, 'g'), value);
+      return Object.entries(params).reduce((str, [paramKey, paramValue]) => {
+        return str.replace(new RegExp(`{${paramKey}}`, 'g'), paramValue);
       }, translation);
     }
     

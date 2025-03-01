@@ -1,5 +1,5 @@
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Properties from "./pages/Properties";
 import Tenants from "./pages/Tenants";
@@ -15,7 +15,6 @@ import TenantCommunications from "./pages/tenant/TenantCommunications";
 import TenantDashboard from "./pages/tenant/TenantDashboard";
 import TenantDocuments from "./pages/TenantDocuments";
 import TenantPayments from "./pages/TenantPayments";
-import { lazy } from "react";
 
 import About from "./pages/company/About";
 import Careers from "./pages/company/Careers";
@@ -108,8 +107,4 @@ const router = createBrowserRouter([
   },
 ]);
 
-function AppRouter() {
-  return <RouterProvider router={router} />;
-}
-
-export default AppRouter;
+export default router;
