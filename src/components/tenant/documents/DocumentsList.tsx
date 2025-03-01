@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useEffect } from "react";
 
 interface DocumentsListProps {
   documents: TenantDocument[];
@@ -40,13 +41,29 @@ export const DocumentsList = ({
 }: DocumentsListProps) => {
   const { t } = useLocale();
 
+  // Debug logging
+  useEffect(() => {
+    console.log("DocumentsList - Documents:", documents?.length);
+    console.log("DocumentsList - Loading:", isLoading);
+    if (documents?.length > 0) {
+      console.log("DocumentsList - First document sample:", documents[0]);
+      
+      // Check if any document is missing file_url
+      const missingUrl = documents.filter(doc => !doc.file_url);
+      if (missingUrl.length > 0) {
+        console.warn("Documents missing file_url:", missingUrl.length);
+        console.warn("First missing URL document:", missingUrl[0]);
+      }
+    }
+  }, [documents, isLoading]);
+
   const getDocumentIcon = (document: TenantDocument) => {
-    const lowerName = document.name.toLowerCase();
+    const lowerName = (document?.name || '').toLowerCase();
     
     // First check document_type
-    if (document.document_type === 'lease') {
+    if (document?.document_type === 'lease') {
       return <FileText className="h-5 w-5 text-blue-500" />;
-    } else if (document.document_type === 'receipt') {
+    } else if (document?.document_type === 'receipt') {
       return <FileText className="h-5 w-5 text-green-500" />;
     }
     
@@ -68,7 +85,7 @@ export const DocumentsList = ({
     );
   }
 
-  if (documents.length === 0) {
+  if (!documents || documents.length === 0) {
     return (
       <motion.div 
         initial={{ opacity: 0 }}
@@ -77,8 +94,21 @@ export const DocumentsList = ({
         className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg"
       >
         <FileText className="h-12 w-12 text-muted-foreground mb-3 opacity-40" />
-        <p className="text-muted-foreground">{t("noDocuments")}</p>
+        <p className="text-muted-foreground">{t("noDocuments") || "Aucun document disponible"}</p>
       </motion.div>
+    );
+  }
+
+  // Check all documents have required properties
+  const validDocuments = documents.filter(doc => doc && doc.id && doc.name);
+  
+  if (validDocuments.length === 0) {
+    console.error("No valid documents found after filtering");
+    return (
+      <div className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg">
+        <FileText className="h-12 w-12 text-red-500 mb-3 opacity-40" />
+        <p className="text-red-500">Erreur de chargement des documents</p>
+      </div>
     );
   }
 
@@ -87,13 +117,13 @@ export const DocumentsList = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{t("documentName")}</TableHead>
-            <TableHead>{t("dateUploaded")}</TableHead>
-            <TableHead className="text-right">{t("actions")}</TableHead>
+            <TableHead>{t("documentName") || "Nom du document"}</TableHead>
+            <TableHead>{t("dateUploaded") || "Date d'ajout"}</TableHead>
+            <TableHead className="text-right">{t("actions") || "Actions"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {documents.map((doc, index) => (
+          {validDocuments.map((doc) => (
             <TableRow key={doc.id} className="hover:bg-muted/50">
               <TableCell className="flex items-center gap-2 font-medium">
                 {getDocumentIcon(doc)}
@@ -110,7 +140,7 @@ export const DocumentsList = ({
                     variant="ghost"
                     size="icon"
                     onClick={() => onViewDocument(doc)}
-                    title={t("openDocument")}
+                    title={t("openDocument") || "Ouvrir le document"}
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
@@ -120,10 +150,14 @@ export const DocumentsList = ({
                     size="icon"
                     onClick={() => {
                       if (doc.file_url) {
+                        console.log("Opening document URL:", doc.file_url);
                         window.open(doc.file_url, '_blank');
+                      } else {
+                        console.error("No file_url available for document:", doc.id);
+                        alert("URL du document non disponible");
                       }
                     }}
-                    title={t("downloadDocument")}
+                    title={t("downloadDocument") || "Télécharger"}
                   >
                     <Download className="h-4 w-4" />
                   </Button>
@@ -134,25 +168,25 @@ export const DocumentsList = ({
                         variant="ghost"
                         size="icon"
                         className="hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
-                        title={t("confirmDeleteDocument")}
+                        title={t("confirmDeleteDocument") || "Confirmer la suppression"}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>{t("confirmDeleteDocument")}</AlertDialogTitle>
+                        <AlertDialogTitle>{t("confirmDeleteDocument") || "Supprimer le document"}</AlertDialogTitle>
                         <AlertDialogDescription>
-                          {t("documentDeleteWarning")}
+                          {t("documentDeleteWarning") || "Êtes-vous sûr de vouloir supprimer ce document ?"}
                         </AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel>{t("cancel") || "Annuler"}</AlertDialogCancel>
                         <AlertDialogAction
                           onClick={() => onDeleteDocument(doc.id)}
                           className="bg-red-600 hover:bg-red-700"
                         >
-                          Delete
+                          {t("deleteSuccess") || "Supprimer"}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>

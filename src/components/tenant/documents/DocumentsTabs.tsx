@@ -43,24 +43,28 @@ export const DocumentsTabs = ({
 }: DocumentsTabsProps) => {
   const { t } = useLocale();
   
-  // Logs de débogage
+  // Debug logs
   useEffect(() => {
-    console.log("DocumentsTabs - Documents disponibles:", documents?.length || 0);
-    console.log("DocumentsTabs - Documents filtrés:", filteredDocuments?.length || 0);
+    console.log("DocumentsTabs - Documents available:", documents?.length || 0);
+    console.log("DocumentsTabs - Documents filtered:", filteredDocuments?.length || 0);
+    console.log("DocumentsTabs - Documents sample:", documents?.slice(0, 2));
     
     if (documents?.length === 0) {
-      console.log("Aucun document disponible");
+      console.log("No documents available");
     }
     
     if (documents?.length > 0 && filteredDocuments?.length === 0) {
-      console.log("Documents disponibles mais aucun document filtré");
+      console.log("Documents available but no filtered documents");
+      console.log("Current filters - Search:", searchQuery, "Type:", selectedDocType, "Sort:", sortBy, sortOrder);
     }
-  }, [documents, filteredDocuments]);
+  }, [documents, filteredDocuments, searchQuery, selectedDocType, sortBy, sortOrder]);
 
-  // Récents: les 5 documents les plus récents
-  const recentDocuments = [...(documents || [])].sort((a, b) => {
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-  }).slice(0, 5);
+  // Recent: the 5 most recent documents
+  const recentDocuments = documents?.length 
+    ? [...documents].sort((a, b) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }).slice(0, 5)
+    : [];
   
   console.log("Recent documents:", recentDocuments?.length || 0);
 
@@ -84,7 +88,7 @@ export const DocumentsTabs = ({
         />
         
         <DocumentsList 
-          documents={filteredDocuments}
+          documents={filteredDocuments || []}
           isLoading={isLoading}
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}

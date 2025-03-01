@@ -18,7 +18,7 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       setIsLoading(true);
       console.log("Fetching documents for tenant:", id);
       
-      // Vérifier d'abord si le bucket existe
+      // Check if storage bucket exists
       const { data: buckets, error: bucketsError } = await supabase
         .storage
         .listBuckets();
@@ -33,9 +33,24 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       
       if (!bucketExists) {
         console.warn("Tenant documents bucket does not exist!");
+        // Try to create the bucket if it doesn't exist
+        try {
+          console.log("Attempting to create tenant_documents bucket");
+          const { error: createBucketError } = await supabase
+            .storage
+            .createBucket('tenant_documents', { public: true });
+          
+          if (createBucketError) {
+            console.error("Error creating bucket:", createBucketError);
+          } else {
+            console.log("Successfully created tenant_documents bucket");
+          }
+        } catch (bucketCreateError) {
+          console.error("Failed to create bucket:", bucketCreateError);
+        }
       }
       
-      // Récupérer les documents
+      // Retrieve the documents metadata from the database
       const { data, error } = await supabase
         .from('tenant_documents')
         .select('*')
@@ -56,10 +71,42 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         return;
       }
       
-      // S'assurer que chaque document a un document_type
-      const processedData = data.map(doc => {
+      // Process the documents and ensure each has a document_type and file_url
+      const processedDocs = await Promise.all(data.map(async (doc) => {
+        // If document doesn't have a file_url, try to generate a signed URL
+        if (!doc.file_url && doc.name) {
+          try {
+            console.log("Generating signed URL for document:", doc.id, doc.name);
+            
+            // Assume the file path is the document id with the extension from the name
+            const fileExt = doc.name.split('.').pop() || '';
+            const filePath = `${doc.id}.${fileExt}`;
+            
+            const { data: urlData, error: urlError } = await supabase
+              .storage
+              .from('tenant_documents')
+              .createSignedUrl(filePath, 60 * 60); // 1 hour expiry
+            
+            if (urlError) {
+              console.error("Error creating signed URL:", urlError);
+            } else if (urlData) {
+              console.log("Generated signed URL for document:", doc.id);
+              doc.file_url = urlData.signedUrl;
+              
+              // Update the document in the database with the new URL
+              await supabase
+                .from('tenant_documents')
+                .update({ file_url: urlData.signedUrl })
+                .eq('id', doc.id);
+            }
+          } catch (urlGenError) {
+            console.error("Failed to generate URL for document:", doc.id, urlGenError);
+          }
+        }
+        
+        // Process document_type if missing
         if (!doc.document_type || doc.document_type === '') {
-          // Déterminer le type de document s'il n'est pas spécifié
+          // Determine document type if not specified
           const name = (doc.name || '').toLowerCase();
           let document_type: 'lease' | 'receipt' | 'other' = 'other';
           
@@ -69,7 +116,7 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
             document_type = 'receipt';
           }
           
-          // Mettre à jour le type de document dans la base de données
+          // Update document type in the database
           console.log("Updating document type for doc:", doc.id, "to:", document_type);
           supabase
             .from('tenant_documents')
@@ -82,11 +129,12 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
           
           return { ...doc, document_type };
         }
+        
         return doc;
-      });
+      }));
       
-      console.log("Processed documents:", processedData);
-      setDocuments(processedData);
+      console.log("Processed documents:", processedDocs);
+      setDocuments(processedDocs);
     } catch (error: any) {
       console.error('Error fetching documents:', error);
       toast({
@@ -100,10 +148,10 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
     }
   }, [toast]);
 
-  // Exécuter fetchDocuments lorsque tenantId change
+  // Execute fetchDocuments when tenantId changes
   useEffect(() => {
+    console.log("useTenantDocuments - TenantId changed:", tenantId);
     if (tenantId) {
-      console.log("TenantId changed, fetching documents for:", tenantId);
       fetchDocuments(tenantId);
     } else {
       console.log("No tenant ID available");

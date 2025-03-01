@@ -1,5 +1,5 @@
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTenantData } from "./useTenantData";
 import { useTenantDocuments } from "./useTenantDocuments";
 import { useDocumentFilters } from "./useDocumentFilters";
@@ -14,6 +14,7 @@ export const useDocumentState = (
   user: any, 
   toast: any
 ) => {
+  const [isInitialized, setIsInitialized] = useState(false);
   const { tenant, isLoading: tenantLoading, fetchTenantData } = useTenantData(user?.id, toast);
   const { documents, isLoading: documentsLoading, fetchDocuments, setDocuments } = useTenantDocuments(tenant?.id || null, toast);
   const { filteredDocuments, searchQuery, setSearchQuery, selectedDocType, setSelectedDocType, sortBy, setSortBy, sortOrder, setSortOrder } = useDocumentFilters(documents);
@@ -21,22 +22,27 @@ export const useDocumentState = (
   // Combine loading states
   const isLoading = tenantLoading || documentsLoading;
 
+  // Initial fetch of tenant data when component mounts and user is available
   useEffect(() => {
-    console.log("useDocumentState - User:", user?.id);
-    if (user) {
-      fetchTenantData();
+    console.log("useDocumentState - User ID:", user?.id);
+    if (user?.id) {
+      console.log("Fetching tenant data for user:", user.id);
+      fetchTenantData().then(() => {
+        setIsInitialized(true);
+      });
     }
   }, [user, fetchTenantData]);
 
+  // Fetch documents when tenant ID is available
   useEffect(() => {
-    console.log("useDocumentState - Tenant:", tenant?.id);
-    if (tenant?.id) {
+    console.log("useDocumentState - Tenant ID:", tenant?.id, "Initialized:", isInitialized);
+    if (tenant?.id && isInitialized) {
       console.log("Fetching documents for tenant:", tenant.id);
       fetchDocuments(tenant.id);
-    } else {
+    } else if (isInitialized) {
       console.log("No tenant ID available to fetch documents");
     }
-  }, [tenant, fetchDocuments]);
+  }, [tenant, fetchDocuments, isInitialized]);
 
   const handleDocumentUpdate = useCallback(() => {
     console.log("Document update requested");

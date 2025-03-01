@@ -1,133 +1,147 @@
 
-import { Download, FileText, X, Share2 } from "lucide-react";
-import { TenantDocument } from "@/types/tenant";
-import { Button } from "@/components/ui/button";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { useState } from "react";
-import { DocumentShare } from "./DocumentShare";
-import {
-  Dialog,
-  DialogContent,
+import { useEffect, useState } from "react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTitle, 
   DialogHeader,
-  DialogTitle,
-  DialogClose,
+  DialogFooter
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { TenantDocument } from "@/types/tenant";
+import { Download, Share2, X } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
-interface DocumentViewerProps {
+interface DocumentViewerDialogProps {
   document: TenantDocument | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export const DocumentViewerDialog = ({ document, open, onOpenChange }: DocumentViewerProps) => {
+export const DocumentViewerDialog = ({
+  document,
+  open,
+  onOpenChange
+}: DocumentViewerDialogProps) => {
   const { t } = useLocale();
-  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [viewUrl, setViewUrl] = useState<string | null>(null);
+  const [isImage, setIsImage] = useState(false);
+  const [isPdf, setIsPdf] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const isPdf = document?.name.toLowerCase().endsWith('.pdf');
-  const isImage = document?.name.toLowerCase().match(/\.(jpg|jpeg|png|gif|webp)$/);
-  const fileUrl = document?.file_url;
-
-  const renderDocumentPreview = () => {
-    if (!fileUrl) {
-      return (
-        <div className="flex items-center justify-center h-96 bg-slate-100 dark:bg-slate-900 rounded">
-          <FileText className="h-16 w-16 text-muted-foreground opacity-30" />
-        </div>
-      );
+  useEffect(() => {
+    console.log("DocumentViewerDialog - Document:", document);
+    
+    if (document?.file_url) {
+      setViewUrl(document.file_url);
+      
+      const name = (document.name || '').toLowerCase();
+      setIsImage(!!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
+      setIsPdf(name.endsWith('.pdf'));
+      setError(null);
+    } else if (document) {
+      console.error("Document missing file_url:", document);
+      setError("URL du document non disponible");
+      setViewUrl(null);
+    } else {
+      setViewUrl(null);
+      setError(null);
     }
+  }, [document]);
 
-    if (isPdf) {
-      return (
-        <iframe
-          src={fileUrl}
-          className="w-full h-[70vh] rounded border"
-          title={document?.name || "Document preview"}
-        />
-      );
-    }
-
-    if (isImage) {
-      return (
-        <div className="flex items-center justify-center bg-slate-100 dark:bg-slate-900 rounded p-4 h-[70vh]">
-          <img
-            src={fileUrl}
-            alt={document?.name || "Document preview"}
-            className="max-w-full max-h-full object-contain"
-          />
-        </div>
-      );
-    }
-
-    return (
-      <div className="flex flex-col items-center justify-center h-96 bg-slate-100 dark:bg-slate-900 rounded p-6 text-center">
-        <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-        <p className="text-muted-foreground mb-2">{t("previewNotAvailable")}</p>
-        <Button 
-          variant="outline" 
-          onClick={() => window.open(fileUrl, '_blank')}
-          className="mt-4"
-        >
-          <Download className="h-4 w-4 mr-2" />
-          {t("downloadDocument")}
-        </Button>
-      </div>
-    );
-  };
+  if (!document) return null;
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-4xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              {document?.name}
-            </DialogTitle>
-          </DialogHeader>
-
-          <div className="mt-4">
-            {renderDocumentPreview()}
-          </div>
-
-          <div className="flex justify-between items-center mt-4">
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                if (document?.file_url) {
-                  window.open(document.file_url, '_blank');
-                }
-              }}
-              disabled={!document?.file_url}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              {t("downloadDocument")}
-            </Button>
-            
-            <div className="flex gap-2">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-4xl h-[80vh] max-h-[800px] flex flex-col p-0 gap-0">
+        <DialogHeader className="p-4 border-b">
+          <div className="flex items-center justify-between">
+            <DialogTitle>{document.name}</DialogTitle>
+            <div className="flex items-center gap-2">
               <Button
-                variant="outline"
-                onClick={() => setIsShareOpen(true)}
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  if (document.file_url) {
+                    window.open(document.file_url, '_blank');
+                  }
+                }}
+                title={t("downloadDocument") || "Télécharger"}
               >
-                <Share2 className="h-4 w-4 mr-2" />
-                {t("shareDocument")}
+                <Download className="h-4 w-4" />
               </Button>
               
-              <DialogClose asChild>
-                <Button variant="ghost">
-                  <X className="h-4 w-4 mr-2" />
-                  {t("closeViewer")}
-                </Button>
-              </DialogClose>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onOpenChange(false)}
+                className="text-muted-foreground"
+                title={t("closeViewer") || "Fermer"}
+              >
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-      
-      <DocumentShare 
-        document={document} 
-        open={isShareOpen}
-        onOpenChange={setIsShareOpen}
-      />
-    </>
+        </DialogHeader>
+        
+        <div className="flex-1 overflow-auto bg-slate-100 p-4 flex justify-center">
+          {error ? (
+            <div className="flex items-center justify-center h-full w-full">
+              <p className="text-red-500">{error}</p>
+            </div>
+          ) : viewUrl ? (
+            isPdf ? (
+              <iframe 
+                src={`${viewUrl}#toolbar=0&navpanes=0&scrollbar=0`} 
+                className="w-full h-full border-none"
+                title={document.name}
+              />
+            ) : isImage ? (
+              <img 
+                src={viewUrl} 
+                alt={document.name} 
+                className="max-h-full object-contain" 
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full w-full flex-col">
+                <p className="text-muted-foreground mb-2">
+                  {t("previewNotAvailable") || "Aperçu non disponible pour ce type de fichier"}
+                </p>
+                <Button 
+                  variant="secondary" 
+                  onClick={() => window.open(viewUrl, '_blank')}
+                >
+                  {t("openDocument") || "Ouvrir le document"}
+                </Button>
+              </div>
+            )
+          ) : (
+            <div className="flex items-center justify-center h-full w-full">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700"></div>
+            </div>
+          )}
+        </div>
+        
+        <DialogFooter className="p-3 border-t bg-slate-50">
+          <div className="flex w-full justify-between">
+            <p className="text-sm text-muted-foreground">{document.document_type || 'other'}</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-1"
+              onClick={() => {
+                if (document.file_url) {
+                  navigator.clipboard.writeText(document.file_url);
+                  alert(t("success") || "Lien copié");
+                }
+              }}
+            >
+              <Share2 className="h-4 w-4" />
+              {t("shareDocument") || "Partager"}
+            </Button>
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
