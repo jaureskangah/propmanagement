@@ -25,7 +25,7 @@ export const DashboardHeader = ({
   const { t } = useLocale();
   
   return (
-    <div className="flex items-center justify-between mb-8 bg-background sticky top-0 z-10 pt-4 pb-6 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
+    <div className="flex items-center justify-between mb-10 bg-background sticky top-0 z-10 pt-6 pb-8 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
       <motion.h2 
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -34,12 +34,12 @@ export const DashboardHeader = ({
       >
         {t('welcomeTenant', { name: tenantName.split(' ')[0] })}
       </motion.h2>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-4">
         <Button 
           variant="outline" 
           size="sm" 
           onClick={refreshDashboard}
-          className="flex items-center gap-2 hover:bg-blue-50 hover:text-blue-700 transition-all px-4"
+          className="flex items-center gap-2 hover:bg-blue-50 hover:text-blue-700 transition-all px-4 py-2"
         >
           <RefreshCw className="h-4 w-4" />
           {t('refresh')}

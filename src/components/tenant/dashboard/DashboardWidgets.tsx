@@ -104,11 +104,21 @@ export const DashboardWidgets = ({
   };
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {widgetOrder.map(widgetId => (
-        <div key={widgetId} className={widgetId === 'chart' ? 'col-span-full' : ''}>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-1">
+      {widgetOrder.map((widgetId, index) => (
+        <motion.div 
+          key={widgetId} 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.5, 
+            delay: index * 0.1,
+            ease: "easeOut"
+          }}
+          className={widgetId === 'chart' ? 'col-span-full' : ''}
+        >
           {renderWidget(widgetId)}
-        </div>
+        </motion.div>
       ))}
     </div>
   );
