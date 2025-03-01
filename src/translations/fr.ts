@@ -43,4 +43,4 @@ export const frTranslations = {
   ...frDashboard,
   ...frSettings,
   ...frModal
-} as unknown as Translations;
+};

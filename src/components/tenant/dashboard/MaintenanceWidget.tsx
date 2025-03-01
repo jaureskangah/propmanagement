@@ -58,7 +58,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             
             {requests.length > 3 && (
               <div className="text-sm text-center text-muted-foreground">
-                {t('andMoreRequests', { count: requests.length - 3 + "" })}
+                {t('andMoreRequests', { count: (requests.length - 3).toString() })}
               </div>
             )}
           </div>

@@ -11,14 +11,14 @@ interface LocaleContextType {
   setLanguage: (lang: Language) => void;
   unitSystem: UnitSystem;
   setUnitSystem: (system: UnitSystem) => void;
-  t: (key: string, nested?: boolean) => any;
+  t: (key: string, params?: Record<string, string>) => string;
 }
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
 const translations: Record<Language, Translations> = {
-  en: enTranslations,
-  fr: frTranslations
+  en: enTranslations as unknown as Translations,
+  fr: frTranslations as unknown as Translations
 };
 
 const LANGUAGE_STORAGE_KEY = 'app-language';
@@ -85,7 +85,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     document.documentElement.lang = language;
   }, [language]);
 
-  const t = (key: string, nested: boolean = false): any => {
+  const t = (key: string, params?: Record<string, string>): string => {
     const currentTranslations = translations[language];
     const keys = key.split('.');
     let translation = currentTranslations;
@@ -99,12 +99,19 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       }
     }
     
-    if (nested || typeof translation !== 'object') {
-      return translation;
+    if (typeof translation !== 'string') {
+      console.warn(`Unexpected object for translation key: ${key}`);
+      return key;
     }
     
-    console.warn(`Unexpected object for non-nested translation key: ${key}`);
-    return key;
+    // Replace parameters in the translation string if provided
+    if (params) {
+      return Object.entries(params).reduce((str, [key, value]) => {
+        return str.replace(new RegExp(`{${key}}`, 'g'), value);
+      }, translation);
+    }
+    
+    return translation;
   };
 
   // La propriété locale dérivée de language pour usage avec les bibliothèques comme date-fns

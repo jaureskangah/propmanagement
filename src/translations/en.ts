@@ -43,4 +43,4 @@ export const enTranslations = {
   ...enDashboard,
   ...enSettings,
   ...enModal
-} as unknown as Translations;
+};
