@@ -8,7 +8,7 @@ export const frDashboard = {
   unreadMessages: "Messages non lus",
   pendingMaintenanceRequests: "Demandes de maintenance en attente",
   viewMessages: "Voir les messages",
-  viewMaintenanceRequests: "Voir les demandes",
+  viewMaintenanceRequests: "Voir les demandes de maintenance",
   currentMonthRent: "Loyer du mois en cours",
   status: "Statut",
   paid: "Payé",
@@ -23,8 +23,7 @@ export const frDashboard = {
   viewAll: "Voir tout",
   sendMessage: "Envoyer un message",
   andMoreMessages: "Et {count} de plus...",
-  maintenanceRequests: "Demandes de maintenance",
-  maintenance: "Maintenance",
+  maintenanceRequests: "Maintenance",
   noMaintenanceRequests: "Aucune demande de maintenance",
   andMoreRequests: "Et {count} de plus...",
   newRequest: "Nouvelle demande",
@@ -48,8 +47,8 @@ export const frDashboard = {
   refresh: "Actualiser",
   payments: "Paiements",
   documents: "Documents",
+  maintenance: "Maintenance",
   chart: "Graphique",
   property: "Propriété",
-  unit: "Appartement",
   noPaymentHistory: "Aucun historique de paiement disponible"
 };

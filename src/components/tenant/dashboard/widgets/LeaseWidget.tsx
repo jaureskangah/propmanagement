@@ -58,11 +58,11 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.1 }}
       whileHover={{ y: -5 }}
-      className={`rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br ${getStatusColor()} border p-6`}
+      className={`rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br ${getStatusColor()} border p-5`}
     >
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <Calendar className={`h-5 w-5 mr-2.5 ${getStatusTextColor()}`} />
+          <Calendar className={`h-5 w-5 mr-2 ${getStatusTextColor()}`} />
           <h3 className={`font-semibold ${getStatusTextColor()}`}>
             {status === 'active' && t('leaseStatusActive')}
             {status === 'expiring' && t('leaseStatusExpiringDays', { days: daysLeft.toString() })}
@@ -95,22 +95,22 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
           />
         </div>
         
-        <div className="mt-3 flex items-center">
+        <div className="mt-2 flex items-center">
           {status === 'active' && (
             <div className="flex items-center text-emerald-600">
-              <CheckCircle className="h-4 w-4 mr-2.5" />
+              <CheckCircle className="h-4 w-4 mr-2" />
               <span className="text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
             </div>
           )}
           {status === 'expiring' && (
             <div className="flex items-center text-amber-600">
-              <AlertTriangle className="h-4 w-4 mr-2.5" />
+              <AlertTriangle className="h-4 w-4 mr-2" />
               <span className="text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
             </div>
           )}
           {status === 'expired' && (
             <div className="flex items-center text-rose-600">
-              <AlertTriangle className="h-4 w-4 mr-2.5" />
+              <AlertTriangle className="h-4 w-4 mr-2" />
               <span className="text-sm font-medium">{t('daysAgo', { days: daysLeft.toString() })}</span>
             </div>
           )}
