@@ -7,9 +7,9 @@ export const frDocuments: TenantDocumentsTranslations = {
   uploading: "Téléchargement en cours...",
   documentDeleted: "Document supprimé avec succès",
   confirmDeleteDocument: "Supprimer le Document",
-  documentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce document ? Cette action ne peut pas être annulée.",
+  documentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce document ?",
   noDocuments: "Aucun document disponible",
   generateDocument: "Générer un Document",
   downloadDocument: "Télécharger",
-  openDocument: "Ouvrir",
+  openDocument: "Ouvrir le Document",
 };

@@ -1,41 +1,46 @@
 
-import type { TenantTranslations } from '../../types/tenant';
-import { enForm } from './en/form';
-import { enList } from './en/list';
-import { enLease } from './en/lease';
-import { enDocuments } from './en/documents';
+// English translations
+import { enTenantForm } from './en/form';
+import { enTenantList } from './en/list';
+import { enTenantProfile } from './en/profile';
 import { enCommunications } from './en/communications';
-import { enPayments } from './en/payments';
-import { enProfile } from './en/profile';
 import { enMessages } from './en/messages';
+import { enDocuments } from './en/documents';
+import { enLease } from './en/lease';
+import { enPayments } from './en/payments';
+import { enDashboard } from './en/dashboard';
 
-import { frForm } from './fr/form';
-import { frList } from './fr/list';
-import { frLease } from './fr/lease';
-import { frDocuments } from './fr/documents';
+// French translations
+import { frTenantForm } from './fr/form';
+import { frTenantList } from './fr/list';
+import { frTenantProfile } from './fr/profile';
 import { frCommunications } from './fr/communications';
-import { frPayments } from './fr/payments';
-import { frProfile } from './fr/profile';
 import { frMessages } from './fr/messages';
+import { frDocuments } from './fr/documents';
+import { frLease } from './fr/lease';
+import { frPayments } from './fr/payments';
+import { frDashboard } from './fr/dashboard';
 
-export const enTenant: TenantTranslations = {
-  ...enForm,
-  ...enList,
-  ...enLease,
-  ...enDocuments,
-  ...enCommunications,
-  ...enPayments,
-  ...enProfile,
-  ...enMessages,
+export const enTenant = {
+  form: enTenantForm,
+  list: enTenantList,
+  profile: enTenantProfile,
+  communications: enCommunications,
+  messages: enMessages,
+  documents: enDocuments,
+  lease: enLease,
+  payments: enPayments,
+  dashboard: enDashboard
 };
 
-export const frTenant: TenantTranslations = {
-  ...frForm,
-  ...frList,
-  ...frLease,
-  ...frDocuments,
-  ...frCommunications,
-  ...frPayments,
-  ...frProfile,
-  ...frMessages,
+export const frTenant = {
+  form: frTenantForm,
+  list: frTenantList,
+  profile: frTenantProfile,
+  communications: frCommunications,
+  messages: frMessages,
+  documents: frDocuments,
+  lease: frLease,
+  payments: frPayments,
+  dashboard: frDashboard
 };
