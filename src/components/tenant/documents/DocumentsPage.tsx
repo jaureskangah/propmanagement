@@ -2,9 +2,8 @@
 import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from "@/components/AuthProvider";
-import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { TenantDocument, Tenant } from "@/types/tenant";
+import { TenantDocument } from "@/types/tenant";
 import { DocumentsHeader } from "./DocumentsHeader";
 import { DocumentsTabs } from "./DocumentsTabs";
 import { DocumentViewerDialog } from "./DocumentViewerDialog";
