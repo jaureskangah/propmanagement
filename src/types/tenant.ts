@@ -1,4 +1,3 @@
-
 export interface Tenant {
   id: string;
   name: string;
@@ -29,6 +28,7 @@ export interface TenantDocument {
   created_at: string;
   uploaded_at?: string;
   document_type?: 'lease' | 'receipt' | 'other';
+  tenant_id?: string;
 }
 
 export interface TenantPayment {

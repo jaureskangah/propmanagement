@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
@@ -6,14 +7,14 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadDocument = async (file: File) => {
+  const uploadDocument = async (file: File, documentType: 'lease' | 'receipt' | 'other' = 'other') => {
     if (!file) {
       console.log("No file selected");
       return;
     }
 
     setIsUploading(true);
-    console.log("Starting upload for file:", file.name);
+    console.log("Starting upload for file:", file.name, "type:", documentType);
 
     try {
       // 1. Upload file to storage
@@ -53,7 +54,8 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         .insert({
           tenant_id: tenantId,
           name: file.name,
-          file_url: publicUrlData.publicUrl
+          file_url: publicUrlData.publicUrl,
+          document_type: documentType
         });
 
       if (dbError) {

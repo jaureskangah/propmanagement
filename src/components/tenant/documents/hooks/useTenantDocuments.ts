@@ -12,6 +12,8 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
     
     try {
       setIsLoading(true);
+      console.log("Fetching documents for tenant:", id);
+      
       const { data, error } = await supabase
         .from('tenant_documents')
         .select('*')
@@ -19,6 +21,8 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+      
+      console.log("Documents received:", data?.length || 0);
       
       // Handle documents that don't have document_type field yet
       const processedData = data?.map(doc => {
