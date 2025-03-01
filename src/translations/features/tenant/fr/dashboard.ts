@@ -8,7 +8,7 @@ export const frDashboard = {
   unreadMessages: "Messages non lus",
   pendingMaintenanceRequests: "Demandes de maintenance en attente",
   viewMessages: "Voir les messages",
-  viewMaintenanceRequests: "Voir les demandes de maintenance",
+  viewMaintenanceRequests: "Voir les demandes",
   currentMonthRent: "Loyer du mois en cours",
   status: "Statut",
   paid: "Payé",

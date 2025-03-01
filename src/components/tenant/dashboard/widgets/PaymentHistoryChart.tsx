@@ -54,11 +54,11 @@ export const PaymentHistoryChart = ({ payments }: PaymentHistoryChartProps) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.7 }}
       whileHover={{ y: -5 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-sky-50 to-cyan-50 border border-sky-100 p-5 col-span-full"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-sky-50 to-cyan-50 border border-sky-100 p-6 col-span-full"
     >
-      <div className="flex items-center mb-4">
-        <BarChart3 className="h-5 w-5 mr-2 text-sky-600" />
-        <h3 className="font-semibold text-sky-700">{t('paymentHistory')}</h3>
+      <div className="flex items-center mb-5">
+        <BarChart3 className="h-6 w-6 mr-3 text-sky-600" />
+        <h3 className="font-semibold text-sky-700 text-lg">{t('paymentHistory')}</h3>
       </div>
       
       {chartData.length > 0 ? (
@@ -117,7 +117,7 @@ export const PaymentHistoryChart = ({ payments }: PaymentHistoryChartProps) => {
         </div>
       ) : (
         <div className="text-center py-16 bg-white/60 rounded-lg">
-          <BarChart3 className="h-10 w-10 text-sky-300 mx-auto mb-2 opacity-50" />
+          <BarChart3 className="h-12 w-12 text-sky-300 mx-auto mb-4 opacity-50" />
           <p className="text-sm text-gray-500">
             {t('noPaymentHistory')}
           </p>
