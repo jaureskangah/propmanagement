@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useLeaseStatus } from "./dashboard/useLeaseStatus";
 import { useCommunicationsData } from "./dashboard/useCommunicationsData";
 import { useMaintenanceData } from "./dashboard/useMaintenanceData";
@@ -14,9 +14,9 @@ export const useTenantDashboard = () => {
   const { communications, isLoading: isCommLoading, fetchCommunications } = useCommunicationsData();
   const { maintenanceRequests, isLoading: isMaintenanceLoading, fetchMaintenanceRequests } = useMaintenanceData();
   const { payments, documents, isLoading: isPaymentsDocsLoading, fetchPaymentsAndDocuments } = usePaymentsAndDocuments();
-  const leaseStatus = useLeaseStatus(tenant?.lease_end);
+  const { daysLeft, status } = useLeaseStatus(tenant?.lease_end);
   const { toast } = useToast();
-  const { preferences, updatePreferences } = useDashboardPreferences();
+  const { preferences } = useDashboardPreferences();
 
   const isLoading = isTenantLoading || isCommLoading || isMaintenanceLoading || isPaymentsDocsLoading || isRefreshing;
 
@@ -52,7 +52,7 @@ export const useTenantDashboard = () => {
     maintenanceRequests,
     payments,
     documents,
-    leaseStatus,
+    leaseStatus: { daysLeft, status },
     isLoading,
     refreshDashboard
   };

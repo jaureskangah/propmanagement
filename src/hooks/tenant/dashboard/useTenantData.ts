@@ -52,10 +52,10 @@ export const useTenantData = () => {
       if (error) throw error;
 
       if (tenant) {
-        // Fix the properties type to match TenantData interface
+        // Handle the properties object properly
         setTenant({
           ...tenant,
-          properties: tenant.properties as { name: string }
+          properties: tenant.properties as unknown as { name: string }
         });
       }
       
@@ -74,7 +74,6 @@ export const useTenantData = () => {
   return {
     tenant,
     isLoading,
-    setIsLoading,
     fetchTenantData
   };
 };

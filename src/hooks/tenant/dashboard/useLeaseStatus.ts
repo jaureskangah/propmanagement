@@ -6,11 +6,11 @@ export interface LeaseStatus {
   status: 'active' | 'expiring' | 'expired';
 }
 
-export const useLeaseStatus = () => {
-  const calculateLeaseStatus = (leaseEnd: string): LeaseStatus => {
+export const useLeaseStatus = (leaseEnd?: string) => {
+  const calculateLeaseStatus = (endDate: string): LeaseStatus => {
     const today = new Date();
-    const endDate = new Date(leaseEnd);
-    const daysLeft = differenceInDays(endDate, today);
+    const end = new Date(endDate);
+    const daysLeft = differenceInDays(end, today);
     
     let status: 'active' | 'expiring' | 'expired';
     if (daysLeft < 0) {
@@ -24,7 +24,15 @@ export const useLeaseStatus = () => {
     return { daysLeft: Math.abs(daysLeft), status };
   };
 
+  // Calculate status if leaseEnd is provided
+  let status: LeaseStatus = { daysLeft: 0, status: 'active' };
+  if (leaseEnd) {
+    status = calculateLeaseStatus(leaseEnd);
+  }
+
   return {
-    calculateLeaseStatus
+    calculateLeaseStatus,
+    daysLeft: status.daysLeft,
+    status: status.status
   };
 };
