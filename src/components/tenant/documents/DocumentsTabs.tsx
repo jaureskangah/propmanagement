@@ -4,6 +4,7 @@ import { DocumentsFilters } from "./DocumentsFilters";
 import { DocumentsList } from "./DocumentsList";
 import { TenantDocument, Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useEffect } from "react";
 
 interface DocumentsTabsProps {
   documents: TenantDocument[];
@@ -41,6 +42,12 @@ export const DocumentsTabs = ({
   onDocumentUpdate
 }: DocumentsTabsProps) => {
   const { t } = useLocale();
+  
+  // Log pour le débogage
+  useEffect(() => {
+    console.log("DocumentsTabs - Documents:", documents.length, documents);
+    console.log("DocumentsTabs - Filtered Documents:", filteredDocuments.length, filteredDocuments);
+  }, [documents, filteredDocuments]);
 
   return (
     <Tabs defaultValue="all" className="mt-6">

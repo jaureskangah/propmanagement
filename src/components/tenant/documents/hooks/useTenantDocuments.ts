@@ -22,7 +22,7 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
 
       if (error) throw error;
       
-      console.log("Documents received:", data?.length || 0);
+      console.log("Documents received:", data?.length || 0, data);
       
       // Handle documents that don't have document_type field yet
       const processedData = data?.map(doc => {
@@ -43,6 +43,7 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       }) || [];
       
       setDocuments(processedData);
+      console.log("Processed documents:", processedData.length, processedData);
     } catch (error) {
       console.error('Error fetching documents:', error);
       toast({

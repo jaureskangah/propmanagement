@@ -17,6 +17,21 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     console.log("Starting upload for file:", file.name, "type:", documentType);
 
     try {
+      // Vérifier si le bucket existe
+      const { data: bucketData, error: bucketError } = await supabase.storage
+        .getBucket('tenant_documents');
+      
+      if (bucketError && bucketError.message.includes('does not exist')) {
+        console.error("Bucket 'tenant_documents' does not exist:", bucketError);
+        toast({
+          title: "Erreur de configuration",
+          description: "Le bucket de stockage n'existe pas. Veuillez contacter l'administrateur.",
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        return;
+      }
+
       // 1. Upload file to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
@@ -49,21 +64,22 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       console.log("Generated public URL:", publicUrlData.publicUrl);
 
       // 3. Save document reference with public URL in database
-      const { error: dbError } = await supabase
+      const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
           tenant_id: tenantId,
           name: file.name,
           file_url: publicUrlData.publicUrl,
           document_type: documentType
-        });
+        })
+        .select();
 
       if (dbError) {
         console.error("Database insert error:", dbError);
         throw dbError;
       }
 
-      console.log("Document reference saved in database with URL:", publicUrlData.publicUrl);
+      console.log("Document reference saved in database:", insertData);
 
       toast({
         title: "Document chargé",

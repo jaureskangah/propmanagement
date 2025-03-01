@@ -10,6 +10,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
+    console.log("useDocumentFilters - Original documents:", documents.length, documents);
     if (documents.length > 0) {
       applyFilters();
     } else {
@@ -19,12 +20,14 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
 
   const applyFilters = () => {
     let filtered = [...documents];
+    console.log("Applying filters to documents:", filtered.length);
     
     // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(doc => 
         doc.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
+      console.log("After search filter:", filtered.length);
     }
     
     // Apply document type filter using document_type field
@@ -32,6 +35,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
       filtered = filtered.filter(doc => 
         doc.document_type === selectedDocType
       );
+      console.log("After type filter:", filtered.length);
     }
     
     // Apply sorting
@@ -47,6 +51,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
       }
     });
     
+    console.log("Final filtered documents:", filtered.length);
     setFilteredDocuments(filtered);
   };
 
