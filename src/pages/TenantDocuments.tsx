@@ -1,46 +1,60 @@
 
-import AppSidebar from "@/components/AppSidebar";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAuth } from "@/components/AuthProvider";
 import { useState, useEffect } from "react";
+import AppSidebar from "@/components/AppSidebar";
+import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { TenantDocument } from "@/types/tenant";
-import { FileIcon, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
+import { TenantDocument, Tenant } from "@/types/tenant";
+import { DocumentsHeader } from "@/components/tenant/documents/DocumentsHeader";
+import { DocumentsFilters } from "@/components/tenant/documents/DocumentsFilters";
+import { DocumentsList } from "@/components/tenant/documents/DocumentsList";
+import { DocumentViewerDialog } from "@/components/tenant/documents/DocumentViewerDialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { DocumentGenerator } from "@/components/tenant/documents/DocumentGenerator";
 
 const TenantDocuments = () => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLocale();
   const [documents, setDocuments] = useState<TenantDocument[]>([]);
-  const [tenantId, setTenantId] = useState<string | null>(null);
+  const [filteredDocuments, setFilteredDocuments] = useState<TenantDocument[]>([]);
+  const [tenant, setTenant] = useState<Tenant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDocType, setSelectedDocType] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<"date" | "name">("date");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [selectedDocument, setSelectedDocument] = useState<TenantDocument | null>(null);
+  const [viewerOpen, setViewerOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
-      fetchTenantId();
+      fetchTenantData();
     }
   }, [user]);
 
   useEffect(() => {
-    if (tenantId) {
-      fetchDocuments();
+    if (documents.length > 0) {
+      applyFilters();
     }
-  }, [tenantId]);
+  }, [documents, searchQuery, selectedDocType, sortBy, sortOrder]);
 
-  const fetchTenantId = async () => {
+  const fetchTenantData = async () => {
     try {
-      const { data, error } = await supabase
+      setIsLoading(true);
+      const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
-        .select('id')
+        .select('*')
         .eq('tenant_profile_id', user?.id)
-        .maybeSingle();
+        .single();
 
-      if (error) throw error;
+      if (tenantError) throw tenantError;
       
-      if (data) {
-        setTenantId(data.id);
+      if (tenantData) {
+        setTenant(tenantData);
+        await fetchDocuments(tenantData.id);
       } else {
         toast({
           title: "Non lié",
@@ -50,19 +64,18 @@ const TenantDocuments = () => {
         setIsLoading(false);
       }
     } catch (error) {
-      console.error('Error fetching tenant ID:', error);
+      console.error('Error fetching tenant data:', error);
       toast({
         title: "Erreur",
-        description: "Impossible de charger votre identifiant de locataire",
+        description: "Impossible de charger vos données de locataire",
         variant: "destructive",
       });
       setIsLoading(false);
     }
   };
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = async (tenantId: string) => {
     try {
-      setIsLoading(true);
       const { data, error } = await supabase
         .from('tenant_documents')
         .select('*')
@@ -72,6 +85,7 @@ const TenantDocuments = () => {
       if (error) throw error;
       
       setDocuments(data || []);
+      setFilteredDocuments(data || []);
     } catch (error) {
       console.error('Error fetching documents:', error);
       toast({
@@ -84,13 +98,79 @@ const TenantDocuments = () => {
     }
   };
 
-  const handleDownload = (document: TenantDocument) => {
-    if (document.file_url) {
-      window.open(document.file_url, '_blank');
-    } else {
+  const applyFilters = () => {
+    let filtered = [...documents];
+    
+    // Apply search filter
+    if (searchQuery) {
+      filtered = filtered.filter(doc => 
+        doc.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    // Apply document type filter
+    if (selectedDocType) {
+      filtered = filtered.filter(doc => {
+        const lowerName = doc.name.toLowerCase();
+        if (selectedDocType === "lease") {
+          return lowerName.includes("lease") || lowerName.includes("bail");
+        } else if (selectedDocType === "receipt") {
+          return lowerName.includes("receipt") || lowerName.includes("reçu") || lowerName.includes("payment");
+        } else {
+          return !lowerName.includes("lease") && !lowerName.includes("bail") && 
+                 !lowerName.includes("receipt") && !lowerName.includes("reçu") && 
+                 !lowerName.includes("payment");
+        }
+      });
+    }
+    
+    // Apply sorting
+    filtered.sort((a, b) => {
+      if (sortBy === "date") {
+        return sortOrder === "asc" 
+          ? new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      } else {
+        return sortOrder === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      }
+    });
+    
+    setFilteredDocuments(filtered);
+  };
+
+  const handleDocumentUpdate = () => {
+    if (tenant) {
+      fetchDocuments(tenant.id);
+    }
+  };
+
+  const handleViewDocument = (document: TenantDocument) => {
+    setSelectedDocument(document);
+    setViewerOpen(true);
+  };
+
+  const handleDeleteDocument = async (documentId: string) => {
+    try {
+      const { error } = await supabase
+        .from('tenant_documents')
+        .delete()
+        .eq('id', documentId);
+
+      if (error) throw error;
+      
+      toast({
+        title: "Succès",
+        description: t("docDeleteSuccess"),
+      });
+      
+      handleDocumentUpdate();
+    } catch (error) {
+      console.error('Error deleting document:', error);
       toast({
         title: "Erreur",
-        description: "URL du document non disponible",
+        description: "Impossible de supprimer le document",
         variant: "destructive",
       });
     }
@@ -99,52 +179,69 @@ const TenantDocuments = () => {
   return (
     <div className="flex">
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Mes documents</CardTitle>
-            <CardDescription>Documents importants liés à votre location</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {isLoading ? (
-              <div className="flex justify-center items-center h-32">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-              </div>
-            ) : !tenantId ? (
-              <p className="text-center text-muted-foreground py-8">
-                Votre compte n'est pas encore lié à un profil locataire.
-              </p>
-            ) : documents.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">
-                Aucun document n'a été trouvé.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {documents.map((document) => (
-                  <div key={document.id} className="flex justify-between items-center p-4 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <FileIcon className="h-6 w-6 text-blue-500" />
-                      <div>
-                        <p className="font-medium">{document.name}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {format(new Date(document.created_at), 'dd/MM/yyyy')}
-                        </p>
-                      </div>
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      onClick={() => handleDownload(document)}
-                      title="Télécharger"
-                    >
-                      <Download className="h-5 w-5" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+      <div className="flex-1 container mx-auto p-4 md:p-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <DocumentsHeader 
+            tenant={tenant} 
+            onDocumentUpdate={handleDocumentUpdate}
+          />
+          
+          <Tabs defaultValue="all" className="mt-6">
+            <TabsList className="mb-4">
+              <TabsTrigger value="all">{t("allDocuments")}</TabsTrigger>
+              <TabsTrigger value="recent">{t("recentlyUploaded")}</TabsTrigger>
+              <TabsTrigger value="generate">{t("generateDocument")}</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="all" className="space-y-4">
+              <DocumentsFilters 
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedDocType={selectedDocType}
+                setSelectedDocType={setSelectedDocType}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+              />
+              
+              <DocumentsList 
+                documents={filteredDocuments}
+                isLoading={isLoading}
+                onViewDocument={handleViewDocument}
+                onDeleteDocument={handleDeleteDocument}
+              />
+            </TabsContent>
+            
+            <TabsContent value="recent">
+              <DocumentsList 
+                documents={documents.slice(0, 5)}
+                isLoading={isLoading}
+                onViewDocument={handleViewDocument}
+                onDeleteDocument={handleDeleteDocument}
+              />
+            </TabsContent>
+            
+            <TabsContent value="generate">
+              {tenant && (
+                <DocumentGenerator 
+                  tenant={tenant} 
+                  onDocumentGenerated={handleDocumentUpdate} 
+                />
+              )}
+            </TabsContent>
+          </Tabs>
+        </motion.div>
+        
+        <DocumentViewerDialog 
+          document={selectedDocument}
+          open={viewerOpen}
+          onOpenChange={setViewerOpen}
+        />
       </div>
     </div>
   );
