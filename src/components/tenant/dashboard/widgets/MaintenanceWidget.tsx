@@ -65,7 +65,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             ))}
             
             {requests.length > 3 && (
-              <div className="text-sm text-center text-gray-500 mt-2">
+              <div className="text-xs text-center text-gray-500 mt-2">
                 {t('andMoreRequests', { count: (requests.length - 3).toString() })}
               </div>
             )}
@@ -74,21 +74,21 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
         
         <div className="flex gap-2 mt-4">
           <Button 
-            className="flex-1 text-xs md:text-sm border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            className="flex-1 text-xs bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800 border-amber-200"
             variant="outline"
             onClick={() => navigate('/tenant/maintenance')}
             size="sm"
           >
             {t('viewAll')}
-            <ArrowUpRight className="h-3.5 w-3.5" />
+            <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
           </Button>
           <Button 
-            className="flex-1 text-xs md:text-sm bg-amber-600 hover:bg-amber-700 text-white"
+            className="flex-1 text-xs bg-amber-600 hover:bg-amber-700 text-white"
             onClick={() => navigate('/tenant/maintenance/new')}
             size="sm"
           >
             {t('newRequest')}
-            <PlusCircle className="h-3.5 w-3.5" />
+            <PlusCircle className="h-3.5 w-3.5 ml-1" />
           </Button>
         </div>
       </div>
