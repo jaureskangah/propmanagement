@@ -21,12 +21,12 @@ export const DocumentViewerDialog = ({
   const handleDownload = () => {
     if (document?.file_url) {
       // Create a temporary anchor element for download
-      const link = document.createElement('a');
+      const link = window.document.createElement('a');
       link.href = document.file_url;
       link.setAttribute('download', document.name);
-      document.body.appendChild(link);
+      window.document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      window.document.body.removeChild(link);
     }
   };
 
