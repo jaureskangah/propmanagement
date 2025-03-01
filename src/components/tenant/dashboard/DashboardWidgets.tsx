@@ -104,7 +104,7 @@ export const DashboardWidgets = ({
   };
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-1 pb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-1 pb-12">
       {widgetOrder.map((widgetId, index) => (
         <motion.div 
           key={widgetId} 
@@ -115,7 +115,7 @@ export const DashboardWidgets = ({
             delay: index * 0.1 + 0.2,
             ease: "easeOut"
           }}
-          className={`${widgetId === 'chart' ? 'col-span-full' : ''} hover:shadow-md transition-shadow rounded-lg`}
+          className={`${widgetId === 'chart' ? 'col-span-full' : ''} hover:shadow-md transition-shadow rounded-lg p-1`}
         >
           {renderWidget(widgetId)}
         </motion.div>
