@@ -12,8 +12,9 @@ import { PaymentHistoryChart } from "./dashboard/PaymentHistoryChart";
 import { DashboardCustomization } from "./dashboard/DashboardCustomization";
 import { useDashboardPreferences } from "@/components/dashboard/hooks/useDashboardPreferences";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Home, RefreshCw } from "lucide-react";
+import { Home, RefreshCw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export const TenantDashboard = () => {
   const { t } = useLocale();
@@ -74,50 +75,99 @@ export const TenantDashboard = () => {
     switch (widgetId) {
       case 'lease':
         return tenant && (
-          <LeaseStatusCard 
-            leaseStart={tenant.lease_start}
-            leaseEnd={tenant.lease_end}
-            daysLeft={leaseStatus.daysLeft}
-            status={leaseStatus.status}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('leaseStatus')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LeaseStatusCard 
+                leaseStart={tenant.lease_start}
+                leaseEnd={tenant.lease_end}
+                daysLeft={leaseStatus.daysLeft}
+                status={leaseStatus.status}
+              />
+            </CardContent>
+          </Card>
         );
       case 'notifications':
         return (
-          <NotificationSummary
-            communications={communications}
-            maintenanceRequests={maintenanceRequests}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('notifications')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <NotificationSummary
+                communications={communications}
+                maintenanceRequests={maintenanceRequests}
+              />
+            </CardContent>
+          </Card>
         );
       case 'payments':
         return tenant && (
-          <PaymentWidget
-            rentAmount={tenant.rent_amount}
-            payments={payments}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('payments')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PaymentWidget
+                rentAmount={tenant.rent_amount}
+                payments={payments}
+              />
+            </CardContent>
+          </Card>
         );
       case 'maintenance':
         return (
-          <MaintenanceWidget
-            requests={maintenanceRequests}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('maintenance')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <MaintenanceWidget
+                requests={maintenanceRequests}
+              />
+            </CardContent>
+          </Card>
         );
       case 'communications':
         return (
-          <CommunicationsWidget
-            communications={communications}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('communications')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CommunicationsWidget
+                communications={communications}
+              />
+            </CardContent>
+          </Card>
         );
       case 'documents':
         return (
-          <DocumentsWidget
-            documents={documents}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('documents')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <DocumentsWidget
+                documents={documents}
+              />
+            </CardContent>
+          </Card>
         );
       case 'chart':
         return (
-          <PaymentHistoryChart
-            payments={payments}
-          />
+          <Card className="shadow-sm hover:shadow transition-shadow duration-200 col-span-full">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">{t('paymentHistory')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PaymentHistoryChart
+                payments={payments}
+              />
+            </CardContent>
+          </Card>
         );
       default:
         return null;
@@ -157,32 +207,33 @@ export const TenantDashboard = () => {
   }
   
   return (
-    <div className="space-y-4 relative">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">
+    <div className="space-y-6 relative pb-8">
+      <div className="flex items-center justify-between mb-2 bg-background sticky top-0 z-10 pt-2 pb-4">
+        <h2 className="text-3xl font-bold tracking-tight text-primary">
           {t('welcomeTenant', { name: tenant.name.split(' ')[0] })}
         </h2>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={refreshDashboard}
-          className="flex items-center gap-1"
-        >
-          <RefreshCw className="h-4 w-4" />
-          {t('refresh')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={refreshDashboard}
+            className="flex items-center gap-1"
+          >
+            <RefreshCw className="h-4 w-4" />
+            {t('refresh')}
+          </Button>
+          <DashboardCustomization 
+            onOrderChange={handleOrderChange}
+            onVisibilityChange={handleVisibilityChange}
+            currentOrder={widgetOrder}
+            hiddenSections={hiddenSections}
+          />
+        </div>
       </div>
       
-      <DashboardCustomization 
-        onOrderChange={handleOrderChange}
-        onVisibilityChange={handleVisibilityChange}
-        currentOrder={widgetOrder}
-        hiddenSections={hiddenSections}
-      />
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {widgetOrder.map(widgetId => (
-          <div key={widgetId}>
+          <div key={widgetId} className={widgetId === 'chart' ? 'col-span-full' : ''}>
             {renderWidget(widgetId)}
           </div>
         ))}

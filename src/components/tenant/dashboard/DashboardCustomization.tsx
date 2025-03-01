@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Settings, Save, X } from "lucide-react";
+import { Settings, Save, X, MoveVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
   Dialog, 
@@ -30,6 +30,7 @@ import { Label } from "@/components/ui/label";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useDashboardPreferences } from "@/components/dashboard/hooks/useDashboardPreferences";
 import { Separator } from "@/components/ui/separator";
+import { SortableItem } from "./SortableItem";
 
 interface DashboardCustomizationProps {
   onOrderChange: (order: string[]) => void;
@@ -97,8 +98,9 @@ export const DashboardCustomization = ({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="absolute right-4 top-4">
-          <Settings className="h-4 w-4" />
+        <Button variant="outline" size="sm">
+          <Settings className="h-4 w-4 mr-1" />
+          {t('customizeDashboard')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
@@ -189,12 +191,12 @@ export const DashboardCustomization = ({
               >
                 <div className="space-y-2">
                   {tempOrder.map((id) => (
-                    <div 
-                      key={id}
-                      className="flex items-center gap-2 p-2 rounded border cursor-move bg-muted hover:bg-muted/80 transition-colors"
-                    >
-                      <span className="text-sm font-medium">{t(id)}</span>
-                    </div>
+                    <SortableItem key={id} id={id}>
+                      <div className="flex items-center gap-2 p-3 rounded border bg-muted/60 hover:bg-muted transition-colors">
+                        <MoveVertical className="h-4 w-4 text-muted-foreground mr-1" />
+                        <span className="text-sm font-medium">{t(id)}</span>
+                      </div>
+                    </SortableItem>
                   ))}
                 </div>
               </SortableContext>
