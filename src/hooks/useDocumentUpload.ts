@@ -13,6 +13,16 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       return;
     }
 
+    if (!tenantId) {
+      console.error("No tenant ID provided");
+      toast({
+        title: "Erreur",
+        description: "ID du locataire manquant",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsUploading(true);
     console.log("Starting upload for file:", file.name, "type:", documentType, "for tenant:", tenantId);
 
@@ -22,7 +32,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         .storage
         .listBuckets();
       
-      console.log("Available buckets:", buckets);
+      console.log("Available storage buckets:", buckets?.map(b => b.name));
       
       if (bucketsError) {
         console.error("Error checking buckets:", bucketsError);
@@ -32,10 +42,10 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       const bucketExists = buckets?.some(b => b.name === 'tenant_documents');
       
       if (!bucketExists) {
-        console.error("Bucket 'tenant_documents' does not exist");
+        console.error("Storage bucket 'tenant_documents' does not exist");
         toast({
           title: "Erreur de configuration",
-          description: "Le bucket de stockage n'existe pas. Veuillez contacter l'administrateur.",
+          description: "Le bucket de stockage 'tenant_documents' n'existe pas. Veuillez contacter l'administrateur.",
           variant: "destructive",
         });
         setIsUploading(false);
@@ -48,7 +58,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
       console.log("Uploading to storage with path:", fileName);
 
-      const { error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
           cacheControl: '3600',
@@ -60,7 +70,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         throw uploadError;
       }
 
-      console.log("File uploaded successfully, getting public URL");
+      console.log("File uploaded successfully:", uploadData, "getting public URL");
 
       // 2. Generate public URL
       const { data: publicUrlData } = await supabase.storage
@@ -68,6 +78,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         .getPublicUrl(fileName);
 
       if (!publicUrlData?.publicUrl) {
+        console.error("Failed to generate public URL");
         throw new Error("Failed to generate public URL");
       }
 
@@ -102,10 +113,14 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       
       let errorMessage = "Une erreur est survenue lors du chargement";
       
-      if (error.message && error.message.includes("duplicate key")) {
-        errorMessage = "Un document avec ce nom existe déjà";
-      } else if (error.message && error.message.includes("storage")) {
-        errorMessage = "Erreur de stockage: " + error.message;
+      if (error.message) {
+        if (error.message.includes("duplicate key")) {
+          errorMessage = "Un document avec ce nom existe déjà";
+        } else if (error.message.includes("storage")) {
+          errorMessage = "Erreur de stockage: " + error.message;
+        } else {
+          errorMessage = "Erreur: " + error.message;
+        }
       }
       
       toast({

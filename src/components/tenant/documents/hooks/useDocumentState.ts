@@ -15,27 +15,36 @@ export const useDocumentState = (
   toast: any
 ) => {
   const { tenant, isLoading: tenantLoading, fetchTenantData } = useTenantData(user?.id, toast);
-  const { documents, isLoading: documentsLoading, fetchDocuments } = useTenantDocuments(tenant?.id || null, toast);
+  const { documents, isLoading: documentsLoading, fetchDocuments, setDocuments } = useTenantDocuments(tenant?.id || null, toast);
   const { filteredDocuments, searchQuery, setSearchQuery, selectedDocType, setSelectedDocType, sortBy, setSortBy, sortOrder, setSortOrder } = useDocumentFilters(documents);
   
   // Combine loading states
   const isLoading = tenantLoading || documentsLoading;
 
   useEffect(() => {
+    console.log("useDocumentState - User:", user?.id);
     if (user) {
       fetchTenantData();
     }
   }, [user, fetchTenantData]);
 
   useEffect(() => {
+    console.log("useDocumentState - Tenant:", tenant?.id);
     if (tenant?.id) {
+      console.log("Fetching documents for tenant:", tenant.id);
       fetchDocuments(tenant.id);
+    } else {
+      console.log("No tenant ID available to fetch documents");
     }
   }, [tenant, fetchDocuments]);
 
   const handleDocumentUpdate = useCallback(() => {
-    if (tenant) {
+    console.log("Document update requested");
+    if (tenant?.id) {
+      console.log("Refreshing documents for tenant:", tenant.id);
       fetchDocuments(tenant.id);
+    } else {
+      console.log("Cannot refresh documents - no tenant ID");
     }
   }, [tenant, fetchDocuments]);
 

@@ -45,19 +45,30 @@ export const DocumentsTabs = ({
   
   // Logs de débogage
   useEffect(() => {
-    console.log("DocumentsTabs - Documents disponibles:", documents);
-    console.log("DocumentsTabs - Documents filtrés:", filteredDocuments);
+    console.log("DocumentsTabs - Documents disponibles:", documents?.length || 0);
+    console.log("DocumentsTabs - Documents filtrés:", filteredDocuments?.length || 0);
+    
+    if (documents?.length === 0) {
+      console.log("Aucun document disponible");
+    }
+    
+    if (documents?.length > 0 && filteredDocuments?.length === 0) {
+      console.log("Documents disponibles mais aucun document filtré");
+    }
   }, [documents, filteredDocuments]);
 
   // Récents: les 5 documents les plus récents
-  const recentDocuments = [...(documents || [])].slice(0, 5);
-  console.log("Recent documents:", recentDocuments);
+  const recentDocuments = [...(documents || [])].sort((a, b) => {
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  }).slice(0, 5);
+  
+  console.log("Recent documents:", recentDocuments?.length || 0);
 
   return (
     <Tabs defaultValue="all" className="mt-6">
       <TabsList className="mb-4">
-        <TabsTrigger value="all">{t("allDocuments")}</TabsTrigger>
-        <TabsTrigger value="recent">{t("recentlyUploaded")}</TabsTrigger>
+        <TabsTrigger value="all">{t("allDocuments") || "Tous les documents"}</TabsTrigger>
+        <TabsTrigger value="recent">{t("recentlyUploaded") || "Récemment ajoutés"}</TabsTrigger>
       </TabsList>
       
       <TabsContent value="all" className="space-y-4">
