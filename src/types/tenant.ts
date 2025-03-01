@@ -1,3 +1,4 @@
+
 export interface Tenant {
   id: string;
   name: string;
@@ -54,6 +55,12 @@ export interface MaintenanceRequest {
   photos?: string[];
   tenant_feedback?: string;
   tenant_rating?: number;
+  tenant_id?: string;
+  status_history?: {
+    status: string;
+    date: string;
+    comments?: string;
+  }[];
 }
 
 export interface Communication {

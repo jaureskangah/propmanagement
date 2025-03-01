@@ -3,7 +3,7 @@ import { MaintenanceRequest } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Wrench, Eye, Clock, AlertCircle, CheckCircle } from "lucide-react";
+import { Wrench, Eye, Clock, AlertCircle, CheckCircle, Star } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceListProps {
@@ -84,6 +84,12 @@ export const MaintenanceList = ({
                   <Badge className={`${getPriorityClass(request.priority)} text-white text-xs`}>
                     {request.priority}
                   </Badge>
+                  {request.tenant_rating ? (
+                    <div className="flex items-center text-xs text-yellow-500">
+                      <Star className="h-3 w-3 fill-yellow-500 mr-1" />
+                      {request.tenant_rating}/5
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </div>

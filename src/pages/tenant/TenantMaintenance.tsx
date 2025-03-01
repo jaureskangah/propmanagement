@@ -9,11 +9,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const TenantMaintenance = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useLocale();
   
   // Activer les notifications en temps réel
   useRealtimeNotifications();
@@ -45,8 +47,8 @@ const TenantMaintenance = () => {
     if (!isLoading && !user) {
       console.log("No authenticated user found");
       toast({
-        title: "Authentication Required",
-        description: "Please sign in to access this page",
+        title: t('authenticationRequired'),
+        description: t('pleaseSignIn'),
         variant: "destructive",
       });
       navigate("/");
@@ -56,24 +58,24 @@ const TenantMaintenance = () => {
     if (!isLoading && profile && !profile.is_tenant_user) {
       console.log("User is not a tenant");
       toast({
-        title: "Access Denied",
-        description: "This page is only accessible to tenants",
+        title: t('accessDenied'),
+        description: t('tenantsOnly'),
         variant: "destructive",
       });
       navigate("/dashboard");
       return;
     }
-  }, [user, profile, isLoading, navigate, toast]);
+  }, [user, profile, isLoading, navigate, toast, t]);
 
   if (isLoading) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Loading...</CardTitle>
+          <CardTitle>{t('loading')}</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Please wait while we load your maintenance information...
+            {t('loadingMaintenanceInfo')}
           </p>
         </CardContent>
       </Card>
