@@ -9,6 +9,16 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { MaintenanceRequest } from "@/types/tenant";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface FeedbackSectionProps {
   request: MaintenanceRequest;
@@ -23,6 +33,7 @@ export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedbackSubmitted, setFeedbackSubmitted] = useState(!!request.tenant_feedback || !!request.tenant_rating);
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const validateForm = (): boolean => {
     if (rating === 0) {
@@ -34,13 +45,15 @@ export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => 
     return true;
   };
 
-  const handleSubmitFeedback = async () => {
-    if (isSubmitting) return;
-    
-    // Validate form before submission
+  const openConfirmDialog = () => {
     if (!validateForm()) {
       return;
     }
+    setShowConfirmDialog(true);
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (isSubmitting) return;
     
     setIsSubmitting(true);
     try {
@@ -76,49 +89,84 @@ export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => 
       });
     } finally {
       setIsSubmitting(false);
+      setShowConfirmDialog(false);
     }
   };
 
   if (!feedbackSubmitted) {
     return (
-      <div className="space-y-3">
-        <div>
-          <p className="text-sm text-gray-500 mb-1">{t('rating')}</p>
-          <Rating 
-            value={rating} 
-            onChange={(value) => {
-              setRating(value);
-              if (validationError) validateForm();
-            }} 
-            max={5} 
-            className="mb-3"
-          />
+      <>
+        <div className="space-y-3">
+          <div>
+            <p className="text-sm text-gray-500 mb-1">{t('rating')}</p>
+            <Rating 
+              value={rating} 
+              onChange={(value) => {
+                setRating(value);
+                if (validationError) validateForm();
+              }} 
+              max={5} 
+              className="mb-3"
+            />
+            
+            {validationError && (
+              <Alert variant="destructive" className="mt-2 py-2">
+                <AlertDescription className="text-sm">{validationError}</AlertDescription>
+              </Alert>
+            )}
+          </div>
           
-          {validationError && (
-            <Alert variant="destructive" className="mt-2 py-2">
-              <AlertDescription className="text-sm">{validationError}</AlertDescription>
-            </Alert>
-          )}
+          <div>
+            <p className="text-sm text-gray-500 mb-1">{t('comments')}</p>
+            <Textarea
+              value={feedback}
+              onChange={(e) => setFeedback(e.target.value)}
+              placeholder={t('feedbackPlaceholder')}
+              className="resize-none h-24"
+            />
+          </div>
+          
+          <Button 
+            onClick={openConfirmDialog} 
+            disabled={isSubmitting}
+            className="mt-2 w-full"
+          >
+            {isSubmitting ? t('submitting') : t('submit')}
+          </Button>
         </div>
-        
-        <div>
-          <p className="text-sm text-gray-500 mb-1">{t('comments')}</p>
-          <Textarea
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
-            placeholder={t('feedbackPlaceholder')}
-            className="resize-none h-24"
-          />
-        </div>
-        
-        <Button 
-          onClick={handleSubmitFeedback} 
-          disabled={isSubmitting}
-          className="mt-2 w-full"
-        >
-          {isSubmitting ? t('submitting') : t('submit')}
-        </Button>
-      </div>
+
+        <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('confirmSubmit')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('areYouSure')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            
+            <div className="py-3">
+              <div className="mb-3">
+                <p className="text-sm font-medium text-gray-500">{t('rating')}</p>
+                <Rating value={rating} onChange={() => {}} max={5} className="mt-1" />
+              </div>
+              
+              {feedback && (
+                <div>
+                  <p className="text-sm font-medium text-gray-500">{t('comments')}</p>
+                  <p className="text-sm mt-1 bg-gray-50 dark:bg-gray-800 p-2 rounded">{feedback}</p>
+                </div>
+              )}
+            </div>
+            
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+              <AlertDialogAction onClick={handleSubmitFeedback}>
+                {t('confirm')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </>
     );
   }
 
