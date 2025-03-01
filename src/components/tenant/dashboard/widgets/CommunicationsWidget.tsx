@@ -55,7 +55,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
                   ${comm.status === 'unread' ? 'bg-blue-100/40' : 'bg-white/70'}
                 `}
               >
-                <div className="flex flex-col flex-1 min-w-0">
+                <div className="flex flex-col flex-1 min-w-0 pr-2">
                   <div className="flex items-center">
                     <span className="text-sm font-medium truncate text-gray-800">{comm.subject}</span>
                     {comm.status === 'unread' && (
@@ -85,7 +85,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             ))}
             
             {communications.length > 3 && (
-              <div className="text-sm text-center text-gray-500 mt-2">
+              <div className="text-xs text-center text-gray-500 mt-2">
                 {t('andMoreMessages', { count: (communications.length - 3).toString() })}
               </div>
             )}
@@ -99,16 +99,16 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             onClick={() => navigate('/tenant/communications')}
             size="sm"
           >
-            {t('viewAll')}
-            <ArrowUpRight className="h-3 w-3 ml-1" />
+            <span className="mr-1">{t('viewAll')}</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
             className="flex-1 text-xs bg-blue-600 hover:bg-blue-700 text-white py-1 px-2"
             onClick={() => navigate('/tenant/communications/new')}
             size="sm"
           >
-            {t('sendMessage')}
-            <PlusCircle className="h-3 w-3 ml-1" />
+            <span className="mr-1">{t('sendMessage')}</span>
+            <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
       </div>

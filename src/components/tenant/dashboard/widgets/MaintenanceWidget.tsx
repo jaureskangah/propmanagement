@@ -45,7 +45,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                 transition={{ duration: 0.3, delay: index * 0.1 }}
                 className="flex items-center justify-between p-3 bg-white/70 rounded-lg shadow-sm hover:shadow transition-shadow"
               >
-                <div className="flex flex-col">
+                <div className="flex flex-col pr-2">
                   <span className="text-sm font-medium truncate text-gray-800">{request.issue}</span>
                   <span className="text-xs text-gray-500">
                     {formatDate(request.created_at)}
@@ -79,16 +79,16 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             onClick={() => navigate('/tenant/maintenance')}
             size="sm"
           >
-            {t('viewAll')}
-            <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
+            <span className="mr-1">{t('viewAll')}</span>
+            <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
             className="flex-1 text-xs bg-amber-600 hover:bg-amber-700 text-white"
             onClick={() => navigate('/tenant/maintenance/new')}
             size="sm"
           >
-            {t('newRequest')}
-            <PlusCircle className="h-3.5 w-3.5 ml-1" />
+            <span className="mr-1">{t('newRequest')}</span>
+            <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
       </div>

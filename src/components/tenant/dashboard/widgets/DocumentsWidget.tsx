@@ -45,7 +45,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                 onClick={() => window.open(doc.file_url, '_blank')}
               >
                 <FileText className="h-4 w-4 mr-3 text-purple-500" />
-                <span className="text-sm flex-1 truncate text-gray-800">{doc.name}</span>
+                <span className="text-sm flex-1 truncate text-gray-800 pr-2">{doc.name}</span>
                 <Button variant="ghost" size="icon" className="h-6 w-6 text-purple-700">
                   <ArrowUpRight className="h-4 w-4" />
                 </Button>
@@ -53,7 +53,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
             ))}
             
             {documents.length > 3 && (
-              <div className="text-sm text-center text-gray-500 mt-2">
+              <div className="text-xs text-center text-gray-500 mt-2">
                 {t('andMoreDocuments', { count: (documents.length - 3).toString() })}
               </div>
             )}
@@ -65,8 +65,8 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
           onClick={() => navigate('/tenant/documents')}
           size="sm"
         >
-          {t('viewAllDocuments')}
-          <ArrowUpRight className="h-3 w-3 ml-1" />
+          <span className="mr-1">{t('viewAllDocuments')}</span>
+          <ArrowUpRight className="h-3 w-3" />
         </Button>
       </div>
     </motion.div>
