@@ -44,7 +44,7 @@ export const NotificationWidget = ({ communications, maintenanceRequests }: Noti
       
       <div className="space-y-4 flex-1">
         {!hasNotifications ? (
-          <div className="text-center py-3">
+          <div className="text-center py-6 bg-white/60 rounded-lg">
             <Bell className="h-8 w-8 text-rose-300 mx-auto mb-2 opacity-50" />
             <p className="text-sm text-gray-500">{t('noNotifications')}</p>
           </div>
@@ -55,7 +55,7 @@ export const NotificationWidget = ({ communications, maintenanceRequests }: Noti
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="flex items-center justify-between p-2 bg-white/60 rounded-lg"
+                className="flex items-center justify-between p-3 bg-white/60 rounded-lg"
               >
                 <div className="flex items-center">
                   <MessageSquare className="h-4 w-4 mr-2 text-blue-600" />
@@ -72,7 +72,7 @@ export const NotificationWidget = ({ communications, maintenanceRequests }: Noti
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: 0.1 }}
-                className="flex items-center justify-between p-2 bg-white/60 rounded-lg"
+                className="flex items-center justify-between p-3 bg-white/60 rounded-lg"
               >
                 <div className="flex items-center">
                   <Wrench className="h-4 w-4 mr-2 text-amber-600" />

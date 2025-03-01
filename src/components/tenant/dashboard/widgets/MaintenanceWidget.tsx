@@ -26,14 +26,14 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
     >
       <div className="flex items-center mb-4">
         <Wrench className="h-5 w-5 mr-2 text-amber-600" />
-        <h3 className="font-semibold text-amber-700">Maintenance</h3>
+        <h3 className="font-semibold text-amber-700">{t('maintenance')}</h3>
       </div>
       
       <div className="space-y-4">
         {requests.length === 0 ? (
           <div className="text-center py-6 bg-white/60 rounded-lg">
             <Wrench className="h-10 w-10 text-amber-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">No Maintenance Requests</p>
+            <p className="text-sm text-gray-500">{t('noMaintenanceRequests')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -79,7 +79,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             onClick={() => navigate('/tenant/maintenance')}
             size="sm"
           >
-            <span className="mr-1">View All</span>
+            <span className="mr-1">{t('viewAll')}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
@@ -87,7 +87,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             onClick={() => navigate('/tenant/maintenance/new')}
             size="sm"
           >
-            <span className="mr-1">New Request</span>
+            <span className="mr-1">{t('newRequest')}</span>
             <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>
