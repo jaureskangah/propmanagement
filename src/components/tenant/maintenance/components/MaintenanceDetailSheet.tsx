@@ -83,7 +83,8 @@ export const MaintenanceDetailSheet = ({
         .from('maintenance_requests')
         .update({
           tenant_feedback: feedback,
-          tenant_rating: rating
+          tenant_rating: rating,
+          updated_at: new Date().toISOString() // Force an update event for notifications
         })
         .eq('id', request.id);
 

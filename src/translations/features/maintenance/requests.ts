@@ -78,7 +78,10 @@ export const enRequests = {
   sortOldest: "Oldest First",
   sortByPriority: "By Priority",
   deadline: "Deadline",
-  edit: "Edit"
+  edit: "Edit",
+  // Nouvelles traductions pour les notifications
+  tenantFeedbackReceived: "Tenant Feedback Received",
+  feedbackReceivedFor: "Feedback received for request"
 };
 
 export const frRequests = {
@@ -160,5 +163,8 @@ export const frRequests = {
   sortOldest: "Plus ancien d'abord",
   sortByPriority: "Par priorité",
   deadline: "Date limite",
-  edit: "Modifier"
+  edit: "Modifier",
+  // Nouvelles traductions pour les notifications
+  tenantFeedbackReceived: "Avis du locataire reçu",
+  feedbackReceivedFor: "Avis reçu pour la demande"
 };
