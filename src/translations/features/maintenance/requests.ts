@@ -56,7 +56,28 @@ export const enRequests = {
   allStatuses: "All Statuses",
   update: "Update",
   createOrder: "Create Order",
-  add: "Add"
+  add: "Add",
+  // Nouvelles traductions
+  viewDetails: "View Details",
+  priority: "Priority",
+  description: "Description",
+  statusHistory: "Status History",
+  daysAgo: "days ago",
+  provideFeedback: "Provide Feedback",
+  rating: "Rating",
+  comments: "Comments",
+  feedbackPlaceholder: "Share your experience with this maintenance request...",
+  feedbackSaved: "Feedback saved successfully",
+  errorSavingFeedback: "Error saving feedback",
+  success: "Success",
+  error: "Error",
+  close: "Close",
+  maintenancePhoto: "Maintenance Photo",
+  statusChanged: "status changed to",
+  sortNewest: "Newest First",
+  sortOldest: "Oldest First",
+  sortByPriority: "By Priority",
+  deadline: "Deadline"
 };
 
 export const frRequests = {
@@ -116,5 +137,26 @@ export const frRequests = {
   allStatuses: "Tous les statuts",
   update: "Mettre à jour",
   createOrder: "Créer un ordre",
-  add: "Ajouter"
+  add: "Ajouter",
+  // Nouvelles traductions
+  viewDetails: "Voir détails",
+  priority: "Priorité",
+  description: "Description",
+  statusHistory: "Historique des statuts",
+  daysAgo: "jours",
+  provideFeedback: "Donner votre avis",
+  rating: "Évaluation",
+  comments: "Commentaires",
+  feedbackPlaceholder: "Partagez votre expérience concernant cette demande de maintenance...",
+  feedbackSaved: "Commentaire enregistré avec succès",
+  errorSavingFeedback: "Erreur lors de l'enregistrement du commentaire",
+  success: "Succès",
+  error: "Erreur",
+  close: "Fermer",
+  maintenancePhoto: "Photo de maintenance",
+  statusChanged: "statut changé en",
+  sortNewest: "Plus récent d'abord",
+  sortOldest: "Plus ancien d'abord",
+  sortByPriority: "Par priorité",
+  deadline: "Date limite"
 };

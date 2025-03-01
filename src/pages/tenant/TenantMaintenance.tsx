@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -7,11 +8,15 @@ import AppSidebar from "@/components/AppSidebar";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
+import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 
 const TenantMaintenance = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
+  
+  // Activer les notifications en temps réel
+  useRealtimeNotifications();
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ["profile", user?.id],
@@ -78,10 +83,7 @@ const TenantMaintenance = () => {
   return (
     <div className="flex">
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-6 space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Maintenance</h1>
-        </div>
+      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6">
         <TenantMaintenanceView />
       </div>
     </div>

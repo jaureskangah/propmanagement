@@ -47,6 +47,13 @@ export interface MaintenanceRequest {
   status: string;
   created_at: string;
   tenant_notified?: boolean;
+  description?: string;
+  priority: string;
+  updated_at: string;
+  deadline?: string;
+  photos?: string[];
+  tenant_feedback?: string;
+  tenant_rating?: number;
 }
 
 export interface Communication {
