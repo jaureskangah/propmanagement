@@ -105,6 +105,11 @@ const router = createBrowserRouter([
     path: "/tenant/dashboard",
     element: <TenantDashboard />,
   },
+  // Add the profile route
+  {
+    path: "/profile",
+    element: <TenantProfile />,
+  },
 ]);
 
 export default router;

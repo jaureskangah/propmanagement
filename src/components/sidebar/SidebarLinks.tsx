@@ -41,22 +41,22 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       label: t('profile'),
     },
     {
-      href: "/payments",
+      href: "/tenant/payments",
       icon: CreditCard,
       label: t('payments'),
     },
     {
-      href: "/documents",
+      href: "/tenant/documents",
       icon: FileText,
       label: t('documents'),
     },
     {
-      href: "/maintenance",
+      href: "/tenant/maintenance",
       icon: Wrench,
       label: t('maintenance'),
     },
     {
-      href: "/communications",
+      href: "/tenant/communications",
       icon: MessageCircle,
       label: t('communications'),
     },
