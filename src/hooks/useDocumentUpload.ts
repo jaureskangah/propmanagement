@@ -17,21 +17,6 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     console.log("Starting upload for file:", file.name, "type:", documentType);
 
     try {
-      // Vérifier si le bucket existe
-      const { data: bucketData, error: bucketError } = await supabase.storage
-        .getBucket('tenant_documents');
-      
-      if (bucketError && bucketError.message.includes('does not exist')) {
-        console.error("Bucket 'tenant_documents' does not exist:", bucketError);
-        toast({
-          title: "Erreur de configuration",
-          description: "Le bucket de stockage n'existe pas. Veuillez contacter l'administrateur.",
-          variant: "destructive",
-        });
-        setIsUploading(false);
-        return;
-      }
-
       // 1. Upload file to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
@@ -46,7 +31,16 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         });
 
       if (uploadError) {
-        console.error("Storage upload error:", uploadError);
+        if (uploadError.message.includes('does not exist')) {
+          console.error("Bucket 'tenant_documents' does not exist:", uploadError);
+          toast({
+            title: "Erreur de configuration",
+            description: "Le bucket de stockage n'existe pas. Veuillez contacter l'administrateur.",
+            variant: "destructive",
+          });
+          setIsUploading(false);
+          return;
+        }
         throw uploadError;
       }
 

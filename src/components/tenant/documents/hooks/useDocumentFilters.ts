@@ -10,27 +10,30 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   useEffect(() => {
-    console.log("useDocumentFilters - Original documents:", documents.length, documents);
-    if (documents.length > 0) {
-      applyFilters();
-    } else {
+    console.log("useDocumentFilters - Documents à filtrer:", documents.length, documents);
+    
+    // Toujours définir les documents filtrés, même si le tableau est vide
+    if (documents.length === 0) {
       setFilteredDocuments([]);
+    } else {
+      applyFilters();
     }
   }, [documents, searchQuery, selectedDocType, sortBy, sortOrder]);
 
   const applyFilters = () => {
+    // Clone pour éviter de modifier l'original
     let filtered = [...documents];
     console.log("Applying filters to documents:", filtered.length);
     
-    // Apply search filter
-    if (searchQuery) {
+    // Filtre par recherche
+    if (searchQuery.trim()) {
       filtered = filtered.filter(doc => 
         doc.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
       console.log("After search filter:", filtered.length);
     }
     
-    // Apply document type filter using document_type field
+    // Filtre par type de document
     if (selectedDocType) {
       filtered = filtered.filter(doc => 
         doc.document_type === selectedDocType
@@ -38,12 +41,12 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
       console.log("After type filter:", filtered.length);
     }
     
-    // Apply sorting
+    // Appliquer le tri
     filtered.sort((a, b) => {
       if (sortBy === "date") {
-        return sortOrder === "asc" 
-          ? new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-          : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
       } else {
         return sortOrder === "asc"
           ? a.name.localeCompare(b.name)
@@ -51,7 +54,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
       }
     });
     
-    console.log("Final filtered documents:", filtered.length);
+    console.log("Final filtered documents:", filtered.length, filtered);
     setFilteredDocuments(filtered);
   };
 

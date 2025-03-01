@@ -43,11 +43,15 @@ export const DocumentsTabs = ({
 }: DocumentsTabsProps) => {
   const { t } = useLocale();
   
-  // Log pour le débogage
+  // Logs de débogage
   useEffect(() => {
-    console.log("DocumentsTabs - Documents:", documents.length, documents);
-    console.log("DocumentsTabs - Filtered Documents:", filteredDocuments.length, filteredDocuments);
+    console.log("DocumentsTabs - Documents disponibles:", documents.length, documents);
+    console.log("DocumentsTabs - Documents filtrés:", filteredDocuments.length, filteredDocuments);
   }, [documents, filteredDocuments]);
+
+  // Récents: les 5 documents les plus récents
+  const recentDocuments = [...documents].slice(0, 5);
+  console.log("Recent documents:", recentDocuments.length);
 
   return (
     <Tabs defaultValue="all" className="mt-6">
@@ -78,7 +82,7 @@ export const DocumentsTabs = ({
       
       <TabsContent value="recent">
         <DocumentsList 
-          documents={documents.slice(0, 5)}
+          documents={recentDocuments}
           isLoading={isLoading}
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}

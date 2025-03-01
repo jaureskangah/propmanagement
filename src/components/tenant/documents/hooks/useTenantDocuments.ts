@@ -24,10 +24,10 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       
       console.log("Documents received:", data?.length || 0, data);
       
-      // Handle documents that don't have document_type field yet
+      // Traiter les documents pour s'assurer qu'ils ont tous un document_type
       const processedData = data?.map(doc => {
         if (!doc.document_type) {
-          // Determine document type if not specified
+          // Déterminer le type de document s'il n'est pas spécifié
           const name = doc.name.toLowerCase();
           let document_type: 'lease' | 'receipt' | 'other' = 'other';
           
@@ -37,13 +37,22 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
             document_type = 'receipt';
           }
           
+          // Update the document type in the database
+          supabase
+            .from('tenant_documents')
+            .update({ document_type })
+            .eq('id', doc.id)
+            .then(({ error }) => {
+              if (error) console.error('Error updating document type:', error);
+            });
+          
           return { ...doc, document_type };
         }
         return doc;
       }) || [];
       
       setDocuments(processedData);
-      console.log("Processed documents:", processedData.length, processedData);
+      console.log("Processed documents:", processedData);
     } catch (error) {
       console.error('Error fetching documents:', error);
       toast({
