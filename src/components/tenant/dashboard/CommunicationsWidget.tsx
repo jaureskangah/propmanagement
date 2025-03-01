@@ -92,21 +92,21 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
         
         <div className="flex gap-2 mt-4">
           <Button 
-            className="flex-1 text-xs md:text-sm border-blue-200 bg-white/80 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
+            className="flex-1 text-xs border-blue-200 bg-white/80 text-blue-700 hover:bg-blue-50 hover:text-blue-800"
             variant="outline"
             onClick={() => navigate('/tenant/communications')}
             size="sm"
           >
             {t('viewAll')}
-            <ArrowUpRight className="h-3.5 w-3.5" />
+            <ArrowUpRight className="h-3 w-3 ml-1" />
           </Button>
           <Button 
-            className="flex-1 text-xs md:text-sm bg-blue-600 hover:bg-blue-700 text-white"
+            className="flex-1 text-xs bg-blue-600 hover:bg-blue-700 text-white py-1 px-2"
             onClick={() => navigate('/tenant/communications/new')}
             size="sm"
           >
             {t('sendMessage')}
-            <PlusCircle className="h-3.5 w-3.5" />
+            <PlusCircle className="h-3 w-3 ml-1" />
           </Button>
         </div>
       </div>
