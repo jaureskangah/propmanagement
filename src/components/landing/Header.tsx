@@ -42,21 +42,31 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   });
 
   const handleDashboardClick = () => {
-    if (profile?.is_tenant_user) {
-      navigate("/tenant/dashboard");
-    } else {
-      navigate("/dashboard");
+    console.log("Dashboard clicked, profile:", profile);
+    try {
+      if (profile?.is_tenant_user || user?.user_metadata?.is_tenant_user) {
+        navigate("/tenant/dashboard", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    } catch (error) {
+      console.error("Dashboard navigation error:", error);
     }
   };
 
   const handleHomeClick = () => {
-    navigate('/');
+    console.log("Home clicked");
+    try {
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error("Home navigation error:", error);
+    }
   };
 
   const handleSignOut = async () => {
     try {
       await supabase.auth.signOut();
-      navigate("/");
+      navigate("/", { replace: true });
       toast.success("Successfully signed out");
     } catch (error) {
       console.error("Error during sign out:", error);

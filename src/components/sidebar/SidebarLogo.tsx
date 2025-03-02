@@ -12,7 +12,11 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   
   const handleLogoClick = () => {
     console.log("Logo clicked - navigating to home page");
-    navigate('/');
+    try {
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error("Logo navigation error:", error);
+    }
   };
   
   return (

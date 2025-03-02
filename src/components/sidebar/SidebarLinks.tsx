@@ -31,7 +31,11 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   
   const handleNavigation = (path: string) => {
     console.log("Navigating to:", path);
-    navigate(path);
+    try {
+      navigate(path);
+    } catch (error) {
+      console.error("Navigation error:", error);
+    }
   };
   
   // Liens pour les locataires - redessinés pour être plus pertinents

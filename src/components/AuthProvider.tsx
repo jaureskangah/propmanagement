@@ -41,7 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(initialSession.user);
         
         // Handle redirection based on user type, but only if we're at login or root
-        if (location.pathname === '/auth' || location.pathname === '/') {
+        if (location.pathname === '/auth') {
           const isTenantUser = initialSession.user?.user_metadata?.is_tenant_user;
           console.log("User is tenant:", isTenantUser);
           
@@ -63,8 +63,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(newSession);
         setUser(newSession.user);
         
-        // Only redirect if on login or root page
-        if (location.pathname === '/auth' || location.pathname === '/') {
+        // Only redirect if on login page
+        if (location.pathname === '/auth') {
           const isTenantUser = newSession.user?.user_metadata?.is_tenant_user;
           console.log("Redirecting based on user type:", isTenantUser ? "tenant" : "owner");
           
