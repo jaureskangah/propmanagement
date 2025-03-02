@@ -68,14 +68,14 @@ export const DashboardCustomizationDialog = ({
           className="flex items-center gap-1 hover:bg-blue-50 hover:text-blue-700 transition-all"
         >
           <Settings className="h-4 w-4" />
-          {t('customize')}
+          {t('customizeDashboard')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t('dashboardCustomization')}</DialogTitle>
           <DialogDescription>
-            {t('customizeDescription')}
+            {t('customizeDashboardDescription')}
           </DialogDescription>
         </DialogHeader>
         
