@@ -30,24 +30,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
+    console.log("AuthProvider initializing");
+    
     // Get initial session
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      console.log("Initial auth session:", initialSession ? "Found" : "None");
+      
       if (initialSession) {
         setSession(initialSession);
         setUser(initialSession.user);
+        
+        // Handle redirection based on user type, but only if we're at login or root
+        if (location.pathname === '/auth' || location.pathname === '/') {
+          const isTenantUser = initialSession.user?.user_metadata?.is_tenant_user;
+          console.log("User is tenant:", isTenantUser);
+          
+          if (isTenantUser) {
+            navigate('/tenant/dashboard', { replace: true });
+          } else {
+            navigate('/dashboard', { replace: true });
+          }
+        }
       }
       setLoading(false);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        setSession(session);
-        setUser(session.user);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, newSession) => {
+      console.log("Auth state change:", event, newSession ? "Session exists" : "No session");
+      
+      if (newSession) {
+        setSession(newSession);
+        setUser(newSession.user);
         
-        // Rediriger en fonction du rôle de l'utilisateur
+        // Only redirect if on login or root page
         if (location.pathname === '/auth' || location.pathname === '/') {
-          const isTenantUser = session.user?.user_metadata?.is_tenant_user;
+          const isTenantUser = newSession.user?.user_metadata?.is_tenant_user;
+          console.log("Redirecting based on user type:", isTenantUser ? "tenant" : "owner");
+          
           if (isTenantUser) {
             navigate('/tenant/dashboard', { replace: true });
           } else {
@@ -67,6 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [navigate, location.pathname]);
 
   const signOut = async () => {
+    console.log("Signing out user");
     await supabase.auth.signOut();
     setSession(null);
     setUser(null);

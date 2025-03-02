@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
@@ -8,6 +8,14 @@ import { useAuth } from '@/components/AuthProvider';
 
 const Dashboard = () => {
   const { isAuthenticated, loading, user } = useAuth();
+
+  useEffect(() => {
+    console.log("Dashboard component mounted, auth state:", { 
+      isAuthenticated, 
+      isTenant: user?.user_metadata?.is_tenant_user,
+      loading 
+    });
+  }, [isAuthenticated, user, loading]);
 
   if (loading) {
     return (
@@ -18,15 +26,17 @@ const Dashboard = () => {
   }
 
   if (!isAuthenticated) {
+    console.log("User not authenticated, redirecting to /auth");
     return <Navigate to="/auth" replace />;
   }
   
   // Vérifier si l'utilisateur est un locataire
   if (user?.user_metadata?.is_tenant_user) {
-    // Rediriger vers le tableau de bord du locataire
+    console.log("User is tenant, redirecting to tenant dashboard");
     return <Navigate to="/tenant/dashboard" replace />;
   }
 
+  console.log("Rendering owner dashboard");
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar />

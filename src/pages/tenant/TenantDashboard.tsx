@@ -9,14 +9,13 @@ const TenantDashboardPage = () => {
   const { isAuthenticated, loading, user } = useAuth();
 
   useEffect(() => {
-    if (user) {
-      console.log("User authentication in TenantDashboard:", { 
-        authenticated: isAuthenticated,
-        isTenant: user?.user_metadata?.is_tenant_user,
-        email: user?.email
-      });
-    }
-  }, [user, isAuthenticated]);
+    console.log("TenantDashboard component mounted, auth state:", { 
+      isAuthenticated, 
+      isTenant: user?.user_metadata?.is_tenant_user,
+      email: user?.email,
+      loading
+    });
+  }, [isAuthenticated, user, loading]);
 
   if (loading) {
     return (
@@ -27,9 +26,17 @@ const TenantDashboardPage = () => {
   }
 
   if (!isAuthenticated) {
+    console.log("User not authenticated, redirecting to /auth");
     return <Navigate to="/auth" replace />;
   }
 
+  // Vérifier si l'utilisateur n'est PAS un locataire
+  if (user && !user.user_metadata?.is_tenant_user) {
+    console.log("User is not a tenant, redirecting to owner dashboard");
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  console.log("Rendering tenant dashboard");
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar isTenant={true} />
