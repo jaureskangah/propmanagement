@@ -1,6 +1,5 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
 import { TenantInfoCard } from "./tenant/profile/TenantInfoCard";
 import { UnlinkedTenantProfile } from "./tenant/profile/UnlinkedTenantProfile";
 import { TenantTabs } from "./tenant/profile/TenantTabs";
@@ -8,6 +7,7 @@ import type { Tenant } from "@/types/tenant";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface TenantProfileProps {
   tenant: Tenant;
@@ -41,8 +41,10 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
 
   if (!tenant) {
     return (
-      <Card className="h-[300px] flex items-center justify-center">
-        <p className="text-muted-foreground">{t('noTenantSelected')}</p>
+      <Card className="h-[300px] flex items-center justify-center shadow-md">
+        <CardContent>
+          <p className="text-muted-foreground">{t('noTenantSelected')}</p>
+        </CardContent>
       </Card>
     );
   }

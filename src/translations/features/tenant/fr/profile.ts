@@ -18,4 +18,11 @@ export const frProfile: TenantProfileTranslations = {
   perMonth: "/mois",
   unitLabel: "Unité",
   saving: "Enregistrement...",
+  profileTitle: "Votre Profil",
+  profileSubtitle: "Gérez vos informations personnelles",
+  personalInfo: "Informations Personnelles",
+  contactInfo: "Coordonnées",
+  uploadAvatar: "Ajouter un avatar",
+  changeAvatar: "Changer d'avatar",
+  removeAvatar: "Supprimer",
 };

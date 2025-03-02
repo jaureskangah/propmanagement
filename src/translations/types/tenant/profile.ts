@@ -16,4 +16,11 @@ export interface TenantProfileTranslations {
   perMonth: string;
   unitLabel: string;
   saving: string;
+  profileTitle: string;
+  profileSubtitle: string;
+  personalInfo: string;
+  contactInfo: string;
+  uploadAvatar: string;
+  changeAvatar: string;
+  removeAvatar: string;
 }
