@@ -24,6 +24,9 @@ export const DashboardHeader = ({
 }: DashboardHeaderProps) => {
   const { t } = useLocale();
   
+  // Format the full name (e.g., "John Doe")
+  const formattedName = tenantName || "";
+  
   return (
     <div className="flex items-center justify-between mb-6 bg-background sticky top-0 z-10 pt-2 pb-4 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
       <motion.h2 
@@ -32,7 +35,7 @@ export const DashboardHeader = ({
         transition={{ duration: 0.5 }}
         className="text-3xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600"
       >
-        {t('welcomeTenant', { name: tenantName })}
+        {t('welcomeTenant', { name: formattedName })}
       </motion.h2>
       <div className="flex items-center gap-2">
         <Button 
