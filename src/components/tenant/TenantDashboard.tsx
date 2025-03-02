@@ -30,9 +30,7 @@ export const TenantDashboard = () => {
   }
 
   // Format the full name for display
-  const fullName = tenant.first_name && tenant.last_name 
-    ? `${tenant.first_name} ${tenant.last_name}`
-    : tenant.name || "";
+  const fullName = tenant.name || "";
 
   // Handle layout customization
   const handleOrderChange = (newOrder: string[]) => {

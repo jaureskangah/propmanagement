@@ -7,8 +7,6 @@ import { useToast } from "@/hooks/use-toast";
 interface TenantData {
   id: string;
   name: string;
-  first_name: string;
-  last_name: string;
   email: string;
   unit_number: string;
   lease_start: string;
@@ -41,8 +39,6 @@ export const useTenantData = () => {
         .select(`
           id, 
           name, 
-          first_name,
-          last_name,
           email, 
           unit_number, 
           lease_start, 
