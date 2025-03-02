@@ -1,4 +1,3 @@
-
 export interface Tenant {
   id: string;
   name: string;
@@ -20,6 +19,7 @@ export interface Tenant {
   paymentHistory: TenantPayment[];
   maintenanceRequests: MaintenanceRequest[];
   communications: Communication[];
+  avatar_url?: string; // Added avatar_url property
 }
 
 export interface TenantDocument {
