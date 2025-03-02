@@ -1,5 +1,5 @@
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -24,9 +24,15 @@ interface SidebarLinksProps {
 
 export default function SidebarLinks({ isTenant = false, collapsed = false }: SidebarLinksProps) {
   const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
+  
+  const handleHomeClick = (e: React.MouseEvent, path: string) => {
+    e.preventDefault();
+    navigate('/');
+  };
   
   // Liens pour les locataires - redessinés pour être plus pertinents
   const tenantLinks = [
@@ -34,6 +40,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/",
       icon: HomeIcon,
       label: t('home'),
+      onClick: handleHomeClick
     },
     {
       href: "/tenant/dashboard",
@@ -78,6 +85,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/",
       icon: HomeIcon,
       label: t('home'),
+      onClick: handleHomeClick
     },
     {
       href: "/dashboard",
@@ -126,6 +134,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
         <Link
           key={link.href}
           to={link.href}
+          onClick={link.onClick}
           className={cn(
             "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
             location.pathname === link.href

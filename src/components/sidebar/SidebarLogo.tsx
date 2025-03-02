@@ -1,5 +1,5 @@
 
-import { NavLink } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Building2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -8,11 +8,17 @@ interface SidebarLogoProps {
 }
 
 export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
+  const navigate = useNavigate();
+  
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+  
   return (
     <div className="mt-4 mb-8">
-      <NavLink
-        to="/"
-        className="text-xl font-bold text-center block hover:text-[#ea384c] transition-colors"
+      <div
+        onClick={handleLogoClick}
+        className="text-xl font-bold text-center block hover:text-[#ea384c] transition-colors cursor-pointer"
       >
         <div className={cn(
           "flex items-center gap-2",
@@ -21,7 +27,7 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
           <Building2 className="h-8 w-8 text-[#ea384c]" />
           {!isCollapsed && <span>PropManagement</span>}
         </div>
-      </NavLink>
+      </div>
     </div>
   );
 };
