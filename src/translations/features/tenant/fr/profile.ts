@@ -19,7 +19,7 @@ export const frProfile: TenantProfileTranslations = {
   unitLabel: "Unité",
   saving: "Enregistrement...",
   profileTitle: "Votre Profil",
-  profileSubtitle: "Gérez vos informations personnelles",
+  profileSubtitle: "Profil",
   personalInfo: "Informations Personnelles",
   contactInfo: "Coordonnées",
   uploadAvatar: "Ajouter un avatar",

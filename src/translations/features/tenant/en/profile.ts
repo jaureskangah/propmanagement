@@ -19,7 +19,7 @@ export const enProfile: TenantProfileTranslations = {
   unitLabel: "Unit",
   saving: "Saving...",
   profileTitle: "Your Profile",
-  profileSubtitle: "Manage your personal information",
+  profileSubtitle: "Profile",
   personalInfo: "Personal Information",
   contactInfo: "Contact Information",
   uploadAvatar: "Upload avatar",

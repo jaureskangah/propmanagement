@@ -23,6 +23,8 @@ import { frModal } from './features/modal';
 
 // Import les traductions du tableau de bord locataire
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
+// Import les traductions du profil locataire
+import { frProfile } from './features/tenant/fr/profile';
 
 export const frTranslations = {
   ...frNavigation,
@@ -47,5 +49,7 @@ export const frTranslations = {
   ...frSettings,
   ...frModal,
   // Ajouter les traductions du tableau de bord locataire
-  ...frTenantDashboard
+  ...frTenantDashboard,
+  // Ajouter les traductions du profil locataire
+  ...frProfile
 };

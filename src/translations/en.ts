@@ -21,8 +21,10 @@ import { enDashboard } from './features/dashboard';
 import { enSettings } from './features/settings';
 import { enModal } from './features/modal';
 
-// Import les traductions du tableau de bord locataire
+// Import tenant dashboard translations
 import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard';
+// Import tenant profile translations
+import { enProfile } from './features/tenant/en/profile';
 
 export const enTranslations = {
   ...enNavigation,
@@ -46,6 +48,8 @@ export const enTranslations = {
   ...enDashboard,
   ...enSettings,
   ...enModal,
-  // Ajouter les traductions du tableau de bord locataire
-  ...enTenantDashboard
+  // Add tenant dashboard translations
+  ...enTenantDashboard,
+  // Add tenant profile translations
+  ...enProfile
 };
