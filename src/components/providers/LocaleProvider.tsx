@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Language, UnitSystem, Translations } from '@/translations/types';
 import { enTranslations } from '@/translations/en';
@@ -104,7 +103,6 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       return key;
     }
     
-    // Replace parameters in the translation string if provided
     if (params) {
       let resultStr = translation as string;
       for (const [paramKey, paramValue] of Object.entries(params)) {
@@ -116,7 +114,6 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     return translation;
   };
 
-  // La propriété locale dérivée de language pour usage avec les bibliothèques comme date-fns
   const locale = language;
 
   const value = {

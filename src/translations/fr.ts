@@ -21,6 +21,9 @@ import { frDashboard } from './features/dashboard';
 import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 
+// Import les traductions du tableau de bord locataire
+import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
+
 export const frTranslations = {
   ...frNavigation,
   ...frHero,
@@ -42,5 +45,7 @@ export const frTranslations = {
   ...frCommon,
   ...frDashboard,
   ...frSettings,
-  ...frModal
+  ...frModal,
+  // Ajouter les traductions du tableau de bord locataire
+  ...frTenantDashboard
 };
