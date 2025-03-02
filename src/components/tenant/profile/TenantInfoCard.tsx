@@ -42,7 +42,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-2xl font-bold mb-1">{tenant.name}</CardTitle>
+              <CardTitle className="text-2xl font-bold mb-2">{tenant.name}</CardTitle>
               <CardDescription className="text-base">
                 {t('profileSubtitle')}
               </CardDescription>
@@ -61,57 +61,57 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
       </CardHeader>
       
       <CardContent className="pt-2">
-        <Separator className="my-4" />
+        <Separator className="my-6" />
         
-        <h3 className="text-lg font-medium mb-4">
+        <h3 className="text-lg font-medium mb-6">
           {t('personalInfo')}
         </h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8 mb-6">
-          <div className="flex items-center gap-3">
-            <Mail className="h-5 w-5 text-muted-foreground" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 gap-x-8 mb-6">
+          <div className="flex items-start gap-3">
+            <Mail className="h-5 w-5 text-muted-foreground mt-1" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t('emailProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">{t('emailProfileLabel')}</p>
               <p className="font-medium">{tenant.email}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Phone className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start gap-3">
+            <Phone className="h-5 w-5 text-muted-foreground mt-1" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t('phoneProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">{t('phoneProfileLabel')}</p>
               <p className="font-medium">{tenant.phone || t('notAvailable')}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Home className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start gap-3">
+            <Home className="h-5 w-5 text-muted-foreground mt-1" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t('unitProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">{t('unitProfileLabel')}</p>
               <p className="font-medium">{tenant.unit_number}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <DollarSign className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start gap-3">
+            <DollarSign className="h-5 w-5 text-muted-foreground mt-1" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t('rentAmountLabel')}</p>
-              <p className="font-medium">${tenant.rent_amount} {t('perMonth')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">{t('rentAmountLabel')}</p>
+              <p className="font-medium">${tenant.rent_amount}&nbsp;{t('perMonth')}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Calendar className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start gap-3">
+            <Calendar className="h-5 w-5 text-muted-foreground mt-1" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t('leaseStartProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">{t('leaseStartProfileLabel')}</p>
               <p className="font-medium">{new Date(tenant.lease_start).toLocaleDateString()}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Calendar className="h-5 w-5 text-muted-foreground" />
+          <div className="flex items-start gap-3">
+            <Calendar className="h-5 w-5 text-muted-foreground mt-1" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">{t('leaseEndProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-3">{t('leaseEndProfileLabel')}</p>
               <p className="font-medium">{new Date(tenant.lease_end).toLocaleDateString()}</p>
             </div>
           </div>
