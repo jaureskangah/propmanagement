@@ -32,7 +32,7 @@ export const DashboardHeader = ({
         transition={{ duration: 0.5 }}
         className="text-3xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600"
       >
-        {t('welcomeTenant', { name: tenantName.split(' ')[0] })}
+        {t('welcomeTenant', { name: tenantName })}
       </motion.h2>
       <div className="flex items-center gap-2">
         <Button 

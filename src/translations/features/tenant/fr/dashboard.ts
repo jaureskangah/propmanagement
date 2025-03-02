@@ -1,6 +1,6 @@
 
 export const frDashboard = {
-  welcomeTenant: "Bonjour, {name}",
+  welcomeTenant: "Bienvenue, {name}",
   noTenantProfile: "Aucun profil locataire lié",
   noTenantProfileDescription: "Veuillez contacter votre gestionnaire immobilier pour lier votre compte à un profil locataire.",
   notifications: "Notifications",
