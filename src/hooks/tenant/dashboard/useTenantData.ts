@@ -15,6 +15,9 @@ interface TenantData {
   properties?: {
     name: string;
   };
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
 }
 
 export const useTenantData = () => {
@@ -38,7 +41,7 @@ export const useTenantData = () => {
       // First check if we can get profile data
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('full_name')
+        .select('first_name, last_name, full_name')
         .eq('id', user?.id)
         .maybeSingle();
         
@@ -63,11 +66,16 @@ export const useTenantData = () => {
       if (tenant) {
         // Use profile name if available, otherwise fall back to tenant name
         const displayName = profileData?.full_name || tenant.name || user?.user_metadata?.full_name;
+        const firstName = profileData?.first_name || user?.user_metadata?.first_name;
+        const lastName = profileData?.last_name || user?.user_metadata?.last_name;
         
         // Handle the properties object properly
         setTenant({
           ...tenant,
           name: displayName, // Use the display name from profile if available
+          firstName: firstName,
+          lastName: lastName,
+          fullName: displayName,
           properties: tenant.properties as unknown as { name: string }
         });
       }

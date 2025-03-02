@@ -29,22 +29,12 @@ export const TenantDashboard = () => {
     return <NoTenantProfile />;
   }
 
-  // Format the full name for display
-  const fullName = tenant.name || "";
-
-  // Handle layout customization
-  const handleOrderChange = (newOrder: string[]) => {
-    setSectionOrder(newOrder);
-  };
-
-  const handleVisibilityChange = (hidden: string[]) => {
-    setHiddenSections(hidden);
-  };
-
   return (
     <>
       <DashboardHeader 
-        tenantName={fullName}
+        tenantName={tenant.name || ""}
+        firstName={tenant.firstName}
+        lastName={tenant.lastName}
         refreshDashboard={refreshDashboard}
         onOrderChange={handleOrderChange}
         onVisibilityChange={handleVisibilityChange}
@@ -64,4 +54,13 @@ export const TenantDashboard = () => {
       />
     </>
   );
+
+  // Handle layout customization
+  function handleOrderChange(newOrder: string[]) {
+    setSectionOrder(newOrder);
+  }
+
+  function handleVisibilityChange(hidden: string[]) {
+    setHiddenSections(hidden);
+  }
 };
