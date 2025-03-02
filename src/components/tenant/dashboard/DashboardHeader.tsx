@@ -28,8 +28,13 @@ export const DashboardHeader = ({
 }: DashboardHeaderProps) => {
   const { t } = useLocale();
   
-  // Use firstName for greeting if available, otherwise use full name
-  const displayName = firstName || tenantName || "";
+  // Définir le nom d'affichage avec une priorité claire et une valeur par défaut
+  let displayName = firstName || tenantName || "";
+  
+  // Si aucun nom n'est disponible, utiliser un message générique
+  const welcomeMessage = displayName 
+    ? t('welcomeTenant', { name: displayName }) 
+    : t('welcomeGeneric');
   
   return (
     <div className="flex items-center justify-between mb-6 bg-background sticky top-0 z-10 pt-2 pb-4 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
@@ -39,7 +44,7 @@ export const DashboardHeader = ({
         transition={{ duration: 0.5 }}
         className="text-3xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600"
       >
-        {t('welcomeTenant', { name: displayName })}
+        {welcomeMessage}
       </motion.h2>
       <div className="flex items-center gap-2">
         <Button 

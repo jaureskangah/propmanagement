@@ -1,6 +1,7 @@
 
 export const enDashboard = {
   welcomeTenant: "Welcome, {name}",
+  welcomeGeneric: "Welcome to your dashboard",
   noTenantProfile: "No tenant profile linked",
   noTenantProfileDescription: "Please contact your property manager to link your account to a tenant profile.",
   notifications: "Notifications",
