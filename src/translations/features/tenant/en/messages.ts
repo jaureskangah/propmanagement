@@ -14,4 +14,6 @@ export const enMessages: TenantMessagesTranslations = {
   fieldRequired: "This field is required",
   invalidEmail: "Invalid email address",
   invalidAmount: "Amount must be positive",
+  error: "Error",
+  success: "Success"
 };

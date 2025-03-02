@@ -183,6 +183,8 @@ export const useCommunicationActions = (tenantId?: string) => {
         throw error;
       }
 
+      console.log("Communication and all replies deleted successfully");
+      
       toast({
         title: "Success",
         description: "Communication and all replies deleted successfully",

@@ -15,4 +15,8 @@ export interface TenantMessagesTranslations {
   fieldRequired: string;
   invalidEmail: string;
   invalidAmount: string;
+  
+  // Messages d'état
+  error: string;
+  success: string;
 }

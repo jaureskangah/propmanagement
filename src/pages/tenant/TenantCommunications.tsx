@@ -39,6 +39,8 @@ const TenantCommunications = () => {
   const handleDeleteConfirm = () => {
     if (!communicationToDelete) return;
     
+    console.log("Confirming deletion of communication:", communicationToDelete.id);
+    
     handleDeleteCommunication(communicationToDelete.id)
       .then(success => {
         if (success) {
@@ -48,6 +50,15 @@ const TenantCommunications = () => {
           });
           refreshCommunications();
         }
+        setCommunicationToDelete(null);
+      })
+      .catch(error => {
+        console.error("Error deleting communication:", error);
+        toast({
+          title: t('error'),
+          description: "Erreur lors de la suppression du message",
+          variant: "destructive",
+        });
         setCommunicationToDelete(null);
       });
   };

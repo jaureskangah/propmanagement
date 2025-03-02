@@ -14,4 +14,6 @@ export const frMessages: TenantMessagesTranslations = {
   fieldRequired: "Ce champ est requis",
   invalidEmail: "Adresse email invalide",
   invalidAmount: "Le montant doit être positif",
+  error: "Erreur",
+  success: "Succès"
 };

@@ -57,6 +57,15 @@ const Communications = () => {
           refreshCommunications();
         }
         setCommunicationToDelete(null);
+      })
+      .catch(error => {
+        console.error("Error deleting communication:", error);
+        toast({
+          title: t('error'),
+          description: "Erreur lors de la suppression du message",
+          variant: "destructive",
+        });
+        setCommunicationToDelete(null);
       });
   };
 
