@@ -7,7 +7,7 @@ import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
 
 const Dashboard = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading, user } = useAuth();
 
   if (loading) {
     return (
@@ -19,6 +19,12 @@ const Dashboard = () => {
 
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;
+  }
+  
+  // Vérifier si l'utilisateur est un locataire
+  if (user?.user_metadata?.is_tenant_user) {
+    // Rediriger vers le tableau de bord du locataire
+    return <Navigate to="/tenant/dashboard" replace />;
   }
 
   return (

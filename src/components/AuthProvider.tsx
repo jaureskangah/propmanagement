@@ -2,6 +2,7 @@
 import { createContext, useContext, ReactNode, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -25,6 +26,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Get initial session
@@ -41,6 +44,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session) {
         setSession(session);
         setUser(session.user);
+        
+        // Rediriger en fonction du rôle de l'utilisateur
+        if (location.pathname === '/auth' || location.pathname === '/') {
+          const isTenantUser = session.user?.user_metadata?.is_tenant_user;
+          if (isTenantUser) {
+            navigate('/tenant/dashboard', { replace: true });
+          } else {
+            navigate('/dashboard', { replace: true });
+          }
+        }
       } else {
         setSession(null);
         setUser(null);
@@ -51,12 +64,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate, location.pathname]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
     setSession(null);
     setUser(null);
+    navigate('/auth', { replace: true });
   };
 
   const value = {

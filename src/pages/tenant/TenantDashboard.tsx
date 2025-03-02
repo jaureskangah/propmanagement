@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import { TenantDashboard } from "@/components/tenant/TenantDashboard";
@@ -7,6 +7,16 @@ import { useAuth } from '@/components/AuthProvider';
 
 const TenantDashboardPage = () => {
   const { isAuthenticated, loading, user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      console.log("User authentication in TenantDashboard:", { 
+        authenticated: isAuthenticated,
+        isTenant: user?.user_metadata?.is_tenant_user,
+        email: user?.email
+      });
+    }
+  }, [user, isAuthenticated]);
 
   if (loading) {
     return (
@@ -22,7 +32,7 @@ const TenantDashboardPage = () => {
 
   return (
     <div className="flex h-screen bg-background">
-      <AppSidebar />
+      <AppSidebar isTenant={true} />
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto p-4 md:p-6 space-y-6">
           <TenantDashboard />
