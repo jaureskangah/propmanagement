@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("AuthProvider initializing");
+    console.log("AuthProvider initializing", location.pathname);
     
     // Get initial session
     supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
@@ -101,6 +101,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: !!session?.user,
     signOut
   };
+
+  console.log("AuthProvider rendering with values:", { isAuthenticated: !!session?.user, loading });
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

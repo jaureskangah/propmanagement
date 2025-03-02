@@ -9,7 +9,7 @@ const TenantDashboardPage = () => {
   const { isAuthenticated, loading, user } = useAuth();
 
   useEffect(() => {
-    console.log("TenantDashboard component mounted, auth state:", { 
+    console.log("TenantDashboard page mounted, auth state:", { 
       isAuthenticated, 
       isTenant: user?.user_metadata?.is_tenant_user,
       email: user?.email,
@@ -36,7 +36,7 @@ const TenantDashboardPage = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  console.log("Rendering tenant dashboard");
+  console.log("Rendering tenant dashboard page");
   return (
     <div className="flex h-screen bg-background">
       <AppSidebar isTenant={true} />
