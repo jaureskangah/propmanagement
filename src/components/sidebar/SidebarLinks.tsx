@@ -29,9 +29,9 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
   
-  const handleHomeClick = (e: React.MouseEvent) => {
+  const handleNavigation = (e: React.MouseEvent, path: string) => {
     e.preventDefault();
-    navigate('/');
+    navigate(path);
   };
   
   // Liens pour les locataires - redessinés pour être plus pertinents
@@ -40,7 +40,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/",
       icon: HomeIcon,
       label: t('home'),
-      onClick: handleHomeClick
     },
     {
       href: "/tenant/dashboard",
@@ -85,7 +84,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/",
       icon: HomeIcon,
       label: t('home'),
-      onClick: handleHomeClick
     },
     {
       href: "/dashboard",
@@ -131,12 +129,11 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   return (
     <nav className="space-y-1">
       {links.map((link) => (
-        <Link
+        <div
           key={link.href}
-          to={link.href}
-          onClick={link.onClick}
+          onClick={(e) => handleNavigation(e, link.href)}
           className={cn(
-            "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
+            "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150 cursor-pointer",
             location.pathname === link.href
               ? "bg-gray-100 text-gray-900"
               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -153,7 +150,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
           {!collapsed && (
             <span className="truncate">{link.label}</span>
           )}
-        </Link>
+        </div>
       ))}
     </nav>
   );

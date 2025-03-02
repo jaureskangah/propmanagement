@@ -43,7 +43,7 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const handleDashboardClick = () => {
     if (profile?.is_tenant_user) {
-      navigate("/maintenance");
+      navigate("/tenant/dashboard");
     } else {
       navigate("/dashboard");
     }
