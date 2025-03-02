@@ -7,7 +7,7 @@ export const enNavigation: NavigationTranslations = {
   freeTrial: "Free Trial",
   signIn: "Sign In",
   signOut: "Sign Out",
-  dashboard: "Dashboard", // Updated with capital D
+  dashboard: "Dashboard", // Assurons-nous que le D est majuscule
   language: "Language",
   units: "Units",
   metric: "Metric",
