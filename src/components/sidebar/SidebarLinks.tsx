@@ -1,5 +1,5 @@
 
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -29,8 +29,8 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
   
-  const handleNavigation = (e: React.MouseEvent, path: string) => {
-    e.preventDefault();
+  const handleNavigation = (path: string) => {
+    console.log("Navigating to:", path);
     navigate(path);
   };
   
@@ -131,7 +131,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       {links.map((link) => (
         <div
           key={link.href}
-          onClick={(e) => handleNavigation(e, link.href)}
+          onClick={() => handleNavigation(link.href)}
           className={cn(
             "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150 cursor-pointer",
             location.pathname === link.href

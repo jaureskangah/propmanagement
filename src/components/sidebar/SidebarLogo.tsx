@@ -11,6 +11,7 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   const navigate = useNavigate();
   
   const handleLogoClick = () => {
+    console.log("Logo clicked - navigating to home page");
     navigate('/');
   };
   
