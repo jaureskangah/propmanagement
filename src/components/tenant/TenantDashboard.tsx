@@ -61,7 +61,7 @@ export const TenantDashboard = () => {
         payments={payments}
         documents={documents}
         leaseStatus={leaseStatus}
-        sectionOrder={sectionOrder}
+        widgetOrder={sectionOrder}
         hiddenSections={hiddenSections}
       />
     </>
