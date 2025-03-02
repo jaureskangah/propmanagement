@@ -42,7 +42,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
               </AvatarFallback>
             </Avatar>
             <div>
-              <CardTitle className="text-2xl font-bold">{tenant.name}</CardTitle>
+              <CardTitle className="text-2xl font-bold mb-1">{tenant.name}</CardTitle>
               <CardDescription className="text-base">
                 {t('profileSubtitle')}
               </CardDescription>
@@ -63,7 +63,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
       <CardContent className="pt-2">
         <Separator className="my-4" />
         
-        <h3 className="text-lg font-medium mb-3">
+        <h3 className="text-lg font-medium mb-4">
           {t('personalInfo')}
         </h3>
         
@@ -71,7 +71,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Mail className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('emailProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">{t('emailProfileLabel')}</p>
               <p className="font-medium">{tenant.email}</p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Phone className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('phoneProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">{t('phoneProfileLabel')}</p>
               <p className="font-medium">{tenant.phone || t('notAvailable')}</p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Home className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('unitProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">{t('unitProfileLabel')}</p>
               <p className="font-medium">{tenant.unit_number}</p>
             </div>
           </div>
@@ -95,15 +95,15 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <DollarSign className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('rentAmountLabel')}</p>
-              <p className="font-medium">${tenant.rent_amount}{t('perMonth')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">{t('rentAmountLabel')}</p>
+              <p className="font-medium">${tenant.rent_amount} {t('perMonth')}</p>
             </div>
           </div>
           
           <div className="flex items-center gap-3">
             <Calendar className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('leaseStartProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">{t('leaseStartProfileLabel')}</p>
               <p className="font-medium">{new Date(tenant.lease_start).toLocaleDateString()}</p>
             </div>
           </div>
@@ -111,7 +111,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Calendar className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground">{t('leaseEndProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-1">{t('leaseEndProfileLabel')}</p>
               <p className="font-medium">{new Date(tenant.lease_end).toLocaleDateString()}</p>
             </div>
           </div>
