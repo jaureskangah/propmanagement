@@ -29,7 +29,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
   
-  const handleHomeClick = (e: React.MouseEvent, path: string) => {
+  const handleHomeClick = (e: React.MouseEvent) => {
     e.preventDefault();
     navigate('/');
   };
