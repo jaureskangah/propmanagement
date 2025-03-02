@@ -30,8 +30,8 @@ export const UnlinkedTenantProfile = ({ tenant, onProfileLinked }: UnlinkedTenan
     <div className="space-y-6">
       <Card className="shadow-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold mb-3">{t('notLinkedToTenant')}</CardTitle>
-          <CardDescription className="text-base mb-2">
+          <CardTitle className="text-2xl font-bold mb-2">{t('notLinkedToTenant')}</CardTitle>
+          <CardDescription className="text-base">
             {t('linkAccountRequired')}
           </CardDescription>
         </CardHeader>
@@ -43,12 +43,12 @@ export const UnlinkedTenantProfile = ({ tenant, onProfileLinked }: UnlinkedTenan
             </Alert>
           )}
           
-          <div className="flex items-center gap-4 p-5 border rounded-lg bg-muted/50 mb-6">
+          <div className="flex items-center gap-4 p-4 border rounded-lg bg-muted/50 mb-6">
             <div className="p-3 rounded-full bg-primary/10">
               <LinkIcon className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <h3 className="font-medium mb-2">{tenant.name}</h3>
+              <h3 className="font-medium mb-1">{tenant.name}</h3>
               <p className="text-sm text-muted-foreground">{tenant.email}</p>
             </div>
           </div>
