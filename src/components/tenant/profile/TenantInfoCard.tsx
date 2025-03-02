@@ -71,7 +71,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Mail className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">{t('emailProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t('emailProfileLabel')}</p>
               <p className="font-medium">{tenant.email}</p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Phone className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">{t('phoneProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t('phoneProfileLabel')}</p>
               <p className="font-medium">{tenant.phone || t('notAvailable')}</p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Home className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">{t('unitProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t('unitProfileLabel')}</p>
               <p className="font-medium">{tenant.unit_number}</p>
             </div>
           </div>
@@ -95,7 +95,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <DollarSign className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">{t('rentAmountLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t('rentAmountLabel')}</p>
               <p className="font-medium">${tenant.rent_amount} {t('perMonth')}</p>
             </div>
           </div>
@@ -103,7 +103,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Calendar className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">{t('leaseStartProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t('leaseStartProfileLabel')}</p>
               <p className="font-medium">{new Date(tenant.lease_start).toLocaleDateString()}</p>
             </div>
           </div>
@@ -111,7 +111,7 @@ export function TenantInfoCard({ tenant, onEdit }: TenantInfoCardProps) {
           <div className="flex items-center gap-3">
             <Calendar className="h-5 w-5 text-muted-foreground" />
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">{t('leaseEndProfileLabel')}</p>
+              <p className="text-sm font-medium text-muted-foreground mb-2">{t('leaseEndProfileLabel')}</p>
               <p className="font-medium">{new Date(tenant.lease_end).toLocaleDateString()}</p>
             </div>
           </div>
