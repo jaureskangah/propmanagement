@@ -34,6 +34,15 @@ export const useTenantData = () => {
   const fetchTenantData = async () => {
     try {
       setIsLoading(true);
+      
+      // First check if we can get profile data
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('id', user?.id)
+        .maybeSingle();
+        
+      // Then get tenant data
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
@@ -52,9 +61,13 @@ export const useTenantData = () => {
       if (error) throw error;
 
       if (tenant) {
+        // Use profile name if available, otherwise fall back to tenant name
+        const displayName = profileData?.full_name || tenant.name || user?.user_metadata?.full_name;
+        
         // Handle the properties object properly
         setTenant({
           ...tenant,
+          name: displayName, // Use the display name from profile if available
           properties: tenant.properties as unknown as { name: string }
         });
       }

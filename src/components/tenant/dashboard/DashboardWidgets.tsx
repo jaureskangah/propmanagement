@@ -51,52 +51,75 @@ export const DashboardWidgets = ({
     if (hiddenSections.includes(widgetId)) return null;
     
     switch (widgetId) {
+      case 'property':
+        return tenant?.properties && (
+          <div className="col-span-1">
+            <div className="h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+              <h3 className="text-lg font-semibold mb-2">{tenant.properties.name}</h3>
+              <p className="text-gray-500 dark:text-gray-400">Unit: {tenant.unit_number}</p>
+            </div>
+          </div>
+        );
       case 'lease':
         return tenant && (
-          <LeaseWidget 
-            leaseStart={tenant.lease_start}
-            leaseEnd={tenant.lease_end}
-            daysLeft={leaseStatus.daysLeft}
-            status={leaseStatus.status}
-          />
+          <div className="col-span-1">
+            <LeaseWidget 
+              leaseStart={tenant.lease_start}
+              leaseEnd={tenant.lease_end}
+              daysLeft={leaseStatus.daysLeft}
+              status={leaseStatus.status}
+            />
+          </div>
         );
       case 'notifications':
         return (
-          <NotificationWidget
-            communications={communications}
-            maintenanceRequests={maintenanceRequests}
-          />
+          <div className="col-span-1">
+            <NotificationWidget
+              communications={communications}
+              maintenanceRequests={maintenanceRequests}
+            />
+          </div>
         );
       case 'payments':
         return tenant && (
-          <PaymentWidget
-            rentAmount={tenant.rent_amount}
-            payments={payments}
-          />
+          <div className="col-span-1">
+            <PaymentWidget
+              rentAmount={tenant.rent_amount}
+              payments={payments}
+            />
+          </div>
         );
       case 'maintenance':
         return (
-          <MaintenanceWidget
-            requests={maintenanceRequests}
-          />
+          <div className="col-span-1">
+            <MaintenanceWidget
+              requests={maintenanceRequests}
+            />
+          </div>
         );
       case 'communications':
         return (
-          <CommunicationsWidget
-            communications={communications}
-          />
+          <div className="col-span-1">
+            <CommunicationsWidget
+              communications={communications}
+            />
+          </div>
         );
       case 'documents':
         return (
-          <DocumentsWidget
-            documents={documents}
-          />
+          <div className="col-span-1">
+            <DocumentsWidget
+              documents={documents}
+            />
+          </div>
         );
       case 'chart':
         return (
-          <PaymentHistoryChart
-            payments={payments}
-          />
+          <div className="col-span-full">
+            <PaymentHistoryChart
+              payments={payments}
+            />
+          </div>
         );
       default:
         return null;
@@ -105,11 +128,7 @@ export const DashboardWidgets = ({
   
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {widgetOrder.map(widgetId => (
-        <div key={widgetId} className={widgetId === 'chart' ? 'col-span-full' : ''}>
-          {renderWidget(widgetId)}
-        </div>
-      ))}
+      {widgetOrder.map(widgetId => renderWidget(widgetId))}
     </div>
   );
 };
