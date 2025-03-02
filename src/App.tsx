@@ -5,9 +5,6 @@ import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { RouterProvider } from "react-router-dom";
 import router from "./router";
 import { Toaster } from "sonner";
-import { useEffect } from "react";
-import { useAuth } from "@/components/AuthProvider";
-import { useNavigate } from "react-router-dom";
 
 // Assurons-nous que la langue est initialisée au démarrage de l'application
 const initializeLanguage = () => {
@@ -18,26 +15,6 @@ const initializeLanguage = () => {
     const defaultLang = browserLang === 'fr' ? 'fr' : 'en';
     localStorage.setItem('app-language', defaultLang);
   }
-};
-
-// Composant pour gérer les redirections basées sur le rôle de l'utilisateur
-const AuthRedirect = () => {
-  const { user, isAuthenticated } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      // Si l'utilisateur est un locataire, rediriger vers le tableau de bord du locataire
-      if (user?.user_metadata?.is_tenant_user) {
-        navigate('/tenant/dashboard', { replace: true });
-      } else {
-        // Sinon, rediriger vers le tableau de bord standard
-        navigate('/dashboard', { replace: true });
-      }
-    }
-  }, [isAuthenticated, user, navigate]);
-
-  return null;
 };
 
 function App() {
