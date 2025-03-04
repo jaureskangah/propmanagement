@@ -62,7 +62,11 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
           transition={{ duration: 0.3 }}
           className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-100 dark:border-blue-900"
         >
-          <DocumentUpload tenantId={tenant.id} onUploadComplete={onDocumentUpdate} />
+          <DocumentUpload tenantId={tenant.id} onUploadComplete={() => {
+            onDocumentUpdate();
+            // Fermer le formulaire d'upload après un téléversement réussi
+            setIsUploadOpen(false);
+          }} />
         </motion.div>
       )}
     </div>

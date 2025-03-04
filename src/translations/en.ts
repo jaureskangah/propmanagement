@@ -25,6 +25,8 @@ import { enModal } from './features/modal';
 import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard';
 // Import tenant profile translations
 import { enProfile } from './features/tenant/en/profile';
+// Import tenant documents translations
+import { enDocuments } from './features/tenant/en/documents';
 
 export const enTranslations = {
   ...enNavigation,
@@ -51,5 +53,7 @@ export const enTranslations = {
   // Add tenant dashboard translations
   ...enTenantDashboard,
   // Add tenant profile translations
-  ...enProfile
+  ...enProfile,
+  // Add tenant documents translations
+  ...enDocuments
 };

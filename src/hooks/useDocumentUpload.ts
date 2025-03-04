@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void) => {
   const { toast } = useToast();
+  const { t } = useLocale();
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadDocument = async (file: File, documentType: 'lease' | 'receipt' | 'other' = 'other') => {
@@ -16,8 +18,8 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     if (!tenantId) {
       console.error("No tenant ID provided");
       toast({
-        title: "Erreur",
-        description: "ID du locataire manquant",
+        title: t("error"),
+        description: t("error"),
         variant: "destructive",
       });
       return;
@@ -42,14 +44,15 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       const bucketExists = buckets?.some(b => b.name === 'tenant_documents');
       
       if (!bucketExists) {
-        console.error("Storage bucket 'tenant_documents' does not exist");
-        toast({
-          title: "Erreur de configuration",
-          description: "Le bucket de stockage 'tenant_documents' n'existe pas. Veuillez contacter l'administrateur.",
-          variant: "destructive",
-        });
-        setIsUploading(false);
-        return;
+        console.log("Creating tenant_documents bucket");
+        const { error: createBucketError } = await supabase
+          .storage
+          .createBucket('tenant_documents', { public: true });
+          
+        if (createBucketError) {
+          console.error("Error creating bucket:", createBucketError);
+          throw createBucketError;
+        }
       }
 
       // 1. Upload file to storage
@@ -103,15 +106,15 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       console.log("Document reference saved in database:", insertData);
 
       toast({
-        title: "Document chargé",
-        description: "Le document a été chargé avec succès",
+        title: t("success"),
+        description: t("docUploadSuccess"),
       });
 
       onUploadComplete();
     } catch (error: any) {
       console.error('Upload error:', error);
       
-      let errorMessage = "Une erreur est survenue lors du chargement";
+      let errorMessage = t("error");
       
       if (error.message) {
         if (error.message.includes("duplicate key")) {
@@ -124,7 +127,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       }
       
       toast({
-        title: "Erreur",
+        title: t("error"),
         description: errorMessage,
         variant: "destructive",
       });
