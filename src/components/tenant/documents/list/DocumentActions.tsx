@@ -1,86 +1,63 @@
 
-import { Download, Eye, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantDocument } from "@/types/tenant";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Download, ExternalLink, Trash2 } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DocumentActionsProps {
   document: TenantDocument;
-  onView: (document: TenantDocument) => void;
-  onDelete: (documentId: string) => void;
+  onViewDocument: (document: TenantDocument) => void;
+  onDeleteDocument: (documentId: string, filename: string) => void;
 }
 
-export const DocumentActions = ({ document, onView, onDelete }: DocumentActionsProps) => {
+export const DocumentActions = ({ 
+  document,
+  onViewDocument,
+  onDeleteDocument 
+}: DocumentActionsProps) => {
   const { t } = useLocale();
 
+  const handleDownload = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!document.file_url) return;
+    
+    const link = document.createElement('a');
+    link.href = document.file_url;
+    link.download = document.name;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
-    <div className="flex justify-end gap-2">
+    <div className="flex gap-1 justify-end">
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => onView(document)}
-        title={t("openDocument") || "Ouvrir le document"}
-      >
-        <Eye className="h-4 w-4" />
-      </Button>
-      
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => {
-          if (document.file_url) {
-            console.log("Opening document URL:", document.file_url);
-            window.open(document.file_url, '_blank');
-          } else {
-            console.error("No file_url available for document:", document.id);
-            alert("URL du document non disponible");
-          }
-        }}
-        title={t("downloadDocument") || "Télécharger"}
+        onClick={handleDownload}
+        title={t("downloadDocument")}
+        className="h-8 w-8"
       >
         <Download className="h-4 w-4" />
       </Button>
-      
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
-            title={t("confirmDeleteDocument") || "Confirmer la suppression"}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t("confirmDeleteDocument") || "Supprimer le document"}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t("documentDeleteWarning") || "Êtes-vous sûr de vouloir supprimer ce document ?"}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t("cancel") || "Annuler"}</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={() => onDelete(document.id)}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              {t("confirmDeleteDocument") || "Supprimer"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => onViewDocument(document)}
+        title={t("openDocument")}
+        className="h-8 w-8"
+      >
+        <ExternalLink className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => onDeleteDocument(document.id, document.name)}
+        title={t("confirmDeleteDocument")}
+        className="h-8 w-8 hover:text-red-500"
+      >
+        <Trash2 className="h-4 w-4" />
+      </Button>
     </div>
   );
 };

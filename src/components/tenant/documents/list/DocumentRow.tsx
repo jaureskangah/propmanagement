@@ -1,35 +1,43 @@
 
 import { TenantDocument } from "@/types/tenant";
-import { TableCell, TableRow } from "@/components/ui/table";
 import { formatDate } from "@/lib/utils";
 import { DocumentIcon } from "./DocumentIcon";
 import { DocumentActions } from "./DocumentActions";
 
 interface DocumentRowProps {
   document: TenantDocument;
-  onView: (document: TenantDocument) => void;
-  onDelete: (documentId: string) => void;
+  onViewDocument: (document: TenantDocument) => void;
+  onDeleteDocument: (documentId: string, filename: string) => void;
 }
 
-export const DocumentRow = ({ document, onView, onDelete }: DocumentRowProps) => {
+export const DocumentRow = ({ 
+  document,
+  onViewDocument,
+  onDeleteDocument 
+}: DocumentRowProps) => {
   return (
-    <TableRow key={document.id} className="hover:bg-muted/50">
-      <TableCell className="flex items-center gap-2 font-medium">
-        <DocumentIcon document={document} />
-        <span className="truncate max-w-[300px]" title={document.name}>
-          {document.name}
-        </span>
-      </TableCell>
-      <TableCell>
+    <>
+      <td className="px-4 py-4">
+        <div className="flex items-center gap-2">
+          <DocumentIcon documentType={document.document_type} />
+          <span className="font-medium truncate max-w-[200px]">
+            {document.name}
+          </span>
+        </div>
+      </td>
+      <td className="px-4 py-4 hidden md:table-cell text-muted-foreground">
+        {document.document_type || "Autre"}
+      </td>
+      <td className="px-4 py-4 hidden md:table-cell text-muted-foreground">
         {formatDate(document.created_at)}
-      </TableCell>
-      <TableCell className="text-right">
+      </td>
+      <td className="px-4 py-4 text-right">
         <DocumentActions 
-          document={document} 
-          onView={onView} 
-          onDelete={onDelete} 
+          document={document}
+          onViewDocument={onViewDocument}
+          onDeleteDocument={onDeleteDocument}
         />
-      </TableCell>
-    </TableRow>
+      </td>
+    </>
   );
 };

@@ -1,27 +1,35 @@
 
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { DocumentsFilters } from "./DocumentsFilters";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentsList } from "./list/DocumentsList";
-import { TenantDocument, Tenant } from "@/types/tenant";
+import { DocumentUpload } from "@/components/tenant/DocumentUpload";
+import { DocumentGenerator } from "./DocumentGenerator";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useEffect } from "react";
+import { TenantDocument } from "@/types/tenant";
+import { Tenant } from "@/types/tenant";
+import { FileText, Search, SlidersHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface DocumentsTabsProps {
-  documents: TenantDocument[];
-  filteredDocuments: TenantDocument[];
+  documents: TenantDocument[] | undefined;
+  filteredDocuments: TenantDocument[] | undefined;
   isLoading: boolean;
   tenant: Tenant | null;
   searchQuery: string;
-  setSearchQuery: (value: string) => void;
-  selectedDocType: string | null;
-  setSelectedDocType: (value: string | null) => void;
-  sortBy: "date" | "name";
-  setSortBy: (value: "date" | "name") => void;
+  setSearchQuery: (query: string) => void;
+  selectedDocType: string;
+  setSelectedDocType: (type: string) => void;
+  sortBy: string;
+  setSortBy: (sort: string) => void;
   sortOrder: "asc" | "desc";
-  setSortOrder: (value: "asc" | "desc") => void;
+  setSortOrder: (order: "asc" | "desc") => void;
   onViewDocument: (document: TenantDocument) => void;
-  onDeleteDocument: (documentId: string) => void;
+  onDeleteDocument: (documentId: string, filename: string) => void;
   onDocumentUpdate: () => void;
+  error?: Error;
 }
 
 export const DocumentsTabs = ({
@@ -39,69 +47,145 @@ export const DocumentsTabs = ({
   setSortOrder,
   onViewDocument,
   onDeleteDocument,
-  onDocumentUpdate
+  onDocumentUpdate,
+  error
 }: DocumentsTabsProps) => {
   const { t } = useLocale();
-  
-  // Debug logs
-  useEffect(() => {
-    console.log("DocumentsTabs - Documents available:", documents?.length || 0);
-    console.log("DocumentsTabs - Documents filtered:", filteredDocuments?.length || 0);
-    console.log("DocumentsTabs - Documents sample:", documents?.slice(0, 2));
-    
-    if (documents?.length === 0) {
-      console.log("No documents available");
-    }
-    
-    if (documents?.length > 0 && filteredDocuments?.length === 0) {
-      console.log("Documents available but no filtered documents");
-      console.log("Current filters - Search:", searchQuery, "Type:", selectedDocType, "Sort:", sortBy, sortOrder);
-    }
-  }, [documents, filteredDocuments, searchQuery, selectedDocType, sortBy, sortOrder]);
-
-  // Recent: the 5 most recent documents
-  const recentDocuments = documents?.length 
-    ? [...documents].sort((a, b) => {
-        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      }).slice(0, 5)
-    : [];
-  
-  console.log("Recent documents:", recentDocuments?.length || 0);
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   return (
     <Tabs defaultValue="all" className="mt-6">
-      <TabsList className="mb-4">
-        <TabsTrigger value="all">{t("allDocuments") || "Tous les documents"}</TabsTrigger>
-        <TabsTrigger value="recent">{t("recentlyUploaded") || "Récemment ajoutés"}</TabsTrigger>
-      </TabsList>
-      
-      <TabsContent value="all" className="space-y-4">
-        <DocumentsFilters 
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          selectedDocType={selectedDocType}
-          setSelectedDocType={setSelectedDocType}
-          sortBy={sortBy}
-          setSortBy={setSortBy}
-          sortOrder={sortOrder}
-          setSortOrder={setSortOrder}
-        />
-        
-        <DocumentsList 
-          documents={filteredDocuments || []}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <TabsList>
+          <TabsTrigger value="all">{t("allDocuments")}</TabsTrigger>
+          <TabsTrigger value="upload">{t("uploadNewDocument")}</TabsTrigger>
+          <TabsTrigger value="generate">{t("generateDocument")}</TabsTrigger>
+        </TabsList>
+
+        <div className="flex items-center gap-2">
+          <div className="relative flex-1">
+            <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder={t("searchDocuments")}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-8"
+            />
+          </div>
+          
+          <CollapsibleTrigger asChild onClick={() => setFiltersOpen(!filtersOpen)}>
+            <Button variant="outline" size="icon" title={t("filterDocuments")}>
+              <SlidersHorizontal className="h-4 w-4" />
+            </Button>
+          </CollapsibleTrigger>
+        </div>
+      </div>
+
+      <Collapsible open={filtersOpen}>
+        <CollapsibleContent className="mb-4 space-y-4">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1">
+              <label className="text-sm font-medium mb-1 block">
+                {t("documentType")}
+              </label>
+              <Select value={selectedDocType} onValueChange={setSelectedDocType}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("filterDocuments")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">{t("allDocuments")}</SelectItem>
+                  <SelectItem value="lease">{t("leaseDocuments")}</SelectItem>
+                  <SelectItem value="receipt">{t("paymentReceipts")}</SelectItem>
+                  <SelectItem value="other">{t("otherDocuments")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex-1">
+              <label className="text-sm font-medium mb-1 block">
+                {t("sortBy")}
+              </label>
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("sortBy")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="created_at">{t("dateUploaded")}</SelectItem>
+                  <SelectItem value="name">{t("documentName")}</SelectItem>
+                  <SelectItem value="document_type">{t("documentType")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex-1">
+              <label className="text-sm font-medium mb-1 block">
+                {t("order")}
+              </label>
+              <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as "asc" | "desc")}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="desc">Newest first</SelectItem>
+                  <SelectItem value="asc">Oldest first</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
+
+      <TabsContent value="all" className="mt-0">
+        <DocumentsList
+          documents={documents}
+          filteredDocuments={filteredDocuments}
           isLoading={isLoading}
+          error={error}
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}
         />
       </TabsContent>
-      
-      <TabsContent value="recent">
-        <DocumentsList 
-          documents={recentDocuments}
-          isLoading={isLoading}
-          onViewDocument={onViewDocument}
-          onDeleteDocument={onDeleteDocument}
-        />
+
+      <TabsContent value="upload" className="mt-0">
+        {tenant ? (
+          <div className="border rounded-lg p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <FileText className="h-5 w-5 text-blue-600" />
+              <h3 className="text-lg font-medium">{t("uploadNewDocument")}</h3>
+            </div>
+            <DocumentUpload 
+              tenantId={tenant.id} 
+              onUploadComplete={onDocumentUpdate} 
+            />
+          </div>
+        ) : (
+          <div className="border rounded-lg p-6 text-center">
+            <p className="text-muted-foreground">
+              Tenant profile not found
+            </p>
+          </div>
+        )}
+      </TabsContent>
+
+      <TabsContent value="generate" className="mt-0">
+        <div className="border rounded-lg p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <FileText className="h-5 w-5 text-blue-600" />
+            <h3 className="text-lg font-medium">{t("generateDocument")}</h3>
+          </div>
+          {tenant ? (
+            <DocumentGenerator 
+              tenant={tenant} 
+              onDocumentGenerated={onDocumentUpdate}
+            />
+          ) : (
+            <div className="text-center">
+              <p className="text-muted-foreground">
+                Tenant profile not found
+              </p>
+            </div>
+          )}
+        </div>
       </TabsContent>
     </Tabs>
   );
