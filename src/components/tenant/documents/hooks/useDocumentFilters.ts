@@ -2,10 +2,10 @@
 import { useState, useMemo, useEffect } from "react";
 import { TenantDocument } from "@/types/tenant";
 
-export const useDocumentFilters = (documents: TenantDocument[]) => {
+export const useDocumentFilters = (documents: TenantDocument[] | undefined) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDocType, setSelectedDocType] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<"date" | "name">("date");
+  const [selectedDocType, setSelectedDocType] = useState<string>("all");
+  const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Debug logging for filter changes
@@ -29,7 +29,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
     }
     
     // Filter by document type
-    if (selectedDocType) {
+    if (selectedDocType && selectedDocType !== "all") {
       filtered = filtered.filter(doc => 
         doc.document_type === selectedDocType
       );
@@ -38,7 +38,7 @@ export const useDocumentFilters = (documents: TenantDocument[]) => {
     
     // Sort documents
     filtered.sort((a, b) => {
-      if (sortBy === "date") {
+      if (sortBy === "created_at") {
         const dateA = new Date(a.created_at).getTime();
         const dateB = new Date(b.created_at).getTime();
         return sortOrder === "asc" ? dateA - dateB : dateB - dateA;

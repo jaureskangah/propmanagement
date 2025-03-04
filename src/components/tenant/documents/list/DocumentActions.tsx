@@ -21,12 +21,13 @@ export const DocumentActions = ({
     e.stopPropagation();
     if (!document.file_url) return;
     
-    const link = document.createElement('a');
+    // Use the global document object to create an anchor element
+    const link = window.document.createElement('a');
     link.href = document.file_url;
     link.download = document.name;
-    document.body.appendChild(link);
+    window.document.body.appendChild(link);
     link.click();
-    document.body.removeChild(link);
+    window.document.body.removeChild(link);
   };
 
   return (
