@@ -1,7 +1,7 @@
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DocumentsFilters } from "./DocumentsFilters";
-import { DocumentsList } from "./DocumentsList";
+import { DocumentsList } from "./list/DocumentsList";
 import { TenantDocument, Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useEffect } from "react";
