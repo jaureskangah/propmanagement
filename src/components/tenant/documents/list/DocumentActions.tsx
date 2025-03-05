@@ -11,7 +11,7 @@ interface DocumentActionsProps {
 }
 
 export const DocumentActions = ({ 
-  document,
+  document: documentItem,
   onViewDocument,
   onDeleteDocument 
 }: DocumentActionsProps) => {
@@ -19,12 +19,12 @@ export const DocumentActions = ({
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!document.file_url) return;
+    if (!documentItem.file_url) return;
     
-    // Create a temporary link element using the window.document object
+    // Create a temporary link element
     const link = window.document.createElement('a');
-    link.href = document.file_url;
-    link.download = document.name || 'document';
+    link.href = documentItem.file_url;
+    link.download = documentItem.name || 'document';
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
     
@@ -50,7 +50,7 @@ export const DocumentActions = ({
         size="icon"
         onClick={(e) => {
           e.stopPropagation();
-          onViewDocument(document);
+          onViewDocument(documentItem);
         }}
         title={t("openDocument")}
         className="h-8 w-8"
@@ -62,7 +62,7 @@ export const DocumentActions = ({
         size="icon"
         onClick={(e) => {
           e.stopPropagation();
-          onDeleteDocument(document.id, document.name);
+          onDeleteDocument(documentItem.id, documentItem.name);
         }}
         title={t("confirmDeleteDocument")}
         className="h-8 w-8 hover:text-red-500"
