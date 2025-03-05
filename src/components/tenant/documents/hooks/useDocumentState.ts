@@ -25,13 +25,13 @@ export const useDocumentState = (
   // Initial fetch of tenant data when component mounts and user is available
   useEffect(() => {
     console.log("useDocumentState - User ID:", user?.id);
-    if (user?.id) {
+    if (user?.id && !isInitialized) {
       console.log("Fetching tenant data for user:", user.id);
       fetchTenantData().then(() => {
         setIsInitialized(true);
       });
     }
-  }, [user, fetchTenantData]);
+  }, [user, fetchTenantData, isInitialized]);
 
   // Fetch documents when tenant ID is available
   useEffect(() => {
@@ -39,10 +39,10 @@ export const useDocumentState = (
     if (tenant?.id && isInitialized) {
       console.log("Fetching documents for tenant:", tenant.id);
       fetchDocuments(tenant.id);
-    } else if (isInitialized) {
+    } else if (isInitialized && !tenant?.id) {
       console.log("No tenant ID available to fetch documents");
     }
-  }, [tenant, fetchDocuments, isInitialized]);
+  }, [tenant?.id, fetchDocuments, isInitialized]);
 
   const handleDocumentUpdate = useCallback(() => {
     console.log("Document update requested");
@@ -71,6 +71,6 @@ export const useDocumentState = (
     setSortOrder,
     fetchTenantData,
     handleDocumentUpdate,
-    handleDeleteDocument: (documentId: string) => handleDeleteDocument(documentId, toast)
+    handleDeleteDocument: (documentId: string, filename: string) => handleDeleteDocument(documentId, toast)
   };
 };

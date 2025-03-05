@@ -42,13 +42,20 @@ export const useDocumentFilters = (documents: TenantDocument[] | undefined) => {
         const dateA = new Date(a.created_at).getTime();
         const dateB = new Date(b.created_at).getTime();
         return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
-      } else {
+      } else if (sortBy === "name") {
         const nameA = (a.name || "").toLowerCase();
         const nameB = (b.name || "").toLowerCase();
         return sortOrder === "asc" 
           ? nameA.localeCompare(nameB)
           : nameB.localeCompare(nameA);
+      } else if (sortBy === "document_type") {
+        const typeA = (a.document_type || "").toLowerCase();
+        const typeB = (b.document_type || "").toLowerCase();
+        return sortOrder === "asc"
+          ? typeA.localeCompare(typeB)
+          : typeB.localeCompare(typeA);
       }
+      return 0;
     });
     
     console.log("Final filtered documents:", filtered.length);

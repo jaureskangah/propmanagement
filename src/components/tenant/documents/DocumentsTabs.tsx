@@ -79,7 +79,7 @@ export const DocumentsTabs = ({
                 <SlidersHorizontal className="h-4 w-4" />
               </Button>
             </CollapsibleTrigger>
-            <CollapsibleContent className="mb-4 space-y-4">
+            <CollapsibleContent className="absolute z-10 right-0 mt-2 p-4 bg-background border rounded-lg shadow-lg w-full sm:w-auto">
               <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                   <label className="text-sm font-medium mb-1 block">

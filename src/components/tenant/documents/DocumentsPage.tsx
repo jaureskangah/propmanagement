@@ -34,11 +34,13 @@ const DocumentsPage = () => {
   const [selectedDocument, setSelectedDocument] = useState<TenantDocument | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
 
+  // Fetch tenant data only once when user is available
   useEffect(() => {
-    if (user) {
+    if (user?.id) {
+      console.log("DocumentsPage - Initial data fetch for user:", user.id);
       fetchTenantData();
     }
-  }, [user, fetchTenantData]);
+  }, [user?.id, fetchTenantData]);
 
   const handleViewDocument = (document: TenantDocument) => {
     setSelectedDocument(document);
