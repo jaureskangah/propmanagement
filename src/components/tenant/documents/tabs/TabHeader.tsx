@@ -35,7 +35,7 @@ export function TabHeader({
   const { t } = useLocale();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
         {/* Tabs with "All Documents" button removed */}
         
