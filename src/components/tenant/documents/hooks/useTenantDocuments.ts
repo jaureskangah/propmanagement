@@ -20,37 +20,8 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       setError(null);
       console.log("Fetching documents for tenant:", id);
       
-      // Check if storage bucket exists
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-      
-      if (bucketsError) {
-        console.error("Error checking buckets:", bucketsError);
-        throw bucketsError;
-      }
-      
-      const bucketExists = buckets?.some(b => b.name === 'tenant_documents');
-      console.log("Storage buckets:", buckets?.map(b => b.name), "tenant_documents exists:", bucketExists);
-      
-      if (!bucketExists) {
-        console.warn("Tenant documents bucket does not exist!");
-        // Try to create the bucket if it doesn't exist
-        try {
-          console.log("Attempting to create tenant_documents bucket");
-          const { error: createBucketError } = await supabase
-            .storage
-            .createBucket('tenant_documents', { public: true });
-          
-          if (createBucketError) {
-            console.error("Error creating bucket:", createBucketError);
-          } else {
-            console.log("Successfully created tenant_documents bucket");
-          }
-        } catch (bucketCreateError) {
-          console.error("Failed to create bucket:", bucketCreateError);
-        }
-      }
+      // Skip the bucket check as we've already set it up in the database
+      // and focus on fetching the documents
       
       // Retrieve the documents metadata from the database
       const { data, error } = await supabase

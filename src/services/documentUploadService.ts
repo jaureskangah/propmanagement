@@ -44,25 +44,10 @@ export const documentUploadService = {
 
       console.log("Uploading to storage with path:", fileName);
 
-      // Check if the tenant_documents bucket exists
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-      
-      if (bucketsError) {
-        console.error("Error checking buckets:", bucketsError);
-        return { success: false, error: "storageError" };
-      }
-      
-      const bucketExists = buckets?.some(bucket => bucket.name === 'tenant_documents');
-      console.log("Storage buckets:", buckets?.map(b => b.name), "tenant_documents exists:", bucketExists);
-      
-      if (!bucketExists) {
-        console.error("Tenant documents bucket doesn't exist and cannot be created programmatically due to RLS policies");
-        return { success: false, error: "storageBucketMissing" };
-      }
+      // We'll skip the bucket existence check as we've already confirmed it exists in Supabase
+      // and the client might not have permission to list buckets due to RLS
 
-      // Upload the file
+      // Upload the file directly
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
@@ -78,6 +63,11 @@ export const documentUploadService = {
             success: false, 
             error: "permissionDenied"
           };
+        }
+        
+        if (uploadError.message?.includes("bucket_id") || uploadError.message?.includes("not found")) {
+          console.error("Bucket not found:", uploadError);
+          return { success: false, error: "storageBucketMissing" };
         }
         
         return { success: false, error: "uploadError" };
