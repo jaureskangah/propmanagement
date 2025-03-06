@@ -92,6 +92,7 @@ export const DocumentsTabs = ({
         setSortOrder={setSortOrder}
         filtersOpen={filtersOpen}
         setFiltersOpen={setFiltersOpen}
+        isMobile={isMobile}
       />
 
       <TabsContent value="all" className="mt-0">
@@ -104,6 +105,7 @@ export const DocumentsTabs = ({
           setSelectedCategory={setSelectedCategory}
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}
+          isMobile={isMobile}
         />
       </TabsContent>
 

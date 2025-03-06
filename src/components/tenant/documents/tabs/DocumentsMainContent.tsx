@@ -12,6 +12,7 @@ interface DocumentsMainContentProps {
   setSelectedCategory: (category: string) => void;
   onViewDocument: (document: TenantDocument) => void;
   onDeleteDocument: (documentId: string, filename: string) => void;
+  isMobile?: boolean;
 }
 
 export function DocumentsMainContent({
@@ -23,15 +24,19 @@ export function DocumentsMainContent({
   setSelectedCategory,
   onViewDocument,
   onDeleteDocument,
+  isMobile = false
 }: DocumentsMainContentProps) {
   return (
     <div className="flex flex-col md:flex-row gap-4">
-      {/* Categories sidebar */}
-      <DocumentCategories
-        documents={documents}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-      />
+      {/* Categories sidebar - hidden on very small mobile screens */}
+      {(!isMobile || window.innerWidth > 480) && (
+        <DocumentCategories
+          documents={documents}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          isCompact={isMobile}
+        />
+      )}
       
       {/* Main content */}
       <div className="flex-1">
@@ -42,6 +47,7 @@ export function DocumentsMainContent({
           error={error}
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}
+          isMobile={isMobile}
         />
       </div>
     </div>

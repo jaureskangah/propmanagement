@@ -1,71 +1,142 @@
 
+import React from "react";
 import { TenantDocument } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal, Eye, Trash, Download } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { DocumentIcon } from "./DocumentIcon";
-import { DocumentActions } from "./DocumentActions";
-import { Tag } from "lucide-react";
+import { formatDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DocumentRowProps {
   document: TenantDocument;
   onViewDocument: (document: TenantDocument) => void;
   onDeleteDocument: (documentId: string, filename: string) => void;
+  isMobile?: boolean;
 }
 
-export const DocumentRow = ({ 
+export const DocumentRow = ({
   document,
   onViewDocument,
-  onDeleteDocument 
+  onDeleteDocument,
+  isMobile = false
 }: DocumentRowProps) => {
-  const handleRowClick = () => {
-    onViewDocument(document);
+  const { t } = useLocale();
+  
+  // Format the document name to truncate if too long
+  const displayName = 
+    document.name.length > 30 
+      ? document.name.substring(0, 30) + "..." 
+      : document.name;
+  
+  // Determine category and type text
+  let categoryText = t("otherDocuments");
+  if (document.category === "lease" || document.category === "important") {
+    categoryText = document.category === "lease" ? t("leaseDocuments") : t("importantDocuments");
+  }
+  
+  const typeText = document.document_type === "lease" 
+    ? t("lease") 
+    : document.document_type === "receipt" 
+      ? t("receipt") 
+      : t("other");
+  
+  const handleView = () => onViewDocument(document);
+  
+  const handleDelete = () => onDeleteDocument(document.id, document.file_url);
+  
+  const handleDownload = () => {
+    window.open(document.file_url, '_blank');
   };
 
   return (
     <>
-      <td 
-        className="px-4 py-4 cursor-pointer hover:bg-muted/25 transition-colors" 
-        onClick={handleRowClick}
-      >
+      <td className="px-4 py-3">
         <div className="flex items-center gap-2">
-          <DocumentIcon documentType={document.document_type} />
-          <span className="font-medium truncate max-w-[200px]">
-            {document.name}
-          </span>
+          <DocumentIcon document={document} />
+          <div>
+            <p className="font-medium text-sm">{displayName}</p>
+            {isMobile && (
+              <div className="mt-1 flex gap-2 flex-wrap">
+                <Badge variant="outline" className="text-xs">
+                  {typeText}
+                </Badge>
+                {document.category === "important" && (
+                  <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                    {t("important")}
+                  </Badge>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </td>
-      <td 
-        className="px-4 py-4 hidden md:table-cell cursor-pointer hover:bg-muted/25 transition-colors" 
-        onClick={handleRowClick}
-      >
-        {document.category ? (
-          <div className="flex items-center gap-1">
-            <Tag className="h-3 w-3 text-slate-400" />
-            <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">
-              {document.category.charAt(0).toUpperCase() + document.category.slice(1)}
-            </span>
-          </div>
+      
+      <td className="px-4 py-3 hidden md:table-cell text-sm">
+        {document.category === "important" ? (
+          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+            {t("important")}
+          </Badge>
         ) : (
-          <span className="text-muted-foreground text-sm">—</span>
+          categoryText
         )}
       </td>
-      <td 
-        className="px-4 py-4 hidden md:table-cell text-muted-foreground cursor-pointer hover:bg-muted/25 transition-colors" 
-        onClick={handleRowClick}
-      >
-        {document.document_type || "Autre"}
+      
+      <td className="px-4 py-3 hidden md:table-cell text-sm">
+        <Badge variant="outline">
+          {typeText}
+        </Badge>
       </td>
-      <td 
-        className="px-4 py-4 hidden md:table-cell text-muted-foreground cursor-pointer hover:bg-muted/25 transition-colors" 
-        onClick={handleRowClick}
-      >
-        {formatDate(document.created_at)}
+      
+      <td className="px-4 py-3 hidden md:table-cell text-sm text-muted-foreground">
+        {document.created_at ? formatDate(document.created_at) : "-"}
       </td>
-      <td className="px-4 py-4 text-right">
-        <DocumentActions 
-          document={document}
-          onViewDocument={onViewDocument}
-          onDeleteDocument={onDeleteDocument}
-        />
+      
+      <td className="px-4 py-3 text-right">
+        {isMobile ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleView}>
+                <Eye className="h-4 w-4 mr-2" />
+                {t("view")}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDownload}>
+                <Download className="h-4 w-4 mr-2" />
+                {t("download")}
+              </DropdownMenuItem>
+              <DropdownMenuItem 
+                onClick={handleDelete}
+                className="text-red-600 focus:text-red-600"
+              >
+                <Trash className="h-4 w-4 mr-2" />
+                {t("delete")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <div className="flex justify-end gap-2">
+            <Button variant="ghost" size="icon" onClick={handleView} title={t("view")}>
+              <Eye className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleDownload} title={t("download")}>
+              <Download className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleDelete} title={t("delete")} className="text-red-600 hover:text-red-700">
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
       </td>
     </>
   );

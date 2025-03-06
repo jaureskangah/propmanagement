@@ -1,91 +1,71 @@
 
-import { TenantDocument } from "@/types/tenant";
-import { DocumentsLoader } from "./DocumentsLoader";
-import { ErrorState } from "./ErrorState";
-import { DocumentEmptyState } from "./DocumentEmptyState";
+import { Card } from "@/components/ui/card";
 import { DocumentTable } from "./DocumentTable";
-import { useDebugLogging } from "./useDebugLogging";
-import { motion } from "framer-motion";
-import { AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { DocumentsLoader } from "./DocumentsLoader";
+import { DocumentEmptyState } from "./DocumentEmptyState";
+import { ErrorState } from "./ErrorState";
+import { TenantDocument } from "@/types/tenant";
+import { useEffect } from "react";
 
 interface DocumentsListProps {
   documents: TenantDocument[] | undefined;
   filteredDocuments: TenantDocument[] | undefined;
   isLoading: boolean;
-  isTimedOut?: boolean;
-  error?: Error | null;
+  error?: Error;
   onViewDocument: (document: TenantDocument) => void;
   onDeleteDocument: (documentId: string, filename: string) => void;
+  isMobile?: boolean;
 }
 
-export const DocumentsList = ({
+export function DocumentsList({
   documents,
   filteredDocuments,
   isLoading,
-  isTimedOut,
   error,
   onViewDocument,
-  onDeleteDocument
-}: DocumentsListProps) => {
-  // Hook to log document-related debug information
-  useDebugLogging(documents, isLoading);
+  onDeleteDocument,
+  isMobile = false
+}: DocumentsListProps) {
+  // Log when documents data changes (for debugging)
+  useEffect(() => {
+    console.log("DocumentsList - Documents updated:", documents?.length);
+    console.log("DocumentsList - Filtered documents:", filteredDocuments?.length);
+  }, [documents, filteredDocuments]);
 
-  // Handle loading timeout
-  if (isTimedOut) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg"
-      >
-        <AlertTriangle className="h-12 w-12 text-amber-500 mb-3" />
-        <p className="text-muted-foreground mb-4">Le chargement des documents prend plus de temps que prévu</p>
-        <Button 
-          variant="outline" 
-          onClick={() => window.location.reload()}
-        >
-          Rafraîchir la page
-        </Button>
-      </motion.div>
-    );
-  }
-
-  // Show loading state
+  // Loading state
   if (isLoading) {
     return <DocumentsLoader />;
   }
 
-  // Show error state
+  // Error state
   if (error) {
-    console.error("Error loading documents:", error);
-    return <ErrorState />;
+    return <ErrorState error={error} />;
   }
 
-  // Show empty state if no documents available
+  // Empty state
   if (!documents || documents.length === 0) {
     return <DocumentEmptyState />;
   }
 
-  // Show empty search results
+  // No matches for filtered documents
   if (filteredDocuments && filteredDocuments.length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg"
-      >
-        <p className="text-muted-foreground">Aucun document ne correspond à votre recherche</p>
-      </motion.div>
+      <Card className="p-8 text-center">
+        <h3 className="text-lg font-medium mb-2">No matches found</h3>
+        <p className="text-muted-foreground">
+          Try changing your search terms or filters.
+        </p>
+      </Card>
     );
   }
 
-  // Show document table with filtered or all documents
+  // Content
   return (
     <DocumentTable 
       documents={filteredDocuments || documents} 
       onViewDocument={onViewDocument}
       onDeleteDocument={onDeleteDocument}
+      isMobile={isMobile}
     />
   );
-};
+}

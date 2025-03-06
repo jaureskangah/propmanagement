@@ -8,12 +8,14 @@ interface DocumentTableProps {
   documents: TenantDocument[];
   onViewDocument: (document: TenantDocument) => void;
   onDeleteDocument: (documentId: string, filename: string) => void;
+  isMobile?: boolean;
 }
 
 export const DocumentTable = ({ 
   documents,
   onViewDocument,
-  onDeleteDocument 
+  onDeleteDocument,
+  isMobile = false
 }: DocumentTableProps) => {
   const { t } = useLocale();
   
@@ -23,7 +25,7 @@ export const DocumentTable = ({
         <table className="w-full">
           <thead>
             <tr className="border-b bg-muted/50">
-              <th className="px-4 py-3 text-sm font-medium text-left">Document</th>
+              <th className="px-4 py-3 text-sm font-medium text-left">{t("document")}</th>
               <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("category")}</th>
               <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("documentType")}</th>
               <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("dateUploaded")}</th>
@@ -43,6 +45,7 @@ export const DocumentTable = ({
                   document={document} 
                   onViewDocument={onViewDocument}
                   onDeleteDocument={onDeleteDocument}
+                  isMobile={isMobile}
                 />
               </motion.tr>
             ))}
