@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +36,47 @@ const DocumentsPage = () => {
 
   const [selectedDocument, setSelectedDocument] = useState<TenantDocument | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
+  
+  // Pour contrôler le sidebar
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Gestion des swipes
+  useEffect(() => {
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      touchEndX = e.touches[0].clientX;
+    };
+    
+    const handleTouchEnd = () => {
+      // Détection du swipe vers la droite
+      if (touchEndX - touchStartX > 100) {
+        // Contraction du sidebar
+        setSidebarCollapsed(true);
+      }
+    };
+    
+    const container = containerRef.current;
+    if (container) {
+      container.addEventListener('touchstart', handleTouchStart);
+      container.addEventListener('touchmove', handleTouchMove);
+      container.addEventListener('touchend', handleTouchEnd);
+    }
+    
+    return () => {
+      if (container) {
+        container.removeEventListener('touchstart', handleTouchStart);
+        container.removeEventListener('touchmove', handleTouchMove);
+        container.removeEventListener('touchend', handleTouchEnd);
+      }
+    };
+  }, []);
 
   // Fetch tenant data only once when user is available
   useEffect(() => {
@@ -52,8 +93,8 @@ const DocumentsPage = () => {
 
   return (
     <div className="flex">
-      <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-4 md:p-6">
+      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div ref={containerRef} className="flex-1 container mx-auto p-4 md:p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

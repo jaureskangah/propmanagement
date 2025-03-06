@@ -6,10 +6,21 @@ import { DesktopSidebar } from "./sidebar/DesktopSidebar";
 
 interface AppSidebarProps {
   isTenant?: boolean;
+  isCollapsed?: boolean;
+  setIsCollapsed?: (collapsed: boolean) => void;
 }
 
-const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const AppSidebar = ({ 
+  isTenant = false,
+  isCollapsed: externalIsCollapsed,
+  setIsCollapsed: externalSetIsCollapsed
+}: AppSidebarProps) => {
+  // Gestion interne ou externe de l'état de contraction
+  const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
+  
+  const isCollapsed = externalIsCollapsed !== undefined ? externalIsCollapsed : internalIsCollapsed;
+  const setIsCollapsed = externalSetIsCollapsed || setInternalIsCollapsed;
+
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   const toggleCollapse = () => {
