@@ -1,16 +1,8 @@
 
-import React from "react";
-import { TenantDocument } from "@/types/tenant";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Eye, Trash, Download } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { DocumentIcon } from "./DocumentIcon";
 import { formatDate } from "@/lib/utils";
+import { TenantDocument } from "@/types/tenant";
+import { DocumentIcon } from "./DocumentIcon";
+import { DocumentActions } from "./DocumentActions";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -21,123 +13,53 @@ interface DocumentRowProps {
   isMobile?: boolean;
 }
 
-export const DocumentRow = ({
+export function DocumentRow({
   document,
   onViewDocument,
   onDeleteDocument,
   isMobile = false
-}: DocumentRowProps) => {
+}: DocumentRowProps) {
   const { t } = useLocale();
   
-  // Format the document name to truncate if too long
-  const displayName = 
-    document.name.length > 30 
-      ? document.name.substring(0, 30) + "..." 
-      : document.name;
-  
-  // Determine category and type text
-  let categoryText = t("otherDocuments");
-  if (document.category === "lease" || document.category === "important") {
-    categoryText = document.category === "lease" ? t("leaseDocuments") : t("importantDocuments");
-  }
-  
-  const typeText = document.document_type === "lease" 
-    ? t("lease") 
-    : document.document_type === "receipt" 
-      ? t("receipt") 
-      : t("other");
-  
-  const handleView = () => onViewDocument(document);
-  
-  const handleDelete = () => onDeleteDocument(document.id, document.file_url);
-  
-  const handleDownload = () => {
-    window.open(document.file_url, '_blank');
-  };
-
   return (
-    <>
-      <td className="px-4 py-3">
-        <div className="flex items-center gap-2">
-          <DocumentIcon document={document} />
+    <tr className="hover:bg-muted/50">
+      <td className="py-3 px-4">
+        <div className="flex items-center gap-3">
+          <DocumentIcon documentType={document.document_type} />
           <div>
-            <p className="font-medium text-sm">{displayName}</p>
-            {isMobile && (
-              <div className="mt-1 flex gap-2 flex-wrap">
-                <Badge variant="outline" className="text-xs">
-                  {typeText}
+            <div className="font-medium">{document.name}</div>
+            <div className="text-sm text-muted-foreground">
+              {formatDate(document.created_at)}
+              {document.source === 'landlord' && (
+                <Badge variant="outline" className="ml-2 text-xs py-0 text-blue-600 border-blue-200 bg-blue-50">
+                  {t('fromLandlord')}
                 </Badge>
-                {document.category === "important" && (
-                  <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                    {t("important")}
-                  </Badge>
-                )}
-              </div>
-            )}
+              )}
+              {document.sender_name && (
+                <span className="ml-2 text-xs text-muted-foreground">
+                  {t('from')}: {document.sender_name}
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </td>
       
-      <td className="px-4 py-3 hidden md:table-cell text-sm">
-        {document.category === "important" ? (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-            {t("important")}
-          </Badge>
-        ) : (
-          categoryText
-        )}
-      </td>
+      {!isMobile && (
+        <>
+          <td className="py-3 px-4 text-muted-foreground">
+            {document.category || document.document_type || "Other"}
+          </td>
+        </>
+      )}
       
-      <td className="px-4 py-3 hidden md:table-cell text-sm">
-        <Badge variant="outline">
-          {typeText}
-        </Badge>
+      <td className="py-3 px-4 text-right">
+        <DocumentActions 
+          document={document} 
+          onViewDocument={onViewDocument}
+          onDeleteDocument={onDeleteDocument}
+        />
       </td>
-      
-      <td className="px-4 py-3 hidden md:table-cell text-sm text-muted-foreground">
-        {document.created_at ? formatDate(document.created_at) : "-"}
-      </td>
-      
-      <td className="px-4 py-3 text-right">
-        {isMobile ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={handleView}>
-                <Eye className="h-4 w-4 mr-2" />
-                {t("view")}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                {t("download")}
-              </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={handleDelete}
-                className="text-red-600 focus:text-red-600"
-              >
-                <Trash className="h-4 w-4 mr-2" />
-                {t("delete")}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <div className="flex justify-end gap-2">
-            <Button variant="ghost" size="icon" onClick={handleView} title={t("view")}>
-              <Eye className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleDownload} title={t("download")}>
-              <Download className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleDelete} title={t("delete")} className="text-red-600 hover:text-red-700">
-              <Trash className="h-4 w-4" />
-            </Button>
-          </div>
-        )}
-      </td>
-    </>
+    </tr>
   );
-};
+}
