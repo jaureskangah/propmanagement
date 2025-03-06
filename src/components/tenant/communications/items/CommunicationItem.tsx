@@ -105,7 +105,7 @@ export const CommunicationItem = ({
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <time>{formatDate(communication.created_at)}</time>
               {hasAttachments && (
-                <Badge variant="outline" size="sm" className="gap-1 h-5">
+                <Badge variant="outline" className="gap-1 h-5 flex items-center text-xs">
                   <Paperclip className="h-3 w-3" />
                   {communication.attachments?.length}
                 </Badge>
