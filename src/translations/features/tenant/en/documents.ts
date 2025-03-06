@@ -62,5 +62,6 @@ export const enDocuments: TenantDocumentsTranslations = {
   openFullViewer: "Open Full Viewer",
   documentShareSuccess: "Document shared successfully",
   documentShareError: "Failed to share document",
-  permissionError: "Permission error"
+  permissionError: "Permission error",
+  tenantProfileNotFound: "Tenant profile not found"
 };

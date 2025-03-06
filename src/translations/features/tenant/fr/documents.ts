@@ -1,4 +1,3 @@
-
 import type { TenantDocumentsTranslations } from '../../../types/tenant/documents';
 
 export const frDocuments: TenantDocumentsTranslations = {
@@ -62,5 +61,6 @@ export const frDocuments: TenantDocumentsTranslations = {
   openFullViewer: "Ouvrir la visionneuse complète",
   documentShareSuccess: "Document partagé avec succès",
   documentShareError: "Échec du partage du document",
-  permissionError: "Erreur de permission"
+  permissionError: "Erreur de permission",
+  tenantProfileNotFound: "Profil de locataire non trouvé"
 };

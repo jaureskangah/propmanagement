@@ -30,7 +30,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
     if (!tenantId) {
       console.error("No tenant ID provided");
-      showToastMessage("error", "error", "destructive");
+      showToastMessage("error", "tenantProfileNotFound", "destructive");
       return;
     }
 
@@ -65,7 +65,11 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       let errorMessage = t("error");
       
       if (error.message) {
-        errorMessage = error.message;
+        if (error.message.includes("Permission error")) {
+          errorMessage = t("permissionError") + ": " + error.message;
+        } else {
+          errorMessage = error.message;
+        }
       }
       
       showToastMessage("error", errorMessage, "destructive");

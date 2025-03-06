@@ -28,7 +28,7 @@ export const documentUploadService = {
     }
 
     try {
-      // Check if current user is authenticated
+      // Vérifier si l'utilisateur actuel est authentifié
       const { data: userData, error: authError } = await supabase.auth.getUser();
       if (authError || !userData.user) {
         console.error("Authentication error:", authError);
@@ -38,13 +38,13 @@ export const documentUploadService = {
       console.log("Current user:", userData.user.id);
       console.log("Attempting to upload document for tenant:", tenantId);
       
-      // Create unique filename with proper path structure
+      // Créer un nom de fichier unique avec une structure de chemin appropriée
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
       console.log("Uploading to storage with path:", fileName);
 
-      // Upload file
+      // Télécharger le fichier
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
@@ -54,12 +54,21 @@ export const documentUploadService = {
 
       if (uploadError) {
         console.error("Upload error:", uploadError);
+        
+        // Vérifier si c'est une erreur RLS
+        if (uploadError.message && uploadError.message.includes("violates row-level security policy")) {
+          return { 
+            success: false, 
+            error: "Permission error: You don't have access to upload documents. Please make sure you are logged in."
+          };
+        }
+        
         throw uploadError;
       }
 
       console.log("File uploaded successfully:", uploadData, "getting public URL");
 
-      // Generate public URL
+      // Générer l'URL publique
       const { data: publicUrlData } = await supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
@@ -71,7 +80,7 @@ export const documentUploadService = {
 
       console.log("Generated public URL:", publicUrlData.publicUrl);
 
-      // Determine document type
+      // Déterminer le type de document
       let document_type: DocumentType = 'other';
       if (category === 'lease') {
         document_type = 'lease';
@@ -79,7 +88,7 @@ export const documentUploadService = {
         document_type = 'receipt';
       }
 
-      // Save document reference to database with additional column for category and document_type
+      // Enregistrer la référence du document dans la base de données
       const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
@@ -87,13 +96,14 @@ export const documentUploadService = {
           name: file.name,
           file_url: publicUrlData.publicUrl,
           document_type: document_type,
-          category: category
+          category: category,
+          uploaded_by: userData.user.id // Ajouter l'ID de l'utilisateur qui télécharge
         })
         .select();
 
       if (dbError) {
         console.error("Database insert error:", dbError);
-        // Rollback the file upload if possible
+        // Retour en arrière du téléchargement du fichier si possible
         try {
           await supabase.storage
             .from('tenant_documents')
@@ -124,6 +134,8 @@ export const documentUploadService = {
           errorMessage = "Storage error: " + error.message;
         } else if (error.message.includes("violates row-level security")) {
           errorMessage = "Permission error: You don't have access to upload documents";
+        } else if (error.message.includes("auth")) {
+          errorMessage = "Authentication error: " + error.message;
         } else {
           errorMessage = "Error: " + error.message;
         }
