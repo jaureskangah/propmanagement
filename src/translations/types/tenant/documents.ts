@@ -56,4 +56,6 @@ export interface TenantDocumentsTranslations {
   fileSizeLimit: string;
   andMoreDocuments: string;
   viewAllDocuments: string;
+  quickPreview: string;
+  openFullViewer: string;
 }

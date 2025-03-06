@@ -16,9 +16,16 @@ export const DocumentRow = ({
   onViewDocument,
   onDeleteDocument 
 }: DocumentRowProps) => {
+  const handleRowClick = () => {
+    onViewDocument(document);
+  };
+
   return (
     <>
-      <td className="px-4 py-4">
+      <td 
+        className="px-4 py-4 cursor-pointer hover:bg-muted/25 transition-colors" 
+        onClick={handleRowClick}
+      >
         <div className="flex items-center gap-2">
           <DocumentIcon documentType={document.document_type} />
           <span className="font-medium truncate max-w-[200px]">
@@ -26,7 +33,10 @@ export const DocumentRow = ({
           </span>
         </div>
       </td>
-      <td className="px-4 py-4 hidden md:table-cell">
+      <td 
+        className="px-4 py-4 hidden md:table-cell cursor-pointer hover:bg-muted/25 transition-colors" 
+        onClick={handleRowClick}
+      >
         {document.category ? (
           <div className="flex items-center gap-1">
             <Tag className="h-3 w-3 text-slate-400" />
@@ -38,10 +48,16 @@ export const DocumentRow = ({
           <span className="text-muted-foreground text-sm">—</span>
         )}
       </td>
-      <td className="px-4 py-4 hidden md:table-cell text-muted-foreground">
+      <td 
+        className="px-4 py-4 hidden md:table-cell text-muted-foreground cursor-pointer hover:bg-muted/25 transition-colors" 
+        onClick={handleRowClick}
+      >
         {document.document_type || "Autre"}
       </td>
-      <td className="px-4 py-4 hidden md:table-cell text-muted-foreground">
+      <td 
+        className="px-4 py-4 hidden md:table-cell text-muted-foreground cursor-pointer hover:bg-muted/25 transition-colors" 
+        onClick={handleRowClick}
+      >
         {formatDate(document.created_at)}
       </td>
       <td className="px-4 py-4 text-right">

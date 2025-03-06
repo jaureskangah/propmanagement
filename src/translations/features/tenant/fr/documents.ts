@@ -57,5 +57,7 @@ export const frDocuments: TenantDocumentsTranslations = {
   fileSelected: "Fichier sélectionné",
   fileSizeLimit: "Taille maximale du fichier: 10Mo",
   andMoreDocuments: "et {count} documents de plus",
-  viewAllDocuments: "Voir tous les documents"
+  viewAllDocuments: "Voir tous les documents",
+  quickPreview: "Aperçu rapide",
+  openFullViewer: "Ouvrir la visionneuse complète"
 };

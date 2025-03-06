@@ -3,6 +3,7 @@ import { TenantDocument } from "@/types/tenant";
 import { Button } from "@/components/ui/button";
 import { Download, ExternalLink, Trash2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { QuickPreview } from "./QuickPreview";
 
 interface DocumentActionsProps {
   document: TenantDocument;
@@ -36,6 +37,10 @@ export const DocumentActions = ({
 
   return (
     <div className="flex gap-1 justify-end">
+      <QuickPreview 
+        document={documentItem} 
+        onFullView={() => onViewDocument(documentItem)} 
+      />
       <Button
         variant="ghost"
         size="icon"
