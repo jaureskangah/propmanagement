@@ -20,49 +20,41 @@ export const useDeleteCommunicationAction = () => {
         throw fetchError;
       }
 
-      console.log("Found replies:", replies);
-
-      // If there are replies, delete them one by one
+      // If there are replies, delete them first
       if (replies && replies.length > 0) {
-        for (const reply of replies) {
-          console.log("Deleting reply:", reply.id);
-          const { error: replyError } = await supabase
-            .from('tenant_communications')
-            .delete()
-            .eq('id', reply.id);
+        const { error: repliesError } = await supabase
+          .from('tenant_communications')
+          .delete()
+          .in('id', replies.map(reply => reply.id));
 
-          if (replyError) {
-            console.error("Error deleting reply:", replyError);
-            throw replyError;
-          }
+        if (repliesError) {
+          console.error("Error deleting replies:", repliesError);
+          throw repliesError;
         }
       }
 
-      // Now that all replies are deleted, delete the original communication
-      console.log("Deleting original communication:", commId);
-      const { error } = await supabase
+      // Now delete the main communication
+      const { error: deleteError } = await supabase
         .from('tenant_communications')
         .delete()
         .eq('id', commId);
 
-      if (error) {
-        console.error("Error deleting communication:", error);
-        throw error;
+      if (deleteError) {
+        console.error("Error deleting main communication:", deleteError);
+        throw deleteError;
       }
 
-      console.log("Communication and all replies deleted successfully");
-      
       toast({
-        title: "Success",
-        description: "Communication and all replies deleted successfully",
+        title: "Succès",
+        description: "Message supprimé avec succès",
       });
 
       return true;
     } catch (error) {
       console.error("Error in handleDeleteCommunication:", error);
       toast({
-        title: "Error",
-        description: "Error deleting communication",
+        title: "Erreur",
+        description: "Impossible de supprimer le message",
         variant: "destructive",
       });
       return false;

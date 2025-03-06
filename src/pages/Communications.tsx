@@ -1,4 +1,3 @@
-
 import AppSidebar from "@/components/AppSidebar";
 import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications";
 import { TenantCommunications as TenantCommunicationsComponent } from "@/components/tenant/TenantCommunications";
@@ -43,30 +42,21 @@ const Communications = () => {
     }
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!communicationToDelete) return;
     
     console.log("Confirming deletion of communication:", communicationToDelete.id);
-    handleDeleteCommunication(communicationToDelete.id)
-      .then(success => {
-        if (success) {
-          toast({
-            title: t('success'),
-            description: t('messageDeleted'),
-          });
-          refreshCommunications();
-        }
-        setCommunicationToDelete(null);
-      })
-      .catch(error => {
-        console.error("Error deleting communication:", error);
-        toast({
-          title: t('error'),
-          description: "Erreur lors de la suppression du message",
-          variant: "destructive",
-        });
-        setCommunicationToDelete(null);
+    const success = await handleDeleteCommunication(communicationToDelete.id);
+    
+    if (success) {
+      toast({
+        title: t('success'),
+        description: t('messageDeleted'),
       });
+      refreshCommunications();
+    }
+    
+    setCommunicationToDelete(null);
   };
 
   return (
