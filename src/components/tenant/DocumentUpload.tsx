@@ -8,7 +8,7 @@ import { FilePreview } from "./upload/FilePreview";
 import { UploadProgress } from "./upload/UploadProgress";
 import { CategorySelector } from "./upload/CategorySelector";
 import { UploadButton } from "./upload/UploadButton";
-import { InfoCircle } from "lucide-react";
+import { Info } from "lucide-react";
 
 interface DocumentUploadProps {
   tenantId: string;
@@ -90,7 +90,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
     <div className="space-y-4">
       {errorMessage === "storageBucketMissing" && (
         <div className="text-sm p-3 border border-yellow-300 bg-yellow-50 rounded-md text-yellow-700 flex items-start gap-2">
-          <InfoCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+          <Info className="h-5 w-5 flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium">{t("storageBucketMissing")}</p>
             <p className="mt-1">The document storage system needs to be configured. Please contact your administrator.</p>
