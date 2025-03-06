@@ -1,8 +1,7 @@
 
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter, Plus, X } from "lucide-react";
+import { Search, Filter, X } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { FilterPanel } from "./FilterPanel";
 
@@ -38,16 +37,10 @@ export function TabHeader({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <Tabs defaultValue="all" className="w-full sm:w-auto">
-          <TabsList>
-            <TabsTrigger value="all" className="text-sm">
-              {t("allDocuments")}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {/* Tabs with "All Documents" button removed */}
         
-        <div className="flex gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:w-[260px]">
+        <div className="flex gap-2 w-full">
+          <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
