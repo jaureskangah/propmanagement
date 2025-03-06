@@ -70,18 +70,19 @@ export const CommunicationsContent = ({
     return acc;
   }, {} as Record<string, Communication[]>);
 
+  // Extract unique communication types for the filter
+  const communicationTypes = [...new Set(communications.map(comm => comm.type))];
+
   return (
     <div className="space-y-6">
       <CommunicationFilters
-        onSearchChange={setSearchTerm}
-        searchTerm={searchTerm}
-        onCategoryChange={setSelectedCategory}
-        selectedCategory={selectedCategory}
-        onTypeChange={setSelectedType}
+        searchQuery={searchTerm}
+        startDate={dateRange.from ? dateRange.from.toISOString().split('T')[0] : ""}
         selectedType={selectedType}
-        onDateRangeChange={setDateRange}
-        dateRange={dateRange}
-        communications={communications}
+        communicationTypes={communicationTypes}
+        onSearchChange={setSearchTerm}
+        onDateChange={(value) => setDateRange(prev => ({ ...prev, from: value ? new Date(value) : undefined }))}
+        onTypeChange={setSelectedType}
       />
       
       <CommunicationsList
