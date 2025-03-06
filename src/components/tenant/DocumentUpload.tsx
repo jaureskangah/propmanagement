@@ -5,6 +5,7 @@ import { Upload, FileUp, File } from "lucide-react";
 import { useDocumentUpload } from "@/hooks/useDocumentUpload";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface DocumentUploadProps {
   tenantId: string;
@@ -15,13 +16,15 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
   const fileInputRef = React.useRef<HTMLInputElement>(null);
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("other");
   const { t } = useLocale();
   const { isUploading, uploadDocument } = useDocumentUpload(tenantId, onUploadComplete);
 
   const handleUpload = async () => {
     if (selectedFile) {
-      await uploadDocument(selectedFile);
+      await uploadDocument(selectedFile, selectedCategory);
       setSelectedFile(null);
+      setSelectedCategory("other");
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -85,18 +88,39 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between p-3 border rounded-lg bg-slate-50 dark:bg-slate-900"
+          className="space-y-4"
         >
-          <div className="flex items-center gap-2">
-            <File className="h-5 w-5 text-blue-500" />
-            <span className="text-sm font-medium truncate max-w-[250px]">
-              {selectedFile.name}
-            </span>
+          <div className="flex items-center justify-between p-3 border rounded-lg bg-slate-50 dark:bg-slate-900">
+            <div className="flex items-center gap-2">
+              <File className="h-5 w-5 text-blue-500" />
+              <span className="text-sm font-medium truncate max-w-[250px]">
+                {selectedFile.name}
+              </span>
+            </div>
           </div>
+          
+          <div className="space-y-2">
+            <label className="text-sm font-medium">{t("category")}</label>
+            <Select 
+              value={selectedCategory} 
+              onValueChange={setSelectedCategory}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t("selectCategory")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="important">{t("importantDocuments")}</SelectItem>
+                <SelectItem value="lease">{t("leaseDocuments")}</SelectItem>
+                <SelectItem value="receipt">{t("paymentReceipts")}</SelectItem>
+                <SelectItem value="other">{t("otherDocuments")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <Button
             onClick={handleUpload}
             disabled={isUploading}
-            size="sm"
+            className="w-full"
           >
             {isUploading ? (
               <>

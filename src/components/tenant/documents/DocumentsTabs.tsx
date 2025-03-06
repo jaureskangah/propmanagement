@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentsList } from "./list/DocumentsList";
 import { DocumentUpload } from "@/components/tenant/DocumentUpload";
+import { DocumentCategories } from "./list/DocumentCategories";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantDocument } from "@/types/tenant";
 import { Tenant } from "@/types/tenant";
@@ -21,6 +22,8 @@ interface DocumentsTabsProps {
   setSearchQuery: (query: string) => void;
   selectedDocType: string;
   setSelectedDocType: (type: string) => void;
+  selectedCategory: string;
+  setSelectedCategory: (category: string) => void;
   sortBy: string;
   setSortBy: (sort: string) => void;
   sortOrder: "asc" | "desc";
@@ -40,6 +43,8 @@ export const DocumentsTabs = ({
   setSearchQuery,
   selectedDocType,
   setSelectedDocType,
+  selectedCategory,
+  setSelectedCategory,
   sortBy,
   setSortBy,
   sortOrder,
@@ -52,6 +57,7 @@ export const DocumentsTabs = ({
   const { t } = useLocale();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Set a timeout to prevent infinite loading state
   useEffect(() => {
@@ -65,6 +71,20 @@ export const DocumentsTabs = ({
       setLoadingTimeout(false);
     }
   }, [isLoading]);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+    };
+  }, []);
 
   return (
     <Tabs defaultValue="all" className="mt-6">
@@ -147,15 +167,27 @@ export const DocumentsTabs = ({
       </div>
 
       <TabsContent value="all" className="mt-0">
-        <DocumentsList
-          documents={documents}
-          filteredDocuments={filteredDocuments}
-          isLoading={isLoading && !loadingTimeout}
-          isTimedOut={loadingTimeout}
-          error={error}
-          onViewDocument={onViewDocument}
-          onDeleteDocument={onDeleteDocument}
-        />
+        <div className="flex flex-col md:flex-row gap-4">
+          {/* Categories sidebar */}
+          <DocumentCategories
+            documents={documents}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
+          
+          {/* Main content */}
+          <div className="flex-1">
+            <DocumentsList
+              documents={documents}
+              filteredDocuments={filteredDocuments}
+              isLoading={isLoading && !loadingTimeout}
+              isTimedOut={loadingTimeout}
+              error={error}
+              onViewDocument={onViewDocument}
+              onDeleteDocument={onDeleteDocument}
+            />
+          </div>
+        </div>
       </TabsContent>
 
       <TabsContent value="upload" className="mt-0">

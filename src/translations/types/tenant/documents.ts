@@ -40,4 +40,9 @@ export interface TenantDocumentsTranslations {
   cancel: string;
   success: string;
   error: string;
+  categories: string;
+  category: string;
+  selectCategory: string;
+  uncategorized: string;
+  order: string;
 }

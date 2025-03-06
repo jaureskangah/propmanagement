@@ -3,6 +3,7 @@ import { TenantDocument } from "@/types/tenant";
 import { formatDate } from "@/lib/utils";
 import { DocumentIcon } from "./DocumentIcon";
 import { DocumentActions } from "./DocumentActions";
+import { Tag } from "lucide-react";
 
 interface DocumentRowProps {
   document: TenantDocument;
@@ -24,6 +25,18 @@ export const DocumentRow = ({
             {document.name}
           </span>
         </div>
+      </td>
+      <td className="px-4 py-4 hidden md:table-cell">
+        {document.category ? (
+          <div className="flex items-center gap-1">
+            <Tag className="h-3 w-3 text-slate-400" />
+            <span className="text-xs bg-muted px-2 py-0.5 rounded-full text-muted-foreground">
+              {document.category.charAt(0).toUpperCase() + document.category.slice(1)}
+            </span>
+          </div>
+        ) : (
+          <span className="text-muted-foreground text-sm">—</span>
+        )}
       </td>
       <td className="px-4 py-4 hidden md:table-cell text-muted-foreground">
         {document.document_type || "Autre"}

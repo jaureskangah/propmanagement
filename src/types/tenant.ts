@@ -19,7 +19,7 @@ export interface Tenant {
   paymentHistory: TenantPayment[];
   maintenanceRequests: MaintenanceRequest[];
   communications: Communication[];
-  avatar_url?: string; // Added avatar_url property
+  avatar_url?: string;
 }
 
 export interface TenantDocument {
@@ -30,6 +30,7 @@ export interface TenantDocument {
   uploaded_at?: string;
   document_type?: 'lease' | 'receipt' | 'other';
   tenant_id?: string;
+  category?: string;
 }
 
 export interface TenantPayment {

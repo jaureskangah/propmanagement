@@ -41,5 +41,10 @@ export const frDocuments: TenantDocumentsTranslations = {
   message: "Message",
   cancel: "Annuler",
   success: "Succès",
-  error: "Erreur"
+  error: "Erreur",
+  categories: "Catégories",
+  category: "Catégorie",
+  selectCategory: "Sélectionner une catégorie",
+  uncategorized: "Non catégorisé",
+  order: "Ordre"
 };

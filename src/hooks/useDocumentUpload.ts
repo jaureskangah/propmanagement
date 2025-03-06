@@ -9,7 +9,10 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
   const { t } = useLocale();
   const [isUploading, setIsUploading] = useState(false);
 
-  const uploadDocument = async (file: File, documentType: 'lease' | 'receipt' | 'other' = 'other') => {
+  const uploadDocument = async (
+    file: File, 
+    category: string = 'other'
+  ) => {
     if (!file) {
       console.log("No file selected");
       return;
@@ -26,7 +29,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     }
 
     setIsUploading(true);
-    console.log("Starting upload for file:", file.name, "type:", documentType, "for tenant:", tenantId);
+    console.log("Starting upload for file:", file.name, "category:", category, "for tenant:", tenantId);
 
     try {
       // Vérifier si le bucket existe
@@ -87,6 +90,14 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
       console.log("Generated public URL:", publicUrlData.publicUrl);
 
+      // Déterminer le document_type en fonction de la catégorie
+      let document_type: 'lease' | 'receipt' | 'other' = 'other';
+      if (category === 'lease') {
+        document_type = 'lease';
+      } else if (category === 'receipt') {
+        document_type = 'receipt';
+      }
+
       // 3. Save document reference with public URL in database
       const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
@@ -94,7 +105,8 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
           tenant_id: tenantId,
           name: file.name,
           file_url: publicUrlData.publicUrl,
-          document_type: documentType
+          document_type: document_type,
+          category: category
         })
         .select();
 

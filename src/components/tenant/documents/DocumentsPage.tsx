@@ -17,11 +17,13 @@ const DocumentsPage = () => {
     documents, 
     filteredDocuments, 
     isLoading, 
-    tenant, 
+    tenant,
     searchQuery, 
     setSearchQuery, 
     selectedDocType, 
-    setSelectedDocType, 
+    setSelectedDocType,
+    selectedCategory,
+    setSelectedCategory,
     sortBy, 
     setSortBy, 
     sortOrder, 
@@ -71,6 +73,8 @@ const DocumentsPage = () => {
             setSearchQuery={setSearchQuery}
             selectedDocType={selectedDocType}
             setSelectedDocType={setSelectedDocType}
+            selectedCategory={selectedCategory}
+            setSelectedCategory={setSelectedCategory}
             sortBy={sortBy}
             setSortBy={setSortBy}
             sortOrder={sortOrder}

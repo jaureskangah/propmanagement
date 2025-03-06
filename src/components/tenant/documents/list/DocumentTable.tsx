@@ -2,6 +2,7 @@
 import { TenantDocument } from "@/types/tenant";
 import { DocumentRow } from "./DocumentRow";
 import { motion } from "framer-motion";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DocumentTableProps {
   documents: TenantDocument[];
@@ -14,6 +15,8 @@ export const DocumentTable = ({
   onViewDocument,
   onDeleteDocument 
 }: DocumentTableProps) => {
+  const { t } = useLocale();
+  
   return (
     <div className="overflow-hidden rounded-lg border">
       <div className="overflow-x-auto">
@@ -21,9 +24,10 @@ export const DocumentTable = ({
           <thead>
             <tr className="border-b bg-muted/50">
               <th className="px-4 py-3 text-sm font-medium text-left">Document</th>
-              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">Type</th>
-              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">Date</th>
-              <th className="px-4 py-3 text-sm font-medium text-right">Actions</th>
+              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("category")}</th>
+              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("documentType")}</th>
+              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("dateUploaded")}</th>
+              <th className="px-4 py-3 text-sm font-medium text-right">{t("actions")}</th>
             </tr>
           </thead>
           <tbody>

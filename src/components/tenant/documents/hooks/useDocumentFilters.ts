@@ -5,13 +5,14 @@ import { TenantDocument } from "@/types/tenant";
 export const useDocumentFilters = (documents: TenantDocument[] | undefined) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocType, setSelectedDocType] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("created_at");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
   // Debug logging for filter changes
   useEffect(() => {
-    console.log("Filter changed - Search:", searchQuery, "Type:", selectedDocType, "Sort:", sortBy, sortOrder);
-  }, [searchQuery, selectedDocType, sortBy, sortOrder]);
+    console.log("Filter changed - Search:", searchQuery, "Type:", selectedDocType, "Category:", selectedCategory, "Sort:", sortBy, sortOrder);
+  }, [searchQuery, selectedDocType, selectedCategory, sortBy, sortOrder]);
 
   const filteredDocuments = useMemo(() => {
     console.log("Filtering documents - total:", documents?.length || 0);
@@ -34,6 +35,20 @@ export const useDocumentFilters = (documents: TenantDocument[] | undefined) => {
         doc.document_type === selectedDocType
       );
       console.log("After type filter:", filtered.length);
+    }
+    
+    // Filter by category
+    if (selectedCategory && selectedCategory !== "all") {
+      if (selectedCategory === "uncategorized") {
+        filtered = filtered.filter(doc => 
+          !doc.category || doc.category === ""
+        );
+      } else {
+        filtered = filtered.filter(doc => 
+          doc.category === selectedCategory
+        );
+      }
+      console.log("After category filter:", filtered.length);
     }
     
     // Sort documents
@@ -60,7 +75,7 @@ export const useDocumentFilters = (documents: TenantDocument[] | undefined) => {
     
     console.log("Final filtered documents:", filtered.length);
     return filtered;
-  }, [documents, searchQuery, selectedDocType, sortBy, sortOrder]);
+  }, [documents, searchQuery, selectedDocType, selectedCategory, sortBy, sortOrder]);
 
   return {
     filteredDocuments,
@@ -68,6 +83,8 @@ export const useDocumentFilters = (documents: TenantDocument[] | undefined) => {
     setSearchQuery,
     selectedDocType,
     setSelectedDocType,
+    selectedCategory,
+    setSelectedCategory,
     sortBy,
     setSortBy,
     sortOrder,

@@ -132,6 +132,25 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
           return { ...doc, document_type };
         }
         
+        // Ensure category exists
+        if (!doc.category) {
+          // Default to using document_type as category if available
+          const category = doc.document_type || 'other';
+          
+          // Update category in the database
+          console.log("Setting default category for doc:", doc.id, "to:", category);
+          supabase
+            .from('tenant_documents')
+            .update({ category })
+            .eq('id', doc.id)
+            .then(({ error }) => {
+              if (error) console.error('Error updating category:', error);
+              else console.log("Successfully updated category");
+            });
+          
+          return { ...doc, category };
+        }
+        
         return doc;
       }));
       
