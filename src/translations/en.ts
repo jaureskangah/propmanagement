@@ -27,6 +27,8 @@ import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard
 import { enProfile } from './features/tenant/en/profile';
 // Import tenant documents translations
 import { enDocuments } from './features/tenant/en/documents';
+// Import tenant maintenance translations
+import { enMaintenance as enTenantMaintenance } from './features/tenant/en/maintenance';
 
 export const enTranslations = {
   ...enNavigation,
@@ -55,5 +57,7 @@ export const enTranslations = {
   // Add tenant profile translations
   ...enProfile,
   // Add tenant documents translations
-  ...enDocuments
+  ...enDocuments,
+  // Add tenant maintenance translations
+  ...enTenantMaintenance
 };

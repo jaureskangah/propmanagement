@@ -27,6 +27,8 @@ import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard
 import { frProfile } from './features/tenant/fr/profile';
 // Import les traductions des documents locataire
 import { frDocuments } from './features/tenant/fr/documents';
+// Import les traductions de maintenance locataire
+import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
 
 export const frTranslations = {
   ...frNavigation,
@@ -55,5 +57,7 @@ export const frTranslations = {
   // Ajouter les traductions du profil locataire
   ...frProfile,
   // Ajouter les traductions des documents locataire
-  ...frDocuments
+  ...frDocuments,
+  // Ajouter les traductions de maintenance locataire
+  ...frTenantMaintenance
 };

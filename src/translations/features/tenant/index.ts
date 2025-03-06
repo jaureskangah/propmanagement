@@ -6,6 +6,8 @@ import { enMessages } from './en/messages';
 import { enDocuments } from './en/documents';
 import { enPayments } from './en/payments';
 import { enDashboard } from './en/dashboard';
+import { enProfile } from './en/profile';
+import { enMaintenance } from './en/maintenance';
 
 // French translations
 import { frLease } from './fr/lease';
@@ -14,6 +16,8 @@ import { frMessages } from './fr/messages';
 import { frDocuments } from './fr/documents';
 import { frPayments } from './fr/payments';
 import { frDashboard } from './fr/dashboard';
+import { frProfile } from './fr/profile';
+import { frMaintenance } from './fr/maintenance';
 
 export const enTenant = {
   communications: enCommunications,
@@ -21,7 +25,9 @@ export const enTenant = {
   documents: enDocuments,
   lease: enLease,
   payments: enPayments,
-  dashboard: enDashboard
+  dashboard: enDashboard,
+  profile: enProfile,
+  maintenance: enMaintenance
 };
 
 export const frTenant = {
@@ -30,5 +36,7 @@ export const frTenant = {
   documents: frDocuments,
   lease: frLease,
   payments: frPayments,
-  dashboard: frDashboard
+  dashboard: frDashboard,
+  profile: frProfile,
+  maintenance: frMaintenance
 };

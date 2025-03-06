@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface AddMaintenanceDialogProps {
   isOpen: boolean;
@@ -27,13 +29,21 @@ export const AddMaintenanceDialog = ({
   const [photos, setPhotos] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useLocale();
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setPriority("Medium");
+    setPhotos([]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim() || !description.trim()) {
       toast({
-        title: "Error",
-        description: "Please fill in all required fields",
+        title: t('error'),
+        description: t('pleaseFillAllFields'),
         variant: "destructive",
       });
       return;
@@ -92,16 +102,20 @@ export const AddMaintenanceDialog = ({
 
       if (error) throw error;
 
+      toast({
+        title: t('success'),
+        description: t('maintenanceRequestSubmitted'),
+      });
+
+      // Reset form and close dialog
+      resetForm();
       onSuccess();
-      setTitle("");
-      setDescription("");
-      setPriority("Medium");
-      setPhotos([]);
+      onClose();
     } catch (error: any) {
       console.error("Error adding maintenance request:", error);
       toast({
-        title: "Error",
-        description: "Failed to create maintenance request",
+        title: t('error'),
+        description: t('errorSubmittingRequest'),
         variant: "destructive",
       });
     } finally {
@@ -116,52 +130,57 @@ export const AddMaintenanceDialog = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) {
+        resetForm();
+        onClose();
+      }
+    }}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>New Maintenance Request</DialogTitle>
+          <DialogTitle>{t('newMaintenanceRequest')}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">{t('title')}</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g., Water leak in bathroom"
+              placeholder={t('maintenanceRequestTitlePlaceholder')}
               required
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t('description')}</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Describe the maintenance issue in detail..."
+              placeholder={t('maintenanceDescriptionPlaceholder')}
               className="min-h-[100px]"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="priority">Priority</Label>
+            <Label htmlFor="priority">{t('priority')}</Label>
             <Select value={priority} onValueChange={setPriority}>
               <SelectTrigger>
-                <SelectValue placeholder="Select priority" />
+                <SelectValue placeholder={t('selectPriority')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Low">Low</SelectItem>
-                <SelectItem value="Medium">Medium</SelectItem>
-                <SelectItem value="High">High</SelectItem>
-                <SelectItem value="Urgent">Urgent</SelectItem>
+                <SelectItem value="Low">{t('low')}</SelectItem>
+                <SelectItem value="Medium">{t('medium')}</SelectItem>
+                <SelectItem value="High">{t('high')}</SelectItem>
+                <SelectItem value="Urgent">{t('urgent')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="photos">Photos</Label>
+            <Label htmlFor="photos">{t('photos')}</Label>
             <Input
               id="photos"
               type="file"
@@ -172,21 +191,24 @@ export const AddMaintenanceDialog = ({
             />
             {photos.length > 0 && (
               <p className="text-sm text-muted-foreground">
-                {photos.length} photo(s) selected
+                {photos.length} {t('photosSelected')}
               </p>
             )}
           </div>
 
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
+            <Button type="button" variant="outline" onClick={() => {
+              resetForm();
+              onClose();
+            }}>
+              {t('cancel')}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
               className="bg-[#ea384c] hover:bg-[#ea384c]/90"
             >
-              {isSubmitting ? "Submitting..." : "Submit Request"}
+              {isSubmitting ? t('submitting') : t('submitRequest')}
             </Button>
           </div>
         </form>
