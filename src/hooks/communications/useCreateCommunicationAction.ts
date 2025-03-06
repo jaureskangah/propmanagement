@@ -2,9 +2,11 @@
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { sendTenantEmail, createCommunicationRecord } from "./utils/emailOperations";
+import { useNotifyCommunication } from "./useNotifyCommunication";
 
 export const useCreateCommunicationAction = (tenantId?: string) => {
   const { toast } = useToast();
+  const { sendNotification } = useNotifyCommunication();
 
   const handleCreateCommunication = async (newCommData: {
     type: string;
@@ -57,6 +59,14 @@ export const useCreateCommunicationAction = (tenantId?: string) => {
           newCommData.content,
           category,
           'unread'
+        );
+
+        // Send notification if it's not an email
+        await sendNotification(
+          tenantId,
+          newCommData.subject,
+          newCommData.content,
+          false
         );
 
         toast({

@@ -1,8 +1,11 @@
+
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useNotifyCommunication } from "./useNotifyCommunication";
 
 export const useCreateCommunication = (tenantId: string, onCommunicationUpdate?: () => void) => {
   const { toast } = useToast();
+  const { sendNotification } = useNotifyCommunication();
 
   const handleCreateCommunication = async (newCommData: {
     subject: string;
@@ -32,18 +35,13 @@ export const useCreateCommunication = (tenantId: string, onCommunicationUpdate?:
       
       console.log("Message created successfully:", data);
 
-      const { error: notificationError } = await supabase.functions.invoke('notify-communication', {
-        body: {
-          tenantId,
-          subject: newCommData.subject,
-          content: formattedContent,
-          isFromTenant: true
-        }
-      });
-
-      if (notificationError) {
-        console.error("Error sending notification:", notificationError);
-      }
+      // Use the separated notification hook
+      await sendNotification(
+        tenantId,
+        newCommData.subject,
+        formattedContent,
+        true
+      );
 
       toast({
         title: "Success",
