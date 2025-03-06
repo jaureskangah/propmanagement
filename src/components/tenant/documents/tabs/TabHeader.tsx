@@ -43,9 +43,6 @@ export function TabHeader({
             <TabsTrigger value="all" className="text-sm">
               {t("allDocuments")}
             </TabsTrigger>
-            <TabsTrigger value="upload" className="text-sm">
-              {t("uploadDocument")}
-            </TabsTrigger>
           </TabsList>
         </Tabs>
         
@@ -75,7 +72,7 @@ export function TabHeader({
             ) : (
               <>
                 <Filter className="h-4 w-4" />
-                {!isMobile && t("showFilters")}
+                {!isMobile && "Show Filters"}
               </>
             )}
           </Button>
