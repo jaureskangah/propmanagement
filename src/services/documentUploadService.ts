@@ -13,7 +13,7 @@ interface UploadOptions {
 interface UploadResult {
   success: boolean;
   data?: any;
-  error?: any;
+  error?: string;
   publicUrl?: string;
 }
 
@@ -28,23 +28,40 @@ export const documentUploadService = {
     }
 
     try {
-      // Vérifier si l'utilisateur actuel est authentifié
+      // Check if the current user is authenticated
       const { data: userData, error: authError } = await supabase.auth.getUser();
       if (authError || !userData.user) {
         console.error("Authentication error:", authError);
-        throw new Error("You must be logged in to upload documents");
+        return { success: false, error: "authRequired" };
       }
 
       console.log("Current user:", userData.user.id);
       console.log("Attempting to upload document for tenant:", tenantId);
       
-      // Créer un nom de fichier unique avec une structure de chemin appropriée
+      // Create a unique filename with appropriate path structure
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
       console.log("Uploading to storage with path:", fileName);
 
-      // Télécharger le fichier
+      // First check if tenant_documents bucket exists
+      const { data: buckets, error: bucketsError } = await supabase
+        .storage
+        .listBuckets();
+      
+      if (bucketsError) {
+        console.error("Error checking buckets:", bucketsError);
+        return { success: false, error: "storageError" };
+      }
+      
+      const bucketExists = buckets?.some(bucket => bucket.name === 'tenant_documents');
+      
+      if (!bucketExists) {
+        console.error("Bucket 'tenant_documents' does not exist");
+        return { success: false, error: "storageBucketMissing" };
+      }
+
+      // Upload the file
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
@@ -55,32 +72,31 @@ export const documentUploadService = {
       if (uploadError) {
         console.error("Upload error:", uploadError);
         
-        // Vérifier si c'est une erreur RLS
-        if (uploadError.message && uploadError.message.includes("violates row-level security policy")) {
+        if (uploadError.message?.includes("new row violates row-level security policy")) {
           return { 
             success: false, 
-            error: "Permission error: You don't have access to upload documents. Please make sure you are logged in."
+            error: "permissionDenied"
           };
         }
         
-        throw uploadError;
+        return { success: false, error: "uploadError" };
       }
 
       console.log("File uploaded successfully:", uploadData, "getting public URL");
 
-      // Générer l'URL publique
+      // Generate public URL
       const { data: publicUrlData } = await supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
 
       if (!publicUrlData?.publicUrl) {
         console.error("Failed to generate public URL");
-        throw new Error("Failed to generate public URL");
+        return { success: false, error: "publicUrlError" };
       }
 
       console.log("Generated public URL:", publicUrlData.publicUrl);
 
-      // Déterminer le type de document
+      // Determine document type
       let document_type: DocumentType = 'other';
       if (category === 'lease') {
         document_type = 'lease';
@@ -88,7 +104,7 @@ export const documentUploadService = {
         document_type = 'receipt';
       }
 
-      // Enregistrer la référence du document dans la base de données
+      // Save document reference in database
       const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
@@ -97,13 +113,14 @@ export const documentUploadService = {
           file_url: publicUrlData.publicUrl,
           document_type: document_type,
           category: category,
-          uploaded_by: userData.user.id // Ajouter l'ID de l'utilisateur qui télécharge
+          uploaded_by: userData.user.id
         })
         .select();
 
       if (dbError) {
         console.error("Database insert error:", dbError);
-        // Retour en arrière du téléchargement du fichier si possible
+        
+        // Rollback file upload if possible
         try {
           await supabase.storage
             .from('tenant_documents')
@@ -112,7 +129,12 @@ export const documentUploadService = {
         } catch (rollbackError) {
           console.error("Could not rollback file upload:", rollbackError);
         }
-        throw dbError;
+        
+        if (dbError.message?.includes("violates row-level security policy")) {
+          return { success: false, error: "permissionDenied" };
+        }
+        
+        return { success: false, error: "databaseError" };
       }
 
       console.log("Document reference saved in database:", insertData);
@@ -124,26 +146,9 @@ export const documentUploadService = {
       };
     } catch (error: any) {
       console.error('Upload error:', error);
-      
-      let errorMessage = "An error occurred during upload";
-      
-      if (error.message) {
-        if (error.message.includes("duplicate key")) {
-          errorMessage = "A document with this name already exists";
-        } else if (error.message.includes("storage")) {
-          errorMessage = "Storage error: " + error.message;
-        } else if (error.message.includes("violates row-level security")) {
-          errorMessage = "Permission error: You don't have access to upload documents";
-        } else if (error.message.includes("auth")) {
-          errorMessage = "Authentication error: " + error.message;
-        } else {
-          errorMessage = "Error: " + error.message;
-        }
-      }
-      
       return {
         success: false,
-        error: errorMessage
+        error: error.message || "Unknown error"
       };
     }
   }

@@ -1,3 +1,4 @@
+
 export interface TenantDocumentsTranslations {
   documents: string;
   uploadDocument: string;
@@ -61,4 +62,10 @@ export interface TenantDocumentsTranslations {
   documentShareError: string;
   permissionError: string;
   tenantProfileNotFound: string;
+  authRequired: string;
+  databaseError: string;
+  storageError: string;
+  storageBucketMissing: string;
+  uploadError: string;
+  publicUrlError: string;
 }

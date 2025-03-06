@@ -4,11 +4,13 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { validateFile } from "@/utils/fileValidation";
 import { documentUploadService } from "@/services/documentUploadService";
+import { useAuth } from "@/components/AuthProvider";
 
 export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void) => {
   const { toast } = useToast();
   const { t } = useLocale();
   const [isUploading, setIsUploading] = useState(false);
+  const { user } = useAuth();
 
   // Helper function to show toast messages
   const showToastMessage = (title: string, description: string, variant: "default" | "destructive" = "default") => {
@@ -31,6 +33,12 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     if (!tenantId) {
       console.error("No tenant ID provided");
       showToastMessage("error", "tenantProfileNotFound", "destructive");
+      return;
+    }
+
+    if (!user) {
+      console.error("User not authenticated");
+      showToastMessage("error", "authRequired", "destructive");
       return;
     }
 
@@ -57,22 +65,35 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         onUploadComplete();
         return result.data;
       } else {
+        // Handle specific error messages
+        let errorKey = "error";
+        
+        if (result.error === "authRequired") {
+          errorKey = "authRequired";
+        } else if (result.error === "permissionDenied") {
+          errorKey = "permissionError";
+        } else if (result.error === "storageBucketMissing") {
+          errorKey = "storageBucketMissing";
+        } else if (result.error === "uploadError") {
+          errorKey = "uploadError";
+        } else if (result.error === "databaseError") {
+          errorKey = "databaseError";
+        }
+        
+        showToastMessage("error", errorKey, "destructive");
         throw new Error(result.error);
       }
     } catch (error: any) {
       console.error('Upload error:', error);
       
-      let errorMessage = t("error");
-      
-      if (error.message) {
-        if (error.message.includes("Permission error")) {
-          errorMessage = t("permissionError") + ": " + error.message;
-        } else {
-          errorMessage = error.message;
-        }
+      // If not already handled above, show generic error
+      if (!error.message?.includes("authRequired") && 
+          !error.message?.includes("permissionDenied") &&
+          !error.message?.includes("storageBucketMissing") &&
+          !error.message?.includes("uploadError") &&
+          !error.message?.includes("databaseError")) {
+        showToastMessage("error", "uploadFailed", "destructive");
       }
-      
-      showToastMessage("error", errorMessage, "destructive");
       
       throw error;
     } finally {

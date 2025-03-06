@@ -1,3 +1,4 @@
+
 import type { TenantDocumentsTranslations } from '../../../types/tenant/documents';
 
 export const frDocuments: TenantDocumentsTranslations = {
@@ -61,6 +62,12 @@ export const frDocuments: TenantDocumentsTranslations = {
   openFullViewer: "Ouvrir la visionneuse complète",
   documentShareSuccess: "Document partagé avec succès",
   documentShareError: "Échec du partage du document",
-  permissionError: "Erreur de permission",
-  tenantProfileNotFound: "Profil de locataire non trouvé"
+  permissionError: "Erreur de permission: Vous n'avez pas accès pour téléverser des documents",
+  tenantProfileNotFound: "Profil de locataire non trouvé",
+  authRequired: "Vous devez être connecté pour téléverser des documents",
+  databaseError: "Erreur de base de données lors de l'enregistrement du document",
+  storageError: "Erreur du système de stockage",
+  storageBucketMissing: "Le stockage de documents n'est pas correctement configuré",
+  uploadError: "Erreur lors du téléversement du fichier",
+  publicUrlError: "Impossible de générer l'URL publique du document"
 };

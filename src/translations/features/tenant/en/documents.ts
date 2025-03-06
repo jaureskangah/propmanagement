@@ -62,6 +62,12 @@ export const enDocuments: TenantDocumentsTranslations = {
   openFullViewer: "Open Full Viewer",
   documentShareSuccess: "Document shared successfully",
   documentShareError: "Failed to share document",
-  permissionError: "Permission error",
-  tenantProfileNotFound: "Tenant profile not found"
+  permissionError: "Permission error: You don't have access to upload documents",
+  tenantProfileNotFound: "Tenant profile not found",
+  authRequired: "You must be logged in to upload documents",
+  databaseError: "Database error occurred while saving document",
+  storageError: "Storage system error occurred",
+  storageBucketMissing: "Document storage not properly configured",
+  uploadError: "Error uploading file to storage",
+  publicUrlError: "Could not generate public URL for document"
 };
