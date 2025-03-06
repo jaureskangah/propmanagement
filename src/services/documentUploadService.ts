@@ -2,14 +2,11 @@
 import { supabase } from "@/lib/supabase";
 
 type DocumentType = 'lease' | 'receipt' | 'other';
-type DocumentSource = 'tenant' | 'landlord';
 
 interface UploadOptions {
   tenantId: string;
   file: File;
   category?: string;
-  source?: DocumentSource;
-  senderName?: string;
   onProgress?: (progress: number) => void;
 }
 
@@ -24,14 +21,7 @@ export const documentUploadService = {
   /**
    * Uploads a document to Supabase storage and creates a database record
    */
-  async uploadDocument({ 
-    tenantId, 
-    file, 
-    category = 'other', 
-    source = 'tenant',
-    senderName,
-    onProgress 
-  }: UploadOptions): Promise<UploadResult> {
+  async uploadDocument({ tenantId, file, category = 'other', onProgress }: UploadOptions): Promise<UploadResult> {
     if (!file || !tenantId) {
       console.error("Missing required parameters: file or tenantId");
       return { success: false, error: "Missing required parameters" };
@@ -47,7 +37,6 @@ export const documentUploadService = {
 
       console.log("Current user:", userData.user.id);
       console.log("Attempting to upload document for tenant:", tenantId);
-      console.log("Document source:", source);
       
       // Create a unique filename with appropriate path structure
       const fileExt = file.name.split('.').pop();
@@ -114,9 +103,7 @@ export const documentUploadService = {
           file_url: publicUrlData.publicUrl,
           document_type: document_type,
           category: category,
-          uploaded_by: userData.user.id,
-          source: source,
-          sender_name: senderName
+          uploaded_by: userData.user.id
         })
         .select();
 

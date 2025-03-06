@@ -31,8 +31,6 @@ export interface TenantDocument {
   document_type?: 'lease' | 'receipt' | 'other';
   tenant_id?: string;
   category?: string;
-  source?: 'tenant' | 'landlord';
-  sender_name?: string;
 }
 
 export interface TenantPayment {
