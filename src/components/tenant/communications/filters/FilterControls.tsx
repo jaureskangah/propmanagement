@@ -1,17 +1,14 @@
 
 import { Button } from "@/components/ui/button";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { DateFilter } from "./DateFilter";
 import { TypeFilter } from "./TypeFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { SearchInput } from "./SearchInput";
 
 interface FilterControlsProps {
-  searchQuery: string;
   startDate: string;
   selectedType: string | null;
   communicationTypes: string[];
-  onSearchChange: (value: string) => void;
   onDateChange: (value: string) => void;
   onTypeChange: (value: string | null) => void;
   filtersApplied: boolean;
@@ -19,11 +16,9 @@ interface FilterControlsProps {
 }
 
 export const FilterControls = ({
-  searchQuery,
   startDate,
   selectedType,
   communicationTypes,
-  onSearchChange,
   onDateChange,
   onTypeChange,
   filtersApplied,
@@ -33,8 +28,6 @@ export const FilterControls = ({
   
   return (
     <div className="flex flex-col md:flex-row gap-3 bg-muted/30 p-3 rounded-lg">
-      <SearchInput value={searchQuery} onChange={onSearchChange} />
-      
       <DateFilter 
         value={startDate} 
         onChange={onDateChange} 
@@ -47,7 +40,13 @@ export const FilterControls = ({
       />
       
       {filtersApplied && (
-        <Button variant="ghost" size="sm" onClick={onClearFilters} className="flex-shrink-0">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={onClearFilters} 
+          className="flex-shrink-0 mt-2 md:mt-0"
+          type="button"
+        >
           <X className="h-4 w-4 mr-2" />
           {t('clearFilter')}
         </Button>

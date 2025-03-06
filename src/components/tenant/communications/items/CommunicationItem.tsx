@@ -122,6 +122,7 @@ export const CommunicationItem = ({
                   onToggleStatus();
                 }}
                 title={communication.status === "read" ? "Marquer comme non lu" : "Marquer comme lu"}
+                type="button"
               >
                 {communication.status === "read" ? 
                   <EyeOff className="h-4 w-4" /> : 
@@ -137,6 +138,7 @@ export const CommunicationItem = ({
                   onDelete();
                 }}
                 title="Supprimer"
+                type="button"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>

@@ -25,24 +25,17 @@ export const CommunicationsContent = ({
   onCommunicationUpdate,
 }: CommunicationsContentProps) => {
   const { t } = useLocale();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [startDate, setStartDate] = useState("");
   const [filtersApplied, setFiltersApplied] = useState(false);
 
   useEffect(() => {
-    setFiltersApplied(!!searchQuery || !!startDate || !!selectedType);
-  }, [searchQuery, startDate, selectedType]);
+    setFiltersApplied(!!startDate || !!selectedType);
+  }, [startDate, selectedType]);
 
   const filteredCommunications = communications.filter(comm => {
     if (!comm) return false;
     
-    const matchesSearch = searchQuery === "" || 
-      (comm.subject?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-       comm.content?.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesCategory = !selectedCategory || comm.category === selectedCategory;
     const matchesType = !selectedType || comm.type === selectedType;
     
     let matchesDate = true;
@@ -54,7 +47,7 @@ export const CommunicationsContent = ({
       }
     }
     
-    return matchesSearch && matchesCategory && matchesType && matchesDate;
+    return matchesType && matchesDate;
   });
 
   const groupedCommunications = filteredCommunications.reduce((acc, comm) => {
@@ -87,7 +80,6 @@ export const CommunicationsContent = ({
   };
 
   const clearFilters = () => {
-    setSearchQuery("");
     setStartDate("");
     setSelectedType(null);
   };
@@ -95,11 +87,9 @@ export const CommunicationsContent = ({
   return (
     <div className="space-y-4">
       <FilterControls
-        searchQuery={searchQuery}
         startDate={startDate}
         selectedType={selectedType}
         communicationTypes={communicationTypes}
-        onSearchChange={setSearchQuery}
         onDateChange={setStartDate}
         onTypeChange={setSelectedType}
         filtersApplied={filtersApplied}
@@ -107,10 +97,8 @@ export const CommunicationsContent = ({
       />
       
       <FilterBadges
-        searchQuery={searchQuery}
         startDate={startDate}
         selectedType={selectedType}
-        onClearSearch={() => setSearchQuery("")}
         onClearDate={() => setStartDate("")}
         onClearType={() => setSelectedType(null)}
         getTypeIcon={getTypeIcon}
