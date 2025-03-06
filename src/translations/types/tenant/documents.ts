@@ -68,4 +68,5 @@ export interface TenantDocumentsTranslations {
   storageBucketMissing: string;
   uploadError: string;
   publicUrlError: string;
+  fileValidationError: string;
 }

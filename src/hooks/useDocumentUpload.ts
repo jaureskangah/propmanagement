@@ -78,6 +78,8 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
           errorKey = "uploadError";
         } else if (result.error === "databaseError") {
           errorKey = "databaseError";
+        } else if (result.error === "publicUrlError") {
+          errorKey = "publicUrlError";
         }
         
         showToastMessage("error", errorKey, "destructive");
@@ -91,7 +93,8 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
           !error.message?.includes("permissionDenied") &&
           !error.message?.includes("storageBucketMissing") &&
           !error.message?.includes("uploadError") &&
-          !error.message?.includes("databaseError")) {
+          !error.message?.includes("databaseError") &&
+          !error.message?.includes("publicUrlError")) {
         showToastMessage("error", "uploadFailed", "destructive");
       }
       

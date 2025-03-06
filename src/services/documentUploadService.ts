@@ -44,21 +44,27 @@ export const documentUploadService = {
 
       console.log("Uploading to storage with path:", fileName);
 
-      // First check if tenant_documents bucket exists
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-      
-      if (bucketsError) {
-        console.error("Error checking buckets:", bucketsError);
+      // First confirm that the tenant_documents bucket exists
+      try {
+        const { data: buckets, error: bucketsError } = await supabase
+          .storage
+          .listBuckets();
+        
+        if (bucketsError) {
+          console.error("Error checking buckets:", bucketsError);
+          return { success: false, error: "storageError" };
+        }
+        
+        const bucketExists = buckets?.some(bucket => bucket.name === 'tenant_documents');
+        console.log("Storage buckets:", buckets?.map(b => b.name), "tenant_documents exists:", bucketExists);
+        
+        if (!bucketExists) {
+          console.error("Bucket 'tenant_documents' does not exist");
+          return { success: false, error: "storageBucketMissing" };
+        }
+      } catch (bucketError) {
+        console.error("Error checking buckets:", bucketError);
         return { success: false, error: "storageError" };
-      }
-      
-      const bucketExists = buckets?.some(bucket => bucket.name === 'tenant_documents');
-      
-      if (!bucketExists) {
-        console.error("Bucket 'tenant_documents' does not exist");
-        return { success: false, error: "storageBucketMissing" };
       }
 
       // Upload the file

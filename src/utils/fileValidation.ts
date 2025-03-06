@@ -1,55 +1,39 @@
-
-import { useToast } from "@/hooks/use-toast";
-
-interface ValidationOptions {
-  maxSize?: number;
-  allowedTypes?: string[];
-  allowedExtensions?: string[];
-}
-
 export const validateFile = (
   file: File, 
-  options: ValidationOptions = {}, 
-  showToast: (title: string, description: string, variant?: "default" | "destructive") => void
+  options: { 
+    maxSizeMB?: number, 
+    allowedTypes?: string[] 
+  } = {},
+  showError?: (title: string, description: string, variant?: "default" | "destructive") => void
 ): boolean => {
-  const {
-    maxSize = 10 * 1024 * 1024, // 10MB default
-    allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'text/plain',
-      'image/jpeg',
-      'image/png'
-    ],
-    allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'jpg', 'jpeg', 'png']
-  } = options;
-
+  const maxSizeMB = options.maxSizeMB || 10; // Default 10MB
+  const maxSizeBytes = maxSizeMB * 1024 * 1024;
+  const allowedTypes = options.allowedTypes || [
+    'application/pdf', 
+    'application/msword', 
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'image/jpeg',
+    'image/png',
+    'text/plain'
+  ];
+  
   // Check file size
-  if (file.size > maxSize) {
-    showToast(
-      "Error",
-      "Maximum file size: 10MB",
-      "destructive"
-    );
+  if (file.size > maxSizeBytes) {
+    console.error(`File too large: ${file.size} bytes. Max allowed: ${maxSizeBytes} bytes`);
+    if (showError) {
+      showError("error", "fileSizeLimit", "destructive");
+    }
     return false;
   }
-
+  
   // Check file type
-  const fileType = file.type;
-  if (!allowedTypes.includes(fileType)) {
-    // Additional check by extension
-    const extension = file.name.split('.').pop()?.toLowerCase();
-    
-    if (!extension || !allowedExtensions.includes(extension)) {
-      showToast(
-        "Error",
-        "Supported formats: PDF, DOC, DOCX, TXT, JPG, PNG",
-        "destructive"
-      );
-      return false;
+  if (allowedTypes.length > 0 && !allowedTypes.includes(file.type)) {
+    console.error(`Invalid file type: ${file.type}. Allowed types: ${allowedTypes.join(', ')}`);
+    if (showError) {
+      showError("error", "fileValidationError", "destructive");
     }
+    return false;
   }
-
+  
   return true;
 };
