@@ -1,4 +1,3 @@
-
 import type { TenantCommunicationsTranslations } from '../../../types/tenant/communications';
 
 export const enCommunications: TenantCommunicationsTranslations = {
@@ -18,8 +17,8 @@ export const enCommunications: TenantCommunicationsTranslations = {
   replyToMessage: "Reply to message",
   messageFrom: "Message from",
   markAsRead: "Mark as read",
-  markAsUnread: "Mark as unread",
-  deleteMessage: "Delete message",
+  markAsUnread: "Mark as unread", // Ajout de la traduction manquante
+  deleteMessage: "Delete message", // Ajout de la traduction manquante
   messageDeleted: "Message deleted",
   filter: "Filter",
   searchMessages: "Search messages",

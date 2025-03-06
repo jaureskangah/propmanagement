@@ -1,4 +1,3 @@
-
 import AppSidebar from "@/components/AppSidebar";
 import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications";
 import { TenantCommunicationsContent } from "@/components/tenant/communications/TenantCommunicationsContent";
@@ -27,7 +26,6 @@ const TenantCommunications = () => {
   const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenantId || undefined);
   const [communicationToDelete, setCommunicationToDelete] = useState<Communication | null>(null);
 
-  // Activer les notifications en temps réel
   useRealtimeNotifications();
 
   const handleToggleStatusAndRefresh = async (comm: Communication) => {
@@ -37,31 +35,30 @@ const TenantCommunications = () => {
     }
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (!communicationToDelete) return;
     
     console.log("Confirming deletion of communication:", communicationToDelete.id);
     
-    handleDeleteCommunication(communicationToDelete.id)
-      .then(success => {
-        if (success) {
-          toast({
-            title: t('success'),
-            description: t('messageDeleted'),
-          });
-          refreshCommunications();
-        }
-        setCommunicationToDelete(null);
-      })
-      .catch(error => {
-        console.error("Error deleting communication:", error);
+    try {
+      const success = await handleDeleteCommunication(communicationToDelete.id);
+      if (success) {
         toast({
-          title: t('error'),
-          description: "Erreur lors de la suppression du message",
-          variant: "destructive",
+          title: t('success'),
+          description: t('messageDeleted'),
         });
-        setCommunicationToDelete(null);
+        await refreshCommunications();
+      }
+    } catch (error) {
+      console.error("Error deleting communication:", error);
+      toast({
+        title: t('error'),
+        description: "Erreur lors de la suppression du message",
+        variant: "destructive",
       });
+    } finally {
+      setCommunicationToDelete(null);
+    }
   };
 
   return (
