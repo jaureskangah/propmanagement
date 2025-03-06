@@ -110,14 +110,12 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
       console.log("Uploading to storage with path:", fileName);
 
-      // 2. Upload du fichier avec abortController pour permettre l'annulation
-      const controller = new AbortController();
+      // 2. Upload du fichier - removed the signal from AbortController as it's not supported
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
           cacheControl: '3600',
-          upsert: false,
-          signal: controller.signal
+          upsert: false
         });
 
       if (uploadError) {
