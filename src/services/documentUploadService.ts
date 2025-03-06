@@ -44,27 +44,36 @@ export const documentUploadService = {
 
       console.log("Uploading to storage with path:", fileName);
 
-      // First confirm that the tenant_documents bucket exists
-      try {
-        const { data: buckets, error: bucketsError } = await supabase
+      // Check if the tenant_documents bucket exists
+      const { data: buckets, error: bucketsError } = await supabase
+        .storage
+        .listBuckets();
+      
+      if (bucketsError) {
+        console.error("Error checking buckets:", bucketsError);
+        return { success: false, error: "storageError" };
+      }
+      
+      const bucketExists = buckets?.some(bucket => bucket.name === 'tenant_documents');
+      console.log("Storage buckets:", buckets?.map(b => b.name), "tenant_documents exists:", bucketExists);
+      
+      if (!bucketExists) {
+        console.log("Tenant documents bucket doesn't exist, creating it...");
+        
+        // Create the bucket if it doesn't exist
+        const { error: createBucketError } = await supabase
           .storage
-          .listBuckets();
+          .createBucket('tenant_documents', { 
+            public: true,
+            fileSizeLimit: 10485760 // 10MB
+          });
         
-        if (bucketsError) {
-          console.error("Error checking buckets:", bucketsError);
-          return { success: false, error: "storageError" };
-        }
-        
-        const bucketExists = buckets?.some(bucket => bucket.name === 'tenant_documents');
-        console.log("Storage buckets:", buckets?.map(b => b.name), "tenant_documents exists:", bucketExists);
-        
-        if (!bucketExists) {
-          console.error("Bucket 'tenant_documents' does not exist");
+        if (createBucketError) {
+          console.error("Error creating bucket:", createBucketError);
           return { success: false, error: "storageBucketMissing" };
         }
-      } catch (bucketError) {
-        console.error("Error checking buckets:", bucketError);
-        return { success: false, error: "storageError" };
+        
+        console.log("Successfully created tenant_documents bucket");
       }
 
       // Upload the file
