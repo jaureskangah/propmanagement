@@ -44,9 +44,6 @@ export const documentUploadService = {
 
       console.log("Uploading to storage with path:", fileName);
 
-      // We'll skip the bucket existence check as we've already confirmed it exists in Supabase
-      // and the client might not have permission to list buckets due to RLS
-
       // Upload the file directly
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
@@ -58,7 +55,9 @@ export const documentUploadService = {
       if (uploadError) {
         console.error("Upload error:", uploadError);
         
-        if (uploadError.message?.includes("new row violates row-level security policy")) {
+        if (uploadError.message?.includes("new row violates row-level security policy") ||
+            uploadError.message?.includes("permission denied") ||
+            uploadError.message?.includes("not authorized")) {
           return { 
             success: false, 
             error: "permissionDenied"
@@ -121,7 +120,9 @@ export const documentUploadService = {
           console.error("Could not rollback file upload:", rollbackError);
         }
         
-        if (dbError.message?.includes("violates row-level security policy")) {
+        if (dbError.message?.includes("violates row-level security policy") || 
+            dbError.message?.includes("permission denied") ||
+            dbError.message?.includes("not authorized")) {
           return { success: false, error: "permissionDenied" };
         }
         
