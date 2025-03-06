@@ -66,8 +66,8 @@ const Communications = () => {
       
       if (success) {
         toast({
-          title: t('success'),
-          description: t('messageDeleted'),
+          title: "Succès",
+          description: "Message supprimé avec succès",
         });
         await refreshCommunications();
       }
@@ -108,18 +108,18 @@ const Communications = () => {
       <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
+            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDeleteMessage')}
+              Êtes-vous sûr de vouloir supprimer ce message ? Cette action ne peut pas être annulée.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {t('deleteMessage')}
+              Supprimer
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -7,11 +7,16 @@ export const useStatusToggleAction = () => {
   const { toast } = useToast();
 
   const handleToggleStatus = async (comm: Communication) => {
+    if (!comm || !comm.id) {
+      console.error("Invalid communication object:", comm);
+      return false;
+    }
+    
     try {
       console.log("Toggling status for communication:", comm.id);
       const newStatus = comm.status === 'read' ? 'unread' : 'read';
       
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('tenant_communications')
         .update({ status: newStatus })
         .eq('id', comm.id)
@@ -22,6 +27,7 @@ export const useStatusToggleAction = () => {
         throw error;
       }
 
+      console.log("Status successfully updated:", data);
       return true;
     } catch (error) {
       console.error("Error in handleToggleStatus:", error);

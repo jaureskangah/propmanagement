@@ -6,6 +6,11 @@ export const useDeleteCommunicationAction = () => {
   const { toast } = useToast();
 
   const handleDeleteCommunication = async (commId: string) => {
+    if (!commId) {
+      console.error("Invalid communication ID");
+      return false;
+    }
+    
     try {
       console.log("Starting deletion process for communication:", commId);
       
@@ -26,8 +31,7 @@ export const useDeleteCommunicationAction = () => {
         const { error: repliesError } = await supabase
           .from('tenant_communications')
           .delete()
-          .in('id', replies.map(reply => reply.id))
-          .select();
+          .in('id', replies.map(reply => reply.id));
 
         if (repliesError) {
           console.error("Error deleting replies:", repliesError);
@@ -40,14 +44,14 @@ export const useDeleteCommunicationAction = () => {
       const { error: deleteError } = await supabase
         .from('tenant_communications')
         .delete()
-        .eq('id', commId)
-        .select();
+        .eq('id', commId);
 
       if (deleteError) {
         console.error("Error deleting main communication:", deleteError);
         throw deleteError;
       }
 
+      console.log("Communication successfully deleted");
       return true;
     } catch (error) {
       console.error("Error in handleDeleteCommunication:", error);

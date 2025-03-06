@@ -121,7 +121,7 @@ export const CommunicationItem = ({
                   e.stopPropagation();
                   onToggleStatus();
                 }}
-                title={communication.status === "read" ? t('markAsUnread') : t('markAsRead')}
+                title={communication.status === "read" ? "Marquer comme non lu" : "Marquer comme lu"}
               >
                 {communication.status === "read" ? 
                   <EyeOff className="h-4 w-4" /> : 
@@ -136,7 +136,7 @@ export const CommunicationItem = ({
                   e.stopPropagation();
                   onDelete();
                 }}
-                title={t('deleteMessage')}
+                title="Supprimer"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
