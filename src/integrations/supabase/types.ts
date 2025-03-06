@@ -528,25 +528,34 @@ export type Database = {
       }
       tenant_documents: {
         Row: {
+          category: string | null
           created_at: string
+          document_type: string | null
           file_url: string | null
           id: string
           name: string
           tenant_id: string | null
+          uploaded_by: string | null
         }
         Insert: {
+          category?: string | null
           created_at?: string
+          document_type?: string | null
           file_url?: string | null
           id?: string
           name: string
           tenant_id?: string | null
+          uploaded_by?: string | null
         }
         Update: {
+          category?: string | null
           created_at?: string
+          document_type?: string | null
           file_url?: string | null
           id?: string
           name?: string
           tenant_id?: string | null
+          uploaded_by?: string | null
         }
         Relationships: [
           {

@@ -1,4 +1,3 @@
-
 import { ThemeProvider } from "@/components/theme-provider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { Toaster } from "sonner";
@@ -23,6 +22,7 @@ import Careers from "./pages/company/Careers";
 import Terms from "./pages/legal/Terms";
 import Privacy from "./pages/legal/Privacy";
 import Cookies from "./pages/legal/Cookies";
+import { ensureTenantDocumentsBucket } from "./utils/createStorageBucket";
 
 // Assurons-nous que la langue est initialisée au démarrage de l'application
 const initializeLanguage = () => {
@@ -38,6 +38,17 @@ const initializeLanguage = () => {
 function App() {
   // Initialiser la langue au démarrage de l'application
   initializeLanguage();
+
+  useEffect(() => {
+    // Initialize storage
+    ensureTenantDocumentsBucket().then((success) => {
+      if (success) {
+        console.log("Storage bucket setup complete");
+      } else {
+        console.error("Failed to setup storage bucket");
+      }
+    });
+  }, []);
 
   return (
     <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
