@@ -8,18 +8,27 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTenantData = useCallback(async () => {
-    if (!userId) return;
+    if (!userId) {
+      console.log("useTenantData: No user ID provided");
+      setIsLoading(false);
+      return null;
+    }
     
     try {
+      console.log("Fetching tenant data for user:", userId);
       setIsLoading(true);
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select('*')
         .eq('tenant_profile_id', userId)
-        .single();
+        .maybeSingle();
 
-      if (tenantError) throw tenantError;
+      if (tenantError) {
+        console.error('Error fetching tenant data:', tenantError);
+        throw tenantError;
+      }
       
+      console.log("Tenant data result:", tenantData ? "Found" : "Not found");
       setTenant(tenantData);
       return tenantData;
     } catch (error) {

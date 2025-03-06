@@ -39,8 +39,13 @@ export const useDocumentState = (
     console.log("useDocumentState - User ID:", user?.id);
     if (user?.id && !isInitialized) {
       console.log("Fetching tenant data for user:", user.id);
-      fetchTenantData().then(() => {
+      fetchTenantData().then((tenantData) => {
+        console.log("Tenant data fetched:", tenantData);
         setIsInitialized(true);
+        
+        if (!tenantData) {
+          console.log("No tenant profile found for user:", user.id);
+        }
       });
     }
   }, [user, fetchTenantData, isInitialized]);

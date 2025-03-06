@@ -18,10 +18,11 @@ export const UploadButton = ({ isUploading, onClick, disabled }: UploadButtonPro
       onClick={onClick}
       disabled={disabled}
       className="w-full"
+      variant={disabled ? "outline" : "default"}
     >
       {isUploading ? (
         <>
-          <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+          <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
           {t("uploading")}
         </>
       ) : (

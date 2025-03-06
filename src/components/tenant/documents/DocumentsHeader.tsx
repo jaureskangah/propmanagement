@@ -1,11 +1,12 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FileText, Upload, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DocumentUpload } from "../DocumentUpload";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Tenant } from "@/types/tenant";
 import { motion } from "framer-motion";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentsHeaderProps {
   tenant: Tenant | null;
@@ -14,7 +15,20 @@ interface DocumentsHeaderProps {
 
 export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderProps) => {
   const { t } = useLocale();
+  const { toast } = useToast();
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+
+  const handleUploadClick = () => {
+    if (!tenant) {
+      toast({
+        title: t("error"),
+        description: t("tenantProfileNotFound"),
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsUploadOpen(prev => !prev);
+  };
 
   return (
     <div className="space-y-2">
@@ -34,24 +48,22 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          {tenant && (
-            <Button 
-              onClick={() => setIsUploadOpen(prev => !prev)}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
-            >
-              {isUploadOpen ? (
-                <>
-                  <Upload className="h-4 w-4" />
-                  {t("uploadDocument")}
-                </>
-              ) : (
-                <>
-                  <Plus className="h-4 w-4" />
-                  {t("uploadNewDocument")}
-                </>
-              )}
-            </Button>
-          )}
+          <Button 
+            onClick={handleUploadClick}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+          >
+            {isUploadOpen ? (
+              <>
+                <Upload className="h-4 w-4" />
+                {t("uploadDocument")}
+              </>
+            ) : (
+              <>
+                <Plus className="h-4 w-4" />
+                {t("uploadNewDocument")}
+              </>
+            )}
+          </Button>
         </motion.div>
       </div>
       
@@ -64,7 +76,7 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
         >
           <DocumentUpload tenantId={tenant.id} onUploadComplete={() => {
             onDocumentUpdate();
-            // Fermer le formulaire d'upload après un téléversement réussi
+            // Close the upload form after a successful upload
             setIsUploadOpen(false);
           }} />
         </motion.div>
