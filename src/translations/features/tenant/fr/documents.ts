@@ -59,5 +59,8 @@ export const frDocuments: TenantDocumentsTranslations = {
   andMoreDocuments: "et {count} documents de plus",
   viewAllDocuments: "Voir tous les documents",
   quickPreview: "Aperçu rapide",
-  openFullViewer: "Ouvrir la visionneuse complète"
+  openFullViewer: "Ouvrir la visionneuse complète",
+  documentShareSuccess: "Document partagé avec succès",
+  documentShareError: "Échec du partage du document",
+  permissionError: "Erreur de permission"
 };

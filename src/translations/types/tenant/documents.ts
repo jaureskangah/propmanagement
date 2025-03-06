@@ -58,4 +58,7 @@ export interface TenantDocumentsTranslations {
   viewAllDocuments: string;
   quickPreview: string;
   openFullViewer: string;
+  documentShareSuccess: string;
+  documentShareError: string;
+  permissionError: string;
 }

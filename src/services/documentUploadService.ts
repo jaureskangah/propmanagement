@@ -28,33 +28,17 @@ export const documentUploadService = {
     }
 
     try {
-      // Check if bucket exists
-      const { data: buckets, error: bucketsError } = await supabase
-        .storage
-        .listBuckets();
-      
-      console.log("Available storage buckets:", buckets?.map(b => b.name));
-      
-      if (bucketsError) {
-        console.error("Error checking buckets:", bucketsError);
-        throw bucketsError;
-      }
-      
-      const bucketExists = buckets?.some(b => b.name === 'tenant_documents');
-      
-      if (!bucketExists) {
-        console.log("Creating tenant_documents bucket");
-        const { error: createBucketError } = await supabase
-          .storage
-          .createBucket('tenant_documents', { public: true });
-          
-        if (createBucketError) {
-          console.error("Error creating bucket:", createBucketError);
-          throw createBucketError;
-        }
+      // Check if current user is authenticated
+      const { data: userData, error: authError } = await supabase.auth.getUser();
+      if (authError || !userData.user) {
+        console.error("Authentication error:", authError);
+        throw new Error("You must be logged in to upload documents");
       }
 
-      // Create unique filename
+      console.log("Current user:", userData.user.id);
+      console.log("Attempting to upload document for tenant:", tenantId);
+      
+      // Create unique filename with proper path structure
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
@@ -95,7 +79,7 @@ export const documentUploadService = {
         document_type = 'receipt';
       }
 
-      // Save document reference to database
+      // Save document reference to database with additional column for category and document_type
       const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
@@ -109,6 +93,15 @@ export const documentUploadService = {
 
       if (dbError) {
         console.error("Database insert error:", dbError);
+        // Rollback the file upload if possible
+        try {
+          await supabase.storage
+            .from('tenant_documents')
+            .remove([fileName]);
+          console.log("Rollback: Deleted uploaded file due to database error");
+        } catch (rollbackError) {
+          console.error("Could not rollback file upload:", rollbackError);
+        }
         throw dbError;
       }
 
@@ -129,6 +122,8 @@ export const documentUploadService = {
           errorMessage = "A document with this name already exists";
         } else if (error.message.includes("storage")) {
           errorMessage = "Storage error: " + error.message;
+        } else if (error.message.includes("violates row-level security")) {
+          errorMessage = "Permission error: You don't have access to upload documents";
         } else {
           errorMessage = "Error: " + error.message;
         }
