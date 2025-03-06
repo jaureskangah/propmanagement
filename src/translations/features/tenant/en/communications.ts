@@ -18,7 +18,7 @@ export const enCommunications: TenantCommunicationsTranslations = {
   replyToMessage: "Reply to message",
   messageFrom: "Message from",
   markAsRead: "Mark as read",
-  markAsUnread: "Unread",
+  markAsUnread: "Mark as unread",
   deleteMessage: "Delete message",
   messageDeleted: "Message deleted",
   filter: "Filter",
@@ -31,6 +31,7 @@ export const enCommunications: TenantCommunicationsTranslations = {
   writeReply: "Write your reply",
   replyPlaceholder: "Type your reply here...",
   confirmDelete: "Are you sure you want to delete this message?",
+  confirmDeleteMessage: "This action cannot be undone.",
   attachments: "Attachments",
   clearFilter: "Clear filter",
   enterSubject: "Enter subject",
@@ -44,5 +45,8 @@ export const enCommunications: TenantCommunicationsTranslations = {
   unread: "Unread",
   messages: "Messages",
   sentByYou: "Sent by you",
-  payment: "Payment"
+  payment: "Payment",
+  success: "Success",
+  error: "Error",
+  andMoreMessages: "And {count} more messages"
 };

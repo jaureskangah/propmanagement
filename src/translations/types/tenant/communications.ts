@@ -29,6 +29,7 @@ export interface TenantCommunicationsTranslations {
   writeReply: string;
   replyPlaceholder: string;
   confirmDelete: string;
+  confirmDeleteMessage: string;
   attachments: string;
   clearFilter: string;
   enterSubject: string;
@@ -43,4 +44,7 @@ export interface TenantCommunicationsTranslations {
   messages: string;
   sentByYou: string;
   payment: string;
+  success: string;
+  error: string;
+  andMoreMessages: string;
 }
