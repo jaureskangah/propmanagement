@@ -2,8 +2,10 @@
 import { Communication } from "@/types/tenant";
 import { CommunicationsList } from "./CommunicationsList";
 import { useEffect, useState } from "react";
-import { CommunicationFilters } from "./CommunicationFilters";
+import { FilterControls } from "./filters/FilterControls";
+import { FilterBadges } from "./filters/FilterBadges";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { AlertTriangle, Clock, Mail, MessageSquare } from "lucide-react";
 
 interface CommunicationsContentProps {
   communications: Communication[];
@@ -23,36 +25,32 @@ export const CommunicationsContent = ({
   onCommunicationUpdate,
 }: CommunicationsContentProps) => {
   const { t } = useLocale();
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [dateRange, setDateRange] = useState<{from: Date | undefined, to: Date | undefined}>({
-    from: undefined,
-    to: undefined,
-  });
+  const [startDate, setStartDate] = useState("");
+  const [filtersApplied, setFiltersApplied] = useState(false);
+
+  useEffect(() => {
+    setFiltersApplied(!!searchQuery || !!startDate || !!selectedType);
+  }, [searchQuery, startDate, selectedType]);
 
   const filteredCommunications = communications.filter(comm => {
     if (!comm) return false;
     
-    const matchesSearch = searchTerm === "" || 
-      (comm.subject?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-       comm.content?.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesSearch = searchQuery === "" || 
+      (comm.subject?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+       comm.content?.toLowerCase().includes(searchQuery.toLowerCase()));
     
     const matchesCategory = !selectedCategory || comm.category === selectedCategory;
     const matchesType = !selectedType || comm.type === selectedType;
     
     let matchesDate = true;
-    if (dateRange.from || dateRange.to) {
+    if (startDate) {
       const commDate = new Date(comm.created_at);
-      if (dateRange.from && commDate < dateRange.from) {
+      const filterDate = new Date(startDate);
+      if (commDate < filterDate) {
         matchesDate = false;
-      }
-      if (dateRange.to) {
-        const endDate = new Date(dateRange.to);
-        endDate.setHours(23, 59, 59, 999); // End of day
-        if (commDate > endDate) {
-          matchesDate = false;
-        }
       }
     }
     
@@ -73,16 +71,49 @@ export const CommunicationsContent = ({
   // Extract unique communication types for the filter
   const communicationTypes = [...new Set(communications.map(comm => comm.type))];
 
+  const getTypeIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'urgent':
+        return <AlertTriangle className="h-3 w-3 text-red-500" />;
+      case 'maintenance':
+        return <Clock className="h-3 w-3 text-yellow-500" />;
+      case 'email':
+        return <Mail className="h-3 w-3 text-blue-500" />;
+      case 'message':
+        return <MessageSquare className="h-3 w-3 text-green-500" />;
+      default:
+        return <MessageSquare className="h-3 w-3 text-muted-foreground" />;
+    }
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setStartDate("");
+    setSelectedType(null);
+  };
+
   return (
-    <div className="space-y-6">
-      <CommunicationFilters
-        searchQuery={searchTerm}
-        startDate={dateRange.from ? dateRange.from.toISOString().split('T')[0] : ""}
+    <div className="space-y-4">
+      <FilterControls
+        searchQuery={searchQuery}
+        startDate={startDate}
         selectedType={selectedType}
         communicationTypes={communicationTypes}
-        onSearchChange={setSearchTerm}
-        onDateChange={(value) => setDateRange(prev => ({ ...prev, from: value ? new Date(value) : undefined }))}
+        onSearchChange={setSearchQuery}
+        onDateChange={setStartDate}
         onTypeChange={setSelectedType}
+        filtersApplied={filtersApplied}
+        onClearFilters={clearFilters}
+      />
+      
+      <FilterBadges
+        searchQuery={searchQuery}
+        startDate={startDate}
+        selectedType={selectedType}
+        onClearSearch={() => setSearchQuery("")}
+        onClearDate={() => setStartDate("")}
+        onClearType={() => setSelectedType(null)}
+        getTypeIcon={getTypeIcon}
       />
       
       <CommunicationsList
