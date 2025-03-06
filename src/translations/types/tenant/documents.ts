@@ -45,4 +45,15 @@ export interface TenantDocumentsTranslations {
   selectCategory: string;
   uncategorized: string;
   order: string;
+  dragFilesHere: string;
+  orClickToUpload: string;
+  dropFilesHere: string;
+  supportedFormats: string;
+  uploadingFile: string;
+  uploadComplete: string;
+  uploadFailed: string;
+  fileSelected: string;
+  fileSizeLimit: string;
+  andMoreDocuments: string;
+  viewAllDocuments: string;
 }

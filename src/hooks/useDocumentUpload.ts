@@ -9,6 +9,47 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
   const { t } = useLocale();
   const [isUploading, setIsUploading] = useState(false);
 
+  const validateFile = (file: File): boolean => {
+    // Vérifier la taille du fichier (10MB max)
+    const maxSize = 10 * 1024 * 1024; // 10MB en octets
+    if (file.size > maxSize) {
+      toast({
+        title: t("error"),
+        description: t("fileSizeLimit"),
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // Vérifier le type de fichier
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'text/plain',
+      'image/jpeg',
+      'image/png'
+    ];
+    
+    const fileType = file.type;
+    if (!allowedTypes.includes(fileType)) {
+      // Vérification supplémentaire par extension
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      const allowedExtensions = ['pdf', 'doc', 'docx', 'txt', 'jpg', 'jpeg', 'png'];
+      
+      if (!extension || !allowedExtensions.includes(extension)) {
+        toast({
+          title: t("error"),
+          description: t("supportedFormats"),
+          variant: "destructive",
+        });
+        return false;
+      }
+    }
+
+    return true;
+  };
+
   const uploadDocument = async (
     file: File, 
     category: string = 'other'
@@ -25,6 +66,11 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         description: t("error"),
         variant: "destructive",
       });
+      return;
+    }
+
+    // Valider le fichier avant de commencer l'upload
+    if (!validateFile(file)) {
       return;
     }
 
@@ -58,17 +104,20 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         }
       }
 
-      // 1. Upload file to storage
+      // 1. Créer un nom de fichier unique avec un UUID
       const fileExt = file.name.split('.').pop();
       const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
       console.log("Uploading to storage with path:", fileName);
 
+      // 2. Upload du fichier avec abortController pour permettre l'annulation
+      const controller = new AbortController();
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('tenant_documents')
         .upload(fileName, file, {
           cacheControl: '3600',
-          upsert: false
+          upsert: false,
+          signal: controller.signal
         });
 
       if (uploadError) {
@@ -78,7 +127,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
 
       console.log("File uploaded successfully:", uploadData, "getting public URL");
 
-      // 2. Generate public URL
+      // 3. Générer l'URL publique
       const { data: publicUrlData } = await supabase.storage
         .from('tenant_documents')
         .getPublicUrl(fileName);
@@ -98,7 +147,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         document_type = 'receipt';
       }
 
-      // 3. Save document reference with public URL in database
+      // 4. Enregistrer la référence du document avec l'URL publique dans la base de données
       const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
@@ -123,6 +172,7 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
       });
 
       onUploadComplete();
+      return insertData;
     } catch (error: any) {
       console.error('Upload error:', error);
       
@@ -143,6 +193,8 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
         description: errorMessage,
         variant: "destructive",
       });
+      
+      throw error;
     } finally {
       setIsUploading(false);
     }

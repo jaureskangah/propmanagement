@@ -46,5 +46,16 @@ export const frDocuments: TenantDocumentsTranslations = {
   category: "Catégorie",
   selectCategory: "Sélectionner une catégorie",
   uncategorized: "Non catégorisé",
-  order: "Ordre"
+  order: "Ordre",
+  dragFilesHere: "Glissez vos fichiers ici",
+  orClickToUpload: "ou cliquez pour parcourir",
+  dropFilesHere: "Déposez vos fichiers ici",
+  supportedFormats: "Formats supportés: PDF, DOC, DOCX, JPG, PNG",
+  uploadingFile: "Téléversement du fichier...",
+  uploadComplete: "Téléversement terminé !",
+  uploadFailed: "Échec du téléversement",
+  fileSelected: "Fichier sélectionné",
+  fileSizeLimit: "Taille maximale du fichier: 10Mo",
+  andMoreDocuments: "et {count} documents de plus",
+  viewAllDocuments: "Voir tous les documents"
 };

@@ -46,5 +46,16 @@ export const enDocuments: TenantDocumentsTranslations = {
   category: "Category",
   selectCategory: "Select a category",
   uncategorized: "Uncategorized",
-  order: "Order"
+  order: "Order",
+  dragFilesHere: "Drag your files here",
+  orClickToUpload: "or click to browse",
+  dropFilesHere: "Drop your files here",
+  supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG",
+  uploadingFile: "Uploading file...",
+  uploadComplete: "Upload complete!",
+  uploadFailed: "Upload failed",
+  fileSelected: "File selected",
+  fileSizeLimit: "Maximum file size: 10MB",
+  andMoreDocuments: "and {count} more documents",
+  viewAllDocuments: "View all documents"
 };

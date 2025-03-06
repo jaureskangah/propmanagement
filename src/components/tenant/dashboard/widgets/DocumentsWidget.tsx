@@ -16,16 +16,26 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
   const navigate = useNavigate();
   
   // Déterminer l'icône en fonction du type de document
-  const getDocumentIcon = (docName: string) => {
-    const lowerName = docName.toLowerCase();
-    if (lowerName.endsWith('.pdf')) {
-      return <FileText className="h-4 w-4 text-purple-600" />;
-    } else if (lowerName.includes('lease') || lowerName.includes('bail')) {
+  const getDocumentIcon = (docName: string, docType?: string, category?: string) => {
+    // Priorité à la catégorie puis au type
+    if (category === 'lease' || docType === 'lease') {
       return <FileText className="h-4 w-4 text-blue-600" />;
-    } else if (lowerName.includes('receipt') || lowerName.includes('payment') || lowerName.includes('reçu')) {
+    } else if (category === 'receipt' || docType === 'receipt') {
       return <FileText className="h-4 w-4 text-green-600" />;
+    } else if (category === 'important') {
+      return <FileText className="h-4 w-4 text-orange-600" />;
     } else {
-      return <FileText className="h-4 w-4 text-purple-500" />;
+      // Fallback sur l'extension
+      const lowerName = docName.toLowerCase();
+      if (lowerName.endsWith('.pdf')) {
+        return <FileText className="h-4 w-4 text-purple-600" />;
+      } else if (lowerName.includes('lease') || lowerName.includes('bail')) {
+        return <FileText className="h-4 w-4 text-blue-600" />;
+      } else if (lowerName.includes('receipt') || lowerName.includes('payment') || lowerName.includes('reçu')) {
+        return <FileText className="h-4 w-4 text-green-600" />;
+      } else {
+        return <FileText className="h-4 w-4 text-purple-500" />;
+      }
     }
   };
   
@@ -69,7 +79,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                 className="flex items-center p-3 rounded-lg bg-white/70 shadow-sm hover:shadow hover:bg-white/90 transition-all cursor-pointer"
                 onClick={() => window.open(doc.file_url, '_blank')}
               >
-                {getDocumentIcon(doc.name)}
+                {getDocumentIcon(doc.name, doc.document_type, doc.category)}
                 <div className="ml-3 flex-1 overflow-hidden">
                   <div className="text-sm font-medium text-gray-800 truncate">{doc.name}</div>
                   <div className="text-xs text-gray-500">{formatDate(doc.created_at)}</div>
