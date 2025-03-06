@@ -13,22 +13,22 @@ export const DocumentIcon = ({ documentType, document }: DocumentIconProps) => {
   
   switch (type) {
     case 'lease':
-      return <FileText className="h-5 w-5 text-blue-500" />;
+      return <FileText color="#3B82F6" className="h-5 w-5" />; // blue-500
     case 'receipt':
-      return <FileSpreadsheet className="h-5 w-5 text-green-500" />;
+      return <FileSpreadsheet color="#10B981" className="h-5 w-5" />; // green-500
     case 'image':
-      return <FileImage className="h-5 w-5 text-purple-500" />;
+      return <FileImage color="#8B5CF6" className="h-5 w-5" />; // purple-500
     case 'contract':
-      return <FileText className="h-5 w-5 text-orange-500" />;
+      return <FileText color="#F97316" className="h-5 w-5" />; // orange-500
     case 'invoice':
-      return <FileSpreadsheet className="h-5 w-5 text-teal-500" />;
+      return <FileSpreadsheet color="#14B8A6" className="h-5 w-5" />; // teal-500
     case 'report':
-      return <FileJson className="h-5 w-5 text-pink-500" />;
+      return <FileJson color="#EC4899" className="h-5 w-5" />; // pink-500
     case 'technical':
-      return <FileCog className="h-5 w-5 text-cyan-500" />;
+      return <FileCog color="#06B6D4" className="h-5 w-5" />; // cyan-500
     case 'code':
-      return <FileCode className="h-5 w-5 text-indigo-500" />;
+      return <FileCode color="#6366F1" className="h-5 w-5" />; // indigo-500
     default:
-      return <File className="h-5 w-5 text-gray-500" />;
+      return <File color="#6B7280" className="h-5 w-5" />; // gray-500
   }
 };
