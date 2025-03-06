@@ -1,17 +1,11 @@
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DocumentsList } from "./list/DocumentsList";
-import { DocumentUpload } from "@/components/tenant/DocumentUpload";
-import { DocumentCategories } from "./list/DocumentCategories";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { TenantDocument } from "@/types/tenant";
 import { Tenant } from "@/types/tenant";
-import { FileText, Search, SlidersHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { TabHeader } from "./tabs/TabHeader";
+import { DocumentsMainContent } from "./tabs/DocumentsMainContent";
+import { UploadTab } from "./tabs/UploadTab";
 
 interface DocumentsTabsProps {
   documents: TenantDocument[] | undefined;
@@ -54,7 +48,6 @@ export const DocumentsTabs = ({
   onDocumentUpdate,
   error
 }: DocumentsTabsProps) => {
-  const { t } = useLocale();
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [loadingTimeout, setLoadingTimeout] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -88,128 +81,38 @@ export const DocumentsTabs = ({
 
   return (
     <Tabs defaultValue="all" className="mt-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-        <TabsList>
-          <TabsTrigger value="all">{t("allDocuments")}</TabsTrigger>
-          <TabsTrigger value="upload">{t("uploadNewDocument")}</TabsTrigger>
-        </TabsList>
-
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder={t("searchDocuments")}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8"
-            />
-          </div>
-          
-          <Collapsible open={filtersOpen} onOpenChange={setFiltersOpen}>
-            <CollapsibleTrigger asChild>
-              <Button variant="outline" size="icon" title={t("filterDocuments")}>
-                <SlidersHorizontal className="h-4 w-4" />
-              </Button>
-            </CollapsibleTrigger>
-            <CollapsibleContent className="absolute z-10 right-0 mt-2 p-4 bg-background border rounded-lg shadow-lg w-full sm:w-auto">
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <label className="text-sm font-medium mb-1 block">
-                    {t("documentType")}
-                  </label>
-                  <Select value={selectedDocType} onValueChange={setSelectedDocType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t("filterDocuments")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">{t("allDocuments")}</SelectItem>
-                      <SelectItem value="lease">{t("leaseDocuments")}</SelectItem>
-                      <SelectItem value="receipt">{t("paymentReceipts")}</SelectItem>
-                      <SelectItem value="other">{t("otherDocuments")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="flex-1">
-                  <label className="text-sm font-medium mb-1 block">
-                    {t("sortBy")}
-                  </label>
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t("sortBy")} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="created_at">{t("dateUploaded")}</SelectItem>
-                      <SelectItem value="name">{t("documentName")}</SelectItem>
-                      <SelectItem value="document_type">{t("documentType")}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="flex-1">
-                  <label className="text-sm font-medium mb-1 block">
-                    {t("order")}
-                  </label>
-                  <Select value={sortOrder} onValueChange={(value) => setSortOrder(value as "asc" | "desc")}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="desc">Newest first</SelectItem>
-                      <SelectItem value="asc">Oldest first</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </CollapsibleContent>
-          </Collapsible>
-        </div>
-      </div>
+      <TabHeader
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedDocType={selectedDocType}
+        setSelectedDocType={setSelectedDocType}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
+        filtersOpen={filtersOpen}
+        setFiltersOpen={setFiltersOpen}
+      />
 
       <TabsContent value="all" className="mt-0">
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Categories sidebar */}
-          <DocumentCategories
-            documents={documents}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-          />
-          
-          {/* Main content */}
-          <div className="flex-1">
-            <DocumentsList
-              documents={documents}
-              filteredDocuments={filteredDocuments}
-              isLoading={isLoading && !loadingTimeout}
-              isTimedOut={loadingTimeout}
-              error={error}
-              onViewDocument={onViewDocument}
-              onDeleteDocument={onDeleteDocument}
-            />
-          </div>
-        </div>
+        <DocumentsMainContent
+          documents={documents}
+          filteredDocuments={filteredDocuments}
+          isLoading={isLoading && !loadingTimeout}
+          error={error}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          onViewDocument={onViewDocument}
+          onDeleteDocument={onDeleteDocument}
+        />
       </TabsContent>
 
       <TabsContent value="upload" className="mt-0">
-        {tenant ? (
-          <div className="border rounded-lg p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <FileText className="h-5 w-5 text-blue-600" />
-              <h3 className="text-lg font-medium">{t("uploadNewDocument")}</h3>
-            </div>
-            <DocumentUpload 
-              tenantId={tenant.id} 
-              onUploadComplete={onDocumentUpdate} 
-            />
-          </div>
-        ) : (
-          <div className="border rounded-lg p-6 text-center">
-            <p className="text-muted-foreground">
-              Tenant profile not found
-            </p>
-          </div>
-        )}
+        <UploadTab 
+          tenant={tenant} 
+          onDocumentUpdate={onDocumentUpdate} 
+        />
       </TabsContent>
     </Tabs>
   );
-};
+}
