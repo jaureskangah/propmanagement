@@ -16,7 +16,7 @@ export const useDocumentState = (
 ) => {
   const [isInitialized, setIsInitialized] = useState(false);
   const { tenant, isLoading: tenantLoading, fetchTenantData } = useTenantData(user?.id, toast);
-  const { documents, isLoading: documentsLoading, fetchDocuments, setDocuments } = useTenantDocuments(tenant?.id || null, toast);
+  const { documents, isLoading: documentsLoading, fetchDocuments, setDocuments, error } = useTenantDocuments(tenant?.id || null, toast);
   const { filteredDocuments, searchQuery, setSearchQuery, selectedDocType, setSelectedDocType, sortBy, setSortBy, sortOrder, setSortOrder } = useDocumentFilters(documents);
   
   // Combine loading states
@@ -61,6 +61,7 @@ export const useDocumentState = (
     filteredDocuments,
     tenant,
     isLoading,
+    error,
     searchQuery,
     setSearchQuery,
     selectedDocType,

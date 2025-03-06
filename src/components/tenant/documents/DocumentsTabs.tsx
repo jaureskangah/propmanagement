@@ -9,7 +9,7 @@ import { TenantDocument } from "@/types/tenant";
 import { Tenant } from "@/types/tenant";
 import { FileText, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface DocumentsTabsProps {
@@ -51,6 +51,20 @@ export const DocumentsTabs = ({
 }: DocumentsTabsProps) => {
   const { t } = useLocale();
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
+
+  // Set a timeout to prevent infinite loading state
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 10000); // 10 seconds timeout
+      
+      return () => clearTimeout(timer);
+    } else {
+      setLoadingTimeout(false);
+    }
+  }, [isLoading]);
 
   return (
     <Tabs defaultValue="all" className="mt-6">
@@ -136,7 +150,8 @@ export const DocumentsTabs = ({
         <DocumentsList
           documents={documents}
           filteredDocuments={filteredDocuments}
-          isLoading={isLoading}
+          isLoading={isLoading && !loadingTimeout}
+          isTimedOut={loadingTimeout}
           error={error}
           onViewDocument={onViewDocument}
           onDeleteDocument={onDeleteDocument}

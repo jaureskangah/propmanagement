@@ -6,11 +6,14 @@ import { DocumentEmptyState } from "./DocumentEmptyState";
 import { DocumentTable } from "./DocumentTable";
 import { useDebugLogging } from "./useDebugLogging";
 import { motion } from "framer-motion";
+import { AlertTriangle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface DocumentsListProps {
   documents: TenantDocument[] | undefined;
   filteredDocuments: TenantDocument[] | undefined;
   isLoading: boolean;
+  isTimedOut?: boolean;
   error?: Error | null;
   onViewDocument: (document: TenantDocument) => void;
   onDeleteDocument: (documentId: string, filename: string) => void;
@@ -20,12 +23,33 @@ export const DocumentsList = ({
   documents,
   filteredDocuments,
   isLoading,
+  isTimedOut,
   error,
   onViewDocument,
   onDeleteDocument
 }: DocumentsListProps) => {
   // Hook to log document-related debug information
   useDebugLogging(documents, isLoading);
+
+  // Handle loading timeout
+  if (isTimedOut) {
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg"
+      >
+        <AlertTriangle className="h-12 w-12 text-amber-500 mb-3" />
+        <p className="text-muted-foreground mb-4">Le chargement des documents prend plus de temps que prévu</p>
+        <Button 
+          variant="outline" 
+          onClick={() => window.location.reload()}
+        >
+          Rafraîchir la page
+        </Button>
+      </motion.div>
+    );
+  }
 
   // Show loading state
   if (isLoading) {

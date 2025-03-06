@@ -6,6 +6,7 @@ import { TenantDocument } from "@/types/tenant";
 export const useTenantDocuments = (tenantId: string | null, toast: any) => {
   const [documents, setDocuments] = useState<TenantDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchDocuments = useCallback(async (id: string) => {
     if (!id) {
@@ -16,6 +17,7 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
     
     try {
       setIsLoading(true);
+      setError(null);
       console.log("Fetching documents for tenant:", id);
       
       // Check if storage bucket exists
@@ -135,11 +137,12 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       
       console.log("Processed documents:", processedDocs);
       setDocuments(processedDocs);
-    } catch (error: any) {
-      console.error('Error fetching documents:', error);
+    } catch (err: any) {
+      console.error('Error fetching documents:', err);
+      setError(err instanceof Error ? err : new Error(err.message || 'Unknown error'));
       toast({
         title: "Erreur",
-        description: "Impossible de charger vos documents: " + (error.message || error),
+        description: "Impossible de charger vos documents: " + (err.message || err),
         variant: "destructive",
       });
       setDocuments([]);
@@ -163,6 +166,7 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
   return {
     documents,
     isLoading,
+    error,
     fetchDocuments,
     setDocuments
   };

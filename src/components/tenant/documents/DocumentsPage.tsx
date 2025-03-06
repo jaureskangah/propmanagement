@@ -28,7 +28,8 @@ const DocumentsPage = () => {
     setSortOrder,
     fetchTenantData,
     handleDocumentUpdate,
-    handleDeleteDocument
+    handleDeleteDocument,
+    error
   } = useDocumentState(user, toast);
 
   const [selectedDocument, setSelectedDocument] = useState<TenantDocument | null>(null);
@@ -77,6 +78,7 @@ const DocumentsPage = () => {
             onViewDocument={handleViewDocument}
             onDeleteDocument={handleDeleteDocument}
             onDocumentUpdate={handleDocumentUpdate}
+            error={error}
           />
         </motion.div>
         
