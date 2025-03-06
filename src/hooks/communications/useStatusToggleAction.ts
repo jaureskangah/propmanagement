@@ -14,27 +14,18 @@ export const useStatusToggleAction = () => {
       const { error } = await supabase
         .from('tenant_communications')
         .update({ status: newStatus })
-        .eq('id', comm.id);
+        .eq('id', comm.id)
+        .select();
 
       if (error) {
         console.error("Error in handleToggleStatus:", error);
         throw error;
       }
 
-      toast({
-        title: "Success",
-        description: `Communication marked as ${newStatus === 'read' ? 'read' : 'unread'}`,
-      });
-
       return true;
     } catch (error) {
       console.error("Error in handleToggleStatus:", error);
-      toast({
-        title: "Error",
-        description: "Error updating status",
-        variant: "destructive",
-      });
-      return false;
+      throw error;
     }
   };
 

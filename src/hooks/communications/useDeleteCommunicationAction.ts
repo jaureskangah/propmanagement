@@ -22,10 +22,12 @@ export const useDeleteCommunicationAction = () => {
 
       // If there are replies, delete them first
       if (replies && replies.length > 0) {
+        console.log("Deleting replies:", replies.map(r => r.id));
         const { error: repliesError } = await supabase
           .from('tenant_communications')
           .delete()
-          .in('id', replies.map(reply => reply.id));
+          .in('id', replies.map(reply => reply.id))
+          .select();
 
         if (repliesError) {
           console.error("Error deleting replies:", repliesError);
@@ -34,30 +36,22 @@ export const useDeleteCommunicationAction = () => {
       }
 
       // Now delete the main communication
+      console.log("Deleting main communication:", commId);
       const { error: deleteError } = await supabase
         .from('tenant_communications')
         .delete()
-        .eq('id', commId);
+        .eq('id', commId)
+        .select();
 
       if (deleteError) {
         console.error("Error deleting main communication:", deleteError);
         throw deleteError;
       }
 
-      toast({
-        title: "Succès",
-        description: "Message supprimé avec succès",
-      });
-
       return true;
     } catch (error) {
       console.error("Error in handleDeleteCommunication:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le message",
-        variant: "destructive",
-      });
-      return false;
+      throw error;
     }
   };
 

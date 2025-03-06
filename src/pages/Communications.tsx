@@ -1,3 +1,4 @@
+
 import AppSidebar from "@/components/AppSidebar";
 import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications";
 import { TenantCommunications as TenantCommunicationsComponent } from "@/components/tenant/TenantCommunications";
@@ -35,10 +36,24 @@ const Communications = () => {
 
   const handleToggleStatusAndRefresh = async (comm: Communication) => {
     if (!comm) return;
+    
     console.log("Attempting to toggle status for communication:", comm.id);
-    const success = await handleToggleStatus(comm);
-    if (success) {
-      refreshCommunications();
+    try {
+      const success = await handleToggleStatus(comm);
+      if (success) {
+        await refreshCommunications();
+        toast({
+          title: "Succès",
+          description: comm.status === 'read' ? "Message marqué comme non lu" : "Message marqué comme lu",
+        });
+      }
+    } catch (error) {
+      console.error("Error toggling status:", error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de modifier le statut du message",
+        variant: "destructive",
+      });
     }
   };
 
@@ -46,17 +61,26 @@ const Communications = () => {
     if (!communicationToDelete) return;
     
     console.log("Confirming deletion of communication:", communicationToDelete.id);
-    const success = await handleDeleteCommunication(communicationToDelete.id);
-    
-    if (success) {
+    try {
+      const success = await handleDeleteCommunication(communicationToDelete.id);
+      
+      if (success) {
+        toast({
+          title: t('success'),
+          description: t('messageDeleted'),
+        });
+        await refreshCommunications();
+      }
+    } catch (error) {
+      console.error("Error deleting communication:", error);
       toast({
-        title: t('success'),
-        description: t('messageDeleted'),
+        title: "Erreur",
+        description: "Impossible de supprimer le message",
+        variant: "destructive",
       });
-      refreshCommunications();
+    } finally {
+      setCommunicationToDelete(null);
     }
-    
-    setCommunicationToDelete(null);
   };
 
   return (
@@ -86,7 +110,7 @@ const Communications = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDeleteMessage') || t('confirmDelete')}
+              {t('confirmDeleteMessage')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
