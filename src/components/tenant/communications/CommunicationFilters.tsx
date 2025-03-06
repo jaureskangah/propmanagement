@@ -1,12 +1,9 @@
 
-import { SearchInput } from "./filters/SearchInput";
-import { DateFilter } from "./filters/DateFilter";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState, useEffect } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Filter, X, Calendar, Search, MessageSquare, AlertTriangle, Clock, Mail } from "lucide-react";
-import { useState } from "react";
+import { AlertTriangle, Clock, Mail, MessageSquare } from "lucide-react";
+import { FilterControls } from "./filters/FilterControls";
+import { FilterBadges } from "./filters/FilterBadges";
 
 interface CommunicationFiltersProps {
   searchQuery: string;
@@ -30,26 +27,26 @@ export const CommunicationFilters = ({
   const { t } = useLocale();
   const [filtersApplied, setFiltersApplied] = useState(false);
   
-  const handleTypeChange = (value: string) => {
-    onTypeChange(value === "all" ? null : value);
-    setFiltersApplied(value !== "all" || !!startDate || !!searchQuery);
+  useEffect(() => {
+    setFiltersApplied(!!searchQuery || !!startDate || !!selectedType);
+  }, [searchQuery, startDate, selectedType]);
+  
+  const handleTypeChange = (value: string | null) => {
+    onTypeChange(value);
   };
   
   const handleDateChange = (value: string) => {
     onDateChange(value);
-    setFiltersApplied(!!value || !!selectedType || !!searchQuery);
   };
   
   const handleSearchChange = (value: string) => {
     onSearchChange(value);
-    setFiltersApplied(!!value || !!selectedType || !!startDate);
   };
   
   const clearFilters = () => {
     onSearchChange("");
     onDateChange("");
     onTypeChange(null);
-    setFiltersApplied(false);
   };
   
   const getTypeIcon = (type: string) => {
@@ -69,136 +66,27 @@ export const CommunicationFilters = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row gap-3 bg-muted/30 p-3 rounded-lg">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-          <input
-            type="text"
-            placeholder={t('searchMessages')}
-            value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full pl-9 h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-          />
-          {searchQuery && (
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="absolute right-1 top-1 h-7 w-7 p-0" 
-              onClick={() => handleSearchChange("")}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-        
-        <div className="flex-shrink-0 min-w-[170px]">
-          <div className="relative">
-            <Calendar className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => handleDateChange(e.target.value)}
-              className="w-full pl-9 h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            />
-            {startDate && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="absolute right-1 top-1 h-7 w-7 p-0" 
-                onClick={() => handleDateChange("")}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        </div>
-        
-        <div className="flex-shrink-0 min-w-[180px]">
-          <Select 
-            value={selectedType || "all"} 
-            onValueChange={handleTypeChange}
-          >
-            <SelectTrigger className="h-9">
-              <div className="flex items-center">
-                <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
-                <SelectValue placeholder={t('filter')} />
-              </div>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">
-                <div className="flex items-center">
-                  <MessageSquare className="h-4 w-4 mr-2 text-muted-foreground" />
-                  {t('allMessages')}
-                </div>
-              </SelectItem>
-              {communicationTypes.map((type) => (
-                <SelectItem key={type} value={type}>
-                  <div className="flex items-center">
-                    {getTypeIcon(type)}
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        
-        {filtersApplied && (
-          <Button variant="ghost" size="sm" onClick={clearFilters} className="flex-shrink-0">
-            <X className="h-4 w-4 mr-2" />
-            {t('clearFilter')}
-          </Button>
-        )}
-      </div>
+      <FilterControls
+        searchQuery={searchQuery}
+        startDate={startDate}
+        selectedType={selectedType}
+        communicationTypes={communicationTypes}
+        onSearchChange={handleSearchChange}
+        onDateChange={handleDateChange}
+        onTypeChange={handleTypeChange}
+        filtersApplied={filtersApplied}
+        onClearFilters={clearFilters}
+      />
       
-      {filtersApplied && (
-        <div className="flex flex-wrap gap-2">
-          {searchQuery && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              <Search className="h-3 w-3" />
-              {searchQuery}
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-4 w-4 p-0 ml-1" 
-                onClick={() => handleSearchChange("")}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </Badge>
-          )}
-          
-          {startDate && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              {new Date(startDate).toLocaleDateString()}
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-4 w-4 p-0 ml-1" 
-                onClick={() => handleDateChange("")}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </Badge>
-          )}
-          
-          {selectedType && (
-            <Badge variant="secondary" className="flex items-center gap-1">
-              {getTypeIcon(selectedType)}
-              {selectedType}
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="h-4 w-4 p-0 ml-1" 
-                onClick={() => handleTypeChange("all")}
-              >
-                <X className="h-3 w-3" />
-              </Button>
-            </Badge>
-          )}
-        </div>
-      )}
+      <FilterBadges
+        searchQuery={searchQuery}
+        startDate={startDate}
+        selectedType={selectedType}
+        onClearSearch={() => handleSearchChange("")}
+        onClearDate={() => handleDateChange("")}
+        onClearType={() => handleTypeChange(null)}
+        getTypeIcon={getTypeIcon}
+      />
     </div>
   );
 };
