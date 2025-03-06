@@ -36,51 +36,37 @@ const Communications = () => {
 
   const handleToggleStatusAndRefresh = async (comm: Communication) => {
     if (!comm) return;
-    
     console.log("Attempting to toggle status for communication:", comm.id);
-    try {
-      const success = await handleToggleStatus(comm);
-      if (success) {
-        await refreshCommunications();
-        toast({
-          title: "Succès",
-          description: comm.status === 'read' ? "Message marqué comme non lu" : "Message marqué comme lu",
-        });
-      }
-    } catch (error) {
-      console.error("Error toggling status:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de modifier le statut du message",
-        variant: "destructive",
-      });
+    const success = await handleToggleStatus(comm);
+    if (success) {
+      refreshCommunications();
     }
   };
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = () => {
     if (!communicationToDelete) return;
     
     console.log("Confirming deletion of communication:", communicationToDelete.id);
-    try {
-      const success = await handleDeleteCommunication(communicationToDelete.id);
-      
-      if (success) {
+    handleDeleteCommunication(communicationToDelete.id)
+      .then(success => {
+        if (success) {
+          toast({
+            title: t('success'),
+            description: t('messageDeleted'),
+          });
+          refreshCommunications();
+        }
+        setCommunicationToDelete(null);
+      })
+      .catch(error => {
+        console.error("Error deleting communication:", error);
         toast({
-          title: "Succès",
-          description: "Message supprimé avec succès",
+          title: t('error'),
+          description: "Erreur lors de la suppression du message",
+          variant: "destructive",
         });
-        await refreshCommunications();
-      }
-    } catch (error) {
-      console.error("Error deleting communication:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le message",
-        variant: "destructive",
+        setCommunicationToDelete(null);
       });
-    } finally {
-      setCommunicationToDelete(null);
-    }
   };
 
   return (
@@ -108,18 +94,18 @@ const Communications = () => {
       <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Êtes-vous sûr de vouloir supprimer ce message ? Cette action ne peut pas être annulée.
+              {t('confirmDeleteMessage') || t('confirmDelete')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Supprimer
+              {t('deleteMessage')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
