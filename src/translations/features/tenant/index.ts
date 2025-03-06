@@ -3,7 +3,7 @@
 import { enLease } from './en/lease';
 import { enCommunications } from './en/communications';
 import { enMessages } from './en/messages';
-import { enDocuments } from './en/documents';
+import enDocuments from './en/documents';
 import { enPayments } from './en/payments';
 import { enDashboard } from './en/dashboard';
 
@@ -11,7 +11,7 @@ import { enDashboard } from './en/dashboard';
 import { frLease } from './fr/lease';
 import { frCommunications } from './fr/communications';
 import { frMessages } from './fr/messages';
-import { frDocuments } from './fr/documents';
+import frDocuments from './fr/documents';
 import { frPayments } from './fr/payments';
 import { frDashboard } from './fr/dashboard';
 
