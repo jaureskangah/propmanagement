@@ -30,7 +30,7 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
-      if (file.size > 10 * 1024 * 1024) { // 10MB limite
+      if (file.size > 10 * 1024 * 1024) { // 10MB limit
         alert(t("fileSizeLimit"));
         return;
       }
