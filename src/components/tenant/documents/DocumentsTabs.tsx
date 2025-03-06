@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentsList } from "./list/DocumentsList";
 import { DocumentUpload } from "@/components/tenant/DocumentUpload";
-import { DocumentGenerator } from "./DocumentGenerator";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantDocument } from "@/types/tenant";
 import { Tenant } from "@/types/tenant";
@@ -59,7 +58,6 @@ export const DocumentsTabs = ({
         <TabsList>
           <TabsTrigger value="all">{t("allDocuments")}</TabsTrigger>
           <TabsTrigger value="upload">{t("uploadNewDocument")}</TabsTrigger>
-          <TabsTrigger value="generate">{t("generateDocument")}</TabsTrigger>
         </TabsList>
 
         <div className="flex items-center gap-2">
@@ -164,27 +162,6 @@ export const DocumentsTabs = ({
             </p>
           </div>
         )}
-      </TabsContent>
-
-      <TabsContent value="generate" className="mt-0">
-        <div className="border rounded-lg p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <FileText className="h-5 w-5 text-blue-600" />
-            <h3 className="text-lg font-medium">{t("generateDocument")}</h3>
-          </div>
-          {tenant ? (
-            <DocumentGenerator 
-              tenant={tenant} 
-              onDocumentGenerated={onDocumentUpdate}
-            />
-          ) : (
-            <div className="text-center">
-              <p className="text-muted-foreground">
-                Tenant profile not found
-              </p>
-            </div>
-          )}
-        </div>
       </TabsContent>
     </Tabs>
   );
