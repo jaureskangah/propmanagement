@@ -33,20 +33,20 @@ export const useDocumentUpload = (tenantId: string, onUploadComplete: () => void
     if (!tenantId) {
       console.error("No tenant ID provided");
       showToastMessage("error", "tenantProfileNotFound", "destructive");
-      return;
+      throw new Error("tenantProfileNotFound");
     }
 
     if (!user) {
       console.error("User not authenticated");
       showToastMessage("error", "authRequired", "destructive");
-      return;
+      throw new Error("authRequired");
     }
 
     // Validate the file
     if (!validateFile(file, {}, (title, description, variant) => 
       showToastMessage(title, description, variant)
     )) {
-      return;
+      throw new Error("fileValidationError");
     }
 
     setIsUploading(true);

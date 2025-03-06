@@ -58,22 +58,8 @@ export const documentUploadService = {
       console.log("Storage buckets:", buckets?.map(b => b.name), "tenant_documents exists:", bucketExists);
       
       if (!bucketExists) {
-        console.log("Tenant documents bucket doesn't exist, creating it...");
-        
-        // Create the bucket if it doesn't exist
-        const { error: createBucketError } = await supabase
-          .storage
-          .createBucket('tenant_documents', { 
-            public: true,
-            fileSizeLimit: 10485760 // 10MB
-          });
-        
-        if (createBucketError) {
-          console.error("Error creating bucket:", createBucketError);
-          return { success: false, error: "storageBucketMissing" };
-        }
-        
-        console.log("Successfully created tenant_documents bucket");
+        console.error("Tenant documents bucket doesn't exist and cannot be created programmatically due to RLS policies");
+        return { success: false, error: "storageBucketMissing" };
       }
 
       // Upload the file

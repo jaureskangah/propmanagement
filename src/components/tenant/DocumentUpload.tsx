@@ -8,6 +8,7 @@ import { FilePreview } from "./upload/FilePreview";
 import { UploadProgress } from "./upload/UploadProgress";
 import { CategorySelector } from "./upload/CategorySelector";
 import { UploadButton } from "./upload/UploadButton";
+import { InfoCircle } from "lucide-react";
 
 interface DocumentUploadProps {
   tenantId: string;
@@ -20,6 +21,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
   const [selectedCategory, setSelectedCategory] = useState<string>("other");
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState<'idle' | 'uploading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { t } = useLocale();
   const { isUploading, uploadDocument } = useDocumentUpload(tenantId, onUploadComplete);
 
@@ -38,6 +40,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
   const handleUpload = async () => {
     if (selectedFile) {
       setUploadStatus('uploading');
+      setErrorMessage(null);
       const progressInterval = simulateProgress();
       
       try {
@@ -55,9 +58,10 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
             fileInputRef.current.value = '';
           }
         }, 2000);
-      } catch (error) {
+      } catch (error: any) {
         clearInterval(progressInterval);
         setUploadStatus('error');
+        setErrorMessage(error.message || "Unknown error");
         console.error("Upload error:", error);
       }
     }
@@ -72,16 +76,28 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
       }
       setSelectedFile(file);
       setUploadStatus('idle');
+      setErrorMessage(null);
     }
   };
 
   const handleFileDrop = (file: File) => {
     setSelectedFile(file);
     setUploadStatus('idle');
+    setErrorMessage(null);
   };
 
   return (
     <div className="space-y-4">
+      {errorMessage === "storageBucketMissing" && (
+        <div className="text-sm p-3 border border-yellow-300 bg-yellow-50 rounded-md text-yellow-700 flex items-start gap-2">
+          <InfoCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-medium">{t("storageBucketMissing")}</p>
+            <p className="mt-1">The document storage system needs to be configured. Please contact your administrator.</p>
+          </div>
+        </div>
+      )}
+      
       {!selectedFile ? (
         <DragDropArea 
           onFileDrop={handleFileDrop} 
@@ -98,11 +114,18 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
             onRemove={() => {
               setSelectedFile(null);
               setUploadStatus('idle');
+              setErrorMessage(null);
               if (fileInputRef.current) fileInputRef.current.value = '';
             }}
           />
 
           <UploadProgress status={uploadStatus} progress={uploadProgress} />
+          
+          {uploadStatus === 'error' && errorMessage && errorMessage !== "storageBucketMissing" && (
+            <div className="text-sm p-3 border border-red-300 bg-red-50 rounded-md text-red-700">
+              {t(errorMessage) || errorMessage}
+            </div>
+          )}
           
           <CategorySelector 
             selectedCategory={selectedCategory}
