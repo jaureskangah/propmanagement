@@ -1,5 +1,5 @@
 
-import { ArrowUpRight, ArrowDownRight, Percent, Building2, Users, Wrench, DollarSign, MessageSquare } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Building2, Users, Wrench, MessageSquare } from "lucide-react";
 import { DashboardMetric } from "@/components/DashboardMetric";
 import { cn } from "@/lib/utils";
 import { SortableMetric } from "./SortableMetric";
@@ -13,32 +13,6 @@ interface MetricRenderersProps {
 
 export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProps) => {
   const { t } = useLocale();
-
-  const renderOccupancy = () => (
-    <SortableMetric key="occupancy" id="occupancy">
-      <DashboardMetric
-        title={t('globalOccupancy')}
-        value={`${metrics.occupancy.rate}%`}
-        icon={<Percent className="h-4 w-4 text-violet-600" />}
-        description={
-          <div className={cn(
-            "flex items-center gap-1",
-            metrics.occupancy.trend >= 0 ? "text-green-600" : "text-red-600"
-          )}>
-            {metrics.occupancy.trend >= 0 ? (
-              <ArrowUpRight className="h-3 w-3" />
-            ) : (
-              <ArrowDownRight className="h-3 w-3" />
-            )}
-            <span>{Math.abs(metrics.occupancy.trend)}% {t('fromLastMonth')}</span>
-          </div>
-        }
-        chartData={metrics.occupancy.chartData}
-        chartColor="#7C3AED"
-        tooltip={t('occupancyRate')}
-      />
-    </SortableMetric>
-  );
 
   const renderProperties = () => (
     <SortableMetric key="properties" id="properties">
@@ -100,25 +74,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
     </SortableMetric>
   );
 
-  const renderRevenue = () => (
-    <SortableMetric key="revenue" id="revenue">
-      <DashboardMetric
-        title={t('monthlyRevenue')}
-        value={`$${metrics.revenue.monthly.toLocaleString()}`}
-        icon={<DollarSign className="h-4 w-4 text-emerald-600" />}
-        description={
-          <div className="flex items-center gap-1 text-green-600">
-            <ArrowUpRight className="h-3 w-3" />
-            <span>{t('basedOnCurrentLeases')}</span>
-          </div>
-        }
-        chartData={metrics.revenue.chartData}
-        chartColor="#059669"
-        tooltip={t('monthlyRevenue')}
-      />
-    </SortableMetric>
-  );
-
   const renderMessages = () => {
     const defaultChartData = Array.from({ length: 7 }, (_, i) => ({
       value: Math.max(0, unreadMessages + Math.floor(Math.random() * 5) - 2)
@@ -152,11 +107,9 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
   };
 
   return {
-    renderOccupancy,
     renderProperties,
     renderTenants,
     renderMaintenance,
-    renderRevenue,
     renderMessages,
   };
 };

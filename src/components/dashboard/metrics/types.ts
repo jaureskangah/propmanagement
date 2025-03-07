@@ -1,9 +1,5 @@
+
 export interface MetricsData {
-  occupancy: {
-    rate: number;
-    trend: number;
-    chartData: Array<{ value: number }>;
-  };
   properties: {
     total: number;
     new: number;
@@ -16,10 +12,6 @@ export interface MetricsData {
   };
   maintenance: {
     pending: number;
-    chartData: Array<{ value: number }>;
-  };
-  revenue: {
-    monthly: number;
     chartData: Array<{ value: number }>;
   };
   communications?: {

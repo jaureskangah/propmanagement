@@ -1,3 +1,4 @@
+
 import {
   DndContext,
   closestCenter,
@@ -23,11 +24,9 @@ interface MetricsGridProps {
 
 export const MetricsGrid = ({ metrics, unreadMessages }: MetricsGridProps) => {
   const [metricOrder, setMetricOrder] = useState([
-    'occupancy',
     'properties',
     'tenants',
     'maintenance',
-    'revenue',
     'messages'
   ]);
 
@@ -59,11 +58,9 @@ export const MetricsGrid = ({ metrics, unreadMessages }: MetricsGridProps) => {
 
   const renderMetric = (metricId: string) => {
     switch (metricId) {
-      case 'occupancy': return renderers.renderOccupancy();
       case 'properties': return renderers.renderProperties();
       case 'tenants': return renderers.renderTenants();
       case 'maintenance': return renderers.renderMaintenance();
-      case 'revenue': return renderers.renderRevenue();
       case 'messages': return renderers.renderMessages();
       default: return null;
     }
@@ -79,7 +76,7 @@ export const MetricsGrid = ({ metrics, unreadMessages }: MetricsGridProps) => {
         items={metricOrder}
         strategy={rectSortingStrategy}
       >
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {metricOrder.map((metricId) => renderMetric(metricId))}
         </div>
       </SortableContext>

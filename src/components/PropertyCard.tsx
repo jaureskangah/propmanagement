@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, Edit, Trash2, DollarSign } from "lucide-react";
+import { Building2, Edit, Trash2, DollarSign, Percent } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -21,6 +21,7 @@ interface PropertyCardProps {
     units: number;
     type: string;
     image?: string;
+    occupancyRate?: number;
   };
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
@@ -122,7 +123,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
       </CardHeader>
       
       <CardContent className="p-4 sm:p-6">
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 animate-fade-in">
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 animate-fade-in">
           <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
             <p className="text-xs sm:text-sm font-medium text-muted-foreground">{t('propertyUnits')}</p>
             <p className="text-base sm:text-lg font-semibold">{property.units}</p>
@@ -130,6 +131,14 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
           <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
             <p className="text-xs sm:text-sm font-medium text-muted-foreground">{t('propertyType')}</p>
             <p className="text-base sm:text-lg font-semibold capitalize">{t(property.type.toLowerCase())}</p>
+          </div>
+          <div className="bg-slate-50 dark:bg-slate-800 p-2 sm:p-3 rounded-lg transition-colors">
+            <p className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-1">
+              <Percent className="h-3 w-3" /> {t('occupancyRate')}
+            </p>
+            <p className="text-base sm:text-lg font-semibold">
+              {property.occupancyRate !== undefined ? `${property.occupancyRate}%` : 'N/A'}
+            </p>
           </div>
         </div>
       </CardContent>
