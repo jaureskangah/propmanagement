@@ -12,7 +12,10 @@ export const enTasks = {
   addTask: "Add Task",
   noTasks: "No tasks found",
   existingFiles: "Existing files",
-  add: "Add"
+  add: "Add",
+  selectDate: "Select a date",
+  selectPriority: "Select priority",
+  priority: "Priority"
 };
 
 export const frTasks = {
@@ -28,5 +31,8 @@ export const frTasks = {
   addTask: "Ajouter une tâche",
   noTasks: "Aucune tâche trouvée",
   existingFiles: "Fichiers existants",
-  add: "Ajouter"
+  add: "Ajouter",
+  selectDate: "Sélectionner une date",
+  selectPriority: "Sélectionner la priorité",
+  priority: "Priorité"
 };

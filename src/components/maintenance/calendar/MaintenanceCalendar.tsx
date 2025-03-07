@@ -68,7 +68,7 @@ export const MaintenanceCalendar = ({
         mode="single"
         selected={selectedDate}
         onSelect={onSelectDate}
-        className="rounded-md border w-full max-w-[400px] mx-auto"
+        className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
         modifiers={{
           hasTasks: (date) => getTasksForDate(date).length > 0,
         }}
