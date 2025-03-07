@@ -10,6 +10,8 @@ export interface DashboardTranslations {
   loading: string;
   error: string;
   refresh: string;
+  darkMode: string;
+  lightMode: string;
   today: string;
   thisWeek: string;
   thisMonth: string;

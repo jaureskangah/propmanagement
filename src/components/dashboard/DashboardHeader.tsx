@@ -5,6 +5,8 @@ import { DashboardDateFilter, DateRange } from "./DashboardDateFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useAuth } from "@/components/AuthProvider";
 import { useEffect } from "react";
+import { useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 
 interface DashboardHeaderProps {
   title: string;
@@ -14,6 +16,7 @@ interface DashboardHeaderProps {
 export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderProps) => {
   const { t } = useLocale();
   const { user } = useAuth();
+  const { theme, setTheme } = useTheme();
   
   // Log user information to debug
   useEffect(() => {
@@ -35,6 +38,11 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
     onDateRangeChange(newDateRange);
   };
 
+  // Toggle between light and dark mode
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
+
   return (
     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
       <div>
@@ -44,8 +52,9 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
       <div className="flex items-center gap-2">
         <DashboardDateFilter onDateRangeChange={handleDateRangeChange} />
         <DashboardCustomization />
-        <Button variant="outline" className="hidden md:flex" type="button">
-          {t('dashboard.refresh')}
+        <Button variant="outline" className="hidden md:flex" onClick={toggleTheme} type="button">
+          {theme === "dark" ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
+          {theme === "dark" ? t('lightMode') : t('darkMode')}
         </Button>
       </div>
     </div>
