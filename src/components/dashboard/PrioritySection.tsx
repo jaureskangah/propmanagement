@@ -63,6 +63,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
               <div className="space-y-4">
                 {urgentMaintenance.map((task) => {
                   const tenant = getTenantInfo(task.tenant_id);
+                  const propertyName = tenant?.properties?.name || "";
                   
                   return (
                     <div
@@ -76,6 +77,11 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                           {task.description || t('urgentMaintenanceRequest')}
                         </p>
                         <div className="flex flex-wrap gap-2 mt-2">
+                          {propertyName && (
+                            <Badge variant="success" className="text-xs flex items-center gap-1">
+                              {propertyName}
+                            </Badge>
+                          )}
                           <Badge variant="secondary" className="text-xs flex items-center gap-1">
                             <Home className="h-3 w-3" />
                             {t('unit')} {task.unit_number || "N/A"}

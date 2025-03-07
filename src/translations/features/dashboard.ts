@@ -1,3 +1,4 @@
+
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -84,7 +85,9 @@ export const enDashboard = {
   inspection: "Inspection",
   seasonalTask: "Seasonal Task",
   all: "All",
-  yesterday: "Yesterday"
+  yesterday: "Yesterday",
+  emergency: "Emergency",
+  urgentMaintenanceRequest: "Urgent maintenance request"
 };
 
 export const frDashboard = {
@@ -173,5 +176,7 @@ export const frDashboard = {
   inspection: "Inspection",
   seasonalTask: "Tâche saisonnière",
   all: "Tous",
-  yesterday: "Hier"
+  yesterday: "Hier",
+  emergency: "Urgence",
+  urgentMaintenanceRequest: "Demande de maintenance urgente"
 };
