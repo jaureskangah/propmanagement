@@ -55,4 +55,7 @@ export interface DashboardTranslations {
   
   // Ajout de la clé pour "all"
   all: string;
+  
+  // Ajout de la clé pour "yesterday"
+  yesterday: string;
 }

@@ -10,6 +10,9 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter } from "lucide-react";
+import { formatDate } from "@/lib/utils";
+import { format, isToday, isYesterday, isSameWeek } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface Activity {
   id: string;
@@ -18,8 +21,12 @@ interface Activity {
   component: JSX.Element;
 }
 
+interface GroupedActivities {
+  [key: string]: Activity[];
+}
+
 export const RecentActivity = () => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const [activityTypeFilter, setActivityTypeFilter] = useState<string>("all");
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
@@ -115,6 +122,37 @@ export const RecentActivity = () => {
     return allActivities.filter(activity => activity.type === activityTypeFilter);
   }, [allActivities, activityTypeFilter]);
 
+  // Group activities by date
+  const groupedActivities = useMemo(() => {
+    const grouped: GroupedActivities = {};
+    
+    filteredActivities.forEach(activity => {
+      const date = new Date(activity.created_at);
+      let dateKey: string;
+      
+      if (isToday(date)) {
+        dateKey = t('today');
+      } else if (isYesterday(date)) {
+        dateKey = t('yesterday');
+      } else if (isSameWeek(date, new Date(), { weekStartsOn: 1 })) {
+        dateKey = t('thisWeek');
+      } else {
+        // Format as month and year for older activities
+        dateKey = format(date, "MMMM yyyy", {
+          locale: language === 'fr' ? fr : undefined
+        });
+      }
+      
+      if (!grouped[dateKey]) {
+        grouped[dateKey] = [];
+      }
+      
+      grouped[dateKey].push(activity);
+    });
+    
+    return grouped;
+  }, [filteredActivities, t, language]);
+
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
   const container = {
@@ -145,28 +183,39 @@ export const RecentActivity = () => {
           </Select>
         </div>
       </div>
-      <motion.div 
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="space-y-4"
-      >
-        {filteredActivities.map(activity => (
-          <motion.div 
-            key={`${activity.type}-${activity.id}`}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {activity.component}
-          </motion.div>
-        ))}
-        {filteredActivities.length === 0 && (
-          <p className="text-center py-4 text-muted-foreground italic">
-            {t('noActivity')}
-          </p>
-        )}
-      </motion.div>
+      
+      {Object.keys(groupedActivities).length === 0 ? (
+        <p className="text-center py-4 text-muted-foreground italic">
+          {t('noActivity')}
+        </p>
+      ) : (
+        <div className="space-y-6">
+          {Object.entries(groupedActivities).map(([dateGroup, activities]) => (
+            <div key={dateGroup} className="space-y-4">
+              <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">
+                {dateGroup}
+              </h3>
+              <motion.div 
+                variants={container}
+                initial="hidden"
+                animate="show"
+                className="space-y-4"
+              >
+                {activities.map(activity => (
+                  <motion.div 
+                    key={`${activity.type}-${activity.id}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {activity.component}
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          ))}
+        </div>
+      )}
     </ActivityCard>
   );
 };

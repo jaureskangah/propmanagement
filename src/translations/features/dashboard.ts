@@ -84,7 +84,8 @@ export const enDashboard = {
   regularTask: "Regular Task",
   inspection: "Inspection",
   seasonalTask: "Seasonal Task",
-  all: "All" // Ajout de la traduction pour "all"
+  all: "All", // Ajout de la traduction pour "all"
+  yesterday: "Yesterday" // Ajout de la traduction pour "yesterday"
 };
 
 export const frDashboard = {
@@ -172,5 +173,6 @@ export const frDashboard = {
   regularTask: "Tâche régulière",
   inspection: "Inspection",
   seasonalTask: "Tâche saisonnière",
-  all: "Tous" // Ajout de la traduction pour "all"
+  all: "Tous", // Ajout de la traduction pour "all"
+  yesterday: "Hier" // Ajout de la traduction pour "yesterday"
 };
