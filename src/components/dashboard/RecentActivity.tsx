@@ -7,7 +7,7 @@ import { MaintenanceActivity } from "./activity/MaintenanceActivity";
 import { useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Filter } from "lucide-react";
 import { formatDate } from "@/lib/utils";
@@ -155,12 +155,40 @@ export const RecentActivity = () => {
 
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
+  // Animation variants for container
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
         staggerChildren: 0.1
+      }
+    }
+  };
+
+  // Animation variants for individual items
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    show: { 
+      opacity: 1, 
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 24
+      }
+    }
+  };
+
+  // Animation variants for date headers
+  const headerVariants = {
+    hidden: { opacity: 0, x: -10 },
+    show: { 
+      opacity: 1, 
+      x: 0,
+      transition: {
+        delay: 0.1,
+        duration: 0.4
       }
     }
   };
@@ -184,38 +212,64 @@ export const RecentActivity = () => {
         </div>
       </div>
       
-      {Object.keys(groupedActivities).length === 0 ? (
-        <p className="text-center py-4 text-muted-foreground italic">
-          {t('noActivity')}
-        </p>
-      ) : (
-        <div className="space-y-6">
-          {Object.entries(groupedActivities).map(([dateGroup, activities]) => (
-            <div key={dateGroup} className="space-y-4">
-              <h3 className="text-sm font-medium text-muted-foreground border-b pb-1">
-                {dateGroup}
-              </h3>
+      <AnimatePresence mode="wait">
+        {Object.keys(groupedActivities).length === 0 ? (
+          <motion.p 
+            key="no-activity"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="text-center py-4 text-muted-foreground italic"
+          >
+            {t('noActivity')}
+          </motion.p>
+        ) : (
+          <motion.div 
+            key="activity-groups"
+            className="space-y-6"
+            variants={container}
+            initial="hidden"
+            animate="show"
+          >
+            {Object.entries(groupedActivities).map(([dateGroup, activities]) => (
               <motion.div 
-                variants={container}
-                initial="hidden"
-                animate="show"
+                key={dateGroup} 
                 className="space-y-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
               >
-                {activities.map(activity => (
-                  <motion.div 
-                    key={`${activity.type}-${activity.id}`}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {activity.component}
-                  </motion.div>
-                ))}
+                <motion.h3 
+                  className="text-sm font-medium text-muted-foreground border-b pb-1"
+                  variants={headerVariants}
+                >
+                  {dateGroup}
+                </motion.h3>
+                <motion.div 
+                  variants={container}
+                  className="space-y-4"
+                >
+                  <AnimatePresence>
+                    {activities.map(activity => (
+                      <motion.div 
+                        key={`${activity.type}-${activity.id}`}
+                        variants={itemVariants}
+                        whileHover={{ 
+                          scale: 1.01, 
+                          transition: { duration: 0.2 } 
+                        }}
+                        layout
+                      >
+                        {activity.component}
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
               </motion.div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </ActivityCard>
   );
 };
