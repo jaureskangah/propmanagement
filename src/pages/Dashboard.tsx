@@ -5,14 +5,17 @@ import AppSidebar from "@/components/AppSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const Dashboard = () => {
   const { isAuthenticated, loading, user } = useAuth();
+  const { t } = useLocale();
 
   useEffect(() => {
     console.log("Dashboard component mounted, auth state:", { 
       isAuthenticated, 
       isTenant: user?.user_metadata?.is_tenant_user,
+      userName: user?.user_metadata?.first_name,
       loading 
     });
   }, [isAuthenticated, user, loading]);
@@ -42,7 +45,7 @@ const Dashboard = () => {
       <AppSidebar />
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto p-4 md:p-6 space-y-6">
-          <DashboardHeader title="Dashboard" />
+          <DashboardHeader title={t('dashboard.properties') || "Tableau de bord"} />
           <DashboardContent isLoading={false} metrics={{}} />
         </div>
       </div>

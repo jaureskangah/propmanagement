@@ -27,17 +27,18 @@ export const DashboardMetrics = ({
 
   useEffect(() => {
     console.log("DashboardMetrics data received:", {
-      propertiesCount: propertiesData?.length,
-      maintenanceCount: maintenanceData?.length,
-      tenantsCount: tenantsData?.length,
+      propertiesCount: propertiesData?.length || 0,
+      maintenanceCount: maintenanceData?.length || 0,
+      tenantsCount: tenantsData?.length || 0,
       hasMetrics: !!metrics,
-      unreadMessages
+      unreadMessages,
+      dateRange
     });
 
     return () => {
       console.log("DashboardMetrics unmounting");
     };
-  }, [propertiesData, maintenanceData, tenantsData, metrics, unreadMessages]);
+  }, [propertiesData, maintenanceData, tenantsData, metrics, unreadMessages, dateRange]);
 
   return (
     <div className="relative">
