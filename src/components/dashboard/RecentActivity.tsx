@@ -7,6 +7,7 @@ import { MaintenanceActivity } from "./activity/MaintenanceActivity";
 import { useMemo } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
 
 interface Activity {
   id: string;
@@ -105,13 +106,40 @@ export const RecentActivity = () => {
 
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
   return (
     <ActivityCard title={t('recentActivity')} isLoading={isLoading}>
-      {allActivities.map(activity => (
-        <div key={`${activity.type}-${activity.id}`}>
-          {activity.component}
-        </div>
-      ))}
+      <motion.div 
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className="space-y-4"
+      >
+        {allActivities.map(activity => (
+          <motion.div 
+            key={`${activity.type}-${activity.id}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            {activity.component}
+          </motion.div>
+        ))}
+        {allActivities.length === 0 && (
+          <p className="text-center py-4 text-muted-foreground italic">
+            {t('noActivity')}
+          </p>
+        )}
+      </motion.div>
     </ActivityCard>
   );
 };
