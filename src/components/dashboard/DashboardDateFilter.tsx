@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addMonths, startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, subYears } from "date-fns";
@@ -69,20 +70,18 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
   };
 
   return (
-    <div className="mb-6">
-      <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
-        <SelectTrigger className="w-[200px]">
-          <SelectValue placeholder="Select a period" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="this_month">This month</SelectItem>
-          <SelectItem value="last_month">Last month</SelectItem>
-          <SelectItem value="last_3_months">Last 3 months</SelectItem>
-          <SelectItem value="last_6_months">Last 6 months</SelectItem>
-          <SelectItem value="this_year">This year</SelectItem>
-          <SelectItem value="last_year">Last year</SelectItem>
-        </SelectContent>
-      </Select>
-    </div>
+    <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder="Select a period" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="this_month">This month</SelectItem>
+        <SelectItem value="last_month">Last month</SelectItem>
+        <SelectItem value="last_3_months">Last 3 months</SelectItem>
+        <SelectItem value="last_6_months">Last 6 months</SelectItem>
+        <SelectItem value="this_year">This year</SelectItem>
+        <SelectItem value="last_year">Last year</SelectItem>
+      </SelectContent>
+    </Select>
   );
 }

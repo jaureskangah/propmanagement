@@ -22,7 +22,6 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   }, [user]);
   
   // Extraction du prénom de l'utilisateur depuis les métadonnées
-  // Only use user_metadata since raw_user_meta_data doesn't exist on User type
   const firstName = user?.user_metadata?.first_name || "";
   
   // Message d'accueil personnalisé
@@ -42,7 +41,7 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
         <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
         <p className="text-muted-foreground mt-1 text-lg">{welcomeMessage}</p>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2">
         <DashboardDateFilter onDateRangeChange={handleDateRangeChange} />
         <DashboardCustomization />
         <Button variant="outline" className="hidden md:flex" type="button">
