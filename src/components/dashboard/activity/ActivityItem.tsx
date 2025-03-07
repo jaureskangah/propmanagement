@@ -1,9 +1,10 @@
 
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { LucideIcon } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface ActivityItemProps {
   icon: LucideIcon;
@@ -23,6 +24,18 @@ export const ActivityItem = ({
   date 
 }: ActivityItemProps) => {
   const { language } = useLocale();
+  
+  // Format the date for display
+  const dateObj = new Date(date);
+  const formattedDate = format(dateObj, "PP", {
+    locale: language === 'fr' ? fr : undefined
+  });
+  
+  // Get relative time (e.g., "2 days ago")
+  const timeAgo = formatDistanceToNow(dateObj, { 
+    addSuffix: true,
+    locale: language === 'fr' ? fr : undefined
+  });
 
   return (
     <motion.div 
@@ -41,12 +54,18 @@ export const ActivityItem = ({
           {description}
         </p>
       </div>
-      <p className="text-sm text-muted-foreground whitespace-nowrap">
-        {formatDistanceToNow(new Date(date), { 
-          addSuffix: true,
-          locale: language === 'fr' ? fr : undefined
-        })}
-      </p>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <p className="text-sm text-muted-foreground whitespace-nowrap">
+              {timeAgo}
+            </p>
+          </TooltipTrigger>
+          <TooltipContent side="left">
+            {formattedDate}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </motion.div>
   );
 };

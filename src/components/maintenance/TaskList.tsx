@@ -7,6 +7,7 @@ import { Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { formatDate } from "@/lib/utils";
 
 interface Task {
   id: string;
@@ -25,7 +26,6 @@ interface TaskListProps {
 
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   const { t, language } = useLocale();
-  const dateLocale = language === 'fr' ? fr : undefined;
   
   return (
     <ScrollArea className="h-[200px]">
@@ -57,7 +57,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                 variant={task.completed ? "default" : "secondary"}
                 className={task.completed ? "bg-green-500" : ""}
               >
-                {format(task.date, "dd/MM/yyyy", { locale: dateLocale })}
+                {format(task.date, "dd/MM/yyyy", { locale: language === 'fr' ? fr : undefined })}
               </Badge>
               <Badge variant="outline">{t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}</Badge>
               <Button
