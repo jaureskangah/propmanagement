@@ -22,10 +22,8 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   }, [user]);
   
   // Extraction du prénom de l'utilisateur depuis les métadonnées
-  // Check both user_metadata and raw_user_meta_data
-  const firstName = user?.user_metadata?.first_name || 
-                    user?.raw_user_meta_data?.first_name || 
-                    "";
+  // Only use user_metadata since raw_user_meta_data doesn't exist on User type
+  const firstName = user?.user_metadata?.first_name || "";
   
   // Message d'accueil personnalisé
   const welcomeMessage = firstName 
