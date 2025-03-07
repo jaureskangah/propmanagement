@@ -16,6 +16,14 @@ interface TenantActivityProps {
 export const TenantActivity = ({ tenant }: TenantActivityProps) => {
   const { t } = useLocale();
   
+  // Format details for hover card
+  const details = {
+    [t('tenantId')]: tenant.id,
+    [t('tenantName')]: tenant.name,
+    [t('unit')]: tenant.unit_number,
+    [t('dateAdded')]: new Date(tenant.created_at).toLocaleDateString()
+  };
+  
   return (
     <div className="relative">
       <Badge 
@@ -32,6 +40,7 @@ export const TenantActivity = ({ tenant }: TenantActivityProps) => {
         title={t('newTenant')}
         description={`${tenant.name} - ${t('unit')} ${tenant.unit_number}`}
         date={tenant.created_at}
+        details={details}
       />
     </div>
   );
