@@ -78,11 +78,11 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
       </SelectTrigger>
       <SelectContent>
         <SelectItem value="this_month">{t('dashboard.thisMonth')}</SelectItem>
-        <SelectItem value="last_month">{t('dashboard.lastMonth') || "Mois dernier"}</SelectItem>
-        <SelectItem value="last_3_months">{t('dashboard.last3Months') || "3 derniers mois"}</SelectItem>
-        <SelectItem value="last_6_months">{t('dashboard.last6Months') || "6 derniers mois"}</SelectItem>
-        <SelectItem value="this_year">{t('dashboard.thisYear') || "Cette année"}</SelectItem>
-        <SelectItem value="last_year">{t('dashboard.lastYear') || "Année dernière"}</SelectItem>
+        <SelectItem value="last_month">{t('dashboard.lastMonth')}</SelectItem>
+        <SelectItem value="last_3_months">{t('dashboard.last3Months')}</SelectItem>
+        <SelectItem value="last_6_months">{t('dashboard.last6Months')}</SelectItem>
+        <SelectItem value="this_year">{t('dashboard.thisYear')}</SelectItem>
+        <SelectItem value="last_year">{t('dashboard.lastYear')}</SelectItem>
       </SelectContent>
     </Select>
   );

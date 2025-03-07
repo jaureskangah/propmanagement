@@ -32,4 +32,11 @@ export interface DashboardTranslations {
   chartRevenue: string;  // Changed from nested object to flat structure
   chartExpenses: string;
   chartProfit: string;
+  
+  // Ajout des clés pour le filtre de dates
+  lastMonth: string;
+  last3Months: string;
+  last6Months: string;
+  thisYear: string;
+  lastYear: string;
 }
