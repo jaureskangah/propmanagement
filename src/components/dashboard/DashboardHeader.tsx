@@ -4,6 +4,7 @@ import { DashboardCustomization } from "./DashboardCustomization";
 import { DashboardDateFilter, DateRange } from "./DashboardDateFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useAuth } from "@/components/AuthProvider";
+import { useEffect } from "react";
 
 interface DashboardHeaderProps {
   title: string;
@@ -14,8 +15,17 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   const { t } = useLocale();
   const { user } = useAuth();
   
+  // Log user information to debug
+  useEffect(() => {
+    console.log("User in DashboardHeader:", user);
+    console.log("First name:", user?.user_metadata?.first_name);
+  }, [user]);
+  
   // Extraction du prénom de l'utilisateur depuis les métadonnées
-  const firstName = user?.user_metadata?.first_name || "";
+  // Check both user_metadata and raw_user_meta_data
+  const firstName = user?.user_metadata?.first_name || 
+                    user?.raw_user_meta_data?.first_name || 
+                    "";
   
   // Message d'accueil personnalisé
   const welcomeMessage = firstName 
