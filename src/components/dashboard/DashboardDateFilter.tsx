@@ -71,6 +71,17 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
     onDateRangeChange(range);
   };
 
+  // Debug pour voir les traductions
+  console.log("Traductions filtre date:", {
+    thisMonth: t('dashboard.thisMonth'),
+    lastMonth: t('dashboard.lastMonth'),
+    last3Months: t('dashboard.last3Months'),
+    last6Months: t('dashboard.last6Months'),
+    thisYear: t('dashboard.thisYear'),
+    lastYear: t('dashboard.lastYear'),
+    currentLanguage: language
+  });
+
   return (
     <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
       <SelectTrigger className="w-[200px]">

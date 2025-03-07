@@ -21,13 +21,13 @@ import { frDashboard } from './features/dashboard';
 import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 
-// Import les traductions du tableau de bord locataire
+// Import tenant dashboard translations
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
-// Import les traductions du profil locataire
+// Import tenant profile translations
 import { frProfile } from './features/tenant/fr/profile';
-// Import les traductions des documents locataire
+// Import tenant documents translations
 import { frDocuments } from './features/tenant/fr/documents';
-// Import les traductions de maintenance locataire
+// Import tenant maintenance translations
 import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
 
 export const frTranslations = {
@@ -52,12 +52,12 @@ export const frTranslations = {
   ...frDashboard,
   ...frSettings,
   ...frModal,
-  // Ajouter les traductions du tableau de bord locataire
+  // Add tenant dashboard translations
   ...frTenantDashboard,
-  // Ajouter les traductions du profil locataire
+  // Add tenant profile translations
   ...frProfile,
-  // Ajouter les traductions des documents locataire
+  // Add tenant documents translations
   ...frDocuments,
-  // Ajouter les traductions de maintenance locataire
+  // Add tenant maintenance translations
   ...frTenantMaintenance
 };
