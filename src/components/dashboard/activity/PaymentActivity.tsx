@@ -18,14 +18,6 @@ interface PaymentActivityProps {
 export const PaymentActivity = ({ payment }: PaymentActivityProps) => {
   const { t } = useLocale();
   
-  // Format details for hover card
-  const details = {
-    [t('paymentId')]: payment.id,
-    [t('amount')]: `$${payment.amount.toLocaleString()}`,
-    [t('unit')]: payment.tenants?.unit_number,
-    [t('status')]: t('completed')
-  };
-  
   return (
     <div className="relative">
       <Badge 
@@ -42,7 +34,6 @@ export const PaymentActivity = ({ payment }: PaymentActivityProps) => {
         title={t('paymentReceived')}
         description={`$${payment.amount.toLocaleString()} - ${t('unit')} ${payment.tenants?.unit_number}`}
         date={payment.created_at}
-        details={details}
       />
     </div>
   );

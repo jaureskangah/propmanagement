@@ -3,9 +3,10 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { ActivityCard } from "./activity/ActivityCard";
 import { ActivityFilter } from "./activity/ActivityFilter";
 import { ActivityList } from "./activity/ActivityList";
-import { useActivities } from "@/hooks/dashboard/useActivities";
+import { useActivities, Activity } from "@/hooks/dashboard/useActivities";
 
-export type { Activity } from "@/hooks/dashboard/useActivities";
+// Export Activity type for other components
+export type { Activity };
 
 export const RecentActivity = () => {
   const { t } = useLocale();

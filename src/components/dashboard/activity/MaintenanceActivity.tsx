@@ -15,14 +15,6 @@ interface MaintenanceActivityProps {
 export const MaintenanceActivity = ({ request }: MaintenanceActivityProps) => {
   const { t } = useLocale();
   
-  // Format details for hover card
-  const details = {
-    [t('requestId')]: request.id,
-    [t('issueDetails')]: request.issue,
-    [t('status')]: t('completed'),
-    [t('completionDate')]: new Date(request.created_at).toLocaleDateString()
-  };
-  
   return (
     <div className="relative">
       <Badge 
@@ -39,7 +31,6 @@ export const MaintenanceActivity = ({ request }: MaintenanceActivityProps) => {
         title={t('maintenanceCompleted')}
         description={request.issue}
         date={request.created_at}
-        details={details}
       />
     </div>
   );
