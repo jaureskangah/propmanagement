@@ -1,4 +1,3 @@
-
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -115,8 +114,8 @@ export const frDashboard = {
   expenses: "Dépenses",
   profit: "Bénéfice",
   fromLastMonth: "par rapport au mois dernier",
-  messagesRequiringAttention: "messages nécessitant une attention",
-  messageRequiringAttention: "message nécessitant une attention",
+  messagesRequiringAttention: "messages à consulter",
+  messageRequiringAttention: "message à consulter",
   paymentDue: "Paiement dû",
   leaseEnding: "Fin de Bail",
   basedOnCurrentLeases: "basé sur les baux actuels",
