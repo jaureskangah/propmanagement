@@ -1,4 +1,3 @@
-
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -84,12 +83,12 @@ export const enDashboard = {
   regularTask: "Regular Task",
   inspection: "Inspection",
   seasonalTask: "Seasonal Task",
-  all: "All", // Ajout de la traduction pour "all"
-  yesterday: "Yesterday" // Ajout de la traduction pour "yesterday"
+  all: "All",
+  yesterday: "Yesterday"
 };
 
 export const frDashboard = {
-  recentActivity: "Activité Récente",
+  recentActivity: "Activités Récentes",
   upcomingPayments: "Paiements à Venir",
   occupancyRate: "Taux d'Occupation",
   maintenanceRequests: "Demandes de Maintenance",
@@ -173,6 +172,6 @@ export const frDashboard = {
   regularTask: "Tâche régulière",
   inspection: "Inspection",
   seasonalTask: "Tâche saisonnière",
-  all: "Tous", // Ajout de la traduction pour "all"
-  yesterday: "Hier" // Ajout de la traduction pour "yesterday"
+  all: "Tous",
+  yesterday: "Hier"
 };
