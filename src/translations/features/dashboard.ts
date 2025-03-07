@@ -1,4 +1,3 @@
-
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -70,12 +69,20 @@ export const enDashboard = {
   metricsOverview: "Metrics Overview",
   prioritySection: "Priority Section",
   revenueChart: "Revenue Chart",
-  // Ajout des nouvelles clés de traduction pour le filtre de dates
   lastMonth: "Last month",
   last3Months: "Last 3 months",
-  last6Months: "Last 6 months", 
+  last6Months: "Last 6 months",
   thisYear: "This year",
-  lastYear: "Last year"
+  lastYear: "Last year",
+  noScheduledTasks: "No scheduled tasks",
+  scheduledTasks: "Scheduled Tasks",
+  urgent: "Urgent",
+  high: "High",
+  medium: "Medium",
+  low: "Low",
+  regularTask: "Regular Task",
+  inspection: "Inspection",
+  seasonalTask: "Seasonal Task"
 };
 
 export const frDashboard = {
@@ -149,10 +156,18 @@ export const frDashboard = {
   metricsOverview: "Aperçu des Métriques",
   prioritySection: "Section Prioritaire",
   revenueChart: "Graphique des Revenus",
-  // Ajout des nouvelles clés de traduction pour le filtre de dates
   lastMonth: "Mois dernier",
   last3Months: "3 derniers mois",
   last6Months: "6 derniers mois",
   thisYear: "Cette année",
-  lastYear: "Année dernière"
+  lastYear: "Année dernière",
+  noScheduledTasks: "Aucune tâche planifiée",
+  scheduledTasks: "Tâches Planifiées",
+  urgent: "Urgent",
+  high: "Élevé",
+  medium: "Moyen",
+  low: "Faible",
+  regularTask: "Tâche régulière",
+  inspection: "Inspection",
+  seasonalTask: "Tâche saisonnière"
 };

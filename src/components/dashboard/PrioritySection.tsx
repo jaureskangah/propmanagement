@@ -1,13 +1,13 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle } from "lucide-react";
-import { format, isSameDay } from "date-fns";
-import { fr } from 'date-fns/locale';
-import { useState, useMemo } from "react";
+import { Badge } from "@/components/ui/badge";
+import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle, CheckCircle2, Calendar } from "lucide-react";
+import { useMemo } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useMaintenanceTasks } from "@/components/maintenance/tasks/useMaintenanceTasks";
+import { format } from "date-fns";
+import { fr } from 'date-fns/locale';
 
 interface PrioritySectionProps {
   maintenanceData: any[];
@@ -16,8 +16,9 @@ interface PrioritySectionProps {
 }
 
 export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: PrioritySectionProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const { t, language } = useLocale();
+  const { tasks, isLoading } = useMaintenanceTasks();
+  const dateLocale = language === 'fr' ? fr : undefined;
 
   // Mémoriser les données filtrées pour éviter des recalculs inutiles
   const urgentMaintenance = useMemo(() => 
@@ -27,43 +28,14 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
     [maintenanceData]
   );
 
-  // Mémoriser les événements du calendrier
-  const calendarEvents = useMemo(() => [
-    ...(paymentsData?.map(payment => ({
-      date: new Date(payment.payment_date),
-      type: 'payment',
-      title: `${t('paymentDue')}: $${payment.amount}`,
-      tenant: payment.tenants?.name
-    })) || []),
-    ...(tenantsData?.map(tenant => ({
-      date: new Date(tenant.lease_end),
-      type: 'lease',
-      title: `${t('leaseEnding')}: ${tenant.name}`,
-      unit: tenant.unit_number
-    })) || [])
-  ], [paymentsData, tenantsData, t]);
-
-  // Mémoriser les événements sélectionnés
-  const selectedDateEvents = useMemo(() => 
-    calendarEvents.filter(
-      event => selectedDate && isSameDay(event.date, selectedDate)
-    ),
-    [calendarEvents, selectedDate]
-  );
-
-  // Mémoriser les fonctions de modification du calendrier
-  const calendarModifiers = useMemo(() => ({
-    hasEvent: (date: Date) =>
-      calendarEvents.some(event => isSameDay(date, event.date)),
-  }), [calendarEvents]);
-
-  const calendarModifiersStyles = useMemo(() => ({
-    hasEvent: {
-      backgroundColor: "#3b82f6",
-      color: "white",
-      borderRadius: "100%",
-    },
-  }), []);
+  // Trier les tâches par date
+  const upcomingTasks = useMemo(() => {
+    if (!tasks) return [];
+    return tasks
+      .filter(task => !task.completed)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .slice(0, 5); // Limiter à 5 tâches
+  }, [tasks]);
 
   return (
     <div className="grid gap-4 md:grid-cols-2">
@@ -118,48 +90,50 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              className="rounded-md border"
-              locale={language === 'fr' ? fr : undefined}
-              modifiers={calendarModifiers}
-              modifiersStyles={calendarModifiersStyles}
-            />
-
-            <div className="mt-4">
-              <h4 className="font-medium mb-2">
-                {t('eventsOn')} {selectedDate ? format(selectedDate, 'MMMM d, yyyy', { locale: language === 'fr' ? fr : undefined }) : ''}
-              </h4>
-              <ScrollArea className="h-[100px]">
-                <div className="space-y-2">
-                  {selectedDateEvents.length === 0 ? (
-                    <p className="text-muted-foreground text-sm">
-                      {t('noEvents')}
-                    </p>
-                  ) : (
-                    selectedDateEvents.map((event, index) => (
-                      <div
-                        key={index}
-                        className="p-2 rounded-lg border bg-card text-sm"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={event.type === 'payment' ? 'default' : 'secondary'}
-                          >
-                            {t(event.type)}
-                          </Badge>
-                          <span>{event.title}</span>
-                        </div>
+          <ScrollArea className="h-[300px] pr-4">
+            {isLoading ? (
+              <p className="text-muted-foreground text-center py-8">
+                {t('loading')}
+              </p>
+            ) : upcomingTasks.length === 0 ? (
+              <p className="text-muted-foreground text-center py-8">
+                {t('noScheduledTasks')}
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {upcomingTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                  >
+                    <Calendar className="h-5 w-5 text-blue-500 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">{task.title}</h4>
+                      <div className="flex gap-2 mt-2 flex-wrap">
+                        <Badge variant="outline" className="text-xs">
+                          {format(new Date(task.date), 'dd MMM yyyy', { locale: dateLocale })}
+                        </Badge>
+                        <Badge 
+                          variant="outline" 
+                          className={`text-xs ${
+                            task.priority === 'urgent' ? 'bg-red-50 border-red-200 text-red-700' :
+                            task.priority === 'high' ? 'bg-orange-50 border-orange-200 text-orange-700' :
+                            task.priority === 'medium' ? 'bg-yellow-50 border-yellow-200 text-yellow-700' :
+                            'bg-green-50 border-green-200 text-green-700'
+                          }`}
+                        >
+                          {t(task.priority)}
+                        </Badge>
+                        <Badge variant="secondary" className="text-xs">
+                          {t(task.type)}
+                        </Badge>
                       </div>
-                    ))
-                  )}
-                </div>
-              </ScrollArea>
-            </div>
-          </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </ScrollArea>
         </CardContent>
       </Card>
     </div>

@@ -41,4 +41,15 @@ export interface DashboardTranslations {
   last6Months: string;
   thisYear: string;
   lastYear: string;
+  
+  // Ajout des clés pour les tâches planifiées
+  noScheduledTasks: string;
+  scheduledTasks: string;
+  urgent: string;
+  high: string;
+  medium: string;
+  low: string;
+  regularTask: string;
+  inspection: string;
+  seasonalTask: string;
 }
