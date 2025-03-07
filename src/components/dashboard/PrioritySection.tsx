@@ -90,10 +90,10 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                             {t('emergency')}
                           </Badge>
                           {tenant && (
-                            <TooltipProvider>
+                            <TooltipProvider delayDuration={300}>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <Badge variant="outline" className="text-xs flex items-center gap-1">
+                                  <Badge variant="outline" className="text-xs flex items-center gap-1 cursor-pointer">
                                     <User className="h-3 w-3" />
                                     {tenant.name}
                                   </Badge>
