@@ -2,12 +2,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle, CheckCircle2, Calendar } from "lucide-react";
+import { AlertOctagon, Calendar as CalendarIcon, AlertTriangle, CheckCircle2, Calendar, User, Home } from "lucide-react";
 import { useMemo } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useMaintenanceTasks } from "@/components/maintenance/tasks/useMaintenanceTasks";
 import { format } from "date-fns";
 import { fr } from 'date-fns/locale';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PrioritySectionProps {
   maintenanceData: any[];
@@ -27,6 +28,12 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
     ) || [], 
     [maintenanceData]
   );
+
+  // Get tenant information based on tenant_id
+  const getTenantInfo = (tenantId) => {
+    if (!tenantId || !tenantsData) return null;
+    return tenantsData.find(tenant => tenant.id === tenantId);
+  };
 
   // Trier les tâches par date
   const upcomingTasks = useMemo(() => {
@@ -54,28 +61,49 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
               </p>
             ) : (
               <div className="space-y-4">
-                {urgentMaintenance.map((task) => (
-                  <div
-                    key={task.id}
-                    className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-                  >
-                    <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />
-                    <div>
-                      <h4 className="font-medium">{task.title || task.issue}</h4>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {task.description || t('urgentMaintenanceRequest')}
-                      </p>
-                      <div className="flex gap-2 mt-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {t('unit')} {task.unit_number || "N/A"}
-                        </Badge>
-                        <Badge variant="destructive" className="text-xs">
-                          {t('emergency')}
-                        </Badge>
+                {urgentMaintenance.map((task) => {
+                  const tenant = getTenantInfo(task.tenant_id);
+                  
+                  return (
+                    <div
+                      key={task.id}
+                      className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                    >
+                      <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />
+                      <div className="w-full">
+                        <h4 className="font-medium">{task.title || task.issue}</h4>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {task.description || t('urgentMaintenanceRequest')}
+                        </p>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                            <Home className="h-3 w-3" />
+                            {t('unit')} {task.unit_number || "N/A"}
+                          </Badge>
+                          <Badge variant="destructive" className="text-xs">
+                            {t('emergency')}
+                          </Badge>
+                          {tenant && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Badge variant="outline" className="text-xs flex items-center gap-1">
+                                    <User className="h-3 w-3" />
+                                    {tenant.name}
+                                  </Badge>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{tenant.email}</p>
+                                  {tenant.phone && <p>{tenant.phone}</p>}
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </ScrollArea>
