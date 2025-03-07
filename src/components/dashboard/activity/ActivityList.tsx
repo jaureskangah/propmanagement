@@ -3,12 +3,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Activity } from "../RecentActivity";
 import { NoActivity } from "./NoActivity";
 import { ActivityGroup } from "./ActivityGroup";
+import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ActivityListProps {
   groupedActivities: {[key: string]: Activity[]};
+  hasMoreActivities?: boolean;
+  onShowMore?: () => void;
 }
 
-export const ActivityList = ({ groupedActivities }: ActivityListProps) => {
+export const ActivityList = ({ 
+  groupedActivities, 
+  hasMoreActivities = false, 
+  onShowMore 
+}: ActivityListProps) => {
+  const { t } = useLocale();
+  
   // Animation variants for container
   const container = {
     hidden: { opacity: 0 },
@@ -39,6 +50,24 @@ export const ActivityList = ({ groupedActivities }: ActivityListProps) => {
               activities={activities} 
             />
           ))}
+          
+          {hasMoreActivities && onShowMore && (
+            <motion.div 
+              className="flex justify-center mt-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onShowMore}
+                className="flex items-center gap-1"
+              >
+                {t('viewAll')} <ChevronDown className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          )}
         </motion.div>
       )}
     </AnimatePresence>

@@ -1,4 +1,3 @@
-
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -23,6 +22,8 @@ export interface GroupedActivities {
 export function useActivities() {
   const { t, language } = useLocale();
   const [activityTypeFilter, setActivityTypeFilter] = useState<string>("all");
+  const [visibleActivitiesCount, setVisibleActivitiesCount] = useState<number>(5);
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ["recent_tenants"],
@@ -109,7 +110,6 @@ export function useActivities() {
     );
   }, [tenants, payments, maintenance]);
 
-  // Filter activities based on selected type
   const filteredActivities = useMemo(() => {
     if (activityTypeFilter === "all") {
       return allActivities;
@@ -117,11 +117,17 @@ export function useActivities() {
     return allActivities.filter(activity => activity.type === activityTypeFilter);
   }, [allActivities, activityTypeFilter]);
 
-  // Group activities by date
+  const limitedActivities = useMemo(() => {
+    if (showAll) {
+      return filteredActivities;
+    }
+    return filteredActivities.slice(0, visibleActivitiesCount);
+  }, [filteredActivities, visibleActivitiesCount, showAll]);
+
   const groupedActivities = useMemo(() => {
     const grouped: GroupedActivities = {};
     
-    filteredActivities.forEach(activity => {
+    limitedActivities.forEach(activity => {
       const date = new Date(activity.created_at);
       let dateKey: string;
       
@@ -146,14 +152,21 @@ export function useActivities() {
     });
     
     return grouped;
-  }, [filteredActivities, t, language]);
+  }, [limitedActivities, t, language]);
 
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
+  const hasMoreActivities = filteredActivities.length > limitedActivities.length;
+
+  const showMoreActivities = () => {
+    setShowAll(true);
+  };
 
   return {
     groupedActivities,
     isLoading,
     activityTypeFilter,
-    setActivityTypeFilter
+    setActivityTypeFilter,
+    hasMoreActivities,
+    showMoreActivities
   };
 }

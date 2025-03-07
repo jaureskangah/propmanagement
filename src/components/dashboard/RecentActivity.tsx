@@ -14,7 +14,9 @@ export const RecentActivity = () => {
     groupedActivities, 
     isLoading, 
     activityTypeFilter, 
-    setActivityTypeFilter 
+    setActivityTypeFilter,
+    hasMoreActivities,
+    showMoreActivities
   } = useActivities();
 
   return (
@@ -23,7 +25,11 @@ export const RecentActivity = () => {
         value={activityTypeFilter} 
         onChange={setActivityTypeFilter} 
       />
-      <ActivityList groupedActivities={groupedActivities} />
+      <ActivityList 
+        groupedActivities={groupedActivities} 
+        hasMoreActivities={hasMoreActivities}
+        onShowMore={showMoreActivities}
+      />
     </ActivityCard>
   );
 };
