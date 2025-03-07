@@ -82,10 +82,12 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                               {propertyName}
                             </Badge>
                           )}
-                          <Badge variant="secondary" className="text-xs flex items-center gap-1">
-                            <Home className="h-3 w-3" />
-                            {t('unit')} {task.unit_number || "N/A"}
-                          </Badge>
+                          {task.unit_number && (
+                            <Badge variant="secondary" className="text-xs flex items-center gap-1">
+                              <Home className="h-3 w-3" />
+                              {task.unit_number}
+                            </Badge>
+                          )}
                           <Badge variant="destructive" className="text-xs">
                             {t('emergency')}
                           </Badge>
