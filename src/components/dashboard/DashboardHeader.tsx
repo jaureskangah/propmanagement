@@ -4,19 +4,15 @@ import { DashboardCustomization } from "./DashboardCustomization";
 import { DashboardDateFilter, DateRange } from "./DashboardDateFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useAuth } from "@/components/AuthProvider";
-import { useState } from "react";
 
 interface DashboardHeaderProps {
   title: string;
+  onDateRangeChange: (dateRange: DateRange) => void;
 }
 
-export const DashboardHeader = ({ title }: DashboardHeaderProps) => {
+export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderProps) => {
   const { t } = useLocale();
   const { user } = useAuth();
-  const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: new Date(),
-    endDate: new Date()
-  });
   
   // Extraction du prénom de l'utilisateur depuis les métadonnées
   const firstName = user?.user_metadata?.first_name || "";
@@ -26,10 +22,10 @@ export const DashboardHeader = ({ title }: DashboardHeaderProps) => {
     ? `Bienvenue, ${firstName} !` 
     : "Bienvenue sur votre tableau de bord !";
 
+  // Gestion du changement de plage de dates
   const handleDateRangeChange = (newDateRange: DateRange) => {
-    console.log("Date range changed:", newDateRange);
-    setDateRange(newDateRange);
-    // Here you could trigger a data refresh based on the new date range
+    console.log("DashboardHeader date range changed:", newDateRange);
+    onDateRangeChange(newDateRange);
   };
 
   return (

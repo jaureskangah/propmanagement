@@ -9,21 +9,18 @@ import { RevenueChart } from "./RevenueChart";
 import { RecentActivity } from "./RecentActivity";
 import { useDashboardPreferences } from "./hooks/useDashboardPreferences";
 import { DateRange } from "./DashboardDateFilter";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 interface DashboardContentProps {
   isLoading: boolean;
   metrics: any;
+  dateRange: DateRange;
 }
 
-export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
+export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps) => {
   useRealtimeNotifications();
   const { notifications, budgetAlerts, paymentAlerts } = useMaintenanceAlerts();
   const { preferences } = useDashboardPreferences();
-  const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: new Date(),
-    endDate: new Date()
-  });
 
   // Fetch properties, maintenance, and tenants data
   const { data: propertiesData = [] } = useQuery({
@@ -62,7 +59,7 @@ export const DashboardContent = ({ isLoading }: DashboardContentProps) => {
     }
   });
 
-  // Update dateRange state when passed from parent
+  // Log dateRange changes for debugging
   useEffect(() => {
     console.log("DashboardContent received date range:", dateRange);
   }, [dateRange]);

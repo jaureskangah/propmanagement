@@ -1,15 +1,25 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { DateRange } from "@/components/dashboard/DashboardDateFilter";
 
 const Dashboard = () => {
   const { isAuthenticated, loading, user } = useAuth();
   const { t } = useLocale();
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: new Date(),
+    endDate: new Date()
+  });
+
+  const handleDateRangeChange = (newDateRange: DateRange) => {
+    console.log("Dashboard page received date range:", newDateRange);
+    setDateRange(newDateRange);
+  };
 
   useEffect(() => {
     console.log("Dashboard component mounted, auth state:", { 
@@ -45,8 +55,11 @@ const Dashboard = () => {
       <AppSidebar />
       <div className="flex-1 overflow-y-auto">
         <div className="container mx-auto p-4 md:p-6 space-y-6">
-          <DashboardHeader title={t('dashboard.properties') || "Tableau de bord"} />
-          <DashboardContent isLoading={false} metrics={{}} />
+          <DashboardHeader 
+            title={t('dashboard.properties') || "Tableau de bord"} 
+            onDateRangeChange={handleDateRangeChange}
+          />
+          <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
         </div>
       </div>
     </div>
