@@ -1,3 +1,4 @@
+
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -66,7 +67,13 @@ export const enDashboard = {
   visibleSections: "Visible Sections",
   metricsOverview: "Metrics Overview",
   prioritySection: "Priority Section",
-  revenueChart: "Revenue Chart"
+  revenueChart: "Revenue Chart",
+  // Ajout des nouvelles clés de traduction pour le filtre de dates
+  lastMonth: "Last month",
+  last3Months: "Last 3 months",
+  last6Months: "Last 6 months", 
+  thisYear: "This year",
+  lastYear: "Last year"
 };
 
 export const frDashboard = {
@@ -137,5 +144,11 @@ export const frDashboard = {
   visibleSections: "Sections Visibles",
   metricsOverview: "Aperçu des Métriques",
   prioritySection: "Section Prioritaire",
-  revenueChart: "Graphique des Revenus"
+  revenueChart: "Graphique des Revenus",
+  // Ajout des nouvelles clés de traduction pour le filtre de dates
+  lastMonth: "Mois dernier",
+  last3Months: "3 derniers mois",
+  last6Months: "6 derniers mois",
+  thisYear: "Cette année",
+  lastYear: "Année dernière"
 };

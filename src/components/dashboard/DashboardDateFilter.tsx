@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { addMonths, startOfMonth, endOfMonth, startOfYear, endOfYear, subMonths, subYears } from "date-fns";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export type DateRange = {
   startDate: Date;
@@ -14,6 +15,7 @@ interface DashboardDateFilterProps {
 
 export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterProps) {
   const [selectedPeriod, setSelectedPeriod] = useState("this_month");
+  const { t, language } = useLocale();
 
   const handlePeriodChange = (value: string) => {
     setSelectedPeriod(value);
@@ -72,15 +74,15 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
   return (
     <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
       <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Select a period" />
+        <SelectValue placeholder={t('dashboard.filterBy')} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="this_month">This month</SelectItem>
-        <SelectItem value="last_month">Last month</SelectItem>
-        <SelectItem value="last_3_months">Last 3 months</SelectItem>
-        <SelectItem value="last_6_months">Last 6 months</SelectItem>
-        <SelectItem value="this_year">This year</SelectItem>
-        <SelectItem value="last_year">Last year</SelectItem>
+        <SelectItem value="this_month">{t('dashboard.thisMonth')}</SelectItem>
+        <SelectItem value="last_month">{t('dashboard.lastMonth') || "Mois dernier"}</SelectItem>
+        <SelectItem value="last_3_months">{t('dashboard.last3Months') || "3 derniers mois"}</SelectItem>
+        <SelectItem value="last_6_months">{t('dashboard.last6Months') || "6 derniers mois"}</SelectItem>
+        <SelectItem value="this_year">{t('dashboard.thisYear') || "Cette année"}</SelectItem>
+        <SelectItem value="last_year">{t('dashboard.lastYear') || "Année dernière"}</SelectItem>
       </SelectContent>
     </Select>
   );
