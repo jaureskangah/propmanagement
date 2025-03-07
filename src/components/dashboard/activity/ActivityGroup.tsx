@@ -1,6 +1,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Activity } from "../RecentActivity";
+import { Activity } from "@/hooks/dashboard/useActivities";
 
 interface ActivityGroupProps {
   dateGroup: string;
