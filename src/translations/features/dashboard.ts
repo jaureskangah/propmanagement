@@ -1,3 +1,4 @@
+
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -82,7 +83,8 @@ export const enDashboard = {
   low: "Low",
   regularTask: "Regular Task",
   inspection: "Inspection",
-  seasonalTask: "Seasonal Task"
+  seasonalTask: "Seasonal Task",
+  all: "All" // Ajout de la traduction pour "all"
 };
 
 export const frDashboard = {
@@ -169,5 +171,6 @@ export const frDashboard = {
   low: "Faible",
   regularTask: "Tâche régulière",
   inspection: "Inspection",
-  seasonalTask: "Tâche saisonnière"
+  seasonalTask: "Tâche saisonnière",
+  all: "Tous" // Ajout de la traduction pour "all"
 };

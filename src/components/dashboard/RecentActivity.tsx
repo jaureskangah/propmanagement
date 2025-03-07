@@ -4,10 +4,12 @@ import { ActivityCard } from "./activity/ActivityCard";
 import { TenantActivity } from "./activity/TenantActivity";
 import { PaymentActivity } from "./activity/PaymentActivity";
 import { MaintenanceActivity } from "./activity/MaintenanceActivity";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Filter } from "lucide-react";
 
 interface Activity {
   id: string;
@@ -18,6 +20,7 @@ interface Activity {
 
 export const RecentActivity = () => {
   const { t } = useLocale();
+  const [activityTypeFilter, setActivityTypeFilter] = useState<string>("all");
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ["recent_tenants"],
@@ -104,6 +107,14 @@ export const RecentActivity = () => {
     );
   }, [tenants, payments, maintenance]);
 
+  // Filter activities based on selected type
+  const filteredActivities = useMemo(() => {
+    if (activityTypeFilter === "all") {
+      return allActivities;
+    }
+    return allActivities.filter(activity => activity.type === activityTypeFilter);
+  }, [allActivities, activityTypeFilter]);
+
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
   const container = {
@@ -118,13 +129,29 @@ export const RecentActivity = () => {
 
   return (
     <ActivityCard title={t('recentActivity')} isLoading={isLoading}>
+      <div className="mb-4 flex justify-end">
+        <div className="flex items-center space-x-2">
+          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Select value={activityTypeFilter} onValueChange={setActivityTypeFilter}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder={t('filterBy')} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t('all')}</SelectItem>
+              <SelectItem value="tenant">{t('tenant')}</SelectItem>
+              <SelectItem value="payment">{t('payment')}</SelectItem>
+              <SelectItem value="maintenance">{t('maintenance')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
       <motion.div 
         variants={container}
         initial="hidden"
         animate="show"
         className="space-y-4"
       >
-        {allActivities.map(activity => (
+        {filteredActivities.map(activity => (
           <motion.div 
             key={`${activity.type}-${activity.id}`}
             initial={{ opacity: 0, y: 20 }}
@@ -134,7 +161,7 @@ export const RecentActivity = () => {
             {activity.component}
           </motion.div>
         ))}
-        {allActivities.length === 0 && (
+        {filteredActivities.length === 0 && (
           <p className="text-center py-4 text-muted-foreground italic">
             {t('noActivity')}
           </p>

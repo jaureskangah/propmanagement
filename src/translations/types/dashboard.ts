@@ -52,4 +52,7 @@ export interface DashboardTranslations {
   regularTask: string;
   inspection: string;
   seasonalTask: string;
+  
+  // Ajout de la clé pour "all"
+  all: string;
 }
