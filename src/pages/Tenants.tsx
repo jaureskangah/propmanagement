@@ -11,8 +11,11 @@ import { TenantLayout } from "@/components/tenant/TenantLayout";
 import { TenantModals } from "@/components/tenant/TenantModals";
 import AppSidebar from "@/components/AppSidebar";
 import { Badge } from "@/components/ui/badge";
-import { Info } from "lucide-react";
+import { Info, Users, UserPlus } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Tenants = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -28,6 +31,7 @@ const Tenants = () => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useLocale();
+  const isMobile = useIsMobile();
 
   const mapTenantData = (tenant: any): Tenant => ({
     ...tenant,
@@ -100,29 +104,63 @@ const Tenants = () => {
   };
 
   if (isLoading) {
-    return <div>{t('loading')}</div>;
+    return (
+      <div className="flex h-screen">
+        <AppSidebar />
+        <div className="flex-1 container mx-auto p-6">
+          <div className="mb-6">
+            <Skeleton className="h-10 w-60 mb-2" />
+            <Skeleton className="h-4 w-full max-w-md" />
+          </div>
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="space-y-4">
+              <Skeleton className="h-12 w-full" />
+              {[1, 2, 3].map((i) => (
+                <Skeleton key={i} className="h-32 w-full" />
+              ))}
+            </div>
+            <div className="lg:col-span-2">
+              <Skeleton className="h-[600px] w-full" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="flex h-screen">
       <AppSidebar />
-      <div className="flex-1 container mx-auto p-6">
-        <div className="mb-4">
+      <div className="flex-1 container mx-auto p-6 overflow-y-auto">
+        <div className="mb-6">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex-1">
-              <h1 className="text-3xl font-bold text-foreground">
+              <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2">
+                <Users className="h-6 w-6 md:h-7 md:w-7 text-primary/80" />
                 {t('tenantsList')}
               </h1>
               <p className="text-muted-foreground mt-1">
                 {t('tenantsSubtitle')}
               </p>
             </div>
-            <div className="flex items-center justify-end gap-4">
+            <div className="flex items-center justify-between lg:justify-end gap-4">
               <Badge variant="secondary" className="text-sm px-3 py-1.5">
                 <Info className="h-4 w-4 mr-1.5" />
                 {tenants?.length} {tenants?.length === 1 ? t('tenant') : t('tenants')}
               </Badge>
-              <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
+              
+              {isMobile ? (
+                <Button 
+                  size="sm" 
+                  className="flex items-center gap-1.5" 
+                  onClick={() => setIsAddModalOpen(true)}
+                >
+                  <UserPlus className="h-4 w-4" />
+                  {t('addTenant')}
+                </Button>
+              ) : (
+                <TenantActions onAddClick={() => setIsAddModalOpen(true)} />
+              )}
             </div>
           </div>
         </div>

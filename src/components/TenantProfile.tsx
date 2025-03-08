@@ -8,6 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent } from "@/components/ui/card";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface TenantProfileProps {
   tenant: Tenant;
@@ -17,6 +18,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
   const { t } = useLocale();
+  const isMobile = useIsMobile();
   const isTenantUser = user?.id === tenant.tenant_profile_id;
 
   // Préchargement des données
@@ -59,7 +61,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className={`space-y-6 ${isMobile ? 'pb-10' : ''}`}>
       <TenantInfoCard tenant={tenant} />
       <TenantTabs 
         tenant={tenant} 

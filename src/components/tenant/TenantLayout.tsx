@@ -43,7 +43,7 @@ export const TenantLayout = ({
     <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-3'} gap-6`}>
       {showList && (
         <div className="lg:col-span-1 space-y-4">
-          <div className="mb-4">
+          <div className="sticky top-4 z-10 mb-4 bg-background/80 backdrop-blur-sm py-2">
             <TenantSearch 
               value={searchQuery}
               onChange={onSearchChange}
@@ -51,13 +51,15 @@ export const TenantLayout = ({
             />
           </div>
 
-          <TenantList
-            tenants={filteredTenants || []}
-            selectedTenant={selectedTenant}
-            onTenantSelect={onTenantSelect}
-            onEditClick={onEditClick}
-            onDeleteClick={onDeleteClick}
-          />
+          <div className="pb-8">
+            <TenantList
+              tenants={filteredTenants || []}
+              selectedTenant={selectedTenant}
+              onTenantSelect={onTenantSelect}
+              onEditClick={onEditClick}
+              onDeleteClick={onDeleteClick}
+            />
+          </div>
         </div>
       )}
 
@@ -65,8 +67,9 @@ export const TenantLayout = ({
         <div className="lg:col-span-2">
           {isMobile && selectedTenant && (
             <Button
-              variant="ghost"
-              className="mb-4"
+              variant="outline"
+              size="sm"
+              className="mb-4 flex items-center"
               onClick={() => onTenantSelect("")}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
