@@ -52,7 +52,7 @@ const MaintenancePageHeader = ({
           
           <Button 
             size="sm" 
-            className="flex items-center gap-1.5 bg-[#ea384c] hover:bg-[#ea384c]/90" 
+            className="flex items-center gap-1.5" 
             onClick={onCreateTask}
           >
             <Plus className="h-4 w-4" />

@@ -50,10 +50,7 @@ export const TenantMaintenanceView = () => {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-lg">{t('maintenanceRequestTitle')}</CardTitle>
-        <Button 
-          onClick={() => setIsAddDialogOpen(true)}
-          className="bg-[#ea384c] hover:bg-[#ea384c]/90"
-        >
+        <Button onClick={() => setIsAddDialogOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
           {t('addNewTask')}
         </Button>
