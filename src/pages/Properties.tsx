@@ -6,7 +6,7 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useToast } from "@/components/ui/use-toast";
 import { useProperties, Property } from "@/hooks/useProperties";
-import { Loader2, Info, Plus, Filter } from "lucide-react";
+import { Loader2, Info, Plus, Filter, DollarSign } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
