@@ -1,9 +1,10 @@
 
 import React, { useState } from "react";
-import { Box } from "lucide-react";
+import { Box, Search, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
 
 interface EmptyStateProps {
   isFiltering: boolean;
@@ -14,31 +15,44 @@ const EmptyState = ({ isFiltering }: EmptyStateProps) => {
   const { t } = useLocale();
 
   return (
-    <div className="text-center py-16 bg-slate-50 rounded-xl animate-fade-in">
-      <div className="max-w-md mx-auto space-y-6">
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+      className="text-center py-16 bg-slate-50/80 dark:bg-slate-900/30 backdrop-blur-sm rounded-xl border border-dashed"
+    >
+      <div className="max-w-md mx-auto space-y-6 px-4">
         <div className="flex justify-center">
-          <Box className="h-16 w-16 text-slate-400 animate-pulse" />
+          {isFiltering ? (
+            <Search className="h-16 w-16 text-slate-300 dark:text-slate-600" />
+          ) : (
+            <Box className="h-16 w-16 text-slate-300 dark:text-slate-600" />
+          )}
         </div>
         
         {isFiltering ? (
           <>
-            <h3 className="text-lg font-semibold text-slate-700">
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300">
               {t('noPropertiesFiltered')}
             </h3>
-            <p className="text-slate-500">
-              {t('filterByType')}
+            <p className="text-slate-500 dark:text-slate-400">
+              {t('tryAdjustingFilters')}
             </p>
           </>
         ) : (
           <>
-            <h3 className="text-lg font-semibold text-slate-700">
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300">
               {t('noProperties')}
             </h3>
-            <p className="text-slate-500">
-              {t('propertiesSubtitle')}
+            <p className="text-slate-500 dark:text-slate-400">
+              {t('addYourFirstProperty')}
             </p>
             <div className="pt-4">
-              <Button onClick={() => setIsAddModalOpen(true)}>
+              <Button 
+                onClick={() => setIsAddModalOpen(true)}
+                className="bg-primary hover:bg-primary/90 transition-all duration-200 shadow-md"
+              >
+                <PlusCircle className="h-5 w-5 mr-2" />
                 {t('addProperty')}
               </Button>
               <AddPropertyModal 
@@ -49,7 +63,7 @@ const EmptyState = ({ isFiltering }: EmptyStateProps) => {
           </>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
