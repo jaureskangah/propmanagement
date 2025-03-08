@@ -32,7 +32,7 @@ const PropertyCardsSection = ({
 
   const item = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
+    show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
   };
 
   if (filteredProperties.length === 0) {
@@ -47,9 +47,22 @@ const PropertyCardsSection = ({
       className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8"
     >
       {filteredProperties.map((property) => (
-        <motion.div key={property.id} variants={item}>
+        <motion.div 
+          key={property.id} 
+          variants={item}
+          className="h-full"
+          layout
+        >
           <PropertyCard
-            property={property}
+            property={{
+              id: property.id,
+              name: property.name,
+              address: property.address,
+              units: property.units,
+              type: property.type,
+              image: property.image_url,
+              occupancyRate: Math.floor(Math.random() * 101) // For demo purposes
+            }}
             onEdit={onEdit}
             onDelete={onDelete}
             onViewFinancials={onViewFinancials}

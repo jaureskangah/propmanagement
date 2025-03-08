@@ -26,7 +26,12 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   const [imageLoaded, setImageLoaded] = useState(false);
   
   return (
-    <Card className={`w-full h-full overflow-hidden group hover:shadow-lg transition-all duration-300 border border-slate-200 dark:border-slate-800 bg-gradient-to-br ${getGradientByType(property.type)}`}>
+    <Card className={cn(
+      "w-full h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
+      "hover:shadow-lg hover:scale-[1.01] group",
+      "bg-gradient-to-br",
+      getGradientByType(property.type)
+    )}>
       <PropertyCardImage 
         image={property.image}
         type={property.type}

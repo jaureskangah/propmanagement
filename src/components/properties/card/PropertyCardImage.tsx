@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Home } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,7 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
   const { t } = useLocale();
 
   return (
-    <div className="relative w-full h-52 sm:h-60 overflow-hidden bg-slate-100 dark:bg-slate-800">
+    <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-slate-100 dark:bg-slate-800">
       <div 
         className={cn(
           "absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse",
@@ -29,7 +29,7 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
         alt={`${type} - ${t('propertyImage')}`}
         className={cn(
           "w-full h-full object-cover transition-all duration-500",
-          "group-hover:scale-105",
+          "group-hover:scale-110 group-hover:rotate-1",
           imageLoaded ? "opacity-100" : "opacity-0"
         )}
         loading="lazy"
@@ -40,8 +40,11 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
         }}
       />
       <div className="absolute top-4 left-4">
-        <Badge className={`${getBadgeColorByType(type)} px-2.5 py-1 shadow-sm`}>
-          <Home className="h-3.5 w-3.5 mr-1" />
+        <Badge className={cn(
+          getBadgeColorByType(type), 
+          "px-2.5 py-1 shadow-md font-medium"
+        )}>
+          <Home className="h-3.5 w-3.5 mr-1.5" />
           {t(type.toLowerCase())}
         </Badge>
       </div>

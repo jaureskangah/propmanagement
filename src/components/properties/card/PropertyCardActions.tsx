@@ -26,7 +26,7 @@ const PropertyCardActions = ({
   const { t } = useLocale();
   
   return (
-    <div className="flex sm:flex-col gap-1">
+    <div className="flex gap-1">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -37,7 +37,7 @@ const PropertyCardActions = ({
                 e.stopPropagation();
                 onViewFinancials(id);
               }}
-              className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors h-8 w-8"
+              className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors h-8 w-8 rounded-full"
             >
               <DollarSign className="h-4 w-4" />
             </Button>
@@ -56,7 +56,7 @@ const PropertyCardActions = ({
                 e.stopPropagation();
                 onEdit(id);
               }}
-              className="hover:bg-green-100 dark:hover:bg-green-900/30 hover:text-green-600 dark:hover:text-green-400 transition-colors h-8 w-8"
+              className="hover:bg-green-100 dark:hover:bg-green-900/30 hover:text-green-600 dark:hover:text-green-400 transition-colors h-8 w-8 rounded-full"
             >
               <Edit className="h-4 w-4" />
             </Button>
@@ -75,7 +75,7 @@ const PropertyCardActions = ({
                 e.stopPropagation();
                 onDelete(id);
               }}
-              className="hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors h-8 w-8"
+              className="hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400 transition-colors h-8 w-8 rounded-full"
             >
               <Trash2 className="h-4 w-4" />
             </Button>
