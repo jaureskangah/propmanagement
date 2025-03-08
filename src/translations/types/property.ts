@@ -35,4 +35,6 @@ export interface PropertyManagementTranslations {
   updating: string;
   adding: string;
   cancel: string;
+  occupancyRate: string;
+  notAvailable: string;
 }
