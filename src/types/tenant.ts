@@ -20,6 +20,8 @@ export interface Tenant {
   maintenanceRequests: MaintenanceRequest[];
   communications: Communication[];
   avatar_url?: string;
+  security_deposit?: number | null;
+  notes?: string | null;
 }
 
 export interface TenantDocument {
