@@ -12,6 +12,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import MaintenancePageHeader from "@/components/maintenance/header/MaintenancePageHeader";
 import MaintenanceFiltersSection from "@/components/maintenance/filters/MaintenanceFiltersSection";
 import { AddTaskDialog } from "@/components/maintenance/AddTaskDialog";
+import { useToast } from "@/hooks/use-toast";
+import { NewTask } from "@/components/maintenance/types";
 
 const MAINTENANCE_STATUSES = [
   "All",
@@ -42,6 +44,7 @@ const Maintenance = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
   const isTenantUser = user?.user_metadata?.is_tenant_user;
+  const { toast } = useToast();
   
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -93,6 +96,16 @@ const Maintenance = () => {
     setIsAddTaskDialogOpen(true);
   };
 
+  const handleAddTask = (task: NewTask) => {
+    console.log("Adding task:", task);
+    toast({
+      title: t('success'),
+      description: t('taskAdded'),
+    });
+    refetch();
+    setIsAddTaskDialogOpen(false);
+  };
+
   return (
     <div className="flex h-screen">
       <AppSidebar isTenant={isTenantUser} />
@@ -141,10 +154,7 @@ const Maintenance = () => {
             />
 
             <AddTaskDialog 
-              onAddTask={(task) => {
-                refetch();
-                setIsAddTaskDialogOpen(false);
-              }}
+              onAddTask={handleAddTask}
               isOpen={isAddTaskDialogOpen}
               onClose={() => setIsAddTaskDialogOpen(false)}
             />

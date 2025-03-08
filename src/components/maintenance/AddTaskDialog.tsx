@@ -21,10 +21,12 @@ interface AddTaskDialogProps {
     type: "regular" | "inspection" | "seasonal";
     priority?: "low" | "medium" | "high" | "urgent";
   }) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
-  const [open, setOpen] = useState(false);
+export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
@@ -38,7 +40,11 @@ export const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
     e.preventDefault();
     if (title && date && type) {
       onAddTask({ title, date, type, priority });
-      setOpen(false);
+      if (onClose) {
+        onClose();
+      } else {
+        setInternalOpen(false);
+      }
       setTitle("");
       setDate(new Date());
       setType("regular");
@@ -46,14 +52,22 @@ export const AddTaskDialog = ({ onAddTask }: AddTaskDialogProps) => {
     }
   };
 
+  // Determine if we're using controlled or uncontrolled open state
+  const open = isOpen !== undefined ? isOpen : internalOpen;
+  const setOpen = onClose ? (value: boolean) => {
+    if (!value) onClose();
+  } : setInternalOpen;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Plus className="h-4 w-4 mr-2" />
-          {t('add')}
-        </Button>
-      </DialogTrigger>
+      {!isOpen && (
+        <DialogTrigger asChild>
+          <Button variant="outline" size="sm">
+            <Plus className="h-4 w-4 mr-2" />
+            {t('add')}
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-h-[90vh] p-0">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>{t('addNewTask')}</DialogTitle>

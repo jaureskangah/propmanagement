@@ -183,7 +183,6 @@ export const CreateWorkOrderDialog = ({
             <Button
               type="submit"
               disabled={isSubmitting}
-              className="bg-blue-500 hover:bg-blue-600"
             >
               {isSubmitting ? "Création..." : "Créer le bon"}
             </Button>

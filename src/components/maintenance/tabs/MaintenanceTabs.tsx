@@ -7,6 +7,7 @@ import { WorkOrderList } from "@/components/maintenance/work-orders/WorkOrderLis
 import { MaintenanceTasksList } from "@/components/maintenance/tasks/MaintenanceTasksList";
 import { CreateWorkOrderDialog } from "@/components/maintenance/work-orders/CreateWorkOrderDialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useToast } from "@/hooks/use-toast";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -17,6 +18,14 @@ interface MaintenanceTabsProps {
 export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequests = [] }: MaintenanceTabsProps) => {
   const [workOrderDialogOpen, setWorkOrderDialogOpen] = useState(false);
   const { t } = useLocale();
+  const { toast } = useToast();
+
+  const handleWorkOrderSuccess = () => {
+    toast({
+      title: t('success'),
+      description: t('workOrderCreated'),
+    });
+  };
 
   return (
     <Tabs defaultValue="tasks" className="space-y-4">
@@ -51,6 +60,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
       <CreateWorkOrderDialog
         isOpen={workOrderDialogOpen}
         onClose={() => setWorkOrderDialogOpen(false)}
+        onSuccess={handleWorkOrderSuccess}
       />
     </Tabs>
   );
