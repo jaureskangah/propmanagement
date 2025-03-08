@@ -8,7 +8,7 @@ import { MaintenanceTasksList } from "@/components/maintenance/tasks/Maintenance
 import { CreateWorkOrderDialog } from "@/components/maintenance/work-orders/CreateWorkOrderDialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
-import { ClipboardListIcon, ToolIcon } from "lucide-react";
+import { ClipboardListIcon, WrenchIcon } from "lucide-react";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -36,7 +36,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
           {t('maintenanceManagement')}
         </TabsTrigger>
         <TabsTrigger value="vendors" className="flex items-center gap-2">
-          <ToolIcon className="h-4 w-4" />
+          <WrenchIcon className="h-4 w-4" />
           {t('vendors')}
         </TabsTrigger>
       </TabsList>
