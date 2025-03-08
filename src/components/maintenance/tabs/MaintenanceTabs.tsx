@@ -8,6 +8,7 @@ import { MaintenanceTasksList } from "@/components/maintenance/tasks/Maintenance
 import { CreateWorkOrderDialog } from "@/components/maintenance/work-orders/CreateWorkOrderDialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
+import { ClipboardListIcon, ToolIcon } from "lucide-react";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -28,29 +29,43 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
   };
 
   return (
-    <Tabs defaultValue="tasks" className="space-y-4">
-      <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2">
-        <TabsTrigger value="tasks">{t('maintenanceTasks')}</TabsTrigger>
-        <TabsTrigger value="preventive">{t('preventiveMaintenance')}</TabsTrigger>
-        <TabsTrigger value="work-orders">{t('workOrders')}</TabsTrigger>
-        <TabsTrigger value="vendors">{t('vendors')}</TabsTrigger>
+    <Tabs defaultValue="maintenance" className="space-y-4">
+      <TabsList className="grid grid-cols-2 gap-2">
+        <TabsTrigger value="maintenance" className="flex items-center gap-2">
+          <ClipboardListIcon className="h-4 w-4" />
+          {t('maintenanceManagement')}
+        </TabsTrigger>
+        <TabsTrigger value="vendors" className="flex items-center gap-2">
+          <ToolIcon className="h-4 w-4" />
+          {t('vendors')}
+        </TabsTrigger>
       </TabsList>
 
-      <TabsContent value="tasks" className="space-y-4">
-        <MaintenanceTasksList
-          requests={filteredRequests}
-        />
-      </TabsContent>
+      <TabsContent value="maintenance" className="space-y-6">
+        <Tabs defaultValue="tasks" className="w-full">
+          <TabsList className="w-full grid grid-cols-3 gap-2">
+            <TabsTrigger value="tasks">{t('maintenanceTasks')}</TabsTrigger>
+            <TabsTrigger value="preventive">{t('preventiveMaintenance')}</TabsTrigger>
+            <TabsTrigger value="work-orders">{t('workOrders')}</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="tasks" className="pt-4">
+            <MaintenanceTasksList
+              requests={filteredRequests}
+            />
+          </TabsContent>
 
-      <TabsContent value="preventive">
-        <PreventiveMaintenance />
-      </TabsContent>
+          <TabsContent value="preventive" className="pt-4">
+            <PreventiveMaintenance />
+          </TabsContent>
 
-      <TabsContent value="work-orders">
-        <WorkOrderList
-          workOrders={[]}
-          onCreateWorkOrder={() => setWorkOrderDialogOpen(true)}
-        />
+          <TabsContent value="work-orders" className="pt-4">
+            <WorkOrderList
+              workOrders={[]}
+              onCreateWorkOrder={() => setWorkOrderDialogOpen(true)}
+            />
+          </TabsContent>
+        </Tabs>
       </TabsContent>
 
       <TabsContent value="vendors">
@@ -61,6 +76,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
         isOpen={workOrderDialogOpen}
         onClose={() => setWorkOrderDialogOpen(false)}
         onSuccess={handleWorkOrderSuccess}
+        propertyId={propertyId}
       />
     </Tabs>
   );
