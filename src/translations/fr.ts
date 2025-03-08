@@ -21,6 +21,7 @@ import { frDashboard } from './features/dashboard';
 import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 import { frTasks } from './features/maintenance/tasks';
+import { frList } from './features/tenant/fr/list';
 
 // Import tenant dashboard translations
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
@@ -54,6 +55,7 @@ export const frTranslations = {
   ...frSettings,
   ...frModal,
   ...frTasks,
+  ...frList,
   // Add tenant dashboard translations
   ...frTenantDashboard,
   // Add tenant profile translations

@@ -14,4 +14,8 @@ export const frList = {
   active: "Actif",
   expiring: "Expirant",
   expired: "Expiré",
+  leaseStart: "Début du bail",
+  leaseEnd: "Fin du bail",
+  perMonth: "/mois",
+  notAvailable: "Non disponible"
 };

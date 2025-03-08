@@ -8,6 +8,7 @@ import { enPayments } from './en/payments';
 import { enDashboard } from './en/dashboard';
 import { enProfile } from './en/profile';
 import { enMaintenance } from './en/maintenance';
+import { enList } from './en/list';
 
 // French translations
 import { frLease } from './fr/lease';
@@ -18,6 +19,7 @@ import { frPayments } from './fr/payments';
 import { frDashboard } from './fr/dashboard';
 import { frProfile } from './fr/profile';
 import { frMaintenance } from './fr/maintenance';
+import { frList } from './fr/list';
 
 export const enTenant = {
   communications: enCommunications,
@@ -27,7 +29,8 @@ export const enTenant = {
   payments: enPayments,
   dashboard: enDashboard,
   profile: enProfile,
-  maintenance: enMaintenance
+  maintenance: enMaintenance,
+  list: enList
 };
 
 export const frTenant = {
@@ -38,5 +41,6 @@ export const frTenant = {
   payments: frPayments,
   dashboard: frDashboard,
   profile: frProfile,
-  maintenance: frMaintenance
+  maintenance: frMaintenance,
+  list: frList
 };

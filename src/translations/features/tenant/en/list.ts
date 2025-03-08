@@ -1,19 +1,21 @@
 
-import type { TenantListTranslations } from '../../../types/tenant/list';
-
-export const enList: TenantListTranslations = {
-  tenantsList: "Tenants",
-  tenantsSubtitle: "Manage your tenants, track payments, and handle maintenance requests",
+export const enList = {
+  tenantsList: "Tenants List",
+  tenantsSubtitle: "Manage all your tenants and their leases",
   addTenant: "Add Tenant",
   editTenant: "Edit Tenant",
   deleteTenant: "Delete Tenant",
-  searchTenants: "Search by name or property...",
+  searchTenants: "Search tenants",
   noTenants: "No tenants found",
-  noTenantsFiltered: "No tenants match your filters",
+  noTenantsFiltered: "Try adjusting your filters to see more results",
   leaseStatus: "Lease Status",
   filterByStatus: "Filter by status",
   allStatuses: "All Statuses",
   active: "Active",
-  expiring: "Expiring Soon",
+  expiring: "Expiring",
   expired: "Expired",
+  leaseStart: "Lease Start",
+  leaseEnd: "Lease End",
+  perMonth: "/month",
+  notAvailable: "Not available"
 };
