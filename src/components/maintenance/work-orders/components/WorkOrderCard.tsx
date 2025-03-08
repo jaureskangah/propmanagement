@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import {
   CheckCircle2,
   AlertCircle,
   Clock,
-  Tool,
+  Hammer,
   Calendar 
 } from "lucide-react";
 import { WorkOrder } from "@/types/workOrder";
@@ -67,7 +66,7 @@ export const WorkOrderCard = ({ order }: WorkOrderCardProps) => {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <h3 className="text-lg font-semibold group-hover:text-red-500 transition-colors duration-300">{order.title}</h3>
-            <Tool className="h-5 w-5 text-red-500 transition-transform duration-300 group-hover:rotate-12" />
+            <Hammer className="h-5 w-5 text-red-500 transition-transform duration-300 group-hover:rotate-12" />
           </div>
           {order.property && (
             <div className="flex items-center gap-2">

@@ -8,7 +8,7 @@ import { MaintenanceTasksList } from "@/components/maintenance/tasks/Maintenance
 import { CreateWorkOrderDialog } from "@/components/maintenance/work-orders/CreateWorkOrderDialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
-import { ClipboardList, Wrench, Tool, CalendarCheck, Hammer, FileSpreadsheet } from "lucide-react";
+import { ClipboardList, Wrench, Hammer, CalendarCheck, FileSpreadsheet } from "lucide-react";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -53,7 +53,7 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
               {t('preventiveMaintenance')}
             </TabsTrigger>
             <TabsTrigger value="work-orders" className="flex items-center gap-2">
-              <Tool className="h-4 w-4" />
+              <Hammer className="h-4 w-4" />
               {t('workOrders')}
             </TabsTrigger>
           </TabsList>
