@@ -45,7 +45,6 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
       
       <PropertyCardDetails 
         units={property.units}
-        type={property.type}
         occupancyRate={property.occupancyRate}
       />
     </Card>
