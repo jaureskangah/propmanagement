@@ -24,7 +24,7 @@ const PropertyCardDetails = ({ units, occupancyRate }: PropertyCardDetailsProps)
         </div>
         <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-3 rounded-lg shadow-sm">
           <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-            <Percent className="h-3 w-3" /> {t('occupancyRate')}
+            <Percent className="h-3 w-3" /> {t('occupancyRate')} (%)
           </p>
           <p className={`text-lg font-semibold ${getOccupancyColor(occupancyRate)}`}>
             {occupancyRate !== undefined ? `${occupancyRate}%` : 'N/A'}
