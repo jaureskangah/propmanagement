@@ -103,7 +103,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   
   return (
     <Card className={`w-full h-full overflow-hidden group hover:shadow-lg transition-all duration-300 border border-slate-200 dark:border-slate-800 bg-gradient-to-br ${getGradientByType(property.type)}`}>
-      <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-slate-100 dark:bg-slate-800">
+      <div className="relative w-full h-52 sm:h-60 overflow-hidden bg-slate-100 dark:bg-slate-800">
         <div 
           className={cn(
             "absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse",
@@ -208,14 +208,14 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
       </CardHeader>
       
       <CardContent className="p-5 pt-0">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-3 rounded-lg shadow-sm">
             <p className="text-xs font-medium text-muted-foreground">{t('propertyUnits')}</p>
             <p className="text-lg font-semibold">{property.units}</p>
           </div>
           <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-3 rounded-lg shadow-sm">
             <p className="text-xs font-medium text-muted-foreground">{t('propertyType')}</p>
-            <p className="text-lg font-semibold capitalize">{t(property.type.toLowerCase())}</p>
+            <p className="text-lg font-semibold truncate capitalize">{t(property.type.toLowerCase())}</p>
           </div>
           <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm p-3 rounded-lg shadow-sm">
             <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">
