@@ -7,7 +7,7 @@ export const enNavigation: NavigationTranslations = {
   freeTrial: "Free Trial",
   signIn: "Sign In",
   signOut: "Sign Out",
-  dashboard: "Dashboard", // Capitalized D for Dashboard
+  dashboard: "Dashboard", // Already properly capitalized in English
   language: "Language",
   units: "Units",
   metric: "Metric",

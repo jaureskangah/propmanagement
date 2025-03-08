@@ -90,6 +90,12 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
     const keys = key.split('.');
     let translation: any = currentTranslations;
     
+    // Debug dashboard translation 
+    if (key === 'dashboard') {
+      console.log('Dashboard translation called, current language:', language);
+      console.log('Translation value:', currentTranslations['dashboard']);
+    }
+    
     for (const k of keys) {
       if (translation && typeof translation === 'object' && k in translation) {
         translation = translation[k];

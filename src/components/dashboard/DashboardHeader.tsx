@@ -22,7 +22,8 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   useEffect(() => {
     console.log("User in DashboardHeader:", user);
     console.log("First name:", user?.user_metadata?.first_name);
-  }, [user]);
+    console.log("Dashboard title:", title);
+  }, [user, title]);
   
   // Extraction du prénom de l'utilisateur depuis les métadonnées
   const firstName = user?.user_metadata?.first_name || "";
