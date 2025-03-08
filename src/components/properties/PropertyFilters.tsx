@@ -4,7 +4,6 @@ import { Search, Filter } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { motion } from "framer-motion";
 
 interface PropertyFiltersProps {
   selectedType: string;
@@ -35,7 +34,7 @@ const PropertyFilters = ({
             placeholder={t('searchProperties')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 w-full border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary transition-all"
+            className="pl-10 w-full"
           />
         </div>
       </div>
@@ -43,16 +42,11 @@ const PropertyFilters = ({
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: -10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="bg-slate-50/50 dark:bg-slate-900/30 backdrop-blur-sm p-6 rounded-xl shadow-sm border mb-8"
-    >
-      <div className="flex flex-col sm:flex-row gap-4">
+    <div className="space-y-2">
+      <div className="relative flex gap-2">
         <div className="w-full sm:w-64">
           <Select value={selectedType} onValueChange={setSelectedType}>
-            <SelectTrigger className="w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 hover:border-primary/50 dark:hover:border-primary/50 transition-colors">
+            <SelectTrigger className="w-full">
               <div className="flex items-center">
                 <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
                 <SelectValue placeholder={t('filterByType')} />
@@ -63,7 +57,7 @@ const PropertyFilters = ({
                 <SelectItem
                   key={type}
                   value={type}
-                  className="hover:bg-slate-100 dark:hover:bg-slate-700 cursor-pointer"
+                  className="cursor-pointer"
                 >
                   {type === "All" ? t('filterByType') : t(type.toLowerCase())}
                 </SelectItem>
@@ -79,12 +73,12 @@ const PropertyFilters = ({
               placeholder={t('searchProperties')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-full bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-primary transition-all hover:border-primary/50 dark:hover:border-primary/50"
+              className="pl-10 w-full"
             />
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useProperties } from "@/hooks/useProperties";
 import { usePropertyActions } from "@/hooks/usePropertyActions";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Loader2 } from "lucide-react";
 import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
@@ -29,6 +30,7 @@ const Properties = () => {
   const [showFilters, setShowFilters] = useState(false);
   const { properties, isLoading, error } = useProperties();
   const { t } = useLocale();
+  const isMobile = useIsMobile();
   
   const {
     selectedPropertyId,
@@ -69,6 +71,7 @@ const Properties = () => {
           showFilters={showFilters}
           setShowFilters={setShowFilters}
           setIsAddModalOpen={setIsAddModalOpen}
+          isMobile={isMobile}
         />
         
         <PropertyFiltersSection 

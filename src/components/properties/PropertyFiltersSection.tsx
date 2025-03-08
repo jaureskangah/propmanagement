@@ -1,7 +1,6 @@
 
 import React from "react";
 import PropertyFilters from "@/components/properties/PropertyFilters";
-import { motion } from "framer-motion";
 
 interface PropertyFiltersSectionProps {
   showFilters: boolean;
@@ -22,23 +21,17 @@ const PropertyFiltersSection = ({
 }: PropertyFiltersSectionProps) => {
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, height: 0 }}
-        animate={{ 
-          opacity: showFilters ? 1 : 0,
-          height: showFilters ? "auto" : 0
-        }}
-        transition={{ duration: 0.3 }}
-        className={`overflow-hidden ${showFilters ? 'mb-6' : 'mb-0'}`}
-      >
-        <PropertyFilters
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          propertyTypes={propertyTypes}
-        />
-      </motion.div>
+      <div className={`overflow-hidden ${showFilters ? 'mb-6' : 'mb-0'}`}>
+        {showFilters && (
+          <PropertyFilters
+            selectedType={selectedType}
+            setSelectedType={setSelectedType}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            propertyTypes={propertyTypes}
+          />
+        )}
+      </div>
 
       <div className="flex md:hidden mb-4">
         <PropertyFilters
