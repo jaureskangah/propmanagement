@@ -1,246 +1,93 @@
 
-import { useMaintenanceTasks } from './useMaintenanceTasks';
-import { useRealtimeNotifications } from '@/hooks/useRealtimeNotifications';
-import { ExportOptions } from '../ExportOptions';
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
-import { format } from 'date-fns';
-import { CalendarIcon, Copy, Eye, Trash2, GripVertical } from 'lucide-react';
-import { Badge } from "@/components/ui/badge";
-import { ViewPhotosDialog } from './ViewPhotosDialog';
-import { useState } from 'react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { DndContext, DragEndEvent, MouseSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { Task } from '../types';
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { ViewPhotosDialog } from "./ViewPhotosDialog";
+import { EmptyTenantState } from "@/components/tenant/EmptyTenantState";
 
-const SortableTableRow = ({ task, index, onTaskCompletion, onDeleteTask, onViewPhotos }: { 
-  task: Task; 
-  index: number;
-  onTaskCompletion: (id: string) => void;
-  onDeleteTask: (id: string) => void;
-  onViewPhotos: (task: Task) => void;
-}) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = useSortable({ id: task.id });
+interface MaintenanceTasksListProps {
+  requests: any[];
+}
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
+export const MaintenanceTasksList = ({ requests }: MaintenanceTasksListProps) => {
+  const { t } = useLocale();
+  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
+  const [isViewingPhotos, setIsViewingPhotos] = useState(false);
+
+  const handleViewPhotos = (photos: string[]) => {
+    setSelectedPhotos(photos);
+    setIsViewingPhotos(true);
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return 'bg-red-500';
-      case 'high': return 'bg-orange-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  return (
-    <TableRow ref={setNodeRef} style={style} className="animate-fade-in transition-colors hover:bg-muted/50">
-      <TableCell>
-        <div {...attributes} {...listeners} className="cursor-grab">
-          <GripVertical className="h-4 w-4 text-muted-foreground" />
-        </div>
-      </TableCell>
-      <TableCell className="font-medium">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div>
-                <Checkbox
-                  checked={task.completed}
-                  onCheckedChange={() => onTaskCompletion(task.id)}
-                  className="transition-transform hover:scale-105"
-                />
-              </div>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Mark as {task.completed ? 'incomplete' : 'complete'}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </TableCell>
-      <TableCell>
-        <div className="flex flex-col">
-          <span>{task.title}</span>
-          <span className="md:hidden text-sm text-muted-foreground">
-            {format(task.date, 'PPP')}
-          </span>
-          <Badge 
-            className={`md:hidden mt-1 ${getPriorityColor(task.priority)}`}
-          >
-            {task.priority}
-          </Badge>
-        </div>
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        <Badge className="gap-2 transition-all hover:scale-105">
-          {task.type}
-        </Badge>
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        <Badge 
-          className={`transition-all hover:scale-105 ${getPriorityColor(task.priority)}`}
-        >
-          {task.priority}
-        </Badge>
-      </TableCell>
-      <TableCell className="hidden md:table-cell">
-        {format(task.date, 'PPP')}
-      </TableCell>
-      <TableCell>
-        <div className="flex gap-2">
-          {task.photos && task.photos.length > 0 && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => onViewPhotos(task)}
-                    className="transition-transform hover:scale-105"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>View photos</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  size="icon"
-                  className="transition-transform hover:scale-105"
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Duplicate task</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="destructive" 
-                  size="icon" 
-                  onClick={() => onDeleteTask(task.id)}
-                  className="transition-transform hover:scale-105"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Delete task</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-};
-
-export const MaintenanceTasksList = () => {
-  const { tasks, isLoading, handleTaskCompletion, handleDeleteTask, handleUpdateTaskPosition } = useMaintenanceTasks();
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  useRealtimeNotifications();
-
-  const sensors = useSensors(
-    useSensor(MouseSensor),
-    useSensor(TouchSensor)
-  );
-
-  const onDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (!over || active.id === over.id) return;
-
-    const oldIndex = tasks.findIndex(task => task.id === active.id);
-    const newIndex = tasks.findIndex(task => task.id === over.id);
-
-    if (oldIndex !== newIndex) {
-      tasks.forEach((task, index) => {
-        handleUpdateTaskPosition(task.id, index);
-      });
-    }
-  };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
+  if (requests.length === 0) {
+    return (
+      <EmptyTenantState />
+    );
   }
 
   return (
-    <div className="animate-fade-in">
-      <div className="overflow-x-auto">
-        <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-          <Table>
-            <TableCaption>List of scheduled maintenance tasks.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead className="w-[50px]"></TableHead>
-                <TableHead className="w-[100px]">Status</TableHead>
-                <TableHead>Title</TableHead>
-                <TableHead className="hidden md:table-cell">Type</TableHead>
-                <TableHead className="hidden md:table-cell">Priority</TableHead>
-                <TableHead className="hidden md:table-cell">Date</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <SortableContext items={tasks} strategy={verticalListSortingStrategy}>
-                {tasks.map((task, index) => (
-                  <SortableTableRow
-                    key={task.id}
-                    task={task}
-                    index={index}
-                    onTaskCompletion={handleTaskCompletion}
-                    onDeleteTask={handleDeleteTask}
-                    onViewPhotos={setSelectedTask}
-                  />
-                ))}
-              </SortableContext>
-            </TableBody>
-          </Table>
-        </DndContext>
-      </div>
+    <Card>
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          {requests.map((request) => (
+            <div
+              key={request.id}
+              className="p-4 border rounded-lg hover:bg-muted/20 transition-colors"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="font-medium">{request.issue}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{request.description}</p>
+                  
+                  <div className="flex items-center mt-2 gap-2">
+                    <span 
+                      className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                        request.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
+                        request.status === 'In Progress' ? 'bg-blue-100 text-blue-800' :
+                        'bg-green-100 text-green-800'
+                      }`}
+                    >
+                      {request.status}
+                    </span>
+                    
+                    <span 
+                      className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                        request.priority === 'Urgent' ? 'bg-red-100 text-red-800' :
+                        request.priority === 'High' ? 'bg-orange-100 text-orange-800' :
+                        request.priority === 'Medium' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-green-100 text-green-800'
+                      }`}
+                    >
+                      {request.priority}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="text-sm text-muted-foreground">
+                  {new Date(request.created_at).toLocaleDateString()}
+                </div>
+              </div>
+              
+              {request.photos && request.photos.length > 0 && (
+                <div className="mt-3">
+                  <button
+                    onClick={() => handleViewPhotos(request.photos)}
+                    className="text-sm text-primary hover:underline"
+                  >
+                    {t('viewPhotos')} ({request.photos.length})
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </CardContent>
       
-      <ExportOptions tasks={tasks} />
-
-      {selectedTask && (
-        <ViewPhotosDialog
-          isOpen={!!selectedTask}
-          onClose={() => setSelectedTask(null)}
-          photos={selectedTask.photos || []}
-        />
-      )}
-    </div>
+      <ViewPhotosDialog
+        photos={selectedPhotos}
+        isOpen={isViewingPhotos}
+        onClose={() => setIsViewingPhotos(false)}
+      />
+    </Card>
   );
 };
