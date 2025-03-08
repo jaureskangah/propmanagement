@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Buildings, Info } from "lucide-react";
+import { Building, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ const PropertyPageHeader = ({
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="flex-1">
           <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2">
-            <Buildings className="h-6 w-6 md:h-7 md:w-7 text-primary/80" />
+            <Building className="h-6 w-6 md:h-7 md:w-7 text-primary/80" />
             {t('propertiesManagement')}
           </h1>
           <p className="text-muted-foreground mt-1">
