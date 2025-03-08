@@ -61,7 +61,7 @@ const PropertyCardsSection = ({
               units: property.units,
               type: property.type,
               image: property.image_url,
-              occupancyRate: Math.floor(Math.random() * 101) // For demo purposes
+              occupancyRate: Math.floor(Math.random() * 101) // Pour la démo
             }}
             onEdit={onEdit}
             onDelete={onDelete}

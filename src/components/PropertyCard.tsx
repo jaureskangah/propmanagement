@@ -28,7 +28,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   return (
     <Card className={cn(
       "w-full h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
-      "hover:shadow-lg hover:scale-[1.01] group",
+      "hover:shadow-lg hover:scale-[1.01] group flex flex-col",
       "bg-gradient-to-br",
       getGradientByType(property.type)
     )}>
@@ -39,19 +39,22 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
         setImageLoaded={setImageLoaded}
       />
       
-      <PropertyCardHeader 
-        name={property.name}
-        address={property.address}
-        id={property.id}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onViewFinancials={onViewFinancials}
-      />
-      
-      <PropertyCardDetails 
-        units={property.units}
-        occupancyRate={property.occupancyRate}
-      />
+      <div className="flex flex-col flex-grow">
+        <PropertyCardHeader 
+          name={property.name}
+          address={property.address}
+          id={property.id}
+          type={property.type}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          onViewFinancials={onViewFinancials}
+        />
+        
+        <PropertyCardDetails 
+          units={property.units}
+          occupancyRate={property.occupancyRate}
+        />
+      </div>
     </Card>
   );
 };
