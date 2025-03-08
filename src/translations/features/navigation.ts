@@ -7,7 +7,7 @@ export const enNavigation: NavigationTranslations = {
   freeTrial: "Free Trial",
   signIn: "Sign In",
   signOut: "Sign Out",
-  dashboard: "Dashboard", // Assurons-nous que le D est majuscule
+  dashboard: "Dashboard", // Capitalized D for Dashboard
   language: "Language",
   units: "Units",
   metric: "Metric",
@@ -28,7 +28,7 @@ export const frNavigation: NavigationTranslations = {
   freeTrial: "Essai gratuit",
   signIn: "Connexion",
   signOut: "Déconnexion",
-  dashboard: "Tableau de Bord",
+  dashboard: "Tableau de Bord", // Already properly capitalized in French
   language: "Langue",
   units: "Unités",
   metric: "Métrique",
