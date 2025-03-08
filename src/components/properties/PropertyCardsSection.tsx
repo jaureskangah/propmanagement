@@ -4,6 +4,8 @@ import { Property } from "@/hooks/useProperties";
 import PropertyCard from "@/components/PropertyCard";
 import { motion } from "framer-motion";
 import EmptyState from "@/components/properties/EmptyState";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface PropertyCardsSectionProps {
   properties: Property[];
@@ -35,6 +37,35 @@ const PropertyCardsSection = ({
     show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
   };
 
+  // Fetch tenants data to calculate actual occupancy rates
+  const { data: tenants = [] } = useQuery({
+    queryKey: ["tenants"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("*");
+      
+      if (error) {
+        console.error("Error fetching tenants:", error);
+        throw error;
+      }
+      
+      return data;
+    }
+  });
+
+  // Calculate occupancy rate for each property
+  const propertiesWithOccupancy = filteredProperties.map(property => {
+    const propertyTenants = tenants.filter(tenant => tenant.property_id === property.id);
+    const occupiedUnits = propertyTenants.length;
+    const occupancyRate = property.units > 0 ? Math.round((occupiedUnits / property.units) * 100) : 0;
+    
+    return {
+      ...property,
+      occupancyRate
+    };
+  });
+
   if (filteredProperties.length === 0) {
     return <EmptyState isFiltering={properties.length > 0} />;
   }
@@ -46,7 +77,7 @@ const PropertyCardsSection = ({
       animate="show"
       className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8"
     >
-      {filteredProperties.map((property) => (
+      {propertiesWithOccupancy.map((property) => (
         <motion.div 
           key={property.id} 
           variants={item}
@@ -61,7 +92,7 @@ const PropertyCardsSection = ({
               units: property.units,
               type: property.type,
               image: property.image_url,
-              occupancyRate: Math.floor(Math.random() * 101) // For demo purposes
+              occupancyRate: property.occupancyRate
             }}
             onEdit={onEdit}
             onDelete={onDelete}
