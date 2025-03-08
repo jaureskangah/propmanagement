@@ -72,14 +72,14 @@ const Properties = () => {
           setShowFilters={setShowFilters}
           setIsAddModalOpen={setIsAddModalOpen}
           isMobile={isMobile}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
         
         <PropertyFiltersSection 
           showFilters={showFilters}
           selectedType={selectedType}
           setSelectedType={setSelectedType}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
           propertyTypes={PROPERTY_TYPES}
         />
         

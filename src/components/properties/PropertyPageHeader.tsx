@@ -1,10 +1,11 @@
 
-import React from "react";
-import { Building, Info } from "lucide-react";
+import React, { useState } from "react";
+import { Building, Info, Search, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 interface PropertyPageHeaderProps {
   propertiesCount: number;
@@ -12,6 +13,8 @@ interface PropertyPageHeaderProps {
   setShowFilters: (show: boolean) => void;
   setIsAddModalOpen: (isOpen: boolean) => void;
   isMobile: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
 }
 
 const PropertyPageHeader = ({
@@ -19,7 +22,9 @@ const PropertyPageHeader = ({
   showFilters,
   setShowFilters,
   setIsAddModalOpen,
-  isMobile
+  isMobile,
+  searchQuery,
+  setSearchQuery
 }: PropertyPageHeaderProps) => {
   const { t } = useLocale();
 
@@ -61,6 +66,29 @@ const PropertyPageHeader = ({
             </Button>
           )}
         </div>
+      </div>
+      
+      <div className="mt-6 flex gap-2">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            type="text"
+            placeholder={t('searchProperties')}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-9"
+          />
+        </div>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setShowFilters(!showFilters)}
+          className={`transition-colors duration-200 ${
+            showFilters ? "bg-primary/10 text-primary" : ""
+          }`}
+        >
+          <Filter className="h-4 w-4" />
+        </Button>
       </div>
     </div>
   );
