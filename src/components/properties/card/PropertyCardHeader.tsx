@@ -3,6 +3,8 @@ import React from "react";
 import { MapPin } from "lucide-react";
 import { CardTitle, CardDescription, CardHeader } from "@/components/ui/card";
 import PropertyCardActions from "./PropertyCardActions";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PropertyCardHeaderProps {
   name: string;
@@ -21,6 +23,9 @@ const PropertyCardHeader = ({
   onDelete, 
   onViewFinancials 
 }: PropertyCardHeaderProps) => {
+  const { t } = useLocale();
+  const isMobile = useIsMobile();
+  
   return (
     <CardHeader className="p-4 pb-2">
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">

@@ -36,7 +36,9 @@ export const enProperty: PropertyManagementTranslations = {
   saveProperty: "Save Property",
   updating: "Updating...",
   adding: "Adding...",
-  cancel: "Cancel"
+  cancel: "Cancel",
+  occupancyRate: "Occupancy Rate",
+  notAvailable: "N/A"
 };
 
 export const frProperty: PropertyManagementTranslations = {
@@ -74,5 +76,7 @@ export const frProperty: PropertyManagementTranslations = {
   saveProperty: "Enregistrer la propriété",
   updating: "Mise à jour...",
   adding: "Ajout...",
-  cancel: "Annuler"
+  cancel: "Annuler",
+  occupancyRate: "Taux d'occupation",
+  notAvailable: "N/D"
 };
