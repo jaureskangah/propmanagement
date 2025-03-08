@@ -8,7 +8,7 @@ import { MaintenanceTasksList } from "@/components/maintenance/tasks/Maintenance
 import { CreateWorkOrderDialog } from "@/components/maintenance/work-orders/CreateWorkOrderDialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
-import { ClipboardListIcon, WrenchIcon } from "lucide-react";
+import { ClipboardList, Wrench, Tool, CalendarCheck, Hammer, FileSpreadsheet } from "lucide-react";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -32,11 +32,11 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
     <Tabs defaultValue="maintenance" className="space-y-4">
       <TabsList className="grid grid-cols-2 gap-2">
         <TabsTrigger value="maintenance" className="flex items-center gap-2">
-          <ClipboardListIcon className="h-4 w-4" />
+          <ClipboardList className="h-4 w-4" />
           {t('maintenanceManagement')}
         </TabsTrigger>
         <TabsTrigger value="vendors" className="flex items-center gap-2">
-          <WrenchIcon className="h-4 w-4" />
+          <Wrench className="h-4 w-4" />
           {t('vendors')}
         </TabsTrigger>
       </TabsList>
@@ -44,9 +44,18 @@ export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequest
       <TabsContent value="maintenance" className="space-y-6">
         <Tabs defaultValue="tasks" className="w-full">
           <TabsList className="w-full grid grid-cols-3 gap-2">
-            <TabsTrigger value="tasks">{t('maintenanceTasks')}</TabsTrigger>
-            <TabsTrigger value="preventive">{t('preventiveMaintenance')}</TabsTrigger>
-            <TabsTrigger value="work-orders">{t('workOrders')}</TabsTrigger>
+            <TabsTrigger value="tasks" className="flex items-center gap-2">
+              <FileSpreadsheet className="h-4 w-4" />
+              {t('maintenanceTasks')}
+            </TabsTrigger>
+            <TabsTrigger value="preventive" className="flex items-center gap-2">
+              <CalendarCheck className="h-4 w-4" />
+              {t('preventiveMaintenance')}
+            </TabsTrigger>
+            <TabsTrigger value="work-orders" className="flex items-center gap-2">
+              <Tool className="h-4 w-4" />
+              {t('workOrders')}
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="tasks" className="pt-4">

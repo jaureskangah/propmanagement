@@ -1,4 +1,5 @@
-import { AlertTriangle, Bell, CreditCard, TrendingUp } from "lucide-react";
+
+import { AlertTriangle, Bell, AlertCircle, Info, CreditCard, TrendingUp, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NotificationItemProps {
@@ -9,7 +10,24 @@ interface NotificationItemProps {
   icon?: any;
 }
 
-export const NotificationItem = ({ title, issue, priority, deadline, icon: Icon = Bell }: NotificationItemProps) => {
+export const NotificationItem = ({ title, issue, priority, deadline, icon: CustomIcon }: NotificationItemProps) => {
+  const getIcon = () => {
+    if (CustomIcon) return CustomIcon;
+    
+    switch (priority) {
+      case "high":
+        return AlertTriangle;
+      case "medium":
+        return AlertCircle;
+      case "low":
+        return Info;
+      default:
+        return Bell;
+    }
+  };
+  
+  const Icon = getIcon();
+  
   return (
     <div className={cn(
       "p-4 border rounded-lg transition-all duration-200 hover:shadow-md",
@@ -28,7 +46,8 @@ export const NotificationItem = ({ title, issue, priority, deadline, icon: Icon 
           <h4 className="font-medium text-sm text-foreground">{title}</h4>
           <p className="text-sm text-muted-foreground mt-1">{issue}</p>
           {deadline && (
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-xs text-muted-foreground mt-2 flex items-center">
+              <Calendar className="h-3.5 w-3.5 mr-1 inline-block" />
               Deadline: {new Date(deadline).toLocaleDateString()}
             </p>
           )}
