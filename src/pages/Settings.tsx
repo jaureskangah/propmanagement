@@ -10,6 +10,7 @@ import { ProfileSection } from "@/components/settings/ProfileSection";
 import { SecuritySection } from "@/components/settings/SecuritySection";
 import { NotificationsSection } from "@/components/settings/NotificationsSection";
 import { AppearanceSection } from "@/components/settings/AppearanceSection";
+import { LanguageSection } from "@/components/settings/LanguageSection";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -76,6 +77,8 @@ export default function Settings() {
             />
 
             <SecuritySection />
+
+            <LanguageSection />
 
             <NotificationsSection
               profile={profile}

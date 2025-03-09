@@ -34,7 +34,14 @@ export const enSettings = {
   cancel: "Cancel",
   save: "Save",
   saving: "Saving...",
-  updating: "Updating..."
+  updating: "Updating...",
+  passwordSecurity: "Password Security",
+  passwordSecurityDescription: "Ensure your account is using a strong password",
+  language: "Language",
+  languageDescription: "Choose your preferred language for the interface",
+  selectLanguage: "Select Language",
+  selectLanguageDescription: "Change the language used throughout the application",
+  email: "Email"
 };
 
 export const frSettings = {
@@ -72,5 +79,12 @@ export const frSettings = {
   cancel: "Annuler",
   save: "Enregistrer",
   saving: "Enregistrement...",
-  updating: "Mise à jour..."
+  updating: "Mise à jour...",
+  passwordSecurity: "Sécurité du mot de passe",
+  passwordSecurityDescription: "Assurez-vous que votre compte utilise un mot de passe fort",
+  language: "Langue",
+  languageDescription: "Choisissez votre langue préférée pour l'interface",
+  selectLanguage: "Sélectionner la langue",
+  selectLanguageDescription: "Changez la langue utilisée dans toute l'application",
+  email: "Email"
 };

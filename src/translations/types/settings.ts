@@ -37,4 +37,9 @@ export interface SettingsTranslations {
   updating: string;
   passwordSecurity: string;
   passwordSecurityDescription: string;
+  language: string;
+  languageDescription: string;
+  selectLanguage: string;
+  selectLanguageDescription: string;
+  email: string;
 }
