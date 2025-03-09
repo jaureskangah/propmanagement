@@ -15,40 +15,34 @@ export function NotificationsSection({ profile, isLoading, onUpdatePreference }:
   const { t } = useLocale();
 
   return (
-    <Card className="overflow-hidden border-none shadow-md transition-all hover:shadow-lg">
-      <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-amber-50 opacity-50" />
-      <div className="absolute top-0 h-1 w-full bg-gradient-to-r from-orange-400 to-amber-500" />
-      <CardHeader className="relative">
-        <CardTitle className="flex items-center gap-2 text-xl">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-orange-600">
-            <Bell className="h-5 w-5" />
-          </div>
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Bell className="h-5 w-5" />
           {t('notifications')}
         </CardTitle>
-        <CardDescription className="text-sm opacity-75">
+        <CardDescription>
           {t('notificationsDescription')}
         </CardDescription>
       </CardHeader>
-      <CardContent className="relative space-y-4 pb-6">
-        <div className="flex justify-between items-center rounded-lg bg-white/60 p-4 shadow-sm">
+      <CardContent className="space-y-4">
+        <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium text-slate-800">{t('pushNotifications')}</p>
-            <p className="text-sm text-slate-600">{t('pushNotificationsDescription')}</p>
+            <p className="font-medium">{t('pushNotifications')}</p>
+            <p className="text-sm text-muted-foreground">{t('pushNotificationsDescription')}</p>
           </div>
           <Switch 
-            className="data-[state=checked]:bg-orange-500"
             checked={profile?.push_notifications ?? true}
             onCheckedChange={(checked) => onUpdatePreference('push_notifications', checked)}
             disabled={isLoading}
           />
         </div>
-        <div className="flex justify-between items-center rounded-lg bg-white/60 p-4 shadow-sm">
+        <div className="flex justify-between items-center">
           <div>
-            <p className="font-medium text-slate-800">{t('emailUpdates')}</p>
-            <p className="text-sm text-slate-600">{t('emailUpdatesDescription')}</p>
+            <p className="font-medium">{t('emailUpdates')}</p>
+            <p className="text-sm text-muted-foreground">{t('emailUpdatesDescription')}</p>
           </div>
           <Switch 
-            className="data-[state=checked]:bg-orange-500"
             checked={profile?.email_updates ?? true}
             onCheckedChange={(checked) => onUpdatePreference('email_updates', checked)}
             disabled={isLoading}
