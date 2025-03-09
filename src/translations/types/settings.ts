@@ -37,4 +37,9 @@ export interface SettingsTranslations {
   saving: string;
   updating: string;
   email: string;
+  language: string;
+  languageDescription: string;
+  languagePreference: string;
+  english: string;
+  french: string;
 }
