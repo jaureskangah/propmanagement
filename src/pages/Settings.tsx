@@ -10,6 +10,7 @@ import { ProfileSection } from "@/components/settings/ProfileSection";
 import { SecuritySection } from "@/components/settings/SecuritySection";
 import { NotificationsSection } from "@/components/settings/NotificationsSection";
 import { AppearanceSection } from "@/components/settings/AppearanceSection";
+import { LanguageSection } from "@/components/settings/LanguageSection";
 import { Settings as SettingsIcon } from "lucide-react";
 
 export default function Settings() {
@@ -85,6 +86,8 @@ export default function Settings() {
                 isLoading={isLoading}
                 onUpdatePreference={updateNotificationPreference}
               />
+              
+              <LanguageSection />
             </div>
 
             <div className="space-y-8">
