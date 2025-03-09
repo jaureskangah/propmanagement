@@ -5,6 +5,7 @@ export interface SettingsTranslations {
   profileDescription: string;
   security: string;
   securityDescription: string;
+  securityChangePasswordDescription: string;
   notifications: string;
   notificationsDescription: string;
   appearance: string;
@@ -35,4 +36,5 @@ export interface SettingsTranslations {
   save: string;
   saving: string;
   updating: string;
+  email: string;
 }

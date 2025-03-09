@@ -5,6 +5,7 @@ export const enSettings = {
   profileDescription: "Manage your personal information and account settings",
   security: "Security",
   securityDescription: "Update your password and security preferences",
+  securityChangePasswordDescription: "Change your password regularly to keep your account secure",
   notifications: "Notifications",
   notificationsDescription: "Configure how you receive notifications",
   appearance: "Appearance",
@@ -34,7 +35,8 @@ export const enSettings = {
   cancel: "Cancel",
   save: "Save",
   saving: "Saving...",
-  updating: "Updating..."
+  updating: "Updating...",
+  email: "Email Address"
 };
 
 export const frSettings = {
@@ -43,6 +45,7 @@ export const frSettings = {
   profileDescription: "Gérez vos informations personnelles et les paramètres de votre compte",
   security: "Sécurité",
   securityDescription: "Mettez à jour votre mot de passe et vos préférences de sécurité",
+  securityChangePasswordDescription: "Changez régulièrement votre mot de passe pour sécuriser votre compte",
   notifications: "Notifications",
   notificationsDescription: "Configurez la façon dont vous recevez les notifications",
   appearance: "Apparence",
@@ -72,5 +75,6 @@ export const frSettings = {
   cancel: "Annuler",
   save: "Enregistrer",
   saving: "Enregistrement...",
-  updating: "Mise à jour..."
+  updating: "Mise à jour...",
+  email: "Adresse email"
 };
