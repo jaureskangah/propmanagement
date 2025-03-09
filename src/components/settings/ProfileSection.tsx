@@ -17,10 +17,13 @@ export function ProfileSection({ profile, isLoading, userEmail, onProfileUpdate 
   const { t } = useLocale();
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="transition-all duration-300 hover:shadow-md overflow-hidden border-border">
+      <div className="h-1 bg-blue-500" />
+      <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2">
-          <User className="h-5 w-5" />
+          <div className="p-2 rounded-full bg-blue-100 dark:bg-blue-900/30">
+            <User className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+          </div>
           {t('profile')}
         </CardTitle>
         <CardDescription>
@@ -35,22 +38,22 @@ export function ProfileSection({ profile, isLoading, userEmail, onProfileUpdate 
         ) : (
           <>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="font-medium">{t('firstName')}</p>
-                <p className="text-sm text-muted-foreground">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                <p className="font-medium text-sm text-muted-foreground">{t('firstName')}</p>
+                <p className="font-semibold mt-1">
                   {profile?.first_name || '-'}
                 </p>
               </div>
-              <div>
-                <p className="font-medium">{t('lastName')}</p>
-                <p className="text-sm text-muted-foreground">
+              <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+                <p className="font-medium text-sm text-muted-foreground">{t('lastName')}</p>
+                <p className="font-semibold mt-1">
                   {profile?.last_name || '-'}
                 </p>
               </div>
             </div>
-            <div>
-              <p className="font-medium">{t('email')}</p>
-              <p className="text-sm text-muted-foreground">{userEmail}</p>
+            <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
+              <p className="font-medium text-sm text-muted-foreground">{t('email')}</p>
+              <p className="font-semibold mt-1">{userEmail}</p>
             </div>
             <div className="flex justify-end">
               <EditProfileDialog

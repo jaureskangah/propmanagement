@@ -62,12 +62,12 @@ export default function Settings() {
     <div className="flex h-screen">
       <AppSidebar />
       <div className="flex-1 overflow-y-auto">
-        <div className="space-y-6 p-8 pb-16">
+        <div className="space-y-8 p-8 pb-16 max-w-3xl mx-auto">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-bold">{t('settings')}</h1>
           </div>
 
-          <div className="grid gap-6">
+          <div className="space-y-8">
             <ProfileSection
               profile={profile}
               isLoading={isLoading}

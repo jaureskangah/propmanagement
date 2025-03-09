@@ -35,4 +35,6 @@ export interface SettingsTranslations {
   save: string;
   saving: string;
   updating: string;
+  passwordSecurity: string;
+  passwordSecurityDescription: string;
 }
