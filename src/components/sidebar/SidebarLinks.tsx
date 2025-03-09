@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
-  HomeIcon,
   Building2,
   Users,
   Wrench,
@@ -40,11 +39,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   
   // Liens pour les locataires - redessinés pour être plus pertinents
   const tenantLinks = [
-    {
-      href: "/",
-      icon: HomeIcon,
-      label: t('home'),
-    },
     {
       href: "/tenant/dashboard",
       icon: LayoutDashboard,
@@ -84,11 +78,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
 
   // Liens pour les propriétaires - accès complet
   const ownerLinks = [
-    {
-      href: "/",
-      icon: HomeIcon,
-      label: t('home'),
-    },
     {
       href: "/dashboard",
       icon: LayoutDashboard,
