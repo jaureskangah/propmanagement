@@ -13,7 +13,8 @@ import {
   MessageCircle,
   CreditCard,
   FileText,
-  User
+  User,
+  DollarSign
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -97,6 +98,11 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/maintenance",
       icon: Wrench,
       label: t('maintenance'),
+    },
+    {
+      href: "/finances",
+      icon: DollarSign,
+      label: t('finances'),
     },
     {
       href: "/settings",

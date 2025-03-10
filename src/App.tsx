@@ -24,6 +24,7 @@ import Careers from "./pages/company/Careers";
 import Terms from "./pages/legal/Terms";
 import Privacy from "./pages/legal/Privacy";
 import Cookies from "./pages/legal/Cookies";
+import Finances from "./pages/Finances";
 import { ensureTenantDocumentsBucket } from "./utils/createStorageBucket";
 
 // Assurons-nous que la langue est initialisée au démarrage de l'application
@@ -65,6 +66,7 @@ function App() {
           <Route path="/communications" element={<Communications />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/finances" element={<Finances />} />
           <Route path="/company/about" element={<About />} />
           <Route path="/company/careers" element={<Careers />} />
           <Route path="/legal/terms" element={<Terms />} />

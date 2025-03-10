@@ -1,0 +1,45 @@
+
+export interface FinancesTranslations {
+  finances: string;
+  financialOverview: string;
+  selectProperty: string;
+  totalIncome: string;
+  totalExpenses: string;
+  netIncome: string;
+  allTimeIncome: string;
+  allTimeExpenses: string;
+  totalProfit: string;
+  returnOnInvestment: string;
+  income: string;
+  expense: string;
+  expenses: string;
+  profit: string;
+  revenueAndExpenses: string;
+  monthly: string;
+  yearly: string;
+  noDataAvailable: string;
+  roiCalculator: string;
+  propertyValue: string;
+  mortgageInterestRate: string;
+  calculate: string;
+  calculating: string;
+  cashOnCashReturn: string;
+  capitalizationRate: string;
+  annualCashFlow: string;
+  netOperatingIncome: string;
+  export: string;
+  exportToExcel: string;
+  tenant: string;
+  unitNumber: string;
+  amount: string;
+  status: string;
+  date: string;
+  category: string;
+  description: string;
+  noIncomeData: string;
+  noExpenseData: string;
+  selectPropertyToViewFinancialData: string;
+  selectPropertyToViewMetrics: string;
+  selectPropertyToCalculateROI: string;
+  noPropertiesAvailable: string;
+}

@@ -1,3 +1,4 @@
+
 import type { AdminDashboardTranslations } from './admin';
 import type { AuthTranslations } from './auth';
 import type { ContactTranslations } from './contact';
@@ -18,6 +19,7 @@ import type { CommonTranslations } from './common';
 import type { DashboardTranslations } from './dashboard';
 import type { SettingsTranslations } from './settings';
 import type { ModalTranslations } from './modal';
+import type { FinancesTranslations } from './finances';
 
 export type { AdminDashboardTranslations as AdminTranslations };
 export type { AuthTranslations };
@@ -40,6 +42,7 @@ export type { CommonTranslations };
 export type { DashboardTranslations };
 export type { SettingsTranslations };
 export type { ModalTranslations };
+export type { FinancesTranslations };
 
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
@@ -65,4 +68,5 @@ export interface Translations extends
   CommonTranslations,
   DashboardTranslations,
   SettingsTranslations,
-  ModalTranslations {}
+  ModalTranslations,
+  FinancesTranslations {}

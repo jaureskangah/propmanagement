@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 import { frNavigation } from './features/navigation';
 import { frHero } from './features/hero';
@@ -22,17 +21,14 @@ import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 import { frTasks } from './features/maintenance/tasks';
 import { frList } from './features/tenant/fr/list';
+import { frFinances } from './features/finances';
 
-// Import tenant dashboard translations
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
-// Import tenant profile translations
 import { frProfile } from './features/tenant/fr/profile';
-// Import tenant documents translations
 import { frDocuments } from './features/tenant/fr/documents';
-// Import tenant maintenance translations
 import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
 
-export const frTranslations = {
+const translations = {
   ...frNavigation,
   ...frHero,
   ...frFeatures,
@@ -56,12 +52,11 @@ export const frTranslations = {
   ...frModal,
   ...frTasks,
   ...frList,
-  // Add tenant dashboard translations
   ...frTenantDashboard,
-  // Add tenant profile translations
   ...frProfile,
-  // Add tenant documents translations
   ...frDocuments,
-  // Add tenant maintenance translations
-  ...frTenantMaintenance
+  ...frTenantMaintenance,
+  ...frFinances
 };
+
+export default translations;
