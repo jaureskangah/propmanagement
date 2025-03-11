@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Language, UnitSystem, Translations } from '@/translations/types';
 import translations from '@/translations/en';
@@ -86,14 +85,15 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
   }, [language]);
 
   const t = (key: string, params?: Record<string, string>): string => {
-    const currentTranslations = translations[language];
+    const currentTranslations = translationsMap[language] || {};
+    
     const keys = key.split('.');
     let translation: any = currentTranslations;
     
     // Debug dashboard translation 
     if (key === 'dashboard') {
       console.log('Dashboard translation called, current language:', language);
-      console.log('Translation value:', currentTranslations['dashboard']);
+      console.log('Translation value:', translation['dashboard']);
     }
     
     for (const k of keys) {
