@@ -42,4 +42,9 @@ export interface FinancesTranslations {
   selectPropertyToViewMetrics: string;
   selectPropertyToCalculateROI: string;
   noPropertiesAvailable: string;
+  // Nouvelles propriétés
+  occupancyRate: string;
+  occupancyRateDescription: string;
+  unpaidRent: string;
+  unpaidRentDescription: string;
 }

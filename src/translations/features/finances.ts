@@ -41,7 +41,12 @@ export const enFinances = {
   selectPropertyToViewFinancialData: "Select a property to view financial data",
   selectPropertyToViewMetrics: "Select a property to view financial metrics",
   selectPropertyToCalculateROI: "Select a property to calculate ROI",
-  noPropertiesAvailable: "No properties available"
+  noPropertiesAvailable: "No properties available",
+  // Nouvelles traductions
+  occupancyRate: "Occupancy Rate",
+  occupancyRateDescription: "Units currently occupied",
+  unpaidRent: "Unpaid Rent",
+  unpaidRentDescription: "Outstanding rental payments"
 };
 
 export const frFinances = {
@@ -86,5 +91,10 @@ export const frFinances = {
   selectPropertyToViewFinancialData: "Sélectionnez une propriété pour voir les données financières",
   selectPropertyToViewMetrics: "Sélectionnez une propriété pour voir les métriques financières",
   selectPropertyToCalculateROI: "Sélectionnez une propriété pour calculer le ROI",
-  noPropertiesAvailable: "Aucune propriété disponible"
+  noPropertiesAvailable: "Aucune propriété disponible",
+  // Nouvelles traductions
+  occupancyRate: "Taux d'occupation",
+  occupancyRateDescription: "Unités actuellement occupées",
+  unpaidRent: "Loyers impayés",
+  unpaidRentDescription: "Paiements de loyer en attente"
 };

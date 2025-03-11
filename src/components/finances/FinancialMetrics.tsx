@@ -1,6 +1,6 @@
 
 import React from "react";
-import { DollarSign, Wallet, TrendingUp, Landmark } from "lucide-react";
+import { DollarSign, Wallet, Users, AlertCircle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
 import { NoPropertySelected } from "./metrics/NoPropertySelected";
@@ -42,18 +42,18 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
       />
       
       <FinancialMetricCard
-        title={t('netIncome')}
-        value={`$${(financialData?.netIncome || 0).toLocaleString()}`}
-        icon={<Landmark className="h-4 w-4" />}
-        description={t('totalProfit')}
+        title={t('occupancyRate')}
+        value={`${(financialData?.occupancyRate || 0).toFixed(1)}%`}
+        icon={<Users className="h-4 w-4" />}
+        description={t('occupancyRateDescription')}
         chartColor="#3B82F6"
       />
       
       <FinancialMetricCard
-        title="ROI"
-        value={`${(financialData?.roi || 0).toFixed(2)}%`}
-        icon={<TrendingUp className="h-4 w-4" />}
-        description={t('returnOnInvestment')}
+        title={t('unpaidRent')}
+        value={`$${(financialData?.unpaidRent || 0).toLocaleString()}`}
+        icon={<AlertCircle className="h-4 w-4" />}
+        description={t('unpaidRentDescription')}
         chartColor="#8B5CF6"
       />
     </div>
