@@ -46,7 +46,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
       // Get total income from tenant payments
       const { data: payments, error: paymentsError } = await supabase
         .from('tenant_payments')
-        .select('amount, status, payment_date')
+        .select('amount, status, payment_date, tenant_id')
         .in('tenant_id', tenantIds);
       
       if (paymentsError) throw paymentsError;
@@ -115,6 +115,9 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
       // Calculate unpaid rent
       const unpaidPayments = payments?.filter(p => p.status === 'pending' || p.status === 'late') || [];
       const unpaidRent = unpaidPayments.reduce((sum, payment) => sum + payment.amount, 0);
+      
+      // Get unique tenant IDs from unpaid payments
+      // Fix: Use the tenant_id that's now properly selected in the query
       const unpaidTenants = new Set(unpaidPayments.map(p => p.tenant_id)).size;
       
       // Calculate total values for all time
