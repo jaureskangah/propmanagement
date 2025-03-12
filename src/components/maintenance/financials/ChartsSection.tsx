@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
@@ -86,10 +87,10 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
-          <p className="font-semibold mb-2">{label}</p>
+        <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200 text-xs">
+          <p className="font-semibold mb-1.5">{label}</p>
           {payload.map((entry: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: entry.color }}>
+            <p key={index} className="text-xs" style={{ color: entry.color }}>
               {entry.name}: ${entry.value.toLocaleString()}
             </p>
           ))}
@@ -101,15 +102,15 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Payment Evolution</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">Payment Evolution</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[400px]">
+        <div className="h-[350px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart 
               data={paymentData}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+              margin={{ top: 5, right: 20, left: 0, bottom: 0 }}
             >
               <defs>
                 <linearGradient id="colorPaid" x1="0" y1="0" x2="0" y2="1">
@@ -138,31 +139,33 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
               <XAxis 
                 dataKey="date" 
                 stroke="#888888"
-                fontSize={12}
+                fontSize={10}
                 tickLine={false}
                 axisLine={false}
-                padding={{ left: 20, right: 20 }}
+                padding={{ left: 10, right: 10 }}
               />
               <YAxis
                 stroke="#888888"
-                fontSize={12}
+                fontSize={10}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value.toLocaleString()}`}
-                padding={{ top: 20, bottom: 20 }}
+                padding={{ top: 10, bottom: 10 }}
               />
               <Tooltip content={<CustomTooltip />} />
               <Legend 
                 verticalAlign="top" 
-                height={36}
+                height={24}
                 iconType="circle"
-                iconSize={8}
+                iconSize={6}
+                wrapperStyle={{ fontSize: '10px' }}
               />
               <Area
                 type="monotone"
                 dataKey="paid"
                 stackId="1"
                 stroke="#22C55E"
+                strokeWidth={1.5}
                 fill="url(#colorPaid)"
                 name="Paid"
               />
@@ -171,6 +174,7 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
                 dataKey="pending"
                 stackId="1"
                 stroke="#EAB308"
+                strokeWidth={1.5}
                 fill="url(#colorPending)"
                 name="Pending"
               />
@@ -179,6 +183,7 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
                 dataKey="late"
                 stackId="1"
                 stroke="#EF4444"
+                strokeWidth={1.5}
                 fill="url(#colorLate)"
                 name="Late"
               />
@@ -186,10 +191,10 @@ export const ChartsSection = ({ propertyId }: ChartsSectionProps) => {
                 type="monotone"
                 dataKey="cumulative"
                 stroke="#3B82F6"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 fill="none"
                 name="Cumulative Total"
-                dot={true}
+                dot={{ r: 2.5 }}
               />
             </AreaChart>
           </ResponsiveContainer>

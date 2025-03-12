@@ -23,13 +23,13 @@ export default function RevenueExpenseChart({ propertyId }: RevenueExpenseChartP
 
   return (
     <Card>
-      <CardHeader className="pb-2 pt-4">
+      <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base">{t('revenueAndExpenses')}</CardTitle>
+          <CardTitle className="text-sm">{t('revenueAndExpenses')}</CardTitle>
           <Tabs defaultValue="monthly" value={view} onValueChange={(v) => setView(v as 'monthly' | 'yearly')}>
-            <TabsList className="grid w-[180px] grid-cols-2 h-8">
-              <TabsTrigger value="monthly" className="text-xs h-7">{t('monthly')}</TabsTrigger>
-              <TabsTrigger value="yearly" className="text-xs h-7">{t('yearly')}</TabsTrigger>
+            <TabsList className="grid w-[160px] grid-cols-2 h-7">
+              <TabsTrigger value="monthly" className="text-xs h-6">{t('monthly')}</TabsTrigger>
+              <TabsTrigger value="yearly" className="text-xs h-6">{t('yearly')}</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>

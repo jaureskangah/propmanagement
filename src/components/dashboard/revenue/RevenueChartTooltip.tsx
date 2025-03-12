@@ -17,22 +17,22 @@ export const RevenueChartTooltip = ({ active, payload, label }: RevenueTooltipPr
     const profit = revenue - expenses;
     
     return (
-      <div className="rounded-lg border bg-background p-4 shadow-md animate-fade-in">
-        <p className="font-semibold mb-2">{label}</p>
+      <div className="rounded-lg border bg-background p-3 shadow-md animate-fade-in text-xs">
+        <p className="font-semibold mb-1.5">{label}</p>
         <div className="space-y-1">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             <span className="text-muted-foreground">{t('revenue')}:</span>
             <span className="font-medium text-blue-500">
               ${revenue.toLocaleString()}
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1.5">
             <span className="text-muted-foreground">{t('expenses')}:</span>
             <span className="font-medium text-blue-300">
               ${expenses.toLocaleString()}
             </span>
           </div>
-          <div className="grid grid-cols-2 gap-2 border-t pt-1 mt-1">
+          <div className="grid grid-cols-2 gap-1.5 border-t pt-1 mt-1">
             <span className="text-muted-foreground">{t('profit')}:</span>
             <span className={cn(
               "font-medium",

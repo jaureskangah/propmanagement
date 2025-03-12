@@ -19,22 +19,31 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
   
   return (
     <Card className="col-span-1">
-      <CardHeader>
-        <CardTitle>{t(title)}</CardTitle>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">{t(title)}</CardTitle>
       </CardHeader>
-      <CardContent className="h-[300px]">
+      <CardContent className="h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
             <XAxis 
               dataKey="metric_date" 
-              tick={{ fontSize: 12 }}
+              tick={{ fontSize: 10 }}
               angle={-45}
               textAnchor="end"
-              height={60}
+              height={50}
+              tickMargin={5}
             />
-            <YAxis />
-            <Tooltip formatter={tooltipFormatter} />
+            <YAxis tick={{ fontSize: 10 }} />
+            <Tooltip 
+              formatter={tooltipFormatter}
+              contentStyle={{
+                fontSize: '11px',
+                padding: '8px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+              }}
+            />
             {lines.map((line) => (
               <Line
                 key={line.key}
@@ -42,7 +51,9 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
                 dataKey={line.key}
                 stroke={line.color}
                 name={t(line.name)}
-                strokeWidth={2}
+                strokeWidth={1.5}
+                dot={{ r: 2 }}
+                activeDot={{ r: 3 }}
               />
             ))}
           </LineChart>

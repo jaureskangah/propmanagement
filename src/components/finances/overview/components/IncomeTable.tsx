@@ -15,15 +15,15 @@ export function IncomeTable({ payments, tenants, isLoading }: IncomeTableProps) 
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-60">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <div className="flex justify-center items-center h-48">
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
       </div>
     );
   }
 
   if (!payments || payments.length === 0) {
     return (
-      <div className="text-center py-10 text-muted-foreground text-sm">
+      <div className="text-center py-8 text-muted-foreground text-xs">
         {t('noIncomeData')}
       </div>
     );
@@ -36,7 +36,7 @@ export function IncomeTable({ payments, tenants, isLoading }: IncomeTableProps) 
           <TableHead className="text-xs">{t('date')}</TableHead>
           <TableHead className="text-xs">{t('tenant')}</TableHead>
           <TableHead className="text-xs">{t('unitNumber')}</TableHead>
-          <TableHead className="text-xs">{t('amount')}</TableHead>
+          <TableHead className="text-xs text-right">{t('amount')}</TableHead>
           <TableHead className="text-xs">{t('status')}</TableHead>
         </TableRow>
       </TableHeader>
@@ -48,7 +48,7 @@ export function IncomeTable({ payments, tenants, isLoading }: IncomeTableProps) 
               <TableCell>{format(new Date(payment.payment_date), 'yyyy-MM-dd')}</TableCell>
               <TableCell>{tenant?.name || '-'}</TableCell>
               <TableCell>{tenant?.unit_number || '-'}</TableCell>
-              <TableCell>${payment.amount.toLocaleString()}</TableCell>
+              <TableCell className="text-right">${payment.amount.toLocaleString()}</TableCell>
               <TableCell>
                 <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
                   payment.status === 'paid' ? 'bg-green-100 text-green-800' :

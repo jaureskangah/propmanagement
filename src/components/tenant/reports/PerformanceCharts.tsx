@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
@@ -42,8 +43,8 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
   if (isLoadingPayments) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center h-[200px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <CardContent className="flex items-center justify-center h-[180px]">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
         </CardContent>
       </Card>
     );
@@ -68,13 +69,13 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">Payment History Trend</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium">Payment History Trend</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={paymentHistory}>
                 <defs>
@@ -87,13 +88,13 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
                 <XAxis 
                   dataKey="date" 
                   stroke="#888888"
-                  fontSize={12}
+                  fontSize={10}
                   tickLine={false}
                   axisLine={false}
                 />
                 <YAxis
                   stroke="#888888"
-                  fontSize={12}
+                  fontSize={10}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(value) => `$${value}`}
@@ -102,8 +103,10 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
                   contentStyle={{
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    fontSize: '11px',
+                    padding: '8px',
                   }}
                   formatter={(value: number) => [`$${value.toLocaleString()}`]}
                 />
@@ -111,6 +114,7 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
                   type="monotone"
                   dataKey="amount"
                   stroke="#3B82F6"
+                  strokeWidth={1.5}
                   fillOpacity={1}
                   fill="url(#colorAmount)"
                 />
@@ -121,24 +125,24 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-medium">Payment Status Distribution</CardTitle>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium">Payment Status Distribution</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
+          <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statusChartData}>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
                 <XAxis 
                   dataKey="status" 
                   stroke="#888888"
-                  fontSize={12}
+                  fontSize={10}
                   tickLine={false}
                   axisLine={false}
                 />
                 <YAxis
                   stroke="#888888"
-                  fontSize={12}
+                  fontSize={10}
                   tickLine={false}
                   axisLine={false}
                 />
@@ -146,14 +150,17 @@ export const PerformanceCharts = ({ tenantId }: PerformanceChartsProps) => {
                   contentStyle={{
                     backgroundColor: 'white',
                     border: '1px solid #e5e7eb',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    fontSize: '11px',
+                    padding: '8px',
                   }}
                 />
                 <Bar 
                   dataKey="count" 
                   fill="#3B82F6"
-                  radius={[4, 4, 0, 0]}
+                  radius={[3, 3, 0, 0]}
+                  barSize={20}
                 />
               </BarChart>
             </ResponsiveContainer>

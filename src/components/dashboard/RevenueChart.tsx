@@ -38,8 +38,8 @@ export const RevenueChart = () => {
     console.log("RevenueChart is loading");
     return (
       <Card className="animate-pulse">
-        <CardContent className="flex items-center justify-center h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <CardContent className="flex items-center justify-center h-[350px]">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
         </CardContent>
       </Card>
     );
@@ -54,23 +54,23 @@ export const RevenueChart = () => {
 
   return (
     <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in">
-      <CardHeader className="flex flex-row items-center justify-between pb-8">
-        <CardTitle className="text-lg font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <CardTitle className="text-base font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
           {t('revenue')} & {t('expenses')}
         </CardTitle>
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
-            <div className="h-3 w-3 rounded-full bg-blue-500 animate-pulse" />
-            <span className="text-sm text-muted-foreground">{t('revenue')}</span>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
+            <div className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" />
+            <span className="text-xs text-muted-foreground">{t('revenue')}</span>
           </div>
-          <div className="flex items-center gap-2 transition-transform duration-300 hover:scale-105">
-            <div className="h-3 w-3 rounded-full bg-blue-200 animate-pulse" />
-            <span className="text-sm text-muted-foreground">{t('expenses')}</span>
+          <div className="flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
+            <div className="h-2.5 w-2.5 rounded-full bg-blue-200 animate-pulse" />
+            <span className="text-xs text-muted-foreground">{t('expenses')}</span>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[300px] transition-transform duration-500 group-hover:scale-[1.02]">
+        <div className="h-[270px] transition-transform duration-500 group-hover:scale-[1.02]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={monthlyData}>
               <defs>
@@ -91,33 +91,33 @@ export const RevenueChart = () => {
               <XAxis
                 dataKey="month"
                 stroke="#888888"
-                fontSize={12}
+                fontSize={10}
                 tickLine={false}
                 axisLine={false}
-                dy={10}
+                dy={5}
               />
               <YAxis
                 stroke="#888888"
-                fontSize={12}
+                fontSize={10}
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => `$${value.toLocaleString()}`}
-                dx={-10}
+                dx={-5}
               />
               <Tooltip content={RevenueChartTooltip} />
               <Area
                 type="monotone"
                 dataKey="amount"
                 stroke="#3B82F6"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 fillOpacity={1}
                 fill="url(#colorRevenue)"
                 animationDuration={1000}
                 animationBegin={0}
                 activeDot={{
-                  r: 6,
+                  r: 4,
                   stroke: '#3B82F6',
-                  strokeWidth: 2,
+                  strokeWidth: 1.5,
                   fill: 'white',
                   className: 'animate-pulse'
                 }}
@@ -126,15 +126,15 @@ export const RevenueChart = () => {
                 type="monotone"
                 dataKey="expenses"
                 stroke="#93C5FD"
-                strokeWidth={2}
+                strokeWidth={1.5}
                 fillOpacity={1}
                 fill="url(#colorExpenses)"
                 animationDuration={1000}
                 animationBegin={500}
                 activeDot={{
-                  r: 6,
+                  r: 4,
                   stroke: '#93C5FD',
-                  strokeWidth: 2,
+                  strokeWidth: 1.5,
                   fill: 'white',
                   className: 'animate-pulse'
                 }}
