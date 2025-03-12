@@ -1,3 +1,4 @@
+
 import { useAuth } from "@/components/AuthProvider";
 import AppSidebar from "@/components/AppSidebar";
 import { useToast } from "@/hooks/use-toast";
@@ -39,10 +40,10 @@ export default function Finances() {
   return (
     <div className="flex h-screen">
       <AppSidebar />
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="space-y-8 p-8 pb-16 max-w-6xl mx-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-3xl font-bold">{t('finances')}</h1>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in">
+            <h1 className="text-3xl font-bold text-gradient-primary">{t('finances')}</h1>
             <PropertyFinancialSelector 
               properties={properties || []}
               isLoading={propertiesLoading}
@@ -51,13 +52,17 @@ export default function Finances() {
             />
           </div>
 
-          <FinancialMetrics propertyId={selectedPropertyId} />
+          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+            <FinancialMetrics propertyId={selectedPropertyId} />
+          </div>
           
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <RevenueExpenseChart propertyId={selectedPropertyId} />
           </div>
           
-          <FinancialOverview propertyId={selectedPropertyId} />
+          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <FinancialOverview propertyId={selectedPropertyId} />
+          </div>
         </div>
       </div>
     </div>
