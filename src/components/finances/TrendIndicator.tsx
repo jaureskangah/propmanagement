@@ -2,7 +2,7 @@
 import React from "react";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { FinancialMetricTrendProps } from "./types";
+import { FinancialMetricTrendProps } from "./metrics/types";
 
 export function TrendIndicator({ trend, isPositiveMetric }: FinancialMetricTrendProps) {
   if (trend === undefined) return null;

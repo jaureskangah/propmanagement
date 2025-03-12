@@ -3,8 +3,8 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TrendIndicator } from "./TrendIndicator";
-import { MetricIcon } from "./MetricIcon";
-import { FinancialMetricCardProps } from "./types";
+import { MetricIcon } from "./metrics/MetricIcon";
+import { FinancialMetricCardProps } from "./metrics/types";
 
 export function FinancialMetricCard({
   title,
