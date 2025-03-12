@@ -14,15 +14,15 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-80">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex justify-center items-center h-60">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
 
   if (!expenses || expenses.length === 0) {
     return (
-      <div className="text-center py-12 text-muted-foreground">
+      <div className="text-center py-10 text-muted-foreground text-sm">
         {t('noExpenseData')}
       </div>
     );
@@ -32,15 +32,15 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{t('date')}</TableHead>
-          <TableHead>{t('category')}</TableHead>
-          <TableHead>{t('description')}</TableHead>
-          <TableHead>{t('amount')}</TableHead>
+          <TableHead className="text-xs">{t('date')}</TableHead>
+          <TableHead className="text-xs">{t('category')}</TableHead>
+          <TableHead className="text-xs">{t('description')}</TableHead>
+          <TableHead className="text-xs">{t('amount')}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {expenses.map(expense => (
-          <TableRow key={expense.id}>
+          <TableRow key={expense.id} className="text-xs">
             <TableCell>{format(new Date(expense.date), 'yyyy-MM-dd')}</TableCell>
             <TableCell>{expense.category}</TableCell>
             <TableCell>{expense.description || '-'}</TableCell>

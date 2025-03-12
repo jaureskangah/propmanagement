@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { FileSpreadsheet } from "lucide-react";
 import * as XLSX from "xlsx";
-import { format } from "date-fns"; // Add this import for format function
+import { format } from "date-fns"; 
 import { useFinancialOverviewData } from "./overview/hooks/useFinancialOverviewData";
 import { IncomeTable } from "./overview/components/IncomeTable";
 import { ExpensesTable } from "./overview/components/ExpensesTable";
@@ -59,7 +59,7 @@ export default function FinancialOverview({ propertyId }: FinancialOverviewProps
   if (!propertyId) {
     return (
       <Card className="bg-muted/20">
-        <CardContent className="p-6 text-center text-muted-foreground">
+        <CardContent className="p-4 text-center text-muted-foreground text-sm">
           {t('selectPropertyToViewFinancialData')}
         </CardContent>
       </Card>
@@ -68,17 +68,17 @@ export default function FinancialOverview({ propertyId }: FinancialOverviewProps
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2 pt-4">
         <div className="flex items-center justify-between">
-          <CardTitle>{t('financialOverview')}</CardTitle>
+          <CardTitle className="text-base">{t('financialOverview')}</CardTitle>
           <Button
             variant="outline"
             size="sm"
             onClick={handleExportData}
             disabled={isLoading}
-            className="flex items-center gap-2"
+            className="flex items-center gap-1 h-8 text-xs"
           >
-            <FileSpreadsheet className="h-4 w-4" />
+            <FileSpreadsheet className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">{t('exportToExcel')}</span>
             <span className="sm:hidden">{t('export')}</span>
           </Button>
@@ -91,9 +91,9 @@ export default function FinancialOverview({ propertyId }: FinancialOverviewProps
           onValueChange={(v) => setActiveTab(v as 'income' | 'expenses')}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="income">{t('income')}</TabsTrigger>
-            <TabsTrigger value="expenses">{t('expenses')}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 mb-3 h-8">
+            <TabsTrigger value="income" className="text-xs h-7">{t('income')}</TabsTrigger>
+            <TabsTrigger value="expenses" className="text-xs h-7">{t('expenses')}</TabsTrigger>
           </TabsList>
           <TabsContent value="income" className="overflow-x-auto">
             <IncomeTable 
