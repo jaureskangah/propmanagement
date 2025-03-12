@@ -2,11 +2,24 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
+interface ChartDataResult {
+  payments: Array<{
+    amount: number;
+    payment_date: string;
+    status: string;
+  }>;
+  expenses: Array<{
+    amount: number;
+    date: string;
+    category: string;
+  }>;
+}
+
 export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearly') => {
-  return useQuery({
+  return useQuery<ChartDataResult>({
     queryKey: ['financial_chart_data', propertyId, view],
     queryFn: async () => {
-      if (!propertyId) return [];
+      if (!propertyId) return { payments: [], expenses: [] };
 
       const { data: tenants } = await supabase
         .from('tenants')
@@ -27,7 +40,10 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
         .eq('property_id', propertyId)
         .order('date', { ascending: true });
 
-      return { payments: payments || [], expenses: expenses || [] };
+      return { 
+        payments: payments || [], 
+        expenses: expenses || [] 
+      };
     },
     enabled: !!propertyId
   });

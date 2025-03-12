@@ -16,9 +16,10 @@ export default function RevenueExpenseChart({ propertyId }: RevenueExpenseChartP
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
   const { data: chartData, isLoading } = useChartData(propertyId, view);
 
+  // Add proper type checking for chartData
   const processedData = view === 'monthly' 
-    ? processMonthlyData(chartData?.payments, chartData?.expenses)
-    : processYearlyData(chartData?.payments, chartData?.expenses);
+    ? processMonthlyData(chartData?.payments || [], chartData?.expenses || [])
+    : processYearlyData(chartData?.payments || [], chartData?.expenses || []);
 
   return (
     <Card>

@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { FileSpreadsheet } from "lucide-react";
 import * as XLSX from "xlsx";
+import { format } from "date-fns"; // Add this import for format function
 import { useFinancialOverviewData } from "./overview/hooks/useFinancialOverviewData";
 import { IncomeTable } from "./overview/components/IncomeTable";
 import { ExpensesTable } from "./overview/components/ExpensesTable";
