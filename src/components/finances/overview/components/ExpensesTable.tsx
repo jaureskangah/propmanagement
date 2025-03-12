@@ -14,15 +14,15 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-60">
-        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <div className="flex justify-center items-center h-48">
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
       </div>
     );
   }
 
   if (!expenses || expenses.length === 0) {
     return (
-      <div className="text-center py-10 text-muted-foreground text-sm">
+      <div className="text-center py-8 text-muted-foreground text-xs">
         {t('noExpenseData')}
       </div>
     );
@@ -35,7 +35,7 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
           <TableHead className="text-xs">{t('date')}</TableHead>
           <TableHead className="text-xs">{t('category')}</TableHead>
           <TableHead className="text-xs">{t('description')}</TableHead>
-          <TableHead className="text-xs">{t('amount')}</TableHead>
+          <TableHead className="text-xs text-right">{t('amount')}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -44,7 +44,7 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
             <TableCell>{format(new Date(expense.date), 'yyyy-MM-dd')}</TableCell>
             <TableCell>{expense.category}</TableCell>
             <TableCell>{expense.description || '-'}</TableCell>
-            <TableCell>${expense.amount.toLocaleString()}</TableCell>
+            <TableCell className="text-right">${expense.amount.toLocaleString()}</TableCell>
           </TableRow>
         ))}
       </TableBody>
