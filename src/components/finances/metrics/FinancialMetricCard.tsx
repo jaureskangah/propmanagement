@@ -15,6 +15,7 @@ export function FinancialMetricCard({
   trend
 }: FinancialMetricCardProps) {
   // Determine if an increase is positive or negative based on the metric
+  // For expenses and unpaid rent, a decrease is positive
   const isPositiveMetric = title !== 'unpaidRent' && title !== 'totalExpenses';
   
   return (
