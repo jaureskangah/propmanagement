@@ -43,7 +43,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
       
       <FinancialMetricCard
         title={t('occupancyRate')}
-        value={`${(financialData?.occupancyRate || 0).toFixed(1)}%`}
+        value={`${Math.round(financialData?.occupancyRate || 0)}%`}
         icon={<Users className="h-4 w-4" />}
         description={t('occupancyRateDescription')}
         chartColor="#3B82F6"
