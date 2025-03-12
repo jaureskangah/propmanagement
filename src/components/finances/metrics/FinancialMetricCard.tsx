@@ -12,7 +12,7 @@ interface FinancialMetricCardProps {
   description: string;
   icon: React.ReactNode;
   chartColor: string;
-  trend?: number; // pourcentage d'évolution (positif ou négatif)
+  trend?: number;
 }
 
 export function FinancialMetricCard({
@@ -27,20 +27,24 @@ export function FinancialMetricCard({
   const isTrendNegative = trend !== undefined && trend < 0;
   const isTrendNeutral = trend !== undefined && trend === 0;
 
+  // Déterminer si une augmentation est positive ou négative selon la métrique
+  const isPositiveMetric = title !== 'unpaidRent' && title !== 'totalExpenses';
+  
   const renderTrendIndicator = () => {
     if (trend === undefined) return null;
     
     const trendAbs = Math.abs(trend);
     
+    // Déterminer la couleur en fonction de la métrique et de la tendance
+    const isPositiveIndicator = isPositiveMetric ? isTrendPositive : isTrendNegative;
+    const isNegativeIndicator = isPositiveMetric ? isTrendNegative : isTrendPositive;
+    
     return (
       <div className={cn(
         "flex items-center text-xs font-medium ml-2 px-2 py-0.5 rounded transition-colors",
-        isTrendPositive && title !== 'unpaidRent' && "text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30",
-        isTrendNegative && title !== 'unpaidRent' && "text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/30",
-        isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/50",
-        // Inverser les couleurs pour unpaidRent (car une baisse est positive)
-        isTrendPositive && title === 'unpaidRent' && "text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/30",
-        isTrendNegative && title === 'unpaidRent' && "text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30"
+        isPositiveIndicator && "text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30",
+        isNegativeIndicator && "text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/30",
+        isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/50"
       )}>
         {isTrendPositive ? <ArrowUp className="h-3 w-3 mr-1" /> : isTrendNegative ? <ArrowDown className="h-3 w-3 mr-1" /> : null}
         {trendAbs}%
