@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/components/AuthProvider";
 import AppSidebar from "@/components/AppSidebar";
 import { useToast } from "@/hooks/use-toast";
@@ -6,7 +5,6 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
-import ROICalculator from "@/components/finances/ROICalculator";
 import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -55,9 +53,8 @@ export default function Finances() {
 
           <FinancialMetrics propertyId={selectedPropertyId} />
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <RevenueExpenseChart propertyId={selectedPropertyId} />
-            <ROICalculator propertyId={selectedPropertyId} />
           </div>
           
           <FinancialOverview propertyId={selectedPropertyId} />
