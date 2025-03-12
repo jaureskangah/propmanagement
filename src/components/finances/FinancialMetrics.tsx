@@ -40,7 +40,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<Wallet className="h-5 w-5" />}
         description={t('allTimeExpenses')}
         chartColor="#F43F5E"
-        trend={8}
+        trend={-8} // Changed from 8 to -8 to indicate a negative trend
       />
       
       <FinancialMetricCard
@@ -58,7 +58,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<AlertCircle className="h-5 w-5" />}
         description={t('unpaidRentDescription')}
         chartColor="#8B5CF6"
-        trend={5}
+        trend={-5} // Changed from 5 to -5 to indicate a negative trend
       />
     </div>
   );
