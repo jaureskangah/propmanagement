@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -64,7 +65,7 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["Lato", "sans-serif"],
+        sans: ["Open Sans", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
