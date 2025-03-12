@@ -11,9 +11,8 @@ export function TrendIndicator({ trend, isPositiveMetric }: FinancialMetricTrend
   const isTrendNegative = trend < 0;
   const isTrendNeutral = trend === 0;
   
-  // Determine the color based on the metric type and trend direction
-  // For metrics like income, a positive trend is good
-  // For metrics like expenses or unpaid rent, a negative trend is good
+  // Pour les métriques comme les dépenses ou les loyers impayés (isPositiveMetric = false)
+  // une tendance négative est positive (vert) et une tendance positive est négative (rouge)
   const isPositiveIndicator = isPositiveMetric ? isTrendPositive : isTrendNegative;
   const isNegativeIndicator = isPositiveMetric ? isTrendNegative : isTrendPositive;
   
