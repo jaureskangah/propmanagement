@@ -25,7 +25,7 @@ export function TrendIndicator({ trend, isPositiveMetric }: FinancialMetricTrend
       isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/50"
     )}>
       {isTrendPositive ? <ArrowUp className="h-3 w-3 mr-1" /> : isTrendNegative ? <ArrowDown className="h-3 w-3 mr-1" /> : null}
-      {Math.abs(trend)}%
+      {isTrendPositive ? "+" : ""}{isTrendNegative ? "-" : ""}{Math.abs(trend)}%
     </div>
   );
 }
