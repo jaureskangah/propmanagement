@@ -27,15 +27,13 @@ export function FinancialMetricCard({
   const isTrendNegative = trend !== undefined && trend < 0;
   const isTrendNeutral = trend !== undefined && trend === 0;
 
-  // Déterminer si une augmentation est positive ou négative selon la métrique
+  // Determine if an increase is positive or negative based on the metric
   const isPositiveMetric = title !== 'unpaidRent' && title !== 'totalExpenses';
   
   const renderTrendIndicator = () => {
     if (trend === undefined) return null;
     
-    const trendAbs = Math.abs(trend);
-    
-    // Déterminer la couleur en fonction de la métrique et de la tendance
+    // Determine the color based on the metric and the trend
     const isPositiveIndicator = isPositiveMetric ? isTrendPositive : isTrendNegative;
     const isNegativeIndicator = isPositiveMetric ? isTrendNegative : isTrendPositive;
     
@@ -47,7 +45,7 @@ export function FinancialMetricCard({
         isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/50"
       )}>
         {isTrendPositive ? <ArrowUp className="h-3 w-3 mr-1" /> : isTrendNegative ? <ArrowDown className="h-3 w-3 mr-1" /> : null}
-        {trendAbs}%
+        {trend}%
       </div>
     );
   };

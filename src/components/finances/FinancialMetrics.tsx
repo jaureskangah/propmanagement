@@ -24,7 +24,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <FinancialMetricCard
         title={t('totalIncome')}
         value={`$${(financialData?.totalIncome || 0).toLocaleString()}`}
@@ -40,7 +40,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<Wallet className="h-5 w-5" />}
         description={t('allTimeExpenses')}
         chartColor="#F43F5E"
-        trend={-8} // Changed from 8 to -8 to indicate a negative trend
+        trend={-8}
       />
       
       <FinancialMetricCard
@@ -58,7 +58,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<AlertCircle className="h-5 w-5" />}
         description={t('unpaidRentDescription')}
         chartColor="#8B5CF6"
-        trend={-5} // Changed from 5 to -5 to indicate a negative trend
+        trend={-5}
       />
     </div>
   );

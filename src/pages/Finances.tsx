@@ -41,9 +41,9 @@ export default function Finances() {
     <div className="flex h-screen">
       <AppSidebar />
       <div className="flex-1 overflow-y-auto bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <div className="space-y-8 p-8 pb-16 max-w-6xl mx-auto">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 animate-fade-in">
-            <h1 className="text-3xl font-bold text-gradient-primary">{t('finances')}</h1>
+        <div className="space-y-6 p-4 md:p-6 lg:p-8 pb-16 max-w-7xl mx-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 md:mb-6 animate-fade-in">
+            <h1 className="text-2xl md:text-3xl font-bold text-gradient-primary">{t('finances')}</h1>
             <PropertyFinancialSelector 
               properties={properties || []}
               isLoading={propertiesLoading}

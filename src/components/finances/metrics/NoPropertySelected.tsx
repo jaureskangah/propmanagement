@@ -13,7 +13,7 @@ export function NoPropertySelected() {
         <Building2 className="h-12 w-12 text-muted-foreground/50 mb-2" />
         <h3 className="text-lg font-medium">{t('selectPropertyToViewMetrics')}</h3>
         <p className="text-sm text-muted-foreground max-w-md">
-          Veuillez sélectionner une propriété dans le menu déroulant ci-dessus pour afficher ses métriques financières.
+          {t('selectPropertyToViewFinancialData')}
         </p>
       </CardContent>
     </Card>
