@@ -65,14 +65,14 @@ export const AddPaymentDialog = ({
     console.log("Submitting payment:", values);
     setIsSubmitting(true);
     try {
-      // Fix timezone issues by constructing a date in YYYY-MM-DD format without time component
-      // This prevents any timezone conversions from affecting the date
-      const year = values.payment_date.getFullYear();
-      const month = String(values.payment_date.getMonth() + 1).padStart(2, '0');
-      const day = String(values.payment_date.getDate()).padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day}`;
+      // Create a new Date object set to midnight to avoid timezone issues
+      const dateObj = new Date(values.payment_date);
+      dateObj.setUTCHours(0, 0, 0, 0);
       
-      console.log("Selected date:", values.payment_date);
+      // Format the date using ISO format but only take the date part
+      const formattedDate = dateObj.toISOString().split('T')[0];
+      
+      console.log("Selected date object:", dateObj);
       console.log("Formatted date for storage:", formattedDate);
       
       const { error } = await supabase.from("tenant_payments").insert({
