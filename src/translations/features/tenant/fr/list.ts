@@ -17,5 +17,11 @@ export const frList = {
   leaseStart: "Début du bail",
   leaseEnd: "Fin du bail",
   perMonth: "/mois",
-  notAvailable: "Non disponible"
+  notAvailable: "Non disponible",
+  tenant: "Locataire",
+  tenants: "Locataires",
+  unitLabel: "Unité",
+  noProperty: "Sans propriété",
+  back: "Retour",
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails"
 };

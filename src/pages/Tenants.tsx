@@ -7,6 +7,7 @@ import { TenantLayout } from "@/components/tenant/TenantLayout";
 import { TenantModals } from "@/components/tenant/TenantModals";
 import { TenantsHeader } from "@/components/tenant/TenantsHeader";
 import { TenantsLoading } from "@/components/tenant/TenantsLoading";
+import { motion } from "framer-motion";
 
 const Tenants = () => {
   const {
@@ -41,43 +42,49 @@ const Tenants = () => {
     <div className="flex h-screen">
       <AppSidebar />
       <div className="flex-1 container mx-auto p-6 overflow-y-auto">
-        <TenantsHeader 
-          tenantCount={tenants?.length || 0}
-          onAddClick={() => setIsAddModalOpen(true)}
-          isMobile={isMobile}
-        />
-        
-        <TenantLayout
-          filteredTenants={filteredTenants || []}
-          selectedTenant={selectedTenant}
-          searchQuery={searchQuery}
-          searchFilters={searchFilters}
-          onSearchChange={setSearchQuery}
-          onFilterChange={setSearchFilters}
-          onTenantSelect={setSelectedTenant}
-          onEditClick={(id) => {
-            setSelectedTenant(id);
-            setIsEditModalOpen(true);
-          }}
-          onDeleteClick={(id) => {
-            setSelectedTenant(id);
-            setIsDeleteDialogOpen(true);
-          }}
-          selectedTenantData={selectedTenantData}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+        >
+          <TenantsHeader 
+            tenantCount={tenants?.length || 0}
+            onAddClick={() => setIsAddModalOpen(true)}
+            isMobile={isMobile}
+          />
+          
+          <TenantLayout
+            filteredTenants={filteredTenants || []}
+            selectedTenant={selectedTenant}
+            searchQuery={searchQuery}
+            searchFilters={searchFilters}
+            onSearchChange={setSearchQuery}
+            onFilterChange={setSearchFilters}
+            onTenantSelect={setSelectedTenant}
+            onEditClick={(id) => {
+              setSelectedTenant(id);
+              setIsEditModalOpen(true);
+            }}
+            onDeleteClick={(id) => {
+              setSelectedTenant(id);
+              setIsDeleteDialogOpen(true);
+            }}
+            selectedTenantData={selectedTenantData}
+          />
 
-        <TenantModals
-          isAddModalOpen={isAddModalOpen}
-          isEditModalOpen={isEditModalOpen}
-          isDeleteDialogOpen={isDeleteDialogOpen}
-          selectedTenantData={selectedTenantData}
-          onAddClose={() => setIsAddModalOpen(false)}
-          onEditClose={() => setIsEditModalOpen(false)}
-          onDeleteClose={() => setIsDeleteDialogOpen(false)}
-          onAddSubmit={handleAddTenant}
-          onEditSubmit={handleUpdateTenant}
-          onDeleteConfirm={handleDeleteTenant}
-        />
+          <TenantModals
+            isAddModalOpen={isAddModalOpen}
+            isEditModalOpen={isEditModalOpen}
+            isDeleteDialogOpen={isDeleteDialogOpen}
+            selectedTenantData={selectedTenantData}
+            onAddClose={() => setIsAddModalOpen(false)}
+            onEditClose={() => setIsEditModalOpen(false)}
+            onDeleteClose={() => setIsDeleteDialogOpen(false)}
+            onAddSubmit={handleAddTenant}
+            onEditSubmit={handleUpdateTenant}
+            onDeleteConfirm={handleDeleteTenant}
+          />
+        </motion.div>
       </div>
     </div>
   );

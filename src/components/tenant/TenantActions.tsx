@@ -1,11 +1,15 @@
+
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantActionsProps {
   onAddClick: () => void;
 }
 
 export const TenantActions = ({ onAddClick }: TenantActionsProps) => {
+  const { t } = useLocale();
+  
   return (
     <div className="flex justify-end">
       <Button 
@@ -14,7 +18,7 @@ export const TenantActions = ({ onAddClick }: TenantActionsProps) => {
         onClick={onAddClick}
       >
         <Plus className="h-4 w-4" />
-        Add Tenant
+        {t('addTenant')}
       </Button>
     </div>
   );

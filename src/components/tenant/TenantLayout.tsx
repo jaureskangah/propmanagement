@@ -40,9 +40,9 @@ export const TenantLayout = ({
   const { t } = useLocale();
 
   return (
-    <div className={`grid ${isMobile ? 'grid-cols-1' : 'lg:grid-cols-3'} gap-6`}>
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-12">
       {showList && (
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1 space-y-5">
           <div className="sticky top-4 z-10 mb-4 bg-background/80 backdrop-blur-sm py-2">
             <TenantSearch 
               value={searchQuery}

@@ -17,5 +17,11 @@ export const enList = {
   leaseStart: "Lease Start",
   leaseEnd: "Lease End",
   perMonth: "/month",
-  notAvailable: "Not available"
+  notAvailable: "Not available",
+  tenant: "Tenant",
+  tenants: "Tenants",
+  unitLabel: "Unit",
+  noProperty: "No Property",
+  back: "Back",
+  selectTenantToView: "Select a tenant to view details"
 };
