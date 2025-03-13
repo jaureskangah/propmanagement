@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,14 +21,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const paymentSchema = z.object({
   amount: z.string().min(1, "Amount is required"),
   status: z.string().min(1, "Status is required"),
-  payment_date: z.string().min(1, "Date is required"),
+  payment_date: z.date({
+    required_error: "Date is required",
+  }),
 });
 
 interface AddPaymentDialogProps {
@@ -50,7 +57,7 @@ export const AddPaymentDialog = ({
     defaultValues: {
       amount: "",
       status: "paid",
-      payment_date: format(new Date(), "yyyy-MM-dd"),
+      payment_date: new Date(),
     },
   });
 
@@ -58,11 +65,14 @@ export const AddPaymentDialog = ({
     console.log("Submitting payment:", values);
     setIsSubmitting(true);
     try {
+      // Create an ISO date string using the date object to avoid timezone issues
+      const formattedDate = format(values.payment_date, "yyyy-MM-dd");
+      
       const { error } = await supabase.from("tenant_payments").insert({
         tenant_id: tenantId,
         amount: parseFloat(values.amount),
         status: values.status,
-        payment_date: values.payment_date,
+        payment_date: formattedDate,
       });
 
       if (error) throw error;
@@ -143,11 +153,36 @@ export const AddPaymentDialog = ({
               control={form.control}
               name="payment_date"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="flex flex-col">
                   <FormLabel>Payment Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
