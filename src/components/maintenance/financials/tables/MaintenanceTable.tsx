@@ -10,7 +10,7 @@ import {
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, DollarSign, MapPin, Tool } from "lucide-react";
+import { Calendar, DollarSign, MapPin, Wrench } from "lucide-react";
 
 interface MaintenanceTableProps {
   maintenance: {
@@ -73,7 +73,7 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
                 <TableRow key={index} className="hover:bg-muted/50">
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
-                      <Tool className="h-4 w-4 text-muted-foreground" />
+                      <Wrench className="h-4 w-4 text-muted-foreground" />
                       <span>{item.title}</span>
                     </div>
                   </TableCell>
