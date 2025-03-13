@@ -4,6 +4,7 @@ import { PropertyForm } from "@/components/PropertyForm";
 import { useProperties, Property, PropertyFormData } from "@/hooks/useProperties";
 import { toast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface EditPropertyModalProps {
   isOpen: boolean;
@@ -42,16 +43,18 @@ export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyMod
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="max-h-[90vh] p-0">
+        <DialogHeader className="p-6 pb-2">
           <DialogTitle>{t('editProperty')}</DialogTitle>
         </DialogHeader>
-        <PropertyForm
-          onSubmit={handleSubmit}
-          onCancel={onClose}
-          isSubmitting={false}
-          initialData={initialData}
-        />
+        <ScrollArea className="max-h-[calc(90vh-80px)] px-6 pb-6">
+          <PropertyForm
+            onSubmit={handleSubmit}
+            onCancel={onClose}
+            isSubmitting={false}
+            initialData={initialData}
+          />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
