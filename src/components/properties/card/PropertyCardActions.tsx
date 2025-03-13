@@ -26,7 +26,7 @@ const PropertyCardActions = ({
   const { t } = useLocale();
   
   return (
-    <div className="flex gap-0.5">
+    <div className="flex gap-1 mr-2">
       <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -42,7 +42,7 @@ const PropertyCardActions = ({
               <DollarSign className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="top" align="center" sideOffset={5} className="z-50">
+          <TooltipContent side="top" align="center" sideOffset={5} className="z-50 max-w-[200px]">
             <p>{t('viewFinancials')}</p>
           </TooltipContent>
         </Tooltip>
@@ -61,7 +61,7 @@ const PropertyCardActions = ({
               <Edit className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="top" align="center" sideOffset={5} className="z-50">
+          <TooltipContent side="top" align="center" sideOffset={5} className="z-50 max-w-[200px]">
             <p>{t('editProperty')}</p>
           </TooltipContent>
         </Tooltip>
@@ -80,7 +80,7 @@ const PropertyCardActions = ({
               <Trash2 className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="top" align="center" sideOffset={5} className="z-50">
+          <TooltipContent side="top" align="center" sideOffset={5} className="z-50 max-w-[200px]">
             <p>{t('deleteProperty')}</p>
           </TooltipContent>
         </Tooltip>
