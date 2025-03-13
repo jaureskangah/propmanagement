@@ -32,25 +32,25 @@ const EmptyState = ({ isFiltering }: EmptyStateProps) => {
         
         {isFiltering ? (
           <>
-            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300">
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300 font-sans">
               {t('noPropertiesFiltered')}
             </h3>
-            <p className="text-slate-500 dark:text-slate-400">
+            <p className="text-slate-500 dark:text-slate-400 font-sans">
               {t('tryAdjustingFilters')}
             </p>
           </>
         ) : (
           <>
-            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300">
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300 font-sans">
               {t('noProperties')}
             </h3>
-            <p className="text-slate-500 dark:text-slate-400">
+            <p className="text-slate-500 dark:text-slate-400 font-sans">
               {t('addYourFirstProperty')}
             </p>
             <div className="pt-4">
               <Button 
                 onClick={() => setIsAddModalOpen(true)}
-                className="bg-primary hover:bg-primary/90 transition-all duration-200 shadow-md"
+                className="bg-primary hover:bg-primary/90 transition-all duration-200 shadow-md font-sans"
               >
                 <PlusCircle className="h-5 w-5 mr-2" />
                 {t('addProperty')}

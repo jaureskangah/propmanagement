@@ -56,14 +56,14 @@ const Properties = () => {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center space-y-4">
           <Loader2 className="h-10 w-10 animate-spin mx-auto text-primary" />
-          <p className="text-muted-foreground">{t('loading')}</p>
+          <p className="text-muted-foreground font-sans">{t('loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen font-sans">
       <AppSidebar />
       <div className="flex-1 container mx-auto px-4 lg:px-6 py-8 space-y-6 lg:space-y-8 max-w-[1400px] overflow-y-auto">
         <PropertyPageHeader 

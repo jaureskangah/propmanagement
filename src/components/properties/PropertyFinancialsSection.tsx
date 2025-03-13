@@ -24,11 +24,13 @@ const PropertyFinancialsSection = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mt-12 p-6 bg-card rounded-xl shadow-sm border"
+      className="mt-12 p-6 bg-card/50 backdrop-blur-sm rounded-xl shadow-sm border border-border/40 hover:shadow-md transition-all duration-300"
     >
-      <h2 className="text-xl font-bold mb-6 flex items-center">
+      <h2 className="text-xl font-bold mb-6 flex items-center font-sans">
         <DollarSign className="h-5 w-5 mr-2 text-primary" />
-        {t('financialOverview')} - {selectedProperty?.name}
+        <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          {t('financialOverview')}
+        </span> - {selectedProperty?.name}
       </h2>
       <PropertyFinancials propertyId={selectedPropertyId} />
     </motion.div>

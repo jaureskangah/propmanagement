@@ -1,8 +1,7 @@
 
 import React from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Filter } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
 
 interface PropertyFiltersSectionProps {
   showFilters: boolean;
@@ -22,30 +21,32 @@ const PropertyFiltersSection = ({
   if (!showFilters) return null;
 
   return (
-    <div className="mb-6 p-4 border rounded-lg bg-background shadow-sm animate-fade-in space-y-4">
-      <div className="space-y-2">
-        <h4 className="text-sm font-medium">{t('propertyType')}</h4>
-        <Select value={selectedType} onValueChange={setSelectedType}>
-          <SelectTrigger className="w-full sm:w-64">
-            <div className="flex items-center">
-              <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
-              <SelectValue placeholder={t('filterByType')} />
-            </div>
-          </SelectTrigger>
-          <SelectContent>
-            {propertyTypes.map((type) => (
-              <SelectItem
-                key={type}
-                value={type}
-                className="cursor-pointer"
-              >
-                {type === "All" ? t('filterByType') : t(type.toLowerCase())}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+    <motion.div
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: "auto" }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.3 }}
+      className="mb-6"
+    >
+      <div className="p-4 bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg shadow-sm">
+        <h3 className="text-sm font-medium mb-3 text-foreground/80 font-sans">{t('filterByType')}</h3>
+        <div className="flex flex-wrap gap-2">
+          {propertyTypes.map((type) => (
+            <button
+              key={type}
+              onClick={() => setSelectedType(type)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
+                selectedType === type
+                  ? "bg-primary text-white shadow-sm"
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+              } font-sans`}
+            >
+              {type === "All" ? t('all') : t(type.toLowerCase())}
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
