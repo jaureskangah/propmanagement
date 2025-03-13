@@ -5,7 +5,6 @@ import PropertyFinancials from "@/components/PropertyFinancials";
 import { DollarSign } from "lucide-react";
 import { motion } from "framer-motion";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import FinancialMetrics from "@/components/finances/FinancialMetrics";
 
 interface PropertyFinancialsSectionProps {
   selectedPropertyId: string | null;
@@ -37,11 +36,6 @@ const PropertyFinancialsSection = ({
           </h2>
         </div>
       </div>
-      
-      {/* Afficher les KPI avec le nouveau design */}
-      <FinancialMetrics propertyId={selectedPropertyId} />
-      
-      {/* Le reste des données financières */}
       <PropertyFinancials propertyId={selectedPropertyId} />
     </motion.div>
   );
