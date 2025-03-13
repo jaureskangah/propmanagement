@@ -27,14 +27,14 @@ const PropertyCardHeader = ({
   const isMobile = useIsMobile();
   
   return (
-    <CardHeader className="p-4 pb-2">
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+    <CardHeader className="p-3 pb-1">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2">
         <div className="space-y-1">
-          <CardTitle className="text-lg font-bold line-clamp-1 text-slate-800 dark:text-slate-100 font-sans">
+          <CardTitle className="text-md font-bold line-clamp-1 text-slate-800 dark:text-slate-100 font-sans">
             {name}
           </CardTitle>
-          <CardDescription className="flex items-center text-sm text-slate-600 dark:text-slate-400 font-sans">
-            <MapPin className="h-3.5 w-3.5 mr-1.5 flex-shrink-0 text-slate-500 dark:text-slate-400" />
+          <CardDescription className="flex items-center text-xs text-slate-600 dark:text-slate-400 font-sans">
+            <MapPin className="h-3 w-3 mr-1 flex-shrink-0 text-slate-500 dark:text-slate-400" />
             <span className="break-words line-clamp-1">{address}</span>
           </CardDescription>
         </div>

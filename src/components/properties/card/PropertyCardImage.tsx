@@ -17,7 +17,7 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
   const { t } = useLocale();
 
   return (
-    <div className="relative w-full h-48 sm:h-56 overflow-hidden bg-slate-100 dark:bg-slate-800">
+    <div className="relative w-full h-40 sm:h-44 overflow-hidden bg-slate-100 dark:bg-slate-800">
       <div 
         className={cn(
           "absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse",
@@ -39,12 +39,12 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
           target.src = getDefaultImageByType(type);
         }}
       />
-      <div className="absolute top-4 left-4">
+      <div className="absolute top-3 left-3">
         <Badge className={cn(
           getBadgeColorByType(type), 
-          "px-2.5 py-1 shadow-md font-medium"
+          "px-2 py-0.5 text-xs shadow-md font-medium"
         )}>
-          <Home className="h-3.5 w-3.5 mr-1.5" />
+          <Home className="h-3 w-3 mr-1" />
           {t(type.toLowerCase())}
         </Badge>
       </div>
