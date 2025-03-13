@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,7 +52,7 @@ export const EditPaymentDialog = ({
     defaultValues: {
       amount: payment.amount.toString(),
       status: payment.status,
-      payment_date: format(new Date(payment.payment_date), "yyyy-MM-dd"),
+      payment_date: payment.payment_date,
     },
   });
 

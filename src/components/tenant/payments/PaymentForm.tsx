@@ -52,14 +52,16 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
     setIsSubmitting(true);
     
     try {
-      // Create a new Date object set to midnight to avoid timezone issues
-      const dateObj = new Date(values.payment_date);
-      dateObj.setUTCHours(0, 0, 0, 0);
+      // Get date components from the selected date
+      const selectedDate = values.payment_date;
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
       
-      // Format the date using ISO format but only take the date part
-      const formattedDate = dateObj.toISOString().split('T')[0];
+      // Format date directly as YYYY-MM-DD without timezone conversion
+      const formattedDate = `${year}-${month}-${day}`;
       
-      console.log("Selected date object:", dateObj);
+      console.log("Selected date object:", selectedDate);
       console.log("Formatted date for storage:", formattedDate);
       
       const { error } = await supabase.from("tenant_payments").insert({
