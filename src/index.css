@@ -80,7 +80,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 
@@ -114,6 +114,10 @@
     display: none;
   }
   
+  .text-gradient-primary {
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+
   /* Design pour petits écrans */
   @media (max-width: 640px) {
     .mobile-full-width {
@@ -156,4 +160,3 @@
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out forwards;
 }
-

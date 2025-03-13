@@ -30,7 +30,7 @@ export const SortableMetric = ({ id, children }: SortableMetricProps) => {
       style={style} 
       {...attributes} 
       {...listeners}
-      className="hover:cursor-grab active:cursor-grabbing rounded-lg transition-all duration-200"
+      className="hover:cursor-grab active:cursor-grabbing rounded-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
     >
       {children}
     </div>

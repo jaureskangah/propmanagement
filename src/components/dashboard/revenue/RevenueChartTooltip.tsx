@@ -17,7 +17,7 @@ export const RevenueChartTooltip = ({ active, payload, label }: RevenueTooltipPr
     const profit = revenue - expenses;
     
     return (
-      <div className="rounded-lg border bg-card/90 dark:bg-gray-800/90 p-3 shadow-lg backdrop-blur-sm animate-fade-in text-xs">
+      <div className="rounded-lg border bg-card/90 dark:bg-gray-800/90 p-3 shadow-lg backdrop-blur-sm animate-fade-in text-xs font-sans">
         <p className="font-bold mb-1.5 text-xs text-primary dark:text-blue-300">{label}</p>
         <div className="space-y-1">
           <div className="grid grid-cols-2 gap-1.5">

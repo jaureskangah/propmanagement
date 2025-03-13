@@ -16,13 +16,12 @@ export default function RevenueExpenseChart({ propertyId }: RevenueExpenseChartP
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
   const { data: chartData, isLoading } = useChartData(propertyId, view);
 
-  // Add proper type checking for chartData
   const processedData = view === 'monthly' 
     ? processMonthlyData(chartData?.payments || [], chartData?.expenses || [])
     : processYearlyData(chartData?.payments || [], chartData?.expenses || []);
 
   return (
-    <Card className="border-border/40 bg-card/50 backdrop-blur-sm shadow-md dark:bg-gray-800/40 transition-all duration-200 hover:shadow-lg hover:bg-card/60">
+    <Card className="border-border/40 bg-card/50 backdrop-blur-sm shadow-md dark:bg-gray-800/40 transition-all duration-200 hover:shadow-lg hover:bg-card/60 font-sans">
       <CardHeader className="pb-2 pt-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm font-semibold text-primary/90 dark:text-white/90">{t('revenueAndExpenses')}</CardTitle>
