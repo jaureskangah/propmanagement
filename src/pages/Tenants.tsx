@@ -46,6 +46,7 @@ const Tenants = () => {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35 }}
+          className="space-y-6"
         >
           <TenantsHeader 
             tenantCount={tenants?.length || 0}
