@@ -27,7 +27,7 @@ const PropertyCardActions = ({
   
   return (
     <div className="flex gap-0.5">
-      <TooltipProvider>
+      <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -42,7 +42,7 @@ const PropertyCardActions = ({
               <DollarSign className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="top" align="center" sideOffset={5} className="z-50">
             <p>{t('viewFinancials')}</p>
           </TooltipContent>
         </Tooltip>
@@ -61,7 +61,7 @@ const PropertyCardActions = ({
               <Edit className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="top" align="center" sideOffset={5} className="z-50">
             <p>{t('editProperty')}</p>
           </TooltipContent>
         </Tooltip>
@@ -80,7 +80,7 @@ const PropertyCardActions = ({
               <Trash2 className="h-3 w-3" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="top" align="center" sideOffset={5} className="z-50">
             <p>{t('deleteProperty')}</p>
           </TooltipContent>
         </Tooltip>
