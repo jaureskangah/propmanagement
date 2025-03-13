@@ -26,7 +26,7 @@ const PropertyCardActions = ({
   const { t } = useLocale();
   
   return (
-    <div className="flex gap-2 mr-10">
+    <div className="flex gap-3 mr-14">
       <TooltipProvider delayDuration={300}>
         <Tooltip>
           <TooltipTrigger asChild>
