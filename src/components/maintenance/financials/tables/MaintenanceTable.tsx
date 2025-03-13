@@ -1,16 +1,18 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
+  CardFooter
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, DollarSign, MapPin, Wrench } from "lucide-react";
+import { Calendar, DollarSign, MapPin, Wrench, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface MaintenanceTableProps {
   maintenance: {
@@ -29,6 +31,7 @@ interface MaintenanceTableProps {
 
 export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
   const { t } = useLocale();
+  const [showAll, setShowAll] = useState(false);
   
   const getStatusColor = (status?: string) => {
     switch(status?.toLowerCase()) {
@@ -42,6 +45,10 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
         return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
+  
+  // Limit displayed maintenance items to 5 if showAll is false
+  const displayedMaintenance = showAll ? maintenance : maintenance.slice(0, 5);
+  const hasMoreItems = maintenance.length > 5;
   
   return (
     <Card>
@@ -62,14 +69,14 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {maintenance.length === 0 ? (
+            {displayedMaintenance.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
                   Aucune intervention de maintenance trouvée
                 </TableCell>
               </TableRow>
             ) : (
-              maintenance.map((item, index) => (
+              displayedMaintenance.map((item, index) => (
                 <TableRow key={index} className="hover:bg-muted/50">
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-2">
@@ -117,6 +124,28 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
           </TableBody>
         </Table>
       </CardContent>
+      {hasMoreItems && (
+        <CardFooter className="flex justify-center pb-4">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setShowAll(!showAll)}
+            className="flex items-center gap-1 text-muted-foreground hover:text-primary transition-colors"
+          >
+            {showAll ? (
+              <>
+                <span>Voir moins</span>
+                <ChevronUp className="w-4 h-4" />
+              </>
+            ) : (
+              <>
+                <span>Voir tout</span> 
+                <ChevronDown className="w-4 h-4" />
+              </>
+            )}
+          </Button>
+        </CardFooter>
+      )}
     </Card>
   );
 };
