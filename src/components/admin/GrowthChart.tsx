@@ -18,14 +18,14 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
   const { t } = useLocale();
   
   return (
-    <Card className="col-span-1">
+    <Card className="col-span-1 border-border/40 bg-card/50 backdrop-blur-sm hover:shadow-md transition-all duration-200 hover:bg-card/60">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">{t(title)}</CardTitle>
+        <CardTitle className="text-base font-semibold text-primary/90 dark:text-white/90">{t(title)}</CardTitle>
       </CardHeader>
       <CardContent className="h-[250px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" className="stroke-muted/50" />
             <XAxis 
               dataKey="metric_date" 
               tick={{ fontSize: 10 }}
@@ -33,16 +33,21 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
               textAnchor="end"
               height={50}
               tickMargin={5}
+              stroke="#888"
             />
-            <YAxis tick={{ fontSize: 10 }} />
+            <YAxis tick={{ fontSize: 10 }} stroke="#888" />
             <Tooltip 
               formatter={tooltipFormatter}
               contentStyle={{
                 fontSize: '11px',
                 padding: '8px',
-                borderRadius: '4px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                borderRadius: '8px',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+                border: '1px solid rgba(229, 231, 235, 0.5)',
+                backdropFilter: 'blur(8px)',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)'
               }}
+              cursor={{ stroke: '#888', strokeDasharray: '3 3', strokeWidth: 1 }}
             />
             {lines.map((line) => (
               <Line
@@ -52,8 +57,8 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
                 stroke={line.color}
                 name={t(line.name)}
                 strokeWidth={1.5}
-                dot={{ r: 2 }}
-                activeDot={{ r: 3 }}
+                dot={{ r: 2, strokeWidth: 1, stroke: line.color, fill: 'white' }}
+                activeDot={{ r: 4, stroke: line.color, strokeWidth: 1, fill: 'white' }}
               />
             ))}
           </LineChart>

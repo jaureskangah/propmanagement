@@ -75,28 +75,36 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
   const isHidden = (sectionId: string) => preferences.hidden_sections.includes(sectionId);
 
   return (
-    <div className="space-y-6">
-      <DashboardMetrics 
-        propertiesData={propertiesData}
-        maintenanceData={maintenanceData}
-        tenantsData={tenantsData}
-        dateRange={dateRange}
-      />
-
-      {!isHidden('priority') && (
-        <PrioritySection
+    <div className="space-y-8 pb-10">
+      <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm">
+        <DashboardMetrics 
+          propertiesData={propertiesData}
           maintenanceData={maintenanceData}
           tenantsData={tenantsData}
-          paymentsData={paymentsData}
+          dateRange={dateRange}
         />
+      </div>
+
+      {!isHidden('priority') && (
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+          <PrioritySection
+            maintenanceData={maintenanceData}
+            tenantsData={tenantsData}
+            paymentsData={paymentsData}
+          />
+        </div>
       )}
 
       {!isHidden('revenue') && (
-        <RevenueChart />
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+          <RevenueChart />
+        </div>
       )}
 
       {!isHidden('activity') && (
-        <RecentActivity />
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+          <RecentActivity />
+        </div>
       )}
     </div>
   );

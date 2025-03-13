@@ -6,7 +6,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useAuth } from "@/components/AuthProvider";
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, LayoutDashboard } from "lucide-react";
 
 interface DashboardHeaderProps {
   title: string;
@@ -45,18 +45,25 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   };
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
-        <p className="text-muted-foreground mt-1 text-lg">{welcomeMessage}</p>
-      </div>
-      <div className="flex items-center gap-2">
-        <DashboardDateFilter onDateRangeChange={handleDateRangeChange} />
-        <DashboardCustomization />
-        <Button variant="outline" className="hidden md:flex" onClick={toggleTheme} type="button">
-          {theme === "dark" ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
-          {theme === "dark" ? t('lightMode') : t('darkMode')}
-        </Button>
+    <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div className="flex items-center gap-3">
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <LayoutDashboard className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{title}</h1>
+            <p className="text-muted-foreground mt-1">{welcomeMessage}</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <DashboardDateFilter onDateRangeChange={handleDateRangeChange} />
+          <DashboardCustomization />
+          <Button variant="outline" className="hidden md:flex" onClick={toggleTheme} type="button" size="sm">
+            {theme === "dark" ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
+            {theme === "dark" ? t('lightMode') : t('darkMode')}
+          </Button>
+        </div>
       </div>
     </div>
   );

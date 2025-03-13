@@ -2,6 +2,7 @@
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Loader2 } from "lucide-react";
+import { RevenueChartTooltip } from "@/components/dashboard/revenue/RevenueChartTooltip";
 
 interface ChartDisplayProps {
   data: any[];
@@ -35,8 +36,8 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
           <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#22C55E" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#22C55E" stopOpacity={0}/>
+                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
+                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
               </linearGradient>
               <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#F43F5E" stopOpacity={0.8}/>
@@ -44,21 +45,22 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
-            <XAxis dataKey="name" fontSize={10} />
-            <YAxis fontSize={10} />
+            <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+            <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
             <Tooltip 
-              formatter={(value) => [`$${value.toLocaleString()}`, undefined]} 
-              contentStyle={{ fontSize: '11px', padding: '8px' }}
+              content={<RevenueChartTooltip />} 
+              cursor={{ stroke: '#888', strokeDasharray: '3 3', strokeWidth: 1, opacity: 0.5 }}
             />
             <Legend wrapperStyle={{ fontSize: '10px' }} />
             <Area
               type="monotone"
               dataKey="income"
               name={t('income')}
-              stroke="#22C55E"
+              stroke="#3B82F6"
               strokeWidth={1.5}
               fillOpacity={1}
               fill="url(#colorIncome)"
+              activeDot={{ r: 6, stroke: '#3B82F6', strokeWidth: 1, fill: '#fff' }}
             />
             <Area
               type="monotone"
@@ -68,21 +70,22 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
               strokeWidth={1.5}
               fillOpacity={1}
               fill="url(#colorExpense)"
+              activeDot={{ r: 6, stroke: '#F43F5E', strokeWidth: 1, fill: '#fff' }}
             />
           </AreaChart>
         ) : (
           <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
-            <XAxis dataKey="name" fontSize={10} />
-            <YAxis fontSize={10} />
+            <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+            <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
             <Tooltip 
-              formatter={(value) => [`$${value.toLocaleString()}`, undefined]} 
-              contentStyle={{ fontSize: '11px', padding: '8px' }}
+              content={<RevenueChartTooltip />}
+              cursor={{ fill: '#f5f5f5', opacity: 0.2 }}
             />
             <Legend wrapperStyle={{ fontSize: '10px' }} />
-            <Bar dataKey="income" name={t('income')} fill="#22C55E" radius={[2, 2, 0, 0]} barSize={16} />
-            <Bar dataKey="expense" name={t('expense')} fill="#F43F5E" radius={[2, 2, 0, 0]} barSize={16} />
-            <Bar dataKey="profit" name={t('profit')} fill="#3B82F6" radius={[2, 2, 0, 0]} barSize={16} />
+            <Bar dataKey="income" name={t('income')} fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={12} />
+            <Bar dataKey="expense" name={t('expense')} fill="#F43F5E" radius={[4, 4, 0, 0]} barSize={12} />
+            <Bar dataKey="profit" name={t('profit')} fill="#10B981" radius={[4, 4, 0, 0]} barSize={12} />
           </BarChart>
         )}
       </ResponsiveContainer>
