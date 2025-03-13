@@ -26,7 +26,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
 const paymentSchema = z.object({
@@ -65,8 +65,15 @@ export const AddPaymentDialog = ({
     console.log("Submitting payment:", values);
     setIsSubmitting(true);
     try {
-      // Create an ISO date string using the date object to avoid timezone issues
-      const formattedDate = format(values.payment_date, "yyyy-MM-dd");
+      // Fix timezone issues by constructing a date in YYYY-MM-DD format without time component
+      // This prevents any timezone conversions from affecting the date
+      const year = values.payment_date.getFullYear();
+      const month = String(values.payment_date.getMonth() + 1).padStart(2, '0');
+      const day = String(values.payment_date.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
+      
+      console.log("Selected date:", values.payment_date);
+      console.log("Formatted date for storage:", formattedDate);
       
       const { error } = await supabase.from("tenant_payments").insert({
         tenant_id: tenantId,
