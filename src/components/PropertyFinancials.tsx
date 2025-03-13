@@ -1,6 +1,6 @@
 
 import React from "react";
-import { MetricsCards } from "./maintenance/financials/MetricsCards";
+import FinancialMetrics from "./finances/FinancialMetrics";
 import { DataTables } from "./maintenance/financials/DataTables";
 import { ChartsSection } from "./maintenance/financials/ChartsSection";
 import { useQuery } from "@tanstack/react-query";
@@ -61,24 +61,9 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
     },
   });
 
-  // Calculate ROI based on real data
-  const calculateROI = () => {
-    const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-    const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
-    // Note: propertyValue should ideally come from the properties table
-    const propertyValue = 500000; // This is still hardcoded as it's not in our database schema
-    const netIncome = -totalExpenses - totalMaintenance;
-    return ((netIncome / propertyValue) * 100).toFixed(2);
-  };
-
   return (
     <div className="space-y-6">
-      <MetricsCards
-        propertyId={propertyId}
-        expenses={expenses}
-        maintenance={maintenance}
-        calculateROI={calculateROI}
-      />
+      <FinancialMetrics propertyId={propertyId} />
       <ChartsSection propertyId={propertyId} />
       <DataTables
         propertyId={propertyId}
