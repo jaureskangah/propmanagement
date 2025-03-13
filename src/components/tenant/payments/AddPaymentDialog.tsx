@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,11 +24,21 @@ import {
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { Calendar } from "@/components/ui/calendar";
+import { CalendarIcon } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const paymentSchema = z.object({
   amount: z.string().min(1, "Amount is required"),
   status: z.string().min(1, "Status is required"),
-  payment_date: z.string().min(1, "Date is required"),
+  payment_date: z.date({
+    required_error: "A payment date is required",
+  }),
 });
 
 interface AddPaymentDialogProps {
@@ -50,7 +61,7 @@ export const AddPaymentDialog = ({
     defaultValues: {
       amount: "",
       status: "paid",
-      payment_date: format(new Date(), "yyyy-MM-dd"),
+      payment_date: new Date(),
     },
   });
 
@@ -62,7 +73,7 @@ export const AddPaymentDialog = ({
         tenant_id: tenantId,
         amount: parseFloat(values.amount),
         status: values.status,
-        payment_date: values.payment_date,
+        payment_date: format(values.payment_date, "yyyy-MM-dd"),
       });
 
       if (error) throw error;
@@ -145,9 +156,35 @@ export const AddPaymentDialog = ({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Payment Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
