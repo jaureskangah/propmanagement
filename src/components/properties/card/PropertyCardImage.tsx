@@ -20,7 +20,7 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
     <div className="relative w-full h-40 sm:h-44 overflow-hidden bg-slate-100 dark:bg-slate-800">
       <div 
         className={cn(
-          "absolute inset-0 bg-slate-200 dark:bg-slate-700 animate-pulse",
+          "absolute inset-0 bg-slate-200 dark:bg-slate-700",
           imageLoaded ? "opacity-0" : "opacity-100"
         )}
       />
