@@ -29,18 +29,22 @@ const PropertyPageHeader = ({
   const { t } = useLocale();
 
   return (
-    <div className="mb-6">
+    <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="flex-1">
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2 font-sans">
-            <Building className="h-6 w-6 md:h-7 md:w-7 text-primary/80" />
-            <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              {t('propertiesManagement')}
-            </span>
-          </h1>
-          <p className="text-muted-foreground mt-1 font-sans">
-            {t('propertiesSubtitle')}
-          </p>
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+              <Building className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans">
+                {t('propertiesManagement')}
+              </h1>
+              <p className="text-muted-foreground mt-1 font-sans">
+                {t('propertiesSubtitle')}
+              </p>
+            </div>
+          </div>
         </div>
         <div className="flex items-center justify-between lg:justify-end gap-4">
           <Badge variant="secondary" className="text-sm px-3 py-1.5 font-sans">
@@ -48,25 +52,14 @@ const PropertyPageHeader = ({
             {propertiesCount} {propertiesCount === 1 ? t('property') : t('properties')}
           </Badge>
           
-          {isMobile ? (
-            <Button 
-              size="sm" 
-              className="flex items-center gap-1.5 font-sans" 
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              {t('addProperty')}
-            </Button>
-          ) : (
-            <Button 
-              size="sm" 
-              className="flex items-center gap-1.5 font-sans shadow-sm hover:shadow-md transition-all" 
-              onClick={() => setIsAddModalOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              {t('addProperty')}
-            </Button>
-          )}
+          <Button 
+            size="sm" 
+            className="flex items-center gap-1.5 font-sans shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300" 
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            {t('addProperty')}
+          </Button>
         </div>
       </div>
       

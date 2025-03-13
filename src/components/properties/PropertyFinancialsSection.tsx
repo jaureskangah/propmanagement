@@ -26,12 +26,16 @@ const PropertyFinancialsSection = ({
       transition={{ duration: 0.5 }}
       className="mt-12 p-6 bg-card/50 backdrop-blur-sm rounded-xl shadow-sm border border-border/40 hover:shadow-md transition-all duration-300"
     >
-      <h2 className="text-xl font-bold mb-6 flex items-center font-sans">
-        <DollarSign className="h-5 w-5 mr-2 text-primary" />
-        <span className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-          {t('financialOverview')}
-        </span> - {selectedProperty?.name}
-      </h2>
+      <div className="flex items-center gap-3 mb-6">
+        <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+          <DollarSign className="h-4 w-4 text-primary" />
+        </div>
+        <div>
+          <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans">
+            {t('financialOverview')} - {selectedProperty?.name}
+          </h2>
+        </div>
+      </div>
       <PropertyFinancials propertyId={selectedPropertyId} />
     </motion.div>
   );

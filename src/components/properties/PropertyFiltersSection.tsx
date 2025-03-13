@@ -28,7 +28,7 @@ const PropertyFiltersSection = ({
       transition={{ duration: 0.3 }}
       className="mb-6"
     >
-      <div className="p-4 bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg shadow-sm">
+      <div className="p-4 bg-card/50 backdrop-blur-sm border border-border/40 rounded-lg shadow-sm hover:shadow-md transition-all duration-300">
         <h3 className="text-sm font-medium mb-3 text-foreground/80 font-sans">{t('filterByType')}</h3>
         <div className="flex flex-wrap gap-2">
           {propertyTypes.map((type) => (
@@ -37,8 +37,8 @@ const PropertyFiltersSection = ({
               onClick={() => setSelectedType(type)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
                 selectedType === type
-                  ? "bg-primary text-white shadow-sm"
-                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary"
+                  ? "bg-primary text-white shadow-sm hover:-translate-y-1"
+                  : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:-translate-y-1"
               } font-sans`}
             >
               {type === "All" ? t('all') : t(type.toLowerCase())}
