@@ -23,8 +23,8 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
 import { TenantPayment } from "@/types/tenant";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const paymentSchema = z.object({
   amount: z.string().min(1, "Amount is required"),
@@ -47,6 +47,8 @@ export const EditPaymentDialog = ({
 }: EditPaymentDialogProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { t } = useLocale();
+  
   const form = useForm<z.infer<typeof paymentSchema>>({
     resolver: zodResolver(paymentSchema),
     defaultValues: {
@@ -71,16 +73,16 @@ export const EditPaymentDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Payment Updated",
-        description: "The payment has been updated successfully.",
+        title: t('paymentUpdated'),
+        description: t('paymentUpdatedMessage') || "The payment has been updated successfully.",
       });
       
       onPaymentUpdated();
     } catch (error) {
       console.error("Error updating payment:", error);
       toast({
-        title: "Error",
-        description: "An error occurred while updating the payment.",
+        title: t('error'),
+        description: t('paymentError'),
         variant: "destructive",
       });
     } finally {
@@ -92,7 +94,7 @@ export const EditPaymentDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Payment</DialogTitle>
+          <DialogTitle>{t('editPayment')}</DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
@@ -102,7 +104,7 @@ export const EditPaymentDialog = ({
               name="amount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Amount ($)</FormLabel>
+                  <FormLabel>{t('amount')} ($)</FormLabel>
                   <FormControl>
                     <Input
                       type="number"
@@ -121,20 +123,20 @@ export const EditPaymentDialog = ({
               name="status"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Status</FormLabel>
+                  <FormLabel>{t('paymentStatus')}</FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a status" />
+                        <SelectValue placeholder={t('selectPaymentStatus')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="paid">Paid</SelectItem>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="overdue">Overdue</SelectItem>
+                      <SelectItem value="paid">{t('paid')}</SelectItem>
+                      <SelectItem value="pending">{t('pending')}</SelectItem>
+                      <SelectItem value="overdue">{t('overdue')}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -147,7 +149,7 @@ export const EditPaymentDialog = ({
               name="payment_date"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Payment Date</FormLabel>
+                  <FormLabel>{t('paymentDate')}</FormLabel>
                   <FormControl>
                     <Input type="date" {...field} />
                   </FormControl>
@@ -162,14 +164,14 @@ export const EditPaymentDialog = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                {t('cancel')}
               </Button>
               <Button
                 type="submit"
                 disabled={isSubmitting}
                 className="bg-[#ea384c] hover:bg-[#ea384c]/90"
               >
-                {isSubmitting ? "Updating..." : "Update"}
+                {isSubmitting ? t('updating') : t('updatePayment') || "Update"}
               </Button>
             </div>
           </form>
