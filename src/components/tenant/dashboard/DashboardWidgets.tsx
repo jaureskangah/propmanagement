@@ -62,15 +62,15 @@ export const DashboardWidgets = ({
     show: { opacity: 1, y: 0 }
   };
   
+  // Filter out hidden widgets first
+  const visibleWidgets = widgetOrder.filter(id => !hiddenSections.includes(id));
+  
   // Render widgets based on order and visibility
   const renderWidget = (widgetId: string, index: number) => {
-    if (hiddenSections.includes(widgetId)) return null;
-    
-    // Determine grid column span based on widget type and screen size
+    // Determine grid column span based on widget type
     const getColSpan = () => {
-      if (widgetId === 'chart') return "col-span-1 lg:col-span-3";
-      if (widgetId === 'property' || widgetId === 'lease') return "col-span-1 md:col-span-1";
-      return "col-span-1";
+      if (widgetId === 'chart') return "col-span-2 md:col-span-4 lg:col-span-4";
+      return "col-span-2 md:col-span-2 lg:col-span-1";
     };
     
     const widgetContent = () => {
@@ -138,7 +138,7 @@ export const DashboardWidgets = ({
       <motion.div 
         key={widgetId}
         variants={item}
-        className={`${getColSpan()} h-full`}
+        className={getColSpan()}
         initial="hidden"
         animate="show"
         transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -150,12 +150,12 @@ export const DashboardWidgets = ({
   
   return (
     <motion.div 
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      className="grid grid-cols-4 gap-6"
       variants={container}
       initial="hidden"
       animate="show"
     >
-      {widgetOrder.map((widgetId, index) => renderWidget(widgetId, index))}
+      {visibleWidgets.map((widgetId, index) => renderWidget(widgetId, index))}
     </motion.div>
   );
 };
