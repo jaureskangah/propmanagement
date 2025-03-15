@@ -1,13 +1,13 @@
 
 import { useMemo } from "react";
 import { Communication } from "@/types/tenant";
-import { startOfDay, parseISO, isAfter } from "date-fns";
+import { startOfDay, parseISO, isAfter, isSameDay } from "date-fns";
 
 export const useCommunicationsData = (
   communications: Communication[],
   searchQuery: string,
   selectedType: string | null,
-  startDate: Date | null
+  selectedDate: string | null
 ) => {
   // Group communications by type
   const groupedCommunications = useMemo(() => {
@@ -49,7 +49,7 @@ export const useCommunicationsData = (
       total: communications.length,
       searchQuery,
       selectedType,
-      startDate: startDate?.toISOString()
+      selectedDate
     });
 
     let filtered = [...communications].sort((a, b) => {
@@ -72,19 +72,16 @@ export const useCommunicationsData = (
     }
 
     // Date filter
-    if (startDate) {
-      const filterStartOfDay = startOfDay(startDate);
-
+    if (selectedDate) {
       filtered = filtered.filter(comm => {
         const commDate = parseISO(comm.created_at);
-        const commStartOfDay = startOfDay(commDate);
-        return isAfter(commStartOfDay, filterStartOfDay) || commStartOfDay.getTime() === filterStartOfDay.getTime();
+        return isSameDay(commDate, parseISO(selectedDate));
       });
       console.log("After date filter:", filtered.length);
     }
 
     return filtered;
-  }, [communications, searchQuery, selectedType, startDate]);
+  }, [communications, searchQuery, selectedType, selectedDate]);
 
   return {
     groupedCommunications,

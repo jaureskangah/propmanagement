@@ -28,7 +28,7 @@ export const CommunicationsContent = ({
   const [activeTab, setActiveTab] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [selectedDateRange, setSelectedDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [selectedDate, setSelectedDate] = useState<string>("");
 
   // Fonction pour filtrer les communications
   const filteredCommunications = useMemo(() => {
@@ -42,9 +42,8 @@ export const CommunicationsContent = ({
       const typeFilter = !selectedType || comm.category === selectedType;
       
       // Filtre par date
-      const dateFilter = !selectedDateRange[0] || !selectedDateRange[1] ||
-        (new Date(comm.created_at) >= selectedDateRange[0] && 
-         new Date(comm.created_at) <= selectedDateRange[1]);
+      const dateFilter = !selectedDate || 
+        (new Date(comm.created_at).toDateString() === new Date(selectedDate).toDateString());
       
       // Filtre par onglet
       let tabFilter = true;
@@ -56,7 +55,7 @@ export const CommunicationsContent = ({
       
       return textFilter && typeFilter && dateFilter && tabFilter;
     });
-  }, [communications, searchTerm, selectedType, selectedDateRange, activeTab]);
+  }, [communications, searchTerm, selectedType, selectedDate, activeTab]);
 
   // Regrouper par type de communication
   const groupedCommunications = useMemo(() => {
@@ -86,7 +85,7 @@ export const CommunicationsContent = ({
   useEffect(() => {
     setSearchTerm("");
     setSelectedType(null);
-    setSelectedDateRange([null, null]);
+    setSelectedDate("");
   }, [activeTab]);
 
   return (
@@ -107,16 +106,19 @@ export const CommunicationsContent = ({
           </TabsTrigger>
         </TabsList>
 
-        <CommunicationsFilterBar
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          selectedType={selectedType}
-          onTypeChange={setSelectedType}
-          selectedDateRange={selectedDateRange}
-          onDateRangeChange={setSelectedDateRange}
-        />
+        <div className="mt-4">
+          <CommunicationFilters
+            searchQuery={searchTerm}
+            startDate={selectedDate}
+            selectedType={selectedType}
+            communicationTypes={["general", "maintenance", "urgent", "payment"]}
+            onSearchChange={setSearchTerm}
+            onDateChange={setSelectedDate}
+            onTypeChange={setSelectedType}
+          />
+        </div>
         
-        <TabsContent value="all" className="mt-0">
+        <TabsContent value="all" className="mt-4">
           <CommunicationsListContainer
             filteredCommunications={filteredCommunications}
             groupedCommunications={groupedCommunications}
@@ -126,7 +128,7 @@ export const CommunicationsContent = ({
           />
         </TabsContent>
         
-        <TabsContent value="urgent" className="mt-0">
+        <TabsContent value="urgent" className="mt-4">
           <CommunicationsListContainer
             filteredCommunications={filteredCommunications}
             groupedCommunications={groupedCommunications}
@@ -136,7 +138,7 @@ export const CommunicationsContent = ({
           />
         </TabsContent>
         
-        <TabsContent value="unread" className="mt-0">
+        <TabsContent value="unread" className="mt-4">
           <CommunicationsListContainer
             filteredCommunications={filteredCommunications}
             groupedCommunications={groupedCommunications}
