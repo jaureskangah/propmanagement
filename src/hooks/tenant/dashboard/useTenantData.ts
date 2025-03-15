@@ -50,6 +50,7 @@ export const useTenantData = () => {
         .maybeSingle();
         
       // Puis récupérer les données du locataire avec la jointure sur properties
+      // Notez l'utilisation de "properties:property_id(name)" au lieu de "properties(name)"
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
@@ -61,7 +62,7 @@ export const useTenantData = () => {
           lease_end, 
           rent_amount,
           property_id,
-          properties (name)
+          properties:property_id(name)
         `)
         .eq('tenant_profile_id', user?.id)
         .maybeSingle();

@@ -22,6 +22,8 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
     fullTenant: tenant
   });
   
+  const propertyName = tenant.properties?.name || t('noProperty');
+  
   const formatDate = (dateString: string) => {
     try {
       return format(new Date(dateString), "PPP");
@@ -76,7 +78,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
             </h2>
             <p className="text-muted-foreground flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              {tenant.properties?.name ? tenant.properties.name : t('noProperty')} - {t('unitLabel')} {tenant.unit_number}
+              {propertyName} - {t('unitLabel')} {tenant.unit_number}
             </p>
           </div>
         </div>

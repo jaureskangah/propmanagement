@@ -21,7 +21,7 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
         .from('tenants')
         .select(`
           *,
-          properties(name)
+          properties:property_id(name)
         `)
         .eq('tenant_profile_id', userId)
         .maybeSingle();
