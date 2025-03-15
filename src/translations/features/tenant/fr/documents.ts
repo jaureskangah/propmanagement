@@ -70,5 +70,9 @@ export const frDocuments: TenantDocumentsTranslations = {
   storageBucketMissing: "Le stockage de documents n'est pas correctement configuré",
   uploadError: "Erreur lors du téléversement du fichier",
   publicUrlError: "Impossible de générer l'URL publique du document",
-  fileValidationError: "Type ou taille de fichier invalide. Veuillez essayer un autre fichier."
+  fileValidationError: "Type ou taille de fichier invalide. Veuillez essayer un autre fichier.",
+  hideFilters: "Masquer les filtres",
+  showFilters: "Afficher les filtres",
+  uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location",
+  manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location"
 };

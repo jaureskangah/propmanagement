@@ -70,5 +70,9 @@ export const enDocuments: TenantDocumentsTranslations = {
   storageBucketMissing: "Document storage not properly configured",
   uploadError: "Error uploading file to storage",
   publicUrlError: "Could not generate public URL for document",
-  fileValidationError: "Invalid file type or size. Please try another file."
+  fileValidationError: "Invalid file type or size. Please try another file.",
+  hideFilters: "Hide Filters",
+  showFilters: "Show Filters",
+  uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
+  manageDocumentsDescription: "Upload and manage important documents for your tenancy"
 };

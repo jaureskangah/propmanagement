@@ -65,7 +65,7 @@ export function TabHeader({
             ) : (
               <>
                 <Filter className="h-4 w-4" />
-                {!isMobile && "Show Filters"}
+                {!isMobile && t("showFilters")}
               </>
             )}
           </Button>

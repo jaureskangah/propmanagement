@@ -16,9 +16,9 @@ export const DocumentEmptyState = () => {
       <div className="h-16 w-16 rounded-xl bg-primary/10 flex items-center justify-center mb-4 dark:bg-primary/20">
         <FileText className="h-10 w-10 text-primary dark:text-primary/80" />
       </div>
-      <p className="text-base font-medium text-foreground">{t("noDocuments") || "Aucun document disponible"}</p>
+      <p className="text-base font-medium text-foreground">{t("noDocuments")}</p>
       <p className="text-muted-foreground text-sm mt-2 max-w-md text-center">
-        {t("noDocumentsDescription") || "Vous pouvez télécharger des documents importants comme votre bail ou vos quittances."}
+        {t("uploadAndManageDocuments")}
       </p>
     </motion.div>
   );

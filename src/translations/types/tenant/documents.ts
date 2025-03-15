@@ -69,4 +69,8 @@ export interface TenantDocumentsTranslations {
   uploadError: string;
   publicUrlError: string;
   fileValidationError: string;
+  hideFilters: string;
+  showFilters: string;
+  uploadAndManageDocuments: string;
+  manageDocumentsDescription: string;
 }

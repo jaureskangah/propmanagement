@@ -56,7 +56,7 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
                 {t("myDocuments")}
               </h1>
               <p className="text-muted-foreground text-sm font-sans dark:text-gray-400">
-                {t("manageDocumentsDescription", { fallback: 'Upload and manage important documents for your tenancy' })}
+                {t("manageDocumentsDescription", { fallback: t("uploadAndManageDocuments") })}
               </p>
             </div>
           </div>
