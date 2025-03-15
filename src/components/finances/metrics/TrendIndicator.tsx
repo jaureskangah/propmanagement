@@ -20,9 +20,9 @@ export function TrendIndicator({ trend, isPositiveMetric }: FinancialMetricTrend
   return (
     <div className={cn(
       "flex items-center text-xs font-medium ml-1 px-1.5 py-0.5 rounded transition-colors",
-      isPositiveIndicator && "text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/30",
-      isNegativeIndicator && "text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/30",
-      isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/50"
+      isPositiveIndicator && "text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/40",
+      isNegativeIndicator && "text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/40",
+      isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/60"
     )}>
       {isTrendPositive ? <ArrowUp className="h-2.5 w-2.5 mr-0.5" /> : isTrendNegative ? <ArrowDown className="h-2.5 w-2.5 mr-0.5" /> : null}
       {isTrendPositive ? "+" : ""}{isTrendNegative ? "-" : ""}{Math.abs(trend)}%

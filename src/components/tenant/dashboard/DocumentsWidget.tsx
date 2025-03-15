@@ -18,7 +18,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
     <motion.div 
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100 dark:from-purple-900/20 dark:to-violet-900/20 dark:border-purple-800/30 p-5"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100 dark:from-purple-900/30 dark:to-violet-900/30 dark:border-purple-800/40 p-5 dark-card-gradient"
     >
       <div className="flex items-center mb-4">
         <FileText className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
@@ -39,7 +39,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/60 shadow-sm hover:shadow hover:bg-white/90 dark:hover:bg-gray-800/80 transition-all cursor-pointer"
+                className="flex items-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/80 shadow-sm hover:shadow hover:bg-white/90 dark:hover:bg-gray-700/80 transition-all cursor-pointer dark:text-gray-200"
                 onClick={() => window.open(doc.file_url, '_blank')}
               >
                 <FileText className="h-4 w-4 mr-3 text-purple-500 dark:text-purple-400" />

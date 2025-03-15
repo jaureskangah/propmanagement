@@ -19,13 +19,13 @@ const PropertyCardDetails = ({ units, occupancyRate }: PropertyCardDetailsProps)
   return (
     <CardContent className="p-3 pt-1">
       <div className="grid grid-cols-2 gap-2">
-        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm p-2 rounded-md shadow-sm hover:bg-white/80 dark:hover:bg-slate-800/80 transition-colors">
+        <div className="bg-white/60 dark:bg-slate-800/80 backdrop-blur-sm p-2 rounded-md shadow-sm hover:bg-white/80 dark:hover:bg-slate-700/80 transition-colors">
           <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 mb-0.5 font-sans">
             <Home className="h-3 w-3" /> {t('propertyUnits')}
           </p>
           <p className="text-lg font-semibold text-slate-800 dark:text-slate-100 font-sans">{units}</p>
         </div>
-        <div className="bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm p-2 rounded-md shadow-sm hover:bg-white/80 dark:hover:bg-slate-800/80 transition-colors">
+        <div className="bg-white/60 dark:bg-slate-800/80 backdrop-blur-sm p-2 rounded-md shadow-sm hover:bg-white/80 dark:hover:bg-slate-700/80 transition-colors">
           <p className={cn(
             "text-[10px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1 mb-0.5 font-sans",
             isMobile ? "flex-wrap" : "whitespace-nowrap"

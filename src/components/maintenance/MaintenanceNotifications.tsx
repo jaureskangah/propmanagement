@@ -31,9 +31,9 @@ export const MaintenanceNotifications = () => {
   ];
 
   return (
-    <Card className="font-sans">
+    <Card className="font-sans dark-card-gradient">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
+        <CardTitle className="flex items-center gap-2 text-base dark:text-white">
           <Bell className="h-4 w-4" />
           {t('notificationsAndAlerts')}
         </CardTitle>

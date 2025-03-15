@@ -81,7 +81,7 @@ const PropertyCardsSection = ({
         <motion.div 
           key={property.id} 
           variants={item}
-          className="h-full"
+          className="h-full dark-card-gradient"
           layout
         >
           <PropertyCard

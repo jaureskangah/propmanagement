@@ -20,7 +20,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
     <motion.div 
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 dark:from-amber-900/20 dark:to-yellow-900/20 dark:border-amber-800/30 p-5"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 dark:from-amber-900/30 dark:to-yellow-900/30 dark:border-amber-800/40 p-5 dark-card-gradient"
     >
       <div className="flex items-center mb-4">
         <Wrench className="h-5 w-5 mr-2 text-amber-600 dark:text-amber-400" />
@@ -41,7 +41,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-white/70 dark:bg-gray-800/60 rounded-lg shadow-sm hover:shadow transition-shadow"
+                className="flex items-center justify-between p-3 bg-white/70 dark:bg-gray-800/80 rounded-lg shadow-sm hover:shadow transition-shadow dark:text-gray-200"
               >
                 <div className="flex flex-col">
                   <span className="text-sm font-medium truncate text-gray-800 dark:text-gray-200">{request.issue}</span>

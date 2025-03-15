@@ -19,18 +19,18 @@ export function FinancialMetricCard({
   const isPositiveMetric = title !== 'unpaidRent' && title !== 'totalExpenses';
   
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-md dark:hover:shadow-gray-800/20 hover:translate-y-[-2px]">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-md dark:hover:shadow-gray-800/20 hover:translate-y-[-2px] dark-card-gradient">
       <CardContent className="p-4">
         <div className="flex items-center justify-between mb-1">
           <div className="flex items-center">
             <MetricIcon icon={icon} chartColor={chartColor} />
-            <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+            <h3 className="text-sm font-medium text-muted-foreground dark:text-gray-300">{title}</h3>
           </div>
           <TrendIndicator trend={trend} isPositiveMetric={isPositiveMetric} />
         </div>
         <div className="mt-1">
-          <div className="text-xl font-bold">{value}</div>
-          <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
+          <div className="text-xl font-bold dark:text-white">{value}</div>
+          <p className="text-xs text-muted-foreground mt-0.5 dark:text-gray-400">{description}</p>
         </div>
       </CardContent>
     </Card>
@@ -39,6 +39,6 @@ export function FinancialMetricCard({
 
 export function FinancialMetricSkeleton() {
   return (
-    <Skeleton className="h-20 w-full" />
+    <Skeleton className="h-20 w-full dark:bg-gray-700" />
   );
 }

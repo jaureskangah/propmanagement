@@ -20,7 +20,7 @@ const TenantDashboardPage = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-background dark:bg-gray-900">
         <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
@@ -39,7 +39,7 @@ const TenantDashboardPage = () => {
 
   console.log("Rendering tenant dashboard page");
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background dark:bg-gray-900">
       <AppSidebar isTenant={true} />
       <div className="flex-1 overflow-y-auto">
         <motion.div 

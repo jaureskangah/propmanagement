@@ -25,10 +25,10 @@ export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
   const { t, language } = useLocale();
   
   return (
-    <div className="rounded-md border dark:border-gray-700">
+    <div className="rounded-md border dark:border-gray-700 dark-card-gradient">
       <Table>
         <TableHeader>
-          <TableRow className="dark:bg-gray-800/50">
+          <TableRow className="dark:bg-gray-800/50 dark:border-gray-700">
             <TableHead className="dark:text-gray-300">{t('date', { fallback: 'Date' })}</TableHead>
             <TableHead className="dark:text-gray-300">{t('amount', { fallback: 'Amount' })}</TableHead>
             <TableHead className="dark:text-gray-300">{t('status', { fallback: 'Status' })}</TableHead>
@@ -45,10 +45,10 @@ export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
                 <span
                   className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                     payment.status === 'paid'
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-300'
                       : payment.status === 'late'
-                      ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300'
+                      ? 'bg-red-100 text-red-800 dark:bg-red-900/40 dark:text-red-300'
+                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-300'
                   }`}
                 >
                   {payment.status === 'paid' ? t('paid') : 
