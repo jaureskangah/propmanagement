@@ -21,13 +21,13 @@ export const MaintenanceFilters = ({
     <div className="flex flex-col sm:flex-row gap-3">
       <Select value={statusFilter} onValueChange={onStatusChange}>
         <SelectTrigger className="w-full sm:w-[180px]">
-          <SelectValue placeholder={t('filterByStatus')} />
+          <SelectValue placeholder={t('filterBy')} />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">{t('allStatuses')}</SelectItem>
-          <SelectItem value="Pending">{t('statusPending')}</SelectItem>
-          <SelectItem value="In Progress">{t('statusInProgress')}</SelectItem>
-          <SelectItem value="Resolved">{t('statusCompleted')}</SelectItem>
+          <SelectItem value="Pending">{t('pending')}</SelectItem>
+          <SelectItem value="In Progress">{t('inProgress')}</SelectItem>
+          <SelectItem value="Resolved">{t('resolved')}</SelectItem>
         </SelectContent>
       </Select>
 
@@ -36,9 +36,9 @@ export const MaintenanceFilters = ({
           <SelectValue placeholder={t('sortBy')} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="newest">{t('sortNewest')}</SelectItem>
-          <SelectItem value="oldest">{t('sortOldest')}</SelectItem>
-          <SelectItem value="priority">{t('sortByPriority')}</SelectItem>
+          <SelectItem value="newest">{t('newest')}</SelectItem>
+          <SelectItem value="oldest">{t('oldest')}</SelectItem>
+          <SelectItem value="priority">{t('highestPriority')}</SelectItem>
         </SelectContent>
       </Select>
     </div>

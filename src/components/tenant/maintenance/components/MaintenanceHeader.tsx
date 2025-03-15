@@ -28,7 +28,7 @@ export const MaintenanceHeader = ({ onAddClick }: MaintenanceHeaderProps) => {
             </div>
             <div className="space-y-1.5">
               <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans dark:from-blue-400 dark:to-blue-600">
-                {t('maintenanceRequestTitle')}
+                {t('maintenanceRequests')}
               </h1>
               <p className="text-muted-foreground text-sm font-sans dark:text-gray-400">
                 {t('maintenanceRequestDescription', { fallback: t('manageMaintenanceRequests') })}
@@ -43,7 +43,7 @@ export const MaintenanceHeader = ({ onAddClick }: MaintenanceHeaderProps) => {
             className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 transition-colors"
           >
             <Plus className="h-4 w-4" />
-            {t('addNewTask')}
+            {t('newMaintenanceRequest')}
           </Button>
         </div>
       </div>

@@ -78,7 +78,7 @@ export const MaintenanceList = ({
                 <p className="font-medium text-foreground dark:text-gray-100">{request.issue}</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   <p className="text-xs text-muted-foreground dark:text-gray-400">
-                    {t('createdOn')} {formatDate(request.created_at)}
+                    {t('created')} {formatDate(request.created_at)}
                     {daysSinceCreation > 0 && ` (${daysSinceCreation} ${t('daysAgo')})`}
                   </p>
                   <Badge className={`${getPriorityClass(request.priority)} text-white text-xs`}>

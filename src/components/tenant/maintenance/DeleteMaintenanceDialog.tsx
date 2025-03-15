@@ -1,3 +1,4 @@
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import type { MaintenanceRequest } from "@/types/tenant";
 
 interface DeleteMaintenanceDialogProps {
@@ -26,6 +28,7 @@ export const DeleteMaintenanceDialog = ({
   onSuccess,
 }: DeleteMaintenanceDialogProps) => {
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const handleDelete = async () => {
     const { error } = await supabase
@@ -36,16 +39,16 @@ export const DeleteMaintenanceDialog = ({
     if (error) {
       console.error("Error deleting maintenance request:", error);
       toast({
-        title: "Error",
-        description: "Failed to delete maintenance request",
+        title: t('error'),
+        description: t('errorDeletingRequest'),
         variant: "destructive",
       });
       return;
     }
 
     toast({
-      title: "Success",
-      description: "Maintenance request deleted successfully",
+      title: t('success'),
+      description: t('maintenanceRequestDeleted'),
     });
     onSuccess();
     onClose();
@@ -55,18 +58,18 @@ export const DeleteMaintenanceDialog = ({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete Maintenance Request</AlertDialogTitle>
+          <AlertDialogTitle>{t('deleteMaintenanceRequest')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Are you sure you want to delete this maintenance request? This action cannot be undone.
+            {t('confirmDelete')} {t('thisCantBeUndone')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleDelete}
             className="bg-red-500 hover:bg-red-600"
           >
-            Delete
+            {t('delete', { fallback: 'Delete' })}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

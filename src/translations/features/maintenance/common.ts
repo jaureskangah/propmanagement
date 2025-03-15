@@ -1,6 +1,8 @@
 
 export const enCommon = {
   maintenanceRequestTitle: "Maintenance Request",
+  maintenanceRequestDescription: "Manage and track your maintenance requests",
+  manageMaintenanceRequests: "Manage and track your maintenance requests",
   maintenanceCalendar: "Maintenance Calendar",
   preventiveMaintenance: "Preventive Maintenance",
   workOrders: "Work Orders",
@@ -46,11 +48,16 @@ export const enCommon = {
   comparedToPreviousMonth: "Compared to previous month",
   totalRequestsDesc: "The total number of maintenance requests across all properties",
   pendingRequestsDesc: "The number of maintenance requests awaiting attention",
-  resolvedRequestsDesc: "The number of maintenance requests successfully completed"
+  resolvedRequestsDesc: "The number of maintenance requests successfully completed",
+  // Additional maintenance related keys
+  addNewTask: "Add New Task",
+  filterByPriority: "Filter by priority"
 };
 
 export const frCommon = {
   maintenanceRequestTitle: "Demande de maintenance",
+  maintenanceRequestDescription: "Gérer et suivre vos demandes de maintenance",
+  manageMaintenanceRequests: "Gérer et suivre vos demandes de maintenance",
   maintenanceCalendar: "Calendrier de maintenance",
   preventiveMaintenance: "Maintenance préventive",
   workOrders: "Ordres de travail",
@@ -96,5 +103,8 @@ export const frCommon = {
   comparedToPreviousMonth: "Par rapport au mois précédent",
   totalRequestsDesc: "Le nombre total de demandes de maintenance pour toutes les propriétés",
   pendingRequestsDesc: "Le nombre de demandes de maintenance en attente d'attention",
-  resolvedRequestsDesc: "Le nombre de demandes de maintenance terminées avec succès"
+  resolvedRequestsDesc: "Le nombre de demandes de maintenance terminées avec succès",
+  // Additional maintenance related keys
+  addNewTask: "Ajouter une nouvelle tâche",
+  filterByPriority: "Filtrer par priorité"
 };
