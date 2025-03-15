@@ -63,4 +63,6 @@ export interface TenantCommunicationsTranslations {
   enterEmail: string;
   loadingCommunications: string;
   startSendingMessages: string;
+  showMore: string;
+  showLess: string;
 }

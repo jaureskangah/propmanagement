@@ -1,10 +1,12 @@
 
 import { Communication } from "@/types/tenant";
-import { MessageSquare, Mail, AlertTriangle, Clock, MessageCircle, AlertOctagon, Check } from "lucide-react";
+import { MessageSquare, Mail, AlertTriangle, Clock, MessageCircle, AlertOctagon, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CommunicationItem } from "./items/CommunicationItem";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface CommunicationsListProps {
   filteredCommunications: Communication[];
@@ -22,6 +24,7 @@ export const CommunicationsList = ({
   onDeleteCommunication,
 }: CommunicationsListProps) => {
   const { t } = useLocale();
+  const [showAll, setShowAll] = useState(false);
   
   if (!filteredCommunications?.length) {
     return (
@@ -34,7 +37,7 @@ export const CommunicationsList = ({
     );
   }
 
-  const renderThreadedCommunications = (communications: Communication[]) => {
+  const renderThreadedCommunications = (communications: Communication[], limit?: number) => {
     // Group by parent_id
     const threads = communications.reduce((acc, comm) => {
       if (!comm) return acc;
@@ -52,7 +55,11 @@ export const CommunicationsList = ({
       return acc;
     }, {} as Record<string, Communication[]>);
 
-    return Object.entries(threads).map(([parentId, thread]) => (
+    // Limit the number of threads to display if limit is provided
+    const threadsEntries = Object.entries(threads);
+    const displayThreads = limit && !showAll ? threadsEntries.slice(0, limit) : threadsEntries;
+
+    return displayThreads.map(([parentId, thread]) => (
       <div key={parentId} className="space-y-1 mb-4 bg-background rounded-lg shadow-sm">
         {thread.map((comm, index) => (
           <div
@@ -82,6 +89,18 @@ export const CommunicationsList = ({
     }
   };
 
+  // Calculate total threads count
+  const totalThreadsCount = Object.values(groupedCommunications).reduce((total, comms) => {
+    if (!comms) return total;
+    
+    // Count only parent threads (no parent_id)
+    const parentThreads = comms.filter(comm => 
+      comm && filteredCommunications.includes(comm) && !comm.parent_id
+    );
+    
+    return total + parentThreads.length;
+  }, 0);
+
   return (
     <div className="space-y-6">
       {Object.entries(groupedCommunications).map(([type, comms]) => {
@@ -107,11 +126,32 @@ export const CommunicationsList = ({
               </Badge>
             </h3>
             <div className="space-y-3">
-              {renderThreadedCommunications(filteredComms)}
+              {renderThreadedCommunications(filteredComms, 5)}
             </div>
           </div>
         );
       })}
+
+      {totalThreadsCount > 5 && (
+        <div className="flex justify-center mt-4">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setShowAll(!showAll)}
+            className="flex items-center gap-1"
+          >
+            {showAll ? (
+              <>
+                {t('showLess')} <ChevronUp className="h-4 w-4" />
+              </>
+            ) : (
+              <>
+                {t('showMore')} <ChevronDown className="h-4 w-4" />
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

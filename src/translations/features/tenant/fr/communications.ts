@@ -64,5 +64,7 @@ export const frCommunications: TenantCommunicationsTranslations = {
   email: "Email",
   enterEmail: "Entrez l'adresse email",
   loadingCommunications: "Chargement de vos communications...",
-  startSendingMessages: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier."
+  startSendingMessages: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier.",
+  showMore: "Voir plus",
+  showLess: "Voir moins"
 };

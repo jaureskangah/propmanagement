@@ -64,5 +64,7 @@ export const enCommunications: TenantCommunicationsTranslations = {
   email: "Email",
   enterEmail: "Enter email address",
   loadingCommunications: "Loading your communications...",
-  startSendingMessages: "Start by sending a message to your property manager or landlord."
+  startSendingMessages: "Start by sending a message to your property manager or landlord.",
+  showMore: "Show more",
+  showLess: "Show less"
 };
