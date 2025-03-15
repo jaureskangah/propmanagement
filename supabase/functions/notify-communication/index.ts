@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "npm:resend@2.0.0";
@@ -31,7 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Fetch tenant information
     const { data: tenant, error: tenantError } = await supabase
       .from("tenants")
-      .select("email, name")
+      .select("email, name, property_id")
       .eq("id", tenantId)
       .single();
 
@@ -43,8 +44,48 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Found tenant:", tenant);
 
     // Determine recipient based on who sent the message
-    const recipientEmail = tenant.email;
-    const recipientName = tenant.name;
+    let recipientEmail, recipientName;
+    
+    if (isFromTenant) {
+      // Si le message vient du locataire, on doit notifier le propriétaire
+      // Récupérer l'email du propriétaire associé à la propriété
+      if (!tenant.property_id) {
+        console.error("Property ID not found for tenant");
+        throw new Error("Property ID not found for tenant");
+      }
+      
+      const { data: property, error: propertyError } = await supabase
+        .from("properties")
+        .select("user_id")
+        .eq("id", tenant.property_id)
+        .single();
+      
+      if (propertyError || !property) {
+        console.error("Error fetching property:", propertyError);
+        throw new Error("Property not found");
+      }
+      
+      // Récupérer l'email du propriétaire
+      const { data: user, error: userError } = await supabase
+        .from("profiles")
+        .select("email, first_name, last_name")
+        .eq("id", property.user_id)
+        .single();
+      
+      if (userError || !user) {
+        console.error("Error fetching property owner:", userError);
+        throw new Error("Property owner not found");
+      }
+      
+      recipientEmail = user.email;
+      recipientName = `${user.first_name} ${user.last_name}`;
+    } else {
+      // Si le message vient du propriétaire, notifier le locataire
+      recipientEmail = tenant.email;
+      recipientName = tenant.name;
+    }
+
+    console.log("Sending notification to:", { recipientEmail, recipientName });
 
     // Send email notification
     const emailResponse = await resend.emails.send({
@@ -55,7 +96,9 @@ const handler = async (req: Request): Promise<Response> => {
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">Hello ${recipientName},</h2>
           <p style="color: #666; line-height: 1.6;">
-            ${isFromTenant ? 'Your message has been sent to the property manager.' : 'You have received a new message from your property manager.'}
+            ${isFromTenant 
+              ? 'You have received a new message from your tenant.' 
+              : 'You have received a new message from your property manager.'}
           </p>
           <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
             <h3 style="color: #333; margin-top: 0;">Message Details:</h3>
