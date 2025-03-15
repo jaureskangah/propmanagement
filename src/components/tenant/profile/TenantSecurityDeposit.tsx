@@ -50,16 +50,16 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
       `border-b border-border/30 px-4 sm:px-6 py-4`,
       'w-full'
     )}>
-      <div className="space-y-1 min-w-0">
-        <p className="text-xs text-muted-foreground flex items-center mb-2">
-          <CreditCard className="h-4 w-4 mr-2 text-primary/70" />
-          {t('securityDeposit')}
-        </p>
-        <div className="space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-3 sm:mb-0">
+          <p className="text-xs text-muted-foreground flex items-center mb-2">
+            <CreditCard className="h-4 w-4 mr-2 text-primary/70" />
+            {t('securityDeposit')}
+          </p>
           <RadioGroup 
             value={securityDepositStatus} 
             onValueChange={setSecurityDepositStatus as (value: string) => void}
-            className="flex flex-col space-y-1"
+            className="flex space-x-4"
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="deposited" id="deposited" />
@@ -74,15 +74,15 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
               </label>
             </div>
           </RadioGroup>
-          <Button 
-            size="sm" 
-            onClick={handleUpdateSecurityDeposit}
-            disabled={isButtonDisabled()}
-            className="w-full max-w-[200px]"
-          >
-            {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
-          </Button>
         </div>
+        <Button 
+          size="sm" 
+          onClick={handleUpdateSecurityDeposit}
+          disabled={isButtonDisabled()}
+          className="w-full sm:w-auto"
+        >
+          {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
+        </Button>
       </div>
     </div>
   );
