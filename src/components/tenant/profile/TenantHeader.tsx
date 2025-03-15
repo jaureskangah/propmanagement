@@ -12,6 +12,9 @@ interface TenantHeaderProps {
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   
+  // Logging pour le débogage des données de propriété
+  console.log("Tenant property data:", tenant.properties);
+  
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
     (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
@@ -32,6 +35,20 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     if (leaseEnded) return <XCircle className="h-4 w-4 mr-1" />;
     if (leaseEnding) return <AlertCircle className="h-4 w-4 mr-1" />;
     return <CheckCircle className="h-4 w-4 mr-1" />;
+  };
+
+  // Obtenir le nom de la propriété de manière sécurisée
+  const getPropertyName = () => {
+    if (!tenant.properties) return t('noProperty');
+    
+    if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+      // Si properties est un objet avec une propriété 'name'
+      if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
+        return tenant.properties.name || t('noProperty');
+      }
+    }
+    
+    return t('noProperty');
   };
 
   return (
@@ -57,7 +74,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
           </h2>
           <p className="text-muted-foreground flex items-center">
             <Building className="w-4 h-4 mr-2" />
-            {tenant.properties?.name || t('noProperty')} - {t('unitLabel')} {tenant.unit_number}
+            {getPropertyName()} - {t('unitLabel')} {tenant.unit_number}
           </p>
         </div>
       </div>
