@@ -38,21 +38,25 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
         // Handle properties data correctly
         let formattedProperties: { name: string } = { name: "" };
         
-        if (Array.isArray(tenantData.properties)) {
-          // If it's an array, take the first element if it exists
-          if (tenantData.properties.length > 0) {
-            const firstProperty = tenantData.properties[0];
+        if (tenantData.properties) {
+          if (Array.isArray(tenantData.properties)) {
+            // If it's an array, take the first element if it exists
+            if (tenantData.properties.length > 0) {
+              const firstProperty = tenantData.properties[0];
+              if (firstProperty && typeof firstProperty === 'object') {
+                // Check if the 'name' property exists in the object
+                formattedProperties = { 
+                  name: 'name' in firstProperty ? String(firstProperty.name || "") : "" 
+                };
+              }
+            }
+          } else if (typeof tenantData.properties === 'object') {
+            // If it's already an object, use it directly
+            const propObj = tenantData.properties as Record<string, any>;
             formattedProperties = { 
-              name: firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty 
-                ? String(firstProperty.name || "") 
-                : "" 
+              name: 'name' in propObj ? String(propObj.name || "") : "" 
             };
           }
-        } else if (tenantData.properties && typeof tenantData.properties === 'object') {
-          // If it's already an object, use it directly
-          formattedProperties = { 
-            name: 'name' in tenantData.properties ? String(tenantData.properties.name || "") : "" 
-          };
         }
         
         const formattedTenant = {

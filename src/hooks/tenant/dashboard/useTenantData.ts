@@ -83,21 +83,25 @@ export const useTenantData = () => {
         // Extraire correctement les données de propriété et assurer le bon format
         let propertyData: { name: string } = { name: "" };
         
-        if (Array.isArray(tenant.properties)) {
-          // Si c'est un tableau, prendre le premier élément s'il existe
-          if (tenant.properties.length > 0) {
-            const firstProperty = tenant.properties[0];
+        if (tenant.properties) {
+          if (Array.isArray(tenant.properties)) {
+            // Si c'est un tableau, prendre le premier élément s'il existe
+            if (tenant.properties.length > 0) {
+              const firstProperty = tenant.properties[0];
+              if (firstProperty && typeof firstProperty === 'object') {
+                // Vérifier si la propriété 'name' existe dans l'objet
+                propertyData = { 
+                  name: 'name' in firstProperty ? String(firstProperty.name || "") : "" 
+                };
+              }
+            }
+          } else if (typeof tenant.properties === 'object') {
+            // Si c'est déjà un objet, l'utiliser directement
+            const propObj = tenant.properties as Record<string, any>;
             propertyData = { 
-              name: firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty 
-                ? String(firstProperty.name || "") 
-                : "" 
+              name: 'name' in propObj ? String(propObj.name || "") : "" 
             };
           }
-        } else if (tenant.properties && typeof tenant.properties === 'object') {
-          // Si c'est déjà un objet, l'utiliser directement
-          propertyData = { 
-            name: 'name' in tenant.properties ? String(tenant.properties.name || "") : "" 
-          };
         }
         
         setTenant({
