@@ -72,5 +72,9 @@ export const frDashboard = {
   lease: {
     start: "Début du bail",
     end: "Fin du bail"
-  }
+  },
+  // Thème
+  lightMode: "Mode clair",
+  darkMode: "Mode sombre",
+  toggleTheme: "Changer de thème",
 };

@@ -8,8 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
-import { fr, enUS } from "date-fns/locale";
+import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface Payment {
@@ -25,8 +24,6 @@ interface PaymentHistoryProps {
 export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
   const { t, language } = useLocale();
   
-  const locale = language === 'fr' ? fr : enUS;
-  
   return (
     <div className="rounded-md border">
       <Table>
@@ -41,7 +38,7 @@ export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
           {payments.map((payment, index) => (
             <TableRow key={index}>
               <TableCell>
-                {format(new Date(payment.payment_date), 'PPP', { locale })}
+                {formatDate(payment.payment_date, language)}
               </TableCell>
               <TableCell>${payment.amount.toLocaleString()}</TableCell>
               <TableCell>

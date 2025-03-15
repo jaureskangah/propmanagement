@@ -8,6 +8,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Settings } from "lucide-react";
@@ -88,19 +94,27 @@ export const DashboardCustomizationDialog = ({
   
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex items-center gap-1 hover:bg-blue-50 hover:text-blue-700 transition-all"
-        >
-          <Settings className="h-4 w-4" />
-          {t('customizeDashboard')}
-        </Button>
-      </DialogTrigger>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="flex items-center justify-center h-9 w-9 hover:bg-blue-50 hover:text-blue-700 transition-all"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            {t('customizeDashboard')}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{t('dashboardCustomization')}</DialogTitle>
+          <DialogTitle>{t('customizeDashboard')}</DialogTitle>
           <DialogDescription>
             {t('customizeDashboardDescription')}
           </DialogDescription>

@@ -1,9 +1,16 @@
 
 import { Button } from "@/components/ui/button";
-import { Settings, LayoutDashboard } from "lucide-react";
+import { Settings, LayoutDashboard, Moon, Sun } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DashboardCustomization } from "./DashboardCustomization";
 import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DashboardHeaderProps {
   tenantName: string;
@@ -26,9 +33,14 @@ export function DashboardHeader({
   hiddenSections
 }: DashboardHeaderProps) {
   const { t } = useLocale();
+  const { theme, setTheme } = useTheme();
   
   // Use first name if available, otherwise use full tenant name
   const displayName = firstName || tenantName;
+  
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
   
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
@@ -56,7 +68,29 @@ export function DashboardHeader({
           </div>
         </motion.div>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={toggleTheme}
+                  className="h-9 w-9 hover:bg-blue-50 hover:text-blue-700 transition-all"
+                >
+                  {theme === "dark" ? (
+                    <Sun className="h-4 w-4" />
+                  ) : (
+                    <Moon className="h-4 w-4" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">
+                {theme === "dark" ? t('lightMode') : t('darkMode')}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          
           <DashboardCustomization
             onOrderChange={onOrderChange}
             onVisibilityChange={onVisibilityChange}

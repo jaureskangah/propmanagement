@@ -72,5 +72,9 @@ export const enDashboard = {
   lease: {
     start: "Lease start",
     end: "Lease end"
-  }
+  },
+  // Theme
+  lightMode: "Light mode",
+  darkMode: "Dark mode",
+  toggleTheme: "Toggle theme",
 };
