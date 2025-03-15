@@ -6,6 +6,7 @@ import { CommunicationsListContainer } from "./list/CommunicationsListContainer"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { CommunicationFilters } from "./CommunicationFilters";
 
 interface CommunicationsContentProps {
   communications: Communication[];
