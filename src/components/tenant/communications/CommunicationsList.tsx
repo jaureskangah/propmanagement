@@ -155,7 +155,10 @@ export const CommunicationsList = ({
           <Button 
             variant="outline" 
             size="sm" 
-            onClick={() => setShowAll(!showAll)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowAll(!showAll);
+            }}
             className="flex items-center gap-2 px-4 py-2 rounded-full bg-background border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
           >
             {showAll ? (
