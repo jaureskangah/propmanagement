@@ -60,6 +60,7 @@ export const TenantCommunications = ({
       <CommunicationsPageHeader
         onNewMessageClick={() => setIsNewCommDialogOpen(true)}
         onInviteTenantClick={openInviteDialog}
+        isTenant={isTenant}
       />
 
       <CardContent className="p-6">

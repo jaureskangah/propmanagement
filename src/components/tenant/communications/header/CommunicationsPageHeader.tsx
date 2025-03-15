@@ -15,17 +15,19 @@ import { useAuth } from "@/components/AuthProvider";
 interface CommunicationsPageHeaderProps {
   onNewMessageClick: () => void;
   onInviteTenantClick: () => void;
+  isTenant?: boolean;
 }
 
 export const CommunicationsPageHeader = ({
   onNewMessageClick,
   onInviteTenantClick,
+  isTenant = false,
 }: CommunicationsPageHeaderProps) => {
   const { t } = useLocale();
   const { user } = useAuth();
   
-  // Vérifier si l'utilisateur est un locataire en regardant son e-mail
-  const isTenant = user?.email?.includes('@tenant') || false;
+  // Vérifier si l'utilisateur est un locataire en regardant son e-mail ou la prop isTenant
+  const isUserTenant = isTenant || user?.email?.includes('@tenant') || false;
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm dark:border-gray-700/40 dark:from-gray-900 dark:to-gray-800/30">
@@ -55,7 +57,7 @@ export const CommunicationsPageHeader = ({
 
         <div className="flex items-center gap-2">
           {/* Ne montrer le bouton "Inviter le Locataire" que si l'utilisateur n'est pas un locataire */}
-          {!isTenant && (
+          {!isUserTenant && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
