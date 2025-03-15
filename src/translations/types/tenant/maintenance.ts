@@ -56,4 +56,6 @@ export interface TenantMaintenanceTranslations {
   success: string;
   error: string;
   deadline: string;
+  showMore: string;
+  showLess: string;
 }

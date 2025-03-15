@@ -3,8 +3,9 @@ import { MaintenanceRequest } from "@/types/tenant";
 import { formatDate, formatRelativeDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Wrench, Eye, Clock, AlertCircle, CheckCircle, Star } from "lucide-react";
+import { Wrench, Eye, Clock, AlertCircle, CheckCircle, Star, ChevronRight } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useState } from "react";
 
 interface MaintenanceListProps {
   requests: MaintenanceRequest[];
@@ -18,6 +19,10 @@ export const MaintenanceList = ({
   onViewDetails
 }: MaintenanceListProps) => {
   const { t, language } = useLocale();
+  const [showAll, setShowAll] = useState(false);
+  
+  const INITIAL_DISPLAY_COUNT = 5;
+  const displayedRequests = showAll ? requests : requests.slice(0, INITIAL_DISPLAY_COUNT);
 
   const getStatusIcon = (status: string) => {
     switch(status) {
@@ -60,7 +65,7 @@ export const MaintenanceList = ({
 
   return (
     <div className="space-y-4">
-      {requests.map((request) => {
+      {displayedRequests.map((request) => {
         const daysSinceCreation = Math.floor((new Date().getTime() - new Date(request.created_at).getTime()) / (1000 * 3600 * 24));
         
         return (
@@ -114,6 +119,19 @@ export const MaintenanceList = ({
           </div>
         );
       })}
+      
+      {requests.length > INITIAL_DISPLAY_COUNT && (
+        <div className="flex justify-center pt-2">
+          <Button 
+            variant="outline"
+            onClick={() => setShowAll(!showAll)}
+            className="text-primary hover:text-primary-foreground hover:bg-primary"
+          >
+            {showAll ? t('showLess') : t('showMore')}
+            {!showAll && <ChevronRight className="ml-1 h-4 w-4" />}
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
