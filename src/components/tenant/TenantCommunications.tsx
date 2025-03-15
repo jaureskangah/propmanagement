@@ -1,9 +1,8 @@
 
-import { Card, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Communication } from "@/types/tenant";
 import { NewCommunicationDialog } from "./communications/NewCommunicationDialog";
 import { CommunicationDetailsDialog } from "./communications/CommunicationDetailsDialog";
-import { CommunicationsHeader } from "./communications/header/CommunicationsHeader";
 import { InviteTenantDialog } from "./communications/InviteTenantDialog";
 import { useCommunicationState } from "@/hooks/communications/useCommunicationState";
 import { CommunicationsContent } from "./communications/CommunicationsContent";
@@ -11,6 +10,7 @@ import { useInviteDialog } from "@/hooks/communications/useInviteDialog";
 import { useCreateCommunication } from "@/hooks/communications/useCreateCommunication";
 import { useSelectCommunication } from "@/hooks/communications/useSelectCommunication";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { CommunicationsPageHeader } from "./communications/header/CommunicationsPageHeader";
 
 interface TenantCommunicationsProps {
   communications: Communication[];
@@ -55,21 +55,21 @@ export const TenantCommunications = ({
 
   return (
     <Card className="shadow-sm border-gray-200 dark:border-gray-800">
-      <CardHeader>
-        <CommunicationsHeader 
-          onNewClick={() => setIsNewCommDialogOpen(true)}
-          onInviteTenantClick={openInviteDialog}
-        />
-      </CardHeader>
-
-      <CommunicationsContent
-        communications={communications}
-        onToggleStatus={onToggleStatus}
-        onCommunicationSelect={handleOpenCommunication}
-        onCommunicationUpdate={onCommunicationUpdate}
-        onDeleteCommunication={onDeleteCommunication}
-        tenantId={tenantId}
+      <CommunicationsPageHeader
+        onNewMessageClick={() => setIsNewCommDialogOpen(true)}
+        onInviteTenantClick={openInviteDialog}
       />
+
+      <CardContent className="p-6">
+        <CommunicationsContent
+          communications={communications}
+          onToggleStatus={onToggleStatus}
+          onCommunicationSelect={handleOpenCommunication}
+          onCommunicationUpdate={onCommunicationUpdate}
+          onDeleteCommunication={onDeleteCommunication}
+          tenantId={tenantId}
+        />
+      </CardContent>
 
       <NewCommunicationDialog
         isOpen={isNewCommDialogOpen}

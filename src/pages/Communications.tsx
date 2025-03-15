@@ -9,6 +9,8 @@ import { Communication } from "@/types/tenant";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
+import { MessageSquareOff } from "lucide-react";
 
 const Communications = () => {
   const { t } = useLocale();
@@ -28,8 +30,8 @@ const Communications = () => {
   useEffect(() => {
     if (!isLoading && communications.length === 0 && tenantId) {
       toast({
-        title: "Bienvenue dans vos communications",
-        description: "Vous pouvez envoyer des messages à votre propriétaire directement depuis cette page.",
+        title: t('welcomeToCommunications', { fallback: "Bienvenue dans vos communications" }),
+        description: t('sendMessageDescription', { fallback: "Vous pouvez envoyer des messages à votre propriétaire directement depuis cette page." }),
       });
     }
   }, [isLoading, communications, tenantId]);
@@ -62,7 +64,7 @@ const Communications = () => {
         console.error("Error deleting communication:", error);
         toast({
           title: t('error'),
-          description: "Erreur lors de la suppression du message",
+          description: t('errorDeletingMessage', { fallback: "Erreur lors de la suppression du message" }),
           variant: "destructive",
         });
         setCommunicationToDelete(null);
@@ -72,13 +74,25 @@ const Communications = () => {
   return (
     <div className="flex">
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-6">
+      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6">
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
           </div>
         ) : !tenantId ? (
           <UnlinkedTenantMessage />
+        ) : communications.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
+            <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
+            <p className="text-muted-foreground text-center mt-2 max-w-md">
+              {t('startSendingMessages', { fallback: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier." })}
+            </p>
+          </motion.div>
         ) : (
           <TenantCommunicationsComponent
             communications={communications}

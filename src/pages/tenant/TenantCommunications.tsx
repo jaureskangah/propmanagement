@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MessageSquareOff } from "lucide-react";
+import { motion } from "framer-motion";
 
 const TenantCommunications = () => {
   const {
@@ -57,7 +58,7 @@ const TenantCommunications = () => {
         console.error("Error deleting communication:", error);
         toast({
           title: t('error'),
-          description: "Erreur lors de la suppression du message",
+          description: t('errorDeletingMessage', { fallback: "Erreur lors de la suppression du message" }),
           variant: "destructive",
         });
         setCommunicationToDelete(null);
@@ -67,22 +68,26 @@ const TenantCommunications = () => {
   return (
     <div className="flex">
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-6">
+      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6">
         {isLoading ? (
           <div className="flex flex-col justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            <p className="mt-4 text-muted-foreground">Chargement de vos communications...</p>
+            <p className="mt-4 text-muted-foreground">{t('loadingCommunications', { fallback: "Chargement de vos communications..." })}</p>
           </div>
         ) : !tenantId ? (
           <UnlinkedTenantMessage />
         ) : communications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
             <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
             <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
             <p className="text-muted-foreground text-center mt-2 max-w-md">
-              Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier.
+              {t('startSendingMessages', { fallback: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier." })}
             </p>
-          </div>
+          </motion.div>
         ) : (
           <TenantCommunicationsContent
             communications={communications}
