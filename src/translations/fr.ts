@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { frNavigation } from './features/navigation';
 import { frHero } from './features/hero';
@@ -27,6 +28,7 @@ import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard
 import { frProfile } from './features/tenant/fr/profile';
 import { frDocuments } from './features/tenant/fr/documents';
 import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
+import { frCommunications } from './features/tenant/fr/communications';
 
 const translations = {
   ...frNavigation,
@@ -56,6 +58,7 @@ const translations = {
   ...frProfile,
   ...frDocuments,
   ...frTenantMaintenance,
+  ...frCommunications,
   ...frFinances
 };
 
