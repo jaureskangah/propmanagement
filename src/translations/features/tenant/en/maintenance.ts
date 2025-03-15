@@ -14,6 +14,7 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   priority: "Priority",
   created: "Created",
   updated: "Updated",
+  daysAgo: "days",
   resolved: "Resolved",
   pending: "Pending",
   inProgress: "In Progress",
@@ -55,5 +56,6 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   title: "Title",
   selectPriority: "Select priority",
   success: "Success",
-  error: "Error"
+  error: "Error",
+  deadline: "Deadline"
 };
