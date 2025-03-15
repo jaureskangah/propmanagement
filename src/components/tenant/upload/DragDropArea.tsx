@@ -57,8 +57,8 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
     <motion.div 
       className={`border-2 rounded-lg p-6 text-center cursor-pointer transition-all h-40 flex flex-col items-center justify-center bg-background/70 backdrop-blur-sm ${
         dragActive 
-          ? 'border-blue-500 bg-blue-50/80 dark:bg-blue-900/30' 
-          : 'border-dashed border-gray-300 dark:border-gray-700'
+          ? 'border-purple-500 bg-purple-50/80 dark:bg-purple-900/30' 
+          : 'border-dashed border-purple-200 dark:border-purple-700'
       }`}
       whileHover={{ scale: 1.01, boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)" }}
       onClick={handleClick}
@@ -84,8 +84,8 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
             exit={{ opacity: 0 }}
             className="text-center"
           >
-            <FileUp className="h-14 w-14 mx-auto mb-4 text-blue-500" />
-            <p className="text-lg font-medium text-blue-600 mb-1">
+            <FileUp className="h-14 w-14 mx-auto mb-4 text-purple-500" />
+            <p className="text-lg font-medium text-purple-600 mb-1">
               {t("dropFilesHere")}
             </p>
           </motion.div>
@@ -97,7 +97,7 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
             exit={{ opacity: 0 }}
             className="text-center"
           >
-            <FileUp className="h-14 w-14 mx-auto mb-3 text-blue-500" />
+            <FileUp className="h-14 w-14 mx-auto mb-3 text-purple-500" />
             <p className="text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
               {t("dragFilesHere")}
             </p>

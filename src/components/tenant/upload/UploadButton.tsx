@@ -19,7 +19,7 @@ export const UploadButton = ({ isUploading, onClick, disabled }: UploadButtonPro
       <Button
         onClick={onClick}
         disabled={disabled}
-        className="w-full font-medium shadow-sm"
+        className="w-full font-medium shadow-sm bg-purple-600 hover:bg-purple-700 text-white"
         variant={disabled ? "outline" : "default"}
         size="lg"
       >

@@ -45,7 +45,7 @@ export function DocumentsMainContent({
       )}
       
       {/* Main content */}
-      <div className="flex-1">
+      <div className="flex-1 bg-gradient-to-br from-background to-muted/20 backdrop-blur-sm rounded-lg p-4 border border-purple-100 dark:border-purple-800/30">
         <DocumentsList
           documents={documents}
           filteredDocuments={filteredDocuments}
