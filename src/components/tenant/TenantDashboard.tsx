@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 
 export const TenantDashboard = () => {
   const [sectionOrder, setSectionOrder] = useState<string[]>([]);
-  const [hiddenSections, setHiddenSections] = useState<string[]>([]);
+  const [hiddenSections, setHiddenSections] = useState<string[]>(['payments', 'communications']);
   const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard } = useTenantDashboard();
 
   useEffect(() => {
