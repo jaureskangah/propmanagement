@@ -6,7 +6,7 @@ import { UnlinkedTenantMessage } from "@/components/tenant/communications/Unlink
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
 import { useState } from "react";
-import { Communication } from "@/types/tenant";
+import { Communication, Tenant } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -17,7 +17,7 @@ const TenantCommunications = () => {
   const {
     tenantId,
     communications,
-    handleCreateCommunication,
+    handleCreateCommunication: createCommunication,
     refreshCommunications,
     isLoading,
     tenant
@@ -30,6 +30,15 @@ const TenantCommunications = () => {
 
   // Activer les notifications en temps réel
   useRealtimeNotifications();
+
+  // Adapter la signature de la fonction pour correspondre à ce qui est attendu par TenantCommunicationsContent
+  const handleCreateCommunication = async (data: {
+    subject: string;
+    content: string;
+    category: string;
+  }) => {
+    return await createCommunication(data.subject, data.content, data.category);
+  };
 
   const handleToggleStatusAndRefresh = async (comm: Communication) => {
     const success = await handleToggleStatus(comm);
@@ -95,7 +104,7 @@ const TenantCommunications = () => {
             onCommunicationUpdate={refreshCommunications}
             onToggleStatus={handleToggleStatusAndRefresh}
             onDeleteCommunication={setCommunicationToDelete}
-            tenant={tenant}
+            tenant={tenant as Tenant | null}
           />
         )}
       </div>
