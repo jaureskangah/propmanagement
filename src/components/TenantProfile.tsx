@@ -43,7 +43,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
 
   if (!tenant) {
     return (
-      <Card className="h-[300px] flex items-center justify-center shadow-md">
+      <Card className="h-[300px] flex items-center justify-center shadow-md dark:bg-gray-900">
         <CardContent>
           <p className="text-muted-foreground">{t('noTenantSelected')}</p>
         </CardContent>

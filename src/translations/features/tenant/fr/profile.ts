@@ -25,4 +25,10 @@ export const frProfile: TenantProfileTranslations = {
   uploadAvatar: "Ajouter un avatar",
   changeAvatar: "Changer d'avatar",
   removeAvatar: "Supprimer",
+  leaseActive: "Actif",
+  leaseExpiring: "Expire bientôt",
+  leaseExpired: "Expiré",
+  noProperty: "Aucune propriété assignée",
+  securityDeposit: "Dépôt de Garantie",
+  notes: "Remarques"
 };

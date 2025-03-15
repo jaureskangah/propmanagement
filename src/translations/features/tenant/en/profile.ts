@@ -25,4 +25,10 @@ export const enProfile: TenantProfileTranslations = {
   uploadAvatar: "Upload avatar",
   changeAvatar: "Change avatar",
   removeAvatar: "Remove",
+  leaseActive: "Active",
+  leaseExpiring: "Expiring soon",
+  leaseExpired: "Expired",
+  noProperty: "No property assigned",
+  securityDeposit: "Security Deposit",
+  notes: "Notes"
 };

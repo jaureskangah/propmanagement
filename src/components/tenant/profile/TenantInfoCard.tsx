@@ -36,9 +36,9 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   };
 
   const getLeaseBadgeText = () => {
-    if (leaseEnded) return t('expired');
-    if (leaseEnding) return t('expiring');
-    return t('active');
+    if (leaseEnded) return t('leaseExpired');
+    if (leaseEnding) return t('leaseExpiring');
+    return t('leaseActive');
   };
   
   const getLeaseStatusIcon = () => {
@@ -48,7 +48,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   };
 
   return (
-    <Card className="shadow-sm overflow-hidden border-primary/10 transition-all duration-300 hover:shadow-md">
+    <Card className="shadow-sm overflow-hidden border-primary/10 transition-all duration-300 hover:shadow-md dark:bg-gray-900">
       <div className={cn(
         "p-4 sm:p-6 border-b",
         getLeaseBadgeVariant() === "success" ? "bg-green-50 dark:bg-green-950/20" : "",
@@ -61,9 +61,9 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
               {tenant.name}
               <Badge variant={getLeaseBadgeVariant()} className={cn(
                 "ml-0 mt-1 sm:mt-0 transition-colors flex items-center",
-                getLeaseBadgeVariant() === "success" ? "bg-green-500/15 text-green-600 hover:bg-green-500/20" : "",
-                getLeaseBadgeVariant() === "warning" ? "bg-amber-500/15 text-amber-600 hover:bg-amber-500/20" : "",
-                getLeaseBadgeVariant() === "destructive" ? "bg-red-500/15 text-red-600 hover:bg-red-500/20" : ""
+                getLeaseBadgeVariant() === "success" ? "bg-green-500/15 text-green-600 hover:bg-green-500/20 dark:text-green-400" : "",
+                getLeaseBadgeVariant() === "warning" ? "bg-amber-500/15 text-amber-600 hover:bg-amber-500/20 dark:text-amber-400" : "",
+                getLeaseBadgeVariant() === "destructive" ? "bg-red-500/15 text-red-600 hover:bg-red-500/20 dark:text-red-400" : ""
               )}>
                 {getLeaseStatusIcon()}
                 {getLeaseBadgeText()}
@@ -84,34 +84,34 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
         )}>
           <InfoItem 
             icon={<Mail className="h-4 w-4 text-primary/70" />} 
-            label={t('email')} 
+            label={t('emailProfileLabel')} 
             value={tenant.email} 
           />
           <InfoItem 
             icon={<Phone className="h-4 w-4 text-primary/70" />} 
-            label={t('phone')} 
-            value={tenant.phone || t('notProvided')} 
+            label={t('phoneProfileLabel')} 
+            value={tenant.phone || t('notAvailable')} 
           />
           <InfoItem
             icon={<DollarSign className="h-4 w-4 text-primary/70" />}
-            label={t('rentAmount')}
+            label={t('rentAmountLabel')}
             value={`$${tenant.rent_amount}${t('perMonth')}`}
           />
           <InfoItem
             icon={<CalendarDays className="h-4 w-4 text-primary/70" />}
-            label={t('leaseStart')}
+            label={t('leaseStartProfileLabel')}
             value={formatDate(tenant.lease_start)}
           />
           <InfoItem
             icon={<CalendarDays className="h-4 w-4 text-primary/70" />}
-            label={t('leaseEnd')}
+            label={t('leaseEndProfileLabel')}
             value={formatDate(tenant.lease_end)}
             highlight={leaseEnded || leaseEnding}
           />
           <InfoItem
             icon={<CreditCard className="h-4 w-4 text-primary/70" />}
             label={t('securityDeposit')}
-            value={tenant.security_deposit ? `$${tenant.security_deposit}` : t('notProvided')}
+            value={tenant.security_deposit ? `$${tenant.security_deposit}` : t('notAvailable')}
           />
         </div>
         

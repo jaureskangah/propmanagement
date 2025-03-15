@@ -23,4 +23,10 @@ export interface TenantProfileTranslations {
   uploadAvatar: string;
   changeAvatar: string;
   removeAvatar: string;
+  leaseActive: string;
+  leaseExpiring: string;
+  leaseExpired: string;
+  noProperty: string;
+  securityDeposit: string;
+  notes: string;
 }

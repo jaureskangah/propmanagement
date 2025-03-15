@@ -12,7 +12,7 @@ interface ActivityCardProps {
 export const ActivityCard = ({ title, isLoading, children }: ActivityCardProps) => {
   if (isLoading) {
     return (
-      <Card className="dark-card-gradient">
+      <Card className="dark:bg-gray-900">
         <CardContent className="flex items-center justify-center h-[400px]">
           <Loader2 className="h-8 w-8 animate-spin dark:text-gray-400" />
         </CardContent>
@@ -21,7 +21,7 @@ export const ActivityCard = ({ title, isLoading, children }: ActivityCardProps) 
   }
 
   return (
-    <Card className="font-sans dark-card-gradient">
+    <Card className="font-sans dark:bg-gray-900">
       <CardHeader>
         <CardTitle className="dark:text-white">{title}</CardTitle>
       </CardHeader>
