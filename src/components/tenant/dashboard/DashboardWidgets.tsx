@@ -68,6 +68,10 @@ export const DashboardWidgets = ({
   // Take only the first 4 visible widgets for our 2x2 grid
   const gridWidgets = visibleWidgets.slice(0, 4);
   
+  // Log visible widgets for debugging
+  console.log('Visible widgets:', visibleWidgets);
+  console.log('Grid widgets (first 4):', gridWidgets);
+  
   // Render a widget
   const renderWidget = (widgetId: string, index: number) => {
     const widgetContent = () => {

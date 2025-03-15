@@ -16,8 +16,8 @@ export const TenantDashboard = () => {
     // Initialize default order if we have a tenant
     if (tenant && sectionOrder.length === 0) {
       // Set an order that prioritizes the most relevant widgets first
-      // Making sure notifications is among the first 4 to be visible in the 2x2 grid
-      const defaultOrder = ['property', 'lease', 'notifications', 'maintenance', 'documents', 'chart', 'payments', 'communications'];
+      // Making sure property, lease, notifications and documents are among the first 4 to be visible in the 2x2 grid
+      const defaultOrder = ['property', 'lease', 'notifications', 'documents', 'maintenance', 'chart', 'payments', 'communications'];
       setSectionOrder(defaultOrder);
     }
   }, [tenant, sectionOrder.length]);
