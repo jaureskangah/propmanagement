@@ -4,6 +4,7 @@ import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import { TenantDashboard } from "@/components/tenant/TenantDashboard";
 import { useAuth } from '@/components/AuthProvider';
+import { motion } from "framer-motion";
 
 const TenantDashboardPage = () => {
   const { isAuthenticated, loading, user } = useAuth();
@@ -41,9 +42,14 @@ const TenantDashboardPage = () => {
     <div className="flex h-screen bg-background">
       <AppSidebar isTenant={true} />
       <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto p-4 md:p-6 space-y-6">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          className="container mx-auto p-4 md:p-6 space-y-6"
+        >
           <TenantDashboard />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

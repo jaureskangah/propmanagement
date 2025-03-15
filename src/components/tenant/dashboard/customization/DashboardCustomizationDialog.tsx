@@ -13,6 +13,10 @@ import { Label } from "@/components/ui/label";
 import { Settings } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useState, useEffect } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SortableSectionsList } from "./SortableSectionsList";
+import { DragEndEvent, closestCenter, DndContext } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 
 interface DashboardCustomizationDialogProps {
   onOrderChange: (order: string[]) => void;
@@ -30,11 +34,13 @@ export const DashboardCustomizationDialog = ({
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const [localHidden, setLocalHidden] = useState<string[]>([...hiddenSections]);
+  const [tempOrder, setTempOrder] = useState<string[]>([...currentOrder]);
   
   // Reset local state when props change
   useEffect(() => {
     setLocalHidden([...hiddenSections]);
-  }, [hiddenSections]);
+    setTempOrder([...currentOrder]);
+  }, [hiddenSections, currentOrder]);
   
   const handleCheckboxChange = (widgetId: string) => {
     if (localHidden.includes(widgetId)) {
@@ -44,13 +50,28 @@ export const DashboardCustomizationDialog = ({
     }
   };
   
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id) {
+      setTempOrder((items) => {
+        const oldIndex = items.indexOf(active.id as string);
+        const newIndex = items.indexOf(over.id as string);
+        
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+  
   const handleSave = () => {
     onVisibilityChange(localHidden);
+    onOrderChange(tempOrder);
     setOpen(false);
   };
   
   const widgetNames: Record<string, string> = {
-    'lease': t('lease') || 'Lease',
+    'property': t('property') || 'Property',
+    'lease': t('leaseStatus') || 'Lease',
     'notifications': t('notifications') || 'Notifications',
     'payments': t('payments') || 'Payments',
     'maintenance': t('maintenance') || 'Maintenance',
@@ -79,11 +100,15 @@ export const DashboardCustomizationDialog = ({
           </DialogDescription>
         </DialogHeader>
         
-        <div className="space-y-4 py-4">
-          <div className="space-y-2">
-            <h4 className="font-medium text-sm">{t('visibleSections')}</h4>
+        <Tabs defaultValue="visibility" className="w-full">
+          <TabsList className="grid grid-cols-2 mb-4">
+            <TabsTrigger value="visibility">{t('visibleSections')}</TabsTrigger>
+            <TabsTrigger value="arrange">{t('rearrangeSections')}</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="visibility" className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {currentOrder.map(widgetId => (
+              {tempOrder.map(widgetId => (
                 <div key={widgetId} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`widget-${widgetId}`} 
@@ -96,16 +121,28 @@ export const DashboardCustomizationDialog = ({
                 </div>
               ))}
             </div>
-          </div>
+          </TabsContent>
           
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="outline" onClick={() => setOpen(false)}>
-              {t('cancel')}
-            </Button>
-            <Button onClick={handleSave}>
-              {t('save')}
-            </Button>
-          </div>
+          <TabsContent value="arrange">
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">{t('dragToRearrange')}</p>
+              <DndContext 
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableSectionsList tempOrder={tempOrder} />
+              </DndContext>
+            </div>
+          </TabsContent>
+        </Tabs>
+        
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            {t('cancel')}
+          </Button>
+          <Button onClick={handleSave} className="bg-[#ea384c] hover:bg-[#ea384c]/90 text-white">
+            {t('saveChanges')}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

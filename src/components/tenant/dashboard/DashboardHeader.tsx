@@ -1,8 +1,8 @@
 
-import { RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RefreshCcw, Settings } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { DashboardCustomizationDialog } from "./customization/DashboardCustomizationDialog";
+import { DashboardCustomization } from "./DashboardCustomization";
 import { motion } from "framer-motion";
 
 interface DashboardHeaderProps {
@@ -16,7 +16,7 @@ interface DashboardHeaderProps {
   hiddenSections: string[];
 }
 
-export const DashboardHeader = ({
+export function DashboardHeader({
   tenantName,
   firstName,
   lastName,
@@ -25,44 +25,50 @@ export const DashboardHeader = ({
   onVisibilityChange,
   currentOrder,
   hiddenSections
-}: DashboardHeaderProps) => {
+}: DashboardHeaderProps) {
   const { t } = useLocale();
   
-  // Définir le nom d'affichage avec une priorité claire et une valeur par défaut
-  let displayName = firstName || tenantName || "";
-  
-  // Si aucun nom n'est disponible, utiliser un message générique
-  const welcomeMessage = displayName 
-    ? t('welcomeTenant', { name: displayName }) 
-    : t('welcomeGeneric');
+  // Use first name if available, otherwise use full tenant name
+  const displayName = firstName || tenantName;
   
   return (
-    <div className="flex items-center justify-between mb-6 bg-background sticky top-0 z-10 pt-2 pb-4 backdrop-blur-sm bg-white/90 dark:bg-gray-900/90">
-      <motion.h2 
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="text-3xl font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600"
-      >
-        {welcomeMessage}
-      </motion.h2>
-      <div className="flex items-center gap-2">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={refreshDashboard}
-          className="flex items-center gap-1 hover:bg-blue-50 hover:text-blue-700 transition-all"
+    <div className="space-y-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex-1"
         >
-          <RefreshCw className="h-4 w-4" />
-          {t('refresh')}
-        </Button>
-        <DashboardCustomizationDialog 
-          onOrderChange={onOrderChange}
-          onVisibilityChange={onVisibilityChange}
-          currentOrder={currentOrder}
-          hiddenSections={hiddenSections}
-        />
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
+            {displayName ? t('welcomeTenant', { name: displayName }) : t('welcomeGeneric')}
+          </h1>
+          {firstName && lastName && (
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
+              {lastName}
+            </p>
+          )}
+        </motion.div>
+
+        <div className="flex items-center space-x-3 mt-4 md:mt-0">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={refreshDashboard}
+            className="flex items-center gap-1 hover:bg-blue-50 hover:text-blue-700 transition-all"
+          >
+            <RefreshCcw className="h-4 w-4" />
+            {t('refresh')}
+          </Button>
+          
+          <DashboardCustomization
+            onOrderChange={onOrderChange}
+            onVisibilityChange={onVisibilityChange}
+            currentOrder={currentOrder}
+            hiddenSections={hiddenSections}
+          />
+        </div>
       </div>
     </div>
   );
-};
+}
