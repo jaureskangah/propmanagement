@@ -2,6 +2,7 @@
 import React from "react";
 import { File, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 interface FilePreviewProps {
   file: File;
@@ -10,10 +11,15 @@ interface FilePreviewProps {
 
 export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
   return (
-    <div className="flex items-center justify-between p-4 border rounded-lg bg-slate-50 dark:bg-slate-900">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex items-center justify-between p-4 border rounded-lg bg-background/80 backdrop-blur-sm shadow-sm hover:shadow transition-all"
+    >
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <div className="flex-shrink-0">
-          <File className="h-10 w-10 text-blue-500" />
+        <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg">
+          <File className="h-8 w-8 text-blue-500" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="font-medium truncate max-w-[250px] mb-1">
@@ -32,6 +38,6 @@ export const FilePreview = ({ file, onRemove }: FilePreviewProps) => {
           <XCircle className="h-5 w-5" />
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -72,6 +72,7 @@
   
   html, body {
     font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
   }
 }
 
@@ -81,6 +82,10 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
+    letter-spacing: -0.01em;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-medium tracking-tight;
   }
 }
 
@@ -163,6 +168,16 @@
   
   .dark-widget-content {
     @apply dark:bg-gray-800/80 dark:border-gray-700;
+  }
+  
+  .document-card {
+    @apply bg-background/80 backdrop-blur-sm border rounded-lg p-4 transition-all duration-200;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+  
+  .document-card:hover {
+    @apply bg-background shadow-md;
+    transform: translateY(-2px);
   }
 }
 

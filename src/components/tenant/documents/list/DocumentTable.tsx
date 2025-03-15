@@ -20,11 +20,11 @@ export const DocumentTable = ({
   const { t } = useLocale();
   
   return (
-    <div className="overflow-hidden rounded-lg border">
+    <div className="overflow-hidden rounded-lg border bg-background/70 backdrop-blur-sm shadow-sm">
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b bg-muted/50">
+            <tr className="border-b bg-muted/30">
               <th className="px-4 py-3 text-sm font-medium text-left">{t("document")}</th>
               <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("category")}</th>
               <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell">{t("documentType")}</th>
@@ -39,7 +39,7 @@ export const DocumentTable = ({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
-                className="border-b hover:bg-muted/50"
+                className="border-b hover:bg-muted/30 transition-colors"
               >
                 <DocumentRow 
                   document={document} 

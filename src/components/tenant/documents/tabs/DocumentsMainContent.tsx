@@ -2,6 +2,7 @@
 import { DocumentsList } from "../list/DocumentsList";
 import { DocumentCategories } from "../list/DocumentCategories";
 import { TenantDocument } from "@/types/tenant";
+import { motion } from "framer-motion";
 
 interface DocumentsMainContentProps {
   documents: TenantDocument[] | undefined;
@@ -27,7 +28,12 @@ export function DocumentsMainContent({
   isMobile = false
 }: DocumentsMainContentProps) {
   return (
-    <div className="flex flex-col md:flex-row gap-4 mt-6">
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="flex flex-col md:flex-row gap-4 mt-6"
+    >
       {/* Categories sidebar - hidden on very small mobile screens */}
       {(!isMobile || window.innerWidth > 480) && (
         <DocumentCategories
@@ -50,6 +56,6 @@ export function DocumentsMainContent({
           isMobile={isMobile}
         />
       </div>
-    </div>
+    </motion.div>
   );
 }

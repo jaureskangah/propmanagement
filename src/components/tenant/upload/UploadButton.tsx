@@ -3,6 +3,7 @@ import React from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
 
 interface UploadButtonProps {
   isUploading: boolean;
@@ -14,23 +15,26 @@ export const UploadButton = ({ isUploading, onClick, disabled }: UploadButtonPro
   const { t } = useLocale();
 
   return (
-    <Button
-      onClick={onClick}
-      disabled={disabled}
-      className="w-full"
-      variant={disabled ? "outline" : "default"}
-    >
-      {isUploading ? (
-        <>
-          <div className="animate-spin h-4 w-4 mr-2 border-2 border-current border-t-transparent rounded-full" />
-          {t("uploading")}
-        </>
-      ) : (
-        <>
-          <Upload className="h-4 w-4 mr-2" />
-          {t("uploadDocument")}
-        </>
-      )}
-    </Button>
+    <motion.div whileHover={{ scale: disabled ? 1 : 1.02 }} whileTap={{ scale: disabled ? 1 : 0.98 }}>
+      <Button
+        onClick={onClick}
+        disabled={disabled}
+        className="w-full font-medium shadow-sm"
+        variant={disabled ? "outline" : "default"}
+        size="lg"
+      >
+        {isUploading ? (
+          <>
+            <div className="animate-spin h-5 w-5 mr-2 border-2 border-current border-t-transparent rounded-full" />
+            <span className="text-base">{t("uploading")}</span>
+          </>
+        ) : (
+          <>
+            <Upload className="h-5 w-5 mr-2" />
+            <span className="text-base">{t("uploadDocument")}</span>
+          </>
+        )}
+      </Button>
+    </motion.div>
   );
 };
