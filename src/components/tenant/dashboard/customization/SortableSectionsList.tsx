@@ -62,7 +62,7 @@ export const SortableSectionsList = ({ tempOrder }: SortableSectionsListProps) =
       <div className="space-y-2">
         {tempOrder.map((id) => (
           <SortableItem key={id} id={id}>
-            <div className="flex items-center gap-2 p-3 rounded border bg-muted/60 hover:bg-muted transition-colors">
+            <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/60 hover:bg-muted transition-colors">
               <MoveVertical className="h-4 w-4 text-muted-foreground mr-1" />
               <span className="text-sm font-medium">
                 {widgetNames[id] || id}

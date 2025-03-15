@@ -68,10 +68,6 @@ export const DashboardWidgets = ({
   // Take only the first 4 visible widgets for our 2x2 grid
   const gridWidgets = visibleWidgets.slice(0, 4);
   
-  // Log visible widgets for debugging
-  console.log('Visible widgets:', visibleWidgets);
-  console.log('Grid widgets (first 4):', gridWidgets);
-  
   // Render a widget
   const renderWidget = (widgetId: string, index: number) => {
     const widgetContent = () => {
@@ -139,7 +135,7 @@ export const DashboardWidgets = ({
       <motion.div 
         key={widgetId}
         variants={item}
-        className="w-full h-full"
+        className="w-full h-full transform transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md rounded-xl overflow-hidden"
         initial="hidden"
         animate="show"
         transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -159,4 +155,4 @@ export const DashboardWidgets = ({
       {gridWidgets.map((widgetId, index) => renderWidget(widgetId, index))}
     </motion.div>
   );
-};
+}

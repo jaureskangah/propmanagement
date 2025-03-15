@@ -18,7 +18,6 @@ export const TenantDashboard = () => {
     // Initialize default order if we have a tenant
     if (tenant && sectionOrder.length === 0) {
       // Set an order that prioritizes the most relevant widgets first
-      // Only include the widgets we want to show
       const defaultOrder = ['lease', 'notifications', 'documents', 'maintenance'];
       setSectionOrder(defaultOrder);
     }
@@ -35,7 +34,7 @@ export const TenantDashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <DashboardHeader 
         tenantName={tenant.name || ""}
         firstName={tenant.firstName}
