@@ -81,19 +81,23 @@ export const useTenantData = () => {
           : tenant.name || user?.user_metadata?.full_name;
         
         // Extraire correctement les données de propriété et assurer le bon format
-        let propertyData;
+        let propertyData: { name: string } = { name: "" };
         
         if (Array.isArray(tenant.properties)) {
           // Si c'est un tableau, prendre le premier élément s'il existe
-          propertyData = tenant.properties.length > 0 && tenant.properties[0] 
-            ? { name: tenant.properties[0].name || "" } 
-            : { name: "" };
+          if (tenant.properties.length > 0) {
+            const firstProperty = tenant.properties[0];
+            propertyData = { 
+              name: firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty 
+                ? String(firstProperty.name || "") 
+                : "" 
+            };
+          }
         } else if (tenant.properties && typeof tenant.properties === 'object') {
           // Si c'est déjà un objet, l'utiliser directement
-          propertyData = { name: tenant.properties.name || "" };
-        } else {
-          // Fallback à un objet vide avec name=""
-          propertyData = { name: "" };
+          propertyData = { 
+            name: 'name' in tenant.properties ? String(tenant.properties.name || "") : "" 
+          };
         }
         
         setTenant({
