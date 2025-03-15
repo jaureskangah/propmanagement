@@ -80,15 +80,15 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // S'assurer que properties est bien traité comme un objet unique, pas un tableau
+        // S'assurer que properties est correctement géré (peut être null si pas de propriété)
         setTenant({
           ...tenant,
           name: displayName,
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          // Garder properties tel qu'il est retourné par Supabase
-          properties: tenant.properties
+          // Utiliser les properties tels qu'ils sont retournés par Supabase
+          properties: tenant.properties || undefined
         });
       }
       

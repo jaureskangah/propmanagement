@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -22,6 +23,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
     fullTenant: tenant
   });
   
+  // Safely access the property name, fallback to 'noProperty' translation if undefined
   const propertyName = tenant.properties?.name || t('noProperty');
   
   const formatDate = (dateString: string) => {
