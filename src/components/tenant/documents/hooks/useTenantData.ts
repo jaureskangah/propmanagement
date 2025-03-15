@@ -19,7 +19,10 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
       setIsLoading(true);
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
-        .select('*')
+        .select(`
+          *,
+          properties(name)
+        `)
         .eq('tenant_profile_id', userId)
         .maybeSingle();
 
@@ -28,7 +31,7 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
         throw tenantError;
       }
       
-      console.log("Tenant data result:", tenantData ? "Found" : "Not found");
+      console.log("Tenant data result:", tenantData);
       setTenant(tenantData);
       return tenantData;
     } catch (error) {

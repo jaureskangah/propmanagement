@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -16,6 +15,12 @@ interface TenantInfoCardProps {
 export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
+  
+  console.log("Tenant property details:", {
+    propertyId: tenant.property_id,
+    propertyName: tenant.properties?.name,
+    fullTenant: tenant
+  });
   
   const formatDate = (dateString: string) => {
     try {

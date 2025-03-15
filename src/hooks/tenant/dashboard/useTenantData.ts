@@ -12,6 +12,7 @@ interface TenantData {
   lease_start: string;
   lease_end: string;
   rent_amount: number;
+  property_id: string | null;
   properties?: {
     name: string;
   };
@@ -38,14 +39,17 @@ export const useTenantData = () => {
     try {
       setIsLoading(true);
       
-      // First check if we can get profile data
+      // Log l'ID utilisateur pour le débogage
+      console.log("Fetching tenant data for user_id:", user?.id);
+      
+      // D'abord récupérer les données du profil
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('first_name, last_name, full_name')
+        .select('first_name, last_name')
         .eq('id', user?.id)
         .maybeSingle();
         
-      // Then get tenant data
+      // Puis récupérer les données du locataire avec la jointure sur properties
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
@@ -56,27 +60,32 @@ export const useTenantData = () => {
           lease_start, 
           lease_end, 
           rent_amount,
+          property_id,
           properties (name)
         `)
         .eq('tenant_profile_id', user?.id)
         .maybeSingle();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching tenant data:", error);
+        throw error;
+      }
+
+      console.log("Tenant data fetched:", tenant);
 
       if (tenant) {
-        // Use profile name if available, otherwise fall back to tenant name
-        const displayName = profileData?.full_name || tenant.name || user?.user_metadata?.full_name;
-        const firstName = profileData?.first_name || user?.user_metadata?.first_name;
-        const lastName = profileData?.last_name || user?.user_metadata?.last_name;
+        // Utiliser le nom du profil si disponible, sinon utiliser le nom du locataire
+        const displayName = profileData?.first_name && profileData?.last_name 
+          ? `${profileData.first_name} ${profileData.last_name}` 
+          : tenant.name || user?.user_metadata?.full_name;
         
-        // Handle the properties object properly
+        // Gérer correctement l'objet properties
         setTenant({
           ...tenant,
-          name: displayName, // Use the display name from profile if available
-          firstName: firstName,
-          lastName: lastName,
-          fullName: displayName,
-          properties: tenant.properties as unknown as { name: string }
+          name: displayName,
+          firstName: profileData?.first_name || user?.user_metadata?.first_name,
+          lastName: profileData?.last_name || user?.user_metadata?.last_name,
+          fullName: displayName
         });
       }
       
