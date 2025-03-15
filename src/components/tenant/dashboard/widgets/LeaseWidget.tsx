@@ -58,7 +58,7 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: 0.1 }}
       whileHover={{ y: -5 }}
-      className={`rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br ${getStatusColor()} border p-5`}
+      className={`rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br ${getStatusColor()} border p-5 h-full flex flex-col`}
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
@@ -71,7 +71,7 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
         </div>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-4 flex-1">
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-500">Lease Start</span>

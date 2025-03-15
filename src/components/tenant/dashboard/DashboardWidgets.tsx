@@ -78,7 +78,7 @@ export const DashboardWidgets = ({
       switch (widgetId) {
         case 'property':
           return tenant?.properties && (
-            <div className="h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+            <div className="h-full bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 dark:border-gray-700 flex flex-col">
               <h3 className="text-lg font-semibold mb-2">{tenant.properties.name}</h3>
               <p className="text-gray-500 dark:text-gray-400">Unit: {tenant.unit_number}</p>
             </div>
@@ -154,7 +154,7 @@ export const DashboardWidgets = ({
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 gap-6" 
+      className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr" 
     >
       {gridWidgets.map((widgetId, index) => renderWidget(widgetId, index))}
     </motion.div>
