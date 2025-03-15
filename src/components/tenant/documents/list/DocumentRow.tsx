@@ -35,7 +35,12 @@ export const DocumentRow = ({
       ? document.name.substring(0, 30) + "..." 
       : document.name;
   
-  // Determine type text only
+  // Determine category and type text
+  let categoryText = t("otherDocuments");
+  if (document.category === "lease" || document.category === "important") {
+    categoryText = document.category === "lease" ? t("leaseDocuments") : t("importantDocuments");
+  }
+  
   const typeText = document.document_type === "lease" 
     ? t("lease") 
     : document.document_type === "receipt" 
@@ -79,7 +84,7 @@ export const DocumentRow = ({
             {t("important")}
           </Badge>
         ) : (
-          document.category
+          categoryText
         )}
       </td>
       
