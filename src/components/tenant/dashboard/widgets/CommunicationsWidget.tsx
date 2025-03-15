@@ -29,7 +29,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <MessageSquare className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
-          <h3 className="font-semibold text-blue-700 dark:text-blue-300">Communications</h3>
+          <h3 className="font-semibold text-blue-700 dark:text-blue-300">{t('tenant.communications.communications')}</h3>
           {unreadCount > 0 && (
             <Badge variant="default" className="ml-2 bg-blue-500 hover:bg-blue-600">
               {unreadCount}
@@ -43,7 +43,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
           >
             <Badge variant="outline" className="border-blue-200 bg-blue-100/50 text-blue-800 dark:border-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-              {unreadCount} {unreadCount === 1 ? 'nouveau message' : 'nouveaux messages'}
+              {unreadCount} {unreadCount === 1 ? t('tenant.communications.unread') : t('tenant.communications.messages')}
             </Badge>
           </motion.div>
         )}
@@ -53,7 +53,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
         {communications.length === 0 ? (
           <div className="text-center py-6 bg-white/60 dark:bg-gray-800/20 rounded-lg">
             <MessageSquare className="h-10 w-10 text-blue-300 dark:text-blue-700 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t('noCommunications')}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('tenant.communications.noCommunications')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -81,7 +81,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
                   </div>
                   <div className="flex text-xs text-gray-500 dark:text-gray-400 items-center">
                     {!comm.is_from_tenant && <User className="h-3 w-3 mr-1" />}
-                    {comm.is_from_tenant && <span className="text-xs text-blue-600 dark:text-blue-400 mr-1">{t('sentByYou')}</span>}
+                    {comm.is_from_tenant && <span className="text-xs text-blue-600 dark:text-blue-400 mr-1">{t('tenant.communications.sentByYou')}</span>}
                     <Clock className="h-3 w-3 ml-1 mr-1" />
                     <span className="truncate">
                       {formatDate(comm.created_at)}
@@ -98,14 +98,14 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
                       : "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
                   }
                 >
-                  {comm.category}
+                  {t(`tenant.communications.${comm.category}`)}
                 </Badge>
               </motion.div>
             ))}
             
             {communications.length > 3 && (
               <div className="text-xs text-center text-gray-500 dark:text-gray-400 mt-2">
-                {t('andMoreMessages', { count: (communications.length - 3).toString() })}
+                {t('tenant.communications.andMoreMessages', { count: (communications.length - 3).toString() })}
               </div>
             )}
           </div>
@@ -118,7 +118,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             onClick={() => navigate('/tenant/communications')}
             size="sm"
           >
-            <span className="mr-1">{t('allMessages')}</span>
+            <span className="mr-1">{t('tenant.communications.allMessages')}</span>
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
@@ -126,7 +126,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             onClick={() => navigate('/tenant/communications')}
             size="sm"
           >
-            <span className="mr-1">{t('newMessage')}</span>
+            <span className="mr-1">{t('tenant.communications.newMessage')}</span>
             <PlusCircle className="h-3.5 w-3.5" />
           </Button>
         </div>

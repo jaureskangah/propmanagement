@@ -40,9 +40,9 @@ export const InviteTenantDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{t('inviteTenant')}</DialogTitle>
+          <DialogTitle>{t('tenant.communications.inviteTenant')}</DialogTitle>
           <DialogDescription>
-            {t('inviteTenantDescription')}
+            {t('tenant.communications.inviteTenantDescription')}
           </DialogDescription>
         </DialogHeader>
 

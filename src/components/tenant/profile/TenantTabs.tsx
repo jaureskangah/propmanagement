@@ -42,8 +42,8 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       .then(success => {
         if (success) {
           toast({
-            title: t('success'),
-            description: t('messageDeleted'),
+            title: t('tenant.communications.success'),
+            description: t('tenant.communications.messageDeleted'),
           });
           handleDataUpdate();
           setCommunicationToDelete(null);
@@ -70,8 +70,8 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
           )}
           {isTenantUser && (
             <>
-              <TabsTrigger value="communications">Communications</TabsTrigger>
-              <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+              <TabsTrigger value="communications">{t('tenant.communications.communications')}</TabsTrigger>
+              <TabsTrigger value="maintenance">{t('tenant.maintenance.maintenance')}</TabsTrigger>
             </>
           )}
         </TabsList>
@@ -147,18 +147,18 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
+            <AlertDialogTitle>{t('tenant.communications.confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDeleteMessage') || t('confirmDelete')}
+              {t('tenant.communications.confirmDeleteMessage') || t('tenant.communications.confirmDelete')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{t('tenant.communications.cancel')}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {t('deleteMessage')}
+              {t('tenant.communications.deleteMessage')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
