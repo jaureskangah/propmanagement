@@ -19,6 +19,8 @@ interface TenantData {
   lease_start: string;
   lease_end: string;
   rent_amount: number;
+  firstName?: string;
+  lastName?: string;
   properties?: {
     name: string;
   };
@@ -66,10 +68,10 @@ export const DashboardWidgets = ({
   const renderWidget = (widgetId: string, index: number) => {
     if (hiddenSections.includes(widgetId)) return null;
     
-    // Determine grid column span based on widget type and screen size
+    // Determine grid column span based on widget type
     const getColSpan = () => {
-      if (widgetId === 'chart') return "col-span-1 lg:col-span-3";
-      if (widgetId === 'property' || widgetId === 'lease') return "col-span-1 md:col-span-1";
+      if (widgetId === 'chart') return "col-span-1 md:col-span-2 lg:col-span-3";
+      if (widgetId === 'property' || widgetId === 'lease') return "col-span-1 md:col-span-1 lg:col-span-1";
       return "col-span-1";
     };
     
@@ -150,7 +152,7 @@ export const DashboardWidgets = ({
   
   return (
     <motion.div 
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
       variants={container}
       initial="hidden"
       animate="show"

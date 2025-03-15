@@ -36,7 +36,6 @@ export const TenantDashboard = () => {
         <DashboardHeader 
           tenantName={tenant.name || ""}
           firstName={tenant.firstName}
-          lastName={tenant.lastName}
           refreshDashboard={refreshDashboard}
           onOrderChange={handleOrderChange}
           onVisibilityChange={handleVisibilityChange}
