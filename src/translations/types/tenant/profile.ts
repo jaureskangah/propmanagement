@@ -29,4 +29,10 @@ export interface TenantProfileTranslations {
   noProperty: string;
   securityDeposit: string;
   notes: string;
+  deposited: string;
+  notDeposited: string;
+  update: string;
+  depositStatusUpdated: string;
+  error: string;
+  errorUpdatingDeposit: string;
 }

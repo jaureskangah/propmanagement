@@ -30,5 +30,11 @@ export const frProfile: TenantProfileTranslations = {
   leaseExpired: "Expiré",
   noProperty: "Aucune propriété assignée",
   securityDeposit: "Dépôt de Garantie",
-  notes: "Remarques"
+  notes: "Remarques",
+  deposited: "Déposé",
+  notDeposited: "Non déposé",
+  update: "Mettre à jour",
+  depositStatusUpdated: "Statut du dépôt de garantie mis à jour",
+  error: "Erreur",
+  errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt"
 };

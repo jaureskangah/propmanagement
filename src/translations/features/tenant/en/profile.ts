@@ -30,5 +30,11 @@ export const enProfile: TenantProfileTranslations = {
   leaseExpired: "Expired",
   noProperty: "No property assigned",
   securityDeposit: "Security Deposit",
-  notes: "Notes"
+  notes: "Notes",
+  deposited: "Deposited",
+  notDeposited: "Not deposited",
+  update: "Update",
+  depositStatusUpdated: "Security deposit status updated",
+  error: "Error",
+  errorUpdatingDeposit: "Error updating security deposit"
 };

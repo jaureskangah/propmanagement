@@ -8,6 +8,11 @@ import type { Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useSupabaseUpdate } from "@/hooks/supabase/useSupabaseUpdate";
+import { useToast } from "@/hooks/use-toast";
 
 interface TenantInfoCardProps {
   tenant: Tenant;
@@ -16,12 +21,45 @@ interface TenantInfoCardProps {
 export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
+  const { toast } = useToast();
+  
+  // État pour le dépôt de garantie
+  const [securityDepositStatus, setSecurityDepositStatus] = useState(
+    tenant.security_deposit ? "deposited" : "not_deposited"
+  );
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  const updateTenant = useSupabaseUpdate("tenants", {
+    successMessage: t('depositStatusUpdated') || "Statut du dépôt mis à jour",
+  });
   
   console.log("Tenant property details:", {
     propertyId: tenant.property_id,
     propertyName: tenant.properties?.name,
     fullTenant: tenant
   });
+  
+  // Fonction pour mettre à jour le statut du dépôt de garantie
+  const handleUpdateSecurityDeposit = async () => {
+    setIsUpdating(true);
+    try {
+      await updateTenant.mutateAsync({
+        id: tenant.id,
+        data: {
+          security_deposit: securityDepositStatus === "deposited" ? tenant.rent_amount : null
+        }
+      });
+    } catch (error) {
+      console.error("Error updating security deposit status:", error);
+      toast({
+        title: t('error') || "Erreur",
+        description: t('errorUpdatingDeposit') || "Erreur lors de la mise à jour du dépôt",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
   
   // Safely access the property name, fallback to 'noProperty' translation if undefined
   const propertyName = tenant.properties?.name || t('noProperty');
@@ -117,11 +155,46 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
             value={formatDate(tenant.lease_end)}
             highlight={leaseEnded || leaseEnding}
           />
-          <InfoItem
-            icon={<CreditCard className="h-4 w-4 text-primary/70" />}
-            label={t('securityDeposit')}
-            value={tenant.security_deposit ? `$${tenant.security_deposit}` : t('notAvailable')}
-          />
+          <div className={cn(
+            `flex flex-col gap-3 p-2 rounded-md transition-colors`,
+            'hover:bg-secondary/50'
+          )}>
+            <div className="space-y-1 min-w-0">
+              <p className="text-xs text-muted-foreground flex items-center">
+                <CreditCard className="h-4 w-4 mr-2 text-primary/70" />
+                {t('securityDeposit')}
+              </p>
+              <div className="space-y-3">
+                <RadioGroup 
+                  value={securityDepositStatus} 
+                  onValueChange={setSecurityDepositStatus}
+                  className="flex flex-col space-y-1"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="deposited" id="deposited" />
+                    <label htmlFor="deposited" className="text-sm cursor-pointer">
+                      {t('deposited') || "Déposé"} (${tenant.rent_amount})
+                    </label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="not_deposited" id="not_deposited" />
+                    <label htmlFor="not_deposited" className="text-sm cursor-pointer">
+                      {t('notDeposited') || "Non déposé"}
+                    </label>
+                  </div>
+                </RadioGroup>
+                <Button 
+                  size="sm" 
+                  onClick={handleUpdateSecurityDeposit}
+                  disabled={isUpdating || (securityDepositStatus === "deposited" && tenant.security_deposit) || 
+                             (securityDepositStatus === "not_deposited" && !tenant.security_deposit)}
+                  className="w-full"
+                >
+                  {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
         
         {tenant.notes && (
