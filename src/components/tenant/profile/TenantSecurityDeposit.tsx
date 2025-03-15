@@ -28,6 +28,23 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
     }
   };
 
+  // Determine if the button should be disabled
+  const isButtonDisabled = () => {
+    if (isUpdating) return true;
+    
+    // If status is "deposited" and security deposit already exists
+    if (securityDepositStatus === "deposited" && tenant.security_deposit !== null && tenant.security_deposit !== undefined) {
+      return true;
+    }
+    
+    // If status is "not_deposited" and security deposit doesn't exist
+    if (securityDepositStatus === "not_deposited" && (tenant.security_deposit === null || tenant.security_deposit === undefined)) {
+      return true;
+    }
+    
+    return false;
+  };
+
   return (
     <div className={cn(
       `flex flex-col gap-3 p-4 sm:px-6 sm:pb-6`,
@@ -60,8 +77,7 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
           <Button 
             size="sm" 
             onClick={handleUpdateSecurityDeposit}
-            disabled={isUpdating || (securityDepositStatus === "deposited" && tenant.security_deposit) || 
-                      (securityDepositStatus === "not_deposited" && !tenant.security_deposit)}
+            disabled={isButtonDisabled()}
             className="w-full"
           >
             {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
