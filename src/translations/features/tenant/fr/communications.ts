@@ -3,8 +3,14 @@ import type { TenantCommunicationsTranslations } from '../../../types/tenant/com
 
 export const frCommunications: TenantCommunicationsTranslations = {
   communications: "Communications",
+  communicationsHistory: "Historique des Communications",
+  communicationsDescription: "Gérez toutes vos communications immobilières en un seul endroit",
+  managePropertyCommunications: "Gérez toutes vos communications immobilières en un seul endroit",
   newMessage: "Nouveau Message",
   inviteTenant: "Inviter le Locataire",
+  inviteTenantTooltip: "Inviter un locataire à communiquer avec vous",
+  inviteTenantDescription: "Inviter un locataire à communiquer avec vous",
+  sendNewMessage: "Envoyer un nouveau message",
   subject: "Sujet",
   content: "Message",
   send: "Envoyer",
@@ -43,10 +49,18 @@ export const frCommunications: TenantCommunicationsTranslations = {
   cantReply: "Impossible de répondre à ce message",
   sendReplyError: "Erreur lors de l'envoi de la réponse",
   unread: "Non lu",
+  read: "Lu",
   messages: "Messages",
   sentByYou: "Envoyé par vous",
   payment: "Paiement",
   success: "Succès",
   error: "Erreur",
-  andMoreMessages: "Et {count} messages supplémentaires"
+  andMoreMessages: "Et {count} messages supplémentaires",
+  subjectRequired: "Le sujet est requis",
+  contentRequired: "Le contenu du message est requis",
+  welcomeToCommunications: "Bienvenue dans vos communications",
+  sendMessageDescription: "Vous pouvez envoyer des messages à votre gestionnaire immobilier directement depuis cette page.",
+  errorDeletingMessage: "Erreur lors de la suppression du message",
+  email: "Email",
+  enterEmail: "Entrez l'adresse email"
 };

@@ -3,8 +3,14 @@ import type { TenantCommunicationsTranslations } from '../../../types/tenant/com
 
 export const enCommunications: TenantCommunicationsTranslations = {
   communications: "Communications",
+  communicationsHistory: "Communications History",
+  communicationsDescription: "Manage all your property communications in one place",
+  managePropertyCommunications: "Manage all your property communications in one place",
   newMessage: "New Message",
   inviteTenant: "Invite Tenant",
+  inviteTenantTooltip: "Invite a tenant to communicate with you",
+  inviteTenantDescription: "Invite a tenant to communicate with you",
+  sendNewMessage: "Send a new message",
   subject: "Subject",
   content: "Message",
   send: "Send",
@@ -43,10 +49,18 @@ export const enCommunications: TenantCommunicationsTranslations = {
   cantReply: "Cannot reply to this message",
   sendReplyError: "Error sending reply",
   unread: "Unread",
+  read: "Read",
   messages: "Messages",
   sentByYou: "Sent by you",
   payment: "Payment",
   success: "Success",
   error: "Error",
-  andMoreMessages: "And {count} more messages"
+  andMoreMessages: "And {count} more messages",
+  subjectRequired: "Subject is required",
+  contentRequired: "Message content is required",
+  welcomeToCommunications: "Welcome to your communications",
+  sendMessageDescription: "You can send messages to your property manager directly from this page.",
+  errorDeletingMessage: "Error deleting message",
+  email: "Email",
+  enterEmail: "Enter email address"
 };

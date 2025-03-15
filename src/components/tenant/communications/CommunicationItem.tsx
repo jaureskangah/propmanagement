@@ -27,6 +27,17 @@ export const CommunicationItem = ({
   const locale = language === 'fr' ? fr : enUS;
   const hasAttachments = communication.attachments && communication.attachments.length > 0;
   
+  // Translate category
+  const getCategory = (category: string) => {
+    switch(category) {
+      case 'general': return t('general');
+      case 'urgent': return t('urgent');
+      case 'maintenance': return t('maintenance');
+      case 'payment': return t('payment');
+      default: return t('general');
+    }
+  };
+  
   return (
     <div
       className="flex items-start gap-4 pl-10 relative animate-fade-in cursor-pointer hover:bg-accent/50 rounded-lg p-2 transition-colors"
@@ -43,7 +54,7 @@ export const CommunicationItem = ({
               variant="secondary" 
               className={`${categoryColor} inline-flex items-center`}
             >
-              {t('general', { fallback: 'general' })}
+              {getCategory(communication.category || 'general')}
             </Badge>
             {hasAttachments && (
               <Badge variant="outline" className="inline-flex items-center gap-1">
@@ -62,7 +73,7 @@ export const CommunicationItem = ({
               }}
             >
               <Badge variant={communication.status === "read" ? "secondary" : "default"}>
-                {communication.status === "read" ? t('read', { fallback: 'read' }) : t('unread', { fallback: 'unread' })}
+                {communication.status === "read" ? t('read') : t('unread')}
               </Badge>
             </Button>
           </div>
@@ -70,7 +81,7 @@ export const CommunicationItem = ({
         <div className="text-sm text-muted-foreground">
           {format(new Date(communication.created_at), "PPp", { locale })}
           {communication.is_from_tenant && (
-            <Badge variant="outline" className="ml-2">{t('sentByYou', { fallback: 'From tenant' })}</Badge>
+            <Badge variant="outline" className="ml-2">{t('sentByYou')}</Badge>
           )}
         </div>
       </div>

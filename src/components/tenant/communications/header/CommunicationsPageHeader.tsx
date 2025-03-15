@@ -39,7 +39,7 @@ export const CommunicationsPageHeader = ({
             </div>
             <div className="space-y-1.5">
               <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans dark:from-blue-400 dark:to-blue-600">
-                {t('communicationsHistory')}
+                {t('communications')}
               </h1>
               <p className="text-muted-foreground text-sm font-sans dark:text-gray-400">
                 {t('communicationsDescription', { fallback: t('managePropertyCommunications') })}
@@ -61,7 +61,7 @@ export const CommunicationsPageHeader = ({
                 </Button>
               </TooltipTrigger>
               <TooltipContent side="bottom">
-                {t('inviteTenantDescription', { fallback: "Invite a tenant to communicate with you" })}
+                {t('inviteTenantDescription', { fallback: t('inviteTenantTooltip') })}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

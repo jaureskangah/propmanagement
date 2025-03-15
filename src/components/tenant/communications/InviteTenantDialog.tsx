@@ -1,7 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { InviteTenantForm } from "./invite/InviteTenantForm";
 import { useInvitationService } from "./invite/useInvitationService";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface InviteTenantDialogProps {
   isOpen: boolean;
@@ -16,12 +18,12 @@ export const InviteTenantDialog = ({
   tenantId,
   defaultEmail = ""
 }: InviteTenantDialogProps) => {
+  const { t } = useLocale();
   const [email, setEmail] = useState(defaultEmail);
   const { isLoading, sendInvitation } = useInvitationService(tenantId, onClose);
 
   useEffect(() => {
     if (isOpen && defaultEmail) {
-      console.log("Setting default email in dialog:", defaultEmail); // Ajout d'un log pour déboguer
       setEmail(defaultEmail);
     }
   }, [isOpen, defaultEmail]);
@@ -38,9 +40,9 @@ export const InviteTenantDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Invite Tenant to Communications</DialogTitle>
+          <DialogTitle>{t('inviteTenant')}</DialogTitle>
           <DialogDescription>
-            Send an invitation to your tenant to join the communications platform.
+            {t('inviteTenantDescription', { fallback: "Inviter un locataire à rejoindre la plateforme de communications." })}
           </DialogDescription>
         </DialogHeader>
 

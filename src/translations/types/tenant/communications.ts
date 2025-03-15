@@ -1,8 +1,14 @@
 
 export interface TenantCommunicationsTranslations {
   communications: string;
+  communicationsHistory: string;
+  communicationsDescription: string;
+  managePropertyCommunications: string;
   newMessage: string;
   inviteTenant: string;
+  inviteTenantTooltip: string;
+  inviteTenantDescription: string;
+  sendNewMessage: string;
   subject: string;
   content: string;
   send: string;
@@ -41,10 +47,18 @@ export interface TenantCommunicationsTranslations {
   cantReply: string;
   sendReplyError: string;
   unread: string;
+  read: string;
   messages: string;
   sentByYou: string;
   payment: string;
   success: string;
   error: string;
   andMoreMessages: string;
+  subjectRequired: string;
+  contentRequired: string;
+  welcomeToCommunications: string;
+  sendMessageDescription: string;
+  errorDeletingMessage: string;
+  email: string;
+  enterEmail: string;
 }
