@@ -57,5 +57,7 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   selectPriority: "Sélectionner la priorité",
   success: "Succès",
   error: "Erreur",
-  deadline: "Date limite"
+  deadline: "Date limite",
+  showMore: "Voir plus",
+  showLess: "Voir moins"
 };
