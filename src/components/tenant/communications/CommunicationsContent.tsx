@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { CommunicationFilters } from "./CommunicationFilters";
+import { Button } from "@/components/ui/button";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface CommunicationsContentProps {
   communications: Communication[];
@@ -30,6 +32,8 @@ export const CommunicationsContent = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
+  const [showAll, setShowAll] = useState(false);
+  const INITIAL_DISPLAY_COUNT = 5;
 
   // Fonction pour filtrer les communications
   const filteredCommunications = useMemo(() => {
@@ -73,6 +77,29 @@ export const CommunicationsContent = ({
     return grouped;
   }, [filteredCommunications]);
 
+  // Communications à afficher (limitées ou toutes)
+  const displayedCommunications = useMemo(() => {
+    if (showAll) {
+      return filteredCommunications;
+    }
+    return filteredCommunications.slice(0, INITIAL_DISPLAY_COUNT);
+  }, [filteredCommunications, showAll]);
+
+  // Grouper les communications à afficher
+  const displayedGroupedCommunications = useMemo(() => {
+    const grouped: Record<string, Communication[]> = {};
+    
+    displayedCommunications.forEach(comm => {
+      const type = comm.type || "message";
+      if (!grouped[type]) {
+        grouped[type] = [];
+      }
+      grouped[type].push(comm);
+    });
+    
+    return grouped;
+  }, [displayedCommunications]);
+
   // Compter les messages non lus et urgents
   const unreadCount = useMemo(() => {
     return communications.filter(comm => comm.status === "unread").length;
@@ -87,7 +114,12 @@ export const CommunicationsContent = ({
     setSearchTerm("");
     setSelectedType(null);
     setSelectedDate("");
+    setShowAll(false);
   }, [activeTab]);
+
+  const toggleShowAll = () => {
+    setShowAll(!showAll);
+  };
 
   return (
     <div className="px-6 pb-6">
@@ -121,32 +153,98 @@ export const CommunicationsContent = ({
         
         <TabsContent value="all" className="mt-4">
           <CommunicationsListContainer
-            filteredCommunications={filteredCommunications}
-            groupedCommunications={groupedCommunications}
+            filteredCommunications={displayedCommunications}
+            groupedCommunications={displayedGroupedCommunications}
             onCommunicationClick={onCommunicationSelect}
             onToggleStatus={onToggleStatus}
             onDeleteCommunication={onDeleteCommunication}
           />
+          {filteredCommunications.length > INITIAL_DISPLAY_COUNT && (
+            <div className="flex justify-center mt-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={toggleShowAll}
+                className="flex items-center gap-2"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="h-4 w-4" />
+                    {t('showLess')}
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4" />
+                    {t('showMore')}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="urgent" className="mt-4">
           <CommunicationsListContainer
-            filteredCommunications={filteredCommunications}
-            groupedCommunications={groupedCommunications}
+            filteredCommunications={displayedCommunications}
+            groupedCommunications={displayedGroupedCommunications}
             onCommunicationClick={onCommunicationSelect}
             onToggleStatus={onToggleStatus}
             onDeleteCommunication={onDeleteCommunication}
           />
+          {filteredCommunications.length > INITIAL_DISPLAY_COUNT && (
+            <div className="flex justify-center mt-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={toggleShowAll}
+                className="flex items-center gap-2"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="h-4 w-4" />
+                    {t('showLess')}
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4" />
+                    {t('showMore')}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </TabsContent>
         
         <TabsContent value="unread" className="mt-4">
           <CommunicationsListContainer
-            filteredCommunications={filteredCommunications}
-            groupedCommunications={groupedCommunications}
+            filteredCommunications={displayedCommunications}
+            groupedCommunications={displayedGroupedCommunications}
             onCommunicationClick={onCommunicationSelect}
             onToggleStatus={onToggleStatus}
             onDeleteCommunication={onDeleteCommunication}
           />
+          {filteredCommunications.length > INITIAL_DISPLAY_COUNT && (
+            <div className="flex justify-center mt-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={toggleShowAll}
+                className="flex items-center gap-2"
+              >
+                {showAll ? (
+                  <>
+                    <ChevronUp className="h-4 w-4" />
+                    {t('showLess')}
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="h-4 w-4" />
+                    {t('showMore')}
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </TabsContent>
       </Tabs>
     </div>
