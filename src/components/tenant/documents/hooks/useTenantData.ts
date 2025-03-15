@@ -35,11 +35,25 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
       
       // Ensure properties has the correct format
       if (tenantData) {
+        // Handle properties data correctly
+        let formattedProperties;
+        
+        if (Array.isArray(tenantData.properties)) {
+          // If it's an array, take the first element if it exists
+          formattedProperties = tenantData.properties.length > 0 && tenantData.properties[0]
+            ? { name: tenantData.properties[0].name || "" }
+            : { name: "" };
+        } else if (tenantData.properties && typeof tenantData.properties === 'object') {
+          // If it's already an object, use it directly
+          formattedProperties = { name: tenantData.properties.name || "" };
+        } else {
+          // Fallback to empty object with name=""
+          formattedProperties = { name: "" };
+        }
+        
         const formattedTenant = {
           ...tenantData,
-          properties: Array.isArray(tenantData.properties) && tenantData.properties.length > 0
-            ? { name: tenantData.properties[0]?.name || "" }
-            : tenantData.properties || { name: "" }
+          properties: formattedProperties
         };
         
         setTenant(formattedTenant);

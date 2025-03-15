@@ -80,11 +80,21 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // Extraire correctement les données de propriété 
-        // Supabase retourne properties comme un tableau avec un seul élément ou null
-        const propertyData = Array.isArray(tenant.properties) && tenant.properties.length > 0
-          ? { name: tenant.properties[0]?.name || "" }
-          : tenant.properties || { name: "" };
+        // Extraire correctement les données de propriété et assurer le bon format
+        let propertyData;
+        
+        if (Array.isArray(tenant.properties)) {
+          // Si c'est un tableau, prendre le premier élément s'il existe
+          propertyData = tenant.properties.length > 0 && tenant.properties[0] 
+            ? { name: tenant.properties[0].name || "" } 
+            : { name: "" };
+        } else if (tenant.properties && typeof tenant.properties === 'object') {
+          // Si c'est déjà un objet, l'utiliser directement
+          propertyData = { name: tenant.properties.name || "" };
+        } else {
+          // Fallback à un objet vide avec name=""
+          propertyData = { name: "" };
+        }
         
         setTenant({
           ...tenant,
