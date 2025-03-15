@@ -114,16 +114,9 @@ export const DashboardCustomizationDialog = ({
                     id={`widget-${widgetId}`} 
                     checked={!localHidden.includes(widgetId)}
                     onCheckedChange={() => handleCheckboxChange(widgetId)}
-                    disabled={widgetId === 'payments' || widgetId === 'communications'}
                   />
-                  <Label 
-                    htmlFor={`widget-${widgetId}`} 
-                    className={`text-sm cursor-pointer ${(widgetId === 'payments' || widgetId === 'communications') ? 'text-gray-400' : ''}`}
-                  >
+                  <Label htmlFor={`widget-${widgetId}`} className="text-sm cursor-pointer">
                     {widgetNames[widgetId] || widgetId}
-                    {(widgetId === 'payments' || widgetId === 'communications') && (
-                      <span className="ml-1 text-xs text-gray-400">({t('hidden')})</span>
-                    )}
                   </Label>
                 </div>
               ))}
