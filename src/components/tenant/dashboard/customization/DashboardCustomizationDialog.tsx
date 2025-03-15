@@ -42,6 +42,9 @@ export const DashboardCustomizationDialog = ({
     setTempOrder([...currentOrder]);
   }, [hiddenSections, currentOrder]);
   
+  // Widgets to hide from customization
+  const hiddenWidgets = ['property', 'payments', 'communications', 'chart'];
+  
   const handleCheckboxChange = (widgetId: string) => {
     if (localHidden.includes(widgetId)) {
       setLocalHidden(localHidden.filter(id => id !== widgetId));
@@ -80,6 +83,9 @@ export const DashboardCustomizationDialog = ({
     'chart': t('paymentHistory') || 'Payment History'
   };
   
+  // Filter out the widgets we want to hide from customization
+  const visibleWidgets = tempOrder.filter(widgetId => !hiddenWidgets.includes(widgetId));
+  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -108,22 +114,18 @@ export const DashboardCustomizationDialog = ({
           
           <TabsContent value="visibility" className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {tempOrder.map(widgetId => (
+              {visibleWidgets.map(widgetId => (
                 <div key={widgetId} className="flex items-center space-x-2">
                   <Checkbox 
                     id={`widget-${widgetId}`} 
                     checked={!localHidden.includes(widgetId)}
                     onCheckedChange={() => handleCheckboxChange(widgetId)}
-                    disabled={widgetId === 'payments' || widgetId === 'communications'}
                   />
                   <Label 
                     htmlFor={`widget-${widgetId}`} 
-                    className={`text-sm cursor-pointer ${(widgetId === 'payments' || widgetId === 'communications') ? 'text-gray-400' : ''}`}
+                    className="text-sm cursor-pointer"
                   >
                     {widgetNames[widgetId] || widgetId}
-                    {(widgetId === 'payments' || widgetId === 'communications') && (
-                      <span className="ml-1 text-xs text-gray-400">({t('hidden')})</span>
-                    )}
                   </Label>
                 </div>
               ))}
@@ -137,7 +139,9 @@ export const DashboardCustomizationDialog = ({
                 collisionDetection={closestCenter}
                 onDragEnd={handleDragEnd}
               >
-                <SortableSectionsList tempOrder={tempOrder} />
+                <SortableSectionsList 
+                  tempOrder={visibleWidgets} 
+                />
               </DndContext>
             </div>
           </TabsContent>
