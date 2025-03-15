@@ -55,22 +55,22 @@ export const CommunicationsTabs = ({
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-6">
-      <TabsList className="w-full grid grid-cols-3 mb-2">
-        <TabsTrigger value="all" className="flex gap-2 items-center">
+      <TabsList className="w-full grid grid-cols-3 mb-4 p-1 bg-muted/50 rounded-xl">
+        <TabsTrigger value="all" className="flex gap-2 items-center rounded-lg py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-800">
           {t('allMessages')}
-          <Badge variant="secondary" className="ml-1">{communications.length}</Badge>
+          <Badge variant="secondary" className="ml-1 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">{communications.length}</Badge>
         </TabsTrigger>
-        <TabsTrigger value="urgent" className="flex gap-2 items-center">
+        <TabsTrigger value="urgent" className="flex gap-2 items-center rounded-lg py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-800">
           {t('urgent')}
           <Badge variant="destructive" className="ml-1">{urgentCount}</Badge>
         </TabsTrigger>
-        <TabsTrigger value="unread" className="flex gap-2 items-center">
+        <TabsTrigger value="unread" className="flex gap-2 items-center rounded-lg py-2.5 data-[state=active]:bg-white data-[state=active]:shadow-sm dark:data-[state=active]:bg-gray-800">
           {t('unread')}
-          <Badge variant="secondary" className="ml-1">{unreadCount}</Badge>
+          <Badge variant="secondary" className="ml-1 bg-blue-500 text-white dark:bg-blue-600">{unreadCount}</Badge>
         </TabsTrigger>
       </TabsList>
 
-      <div className="mt-4">
+      <div className="mt-4 mb-6">
         <CommunicationFilters
           searchQuery={searchTerm}
           startDate={selectedDate}

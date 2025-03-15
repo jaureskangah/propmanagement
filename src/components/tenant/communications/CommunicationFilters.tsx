@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Filter, X, Calendar, Search, MessageSquare, AlertTriangle, Clock, Mail } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 interface CommunicationFiltersProps {
   searchQuery: string;
@@ -69,21 +70,21 @@ export const CommunicationFilters = ({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row gap-3 bg-muted/30 p-3 rounded-lg">
+      <div className="flex flex-col md:flex-row gap-3 bg-muted/30 p-4 rounded-xl border border-gray-100 dark:border-gray-800">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             placeholder={t('searchMessages')}
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="w-full pl-9 h-9 rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+            className="w-full pl-10 h-10 rounded-lg border border-input bg-background px-3 py-2 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
           />
           {searchQuery && (
             <Button 
               variant="ghost" 
               size="sm" 
-              className="absolute right-1 top-1 h-7 w-7 p-0" 
+              className="absolute right-1 top-1 h-8 w-8 p-0 rounded-full" 
               onClick={() => handleSearchChange("")}
             >
               <X className="h-4 w-4" />
@@ -98,12 +99,12 @@ export const CommunicationFilters = ({
           />
         </div>
         
-        <div className="flex-shrink-0 min-w-[180px]">
+        <div className="flex-shrink-0 min-w-[200px]">
           <Select 
             value={selectedType || "all"} 
             onValueChange={handleTypeChange}
           >
-            <SelectTrigger className="h-9">
+            <SelectTrigger className="h-10 bg-background rounded-lg border-input">
               <div className="flex items-center">
                 <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
                 <SelectValue placeholder={t('filter')} />
@@ -129,7 +130,12 @@ export const CommunicationFilters = ({
         </div>
         
         {filtersApplied && (
-          <Button variant="ghost" size="sm" onClick={clearFilters} className="flex-shrink-0">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={clearFilters} 
+            className="flex-shrink-0 h-10 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
             <X className="h-4 w-4 mr-2" />
             {t('clearFilter')}
           </Button>
@@ -137,9 +143,14 @@ export const CommunicationFilters = ({
       </div>
       
       {filtersApplied && (
-        <div className="flex flex-wrap gap-2">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="flex flex-wrap gap-2"
+        >
           {searchQuery && (
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge variant="secondary" className="flex items-center gap-1 py-1.5 px-3 bg-blue-50 text-blue-700 border border-blue-100 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800">
               <Search className="h-3 w-3" />
               {searchQuery}
               <Button 
@@ -154,7 +165,7 @@ export const CommunicationFilters = ({
           )}
           
           {startDate && (
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge variant="secondary" className="flex items-center gap-1 py-1.5 px-3 bg-purple-50 text-purple-700 border border-purple-100 dark:bg-purple-900/20 dark:text-purple-300 dark:border-purple-800">
               <Calendar className="h-3 w-3" />
               {new Date(startDate).toLocaleDateString()}
               <Button 
@@ -169,7 +180,7 @@ export const CommunicationFilters = ({
           )}
           
           {selectedType && (
-            <Badge variant="secondary" className="flex items-center gap-1">
+            <Badge variant="secondary" className="flex items-center gap-1 py-1.5 px-3 bg-green-50 text-green-700 border border-green-100 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800">
               {getTypeIcon(selectedType)}
               {selectedType}
               <Button 
@@ -182,7 +193,7 @@ export const CommunicationFilters = ({
               </Button>
             </Badge>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );

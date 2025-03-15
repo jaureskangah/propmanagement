@@ -98,7 +98,7 @@ export const CommunicationItem = ({
 
   return (
     <div
-      className={`flex items-start gap-4 relative animate-fade-in cursor-pointer rounded-lg p-3 transition-colors mb-2 ${unreadStyle}`}
+      className={`flex items-start gap-4 relative animate-fadeIn cursor-pointer rounded-lg p-4 transition-all duration-200 shadow-sm mb-3 ${unreadStyle} hover:transform hover:-translate-y-0.5`}
       onClick={onClick}
     >
       <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-700">
@@ -106,7 +106,7 @@ export const CommunicationItem = ({
       </div>
       
       <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
+        <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <h4 className="font-medium text-foreground dark:text-gray-100 truncate max-w-[250px]">
               {highlightMatch(communication.subject || '', searchTerm)}
@@ -129,7 +129,7 @@ export const CommunicationItem = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
               onClick={(e) => {
                 e.stopPropagation();
                 onToggleStatus();
@@ -144,7 +144,7 @@ export const CommunicationItem = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+              className="h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
               onClick={(e) => {
                 e.stopPropagation();
                 onDelete();
@@ -156,7 +156,7 @@ export const CommunicationItem = ({
           </div>
         </div>
         
-        <div className="text-sm text-muted-foreground dark:text-gray-400 mb-1">
+        <div className="text-sm text-muted-foreground dark:text-gray-400 mb-1.5">
           {formatDate(communication.created_at)}
           {communication.is_from_tenant && 
             <Badge variant="outline" className="ml-2 text-xs">
@@ -165,7 +165,7 @@ export const CommunicationItem = ({
           }
         </div>
         
-        <p className="text-sm text-muted-foreground line-clamp-1">
+        <p className="text-sm text-muted-foreground line-clamp-2 transition-all group-hover:line-clamp-3">
           {highlightMatch(truncateContent(communication.content) || t('noContent'), searchTerm)}
         </p>
       </div>

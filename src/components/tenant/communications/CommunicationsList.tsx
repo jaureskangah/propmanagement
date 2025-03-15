@@ -7,6 +7,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 interface CommunicationsListProps {
   filteredCommunications: Communication[];
@@ -30,12 +31,20 @@ export const CommunicationsList = ({
   
   if (!filteredCommunications?.length) {
     return (
-      <div className="text-center py-12 border-2 border-dashed rounded-lg bg-muted/20 dark:border-gray-700 flex flex-col items-center justify-center">
-        <MessageCircle className="h-12 w-12 text-muted-foreground mb-3" />
-        <p className="text-muted-foreground">
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="text-center py-16 border border-dashed rounded-xl bg-muted/20 dark:border-gray-700 flex flex-col items-center justify-center"
+      >
+        <MessageCircle className="h-16 w-16 text-muted-foreground mb-4 opacity-40" />
+        <p className="text-muted-foreground font-medium">
           {t('noCommunications')}
         </p>
-      </div>
+        <p className="text-sm text-muted-foreground mt-2 max-w-md">
+          {t('startSendingMessages')}
+        </p>
+      </motion.div>
     );
   }
 
@@ -61,12 +70,18 @@ export const CommunicationsList = ({
     const threadsEntries = Object.entries(threads);
     const displayThreads = limit && !showAll ? threadsEntries.slice(0, limit) : threadsEntries;
 
-    return displayThreads.map(([parentId, thread]) => (
-      <div key={parentId} className="space-y-1 mb-4 bg-background rounded-lg shadow-sm">
+    return displayThreads.map(([parentId, thread], index) => (
+      <motion.div 
+        key={parentId} 
+        initial={{ opacity: 0, y: 10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        className="space-y-1 mb-4 bg-background rounded-lg shadow-sm overflow-hidden"
+      >
         {thread.map((comm, index) => (
           <div
             key={comm.id}
-            className={`${index > 0 ? 'ml-6 border-l-2 pl-3 border-gray-200 dark:border-gray-700' : ''}`}
+            className={`${index > 0 ? 'ml-6 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}
           >
             <CommunicationItem
               communication={comm}
@@ -77,7 +92,7 @@ export const CommunicationsList = ({
             />
           </div>
         ))}
-      </div>
+      </motion.div>
     ));
   };
 
@@ -119,16 +134,16 @@ export const CommunicationsList = ({
 
         return (
           <div key={type} className="space-y-3">
-            <h3 className="font-medium flex items-center gap-1 text-foreground dark:text-gray-200 pt-2 pb-1 border-b border-gray-200 dark:border-gray-700">
+            <h3 className="font-medium flex items-center gap-1 text-foreground dark:text-gray-200 pt-3 pb-2 border-b border-gray-200 dark:border-gray-700">
               <div className="flex items-center">
                 {getTypeIcon(type)}
                 {typeDisplayName}
               </div>
-              <Badge variant="secondary" className="ml-2 text-xs">
+              <Badge variant="secondary" className="ml-2 text-xs bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                 {filteredComms.length}
               </Badge>
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-0.5">
               {renderThreadedCommunications(filteredComms, 5)}
             </div>
           </div>
@@ -136,12 +151,12 @@ export const CommunicationsList = ({
       })}
 
       {totalThreadsCount > 5 && (
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center mt-6">
           <Button 
             variant="outline" 
             size="sm" 
             onClick={() => setShowAll(!showAll)}
-            className="flex items-center gap-1"
+            className="flex items-center gap-2 px-4 py-2 rounded-full bg-background border-gray-200 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800"
           >
             {showAll ? (
               <>
