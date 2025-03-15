@@ -6,6 +6,8 @@ import { CreditCard } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
 import type { Tenant } from "@/types/tenant";
+import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/components/AuthProvider";
 
 interface TenantSecurityDepositProps {
   tenant: Tenant;
@@ -14,10 +16,14 @@ interface TenantSecurityDepositProps {
 
 export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurityDepositProps) => {
   const { t } = useLocale();
+  const { user } = useAuth();
   const [securityDepositStatus, setSecurityDepositStatus] = useState<"deposited" | "not_deposited">(
     tenant.security_deposit ? "deposited" : "not_deposited"
   );
   const [isUpdating, setIsUpdating] = useState(false);
+  
+  // Check if the current user is the tenant viewing their own profile
+  const isTenantUser = user?.id === tenant.tenant_profile_id;
   
   const handleUpdateSecurityDeposit = async () => {
     setIsUpdating(true);
@@ -56,33 +62,56 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
             <CreditCard className="h-4 w-4 mr-2 text-primary/70" />
             {t('securityDeposit')}
           </p>
-          <RadioGroup 
-            value={securityDepositStatus} 
-            onValueChange={setSecurityDepositStatus as (value: string) => void}
-            className="flex space-x-4"
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="deposited" id="deposited" />
-              <label htmlFor="deposited" className="text-sm cursor-pointer">
-                {t('deposited') || "Déposé"} (${tenant.rent_amount})
-              </label>
+          
+          {isTenantUser ? (
+            // Read-only view for tenants
+            <div className="flex items-center">
+              <Badge 
+                variant={tenant.security_deposit ? "success" : "secondary"}
+                className={cn(
+                  "px-3 py-1 text-sm",
+                  tenant.security_deposit ? "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400" : 
+                  "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
+                )}
+              >
+                {tenant.security_deposit 
+                  ? `${t('deposited') || "Déposé"} ($${tenant.rent_amount})` 
+                  : t('notDeposited') || "Non déposé"}
+              </Badge>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="not_deposited" id="not_deposited" />
-              <label htmlFor="not_deposited" className="text-sm cursor-pointer">
-                {t('notDeposited') || "Non déposé"}
-              </label>
-            </div>
-          </RadioGroup>
+          ) : (
+            // Interactive radio buttons for owners
+            <RadioGroup 
+              value={securityDepositStatus} 
+              onValueChange={setSecurityDepositStatus as (value: string) => void}
+              className="flex space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="deposited" id="deposited" />
+                <label htmlFor="deposited" className="text-sm cursor-pointer">
+                  {t('deposited') || "Déposé"} (${tenant.rent_amount})
+                </label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="not_deposited" id="not_deposited" />
+                <label htmlFor="not_deposited" className="text-sm cursor-pointer">
+                  {t('notDeposited') || "Non déposé"}
+                </label>
+              </div>
+            </RadioGroup>
+          )}
         </div>
-        <Button 
-          size="sm" 
-          onClick={handleUpdateSecurityDeposit}
-          disabled={isButtonDisabled()}
-          className="w-full sm:w-auto"
-        >
-          {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
-        </Button>
+        
+        {!isTenantUser && (
+          <Button 
+            size="sm" 
+            onClick={handleUpdateSecurityDeposit}
+            disabled={isButtonDisabled()}
+            className="w-full sm:w-auto"
+          >
+            {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
+          </Button>
+        )}
       </div>
     </div>
   );
