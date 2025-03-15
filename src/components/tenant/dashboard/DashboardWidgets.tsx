@@ -73,18 +73,11 @@ export const DashboardWidgets = ({
     
     // Determine grid column span based on widget type and position
     const getColSpan = () => {
-      if (widgetId === 'chart') return "col-span-full";
+      // Make the chart take full width
+      if (widgetId === 'chart') return "col-span-2 md:col-span-4";
       
-      // For smaller widgets, let them fill available space better
-      const totalVisible = visibleWidgets.length;
-      
-      // If we have 1-3 widgets total, make them larger
-      if (totalVisible <= 3) {
-        return "col-span-1 md:col-span-1 lg:col-span-1";
-      }
-      
-      // Default sizing
-      return "col-span-1";
+      // For smaller widgets, create a 2x2 grid layout
+      return "col-span-1 md:col-span-2";
     };
     
     const widgetContent = () => {
@@ -164,7 +157,7 @@ export const DashboardWidgets = ({
   
   return (
     <motion.div 
-      className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-auto"
+      className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
       variants={container}
       initial="hidden"
       animate="show"
