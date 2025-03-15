@@ -64,14 +64,26 @@ export const DashboardWidgets = ({
     show: { opacity: 1, y: 0 }
   };
   
+  // Filter out hidden sections from the widget order
+  const visibleWidgets = widgetOrder.filter(id => !hiddenSections.includes(id));
+  
   // Render widgets based on order and visibility
   const renderWidget = (widgetId: string, index: number) => {
     if (hiddenSections.includes(widgetId)) return null;
     
-    // Determine grid column span based on widget type
+    // Determine grid column span based on widget type and position
     const getColSpan = () => {
-      if (widgetId === 'chart') return "col-span-1 md:col-span-2 lg:col-span-3";
-      if (widgetId === 'property' || widgetId === 'lease') return "col-span-1 md:col-span-1 lg:col-span-1";
+      if (widgetId === 'chart') return "col-span-full";
+      
+      // For smaller widgets, let them fill available space better
+      const totalVisible = visibleWidgets.length;
+      
+      // If we have 1-3 widgets total, make them larger
+      if (totalVisible <= 3) {
+        return "col-span-1 md:col-span-1 lg:col-span-1";
+      }
+      
+      // Default sizing
       return "col-span-1";
     };
     
@@ -152,7 +164,7 @@ export const DashboardWidgets = ({
   
   return (
     <motion.div 
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+      className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-auto"
       variants={container}
       initial="hidden"
       animate="show"
