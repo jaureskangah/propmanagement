@@ -8,7 +8,6 @@ import { useCommunicationActions } from "@/hooks/communications/useCommunication
 import { useState } from "react";
 import { Communication } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MessageSquareOff } from "lucide-react";
 import { motion } from "framer-motion";
@@ -26,7 +25,6 @@ const TenantCommunications = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenantId || undefined);
-  const [communicationToDelete, setCommunicationToDelete] = useState<Communication | null>(null);
 
   // Activer les notifications en temps réel
   useRealtimeNotifications();
@@ -38,31 +36,23 @@ const TenantCommunications = () => {
     }
   };
 
-  const handleDeleteConfirm = () => {
-    if (!communicationToDelete) return;
+  const handleDeleteAndRefresh = async (comm: Communication) => {
+    console.log("Deleting communication:", comm.id);
     
-    console.log("Confirming deletion of communication:", communicationToDelete.id);
-    
-    handleDeleteCommunication(communicationToDelete.id)
-      .then(success => {
-        if (success) {
-          toast({
-            title: t('success'),
-            description: t('messageDeleted'),
-          });
-          refreshCommunications();
-        }
-        setCommunicationToDelete(null);
-      })
-      .catch(error => {
-        console.error("Error deleting communication:", error);
-        toast({
-          title: t('error'),
-          description: t('errorDeletingMessage'),
-          variant: "destructive",
-        });
-        setCommunicationToDelete(null);
+    const success = await handleDeleteCommunication(comm.id);
+    if (success) {
+      toast({
+        title: t('success'),
+        description: t('messageDeleted'),
       });
+      refreshCommunications();
+    } else {
+      toast({
+        title: t('error'),
+        description: t('errorDeletingMessage'),
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -94,31 +84,11 @@ const TenantCommunications = () => {
             onCreateCommunication={handleCreateCommunication}
             onCommunicationUpdate={refreshCommunications}
             onToggleStatus={handleToggleStatusAndRefresh}
-            onDeleteCommunication={setCommunicationToDelete}
+            onDeleteCommunication={handleDeleteAndRefresh}
             tenant={tenant}
           />
         )}
       </div>
-
-      <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('confirmDeleteMessage')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleDeleteConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('deleteMessage')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };

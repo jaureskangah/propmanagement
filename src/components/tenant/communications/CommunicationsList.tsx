@@ -22,8 +22,6 @@ export const CommunicationsList = ({
   filteredCommunications,
   groupedCommunications,
   onCommunicationClick,
-  onToggleStatus,
-  onDeleteCommunication,
   searchTerm = '',
 }: CommunicationsListProps) => {
   const { t } = useLocale();
@@ -86,8 +84,8 @@ export const CommunicationsList = ({
             <CommunicationItem
               communication={comm}
               onClick={() => onCommunicationClick(comm)}
-              onToggleStatus={() => onToggleStatus(comm)}
-              onDelete={() => onDeleteCommunication(comm)}
+              onToggleStatus={() => {}}
+              onDelete={() => {}}
               searchTerm={searchTerm}
             />
           </div>

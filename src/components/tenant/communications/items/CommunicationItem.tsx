@@ -1,17 +1,13 @@
 
 import { formatDate } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { 
   Mail, 
   MessageCircle, 
   AlertTriangle, 
   MessageSquare, 
   Paperclip, 
-  Trash2, 
   Clock, 
-  CheckCircle, 
-  EyeOff,
-  Eye
+  CheckCircle
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Communication } from "@/types/tenant";
@@ -30,8 +26,6 @@ interface CommunicationItemProps {
 export const CommunicationItem = ({
   communication,
   onClick,
-  onToggleStatus,
-  onDelete,
   searchTerm = '',
 }: CommunicationItemProps) => {
   const hasAttachments = communication.attachments && communication.attachments.length > 0;
@@ -96,19 +90,10 @@ export const CommunicationItem = ({
     return content.length > 60 ? content.substring(0, 60) + '...' : content;
   };
 
-  // Gestionnaire de clic sur la carte qui n'est pas déclenché si on clique sur les boutons
-  const handleCardClick = (e: React.MouseEvent) => {
-    // Ne déclenche pas onClick si on clique sur un bouton
-    if ((e.target as HTMLElement).closest('button')) {
-      return;
-    }
-    onClick();
-  };
-
   return (
     <div
       className={`flex items-start gap-4 relative animate-fadeIn cursor-pointer rounded-lg p-4 transition-all duration-200 shadow-sm mb-3 ${unreadStyle} hover:transform hover:-translate-y-0.5`}
-      onClick={handleCardClick}
+      onClick={onClick}
     >
       <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-700">
         {getCategoryIcon()}
@@ -132,36 +117,6 @@ export const CommunicationItem = ({
                 {communication.attachments?.length}
               </Badge>
             )}
-          </div>
-          
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-              onClick={(e) => {
-                e.stopPropagation();
-                onToggleStatus();
-              }}
-              title={communication.status === "read" ? t('markAsUnread') : t('markAsRead')}
-            >
-              {communication.status === "read" ? 
-                <EyeOff className="h-4 w-4 text-muted-foreground" /> : 
-                <Eye className="h-4 w-4 text-blue-500" />
-              }
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-8 w-8 p-0 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete();
-              }}
-              title={t('deleteMessage')}
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
           </div>
         </div>
         
