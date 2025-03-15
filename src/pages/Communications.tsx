@@ -30,8 +30,8 @@ const Communications = () => {
   useEffect(() => {
     if (!isLoading && communications.length === 0 && tenantId) {
       toast({
-        title: t('welcomeToCommunications', { fallback: "Bienvenue dans vos communications" }),
-        description: t('sendMessageDescription', { fallback: "Vous pouvez envoyer des messages à votre propriétaire directement depuis cette page." }),
+        title: t('welcomeToCommunications'),
+        description: t('sendMessageDescription'),
       });
     }
   }, [isLoading, communications, tenantId]);
@@ -64,7 +64,7 @@ const Communications = () => {
         console.error("Error deleting communication:", error);
         toast({
           title: t('error'),
-          description: t('errorDeletingMessage', { fallback: "Erreur lors de la suppression du message" }),
+          description: t('errorDeletingMessage'),
           variant: "destructive",
         });
         setCommunicationToDelete(null);
@@ -78,6 +78,7 @@ const Communications = () => {
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
+            <p className="ml-4 text-muted-foreground">{t('loadingCommunications')}</p>
           </div>
         ) : !tenantId ? (
           <UnlinkedTenantMessage />
@@ -90,7 +91,7 @@ const Communications = () => {
             <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
             <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
             <p className="text-muted-foreground text-center mt-2 max-w-md">
-              {t('startSendingMessages', { fallback: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier." })}
+              {t('startSendingMessages')}
             </p>
           </motion.div>
         ) : (
@@ -110,7 +111,7 @@ const Communications = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('confirmDeleteMessage') || t('confirmDelete')}
+              {t('confirmDeleteMessage')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

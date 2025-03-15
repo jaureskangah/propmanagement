@@ -62,5 +62,7 @@ export const frCommunications: TenantCommunicationsTranslations = {
   sendMessageDescription: "Vous pouvez envoyer des messages à votre gestionnaire immobilier directement depuis cette page.",
   errorDeletingMessage: "Erreur lors de la suppression du message",
   email: "Email",
-  enterEmail: "Entrez l'adresse email"
+  enterEmail: "Entrez l'adresse email",
+  loadingCommunications: "Chargement de vos communications...",
+  startSendingMessages: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier."
 };

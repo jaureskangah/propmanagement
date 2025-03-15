@@ -42,7 +42,7 @@ export const InviteTenantDialog = ({
         <DialogHeader>
           <DialogTitle>{t('inviteTenant')}</DialogTitle>
           <DialogDescription>
-            {t('inviteTenantDescription', { fallback: "Inviter un locataire à rejoindre la plateforme de communications." })}
+            {t('inviteTenantDescription')}
           </DialogDescription>
         </DialogHeader>
 

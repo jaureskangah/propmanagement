@@ -62,5 +62,7 @@ export const enCommunications: TenantCommunicationsTranslations = {
   sendMessageDescription: "You can send messages to your property manager directly from this page.",
   errorDeletingMessage: "Error deleting message",
   email: "Email",
-  enterEmail: "Enter email address"
+  enterEmail: "Enter email address",
+  loadingCommunications: "Loading your communications...",
+  startSendingMessages: "Start by sending a message to your property manager or landlord."
 };

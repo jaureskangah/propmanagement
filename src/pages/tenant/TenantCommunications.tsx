@@ -58,7 +58,7 @@ const TenantCommunications = () => {
         console.error("Error deleting communication:", error);
         toast({
           title: t('error'),
-          description: t('errorDeletingMessage', { fallback: "Erreur lors de la suppression du message" }),
+          description: t('errorDeletingMessage'),
           variant: "destructive",
         });
         setCommunicationToDelete(null);
@@ -72,7 +72,7 @@ const TenantCommunications = () => {
         {isLoading ? (
           <div className="flex flex-col justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-            <p className="mt-4 text-muted-foreground">{t('loadingCommunications', { fallback: "Chargement de vos communications..." })}</p>
+            <p className="mt-4 text-muted-foreground">{t('loadingCommunications')}</p>
           </div>
         ) : !tenantId ? (
           <UnlinkedTenantMessage />
@@ -85,7 +85,7 @@ const TenantCommunications = () => {
             <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
             <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
             <p className="text-muted-foreground text-center mt-2 max-w-md">
-              {t('startSendingMessages', { fallback: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier." })}
+              {t('startSendingMessages')}
             </p>
           </motion.div>
         ) : (

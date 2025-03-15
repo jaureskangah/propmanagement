@@ -65,6 +65,24 @@ export const CommunicationItem = ({
     }
   };
 
+  // Translate category
+  const getCategoryName = () => {
+    if (!communication.category) return t('general');
+    
+    switch (communication.category.toLowerCase()) {
+      case 'urgent':
+        return t('urgent');
+      case 'maintenance':
+        return t('maintenance');
+      case 'payment':
+        return t('payment');
+      case 'general':
+        return t('general');
+      default:
+        return t('general');
+    }
+  };
+
   // Style conditionnel pour les communications non lues
   const unreadStyle = communication.status === "unread" 
     ? "bg-blue-50 dark:bg-blue-900/10 border-l-4 border-blue-500 dark:border-blue-400" 
@@ -94,7 +112,7 @@ export const CommunicationItem = ({
               variant={getCategoryBadge()}
               className="inline-flex items-center text-xs"
             >
-              {communication.category}
+              {getCategoryName()}
             </Badge>
             {hasAttachments && (
               <Badge variant="outline" className="inline-flex items-center gap-1 text-xs">

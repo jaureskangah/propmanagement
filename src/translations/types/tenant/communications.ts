@@ -61,4 +61,6 @@ export interface TenantCommunicationsTranslations {
   errorDeletingMessage: string;
   email: string;
   enterEmail: string;
+  loadingCommunications: string;
+  startSendingMessages: string;
 }
