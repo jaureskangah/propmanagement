@@ -33,7 +33,7 @@ export const frCommunications: TenantCommunicationsTranslations = {
   reply: "Répondre",
   cancel: "Annuler",
   messageByCategory: "Messages par catégorie",
-  allMessages: "Tous les messages",
+  allMessages: "Tous les Messages",
   writeReply: "Écrire votre réponse",
   replyPlaceholder: "Écrivez votre réponse ici...",
   confirmDelete: "Êtes-vous sûr de vouloir supprimer ce message ?",

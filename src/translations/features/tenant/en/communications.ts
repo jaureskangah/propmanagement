@@ -33,7 +33,7 @@ export const enCommunications: TenantCommunicationsTranslations = {
   reply: "Reply",
   cancel: "Cancel",
   messageByCategory: "Messages by category",
-  allMessages: "All messages",
+  allMessages: "All Messages",
   writeReply: "Write your reply",
   replyPlaceholder: "Type your reply here...",
   confirmDelete: "Are you sure you want to delete this message?",

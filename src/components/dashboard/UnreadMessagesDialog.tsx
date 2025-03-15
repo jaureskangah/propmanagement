@@ -58,7 +58,7 @@ export const UnreadMessagesDialog = ({
           <DialogDescription>
             {t('youHaveUnreadMessages', { 
               fallback: `You have ${tenantMessages.length} new unread message${tenantMessages.length > 1 ? 's' : ''} from your tenants:`, 
-              count: tenantMessages.length 
+              count: String(tenantMessages.length) 
             })}
             <ul className="mt-2 space-y-2">
               {tenantMessages.map((message) => (
