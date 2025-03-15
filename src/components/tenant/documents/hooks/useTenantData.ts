@@ -32,8 +32,21 @@ export const useTenantData = (userId: string | undefined, toast: any) => {
       }
       
       console.log("Tenant data result:", tenantData);
-      setTenant(tenantData);
-      return tenantData;
+      
+      // Ensure properties has the correct format
+      if (tenantData) {
+        const formattedTenant = {
+          ...tenantData,
+          properties: Array.isArray(tenantData.properties) && tenantData.properties.length > 0
+            ? { name: tenantData.properties[0]?.name || "" }
+            : tenantData.properties || { name: "" }
+        };
+        
+        setTenant(formattedTenant);
+        return formattedTenant;
+      }
+      
+      return null;
     } catch (error) {
       console.error('Error fetching tenant data:', error);
       toast({

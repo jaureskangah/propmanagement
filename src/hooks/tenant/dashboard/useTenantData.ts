@@ -50,7 +50,6 @@ export const useTenantData = () => {
         .maybeSingle();
         
       // Puis récupérer les données du locataire avec la jointure sur properties
-      // Notez l'utilisation de "properties:property_id(name)" pour obtenir la propriété correctement
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
@@ -73,6 +72,7 @@ export const useTenantData = () => {
       }
 
       console.log("Tenant data fetched:", tenant);
+      console.log("Properties data structure:", tenant?.properties);
 
       if (tenant) {
         // Utiliser le nom du profil si disponible, sinon utiliser le nom du locataire
@@ -80,15 +80,20 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // S'assurer que properties est correctement géré (peut être null si pas de propriété)
+        // Extraire correctement les données de propriété 
+        // Supabase retourne properties comme un tableau avec un seul élément ou null
+        const propertyData = Array.isArray(tenant.properties) && tenant.properties.length > 0
+          ? { name: tenant.properties[0]?.name || "" }
+          : tenant.properties || { name: "" };
+        
         setTenant({
           ...tenant,
           name: displayName,
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          // Utiliser les properties tels qu'ils sont retournés par Supabase
-          properties: tenant.properties || undefined
+          // Utiliser le format correct pour properties
+          properties: propertyData
         });
       }
       
