@@ -39,8 +39,12 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
           transition={{ duration: 0.3 }}
           className="flex items-center"
         >
-          <FileText className="h-6 w-6 mr-2 text-blue-600" />
-          <h1 className="text-2xl font-bold">{t("myDocuments")}</h1>
+          <div className="h-10 w-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3">
+            <FileText className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-purple-600 to-purple-400 bg-clip-text text-transparent">
+            {t("myDocuments") || "Mes documents"}
+          </h1>
         </motion.div>
         
         <motion.div
@@ -50,17 +54,17 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
         >
           <Button 
             onClick={handleUploadClick}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+            className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white"
           >
             {isUploadOpen ? (
               <>
                 <Upload className="h-4 w-4" />
-                {t("uploadDocument")}
+                {t("uploadDocument") || "Télécharger un document"}
               </>
             ) : (
               <>
                 <Plus className="h-4 w-4" />
-                {t("uploadNewDocument")}
+                {t("uploadNewDocument") || "Télécharger un nouveau document"}
               </>
             )}
           </Button>
@@ -72,7 +76,7 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-100 dark:border-blue-900"
+          className="p-4 bg-purple-50 dark:bg-purple-950/20 rounded-lg border border-purple-100 dark:border-purple-900"
         >
           <DocumentUpload tenantId={tenant.id} onUploadComplete={() => {
             onDocumentUpdate();
