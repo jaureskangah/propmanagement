@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Table,
@@ -8,7 +9,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface Payment {
   amount: number;
@@ -21,21 +23,25 @@ interface PaymentHistoryProps {
 }
 
 export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
+  const { t, language } = useLocale();
+  
+  const locale = language === 'fr' ? fr : enUS;
+  
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Date</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Status</TableHead>
+            <TableHead>{t('date', { fallback: 'Date' })}</TableHead>
+            <TableHead>{t('amount', { fallback: 'Amount' })}</TableHead>
+            <TableHead>{t('status', { fallback: 'Status' })}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {payments.map((payment, index) => (
             <TableRow key={index}>
               <TableCell>
-                {format(new Date(payment.payment_date), 'PPP', { locale: enUS })}
+                {format(new Date(payment.payment_date), 'PPP', { locale })}
               </TableCell>
               <TableCell>${payment.amount.toLocaleString()}</TableCell>
               <TableCell>
@@ -48,7 +54,9 @@ export const PaymentHistory = ({ payments }: PaymentHistoryProps) => {
                       : 'bg-yellow-100 text-yellow-800'
                   }`}
                 >
-                  {payment.status === 'paid' ? 'Paid' : payment.status === 'late' ? 'Late' : 'Pending'}
+                  {payment.status === 'paid' ? t('paid') : 
+                   payment.status === 'late' ? t('late', { fallback: 'Late' }) : 
+                   t('pending')}
                 </span>
               </TableCell>
             </TableRow>

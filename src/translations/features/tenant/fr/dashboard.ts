@@ -52,5 +52,25 @@ export const frDashboard = {
   maintenance: "Maintenance",
   chart: "Graphique",
   property: "Propriété",
-  noPaymentHistory: "Aucun historique de paiement disponible"
+  noPaymentHistory: "Aucun historique de paiement disponible",
+  // Dates et périodes
+  today: "Aujourd'hui",
+  yesterday: "Hier",
+  thisWeek: "Cette semaine",
+  // Activités et événements
+  tenant: "Locataire",
+  payment: "Paiement",
+  deadline: "Échéance",
+  emergency: "Urgence",
+  all: "Tous",
+  filterBy: "Filtrer par",
+  newTenant: "Nouveau locataire",
+  unit: "Unité",
+  paymentReceived: "Paiement reçu",
+  maintenanceCompleted: "Maintenance terminée",
+  // Bail
+  lease: {
+    start: "Début du bail",
+    end: "Fin du bail"
+  }
 };

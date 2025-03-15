@@ -52,5 +52,25 @@ export const enDashboard = {
   maintenance: "Maintenance",
   chart: "Chart",
   property: "Property",
-  noPaymentHistory: "No payment history available"
+  noPaymentHistory: "No payment history available",
+  // Dates et périodes
+  today: "Today",
+  yesterday: "Yesterday",
+  thisWeek: "This week",
+  // Activités et événements
+  tenant: "Tenant",
+  payment: "Payment",
+  deadline: "Deadline",
+  emergency: "Emergency",
+  all: "All",
+  filterBy: "Filter by",
+  newTenant: "New tenant",
+  unit: "Unit",
+  paymentReceived: "Payment received",
+  maintenanceCompleted: "Maintenance completed",
+  // Bail
+  lease: {
+    start: "Lease start",
+    end: "Lease end"
+  }
 };
