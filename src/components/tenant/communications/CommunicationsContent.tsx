@@ -121,6 +121,36 @@ export const CommunicationsContent = ({
     setShowAll(!showAll);
   };
 
+  // Composant pour le bouton Voir plus/Voir moins
+  const ShowMoreLessButton = () => {
+    if (filteredCommunications.length <= INITIAL_DISPLAY_COUNT) {
+      return null;
+    }
+
+    return (
+      <div className="flex justify-center mt-4">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={toggleShowAll}
+          className="flex items-center gap-2"
+        >
+          {showAll ? (
+            <>
+              <ChevronUp className="h-4 w-4" />
+              {t('showLess')}
+            </>
+          ) : (
+            <>
+              <ChevronDown className="h-4 w-4" />
+              {t('showMore')}
+            </>
+          )}
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div className="px-6 pb-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-6">
@@ -159,28 +189,7 @@ export const CommunicationsContent = ({
             onToggleStatus={onToggleStatus}
             onDeleteCommunication={onDeleteCommunication}
           />
-          {filteredCommunications.length > INITIAL_DISPLAY_COUNT && (
-            <div className="flex justify-center mt-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={toggleShowAll}
-                className="flex items-center gap-2"
-              >
-                {showAll ? (
-                  <>
-                    <ChevronUp className="h-4 w-4" />
-                    {t('showLess')}
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="h-4 w-4" />
-                    {t('showMore')}
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
+          <ShowMoreLessButton />
         </TabsContent>
         
         <TabsContent value="urgent" className="mt-4">
@@ -191,28 +200,7 @@ export const CommunicationsContent = ({
             onToggleStatus={onToggleStatus}
             onDeleteCommunication={onDeleteCommunication}
           />
-          {filteredCommunications.length > INITIAL_DISPLAY_COUNT && (
-            <div className="flex justify-center mt-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={toggleShowAll}
-                className="flex items-center gap-2"
-              >
-                {showAll ? (
-                  <>
-                    <ChevronUp className="h-4 w-4" />
-                    {t('showLess')}
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="h-4 w-4" />
-                    {t('showMore')}
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
+          <ShowMoreLessButton />
         </TabsContent>
         
         <TabsContent value="unread" className="mt-4">
@@ -223,28 +211,7 @@ export const CommunicationsContent = ({
             onToggleStatus={onToggleStatus}
             onDeleteCommunication={onDeleteCommunication}
           />
-          {filteredCommunications.length > INITIAL_DISPLAY_COUNT && (
-            <div className="flex justify-center mt-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={toggleShowAll}
-                className="flex items-center gap-2"
-              >
-                {showAll ? (
-                  <>
-                    <ChevronUp className="h-4 w-4" />
-                    {t('showLess')}
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="h-4 w-4" />
-                    {t('showMore')}
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
+          <ShowMoreLessButton />
         </TabsContent>
       </Tabs>
     </div>
