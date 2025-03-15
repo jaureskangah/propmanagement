@@ -23,7 +23,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   
-  // État pour le dépôt de garantie
+  // État pour le dépôt de garantie - use the correct type
   const [securityDepositStatus, setSecurityDepositStatus] = useState(
     tenant.security_deposit ? "deposited" : "not_deposited"
   );
@@ -39,7 +39,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
     fullTenant: tenant
   });
   
-  // Fonction pour mettre à jour le statut du dépôt de garantie
+  // Fix the type in the update function
   const handleUpdateSecurityDeposit = async () => {
     setIsUpdating(true);
     try {
@@ -118,7 +118,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
             </h2>
             <p className="text-muted-foreground flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              {propertyName} - {t('unitLabel')} {tenant.unit_number}
+              {tenant.properties?.name || t('noProperty')} - {t('unitLabel')} {tenant.unit_number}
             </p>
           </div>
         </div>
