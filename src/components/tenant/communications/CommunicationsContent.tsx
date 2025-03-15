@@ -94,15 +94,15 @@ export const CommunicationsContent = ({
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-6">
         <TabsList className="w-full grid grid-cols-3 mb-2">
           <TabsTrigger value="all" className="flex gap-2 items-center">
-            {t('tenant.communications.allMessages')}
+            {t('allMessages')}
             <Badge variant="secondary" className="ml-1">{communications.length}</Badge>
           </TabsTrigger>
           <TabsTrigger value="urgent" className="flex gap-2 items-center">
-            {t('tenant.communications.urgent')}
+            {t('urgent')}
             <Badge variant="destructive" className="ml-1">{urgentCount}</Badge>
           </TabsTrigger>
           <TabsTrigger value="unread" className="flex gap-2 items-center">
-            {t('tenant.communications.unread')}
+            {t('unread')}
             <Badge variant="secondary" className="ml-1">{unreadCount}</Badge>
           </TabsTrigger>
         </TabsList>

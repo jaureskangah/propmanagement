@@ -30,8 +30,8 @@ const Communications = () => {
   useEffect(() => {
     if (!isLoading && communications.length === 0 && tenantId) {
       toast({
-        title: t('tenant.communications.welcomeToCommunications'),
-        description: t('tenant.communications.sendMessageDescription'),
+        title: t('welcomeToCommunications'),
+        description: t('sendMessageDescription'),
       });
     }
   }, [isLoading, communications, tenantId]);
@@ -53,8 +53,8 @@ const Communications = () => {
       .then(success => {
         if (success) {
           toast({
-            title: t('tenant.communications.success'),
-            description: t('tenant.communications.messageDeleted'),
+            title: t('success'),
+            description: t('messageDeleted'),
           });
           refreshCommunications();
         }
@@ -63,8 +63,8 @@ const Communications = () => {
       .catch(error => {
         console.error("Error deleting communication:", error);
         toast({
-          title: t('tenant.communications.error'),
-          description: t('tenant.communications.errorDeletingMessage'),
+          title: t('error'),
+          description: t('errorDeletingMessage'),
           variant: "destructive",
         });
         setCommunicationToDelete(null);
@@ -78,7 +78,7 @@ const Communications = () => {
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
-            <p className="ml-4 text-muted-foreground">{t('tenant.communications.loadingCommunications')}</p>
+            <p className="ml-4 text-muted-foreground">{t('loadingCommunications')}</p>
           </div>
         ) : !tenantId ? (
           <UnlinkedTenantMessage />
@@ -89,9 +89,9 @@ const Communications = () => {
             transition={{ duration: 0.5 }}
             className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
             <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
-            <h3 className="text-lg font-medium">{t('tenant.communications.noCommunications')}</h3>
+            <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
             <p className="text-muted-foreground text-center mt-2 max-w-md">
-              {t('tenant.communications.startSendingMessages')}
+              {t('startSendingMessages')}
             </p>
           </motion.div>
         ) : (
@@ -109,18 +109,18 @@ const Communications = () => {
       <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('tenant.communications.confirmDelete')}</AlertDialogTitle>
+            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
             <AlertDialogDescription>
-              {t('tenant.communications.confirmDeleteMessage')}
+              {t('confirmDeleteMessage')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('tenant.communications.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction 
               onClick={handleDeleteConfirm}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {t('tenant.communications.deleteMessage')}
+              {t('deleteMessage')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
