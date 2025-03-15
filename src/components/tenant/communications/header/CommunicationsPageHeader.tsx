@@ -10,6 +10,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAuth } from "@/components/AuthProvider";
 
 interface CommunicationsPageHeaderProps {
   onNewMessageClick: () => void;
@@ -21,6 +22,10 @@ export const CommunicationsPageHeader = ({
   onInviteTenantClick,
 }: CommunicationsPageHeaderProps) => {
   const { t } = useLocale();
+  const { user } = useAuth();
+  
+  // Vérifier si l'utilisateur est un locataire en regardant son e-mail
+  const isTenant = user?.email?.includes('@tenant') || false;
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm dark:border-gray-700/40 dark:from-gray-900 dark:to-gray-800/30">
@@ -49,22 +54,25 @@ export const CommunicationsPageHeader = ({
         </motion.div>
 
         <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button 
-                  variant="outline"
-                  onClick={onInviteTenantClick}
-                  className="flex items-center gap-2 hover:bg-primary/10 transition-colors"
-                >
-                  {t('inviteTenant')}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">
-                {t('inviteTenantDescription', { fallback: t('inviteTenantTooltip') })}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {/* Ne montrer le bouton "Inviter le Locataire" que si l'utilisateur n'est pas un locataire */}
+          {!isTenant && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    variant="outline"
+                    onClick={onInviteTenantClick}
+                    className="flex items-center gap-2 hover:bg-primary/10 transition-colors"
+                  >
+                    {t('inviteTenant')}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  {t('inviteTenantDescription', { fallback: t('inviteTenantTooltip') })}
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
           
           <TooltipProvider>
             <Tooltip>

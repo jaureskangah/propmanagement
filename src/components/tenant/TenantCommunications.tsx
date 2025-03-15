@@ -19,6 +19,7 @@ interface TenantCommunicationsProps {
   onToggleStatus: (comm: Communication) => void;
   onDeleteCommunication: (comm: Communication) => void;
   tenant?: { email: string; name?: string } | null;
+  isTenant?: boolean;
 }
 
 export const TenantCommunications = ({ 
@@ -27,7 +28,8 @@ export const TenantCommunications = ({
   onCommunicationUpdate,
   onToggleStatus,
   onDeleteCommunication,
-  tenant 
+  tenant,
+  isTenant = false
 }: TenantCommunicationsProps) => {
   const { t } = useLocale();
   const { isInviteDialogOpen, openInviteDialog, closeInviteDialog } = useInviteDialog();
@@ -88,12 +90,15 @@ export const TenantCommunications = ({
         />
       )}
 
-      <InviteTenantDialog
-        isOpen={isInviteDialogOpen}
-        onClose={closeInviteDialog}
-        tenantId={tenantId}
-        defaultEmail={tenant?.email}
-      />
+      {/* N'afficher le dialogue d'invitation que si l'utilisateur n'est pas un locataire */}
+      {!isTenant && (
+        <InviteTenantDialog
+          isOpen={isInviteDialogOpen}
+          onClose={closeInviteDialog}
+          tenantId={tenantId}
+          defaultEmail={tenant?.email}
+        />
+      )}
     </Card>
   );
 };

@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Communication } from "@/types/tenant";
 import { TenantCommunications } from "@/components/tenant/TenantCommunications";
@@ -11,6 +10,7 @@ interface TenantCommunicationsContentProps {
   onToggleStatus: (comm: Communication) => void;
   onDeleteCommunication: (comm: Communication) => void;
   tenant?: { email: string; name: string } | null;
+  isTenant?: boolean;
 }
 
 export const TenantCommunicationsContent = ({
@@ -19,7 +19,8 @@ export const TenantCommunicationsContent = ({
   onCommunicationUpdate,
   onToggleStatus,
   onDeleteCommunication,
-  tenant
+  tenant,
+  isTenant = false
 }: TenantCommunicationsContentProps) => {
   const tenantId = communications.length > 0 ? communications[0].tenant_id : undefined;
 
@@ -33,6 +34,7 @@ export const TenantCommunicationsContent = ({
           tenant={tenant}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={onDeleteCommunication}
+          isTenant={isTenant}
         />
       </CardContent>
     </Card>

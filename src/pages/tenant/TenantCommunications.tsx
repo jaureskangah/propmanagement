@@ -54,6 +54,11 @@ const TenantCommunications = () => {
     }
   };
 
+  // Comme il s'agit de la page locataire, nous n'avons pas besoin de montrer 
+  // la fonction d'invitation des locataires, donc nous la passons comme une 
+  // fonction vide qui ne fait rien
+  const noOpFunction = () => {};
+
   return (
     <div className="flex">
       <AppSidebar isTenant={true} />
@@ -85,6 +90,7 @@ const TenantCommunications = () => {
             onToggleStatus={handleToggleStatusAndRefresh}
             onDeleteCommunication={handleDeleteAndRefresh}
             tenant={tenant}
+            isTenant={true} // Ajouter cette prop pour indiquer que c'est un locataire
           />
         )}
       </div>
