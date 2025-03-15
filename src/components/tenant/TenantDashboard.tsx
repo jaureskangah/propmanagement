@@ -9,7 +9,7 @@ import { Card } from '@/components/ui/card';
 
 export const TenantDashboard = () => {
   const [sectionOrder, setSectionOrder] = useState<string[]>([]);
-  const [hiddenSections, setHiddenSections] = useState<string[]>([]);
+  const [hiddenSections, setHiddenSections] = useState<string[]>(['payments', 'communications']);
   const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard } = useTenantDashboard();
 
   useEffect(() => {
@@ -36,7 +36,6 @@ export const TenantDashboard = () => {
         <DashboardHeader 
           tenantName={tenant.name || ""}
           firstName={tenant.firstName}
-          lastName={tenant.lastName}
           refreshDashboard={refreshDashboard}
           onOrderChange={handleOrderChange}
           onVisibilityChange={handleVisibilityChange}
