@@ -11,11 +11,13 @@ export const DocumentEmptyState = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center justify-center p-10 border-2 border-dashed rounded-lg bg-background/50 backdrop-blur-sm border-purple-200 dark:border-purple-800/40"
+      className="flex flex-col items-center justify-center p-10 border rounded-lg bg-background/50 backdrop-blur-sm border-border/40 dark:border-gray-700/40"
     >
-      <FileText className="h-16 w-16 text-purple-400 mb-4 opacity-40" />
-      <p className="text-muted-foreground text-base font-medium">{t("noDocuments") || "Aucun document disponible"}</p>
-      <p className="text-muted-foreground/70 text-sm mt-2 max-w-md text-center">
+      <div className="h-16 w-16 rounded-xl bg-primary/10 flex items-center justify-center mb-4 dark:bg-primary/20">
+        <FileText className="h-10 w-10 text-primary dark:text-primary/80" />
+      </div>
+      <p className="text-base font-medium text-foreground">{t("noDocuments") || "Aucun document disponible"}</p>
+      <p className="text-muted-foreground text-sm mt-2 max-w-md text-center">
         {t("noDocumentsDescription") || "Vous pouvez télécharger des documents importants comme votre bail ou vos quittances."}
       </p>
     </motion.div>
