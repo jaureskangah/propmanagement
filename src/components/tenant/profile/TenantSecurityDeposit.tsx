@@ -47,11 +47,11 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
 
   return (
     <div className={cn(
-      `flex flex-col gap-3 p-4 sm:px-6 sm:pb-6`,
-      'sm:w-full lg:w-1/3'
+      `border-b border-border/30 px-4 sm:px-6 py-4`,
+      'w-full'
     )}>
       <div className="space-y-1 min-w-0">
-        <p className="text-xs text-muted-foreground flex items-center">
+        <p className="text-xs text-muted-foreground flex items-center mb-2">
           <CreditCard className="h-4 w-4 mr-2 text-primary/70" />
           {t('securityDeposit')}
         </p>
@@ -78,7 +78,7 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
             size="sm" 
             onClick={handleUpdateSecurityDeposit}
             disabled={isButtonDisabled()}
-            className="w-full"
+            className="w-full max-w-[200px]"
           >
             {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
           </Button>

@@ -44,12 +44,12 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
       <TenantHeader tenant={tenant} />
 
       <div className="p-0">
-        <TenantInfoGrid tenant={tenant} />
-        
         <TenantSecurityDeposit 
           tenant={tenant} 
           onUpdateDeposit={handleUpdateSecurityDeposit} 
         />
+        
+        <TenantInfoGrid tenant={tenant} />
         
         {tenant.notes && <TenantNotes notes={tenant.notes} />}
       </div>
