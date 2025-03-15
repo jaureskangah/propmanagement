@@ -19,6 +19,7 @@ export const ShowMoreLessButton = ({
 }: ShowMoreLessButtonProps) => {
   const { t } = useLocale();
 
+  // Ne pas afficher le bouton s'il n'y a rien de plus à montrer
   if (totalCount <= initialDisplayCount) {
     return null;
   }
@@ -33,7 +34,10 @@ export const ShowMoreLessButton = ({
       <Button 
         variant="outline" 
         size="sm" 
-        onClick={toggleShowAll}
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleShowAll();
+        }}
         className="flex items-center gap-2 px-6 py-2 rounded-full shadow-sm bg-background hover:bg-accent/50 transition-all duration-200"
       >
         {showAll ? (

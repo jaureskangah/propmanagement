@@ -96,10 +96,19 @@ export const CommunicationItem = ({
     return content.length > 60 ? content.substring(0, 60) + '...' : content;
   };
 
+  // Gestionnaire de clic sur la carte qui n'est pas déclenché si on clique sur les boutons
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Ne déclenche pas onClick si on clique sur un bouton
+    if ((e.target as HTMLElement).closest('button')) {
+      return;
+    }
+    onClick();
+  };
+
   return (
     <div
       className={`flex items-start gap-4 relative animate-fadeIn cursor-pointer rounded-lg p-4 transition-all duration-200 shadow-sm mb-3 ${unreadStyle} hover:transform hover:-translate-y-0.5`}
-      onClick={onClick}
+      onClick={handleCardClick}
     >
       <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-200 dark:border-gray-700">
         {getCategoryIcon()}
