@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { fr, enUS } from 'date-fns/locale';
 
 interface CommunicationFiltersProps {
   searchQuery: string;
@@ -29,10 +30,12 @@ export const CommunicationFilters = ({
   onTypeChange,
   onDateChange,
 }: CommunicationFiltersProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const [date, setDate] = useState<Date | undefined>(
     startDate ? new Date(startDate) : undefined
   );
+  
+  const dateLocale = language === 'fr' ? fr : enUS;
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearchChange(e.target.value);
@@ -92,7 +95,7 @@ export const CommunicationFilters = ({
             )}
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP") : t("filterByDate")}
+            {date ? format(date, "PPP", { locale: dateLocale }) : t("filterByDate")}
             {date && (
               <Button
                 variant="ghost"
@@ -114,6 +117,7 @@ export const CommunicationFilters = ({
             selected={date}
             onSelect={handleSelectDate}
             initialFocus
+            locale={dateLocale}
           />
         </PopoverContent>
       </Popover>

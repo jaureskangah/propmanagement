@@ -54,16 +54,16 @@ export const UnreadMessagesDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('newMessages')}</DialogTitle>
+          <DialogTitle>{t("newMessages")}</DialogTitle>
           <DialogDescription>
-            {t('youHaveUnreadMessages', { 
+            {t("youHaveUnreadMessages", { 
               count: String(tenantMessages.length) 
             })}
             <ul className="mt-2 space-y-2">
               {tenantMessages.map((message) => (
                 <li key={message.id} className="text-sm">
                   <span className="font-semibold">
-                    {message.tenants?.name} ({t('unit')} {message.tenants?.unit_number}):
+                    {message.tenants?.name} ({t("unit")} {message.tenants?.unit_number}):
                   </span>{' '}
                   {message.subject}
                 </li>
@@ -73,10 +73,10 @@ export const UnreadMessagesDialog = ({
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('close')}
+            {t("close")}
           </Button>
           <Button onClick={handleViewMessages}>
-            {t('viewMessages')}
+            {t("viewMessages")}
           </Button>
         </DialogFooter>
       </DialogContent>
