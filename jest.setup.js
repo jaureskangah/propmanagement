@@ -17,20 +17,5 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Fix for toBeInTheDocument and other DOM testing library methods
-expect.extend({
-  toBeInTheDocument(received) {
-    const pass = received !== null;
-    return {
-      pass,
-      message: () => `expected ${received} to be in the document`,
-    };
-  },
-  toHaveTextContent(received, text) {
-    const pass = received.textContent.includes(text);
-    return {
-      pass,
-      message: () => `expected ${received.textContent} to include ${text}`,
-    };
-  }
-});
+// The custom matchers are now properly imported from @testing-library/jest-dom
+// This file ensures that the global Jest object is extended with these matchers
