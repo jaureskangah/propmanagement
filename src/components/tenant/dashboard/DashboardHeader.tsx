@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { RefreshCcw, Settings } from "lucide-react";
+import { RefreshCcw } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DashboardCustomization } from "./DashboardCustomization";
 import { motion } from "framer-motion";
@@ -19,7 +19,6 @@ interface DashboardHeaderProps {
 export function DashboardHeader({
   tenantName,
   firstName,
-  lastName,
   refreshDashboard,
   onOrderChange,
   onVisibilityChange,
@@ -43,11 +42,6 @@ export function DashboardHeader({
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
             {displayName ? t('welcomeTenant', { name: displayName }) : t('welcomeGeneric')}
           </h1>
-          {firstName && lastName && (
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
-              {lastName}
-            </p>
-          )}
         </motion.div>
 
         <div className="flex items-center space-x-3 mt-4 md:mt-0">
