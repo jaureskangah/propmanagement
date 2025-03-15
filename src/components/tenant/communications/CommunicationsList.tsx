@@ -128,7 +128,15 @@ export const CommunicationsList = ({
 
         if (filteredComms.length === 0) return null;
 
-        const typeDisplayName = type.charAt(0).toUpperCase() + type.slice(1);
+        // Use translations for type display name if possible
+        let typeDisplayName = type.charAt(0).toUpperCase() + type.slice(1);
+        if (type.toLowerCase() === 'email') {
+          typeDisplayName = t('email');
+        } else if (type.toLowerCase() === 'notification') {
+          typeDisplayName = t('notification', { fallback: 'Notification' });
+        } else if (type.toLowerCase() === 'message') {
+          typeDisplayName = t('messages', { fallback: 'Message' });
+        }
 
         return (
           <div key={type} className="space-y-3">

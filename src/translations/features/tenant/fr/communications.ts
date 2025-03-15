@@ -66,5 +66,11 @@ export const frCommunications: TenantCommunicationsTranslations = {
   loadingCommunications: "Chargement de vos communications...",
   startSendingMessages: "Commencez par envoyer un message à votre propriétaire ou gestionnaire immobilier.",
   showMore: "Voir plus",
-  showLess: "Voir moins"
+  showLess: "Voir moins",
+  notification: "Notification",
+  unit: "Unité",
+  newMessages: "Nouveaux Messages",
+  youHaveUnreadMessages: "Vous avez {count} nouveau(x) message(s) non lu(s) de vos locataires :",
+  close: "Fermer",
+  viewMessages: "Voir les Messages"
 };

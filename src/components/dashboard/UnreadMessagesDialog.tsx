@@ -1,3 +1,4 @@
+
 import {
   Dialog,
   DialogContent,
@@ -8,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface UnreadMessagesDialogProps {
   open: boolean;
@@ -21,6 +23,7 @@ export const UnreadMessagesDialog = ({
   unreadMessages,
 }: UnreadMessagesDialogProps) => {
   const navigate = useNavigate();
+  const { t } = useLocale();
 
   // Only show messages from tenants with explicit check for true
   const tenantMessages = unreadMessages.filter(message => {
@@ -51,14 +54,17 @@ export const UnreadMessagesDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nouveaux Messages</DialogTitle>
+          <DialogTitle>{t('newMessages', { fallback: 'New Messages' })}</DialogTitle>
           <DialogDescription>
-            Vous avez {tenantMessages.length} nouveau{tenantMessages.length > 1 ? 'x' : ''} message{tenantMessages.length > 1 ? 's' : ''} non lu{tenantMessages.length > 1 ? 's' : ''} de vos locataires :
+            {t('youHaveUnreadMessages', { 
+              fallback: `You have ${tenantMessages.length} new unread message${tenantMessages.length > 1 ? 's' : ''} from your tenants:`, 
+              count: tenantMessages.length 
+            })}
             <ul className="mt-2 space-y-2">
               {tenantMessages.map((message) => (
                 <li key={message.id} className="text-sm">
                   <span className="font-semibold">
-                    {message.tenants?.name} (Unité {message.tenants?.unit_number}):
+                    {message.tenants?.name} ({t('unit', { fallback: 'Unit' })} {message.tenants?.unit_number}):
                   </span>{' '}
                   {message.subject}
                 </li>
@@ -68,10 +74,10 @@ export const UnreadMessagesDialog = ({
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fermer
+            {t('close', { fallback: 'Close' })}
           </Button>
           <Button onClick={handleViewMessages}>
-            Voir les Messages
+            {t('viewMessages', { fallback: 'View Messages' })}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -65,4 +65,10 @@ export interface TenantCommunicationsTranslations {
   startSendingMessages: string;
   showMore: string;
   showLess: string;
+  notification: string;
+  unit: string;
+  newMessages: string;
+  youHaveUnreadMessages: string;
+  close: string;
+  viewMessages: string;
 }

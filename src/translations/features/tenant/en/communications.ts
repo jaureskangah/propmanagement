@@ -66,5 +66,11 @@ export const enCommunications: TenantCommunicationsTranslations = {
   loadingCommunications: "Loading your communications...",
   startSendingMessages: "Start by sending a message to your property manager or landlord.",
   showMore: "Show more",
-  showLess: "Show less"
+  showLess: "Show less",
+  notification: "Notification",
+  unit: "Unit",
+  newMessages: "New Messages",
+  youHaveUnreadMessages: "You have {count} new unread message(s) from your tenants:",
+  close: "Close",
+  viewMessages: "View Messages"
 };

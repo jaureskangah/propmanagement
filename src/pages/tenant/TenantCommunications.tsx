@@ -5,7 +5,6 @@ import { TenantCommunicationsContent } from "@/components/tenant/communications/
 import { UnlinkedTenantMessage } from "@/components/tenant/communications/UnlinkedTenantMessage";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useCommunicationActions } from "@/hooks/communications/useCommunicationActions";
-import { useState } from "react";
 import { Communication } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
