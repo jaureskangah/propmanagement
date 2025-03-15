@@ -54,17 +54,16 @@ export const UnreadMessagesDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('newMessages', { fallback: 'New Messages' })}</DialogTitle>
+          <DialogTitle>{t('newMessages')}</DialogTitle>
           <DialogDescription>
             {t('youHaveUnreadMessages', { 
-              fallback: `You have ${tenantMessages.length} new unread message${tenantMessages.length > 1 ? 's' : ''} from your tenants:`, 
               count: String(tenantMessages.length) 
             })}
             <ul className="mt-2 space-y-2">
               {tenantMessages.map((message) => (
                 <li key={message.id} className="text-sm">
                   <span className="font-semibold">
-                    {message.tenants?.name} ({t('unit', { fallback: 'Unit' })} {message.tenants?.unit_number}):
+                    {message.tenants?.name} ({t('unit')} {message.tenants?.unit_number}):
                   </span>{' '}
                   {message.subject}
                 </li>
@@ -74,10 +73,10 @@ export const UnreadMessagesDialog = ({
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            {t('close', { fallback: 'Close' })}
+            {t('close')}
           </Button>
           <Button onClick={handleViewMessages}>
-            {t('viewMessages', { fallback: 'View Messages' })}
+            {t('viewMessages')}
           </Button>
         </DialogFooter>
       </DialogContent>
