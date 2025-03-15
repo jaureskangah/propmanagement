@@ -4,6 +4,14 @@ import { DocumentRow } from "./DocumentRow";
 import { motion } from "framer-motion";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface DocumentTableProps {
   documents: TenantDocument[];
@@ -25,15 +33,15 @@ export const DocumentTable = ({
   return (
     <div className="overflow-hidden rounded-lg border bg-background/70 backdrop-blur-sm shadow-sm border-purple-100 dark:border-purple-800/30">
       <div className="overflow-x-auto">
-        <table className="w-full table-fixed">
-          <thead>
-            <tr className="border-b bg-purple-50/50 dark:bg-purple-900/20">
-              <th className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-left" style={{ width: actualIsMobile ? '60%' : '55%' }}>{t("document")}</th>
-              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell" style={{ width: '25%' }}>{t("dateUploaded")}</th>
-              <th className="px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-right" style={{ width: actualIsMobile ? '40%' : '20%' }}>{t("actions")}</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b bg-purple-50/50 dark:bg-purple-900/20">
+              <TableHead className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm w-[70%] md:w-[65%]">{t("document")}</TableHead>
+              <TableHead className="px-4 py-3 text-sm w-[15%] hidden md:table-cell">{t("dateUploaded")}</TableHead>
+              <TableHead className="px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm text-right w-[30%] md:w-[20%]">{t("actions")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
             {documents.map((document, index) => (
               <motion.tr
                 key={document.id}
@@ -50,8 +58,8 @@ export const DocumentTable = ({
                 />
               </motion.tr>
             ))}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );

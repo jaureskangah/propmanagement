@@ -14,6 +14,7 @@ import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { TableCell } from "@/components/ui/table";
 
 interface DocumentRowProps {
   document: TenantDocument;
@@ -55,11 +56,11 @@ export const DocumentRow = ({
 
   return (
     <>
-      <td className="px-2 sm:px-4 py-2 sm:py-3">
+      <TableCell className="px-2 sm:px-4 py-3">
         <div className="flex items-center gap-2">
           <DocumentIcon document={document} />
-          <div>
-            <p className="font-medium text-xs sm:text-sm">{displayName}</p>
+          <div className="min-w-0 flex-1">
+            <p className="font-medium text-xs sm:text-sm truncate">{displayName}</p>
             <div className="mt-1 flex gap-1 flex-wrap">
               <Badge variant="outline" className="text-xs px-1 py-0">
                 {typeText}
@@ -72,13 +73,13 @@ export const DocumentRow = ({
             </div>
           </div>
         </div>
-      </td>
+      </TableCell>
       
-      <td className="px-4 py-3 hidden md:table-cell text-sm text-muted-foreground">
+      <TableCell className="px-4 py-3 hidden md:table-cell text-sm text-muted-foreground">
         {document.created_at ? formatDate(document.created_at) : "-"}
-      </td>
+      </TableCell>
       
-      <td className="px-1 sm:px-4 py-2 sm:py-3 text-right">
+      <TableCell className="px-1 sm:px-4 py-3 text-right">
         {actualIsMobile ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -117,7 +118,7 @@ export const DocumentRow = ({
             </Button>
           </div>
         )}
-      </td>
+      </TableCell>
     </>
   );
 };
