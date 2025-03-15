@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { RefreshCcw, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DashboardCustomization } from "./DashboardCustomization";
 import { motion } from "framer-motion";
@@ -67,17 +67,7 @@ export function DashboardHeader({
           </div>
         </motion.div>
 
-        <div className="flex items-center space-x-3">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={refreshDashboard}
-            className="flex items-center gap-1.5 hover:bg-primary/10 transition-all font-sans"
-          >
-            <RefreshCcw className="h-4 w-4 mr-1" />
-            {t('refresh')}
-          </Button>
-          
+        <div className="flex items-center">
           <DashboardCustomization
             onOrderChange={onOrderChange}
             onVisibilityChange={onVisibilityChange}
