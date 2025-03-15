@@ -1,6 +1,6 @@
 
 import { MaintenanceRequest } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatRelativeDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Wrench, Eye, Clock, AlertCircle, CheckCircle, Star } from "lucide-react";
@@ -17,7 +17,7 @@ export const MaintenanceList = ({
   onMaintenanceUpdate,
   onViewDetails
 }: MaintenanceListProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
 
   const getStatusIcon = (status: string) => {
     switch(status) {
@@ -62,6 +62,7 @@ export const MaintenanceList = ({
     <div className="space-y-4">
       {requests.map((request) => {
         const daysSinceCreation = Math.floor((new Date().getTime() - new Date(request.created_at).getTime()) / (1000 * 3600 * 24));
+        
         return (
           <div
             key={request.id}
@@ -78,7 +79,7 @@ export const MaintenanceList = ({
                 <p className="font-medium text-foreground dark:text-gray-100">{request.issue}</p>
                 <div className="flex flex-wrap gap-2 mt-1">
                   <p className="text-xs text-muted-foreground dark:text-gray-400">
-                    {t('created')} {formatDate(request.created_at)}
+                    {t('created')} {formatDate(request.created_at, language)}
                     {daysSinceCreation > 0 && ` (${daysSinceCreation} ${t('daysAgo')})`}
                   </p>
                   <Badge className={`${getPriorityClass(request.priority)} text-white text-xs`}>

@@ -12,6 +12,7 @@ export interface TenantMaintenanceTranslations {
   priority: string;
   created: string;
   updated: string;
+  daysAgo: string;
   resolved: string;
   pending: string;
   inProgress: string;
@@ -54,4 +55,5 @@ export interface TenantMaintenanceTranslations {
   selectPriority: string;
   success: string;
   error: string;
+  deadline: string;
 }

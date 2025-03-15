@@ -1,8 +1,7 @@
 
 import { Calendar } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { formatDate } from "@/lib/utils";
 
 interface DeadlineInfoProps {
   deadline?: string;
@@ -13,9 +12,7 @@ export const DeadlineInfo = ({ deadline }: DeadlineInfoProps) => {
 
   if (!deadline) return null;
   
-  const formattedDate = format(new Date(deadline), "PPP", {
-    locale: language === 'fr' ? fr : undefined
-  });
+  const formattedDate = formatDate(deadline, language);
 
   return (
     <div className="flex items-center gap-2">
