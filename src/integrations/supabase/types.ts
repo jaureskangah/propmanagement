@@ -658,9 +658,11 @@ export type Database = {
           lease_end: string
           lease_start: string
           name: string
+          notes: string | null
           phone: string | null
           property_id: string | null
           rent_amount: number
+          security_deposit: number | null
           tenant_profile_id: string | null
           unit_number: string
           updated_at: string
@@ -673,9 +675,11 @@ export type Database = {
           lease_end: string
           lease_start: string
           name: string
+          notes?: string | null
           phone?: string | null
           property_id?: string | null
           rent_amount: number
+          security_deposit?: number | null
           tenant_profile_id?: string | null
           unit_number: string
           updated_at?: string
@@ -688,9 +692,11 @@ export type Database = {
           lease_end?: string
           lease_start?: string
           name?: string
+          notes?: string | null
           phone?: string | null
           property_id?: string | null
           rent_amount?: number
+          security_deposit?: number | null
           tenant_profile_id?: string | null
           unit_number?: string
           updated_at?: string
