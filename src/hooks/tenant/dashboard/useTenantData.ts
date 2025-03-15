@@ -50,7 +50,7 @@ export const useTenantData = () => {
         .maybeSingle();
         
       // Puis récupérer les données du locataire avec la jointure sur properties
-      // Notez l'utilisation de "properties:property_id(name)" au lieu de "properties(name)"
+      // Notez l'utilisation de "properties:property_id(name)" pour obtenir la propriété correctement
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
@@ -80,13 +80,15 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // Gérer correctement l'objet properties
+        // S'assurer que properties est bien traité comme un objet unique, pas un tableau
         setTenant({
           ...tenant,
           name: displayName,
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
-          fullName: displayName
+          fullName: displayName,
+          // Garder properties tel qu'il est retourné par Supabase
+          properties: tenant.properties
         });
       }
       
