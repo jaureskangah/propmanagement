@@ -13,6 +13,7 @@ import { DocumentIcon } from "./DocumentIcon";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { TableCell } from "@/components/ui/table";
 
 interface DocumentRowProps {
   document: TenantDocument;
@@ -35,12 +36,6 @@ export const DocumentRow = ({
       ? document.name.substring(0, 30) + "..." 
       : document.name;
   
-  // Determine category and type text
-  let categoryText = t("otherDocuments");
-  if (document.category === "lease" || document.category === "important") {
-    categoryText = document.category === "lease" ? t("leaseDocuments") : t("importantDocuments");
-  }
-  
   const typeText = document.document_type === "lease" 
     ? t("lease") 
     : document.document_type === "receipt" 
@@ -57,48 +52,30 @@ export const DocumentRow = ({
 
   return (
     <>
-      <td className="px-4 py-3">
+      <TableCell>
         <div className="flex items-center gap-2">
           <DocumentIcon document={document} />
           <div>
             <p className="font-medium text-sm">{displayName}</p>
-            {isMobile && (
-              <div className="mt-1 flex gap-2 flex-wrap">
-                <Badge variant="outline" className="text-xs">
-                  {typeText}
+            <div className="mt-1 flex gap-2 flex-wrap">
+              <Badge variant="outline" className="text-xs">
+                {typeText}
+              </Badge>
+              {document.category === "important" && (
+                <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                  {t("important")}
                 </Badge>
-                {document.category === "important" && (
-                  <Badge variant="secondary" className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                    {t("important")}
-                  </Badge>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </td>
+      </TableCell>
       
-      <td className="px-4 py-3 hidden md:table-cell text-sm">
-        {document.category === "important" ? (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-            {t("important")}
-          </Badge>
-        ) : (
-          categoryText
-        )}
-      </td>
-      
-      <td className="px-4 py-3 hidden md:table-cell text-sm">
-        <Badge variant="outline">
-          {typeText}
-        </Badge>
-      </td>
-      
-      <td className="px-4 py-3 hidden md:table-cell text-sm text-muted-foreground">
+      <TableCell className="hidden md:table-cell text-sm text-muted-foreground text-right">
         {document.created_at ? formatDate(document.created_at) : "-"}
-      </td>
+      </TableCell>
       
-      <td className="px-4 py-3 text-right">
+      <TableCell className="text-right">
         {isMobile ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -137,7 +114,7 @@ export const DocumentRow = ({
             </Button>
           </div>
         )}
-      </td>
+      </TableCell>
     </>
   );
 };
