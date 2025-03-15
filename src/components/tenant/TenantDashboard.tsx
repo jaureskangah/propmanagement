@@ -15,7 +15,8 @@ export const TenantDashboard = () => {
   useEffect(() => {
     // Initialize default order if we have a tenant
     if (tenant && sectionOrder.length === 0) {
-      const defaultOrder = ['property', 'lease', 'notifications', 'maintenance', 'documents', 'chart', 'payments', 'communications'];
+      // Set an order that prioritizes the most relevant widgets first
+      const defaultOrder = ['property', 'lease', 'maintenance', 'documents', 'notifications', 'chart', 'payments', 'communications'];
       setSectionOrder(defaultOrder);
     }
   }, [tenant, sectionOrder.length]);
