@@ -28,11 +28,9 @@ export const DocumentTable = ({
         <table className="w-full table-fixed">
           <thead>
             <tr className="border-b bg-purple-50/50 dark:bg-purple-900/20">
-              <th className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-left" style={{ width: actualIsMobile ? '70%' : '35%' }}>{t("document")}</th>
-              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell" style={{ width: '20%' }}>{t("category")}</th>
-              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell" style={{ width: '15%' }}>{t("documentType")}</th>
-              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell" style={{ width: '15%' }}>{t("dateUploaded")}</th>
-              <th className="px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-right" style={{ width: actualIsMobile ? '30%' : '15%' }}>{t("actions")}</th>
+              <th className="px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-left" style={{ width: actualIsMobile ? '60%' : '55%' }}>{t("document")}</th>
+              <th className="px-4 py-3 text-sm font-medium text-left hidden md:table-cell" style={{ width: '25%' }}>{t("dateUploaded")}</th>
+              <th className="px-1 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-medium text-right" style={{ width: actualIsMobile ? '40%' : '20%' }}>{t("actions")}</th>
             </tr>
           </thead>
           <tbody>

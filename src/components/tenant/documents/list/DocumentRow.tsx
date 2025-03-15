@@ -34,8 +34,8 @@ export const DocumentRow = ({
   
   // Format the document name to truncate if too long
   const displayName = 
-    document.name.length > (actualIsMobile ? 20 : 30) 
-      ? document.name.substring(0, actualIsMobile ? 20 : 30) + "..." 
+    document.name.length > (actualIsMobile ? 20 : 40) 
+      ? document.name.substring(0, actualIsMobile ? 20 : 40) + "..." 
       : document.name;
   
   // Determine type text
@@ -60,36 +60,18 @@ export const DocumentRow = ({
           <DocumentIcon document={document} />
           <div>
             <p className="font-medium text-xs sm:text-sm">{displayName}</p>
-            {actualIsMobile && (
-              <div className="mt-1 flex gap-1 flex-wrap">
-                <Badge variant="outline" className="text-xs px-1 py-0">
-                  {typeText}
+            <div className="mt-1 flex gap-1 flex-wrap">
+              <Badge variant="outline" className="text-xs px-1 py-0">
+                {typeText}
+              </Badge>
+              {document.category === "important" && (
+                <Badge variant="secondary" className="text-xs px-1 py-0 bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
+                  {t("important")}
                 </Badge>
-                {document.category === "important" && (
-                  <Badge variant="secondary" className="text-xs px-1 py-0 bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-                    {t("important")}
-                  </Badge>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
-      </td>
-      
-      <td className="px-4 py-3 hidden md:table-cell text-sm">
-        {document.category === "important" ? (
-          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100">
-            {t("important")}
-          </Badge>
-        ) : (
-          document.category
-        )}
-      </td>
-      
-      <td className="px-4 py-3 hidden md:table-cell text-sm">
-        <Badge variant="outline">
-          {typeText}
-        </Badge>
       </td>
       
       <td className="px-4 py-3 hidden md:table-cell text-sm text-muted-foreground">
