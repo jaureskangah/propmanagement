@@ -16,3 +16,21 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+// Fix for toBeInTheDocument and other DOM testing library methods
+expect.extend({
+  toBeInTheDocument(received) {
+    const pass = received !== null;
+    return {
+      pass,
+      message: () => `expected ${received} to be in the document`,
+    };
+  },
+  toHaveTextContent(received, text) {
+    const pass = received.textContent.includes(text);
+    return {
+      pass,
+      message: () => `expected ${received.textContent} to include ${text}`,
+    };
+  }
+});

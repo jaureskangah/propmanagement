@@ -14,6 +14,7 @@ interface CommunicationsListProps {
   onCommunicationClick: (comm: Communication) => void;
   onToggleStatus: (comm: Communication) => void;
   onDeleteCommunication: (comm: Communication) => void;
+  searchTerm?: string;
 }
 
 export const CommunicationsList = ({
@@ -22,6 +23,7 @@ export const CommunicationsList = ({
   onCommunicationClick,
   onToggleStatus,
   onDeleteCommunication,
+  searchTerm = '',
 }: CommunicationsListProps) => {
   const { t } = useLocale();
   const [showAll, setShowAll] = useState(false);
@@ -71,6 +73,7 @@ export const CommunicationsList = ({
               onClick={() => onCommunicationClick(comm)}
               onToggleStatus={() => onToggleStatus(comm)}
               onDelete={() => onDeleteCommunication(comm)}
+              searchTerm={searchTerm}
             />
           </div>
         ))}

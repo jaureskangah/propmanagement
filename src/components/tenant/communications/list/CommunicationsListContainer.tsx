@@ -8,6 +8,7 @@ interface CommunicationsListContainerProps {
   onCommunicationClick: (comm: Communication) => void;
   onToggleStatus: (comm: Communication) => void;
   onDeleteCommunication: (comm: Communication) => void;
+  searchTerm?: string;
 }
 
 export const CommunicationsListContainer = ({
@@ -15,7 +16,8 @@ export const CommunicationsListContainer = ({
   groupedCommunications,
   onCommunicationClick,
   onToggleStatus,
-  onDeleteCommunication
+  onDeleteCommunication,
+  searchTerm = '',
 }: CommunicationsListContainerProps) => {
   console.log("Rendering CommunicationsListContainer with:", {
     filteredCount: filteredCommunications.length,
@@ -29,6 +31,7 @@ export const CommunicationsListContainer = ({
       onCommunicationClick={onCommunicationClick}
       onToggleStatus={onToggleStatus}
       onDeleteCommunication={onDeleteCommunication}
+      searchTerm={searchTerm}
     />
   );
 };

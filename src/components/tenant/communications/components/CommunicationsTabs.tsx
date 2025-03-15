@@ -93,6 +93,7 @@ export const CommunicationsTabs = ({
           onCommunicationClick={onCommunicationSelect}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={onDeleteCommunication}
+          searchTerm={searchTerm}
         />
       </TabsContent>
       
@@ -107,6 +108,7 @@ export const CommunicationsTabs = ({
           onCommunicationClick={onCommunicationSelect}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={onDeleteCommunication}
+          searchTerm={searchTerm}
         />
       </TabsContent>
       
@@ -121,6 +123,7 @@ export const CommunicationsTabs = ({
           onCommunicationClick={onCommunicationSelect}
           onToggleStatus={onToggleStatus}
           onDeleteCommunication={onDeleteCommunication}
+          searchTerm={searchTerm}
         />
       </TabsContent>
     </Tabs>

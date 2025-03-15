@@ -17,12 +17,14 @@ import { Badge } from "@/components/ui/badge";
 import { Communication } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Avatar } from "@/components/ui/avatar";
+import { highlightMatch } from "../utils/highlightMatch";
 
 interface CommunicationItemProps {
   communication: Communication;
   onClick: () => void;
   onToggleStatus: () => void;
   onDelete: () => void;
+  searchTerm?: string;
 }
 
 export const CommunicationItem = ({
@@ -30,6 +32,7 @@ export const CommunicationItem = ({
   onClick,
   onToggleStatus,
   onDelete,
+  searchTerm = '',
 }: CommunicationItemProps) => {
   const hasAttachments = communication.attachments && communication.attachments.length > 0;
   const { t } = useLocale();
@@ -106,7 +109,7 @@ export const CommunicationItem = ({
         <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
           <div className="flex items-center gap-2 flex-wrap">
             <h4 className="font-medium text-foreground dark:text-gray-100 truncate max-w-[250px]">
-              {communication.subject}
+              {highlightMatch(communication.subject || '', searchTerm)}
             </h4>
             <Badge 
               variant={getCategoryBadge()}
@@ -163,7 +166,7 @@ export const CommunicationItem = ({
         </div>
         
         <p className="text-sm text-muted-foreground line-clamp-1">
-          {truncateContent(communication.content) || t('noContent')}
+          {highlightMatch(truncateContent(communication.content) || t('noContent'), searchTerm)}
         </p>
       </div>
     </div>

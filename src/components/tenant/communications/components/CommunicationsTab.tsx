@@ -13,6 +13,7 @@ interface CommunicationsTabProps {
   onCommunicationClick: (comm: Communication) => void;
   onToggleStatus: (comm: Communication) => void;
   onDeleteCommunication: (comm: Communication) => void;
+  searchTerm?: string;
 }
 
 export const CommunicationsTab = ({
@@ -24,7 +25,8 @@ export const CommunicationsTab = ({
   initialDisplayCount,
   onCommunicationClick,
   onToggleStatus,
-  onDeleteCommunication
+  onDeleteCommunication,
+  searchTerm = '',
 }: CommunicationsTabProps) => {
   return (
     <div className="space-y-4">
@@ -34,6 +36,7 @@ export const CommunicationsTab = ({
         onCommunicationClick={onCommunicationClick}
         onToggleStatus={onToggleStatus}
         onDeleteCommunication={onDeleteCommunication}
+        searchTerm={searchTerm}
       />
       <ShowMoreLessButton
         showAll={showAll}
