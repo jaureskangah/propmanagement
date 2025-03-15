@@ -44,11 +44,11 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
     <motion.div 
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 p-5"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-emerald-50 to-green-50 border border-emerald-100 dark:from-emerald-900/20 dark:to-green-900/20 dark:border-emerald-800/30 p-5"
     >
       <div className="flex items-center mb-4">
-        <DollarSign className="h-5 w-5 mr-2 text-emerald-600" />
-        <h3 className="font-semibold text-emerald-700">{t('payments')}</h3>
+        <DollarSign className="h-5 w-5 mr-2 text-emerald-600 dark:text-emerald-400" />
+        <h3 className="font-semibold text-emerald-700 dark:text-emerald-300">{t('payments')}</h3>
       </div>
       
       <div className="space-y-5">
@@ -56,33 +56,33 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="bg-white/70 rounded-lg p-4 shadow-sm"
+          className="bg-white/70 dark:bg-gray-800/60 rounded-lg p-4 shadow-sm"
         >
           <div className="flex justify-between items-center mb-3">
-            <span className="text-sm text-gray-500">{t('currentMonthRent')}</span>
-            <span className="text-2xl font-bold text-emerald-700">${rentAmount}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('currentMonthRent')}</span>
+            <span className="text-2xl font-bold text-emerald-700 dark:text-emerald-300">${rentAmount}</span>
           </div>
           
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">{t('status')}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('status')}</span>
             <div>
               {isPaid && (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700/30">
                   <CheckCircle className="h-3 w-3 mr-1" /> {t('paid')}
                 </Badge>
               )}
               {isPending && (
-                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700/30">
                   <Clock className="h-3 w-3 mr-1" /> {t('pending')}
                 </Badge>
               )}
               {isOverdue && (
-                <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
+                <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700/30">
                   <AlertCircle className="h-3 w-3 mr-1" /> {t('overdue')}
                 </Badge>
               )}
               {!currentMonthPayment && (
-                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-700/30">
                   <Calendar className="h-3 w-3 mr-1" /> {t('notPaidYet')}
                 </Badge>
               )}
@@ -95,13 +95,13 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 0.1 }}
-            className="bg-white/70 rounded-lg p-4 shadow-sm"
+            className="bg-white/70 dark:bg-gray-800/60 rounded-lg p-4 shadow-sm"
           >
-            <span className="text-sm text-gray-500 block mb-3">{t('lastPayment')}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400 block mb-3">{t('lastPayment')}</span>
             <div className="flex items-center justify-between">
               <div>
-                <span className="font-medium text-gray-800">${lastPayment.amount}</span>
-                <span className="text-xs text-gray-500 ml-2">
+                <span className="font-medium text-gray-800 dark:text-gray-200">${lastPayment.amount}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400 ml-2">
                   {format(new Date(lastPayment.payment_date), 'PP')}
                 </span>
               </div>
@@ -109,10 +109,10 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
                 variant="outline" 
                 className={
                   lastPayment.status === 'paid' 
-                    ? 'bg-green-50 text-green-700 border-green-200' 
+                    ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-700/30' 
                     : lastPayment.status === 'pending' 
-                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200'
-                    : 'bg-red-50 text-red-700 border-red-200'
+                    ? 'bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300 dark:border-yellow-700/30'
+                    : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-700/30'
                 }
               >
                 {lastPayment.status}
@@ -122,7 +122,7 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
         )}
         
         <Button 
-          className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+          className="w-full mt-2 bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-700 dark:hover:bg-emerald-800"
           onClick={() => navigate('/tenant/payments')}
         >
           {isPaid ? t('viewPaymentHistory') : t('makePayment')}

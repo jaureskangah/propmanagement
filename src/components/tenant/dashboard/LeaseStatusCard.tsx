@@ -15,19 +15,19 @@ export const LeaseStatusCard = ({ leaseStart, leaseEnd, daysLeft, status }: Leas
   
   const getStatusColor = () => {
     switch (status) {
-      case 'active': return 'from-emerald-50 to-green-50 border-emerald-100';
-      case 'expiring': return 'from-amber-50 to-yellow-50 border-amber-100';
-      case 'expired': return 'from-rose-50 to-red-50 border-rose-100';
-      default: return 'from-blue-50 to-indigo-50 border-blue-100';
+      case 'active': return 'from-emerald-50 to-green-50 border-emerald-100 dark:from-emerald-900/20 dark:to-green-900/20 dark:border-emerald-800/30';
+      case 'expiring': return 'from-amber-50 to-yellow-50 border-amber-100 dark:from-amber-900/20 dark:to-yellow-900/20 dark:border-amber-800/30';
+      case 'expired': return 'from-rose-50 to-red-50 border-rose-100 dark:from-rose-900/20 dark:to-red-900/20 dark:border-rose-800/30';
+      default: return 'from-blue-50 to-indigo-50 border-blue-100 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-800/30';
     }
   };
   
   const getStatusTextColor = () => {
     switch (status) {
-      case 'active': return 'text-emerald-700';
-      case 'expiring': return 'text-amber-700';
-      case 'expired': return 'text-rose-700';
-      default: return 'text-blue-700';
+      case 'active': return 'text-emerald-700 dark:text-emerald-300';
+      case 'expiring': return 'text-amber-700 dark:text-amber-300';
+      case 'expired': return 'text-rose-700 dark:text-rose-300';
+      default: return 'text-blue-700 dark:text-blue-300';
     }
   };
   
@@ -72,42 +72,42 @@ export const LeaseStatusCard = ({ leaseStart, leaseEnd, daysLeft, status }: Leas
       <div className="space-y-4">
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">{t('lease.start')}</span>
-            <span className="font-medium text-gray-700">{new Date(leaseStart).toLocaleDateString()}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('lease.start')}</span>
+            <span className="font-medium text-gray-700 dark:text-gray-300">{new Date(leaseStart).toLocaleDateString()}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">{t('lease.end')}</span>
-            <span className="font-medium text-gray-700">{new Date(leaseEnd).toLocaleDateString()}</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t('lease.end')}</span>
+            <span className="font-medium text-gray-700 dark:text-gray-300">{new Date(leaseEnd).toLocaleDateString()}</span>
           </div>
         </div>
         
-        <div className="w-full bg-gray-200/50 rounded-full h-2.5 mt-4">
+        <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-2.5 mt-4">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${progressPercentage}%` }}
             transition={{ duration: 1, delay: 0.2 }}
             className={`h-2.5 rounded-full ${
-              status === 'active' ? 'bg-green-500' : 
-              status === 'expiring' ? 'bg-amber-500' : 'bg-rose-500'
+              status === 'active' ? 'bg-green-500 dark:bg-green-600' : 
+              status === 'expiring' ? 'bg-amber-500 dark:bg-amber-600' : 'bg-rose-500 dark:bg-rose-600'
             }`}
           />
         </div>
         
         <div className="mt-2 flex items-center">
           {status === 'active' && (
-            <div className="flex items-center text-emerald-600">
+            <div className="flex items-center text-emerald-600 dark:text-emerald-400">
               <CheckCircle className="h-4 w-4 mr-2" />
               <span className="text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
             </div>
           )}
           {status === 'expiring' && (
-            <div className="flex items-center text-amber-600">
+            <div className="flex items-center text-amber-600 dark:text-amber-400">
               <AlertTriangle className="h-4 w-4 mr-2" />
               <span className="text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
             </div>
           )}
           {status === 'expired' && (
-            <div className="flex items-center text-rose-600">
+            <div className="flex items-center text-rose-600 dark:text-rose-400">
               <AlertTriangle className="h-4 w-4 mr-2" />
               <span className="text-sm font-medium">{t('daysAgo', { days: daysLeft.toString() })}</span>
             </div>

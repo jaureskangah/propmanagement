@@ -20,18 +20,18 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
     <motion.div 
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 p-5"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 dark:from-amber-900/20 dark:to-yellow-900/20 dark:border-amber-800/30 p-5"
     >
       <div className="flex items-center mb-4">
-        <Wrench className="h-5 w-5 mr-2 text-amber-600" />
-        <h3 className="font-semibold text-amber-700">{t('maintenanceRequests')}</h3>
+        <Wrench className="h-5 w-5 mr-2 text-amber-600 dark:text-amber-400" />
+        <h3 className="font-semibold text-amber-700 dark:text-amber-300">{t('maintenanceRequests')}</h3>
       </div>
       
       <div className="space-y-4">
         {requests.length === 0 ? (
-          <div className="text-center py-6 bg-white/60 rounded-lg">
-            <Wrench className="h-10 w-10 text-amber-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">{t('noMaintenanceRequests')}</p>
+          <div className="text-center py-6 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+            <Wrench className="h-10 w-10 text-amber-300 dark:text-amber-500/50 mx-auto mb-2 opacity-50" />
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('noMaintenanceRequests')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -41,11 +41,11 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-white/70 rounded-lg shadow-sm hover:shadow transition-shadow"
+                className="flex items-center justify-between p-3 bg-white/70 dark:bg-gray-800/60 rounded-lg shadow-sm hover:shadow transition-shadow"
               >
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium truncate text-gray-800">{request.issue}</span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-sm font-medium truncate text-gray-800 dark:text-gray-200">{request.issue}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
                     {formatDate(request.created_at)}
                   </span>
                 </div>
@@ -53,8 +53,8 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                   variant={request.status === "Resolved" ? "default" : "secondary"}
                   className={
                     request.status === "Resolved"
-                      ? "bg-green-500 hover:bg-green-600 text-white"
-                      : "bg-amber-500 hover:bg-amber-600 text-white"
+                      ? "bg-green-500 hover:bg-green-600 text-white dark:bg-green-600 dark:hover:bg-green-700"
+                      : "bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-600 dark:hover:bg-amber-700"
                   }
                 >
                   {request.status}
@@ -63,7 +63,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             ))}
             
             {requests.length > 3 && (
-              <div className="text-sm text-center text-gray-500 mt-2">
+              <div className="text-sm text-center text-gray-500 dark:text-gray-400 mt-2">
                 {t('andMoreRequests', { count: (requests.length - 3).toString() })}
               </div>
             )}
@@ -72,7 +72,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
         
         <div className="flex gap-2 mt-4">
           <Button 
-            className="flex-1 text-xs md:text-sm border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            className="flex-1 text-xs md:text-sm border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800 dark:bg-gray-800/50 dark:hover:bg-amber-900/20 dark:text-amber-300 dark:hover:text-amber-200 dark:border-amber-900/30"
             variant="outline"
             onClick={() => navigate('/tenant/maintenance')}
             size="sm"
@@ -81,7 +81,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Button>
           <Button 
-            className="flex-1 text-xs md:text-sm bg-amber-600 hover:bg-amber-700 text-white"
+            className="flex-1 text-xs md:text-sm bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-700 dark:hover:bg-amber-800"
             onClick={() => navigate('/tenant/maintenance/new')}
             size="sm"
           >

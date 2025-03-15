@@ -144,6 +144,14 @@
       margin-bottom: 0.5rem !important;
     }
   }
+
+  .dark-card-gradient {
+    @apply dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800;
+  }
+  
+  .dark-card-hover {
+    @apply dark:hover:bg-gray-800;
+  }
 }
 
 @keyframes fadeIn {
