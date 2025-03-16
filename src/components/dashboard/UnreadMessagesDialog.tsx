@@ -10,6 +10,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { Badge } from "@/components/ui/badge";
+import { formatDistance } from "date-fns";
+import { fr, enUS } from "date-fns/locale";
 
 interface UnreadMessagesDialogProps {
   open: boolean;
@@ -23,22 +26,25 @@ export const UnreadMessagesDialog = ({
   unreadMessages,
 }: UnreadMessagesDialogProps) => {
   const navigate = useNavigate();
-  const { t } = useLocale();
+  const { t, language } = useLocale();
+  const locale = language === 'fr' ? fr : enUS;
 
   // Only show messages from tenants with explicit check for true
   const tenantMessages = unreadMessages.filter(message => {
     console.log("Filtering message:", message);
-    console.log("is_from_tenant value:", message.is_from_tenant);
     return message.is_from_tenant === true && message.status === "unread";
   });
 
   console.log("Final filtered tenant messages:", tenantMessages);
 
-  const handleViewMessages = () => {
+  const handleViewMessages = (tenantId?: string) => {
     onOpenChange(false);
-    if (tenantMessages.length > 0 && tenantMessages[0].tenants?.id) {
-      console.log("Navigating to tenant communications:", tenantMessages[0].tenants.id);
-      navigate(`/tenants?selected=${tenantMessages[0].tenants.id}&tab=communications`);
+    if (tenantId) {
+      console.log("Navigating to tenant communications:", tenantId);
+      navigate(`/tenants?selected=${tenantId}&tab=communications`);
+    } else if (tenantMessages.length > 0 && tenantMessages[0].tenant_id) {
+      console.log("Navigating to tenant communications:", tenantMessages[0].tenant_id);
+      navigate(`/tenants?selected=${tenantMessages[0].tenant_id}&tab=communications`);
     } else {
       navigate("/tenants");
     }
@@ -52,31 +58,58 @@ export const UnreadMessagesDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("newMessages")}</DialogTitle>
           <DialogDescription>
             {t("youHaveUnreadMessages", { 
               count: String(tenantMessages.length) 
             })}
-            <ul className="mt-2 space-y-2">
-              {tenantMessages.map((message) => (
-                <li key={message.id} className="text-sm">
-                  <span className="font-semibold">
-                    {message.tenants?.name} ({t("unit")} {message.tenants?.unit_number}):
-                  </span>{' '}
-                  {message.subject}
-                </li>
-              ))}
-            </ul>
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        
+        <div className="max-h-[60vh] overflow-y-auto">
+          <ul className="space-y-3 my-4">
+            {tenantMessages.map((message) => (
+              <li 
+                key={message.id} 
+                className="p-3 bg-muted/40 rounded-lg hover:bg-muted/80 transition-colors cursor-pointer"
+                onClick={() => handleViewMessages(message.tenant_id)}
+              >
+                <div className="flex justify-between items-start mb-1">
+                  <span className="font-semibold text-sm">
+                    {message.tenants?.name || t('tenant')}
+                    {message.tenants?.unit_number && ` (${t("unit")} ${message.tenants.unit_number})`}
+                  </span>
+                  {message.created_at && (
+                    <span className="text-xs text-muted-foreground">
+                      {formatDistance(new Date(message.created_at), new Date(), { 
+                        addSuffix: true,
+                        locale 
+                      })}
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm font-medium">{message.subject}</p>
+                <div className="flex gap-2 mt-2">
+                  <Badge variant="outline" className="text-xs">
+                    {message.category || t('general')}
+                  </Badge>
+                  <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-800">
+                    {t('unread')}
+                  </Badge>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        
+        <DialogFooter className="sm:justify-between flex-row">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t("close")}
           </Button>
-          <Button onClick={handleViewMessages}>
-            {t("viewMessages")}
+          <Button onClick={() => handleViewMessages()}>
+            {t("viewAllMessages")}
           </Button>
         </DialogFooter>
       </DialogContent>

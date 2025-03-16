@@ -3,10 +3,12 @@ import { useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useLocale } from '@/components/providers/LocaleProvider';
+import { useNavigate } from 'react-router-dom';
 
 export function useRealtimeNotifications() {
   const { toast } = useToast();
   const { t } = useLocale();
+  const navigate = useNavigate();
 
   const handleUrgentTasks = useCallback((payload: any) => {
     if (payload.new.priority === 'high' || payload.new.priority === 'urgent') {
@@ -46,6 +48,27 @@ export function useRealtimeNotifications() {
     }
   }, [toast, t]);
 
+  // Handler for tenant communications
+  const handleTenantCommunication = useCallback((payload: any) => {
+    console.log("Tenant communication received:", payload);
+    
+    // Only show notifications for new messages and those from tenants (is_from_tenant=true)
+    if (payload.eventType === 'INSERT' && payload.new.is_from_tenant === true) {
+      toast({
+        title: t('newMessageFromTenant', { fallback: "New Message From Tenant" }),
+        description: payload.new.subject,
+        action: {
+          label: t('view', { fallback: "View" }),
+          onClick: () => {
+            if (payload.new.tenant_id) {
+              navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
+            }
+          }
+        },
+      });
+    }
+  }, [toast, t, navigate]);
+
   useEffect(() => {
     const channel = supabase
       .channel('db-changes')
@@ -67,10 +90,19 @@ export function useRealtimeNotifications() {
         },
         handleMaintenanceRequest
       )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tenant_communications'
+        },
+        handleTenantCommunication
+      )
       .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [handleUrgentTasks, handleMaintenanceRequest]);
+  }, [handleUrgentTasks, handleMaintenanceRequest, handleTenantCommunication]);
 }
