@@ -56,25 +56,7 @@ export const CommunicationsPageHeader = ({
         </motion.div>
 
         <div className="flex items-center gap-2">
-          {/* Ne montrer le bouton "Inviter le Locataire" que si l'utilisateur n'est pas un locataire */}
-          {!isUserTenant && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button 
-                    variant="outline"
-                    onClick={onInviteTenantClick}
-                    className="flex items-center gap-2 hover:bg-primary/10 transition-colors"
-                  >
-                    {t('inviteTenant')}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  {t('inviteTenantDescription', { fallback: t('inviteTenantTooltip') })}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
+          {/* Le bouton "Inviter le Locataire" a été retiré */}
           
           <TooltipProvider>
             <Tooltip>
