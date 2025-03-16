@@ -32,6 +32,8 @@ export const CommunicationsContent = ({
     setSelectedDate,
     showAll,
     toggleShowAll,
+    sortOrder,
+    setSortOrder,
     filteredCommunications,
     displayedCommunications,
     displayedGroupedCommunications,
@@ -52,6 +54,8 @@ export const CommunicationsContent = ({
         setSelectedType={setSelectedType}
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
+        sortOrder={sortOrder}
+        setSortOrder={setSortOrder}
         unreadCount={unreadCount}
         urgentCount={urgentCount}
         showAll={showAll}

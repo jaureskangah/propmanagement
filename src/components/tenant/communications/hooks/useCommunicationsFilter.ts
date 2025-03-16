@@ -8,6 +8,7 @@ export const useCommunicationsFilter = (communications: Communication[]) => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [showAll, setShowAll] = useState(false);
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const INITIAL_DISPLAY_COUNT = 5;
 
   // Filtered communications based on active filters
@@ -34,8 +35,12 @@ export const useCommunicationsFilter = (communications: Communication[]) => {
       }
       
       return textFilter && typeFilter && dateFilter && tabFilter;
+    }).sort((a, b) => {
+      const dateA = new Date(a.created_at).getTime();
+      const dateB = new Date(b.created_at).getTime();
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
     });
-  }, [communications, searchTerm, selectedType, selectedDate, activeTab]);
+  }, [communications, searchTerm, selectedType, selectedDate, activeTab, sortOrder]);
 
   // Group communications by type
   const groupedCommunications = useMemo(() => {
@@ -104,6 +109,8 @@ export const useCommunicationsFilter = (communications: Communication[]) => {
     showAll,
     setShowAll,
     toggleShowAll: () => setShowAll(!showAll),
+    sortOrder,
+    setSortOrder,
     filteredCommunications,
     groupedCommunications,
     displayedCommunications,

@@ -16,6 +16,8 @@ interface CommunicationsTabsProps {
   setSelectedType: (type: string | null) => void;
   selectedDate: string;
   setSelectedDate: (date: string) => void;
+  sortOrder: "newest" | "oldest";
+  setSortOrder: (order: "newest" | "oldest") => void;
   unreadCount: number;
   urgentCount: number;
   showAll: boolean;
@@ -39,6 +41,8 @@ export const CommunicationsTabs = ({
   setSelectedType,
   selectedDate,
   setSelectedDate,
+  sortOrder,
+  setSortOrder,
   unreadCount,
   urgentCount,
   showAll,
@@ -75,10 +79,12 @@ export const CommunicationsTabs = ({
           searchQuery={searchTerm}
           startDate={selectedDate}
           selectedType={selectedType}
+          sortOrder={sortOrder}
           communicationTypes={["general", "maintenance", "urgent", "payment"]}
           onSearchChange={setSearchTerm}
           onDateChange={setSelectedDate}
           onTypeChange={setSelectedType}
+          onSortOrderChange={setSortOrder}
         />
       </div>
       

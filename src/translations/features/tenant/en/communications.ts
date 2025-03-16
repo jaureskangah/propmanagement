@@ -1,4 +1,3 @@
-
 import type { TenantCommunicationsTranslations } from '../../../types/tenant/communications';
 
 export const enCommunications: TenantCommunicationsTranslations = {
@@ -72,5 +71,8 @@ export const enCommunications: TenantCommunicationsTranslations = {
   newMessages: "New Messages",
   youHaveUnreadMessages: "You have {count} new unread message(s) from your tenants:",
   close: "Close",
-  viewMessages: "View Messages"
+  viewMessages: "View Messages",
+  sortNewestFirst: "Newest first",
+  sortOldestFirst: "Oldest first",
+  sortBy: "Sort by"
 };

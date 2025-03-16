@@ -71,4 +71,7 @@ export interface TenantCommunicationsTranslations {
   youHaveUnreadMessages: string;
   close: string;
   viewMessages: string;
+  sortNewestFirst: string;
+  sortOldestFirst: string;
+  sortBy: string;
 }
