@@ -29,6 +29,7 @@ export const NotificationBell = ({ unreadCount }: NotificationBellProps) => {
           "border border-purple-100 hover:border-purple-200"
         )}
         onClick={() => navigate('/tenants')}
+        aria-label={`${unreadCount} unread messages`}
       >
         <Bell className="h-5 w-5 text-purple-600" />
         <motion.span 

@@ -117,8 +117,8 @@ export const useTenantCommunications = () => {
           table: 'tenant_communications',
           filter: `tenant_id=eq.${tenantId}`
         },
-        () => {
-          console.log("Realtime update received, refreshing communications");
+        (payload) => {
+          console.log("Realtime update received for tenant communications:", payload);
           fetchCommunications();
         }
       )

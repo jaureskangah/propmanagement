@@ -37,8 +37,15 @@ export const DashboardMetrics = ({
 
   useEffect(() => {
     // Combine count from metrics and realtime updates
+    const realtimeCount = realtimeUnreadMessages?.length || 0;
+    console.log("Unread count calculation:", { 
+      unreadMessages, 
+      realtimeCount,
+      realtimeMessages: realtimeUnreadMessages 
+    });
+    
     setTotalUnreadCount(
-      unreadMessages + (realtimeUnreadMessages?.length || 0)
+      unreadMessages + realtimeCount
     );
   }, [unreadMessages, realtimeUnreadMessages]);
 

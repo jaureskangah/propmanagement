@@ -32,14 +32,12 @@ export const UnreadMessagesDialog = ({
     setLocalOpen(open);
   }, [open]);
 
-  // Only show messages from tenants with explicit check for true
+  // Filter to show only messages from tenants
   const tenantMessages = unreadMessages.filter(message => {
-    console.log("Filtering message:", message);
-    console.log("is_from_tenant value:", message.is_from_tenant);
     return message.is_from_tenant === true && message.status === "unread";
   });
 
-  console.log("Final filtered tenant messages:", tenantMessages);
+  console.log("Filtered tenant messages for dialog:", tenantMessages);
 
   const handleViewMessages = () => {
     onOpenChange(false);

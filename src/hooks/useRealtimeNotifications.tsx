@@ -5,7 +5,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { useNavigate } from 'react-router-dom';
 import { ToastAction } from '@/components/ui/toast';
-import { UnreadMessagesDialog } from '@/components/dashboard/UnreadMessagesDialog';
 
 export function useRealtimeNotifications() {
   const { toast } = useToast();
@@ -32,6 +31,13 @@ export function useRealtimeNotifications() {
       if (data && data.length > 0) {
         console.log("Found unread messages:", data);
         setUnreadMessages(data);
+        
+        // Show dialog if there are unread messages and we're on the dashboard
+        if (window.location.pathname === '/dashboard' && data.length > 0) {
+          setTimeout(() => {
+            setShowUnreadDialog(true);
+          }, 1000);
+        }
       }
     } catch (error) {
       console.error("Error fetching unread messages:", error);
@@ -82,7 +88,7 @@ export function useRealtimeNotifications() {
     
     // Only show notifications for new messages and those from tenants (is_from_tenant=true)
     if (payload.eventType === 'INSERT' && payload.new.is_from_tenant === true) {
-      // Update the unread messages list
+      // Update the unread messages list by fetching again
       fetchUnreadMessages();
       
       toast({
@@ -102,10 +108,12 @@ export function useRealtimeNotifications() {
         ),
       });
       
-      // Show dialog if there are multiple unread messages
-      setTimeout(() => {
-        setShowUnreadDialog(true);
-      }, 1000);
+      // Show dialog if we're on the dashboard
+      if (window.location.pathname === '/dashboard') {
+        setTimeout(() => {
+          setShowUnreadDialog(true);
+        }, 1000);
+      }
     }
   }, [toast, t, navigate]);
 
