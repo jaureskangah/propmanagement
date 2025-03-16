@@ -32,18 +32,16 @@ export function DocumentsMainContent({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="flex flex-col md:flex-row gap-4 mt-4 w-full"
+      className="flex flex-col md:flex-row gap-4 mt-6"
     >
       {/* Categories sidebar - hidden on very small mobile screens */}
       {(!isMobile || window.innerWidth > 480) && (
-        <div className="md:w-64 flex-shrink-0">
-          <DocumentCategories
-            documents={documents}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            isCompact={isMobile}
-          />
-        </div>
+        <DocumentCategories
+          documents={documents}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          isCompact={isMobile}
+        />
       )}
       
       {/* Main content */}

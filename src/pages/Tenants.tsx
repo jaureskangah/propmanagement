@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useTenantPage } from "@/hooks/useTenantPage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AppSidebar from "@/components/AppSidebar";
@@ -8,7 +8,6 @@ import { TenantModals } from "@/components/tenant/TenantModals";
 import { TenantsHeader } from "@/components/tenant/TenantsHeader";
 import { TenantsLoading } from "@/components/tenant/TenantsLoading";
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
 
 const Tenants = () => {
   const {
@@ -34,22 +33,13 @@ const Tenants = () => {
   } = useTenantPage();
   
   const isMobile = useIsMobile();
-  const [searchParams] = useSearchParams();
-
-  // Effect to set selected tenant from URL params
-  useEffect(() => {
-    const tenantIdFromUrl = searchParams.get("selected");
-    if (tenantIdFromUrl && tenantIdFromUrl !== selectedTenant) {
-      setSelectedTenant(tenantIdFromUrl);
-    }
-  }, [searchParams, setSelectedTenant, selectedTenant]);
 
   if (isLoading) {
     return <TenantsLoading />;
   }
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen">
       <AppSidebar />
       <div className="flex-1 container mx-auto p-6 overflow-y-auto">
         <motion.div
