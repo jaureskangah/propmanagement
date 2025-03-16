@@ -1,4 +1,3 @@
-
 import { Communication } from "@/types/tenant";
 import { MessageSquare, Mail, AlertTriangle, Clock, MessageCircle, AlertOctagon, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -66,20 +65,17 @@ export const CommunicationsList = ({
       return acc;
     }, {} as Record<string, Communication[]>);
 
-    // Limit the number of threads to display if limit is provided
     const threadsEntries = Object.entries(threads);
     
-    // Sort threads by the most recent message in the thread
     const sortedThreadsEntries = threadsEntries.sort((a, b) => {
       const aLatestTime = Math.max(...a[1].map(comm => new Date(comm.created_at).getTime()));
       const bLatestTime = Math.max(...b[1].map(comm => new Date(comm.created_at).getTime()));
-      return bLatestTime - aLatestTime; // Newest first
+      return bLatestTime - aLatestTime;
     });
     
     const displayThreads = limit && !showAll ? sortedThreadsEntries.slice(0, limit) : sortedThreadsEntries;
 
     return displayThreads.map(([parentId, thread], index) => {
-      // Sort messages within each thread newest first
       const sortedThread = [...thread].sort((a, b) => 
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
@@ -100,8 +96,8 @@ export const CommunicationsList = ({
               <CommunicationItem
                 communication={comm}
                 onClick={() => onCommunicationClick(comm)}
-                onToggleStatus={onToggleStatus}
-                onDelete={onDeleteCommunication}
+                onToggleStatus={() => onToggleStatus(comm)}
+                onDelete={() => onDeleteCommunication(comm)}
                 searchTerm={searchTerm}
               />
             </div>
@@ -122,18 +118,6 @@ export const CommunicationsList = ({
     }
   };
 
-  // Calculate total threads count
-  const totalThreadsCount = Object.values(groupedCommunications).reduce((total, comms) => {
-    if (!comms) return total;
-    
-    // Count only parent threads (no parent_id)
-    const parentThreads = comms.filter(comm => 
-      comm && filteredCommunications.includes(comm) && !comm.parent_id
-    );
-    
-    return total + parentThreads.length;
-  }, 0);
-
   return (
     <div className="space-y-6">
       {Object.entries(groupedCommunications).map(([type, comms]) => {
@@ -145,7 +129,6 @@ export const CommunicationsList = ({
 
         if (filteredComms.length === 0) return null;
 
-        // Use translations for type display name if possible
         let typeDisplayName = type.charAt(0).toUpperCase() + type.slice(1);
         if (type.toLowerCase() === 'email') {
           typeDisplayName = t('email');
