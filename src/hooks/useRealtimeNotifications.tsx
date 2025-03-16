@@ -60,6 +60,7 @@ export function useRealtimeNotifications() {
         description: payload.new.subject,
         action: (
           <ToastAction 
+            altText={t('view', { fallback: "View" })}
             onClick={() => {
               if (payload.new.tenant_id) {
                 navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
