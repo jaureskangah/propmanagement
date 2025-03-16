@@ -3,7 +3,9 @@ import { NotificationBell } from "./NotificationBell";
 import { useMetricsData } from "./hooks/useMetricsData";
 import { MetricsGrid } from "./metrics/MetricsGrid";
 import type { DateRange } from "./DashboardDateFilter";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { UnreadMessagesDialog } from "./UnreadMessagesDialog";
+import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 
 interface DashboardMetricsProps {
   propertiesData: any[];
@@ -24,6 +26,21 @@ export const DashboardMetrics = ({
     tenantsData,
     dateRange
   );
+  
+  const { 
+    unreadMessages: realtimeUnreadMessages, 
+    showUnreadDialog, 
+    setShowUnreadDialog 
+  } = useRealtimeNotifications();
+
+  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
+
+  useEffect(() => {
+    // Combine count from metrics and realtime updates
+    setTotalUnreadCount(
+      unreadMessages + (realtimeUnreadMessages?.length || 0)
+    );
+  }, [unreadMessages, realtimeUnreadMessages]);
 
   useEffect(() => {
     console.log("DashboardMetrics data received:", {
@@ -31,19 +48,26 @@ export const DashboardMetrics = ({
       maintenanceCount: maintenanceData?.length || 0,
       tenantsCount: tenantsData?.length || 0,
       hasMetrics: !!metrics,
-      unreadMessages,
+      unreadMessages: totalUnreadCount,
+      realtimeUnreadMessages,
       dateRange
     });
 
     return () => {
       console.log("DashboardMetrics unmounting");
     };
-  }, [propertiesData, maintenanceData, tenantsData, metrics, unreadMessages, dateRange]);
+  }, [propertiesData, maintenanceData, tenantsData, metrics, totalUnreadCount, realtimeUnreadMessages, dateRange]);
 
   return (
     <div className="relative">
-      <NotificationBell unreadCount={unreadMessages} />
-      <MetricsGrid metrics={metrics} unreadMessages={unreadMessages} />
+      <NotificationBell unreadCount={totalUnreadCount} />
+      <MetricsGrid metrics={metrics} unreadMessages={totalUnreadCount} />
+      
+      <UnreadMessagesDialog 
+        open={showUnreadDialog} 
+        onOpenChange={setShowUnreadDialog} 
+        unreadMessages={realtimeUnreadMessages || []} 
+      />
     </div>
   );
 };

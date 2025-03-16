@@ -1,15 +1,42 @@
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { useNavigate } from 'react-router-dom';
 import { ToastAction } from '@/components/ui/toast';
+import { UnreadMessagesDialog } from '@/components/dashboard/UnreadMessagesDialog';
 
 export function useRealtimeNotifications() {
   const { toast } = useToast();
   const { t } = useLocale();
   const navigate = useNavigate();
+  const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
+  const [showUnreadDialog, setShowUnreadDialog] = useState(false);
+
+  // Fetch initial unread messages
+  useEffect(() => {
+    fetchUnreadMessages();
+  }, []);
+
+  const fetchUnreadMessages = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .select('*, tenants(id, name, unit_number)')
+        .eq('status', 'unread')
+        .eq('is_from_tenant', true);
+
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        console.log("Found unread messages:", data);
+        setUnreadMessages(data);
+      }
+    } catch (error) {
+      console.error("Error fetching unread messages:", error);
+    }
+  };
 
   const handleUrgentTasks = useCallback((payload: any) => {
     if (payload.new.priority === 'high' || payload.new.priority === 'urgent') {
@@ -55,6 +82,9 @@ export function useRealtimeNotifications() {
     
     // Only show notifications for new messages and those from tenants (is_from_tenant=true)
     if (payload.eventType === 'INSERT' && payload.new.is_from_tenant === true) {
+      // Update the unread messages list
+      fetchUnreadMessages();
+      
       toast({
         title: t('newMessageFromTenant', { fallback: "New Message From Tenant" }),
         description: payload.new.subject,
@@ -71,6 +101,11 @@ export function useRealtimeNotifications() {
           </ToastAction>
         ),
       });
+      
+      // Show dialog if there are multiple unread messages
+      setTimeout(() => {
+        setShowUnreadDialog(true);
+      }, 1000);
     }
   }, [toast, t, navigate]);
 
@@ -110,4 +145,10 @@ export function useRealtimeNotifications() {
       supabase.removeChannel(channel);
     };
   }, [handleUrgentTasks, handleMaintenanceRequest, handleTenantCommunication]);
+
+  return {
+    unreadMessages,
+    showUnreadDialog,
+    setShowUnreadDialog
+  };
 }

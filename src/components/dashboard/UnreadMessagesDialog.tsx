@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useState, useEffect } from "react";
 
 interface UnreadMessagesDialogProps {
   open: boolean;
@@ -24,6 +25,12 @@ export const UnreadMessagesDialog = ({
 }: UnreadMessagesDialogProps) => {
   const navigate = useNavigate();
   const { t } = useLocale();
+  const [localOpen, setLocalOpen] = useState(open);
+
+  // Sync local state with prop
+  useEffect(() => {
+    setLocalOpen(open);
+  }, [open]);
 
   // Only show messages from tenants with explicit check for true
   const tenantMessages = unreadMessages.filter(message => {
@@ -51,8 +58,11 @@ export const UnreadMessagesDialog = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+    <Dialog open={localOpen} onOpenChange={(value) => {
+      setLocalOpen(value);
+      onOpenChange(value);
+    }}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{t("newMessages")}</DialogTitle>
           <DialogDescription>
@@ -61,7 +71,7 @@ export const UnreadMessagesDialog = ({
             })}
             <ul className="mt-2 space-y-2">
               {tenantMessages.map((message) => (
-                <li key={message.id} className="text-sm">
+                <li key={message.id} className="text-sm p-2 rounded bg-muted/50">
                   <span className="font-semibold">
                     {message.tenants?.name} ({t("unit")} {message.tenants?.unit_number}):
                   </span>{' '}
@@ -71,11 +81,11 @@ export const UnreadMessagesDialog = ({
             </ul>
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="flex flex-col sm:flex-row sm:justify-between gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t("close")}
           </Button>
-          <Button onClick={handleViewMessages}>
+          <Button onClick={handleViewMessages} className="bg-purple-600 hover:bg-purple-700">
             {t("viewMessages")}
           </Button>
         </DialogFooter>
