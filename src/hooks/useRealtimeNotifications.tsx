@@ -4,6 +4,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { useNavigate } from 'react-router-dom';
+import { ToastAction } from '@/components/ui/toast';
 
 export function useRealtimeNotifications() {
   const { toast } = useToast();
@@ -57,14 +58,13 @@ export function useRealtimeNotifications() {
       toast({
         title: t('newMessageFromTenant', { fallback: "New Message From Tenant" }),
         description: payload.new.subject,
-        action: {
-          label: t('view', { fallback: "View" }),
-          onClick: () => {
-            if (payload.new.tenant_id) {
-              navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
-            }
+        action: <ToastAction onClick={() => {
+          if (payload.new.tenant_id) {
+            navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
           }
-        },
+        }}>
+          {t('view', { fallback: "View" })}
+        </ToastAction>,
       });
     }
   }, [toast, t, navigate]);
