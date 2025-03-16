@@ -56,8 +56,6 @@ export const CommunicationsPageHeader = ({
         </motion.div>
 
         <div className="flex items-center gap-2">
-          {/* Le bouton "Inviter le Locataire" a été retiré */}
-          
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
