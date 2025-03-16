@@ -42,7 +42,7 @@ export const TenantLayout = ({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
       {showList && (
-        <div className="lg:col-span-4 xl:col-span-3 space-y-5">
+        <div className="lg:col-span-3 space-y-5">
           <div className="sticky top-4 z-10 mb-4 bg-background/80 backdrop-blur-sm py-2">
             <TenantSearch 
               value={searchQuery}
@@ -64,7 +64,7 @@ export const TenantLayout = ({
       )}
 
       {showDetails && (
-        <div className="lg:col-span-8 xl:col-span-9">
+        <div className="lg:col-span-9">
           {isMobile && selectedTenant && (
             <Button
               variant="outline"

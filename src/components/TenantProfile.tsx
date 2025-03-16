@@ -61,9 +61,9 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   }
 
   return (
-    <div className="space-y-6 pb-10 min-h-[80vh]">
+    <div className="space-y-6 pb-10 w-full">
       <TenantInfoCard tenant={tenant} />
-      <div className="mt-6">
+      <div className="mt-6 w-full">
         <TenantTabs 
           tenant={tenant} 
           isTenantUser={isTenantUser} 
