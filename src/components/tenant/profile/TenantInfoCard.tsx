@@ -40,7 +40,7 @@ export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   };
 
   return (
-    <Card className="shadow-sm overflow-hidden border-primary/10 transition-all duration-300 hover:shadow-md dark:bg-gray-900">
+    <Card className="shadow-sm overflow-hidden border-primary/10 transition-all duration-300 hover:shadow-md dark:bg-gray-900 rounded-xl">
       <TenantHeader tenant={tenant} />
 
       <div className="p-0">

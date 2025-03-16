@@ -40,9 +40,9 @@ export const TenantLayout = ({
   const { t } = useLocale();
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-12">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pb-12">
       {showList && (
-        <div className="lg:col-span-1 space-y-5">
+        <div className="lg:col-span-4 xl:col-span-3 space-y-5">
           <div className="sticky top-4 z-10 mb-4 bg-background/80 backdrop-blur-sm py-2">
             <TenantSearch 
               value={searchQuery}
@@ -51,7 +51,7 @@ export const TenantLayout = ({
             />
           </div>
 
-          <div className="pb-8">
+          <div className="pb-8 min-h-[70vh]">
             <TenantList
               tenants={filteredTenants || []}
               selectedTenant={selectedTenant}
@@ -64,7 +64,7 @@ export const TenantLayout = ({
       )}
 
       {showDetails && (
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-8 xl:col-span-9">
           {isMobile && selectedTenant && (
             <Button
               variant="outline"

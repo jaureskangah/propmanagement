@@ -14,6 +14,7 @@ import { Communication } from "@/types/tenant";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
+import { useSearchParams } from "react-router-dom";
 
 interface TenantTabsProps {
   tenant: Tenant;
@@ -27,6 +28,21 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
   const { t } = useLocale();
   const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenant.id);
   const [communicationToDelete, setCommunicationToDelete] = useState<Communication | null>(null);
+  const [searchParams] = useSearchParams();
+  const defaultTabFromUrl = searchParams.get("tab");
+
+  // Determine default tab based on URL parameter or user type
+  const getDefaultTab = () => {
+    if (defaultTabFromUrl) {
+      // Check if the default tab from URL is valid for the current user type
+      if (isTenantUser && (defaultTabFromUrl === "communications" || defaultTabFromUrl === "maintenance")) {
+        return defaultTabFromUrl;
+      } else if (!isTenantUser) {
+        return defaultTabFromUrl;
+      }
+    }
+    return isTenantUser ? "communications" : "documents";
+  };
 
   const handleToggleStatusAndRefresh = async (comm: Communication) => {
     const success = await handleToggleStatus(comm);
@@ -53,32 +69,32 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
   return (
     <>
-      <Tabs defaultValue={isTenantUser ? "communications" : "documents"} className="w-full">
-        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : isTenantUser ? 'grid-cols-2' : 'grid-cols-5'} w-full`}>
+      <Tabs defaultValue={getDefaultTab()} className="w-full">
+        <TabsList className={`grid ${isMobile ? 'grid-cols-2' : isTenantUser ? 'grid-cols-2' : 'grid-cols-5'} w-full mb-6`}>
           {!isTenantUser && (
             <>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="payments">Payments</TabsTrigger>
+              <TabsTrigger value="documents" className="text-sm md:text-base">Documents</TabsTrigger>
+              <TabsTrigger value="payments" className="text-sm md:text-base">Payments</TabsTrigger>
               {!isMobile && (
                 <>
-                  <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-                  <TabsTrigger value="communications">Communications</TabsTrigger>
-                  <TabsTrigger value="reports">Reports</TabsTrigger>
+                  <TabsTrigger value="maintenance" className="text-sm md:text-base">Maintenance</TabsTrigger>
+                  <TabsTrigger value="communications" className="text-sm md:text-base">Communications</TabsTrigger>
+                  <TabsTrigger value="reports" className="text-sm md:text-base">Reports</TabsTrigger>
                 </>
               )}
             </>
           )}
           {isTenantUser && (
             <>
-              <TabsTrigger value="communications">Communications</TabsTrigger>
-              <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+              <TabsTrigger value="communications" className="text-sm md:text-base">Communications</TabsTrigger>
+              <TabsTrigger value="maintenance" className="text-sm md:text-base">Maintenance</TabsTrigger>
             </>
           )}
         </TabsList>
 
         {!isTenantUser && (
           <>
-            <TabsContent value="documents" className="mt-4">
+            <TabsContent value="documents" className="mt-0">
               <TenantDocuments 
                 documents={tenant.documents} 
                 tenantId={tenant.id}
@@ -87,7 +103,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
               />
             </TabsContent>
 
-            <TabsContent value="payments" className="mt-4">
+            <TabsContent value="payments" className="mt-0">
               <TenantPayments 
                 payments={tenant.paymentHistory} 
                 tenantId={tenant.id}
@@ -97,7 +113,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
             {!isMobile && (
               <>
-                <TabsContent value="maintenance" className="mt-4">
+                <TabsContent value="maintenance" className="mt-0">
                   <TenantMaintenance 
                     requests={tenant.maintenanceRequests} 
                     tenantId={tenant.id}
@@ -105,7 +121,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
                   />
                 </TabsContent>
 
-                <TabsContent value="communications" className="mt-4">
+                <TabsContent value="communications" className="mt-0">
                   <TenantCommunications 
                     communications={tenant.communications} 
                     tenantId={tenant.id}
@@ -116,7 +132,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
                   />
                 </TabsContent>
 
-                <TabsContent value="reports" className="mt-4">
+                <TabsContent value="reports" className="mt-0">
                   <TenantFinancialReport tenantId={tenant.id} />
                 </TabsContent>
               </>
@@ -126,7 +142,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
         {isTenantUser && (
           <>
-            <TabsContent value="communications" className="mt-4">
+            <TabsContent value="communications" className="mt-0">
               <TenantCommunications 
                 communications={tenant.communications} 
                 tenantId={tenant.id}
@@ -137,7 +153,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
               />
             </TabsContent>
 
-            <TabsContent value="maintenance" className="mt-4">
+            <TabsContent value="maintenance" className="mt-0">
               <TenantMaintenanceView />
             </TabsContent>
           </>
