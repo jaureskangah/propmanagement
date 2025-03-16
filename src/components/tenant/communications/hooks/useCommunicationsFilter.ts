@@ -12,6 +12,7 @@ export const useCommunicationsFilter = (communications: Communication[]) => {
 
   // Filtered communications based on active filters
   const filteredCommunications = useMemo(() => {
+    // Start with sorting by creation date (newest first)
     return communications.filter(comm => {
       // Text filter
       const textFilter = !searchTerm ||
@@ -34,7 +35,7 @@ export const useCommunicationsFilter = (communications: Communication[]) => {
       }
       
       return textFilter && typeFilter && dateFilter && tabFilter;
-    });
+    }).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }, [communications, searchTerm, selectedType, selectedDate, activeTab]);
 
   // Group communications by type

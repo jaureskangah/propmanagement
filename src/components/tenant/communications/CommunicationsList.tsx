@@ -22,6 +22,8 @@ export const CommunicationsList = ({
   filteredCommunications,
   groupedCommunications,
   onCommunicationClick,
+  onToggleStatus,
+  onDeleteCommunication,
   searchTerm = '',
 }: CommunicationsListProps) => {
   const { t } = useLocale();
@@ -66,32 +68,47 @@ export const CommunicationsList = ({
 
     // Limit the number of threads to display if limit is provided
     const threadsEntries = Object.entries(threads);
-    const displayThreads = limit && !showAll ? threadsEntries.slice(0, limit) : threadsEntries;
+    
+    // Sort threads by the most recent message in the thread
+    const sortedThreadsEntries = threadsEntries.sort((a, b) => {
+      const aLatestTime = Math.max(...a[1].map(comm => new Date(comm.created_at).getTime()));
+      const bLatestTime = Math.max(...b[1].map(comm => new Date(comm.created_at).getTime()));
+      return bLatestTime - aLatestTime; // Newest first
+    });
+    
+    const displayThreads = limit && !showAll ? sortedThreadsEntries.slice(0, limit) : sortedThreadsEntries;
 
-    return displayThreads.map(([parentId, thread], index) => (
-      <motion.div 
-        key={parentId} 
-        initial={{ opacity: 0, y: 10 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 0.3, delay: index * 0.05 }}
-        className="space-y-1 mb-4 bg-background rounded-lg shadow-sm overflow-hidden"
-      >
-        {thread.map((comm, index) => (
-          <div
-            key={comm.id}
-            className={`${index > 0 ? 'ml-6 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}
-          >
-            <CommunicationItem
-              communication={comm}
-              onClick={() => onCommunicationClick(comm)}
-              onToggleStatus={() => {}}
-              onDelete={() => {}}
-              searchTerm={searchTerm}
-            />
-          </div>
-        ))}
-      </motion.div>
-    ));
+    return displayThreads.map(([parentId, thread], index) => {
+      // Sort messages within each thread newest first
+      const sortedThread = [...thread].sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      
+      return (
+        <motion.div 
+          key={parentId} 
+          initial={{ opacity: 0, y: 10 }} 
+          animate={{ opacity: 1, y: 0 }} 
+          transition={{ duration: 0.3, delay: index * 0.05 }}
+          className="space-y-1 mb-4 bg-background rounded-lg shadow-sm overflow-hidden"
+        >
+          {sortedThread.map((comm, index) => (
+            <div
+              key={comm.id}
+              className={`${index > 0 ? 'ml-6 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}
+            >
+              <CommunicationItem
+                communication={comm}
+                onClick={() => onCommunicationClick(comm)}
+                onToggleStatus={onToggleStatus}
+                onDelete={onDeleteCommunication}
+                searchTerm={searchTerm}
+              />
+            </div>
+          ))}
+        </motion.div>
+      );
+    });
   };
 
   const getTypeIcon = (type: string) => {
