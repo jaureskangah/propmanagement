@@ -58,7 +58,7 @@ export function useRealtimeNotifications() {
         title: t('newMessageFromTenant', { fallback: "New Message From Tenant" }),
         description: payload.new.subject,
         action: {
-          altText: t('view', { fallback: "View" }),
+          label: t('view', { fallback: "View" }),
           onClick: () => {
             if (payload.new.tenant_id) {
               navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
