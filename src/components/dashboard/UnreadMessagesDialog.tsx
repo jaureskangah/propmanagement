@@ -41,18 +41,9 @@ export const UnreadMessagesDialog = ({
 
   const handleViewMessages = () => {
     onOpenChange(false);
-    if (tenantMessages.length > 0) {
-      // Get tenant ID from the first message
-      const tenantId = tenantMessages[0].tenant_id;
-      
-      // Log the navigation details
-      console.log("Navigating to tenant communications:", {
-        tenantId,
-        tenantInfo: tenantMessages[0].tenants || {}
-      });
-      
-      // Navigate to tenant page with query parameters for selected tenant and active tab
-      navigate(`/tenants?selected=${tenantId}&tab=communications`);
+    if (tenantMessages.length > 0 && tenantMessages[0].tenants?.id) {
+      console.log("Navigating to tenant communications:", tenantMessages[0].tenants.id);
+      navigate(`/tenants?selected=${tenantMessages[0].tenants.id}&tab=communications`);
     } else {
       navigate("/tenants");
     }
@@ -80,7 +71,7 @@ export const UnreadMessagesDialog = ({
               {tenantMessages.map((message) => (
                 <li key={message.id} className="text-sm p-2 rounded bg-muted/50">
                   <span className="font-semibold">
-                    {message.tenants?.name || 'Unknown tenant'} {message.tenants?.unit_number ? `(${t("unit")} ${message.tenants.unit_number})` : ''}:
+                    {message.tenants?.name} ({t("unit")} {message.tenants?.unit_number}):
                   </span>{' '}
                   {message.subject}
                 </li>

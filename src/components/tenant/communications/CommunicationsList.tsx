@@ -1,3 +1,4 @@
+
 import { Communication } from "@/types/tenant";
 import { MessageSquare, Mail, AlertTriangle, Clock, MessageCircle, AlertOctagon, Check, ChevronDown, ChevronUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -21,8 +22,6 @@ export const CommunicationsList = ({
   filteredCommunications,
   groupedCommunications,
   onCommunicationClick,
-  onToggleStatus,
-  onDeleteCommunication,
   searchTerm = '',
 }: CommunicationsListProps) => {
   const { t } = useLocale();
@@ -65,46 +64,34 @@ export const CommunicationsList = ({
       return acc;
     }, {} as Record<string, Communication[]>);
 
+    // Limit the number of threads to display if limit is provided
     const threadsEntries = Object.entries(threads);
-    
-    const sortedThreadsEntries = threadsEntries.sort((a, b) => {
-      const aLatestTime = Math.max(...a[1].map(comm => new Date(comm.created_at).getTime()));
-      const bLatestTime = Math.max(...b[1].map(comm => new Date(comm.created_at).getTime()));
-      return bLatestTime - aLatestTime;
-    });
-    
-    const displayThreads = limit && !showAll ? sortedThreadsEntries.slice(0, limit) : sortedThreadsEntries;
+    const displayThreads = limit && !showAll ? threadsEntries.slice(0, limit) : threadsEntries;
 
-    return displayThreads.map(([parentId, thread], index) => {
-      const sortedThread = [...thread].sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      );
-      
-      return (
-        <motion.div 
-          key={parentId} 
-          initial={{ opacity: 0, y: 10 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.3, delay: index * 0.05 }}
-          className="space-y-1 mb-4 bg-background rounded-lg shadow-sm overflow-hidden"
-        >
-          {sortedThread.map((comm, index) => (
-            <div
-              key={comm.id}
-              className={`${index > 0 ? 'ml-6 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}
-            >
-              <CommunicationItem
-                communication={comm}
-                onClick={() => onCommunicationClick(comm)}
-                onToggleStatus={() => onToggleStatus(comm)}
-                onDelete={() => onDeleteCommunication(comm)}
-                searchTerm={searchTerm}
-              />
-            </div>
-          ))}
-        </motion.div>
-      );
-    });
+    return displayThreads.map(([parentId, thread], index) => (
+      <motion.div 
+        key={parentId} 
+        initial={{ opacity: 0, y: 10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        transition={{ duration: 0.3, delay: index * 0.05 }}
+        className="space-y-1 mb-4 bg-background rounded-lg shadow-sm overflow-hidden"
+      >
+        {thread.map((comm, index) => (
+          <div
+            key={comm.id}
+            className={`${index > 0 ? 'ml-6 border-l-2 pl-4 border-gray-200 dark:border-gray-700' : ''}`}
+          >
+            <CommunicationItem
+              communication={comm}
+              onClick={() => onCommunicationClick(comm)}
+              onToggleStatus={() => {}}
+              onDelete={() => {}}
+              searchTerm={searchTerm}
+            />
+          </div>
+        ))}
+      </motion.div>
+    ));
   };
 
   const getTypeIcon = (type: string) => {
@@ -118,6 +105,18 @@ export const CommunicationsList = ({
     }
   };
 
+  // Calculate total threads count
+  const totalThreadsCount = Object.values(groupedCommunications).reduce((total, comms) => {
+    if (!comms) return total;
+    
+    // Count only parent threads (no parent_id)
+    const parentThreads = comms.filter(comm => 
+      comm && filteredCommunications.includes(comm) && !comm.parent_id
+    );
+    
+    return total + parentThreads.length;
+  }, 0);
+
   return (
     <div className="space-y-6">
       {Object.entries(groupedCommunications).map(([type, comms]) => {
@@ -129,6 +128,7 @@ export const CommunicationsList = ({
 
         if (filteredComms.length === 0) return null;
 
+        // Use translations for type display name if possible
         let typeDisplayName = type.charAt(0).toUpperCase() + type.slice(1);
         if (type.toLowerCase() === 'email') {
           typeDisplayName = t('email');

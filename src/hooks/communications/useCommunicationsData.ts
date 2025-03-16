@@ -11,7 +11,7 @@ export const useCommunicationsData = (
 ) => {
   // Group communications by type
   const groupedCommunications = useMemo(() => {
-    // Sort communications by date (newest first)
+    // Trier d'abord les communications par date de création (du plus récent au moins récent)
     const sortedCommunications = [...communications].sort((a, b) => {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });

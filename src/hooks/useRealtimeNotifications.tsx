@@ -1,5 +1,5 @@
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useLocale } from '@/components/providers/LocaleProvider';
@@ -13,29 +13,20 @@ export function useRealtimeNotifications() {
   const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
   const [showUnreadDialog, setShowUnreadDialog] = useState(false);
 
-  const fetchUnreadMessages = useCallback(async () => {
+  // Fetch initial unread messages
+  useEffect(() => {
+    fetchUnreadMessages();
+  }, []);
+
+  const fetchUnreadMessages = async () => {
     try {
-      console.log("Fetching unread messages...");
       const { data, error } = await supabase
         .from('tenant_communications')
-        .select(`
-          *,
-          tenants:tenant_id (
-            id,
-            name,
-            unit_number,
-            properties:property_id (
-              id,
-              name
-            )
-          )
-        `)
+        .select('*, tenants(id, name, unit_number)')
         .eq('status', 'unread')
         .eq('is_from_tenant', true);
-        
-      if (error) {
-        throw error;
-      }
+
+      if (error) throw error;
       
       if (data && data.length > 0) {
         console.log("Found unread messages:", data);
@@ -47,43 +38,53 @@ export function useRealtimeNotifications() {
             setShowUnreadDialog(true);
           }, 1000);
         }
-      } else {
-        console.log("No unread messages found");
-        setUnreadMessages([]);
       }
     } catch (error) {
       console.error("Error fetching unread messages:", error);
     }
-  }, []);
+  };
 
-  useEffect(() => {
-    // Initial fetch
-    fetchUnreadMessages();
-    
-    // Set up real-time subscription
-    const channel = supabase
-      .channel('tenant-communications')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'tenant_communications'
-        },
-        (payload) => {
-          console.log("Realtime update for tenant_communications:", payload);
-          handleTenantCommunication(payload);
-        }
-      )
-      .subscribe();
+  const handleUrgentTasks = useCallback((payload: any) => {
+    if (payload.new.priority === 'high' || payload.new.priority === 'urgent') {
+      toast({
+        title: "Urgent Task",
+        description: `New urgent task: ${payload.new.title}`,
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
+  const handleMaintenanceRequest = useCallback((payload: any) => {
+    if (payload.eventType === 'INSERT') {
+      toast({
+        title: "New Maintenance Request",
+        description: payload.new.title,
+      });
+    } else if (payload.eventType === 'UPDATE') {
+      // Notification pour mise à jour de l'état
+      if (payload.new.tenant_notified && !payload.old.tenant_notified) {
+        toast({
+          title: "Maintenance Update",
+          description: `Request "${payload.new.title}" has been updated`,
+        });
+      }
       
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [fetchUnreadMessages]);
+      // Nouvelle notification pour l'ajout d'un avis
+      if (
+        (payload.new.tenant_feedback && !payload.old.tenant_feedback) || 
+        (payload.new.tenant_rating && !payload.old.tenant_rating)
+      ) {
+        toast({
+          title: t('tenantFeedbackReceived'),
+          description: `${t('feedbackReceivedFor')}: "${payload.new.issue}"`,
+        });
+      }
+    }
+  }, [toast, t]);
 
+  // Handler for tenant communications
   const handleTenantCommunication = useCallback((payload: any) => {
-    console.log("Processing tenant communication payload:", payload);
+    console.log("Tenant communication received:", payload);
     
     // Only show notifications for new messages and those from tenants (is_from_tenant=true)
     if (payload.eventType === 'INSERT' && payload.new.is_from_tenant === true) {
@@ -91,17 +92,18 @@ export function useRealtimeNotifications() {
       fetchUnreadMessages();
       
       toast({
-        title: t('newMessage'),
-        description: payload.new.subject || t('youHaveNewMessage'),
+        title: t('newMessageFromTenant', { fallback: "New Message From Tenant" }),
+        description: payload.new.subject,
         action: (
           <ToastAction 
             altText={t('view', { fallback: "View" })}
             onClick={() => {
-              // Navigate to the specific tenant's communications
-              navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
+              if (payload.new.tenant_id) {
+                navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
+              }
             }}
           >
-            {t('view')}
+            {t('view', { fallback: "View" })}
           </ToastAction>
         ),
       });
@@ -112,16 +114,49 @@ export function useRealtimeNotifications() {
           setShowUnreadDialog(true);
         }, 1000);
       }
-    } else if (payload.eventType === 'UPDATE' && payload.new.status !== 'unread') {
-      // If a message was marked as read, refresh the unread messages
-      fetchUnreadMessages();
     }
-  }, [toast, t, navigate, fetchUnreadMessages]);
+  }, [toast, t, navigate]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'maintenance_tasks'
+        },
+        handleUrgentTasks
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'maintenance_requests'
+        },
+        handleMaintenanceRequest
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tenant_communications'
+        },
+        handleTenantCommunication
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [handleUrgentTasks, handleMaintenanceRequest, handleTenantCommunication]);
 
   return {
     unreadMessages,
-    fetchUnreadMessages,
-    showUnreadDialog, 
+    showUnreadDialog,
     setShowUnreadDialog
   };
 }

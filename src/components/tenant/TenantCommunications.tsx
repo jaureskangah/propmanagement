@@ -40,11 +40,6 @@ export const TenantCommunications = ({
     setNewCommData
   } = useCommunicationState();
 
-  // Sort communications by created_at date (newest first)
-  const sortedCommunications = [...communications].sort((a, b) => {
-    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-  });
-
   const { handleCreateCommunication } = useCreateCommunication(tenantId, onCommunicationUpdate);
   const { selectedComm, setSelectedComm, handleCommunicationSelect } = useSelectCommunication(onCommunicationUpdate);
 
@@ -70,7 +65,7 @@ export const TenantCommunications = ({
 
       <CardContent className="p-6">
         <CommunicationsContent
-          communications={sortedCommunications}
+          communications={communications}
           onToggleStatus={onToggleStatus}
           onCommunicationSelect={handleOpenCommunication}
           onCommunicationUpdate={onCommunicationUpdate}

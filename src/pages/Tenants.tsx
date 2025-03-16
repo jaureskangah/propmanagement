@@ -1,5 +1,5 @@
 
-import React, { useEffect } from "react";
+import React from "react";
 import { useTenantPage } from "@/hooks/useTenantPage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AppSidebar from "@/components/AppSidebar";
@@ -8,7 +8,6 @@ import { TenantModals } from "@/components/tenant/TenantModals";
 import { TenantsHeader } from "@/components/tenant/TenantsHeader";
 import { TenantsLoading } from "@/components/tenant/TenantsLoading";
 import { motion } from "framer-motion";
-import { useSearchParams } from "react-router-dom";
 
 const Tenants = () => {
   const {
@@ -34,22 +33,6 @@ const Tenants = () => {
   } = useTenantPage();
   
   const isMobile = useIsMobile();
-  const [searchParams] = useSearchParams();
-
-  // Handle URL query parameters for selecting tenant and active tab
-  useEffect(() => {
-    const selectedFromUrl = searchParams.get('selected');
-    const tabFromUrl = searchParams.get('tab');
-    
-    console.log("URL params:", { selectedFromUrl, tabFromUrl });
-    
-    if (selectedFromUrl) {
-      setSelectedTenant(selectedFromUrl);
-      console.log("Setting selected tenant from URL:", selectedFromUrl);
-    }
-    
-    // We'll use the tab parameter in the TenantProfile component
-  }, [searchParams, setSelectedTenant]);
 
   if (isLoading) {
     return <TenantsLoading />;

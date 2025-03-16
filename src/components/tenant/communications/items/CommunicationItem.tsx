@@ -26,8 +26,6 @@ interface CommunicationItemProps {
 export const CommunicationItem = ({
   communication,
   onClick,
-  onToggleStatus,
-  onDelete,
   searchTerm = '',
 }: CommunicationItemProps) => {
   const hasAttachments = communication.attachments && communication.attachments.length > 0;
