@@ -59,9 +59,15 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
         <div className="flex items-center gap-2">
           <DashboardDateFilter onDateRangeChange={handleDateRangeChange} />
           <DashboardCustomization />
-          <Button variant="outline" className="hidden md:flex" onClick={toggleTheme} type="button" size="sm">
-            {theme === "dark" ? <Sun className="h-4 w-4 mr-2" /> : <Moon className="h-4 w-4 mr-2" />}
-            {theme === "dark" ? t('lightMode') : t('darkMode')}
+          <Button 
+            variant="outline" 
+            size="icon" 
+            onClick={toggleTheme} 
+            type="button"
+            className="h-9 w-9"
+            title={theme === "dark" ? t('lightMode') : t('darkMode')}
+          >
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </Button>
         </div>
       </div>

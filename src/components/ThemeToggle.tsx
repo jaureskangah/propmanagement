@@ -1,20 +1,24 @@
+
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
+import { useLocale } from "@/components/providers/LocaleProvider"
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const { t } = useLocale()
 
   return (
     <Button
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="relative h-10 w-10"
+      className="h-9 w-9"
+      title={theme === "dark" ? t('lightMode') : t('darkMode')}
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Changer le thème</span>
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">{theme === "dark" ? t('lightMode') : t('darkMode')}</span>
     </Button>
   )
 }
