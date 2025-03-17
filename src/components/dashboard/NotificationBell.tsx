@@ -104,9 +104,12 @@ export const NotificationBell = ({
                       >
                         <div className="flex flex-col w-full text-left">
                           <span className="font-medium text-xs">
-                            {message.tenants?.name} ({t("unit")} {message.tenants?.unit_number})
+                            {message.tenants?.name}
                           </span>
-                          <span className="text-xs text-muted-foreground line-clamp-1">
+                          <span className="text-xs text-muted-foreground">
+                            {message.tenants?.properties?.name && `${message.tenants.properties.name}, `}{t("unit")} {message.tenants?.unit_number}
+                          </span>
+                          <span className="text-xs text-muted-foreground line-clamp-1 mt-1">
                             {message.subject}
                           </span>
                         </div>
@@ -148,9 +151,15 @@ export const NotificationBell = ({
                         onClick={() => navigate('/maintenance')}
                       >
                         <div className="flex flex-col w-full text-left">
-                          <div className="flex justify-between items-center">
-                            <span className="font-medium text-xs">
-                              {request.tenants?.name} ({t("unit")} {request.tenants?.unit_number})
+                          <span className="font-medium text-xs">
+                            {request.tenants?.name}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {request.tenants?.properties?.name && `${request.tenants.properties.name}, `}{t("unit")} {request.tenants?.unit_number}
+                          </span>
+                          <div className="flex justify-between items-center mt-1">
+                            <span className="text-xs text-muted-foreground line-clamp-1">
+                              {request.issue}
                             </span>
                             <Badge 
                               variant={request.priority === "Urgent" ? "destructive" : "outline"} 
@@ -159,9 +168,6 @@ export const NotificationBell = ({
                               {request.priority}
                             </Badge>
                           </div>
-                          <span className="text-xs text-muted-foreground line-clamp-1">
-                            {request.issue}
-                          </span>
                         </div>
                       </Button>
                     </DropdownMenuItem>

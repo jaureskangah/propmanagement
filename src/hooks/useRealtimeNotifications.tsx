@@ -20,7 +20,7 @@ export function useRealtimeNotifications() {
     try {
       const { data, error } = await supabase
         .from('tenant_communications')
-        .select('*, tenants(id, name, unit_number)')
+        .select('*, tenants(id, name, unit_number, property_id, properties(name))')
         .eq('status', 'unread')
         .eq('is_from_tenant', true);
 
@@ -47,7 +47,7 @@ export function useRealtimeNotifications() {
     try {
       const { data, error } = await supabase
         .from('maintenance_requests')
-        .select('*, tenants(id, name, unit_number)')
+        .select('*, tenants(id, name, unit_number, property_id, properties(name))')
         .eq('status', 'Pending');
 
       if (error) throw error;
@@ -58,6 +58,31 @@ export function useRealtimeNotifications() {
       }
     } catch (error) {
       console.error("Error fetching maintenance requests:", error);
+    }
+  };
+
+  // Mark all messages as read
+  const markAllMessagesAsRead = async () => {
+    try {
+      if (unreadMessages.length === 0) return;
+      
+      // Get all unread message IDs
+      const messageIds = unreadMessages.map(msg => msg.id);
+      
+      const { error } = await supabase
+        .from('tenant_communications')
+        .update({ status: 'read' })
+        .in('id', messageIds);
+        
+      if (error) throw error;
+      
+      // Update local state
+      setUnreadMessages([]);
+      setTotalNotificationCount(prev => prev - messageIds.length);
+      
+      console.log("Marked all messages as read:", messageIds);
+    } catch (error) {
+      console.error("Error marking messages as read:", error);
     }
   };
 
@@ -171,6 +196,9 @@ export function useRealtimeNotifications() {
           setShowUnreadDialog(true);
         }, 1000);
       }
+    } else if (payload.eventType === 'UPDATE' && payload.new.status === 'read' && payload.old.status === 'unread') {
+      // When a message is marked as read, update our local state
+      setUnreadMessages(prevMessages => prevMessages.filter(msg => msg.id !== payload.new.id));
     }
   }, [toast, t, navigate]);
 
@@ -219,6 +247,7 @@ export function useRealtimeNotifications() {
     showUnreadDialog,
     setShowUnreadDialog,
     refreshUnreadMessages: fetchUnreadMessages,
-    refreshMaintenanceRequests: fetchPendingMaintenance
+    refreshMaintenanceRequests: fetchPendingMaintenance,
+    markAllMessagesAsRead
   };
 }

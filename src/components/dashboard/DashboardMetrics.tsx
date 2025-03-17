@@ -32,7 +32,8 @@ export const DashboardMetrics = ({
     maintenanceRequests,
     totalNotificationCount,
     showUnreadDialog, 
-    setShowUnreadDialog 
+    setShowUnreadDialog,
+    markAllMessagesAsRead
   } = useRealtimeNotifications();
 
   const [totalUnreadCount, setTotalUnreadCount] = useState(0);
@@ -68,6 +69,15 @@ export const DashboardMetrics = ({
     };
   }, [propertiesData, maintenanceData, tenantsData, metrics, totalUnreadCount, unreadMessages, dateRange]);
 
+  // Handle dialog close with read status update
+  const handleDialogOpenChange = (open: boolean) => {
+    if (!open && showUnreadDialog) {
+      // When dialog closes, mark messages as read
+      markAllMessagesAsRead();
+    }
+    setShowUnreadDialog(open);
+  };
+
   return (
     <div className="relative">
       <NotificationBell 
@@ -80,7 +90,7 @@ export const DashboardMetrics = ({
       
       <UnreadMessagesDialog 
         open={showUnreadDialog} 
-        onOpenChange={setShowUnreadDialog} 
+        onOpenChange={handleDialogOpenChange} 
         unreadMessages={unreadMessages || []} 
       />
     </div>
