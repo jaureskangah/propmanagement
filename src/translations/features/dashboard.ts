@@ -87,7 +87,26 @@ export const enDashboard = {
   all: "All",
   yesterday: "Yesterday",
   emergency: "Emergency",
-  urgentMaintenanceRequest: "Urgent maintenance request"
+  urgentMaintenanceRequest: "Urgent maintenance request",
+  // Nouvelles traductions pour les notifications
+  newMessages: "New Messages",
+  youHaveUnreadMessages: "You have {count} unread messages",
+  close: "Close",
+  viewMessages: "View Messages",
+  markAllAsRead: "Mark All as Read",
+  notificationCenter: "Notification Center",
+  newMessageFromTenant: "New Message From Tenant",
+  newMaintenanceRequest: "New Maintenance Request",
+  view: "View",
+  noNotifications: "No notifications",
+  tenantFeedbackReceived: "Tenant Feedback Received",
+  feedbackReceivedFor: "Feedback received for",
+  maintenanceNotification: "Maintenance Notification",
+  notificationsAndAlerts: "Notifications & Alerts",
+  budgetAlert: "Budget Alert",
+  paymentAlert: "Payment Alert",
+  trendAlert: "Trend Alert",
+  paymentNotification: "Payment Notification"
 };
 
 export const frDashboard = {
@@ -178,5 +197,24 @@ export const frDashboard = {
   all: "Tous",
   yesterday: "Hier",
   emergency: "Urgence",
-  urgentMaintenanceRequest: "Demande de maintenance urgente"
+  urgentMaintenanceRequest: "Demande de maintenance urgente",
+  // Nouvelles traductions pour les notifications
+  newMessages: "Nouveaux Messages",
+  youHaveUnreadMessages: "Vous avez {count} messages non lus",
+  close: "Fermer",
+  viewMessages: "Voir les Messages",
+  markAllAsRead: "Marquer tout comme lu",
+  notificationCenter: "Centre de Notifications",
+  newMessageFromTenant: "Nouveau Message d'un Locataire",
+  newMaintenanceRequest: "Nouvelle Demande de Maintenance",
+  view: "Voir",
+  noNotifications: "Aucune notification",
+  tenantFeedbackReceived: "Commentaire du Locataire Reçu",
+  feedbackReceivedFor: "Commentaire reçu pour",
+  maintenanceNotification: "Notification de Maintenance",
+  notificationsAndAlerts: "Notifications et Alertes",
+  budgetAlert: "Alerte Budget",
+  paymentAlert: "Alerte Paiement",
+  trendAlert: "Alerte Tendance",
+  paymentNotification: "Notification de Paiement"
 };

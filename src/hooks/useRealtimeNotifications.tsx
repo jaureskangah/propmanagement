@@ -12,12 +12,10 @@ export function useRealtimeNotifications() {
   const navigate = useNavigate();
   const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
   const [showUnreadDialog, setShowUnreadDialog] = useState(false);
+  const [maintenanceRequests, setMaintenanceRequests] = useState<any[]>([]);
+  const [totalNotificationCount, setTotalNotificationCount] = useState(0);
 
-  // Fetch initial unread messages
-  useEffect(() => {
-    fetchUnreadMessages();
-  }, []);
-
+  // Charger les messages non lus initiaux
   const fetchUnreadMessages = async () => {
     try {
       const { data, error } = await supabase
@@ -28,11 +26,11 @@ export function useRealtimeNotifications() {
 
       if (error) throw error;
       
-      if (data && data.length > 0) {
+      if (data) {
         console.log("Found unread messages:", data);
         setUnreadMessages(data);
         
-        // Show dialog if there are unread messages and we're on the dashboard
+        // Afficher le dialogue si nous sommes sur la page du tableau de bord
         if (window.location.pathname === '/dashboard' && data.length > 0) {
           setTimeout(() => {
             setShowUnreadDialog(true);
@@ -44,28 +42,79 @@ export function useRealtimeNotifications() {
     }
   };
 
+  // Charger les demandes de maintenance en attente
+  const fetchPendingMaintenance = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('maintenance_requests')
+        .select('*, tenants(id, name, unit_number)')
+        .eq('status', 'Pending');
+
+      if (error) throw error;
+      
+      if (data) {
+        console.log("Found pending maintenance requests:", data);
+        setMaintenanceRequests(data);
+      }
+    } catch (error) {
+      console.error("Error fetching maintenance requests:", error);
+    }
+  };
+
+  // Exécuter le chargement initial
+  useEffect(() => {
+    fetchUnreadMessages();
+    fetchPendingMaintenance();
+  }, []);
+
+  // Mettre à jour le compteur total de notifications
+  useEffect(() => {
+    setTotalNotificationCount(unreadMessages.length + maintenanceRequests.length);
+  }, [unreadMessages, maintenanceRequests]);
+
+  // Gestionnaire pour les tâches urgentes
   const handleUrgentTasks = useCallback((payload: any) => {
-    if (payload.new.priority === 'high' || payload.new.priority === 'urgent') {
+    if (payload.new.priority === 'Urgent' || payload.new.priority === 'High') {
       toast({
-        title: "Urgent Task",
-        description: `New urgent task: ${payload.new.title}`,
+        title: t('urgent'),
+        description: `${t('urgentMaintenanceRequest')}: ${payload.new.title}`,
         variant: "destructive",
+        action: (
+          <ToastAction 
+            altText={t('view')}
+            onClick={() => navigate('/maintenance')}
+          >
+            {t('view')}
+          </ToastAction>
+        ),
       });
     }
-  }, [toast]);
+  }, [toast, t, navigate]);
 
+  // Gestionnaire pour les demandes de maintenance
   const handleMaintenanceRequest = useCallback((payload: any) => {
+    // Actualiser les données des demandes de maintenance
+    fetchPendingMaintenance();
+    
     if (payload.eventType === 'INSERT') {
       toast({
-        title: "New Maintenance Request",
-        description: payload.new.title,
+        title: t('newMaintenanceRequest'),
+        description: payload.new.issue,
+        action: (
+          <ToastAction 
+            altText={t('view')}
+            onClick={() => navigate('/maintenance')}
+          >
+            {t('view')}
+          </ToastAction>
+        ),
       });
     } else if (payload.eventType === 'UPDATE') {
       // Notification pour mise à jour de l'état
       if (payload.new.tenant_notified && !payload.old.tenant_notified) {
         toast({
-          title: "Maintenance Update",
-          description: `Request "${payload.new.title}" has been updated`,
+          title: t('maintenanceNotification'),
+          description: `${t('maintenance')} "${payload.new.title}" ${t('status')}: ${payload.new.status}`,
         });
       }
       
@@ -77,38 +126,46 @@ export function useRealtimeNotifications() {
         toast({
           title: t('tenantFeedbackReceived'),
           description: `${t('feedbackReceivedFor')}: "${payload.new.issue}"`,
+          action: (
+            <ToastAction 
+              altText={t('view')}
+              onClick={() => navigate('/maintenance')}
+            >
+              {t('view')}
+            </ToastAction>
+          ),
         });
       }
     }
-  }, [toast, t]);
+  }, [toast, t, navigate]);
 
-  // Handler for tenant communications
+  // Gestionnaire pour les communications des locataires
   const handleTenantCommunication = useCallback((payload: any) => {
     console.log("Tenant communication received:", payload);
     
-    // Only show notifications for new messages and those from tenants (is_from_tenant=true)
+    // Afficher les notifications uniquement pour les nouveaux messages et ceux des locataires (is_from_tenant=true)
     if (payload.eventType === 'INSERT' && payload.new.is_from_tenant === true) {
-      // Update the unread messages list by fetching again
+      // Mettre à jour la liste des messages non lus en les récupérant à nouveau
       fetchUnreadMessages();
       
       toast({
-        title: t('newMessageFromTenant', { fallback: "New Message From Tenant" }),
+        title: t('newMessageFromTenant'),
         description: payload.new.subject,
         action: (
           <ToastAction 
-            altText={t('view', { fallback: "View" })}
+            altText={t('view')}
             onClick={() => {
               if (payload.new.tenant_id) {
                 navigate(`/tenants?selected=${payload.new.tenant_id}&tab=communications`);
               }
             }}
           >
-            {t('view', { fallback: "View" })}
+            {t('view')}
           </ToastAction>
         ),
       });
       
-      // Show dialog if we're on the dashboard
+      // Afficher le dialogue si nous sommes sur le tableau de bord
       if (window.location.pathname === '/dashboard') {
         setTimeout(() => {
           setShowUnreadDialog(true);
@@ -117,6 +174,7 @@ export function useRealtimeNotifications() {
     }
   }, [toast, t, navigate]);
 
+  // Abonnement aux changements en temps réel
   useEffect(() => {
     const channel = supabase
       .channel('db-changes')
@@ -156,7 +214,11 @@ export function useRealtimeNotifications() {
 
   return {
     unreadMessages,
+    maintenanceRequests,
+    totalNotificationCount,
     showUnreadDialog,
-    setShowUnreadDialog
+    setShowUnreadDialog,
+    refreshUnreadMessages: fetchUnreadMessages,
+    refreshMaintenanceRequests: fetchPendingMaintenance
   };
 }

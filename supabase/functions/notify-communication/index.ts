@@ -87,27 +87,39 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending notification to:", { recipientEmail, recipientName });
 
-    // Send email notification
+    // Envoyer une notification par email avec un design plus moderne
     const emailResponse = await resend.emails.send({
       from: "Property Management <onboarding@resend.dev>",
       to: [recipientEmail],
       subject: `New Message: ${subject}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">Hello ${recipientName},</h2>
-          <p style="color: #666; line-height: 1.6;">
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border-radius: 10px; border: 1px solid #e0e0e0; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+          <div style="background-color: #7c3aed; padding: 15px; margin: -20px -20px 20px -20px; border-radius: 10px 10px 0 0;">
+            <h2 style="color: white; margin: 0; font-weight: 500; text-align: center;">New Message Notification</h2>
+          </div>
+          
+          <p style="color: #333; line-height: 1.6; margin-bottom: 20px;">
+            Hello ${recipientName},
+          </p>
+          <p style="color: #444; line-height: 1.6; margin-bottom: 20px;">
             ${isFromTenant 
               ? 'You have received a new message from your tenant.' 
               : 'You have received a new message from your property manager.'}
           </p>
-          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 5px; margin: 20px 0;">
-            <h3 style="color: #333; margin-top: 0;">Message Details:</h3>
-            <p style="color: #666;"><strong>Subject:</strong> ${subject}</p>
-            <p style="color: #666;"><strong>Content:</strong><br>${content}</p>
+          
+          <div style="background-color: #f9f9f9; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #7c3aed;">
+            <h3 style="color: #7c3aed; margin-top: 0; margin-bottom: 10px; font-weight: 500;">Message Details:</h3>
+            <p style="color: #333; margin-bottom: 10px;"><strong>Subject:</strong> ${subject}</p>
+            <p style="color: #333; margin-bottom: 0;"><strong>Content:</strong><br>${content}</p>
           </div>
+          
+          <div style="margin: 30px 0; text-align: center;">
+            <a href="${supabaseUrl.replace('.supabase.co', '')}/dashboard" style="background-color: #7c3aed; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: 500; display: inline-block;">View in Dashboard</a>
+          </div>
+          
           <hr style="border: 1px solid #eee; margin: 20px 0;" />
-          <p style="color: #888; font-size: 0.9em;">
-            This is an automated message from your property management system.
+          <p style="color: #888; font-size: 0.9em; text-align: center;">
+            This is an automated message from your property management system. Please do not reply to this email.
           </p>
         </div>
       `,

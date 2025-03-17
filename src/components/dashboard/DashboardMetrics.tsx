@@ -20,7 +20,7 @@ export const DashboardMetrics = ({
   tenantsData,
   dateRange 
 }: DashboardMetricsProps) => {
-  const { metrics, unreadMessages } = useMetricsData(
+  const { metrics, unreadMessages: staticUnreadMessages } = useMetricsData(
     propertiesData,
     maintenanceData,
     tenantsData,
@@ -28,7 +28,9 @@ export const DashboardMetrics = ({
   );
   
   const { 
-    unreadMessages: realtimeUnreadMessages, 
+    unreadMessages, 
+    maintenanceRequests,
+    totalNotificationCount,
     showUnreadDialog, 
     setShowUnreadDialog 
   } = useRealtimeNotifications();
@@ -36,18 +38,19 @@ export const DashboardMetrics = ({
   const [totalUnreadCount, setTotalUnreadCount] = useState(0);
 
   useEffect(() => {
-    // Combine count from metrics and realtime updates
-    const realtimeCount = realtimeUnreadMessages?.length || 0;
+    // Combine les notifications des métriques statiques et des mises à jour en temps réel
+    const realtimeCount = totalNotificationCount || 0;
     console.log("Unread count calculation:", { 
-      unreadMessages, 
+      staticUnreadMessages, 
       realtimeCount,
-      realtimeMessages: realtimeUnreadMessages 
+      totalNotificationCount,
+      realtimeMessages: unreadMessages 
     });
     
     setTotalUnreadCount(
-      unreadMessages + realtimeCount
+      Math.max(staticUnreadMessages, realtimeCount)
     );
-  }, [unreadMessages, realtimeUnreadMessages]);
+  }, [staticUnreadMessages, totalNotificationCount, unreadMessages]);
 
   useEffect(() => {
     console.log("DashboardMetrics data received:", {
@@ -56,24 +59,29 @@ export const DashboardMetrics = ({
       tenantsCount: tenantsData?.length || 0,
       hasMetrics: !!metrics,
       unreadMessages: totalUnreadCount,
-      realtimeUnreadMessages,
+      realtimeUnreadMessages: unreadMessages,
       dateRange
     });
 
     return () => {
       console.log("DashboardMetrics unmounting");
     };
-  }, [propertiesData, maintenanceData, tenantsData, metrics, totalUnreadCount, realtimeUnreadMessages, dateRange]);
+  }, [propertiesData, maintenanceData, tenantsData, metrics, totalUnreadCount, unreadMessages, dateRange]);
 
   return (
     <div className="relative">
-      <NotificationBell unreadCount={totalUnreadCount} />
+      <NotificationBell 
+        unreadCount={totalUnreadCount} 
+        unreadMessages={unreadMessages} 
+        maintenanceRequests={maintenanceRequests}
+        onShowAllNotifications={() => setShowUnreadDialog(true)}
+      />
       <MetricsGrid metrics={metrics} unreadMessages={totalUnreadCount} />
       
       <UnreadMessagesDialog 
         open={showUnreadDialog} 
         onOpenChange={setShowUnreadDialog} 
-        unreadMessages={realtimeUnreadMessages || []} 
+        unreadMessages={unreadMessages || []} 
       />
     </div>
   );
