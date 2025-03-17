@@ -61,6 +61,8 @@ describe('CommunicationsTabs', () => {
     setSelectedType: jest.fn(),
     selectedDate: '',
     setSelectedDate: jest.fn(),
+    sortOrder: "newest" as const,  // Add the missing sortOrder property
+    setSortOrder: jest.fn(),       // Add the missing setSortOrder property
     unreadCount: 1,
     urgentCount: 1,
     showAll: false,
