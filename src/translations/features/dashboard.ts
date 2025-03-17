@@ -1,3 +1,4 @@
+
 export const enDashboard = {
   recentActivity: "Recent Activity",
   upcomingPayments: "Upcoming Payments",
@@ -103,8 +104,8 @@ export const frDashboard = {
   darkMode: "Mode Sombre",
   lightMode: "Mode Clair",
   today: "Aujourd'hui",
-  thisWeek: "Cette Semaine",
-  thisMonth: "Ce Mois",
+  thisWeek: "Cette semaine",
+  thisMonth: "Ce mois",
   viewAll: "Voir Tout",
   filterBy: "Filtrer Par",
   sortBy: "Trier Par",
