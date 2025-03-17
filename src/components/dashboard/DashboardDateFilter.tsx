@@ -73,27 +73,27 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
 
   // Debug pour voir les traductions
   console.log("Traductions filtre date:", {
-    thisMonth: t('dashboard.thisMonth'),
-    lastMonth: t('dashboard.lastMonth'),
-    last3Months: t('dashboard.last3Months'),
-    last6Months: t('dashboard.last6Months'),
-    thisYear: t('dashboard.thisYear'),
-    lastYear: t('dashboard.lastYear'),
+    thisMonth: t('thisMonth'),
+    lastMonth: t('lastMonth'),
+    last3Months: t('last3Months'),
+    last6Months: t('last6Months'),
+    thisYear: t('thisYear'),
+    lastYear: t('lastYear'),
     currentLanguage: language
   });
 
   return (
     <Select value={selectedPeriod} onValueChange={handlePeriodChange}>
       <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder={t('dashboard.filterBy')} />
+        <SelectValue placeholder={t('filterBy')} />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="this_month">{t('dashboard.thisMonth')}</SelectItem>
-        <SelectItem value="last_month">{t('dashboard.lastMonth')}</SelectItem>
-        <SelectItem value="last_3_months">{t('dashboard.last3Months')}</SelectItem>
-        <SelectItem value="last_6_months">{t('dashboard.last6Months')}</SelectItem>
-        <SelectItem value="this_year">{t('dashboard.thisYear')}</SelectItem>
-        <SelectItem value="last_year">{t('dashboard.lastYear')}</SelectItem>
+        <SelectItem value="this_month">{t('thisMonth')}</SelectItem>
+        <SelectItem value="last_month">{t('lastMonth')}</SelectItem>
+        <SelectItem value="last_3_months">{t('last3Months')}</SelectItem>
+        <SelectItem value="last_6_months">{t('last6Months')}</SelectItem>
+        <SelectItem value="this_year">{t('thisYear')}</SelectItem>
+        <SelectItem value="last_year">{t('lastYear')}</SelectItem>
       </SelectContent>
     </Select>
   );
