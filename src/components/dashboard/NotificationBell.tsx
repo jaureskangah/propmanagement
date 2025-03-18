@@ -1,30 +1,18 @@
 
 import { Button } from "@/components/ui/button";
-import { Bell, MessageSquare, Wrench } from "lucide-react";
+import { Bell } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
-
-interface NotificationBellProps {
-  unreadCount: number;
-  unreadMessages: any[];
-  maintenanceRequests: any[];
-  onShowAllNotifications: () => void;
-}
+import { NotificationsSection } from "./notifications/NotificationsSection";
+import { NotificationBellProps } from "./notifications/types";
 
 export const NotificationBell = ({ 
   unreadCount, 
@@ -32,23 +20,10 @@ export const NotificationBell = ({
   maintenanceRequests = [],
   onShowAllNotifications
 }: NotificationBellProps) => {
-  const navigate = useNavigate();
   const { t } = useLocale();
-  const { toast } = useToast();
-  const [isUpdating, setIsUpdating] = useState(false);
   
-  // Ne rien afficher s'il n'y a pas de notifications
+  // Don't show anything if there are no notifications
   if (unreadCount === 0) return null;
-
-  // Naviguer vers la communication avec le locataire
-  const handleMessageClick = (message: any) => {
-    navigate(`/tenants?selected=${message.tenants?.id}&tab=communications`);
-  };
-
-  // Naviguer vers la demande de maintenance avec dialogue de statut
-  const handleMaintenanceClick = (request: any) => {
-    navigate(`/maintenance?request=${request.id}`);
-  };
 
   return (
     <motion.div
@@ -96,121 +71,15 @@ export const NotificationBell = ({
             </Button>
           </div>
           
-          <DropdownMenuSeparator />
-          
-          <ScrollArea className="h-64">
-            <DropdownMenuGroup>
-              {unreadMessages.length > 0 && (
-                <>
-                  <div className="px-3 py-1">
-                    <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground mb-1">
-                      <MessageSquare className="h-3 w-3" />
-                      {t('unreadMessages')} 
-                      <Badge variant="outline" className="ml-auto text-[10px] h-4">
-                        {unreadMessages.length}
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  {unreadMessages.slice(0, 3).map((message) => (
-                    <DropdownMenuItem 
-                      key={message.id} 
-                      className="cursor-pointer"
-                      onClick={() => handleMessageClick(message)}
-                    >
-                      <div className="flex flex-col w-full text-left px-3 py-2">
-                        <span className="font-medium text-xs">
-                          {message.tenants?.name}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {message.tenants?.properties?.name && `${message.tenants.properties.name}, `}
-                          {t("unit")} {message.tenants?.unit_number}
-                        </span>
-                        <span className="text-xs text-muted-foreground line-clamp-1 mt-1">
-                          {message.subject}
-                        </span>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                  
-                  {unreadMessages.length > 3 && (
-                    <div className="px-3 py-1">
-                      <Button 
-                        variant="link" 
-                        className="w-full h-8 text-xs"
-                        onClick={() => navigate('/tenants')}
-                      >
-                        +{unreadMessages.length - 3} {t('more')}...
-                      </Button>
-                    </div>
-                  )}
-                  
-                  <DropdownMenuSeparator />
-                </>
-              )}
-              
-              {maintenanceRequests.length > 0 && (
-                <>
-                  <div className="px-3 py-1">
-                    <div className="flex items-center gap-1 text-xs font-medium text-muted-foreground mb-1">
-                      <Wrench className="h-3 w-3" />
-                      {t('maintenanceRequests')}
-                      <Badge variant="outline" className="ml-auto text-[10px] h-4">
-                        {maintenanceRequests.length}
-                      </Badge>
-                    </div>
-                  </div>
-                  
-                  {maintenanceRequests.slice(0, 3).map((request) => (
-                    <DropdownMenuItem 
-                      key={request.id}
-                      className="cursor-pointer"
-                      onClick={() => handleMaintenanceClick(request)}
-                    >
-                      <div className="flex flex-col w-full text-left px-3 py-2">
-                        <span className="font-medium text-xs">
-                          {request.tenants?.name}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {request.tenants?.properties?.name && `${request.tenants.properties.name}, `}
-                          {t("unit")} {request.tenants?.unit_number}
-                        </span>
-                        <div className="flex justify-between items-center mt-1">
-                          <span className="text-xs text-muted-foreground line-clamp-1">
-                            {request.issue}
-                          </span>
-                          <Badge 
-                            variant={request.priority === "Urgent" ? "destructive" : "outline"} 
-                            className="ml-1 text-[10px] h-4"
-                          >
-                            {request.priority}
-                          </Badge>
-                        </div>
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                  
-                  {maintenanceRequests.length > 3 && (
-                    <div className="px-3 py-1">
-                      <Button 
-                        variant="link" 
-                        className="w-full h-8 text-xs"
-                        onClick={() => navigate('/maintenance')}
-                      >
-                        +{maintenanceRequests.length - 3} {t('more')}...
-                      </Button>
-                    </div>
-                  )}
-                </>
-              )}
-              
-              {unreadMessages.length === 0 && maintenanceRequests.length === 0 && (
-                <div className="px-3 py-4 text-center text-muted-foreground">
-                  {t('noNotifications')}
-                </div>
-              )}
-            </DropdownMenuGroup>
-          </ScrollArea>
+          <DropdownMenuGroup>
+            <ScrollArea className="h-64">
+              <NotificationsSection 
+                unreadMessages={unreadMessages}
+                maintenanceRequests={maintenanceRequests}
+                t={t}
+              />
+            </ScrollArea>
+          </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </motion.div>

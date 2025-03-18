@@ -26,4 +26,35 @@ export interface NewTask {
   property_id?: string;
   priority: string;
   deadline?: string;
+  title?: string;
+  date?: Date;
+  type?: 'regular' | 'inspection' | 'seasonal';
+  is_recurring?: boolean;
+  recurrence_pattern?: {
+    frequency: string;
+    interval: number;
+    weekdays: string[];
+    end_date?: string;
+  };
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  created_at: string;
+  due_date: string;
+  is_recurring: boolean;
+  recurrence_pattern?: {
+    frequency: string;
+    interval: number;
+    weekdays: string[];
+    end_date?: string;
+  };
+  type: 'regular' | 'inspection' | 'seasonal';
+  assigned_to?: string;
+  property_id?: string;
+  tenant_id?: string;
 }
