@@ -1,4 +1,3 @@
-
 export interface Tenant {
   id: string;
   name: string;
@@ -57,4 +56,7 @@ export interface Task {
   assigned_to?: string;
   property_id?: string;
   tenant_id?: string;
+  date: Date;
+  completed: boolean;
+  user_id?: string;
 }

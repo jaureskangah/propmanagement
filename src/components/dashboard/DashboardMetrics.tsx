@@ -1,11 +1,10 @@
 
+import { useMetricsData } from "@/hooks/dashboard/useMetricsData";
 import { NotificationBell } from "./NotificationBell";
-import { useMetricsData } from "./hooks/useMetricsData";
 import { MetricsGrid } from "./metrics/MetricsGrid";
-import type { DateRange } from "./DashboardDateFilter";
-import { useEffect, useState } from "react";
 import { UnreadMessagesDialog } from "./UnreadMessagesDialog";
-import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
+import { DateRange } from "./DashboardDateFilter";
+import { useEffect, useState } from "react";
 
 interface DashboardMetricsProps {
   propertiesData: any[];
@@ -20,26 +19,21 @@ export const DashboardMetrics = ({
   tenantsData,
   dateRange 
 }: DashboardMetricsProps) => {
-  const { metrics, unreadMessages: staticUnreadMessages } = useMetricsData(
-    propertiesData,
-    maintenanceData,
-    tenantsData,
-    dateRange
-  );
-  
   const { 
-    unreadMessages, 
+    metrics,
+    unreadMessages,
     maintenanceRequests,
     totalNotificationCount,
-    showUnreadDialog, 
+    showUnreadDialog,
     setShowUnreadDialog,
-    markAllMessagesAsRead
-  } = useRealtimeNotifications();
+    markAllMessagesAsRead,
+    staticUnreadMessages
+  } = useMetricsData(propertiesData, maintenanceData, tenantsData, dateRange);
 
   const [totalUnreadCount, setTotalUnreadCount] = useState(0);
 
   useEffect(() => {
-    // Combine les notifications des métriques statiques et des mises à jour en temps réel
+    // Combine static and realtime notifications
     const realtimeCount = totalNotificationCount || 0;
     console.log("Unread count calculation:", { 
       staticUnreadMessages, 
@@ -53,26 +47,9 @@ export const DashboardMetrics = ({
     );
   }, [staticUnreadMessages, totalNotificationCount, unreadMessages]);
 
-  useEffect(() => {
-    console.log("DashboardMetrics data received:", {
-      propertiesCount: propertiesData?.length || 0,
-      maintenanceCount: maintenanceData?.length || 0,
-      tenantsCount: tenantsData?.length || 0,
-      hasMetrics: !!metrics,
-      unreadMessages: totalUnreadCount,
-      realtimeUnreadMessages: unreadMessages,
-      dateRange
-    });
-
-    return () => {
-      console.log("DashboardMetrics unmounting");
-    };
-  }, [propertiesData, maintenanceData, tenantsData, metrics, totalUnreadCount, unreadMessages, dateRange]);
-
   // Handle dialog close with read status update
   const handleDialogOpenChange = (open: boolean) => {
     if (!open && showUnreadDialog) {
-      // When dialog closes, mark messages as read
       markAllMessagesAsRead();
     }
     setShowUnreadDialog(open);
