@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import { MaintenanceMetricsSection } from "@/components/maintenance/metrics/MaintenanceMetricsSection";
@@ -57,15 +56,21 @@ const Maintenance = () => {
     queryFn: fetchMaintenanceRequests,
   });
 
-  // Filter maintenance requests
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const requestId = params.get('request');
+    
+    if (requestId) {
+      const maintenanceSection = document.getElementById('maintenance-section');
+      if (maintenanceSection) {
+        maintenanceSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, []);
+
   const filteredRequests = requests.filter(request => {
-    // Filter by status
     const statusMatch = selectedStatus === "All" || request.status === selectedStatus;
-    
-    // Filter by priority
     const priorityMatch = selectedPriority === "All" || request.priority === selectedPriority;
-    
-    // Filter by search query
     const searchMatch = searchQuery === "" || 
       request.issue.toLowerCase().includes(searchQuery.toLowerCase()) ||
       request.description?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -73,13 +78,11 @@ const Maintenance = () => {
     return statusMatch && priorityMatch && searchMatch;
   });
 
-  // Calculate statistics
   const totalRequests = requests.length;
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
   const resolvedRequests = requests.filter(r => r.status === 'Resolved').length;
   const urgentRequests = requests.filter(r => r.priority === 'Urgent').length;
 
-  // Mock data for demonstration
   const mockFinancialData = {
     propertyId: "123e4567-e89b-12d3-a456-426614174000",
     expenses: [
@@ -111,12 +114,10 @@ const Maintenance = () => {
       <AppSidebar isTenant={isTenantUser} />
       <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 font-sans overflow-y-auto">
         {isTenantUser ? (
-          // Interface simplifiée pour les locataires
           <div className="space-y-6">
             <TenantMaintenanceView />
           </div>
         ) : (
-          // Interface complète pour les propriétaires
           <>
             <MaintenancePageHeader
               totalRequests={totalRequests}
@@ -147,11 +148,13 @@ const Maintenance = () => {
               urgentRequests={urgentRequests}
             />
             
-            <MaintenanceTabs 
-              propertyId={mockFinancialData.propertyId}
-              mockFinancialData={mockFinancialData}
-              filteredRequests={filteredRequests}
-            />
+            <div id="maintenance-section">
+              <MaintenanceTabs 
+                propertyId={mockFinancialData.propertyId}
+                mockFinancialData={mockFinancialData}
+                filteredRequests={filteredRequests}
+              />
+            </div>
 
             <AddTaskDialog 
               onAddTask={handleAddTask}
