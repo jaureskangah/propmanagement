@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +13,7 @@ import MaintenancePageHeader from "@/components/maintenance/header/MaintenancePa
 import MaintenanceFiltersSection from "@/components/maintenance/filters/MaintenanceFiltersSection";
 import { AddTaskDialog } from "@/components/maintenance/AddTaskDialog";
 import { useToast } from "@/hooks/use-toast";
-import { NewTask } from "@/components/maintenance/types";
+import { MaintenanceRequest, NewTask } from "@/components/maintenance/types";
 
 const MAINTENANCE_STATUSES = [
   "All",
