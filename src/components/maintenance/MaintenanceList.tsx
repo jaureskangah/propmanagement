@@ -1,4 +1,3 @@
-
 import { Database } from "@/integrations/supabase/types";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -44,7 +43,7 @@ interface MaintenanceListProps {
 }
 
 export const MaintenanceList = ({ 
-  requests,
+  requests: unsortedRequests,
   onMaintenanceUpdate 
 }: MaintenanceListProps) => {
   const { toast } = useToast();
@@ -53,7 +52,10 @@ export const MaintenanceList = ({
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // Check if there's a request ID in the URL params
+  const requests = [...unsortedRequests].sort((a, b) => 
+    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+
   useEffect(() => {
     const requestId = searchParams.get('request');
     if (requestId) {
@@ -61,7 +63,6 @@ export const MaintenanceList = ({
       if (request) {
         setSelectedRequest(request);
       }
-      // Clear the request param after showing the dialog
       setSearchParams(prev => {
         prev.delete('request');
         return prev;
