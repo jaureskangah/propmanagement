@@ -18,7 +18,25 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
-type MaintenanceRequest = Database['public']['Tables']['maintenance_requests']['Row'];
+interface Tenant {
+  id: string;
+  name: string;
+  unit_number: string;
+  properties?: {
+    name: string;
+  };
+}
+
+interface MaintenanceRequest {
+  id: string;
+  issue: string;
+  status: string;
+  priority: string;
+  created_at: string;
+  tenant_id: string;
+  tenant_notified: boolean;
+  tenants?: Tenant;
+}
 
 interface MaintenanceListProps {
   requests: MaintenanceRequest[];
@@ -108,9 +126,11 @@ export const MaintenanceList = ({
               <Wrench className="h-5 w-5 text-[#ea384c]" />
               <div>
                 <p className="font-medium">{request.issue}</p>
-                <p className="text-sm text-muted-foreground">
-                  {t("from")} {request.tenants?.name} - {request.tenants?.properties?.name}, {t("unit")} {request.tenants?.unit_number}
-                </p>
+                {request.tenants && (
+                  <p className="text-sm text-muted-foreground">
+                    {t("from")} {request.tenants.name} - {request.tenants.properties?.name}, {t("unit")} {request.tenants.unit_number}
+                  </p>
+                )}
                 <p className="text-sm text-muted-foreground">
                   {t("createdOn")} {formatDate(request.created_at)}
                 </p>
@@ -143,13 +163,15 @@ export const MaintenanceList = ({
                 <p>{selectedRequest.issue}</p>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-1">{t("tenant")}</h4>
-                <p>{selectedRequest.tenants?.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {selectedRequest.tenants?.properties?.name}, {t("unit")} {selectedRequest.tenants?.unit_number}
-                </p>
-              </div>
+              {selectedRequest.tenants && (
+                <div>
+                  <h4 className="font-medium mb-1">{t("tenant")}</h4>
+                  <p>{selectedRequest.tenants.name}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {selectedRequest.tenants.properties?.name}, {t("unit")} {selectedRequest.tenants.unit_number}
+                  </p>
+                </div>
+              )}
               
               <div>
                 <h4 className="font-medium mb-1">{t("status")}</h4>

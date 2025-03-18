@@ -32,7 +32,17 @@ const MAINTENANCE_PRIORITIES = [
 const fetchMaintenanceRequests = async () => {
   const { data, error } = await supabase
     .from('maintenance_requests')
-    .select('*');
+    .select(`
+      *,
+      tenants (
+        id,
+        name,
+        unit_number,
+        properties (
+          name
+        )
+      )
+    `);
   
   if (error) throw error;
   return data;
