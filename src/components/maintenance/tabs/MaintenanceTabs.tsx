@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer } from "../charts/ChartContainer";
+import { MaintenanceCharts } from "../charts/MaintenanceCharts";
 import { MaintenanceTable } from "../financials/tables/MaintenanceTable";
 import { ExpensesTable } from "../financials/tables/ExpensesTable";
 import { MaintenanceRequestItem } from "../request/MaintenanceRequestItem";
@@ -19,9 +19,16 @@ interface FinancialData {
     date: string;
   }[];
   maintenance: {
+    title: string;
     description: string;
     cost: number;
     date: string;
+    status?: string;
+    unit_number?: string;
+    vendors?: {
+      name: string;
+      specialty: string;
+    };
   }[];
 }
 
@@ -109,7 +116,7 @@ export const MaintenanceTabs = ({
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer propertyId={propertyId} />
+            <MaintenanceCharts propertyId={propertyId} />
           </CardContent>
         </Card>
       </TabsContent>

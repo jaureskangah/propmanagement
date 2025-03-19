@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
@@ -123,8 +122,20 @@ const Maintenance = () => {
       { category: "Insurance", amount: 300, date: "2024-03-05" },
     ],
     maintenance: [
-      { description: "Plumbing repair", cost: 250, date: "2024-03-02" },
-      { description: "HVAC maintenance", cost: 400, date: "2024-03-10" },
+      { 
+        title: "Plumbing repair",
+        description: "Fixed bathroom sink leak", 
+        cost: 250, 
+        date: "2024-03-02",
+        status: "Completed"
+      },
+      { 
+        title: "HVAC maintenance", 
+        description: "Annual A/C service",
+        cost: 400, 
+        date: "2024-03-10",
+        status: "Completed"
+      },
     ],
   };
 
