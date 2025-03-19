@@ -1,92 +1,118 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PreventiveMaintenance } from "@/components/maintenance/PreventiveMaintenance";
-import { VendorList } from "@/components/maintenance/vendors/VendorList";
-import { WorkOrderList } from "@/components/maintenance/work-orders/WorkOrderList";
-import { MaintenanceTasksList } from "@/components/maintenance/tasks/MaintenanceTasksList";
-import { CreateWorkOrderDialog } from "@/components/maintenance/work-orders/CreateWorkOrderDialog";
+import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useToast } from "@/hooks/use-toast";
-import { ClipboardList, Wrench, Hammer, CalendarCheck, FileSpreadsheet } from "lucide-react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer } from "../charts/ChartContainer";
+import { MaintenanceTable } from "../financials/tables/MaintenanceTable";
+import { ExpensesTable } from "../financials/tables/ExpensesTable";
+import { MaintenanceRequestItem } from "../request/MaintenanceRequestItem";
+import { PreventiveMaintenance } from "../PreventiveMaintenance";
+import { MaintenanceRequest } from "@/components/maintenance/types";
+
+interface FinancialData {
+  propertyId: string;
+  expenses: {
+    category: string;
+    amount: number;
+    date: string;
+  }[];
+  maintenance: {
+    description: string;
+    cost: number;
+    date: string;
+  }[];
+}
 
 interface MaintenanceTabsProps {
   propertyId: string;
-  mockFinancialData: any;
-  filteredRequests?: any[];
+  mockFinancialData: FinancialData;
+  filteredRequests: MaintenanceRequest[];
+  onRequestClick: (request: MaintenanceRequest) => void;
 }
 
-export const MaintenanceTabs = ({ propertyId, mockFinancialData, filteredRequests = [] }: MaintenanceTabsProps) => {
-  const [workOrderDialogOpen, setWorkOrderDialogOpen] = useState(false);
+export const MaintenanceTabs = ({ 
+  propertyId, 
+  mockFinancialData,
+  filteredRequests,
+  onRequestClick
+}: MaintenanceTabsProps) => {
   const { t } = useLocale();
-  const { toast } = useToast();
-
-  const handleWorkOrderSuccess = () => {
-    toast({
-      title: t('success'),
-      description: t('workOrderCreated'),
-    });
-  };
-
+  const [activeTab, setActiveTab] = useState("requests");
+  
   return (
-    <Tabs defaultValue="maintenance" className="space-y-4">
-      <TabsList className="grid grid-cols-2 gap-2">
-        <TabsTrigger value="maintenance" className="flex items-center gap-2">
-          <ClipboardList className="h-4 w-4" />
-          {t('maintenanceManagement')}
-        </TabsTrigger>
-        <TabsTrigger value="vendors" className="flex items-center gap-2">
-          <Wrench className="h-4 w-4" />
-          {t('vendors')}
-        </TabsTrigger>
+    <Tabs 
+      value={activeTab} 
+      onValueChange={setActiveTab}
+      className="w-full"
+    >
+      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-4">
+        <TabsTrigger value="requests">{t('maintenanceRequests')}</TabsTrigger>
+        <TabsTrigger value="preventive">{t('maintenanceTasks')}</TabsTrigger>
+        <TabsTrigger value="financial">{t('financials')}</TabsTrigger>
+        <TabsTrigger value="analytics">{t('analytics')}</TabsTrigger>
       </TabsList>
-
-      <TabsContent value="maintenance" className="space-y-6">
-        <Tabs defaultValue="tasks" className="w-full">
-          <TabsList className="w-full grid grid-cols-3 gap-2">
-            <TabsTrigger value="tasks" className="flex items-center gap-2">
-              <FileSpreadsheet className="h-4 w-4" />
-              {t('maintenanceTasks')}
-            </TabsTrigger>
-            <TabsTrigger value="preventive" className="flex items-center gap-2">
-              <CalendarCheck className="h-4 w-4" />
-              {t('preventiveMaintenance')}
-            </TabsTrigger>
-            <TabsTrigger value="work-orders" className="flex items-center gap-2">
-              <Hammer className="h-4 w-4" />
-              {t('workOrders')}
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="tasks" className="pt-4">
-            <MaintenanceTasksList
-              requests={filteredRequests}
-            />
-          </TabsContent>
-
-          <TabsContent value="preventive" className="pt-4">
-            <PreventiveMaintenance />
-          </TabsContent>
-
-          <TabsContent value="work-orders" className="pt-4">
-            <WorkOrderList
-              workOrders={[]}
-              onCreateWorkOrder={() => setWorkOrderDialogOpen(true)}
-            />
-          </TabsContent>
-        </Tabs>
+      
+      <TabsContent value="requests">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('maintenanceRequests')}</CardTitle>
+            <CardDescription>
+              {t('manageMaintenanceRequests')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {filteredRequests.length === 0 ? (
+                <div className="text-center py-8 border-2 border-dashed rounded-lg">
+                  <p className="text-sm text-muted-foreground">
+                    {t('noMaintenanceRequests')}
+                  </p>
+                </div>
+              ) : (
+                filteredRequests.map((request) => (
+                  <MaintenanceRequestItem 
+                    key={request.id} 
+                    request={request} 
+                    onClick={onRequestClick}
+                  />
+                ))
+              )}
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-end">
+            <Button variant="outline" size="sm">
+              {t('exportData')}
+            </Button>
+          </CardFooter>
+        </Card>
       </TabsContent>
-
-      <TabsContent value="vendors">
-        <VendorList />
+      
+      <TabsContent value="preventive">
+        <PreventiveMaintenance />
       </TabsContent>
-
-      <CreateWorkOrderDialog
-        isOpen={workOrderDialogOpen}
-        onClose={() => setWorkOrderDialogOpen(false)}
-        onSuccess={handleWorkOrderSuccess}
-        propertyId={propertyId}
-      />
+      
+      <TabsContent value="financial">
+        <div className="grid grid-cols-1 gap-4">
+          <MaintenanceTable maintenance={mockFinancialData.maintenance} />
+          <ExpensesTable expenses={mockFinancialData.expenses} />
+        </div>
+      </TabsContent>
+      
+      <TabsContent value="analytics">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('maintenanceAnalytics')}</CardTitle>
+            <CardDescription>
+              {t('maintenanceAnalyticsDescription')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer propertyId={propertyId} />
+          </CardContent>
+        </Card>
+      </TabsContent>
     </Tabs>
   );
 };

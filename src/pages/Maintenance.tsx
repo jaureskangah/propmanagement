@@ -14,6 +14,7 @@ import MaintenanceFiltersSection from "@/components/maintenance/filters/Maintena
 import { AddTaskDialog } from "@/components/maintenance/AddTaskDialog";
 import { useToast } from "@/hooks/use-toast";
 import { MaintenanceRequest, NewTask } from "@/components/maintenance/types";
+import { MaintenanceRequestDialog } from "@/components/maintenance/request/MaintenanceRequestDialog";
 
 const MAINTENANCE_STATUSES = [
   "All",
@@ -61,6 +62,7 @@ const Maintenance = () => {
   const [selectedStatus, setSelectedStatus] = useState<string>("All");
   const [selectedPriority, setSelectedPriority] = useState<string>("All");
   const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   
   const { data: requests = [], isLoading, refetch } = useQuery({
     queryKey: ['maintenance_requests'],
@@ -72,12 +74,18 @@ const Maintenance = () => {
     const requestId = params.get('request');
     
     if (requestId) {
+      // Trouver la demande correspondant à l'ID
+      const request = requests.find(req => req.id === requestId);
+      if (request) {
+        setSelectedRequest(request);
+      }
+      
       const maintenanceSection = document.getElementById('maintenance-section');
       if (maintenanceSection) {
         maintenanceSection.scrollIntoView({ behavior: 'smooth' });
       }
     }
-  }, []);
+  }, [requests]);
 
   const filteredRequests = requests.filter(request => {
     const statusMatch = selectedStatus === "All" || request.status === selectedStatus;
@@ -88,6 +96,20 @@ const Maintenance = () => {
     
     return statusMatch && priorityMatch && searchMatch;
   });
+
+  const handleViewRequest = (request: MaintenanceRequest) => {
+    setSelectedRequest(request);
+  };
+
+  const handleCloseRequestDialog = () => {
+    setSelectedRequest(null);
+    // Nettoyer l'URL si besoin
+    if (window.location.search.includes('request=')) {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('request');
+      window.history.replaceState({}, '', url.toString());
+    }
+  };
 
   const totalRequests = requests.length;
   const pendingRequests = requests.filter(r => r.status === 'Pending').length;
@@ -164,6 +186,7 @@ const Maintenance = () => {
                 propertyId={mockFinancialData.propertyId}
                 mockFinancialData={mockFinancialData}
                 filteredRequests={filteredRequests}
+                onRequestClick={handleViewRequest}
               />
             </div>
 
@@ -172,6 +195,14 @@ const Maintenance = () => {
               isOpen={isAddTaskDialogOpen}
               onClose={() => setIsAddTaskDialogOpen(false)}
             />
+
+            {selectedRequest && (
+              <MaintenanceRequestDialog
+                request={selectedRequest}
+                onClose={handleCloseRequestDialog}
+                onUpdateSuccess={refetch}
+              />
+            )}
           </>
         )}
       </div>

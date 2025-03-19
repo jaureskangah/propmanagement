@@ -16,7 +16,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
   return (
     <div
       key={request.id}
-      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+      className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer dark:hover:bg-gray-800 transition-colors"
       onClick={() => onClick(request)}
     >
       <div className="flex items-center gap-3">
@@ -38,7 +38,9 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
         className={
           request.status === "Resolved"
             ? "bg-green-500 hover:bg-green-600"
-            : "bg-yellow-500 hover:bg-yellow-600"
+            : request.status === "In Progress"
+              ? "bg-blue-500 hover:bg-blue-600" 
+              : "bg-yellow-500 hover:bg-yellow-600"
         }
       >
         {request.status}

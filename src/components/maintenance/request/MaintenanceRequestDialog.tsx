@@ -13,6 +13,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { MaintenanceRequest } from "../types";
+import { formatDate } from "@/lib/utils";
 
 interface MaintenanceRequestDialogProps {
   request: MaintenanceRequest | null;
@@ -77,6 +78,11 @@ export const MaintenanceRequestDialog = ({
             <p>{request.issue}</p>
           </div>
           
+          <div>
+            <h4 className="font-medium mb-1">{t("createdOn")}</h4>
+            <p>{formatDate(request.created_at)}</p>
+          </div>
+          
           {request.tenants && (
             <div>
               <h4 className="font-medium mb-1">{t("tenant")}</h4>
@@ -89,7 +95,7 @@ export const MaintenanceRequestDialog = ({
           
           <div>
             <h4 className="font-medium mb-1">{t("status")}</h4>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               {["Pending", "In Progress", "Resolved"].map((status) => (
                 <Button
                   key={status}
@@ -97,6 +103,15 @@ export const MaintenanceRequestDialog = ({
                   variant={request.status === status ? "default" : "outline"}
                   onClick={() => handleStatusUpdate(request.id, status)}
                   disabled={isUpdating}
+                  className={
+                    request.status === status 
+                      ? status === "Resolved" 
+                        ? "bg-green-600 hover:bg-green-700"
+                        : status === "In Progress"
+                          ? "bg-blue-600 hover:bg-blue-700"
+                          : "bg-yellow-600 hover:bg-yellow-700"
+                      : ""
+                  }
                 >
                   {status}
                 </Button>
