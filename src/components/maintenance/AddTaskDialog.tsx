@@ -13,14 +13,10 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { NewTask } from "./types";
 
 interface AddTaskDialogProps {
-  onAddTask: (task: {
-    title: string;
-    date: Date;
-    type: "regular" | "inspection" | "seasonal";
-    priority?: "low" | "medium" | "high" | "urgent";
-  }) => void;
+  onAddTask: (task: NewTask) => void;
   isOpen?: boolean;
   onClose?: () => void;
 }
@@ -39,7 +35,12 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title && date && type) {
-      onAddTask({ title, date, type, priority });
+      onAddTask({ 
+        title,
+        date,
+        type,
+        priority
+      });
       if (onClose) {
         onClose();
       } else {

@@ -8,6 +8,7 @@ import { AddTaskDialog } from "./AddTaskDialog";
 import { TaskList } from "./TaskList";
 import { useMaintenanceTasks } from "./tasks/useMaintenanceTasks";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { NewTask } from "./types";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -29,6 +30,10 @@ export const PreventiveMaintenance = () => {
   if (isLoading) {
     return <div>{t('loading')}</div>;
   }
+
+  const onAddTask = (newTask: NewTask) => {
+    handleAddTask(newTask);
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
@@ -53,7 +58,7 @@ export const PreventiveMaintenance = () => {
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-medium">{t('scheduledTasks')}</h3>
-              <AddTaskDialog onAddTask={handleAddTask} />
+              <AddTaskDialog onAddTask={onAddTask} />
             </div>
             <TaskList 
               tasks={filteredTasks} 

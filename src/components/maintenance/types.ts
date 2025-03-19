@@ -1,3 +1,4 @@
+
 export interface Tenant {
   id: string;
   name: string;
@@ -19,15 +20,14 @@ export interface MaintenanceRequest {
 }
 
 export interface NewTask {
-  issue: string;
+  title: string;
   description?: string;
   tenant_id?: string;
   property_id?: string;
   priority: string;
   deadline?: string;
-  title?: string;
-  date?: Date;
-  type?: 'regular' | 'inspection' | 'seasonal';
+  date: Date;
+  type: 'regular' | 'inspection' | 'seasonal';
   is_recurring?: boolean;
   recurrence_pattern?: {
     frequency: string;

@@ -36,7 +36,8 @@ export const useMaintenanceTasks = () => {
         recurrence_pattern: task.recurrence_pattern ? {
           frequency: (task.recurrence_pattern as any).frequency || "daily",
           interval: (task.recurrence_pattern as any).interval || 1,
-          endDate: (task.recurrence_pattern as any).endDate
+          weekdays: (task.recurrence_pattern as any).weekdays,
+          end_date: (task.recurrence_pattern as any).end_date
         } : undefined
       })) as Task[];
     },
@@ -129,7 +130,8 @@ export const useMaintenanceTasks = () => {
           recurrence_pattern: newTask.recurrence_pattern ? {
             frequency: newTask.recurrence_pattern.frequency,
             interval: newTask.recurrence_pattern.interval,
-            endDate: newTask.recurrence_pattern.endDate
+            weekdays: newTask.recurrence_pattern.weekdays,
+            end_date: newTask.recurrence_pattern.end_date
           } : null
         });
 
