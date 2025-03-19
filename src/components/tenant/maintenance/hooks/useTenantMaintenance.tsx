@@ -92,8 +92,7 @@ export const useTenantMaintenance = () => {
       const { data, error } = await supabase
         .from('maintenance_requests')
         .select('*')
-        .eq('tenant_id', tenantId)
-        .order('created_at', { ascending: false });
+        .eq('tenant_id', tenantId);
 
       if (error) throw error;
       
