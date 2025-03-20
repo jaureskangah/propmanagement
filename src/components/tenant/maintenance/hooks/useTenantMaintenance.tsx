@@ -89,10 +89,12 @@ export const useTenantMaintenance = () => {
 
   const fetchMaintenanceRequests = async () => {
     try {
+      // Order by created_at descending to get newest first from the database
       const { data, error } = await supabase
         .from('maintenance_requests')
         .select('*')
-        .eq('tenant_id', tenantId);
+        .eq('tenant_id', tenantId)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       
