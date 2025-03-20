@@ -47,7 +47,11 @@ export const TenantMaintenanceView = () => {
 
   return (
     <>
-      <MaintenanceHeader onAddClick={() => setIsAddDialogOpen(true)} />
+      <MaintenanceHeader 
+        onAddClick={() => setIsAddDialogOpen(true)} 
+        sortBy={sortBy}
+        onSortChange={setSortBy}
+      />
       
       <Card>
         <CardContent className="space-y-6 pt-6">

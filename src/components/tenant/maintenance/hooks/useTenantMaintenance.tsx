@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
@@ -34,7 +33,10 @@ export const useTenantMaintenance = () => {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     } else if (sortBy === "priority") {
       const priorityOrder = { Urgent: 0, High: 1, Medium: 2, Low: 3 };
-      return priorityOrder[a.priority as keyof typeof priorityOrder] - priorityOrder[b.priority as keyof typeof priorityOrder];
+      // Utiliser le fallback à Medium si la priorité n'est pas trouvée
+      const priorityA = priorityOrder[a.priority as keyof typeof priorityOrder] ?? priorityOrder.Medium;
+      const priorityB = priorityOrder[b.priority as keyof typeof priorityOrder] ?? priorityOrder.Medium;
+      return priorityA - priorityB;
     }
     return 0;
   });
@@ -102,13 +104,7 @@ export const useTenantMaintenance = () => {
       if (error) throw error;
       
       console.log("Fetched maintenance requests:", data);
-      
-      // S'assurer que les données sont triées par date même après le fetch
-      const sortedData = data ? [...data].sort((a, b) => 
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      ) : [];
-      
-      setRequests(sortedData);
+      setRequests(data || []);
     } catch (error) {
       console.error('Error fetching maintenance requests:', error);
       toast({
