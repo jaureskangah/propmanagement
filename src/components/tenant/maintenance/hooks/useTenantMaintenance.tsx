@@ -19,7 +19,7 @@ export const useTenantMaintenance = () => {
   const { toast } = useToast();
   const { t } = useLocale();
 
-  // Filtered requests
+  // Filtered requests - Nous allons nous assurer que le tri est correctement appliqué
   const filteredRequests = requests.filter(request => {
     const matchesStatus = statusFilter === "all" || request.status === statusFilter;
     const matchesSearch = searchQuery === "" || 
@@ -28,6 +28,7 @@ export const useTenantMaintenance = () => {
     return matchesStatus && matchesSearch;
   }).sort((a, b) => {
     if (sortBy === "newest") {
+      // S'assurer que nous comparons correctement les dates avec new Date()
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     } else if (sortBy === "oldest") {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
@@ -89,6 +90,8 @@ export const useTenantMaintenance = () => {
 
   const fetchMaintenanceRequests = async () => {
     try {
+      console.log("Fetching maintenance requests for tenant ID:", tenantId);
+      
       // Order by created_at descending to get newest first from the database
       const { data, error } = await supabase
         .from('maintenance_requests')
@@ -99,7 +102,13 @@ export const useTenantMaintenance = () => {
       if (error) throw error;
       
       console.log("Fetched maintenance requests:", data);
-      setRequests(data || []);
+      
+      // S'assurer que les données sont triées par date même après le fetch
+      const sortedData = data ? [...data].sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      ) : [];
+      
+      setRequests(sortedData);
     } catch (error) {
       console.error('Error fetching maintenance requests:', error);
       toast({
