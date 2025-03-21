@@ -1,23 +1,12 @@
-
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Star, Pencil, Trash2 } from "lucide-react";
-import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
 import { VendorReview } from "@/types/vendor";
-import { VendorReviewDialog } from "./VendorReviewDialog";
-import { useState } from "react";
 
 interface VendorReviewListProps {
   reviews: VendorReview[];
   onRefresh: () => void;
 }
 
-export const VendorReviewList = ({ reviews, onRefresh }: VendorReviewListProps) => {
+export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onRefresh }) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const [editingReview, setEditingReview] = useState<VendorReview | null>(null);
