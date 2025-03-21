@@ -19,7 +19,7 @@ export const useTenantMaintenance = () => {
   const { toast } = useToast();
   const { t } = useLocale();
 
-  // Filtered requests - Nous allons nous assurer que le tri est correctement appliqué
+  // Filtered requests - Ensure sorting is correctly applied
   const filteredRequests = requests.filter(request => {
     const matchesStatus = statusFilter === "all" || request.status === statusFilter;
     const matchesSearch = searchQuery === "" || 
@@ -27,14 +27,19 @@ export const useTenantMaintenance = () => {
       (request.description && request.description.toLowerCase().includes(searchQuery.toLowerCase()));
     return matchesStatus && matchesSearch;
   }).sort((a, b) => {
+    console.log("Sorting requests with method:", sortBy);
+    
     if (sortBy === "newest") {
-      // S'assurer que nous comparons correctement les dates avec new Date()
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      // Compare dates properly with new Date()
+      const dateA = new Date(a.created_at).getTime();
+      const dateB = new Date(b.created_at).getTime();
+      console.log(`Comparing dates: ${a.created_at} (${dateA}) vs ${b.created_at} (${dateB})`);
+      return dateB - dateA;
     } else if (sortBy === "oldest") {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     } else if (sortBy === "priority") {
       const priorityOrder = { Urgent: 0, High: 1, Medium: 2, Low: 3 };
-      // Utiliser le fallback à Medium si la priorité n'est pas trouvée
+      // Use fallback to Medium if priority not found
       const priorityA = priorityOrder[a.priority as keyof typeof priorityOrder] ?? priorityOrder.Medium;
       const priorityB = priorityOrder[b.priority as keyof typeof priorityOrder] ?? priorityOrder.Medium;
       return priorityA - priorityB;

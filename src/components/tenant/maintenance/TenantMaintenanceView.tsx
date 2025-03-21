@@ -45,6 +45,8 @@ export const TenantMaintenanceView = () => {
     );
   }
 
+  console.log("Current sort order:", sortBy); // Debug log
+
   return (
     <>
       <MaintenanceHeader 
