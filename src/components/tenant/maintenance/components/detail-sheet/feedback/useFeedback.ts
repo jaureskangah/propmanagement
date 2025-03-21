@@ -1,17 +1,21 @@
 
 import { useState } from "react";
-import { MaintenanceRequest } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 
-export const useFeedback = (request: MaintenanceRequest, onUpdate: () => void) => {
+export const useFeedback = (
+  requestId: string, 
+  existingFeedback: string | null, 
+  existingRating: number | null, 
+  onUpdate: () => void
+) => {
   const { t } = useLocale();
   const { toast } = useToast();
-  const [rating, setRating] = useState<number>(request.tenant_rating || 0);
-  const [feedback, setFeedback] = useState<string>(request.tenant_feedback || "");
+  const [rating, setRating] = useState<number>(existingRating || 0);
+  const [feedback, setFeedback] = useState<string>(existingFeedback || "");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [feedbackSubmitted, setFeedbackSubmitted] = useState(!!request.tenant_feedback || !!request.tenant_rating);
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(!!existingFeedback || !!existingRating);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
@@ -46,7 +50,7 @@ export const useFeedback = (request: MaintenanceRequest, onUpdate: () => void) =
     
     setIsSubmitting(true);
     try {
-      console.log("Submitting feedback:", { id: request.id, feedback, rating });
+      console.log("Submitting feedback:", { id: requestId, feedback, rating });
       
       const { error } = await supabase
         .from('maintenance_requests')
@@ -55,7 +59,7 @@ export const useFeedback = (request: MaintenanceRequest, onUpdate: () => void) =
           tenant_rating: rating,
           updated_at: new Date().toISOString() // Force an update event for notifications
         })
-        .eq('id', request.id);
+        .eq('id', requestId);
 
       if (error) {
         console.error('Error details:', error);

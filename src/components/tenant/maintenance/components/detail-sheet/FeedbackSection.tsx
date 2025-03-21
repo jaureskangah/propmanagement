@@ -1,18 +1,24 @@
 
 import { MessageSquare } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { MaintenanceRequest } from "@/types/tenant";
 import { FeedbackForm } from "./feedback/FeedbackForm";
 import { FeedbackConfirmDialog } from "./feedback/FeedbackConfirmDialog";
 import { FeedbackDisplay } from "./feedback/FeedbackDisplay";
 import { useFeedback } from "./feedback/useFeedback";
 
 interface FeedbackSectionProps {
-  request: MaintenanceRequest;
-  onUpdate: () => void;
+  requestId: string;
+  existingFeedback: string | null;
+  existingRating: number | null;
+  onFeedbackSubmitted: () => void;
 }
 
-export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => {
+export const FeedbackSection = ({ 
+  requestId, 
+  existingFeedback, 
+  existingRating, 
+  onFeedbackSubmitted 
+}: FeedbackSectionProps) => {
   const { t } = useLocale();
   const {
     rating,
@@ -27,7 +33,7 @@ export const FeedbackSection = ({ request, onUpdate }: FeedbackSectionProps) => 
     handleFeedbackChange,
     openConfirmDialog,
     handleSubmitFeedback
-  } = useFeedback(request, onUpdate);
+  } = useFeedback(requestId, existingFeedback, existingRating, onFeedbackSubmitted);
 
   if (!feedbackSubmitted) {
     return (
