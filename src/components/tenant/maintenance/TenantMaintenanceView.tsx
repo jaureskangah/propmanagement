@@ -9,6 +9,7 @@ import { MaintenanceStats } from "./components/MaintenanceStats";
 import { MaintenanceSearch } from "./components/MaintenanceSearch";
 import { useTenantMaintenance } from "./hooks/useTenantMaintenance";
 import { MaintenanceHeader } from "./components/MaintenanceHeader";
+import { DeleteMaintenanceDialog } from "./DeleteMaintenanceDialog";
 
 export const TenantMaintenanceView = () => {
   const { t } = useLocale();
@@ -29,7 +30,10 @@ export const TenantMaintenanceView = () => {
     setSearchQuery,
     sortBy,
     setSortBy,
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
     handleMaintenanceUpdate,
+    handleDeleteMaintenance,
     handleViewDetails
   } = useTenantMaintenance();
 
@@ -103,6 +107,15 @@ export const TenantMaintenanceView = () => {
           request={selectedRequest}
           onUpdate={handleMaintenanceUpdate}
           canRate={selectedRequest.status === "Resolved"}
+        />
+      )}
+
+      {selectedRequest && (
+        <DeleteMaintenanceDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          request={selectedRequest}
+          onSuccess={handleMaintenanceUpdate}
         />
       )}
     </>

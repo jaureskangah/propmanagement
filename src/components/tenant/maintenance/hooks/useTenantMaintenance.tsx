@@ -15,6 +15,7 @@ export const useTenantMaintenance = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "priority">("newest");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { session } = useAuth();
   const { toast } = useToast();
   const { t } = useLocale();
@@ -154,6 +155,35 @@ export const useTenantMaintenance = () => {
     await fetchMaintenanceRequests();
   };
 
+  const handleDeleteMaintenance = async (requestId: string) => {
+    try {
+      const { error } = await supabase
+        .from('maintenance_requests')
+        .delete()
+        .eq('id', requestId);
+
+      if (error) throw error;
+      
+      setIsDeleteDialogOpen(false);
+      setIsDetailSheetOpen(false);
+      setSelectedRequest(null);
+      
+      toast({
+        title: t('success'),
+        description: t('maintenanceRequestDeleted'),
+      });
+      
+      await fetchMaintenanceRequests();
+    } catch (error) {
+      console.error('Error deleting maintenance request:', error);
+      toast({
+        title: t('error'),
+        description: t('errorDeletingRequest'),
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleViewDetails = (request: MaintenanceRequest) => {
     setSelectedRequest(request);
     setIsDetailSheetOpen(true);
@@ -176,7 +206,10 @@ export const useTenantMaintenance = () => {
     setSearchQuery,
     sortBy,
     setSortBy,
+    isDeleteDialogOpen,
+    setIsDeleteDialogOpen,
     handleMaintenanceUpdate,
+    handleDeleteMaintenance,
     handleViewDetails
   };
 };
