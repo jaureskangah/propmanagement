@@ -1,5 +1,15 @@
-import React from "react";
+
+import React, { useState } from "react";
 import { VendorReview } from "@/types/vendor";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/components/AuthProvider";
+import { supabase } from "@/lib/supabase";
+import { format } from "date-fns";
+import { enUS } from "date-fns/locale";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Star, Pencil, Trash2 } from "lucide-react";
+import { VendorReviewDialog } from "./VendorReviewDialog";
 
 interface VendorReviewListProps {
   reviews: VendorReview[];

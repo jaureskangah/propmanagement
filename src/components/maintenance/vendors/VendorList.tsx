@@ -30,6 +30,7 @@ export const VendorList = () => {
     reviewDialogOpen,
     setReviewDialogOpen,
     selectedVendorForReview,
+    setSelectedVendorForReview,
     
     // Data
     specialties,
@@ -41,7 +42,8 @@ export const VendorList = () => {
     refetch,
     refetchReviews,
     handleEdit,
-    handleDelete
+    handleDelete,
+    handleOpenReviewDialog
   } = useVendorList();
 
   const { t } = useLocale();
