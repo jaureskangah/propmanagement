@@ -6,10 +6,13 @@ import {
   Clock, 
   CheckCircle,
   TrendingUp,
-  TrendingDown
+  TrendingDown,
+  AlertTriangle,
+  BarChart
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { useState, useEffect } from "react";
 
 interface MaintenanceMetricsProps {
   total: number;
@@ -20,11 +23,20 @@ interface MaintenanceMetricsProps {
 export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetricsProps) => {
   const { t } = useLocale();
   
+  // Calcul des pourcentages et des variations
   const pendingPercent = Math.round((pending / total) * 100) || 0;
   const resolvedPercent = Math.round((resolved / total) * 100) || 0;
   
-  const prevPendingPercent = pendingPercent + 5;
-  const prevResolvedPercent = resolvedPercent - 5;
+  // Simulation de l'évolution par rapport au mois précédent
+  // Dans une implémentation réelle, ces données viendraient d'une API
+  const [prevPendingPercent, setPrevPendingPercent] = useState(pendingPercent + 5);
+  const [prevResolvedPercent, setPrevResolvedPercent] = useState(resolvedPercent - 5);
+  
+  // Mise à jour des variations simulées lorsque les pourcentages changent
+  useEffect(() => {
+    setPrevPendingPercent(pendingPercent + 5);
+    setPrevResolvedPercent(resolvedPercent - 5);
+  }, [pendingPercent, resolvedPercent]);
   
   const pendingVariation = pendingPercent - prevPendingPercent;
   const resolvedVariation = resolvedPercent - prevResolvedPercent;
@@ -66,6 +78,7 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {metrics.map((metric) => (
           <Card key={metric.title} className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
+            <div className={`absolute h-1 w-full top-0 ${metric.progressColor}`}></div>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">
                 {metric.title}
@@ -84,9 +97,12 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
                         <Tooltip>
                           <TooltipTrigger>
                             <div className={`flex items-center gap-1 ${
-                              metric.variation > 0 ? 'text-green-500' : 'text-red-500'
+                              metric.variation > 0 
+                                ? metric.title === t('resolvedRequests') ? 'text-green-500' : 'text-red-500'
+                                : metric.title === t('resolvedRequests') ? 'text-red-500' : 'text-green-500'
                             }`}>
-                              {metric.variation > 0 ? (
+                              {(metric.variation > 0 && metric.title === t('resolvedRequests')) || 
+                               (metric.variation < 0 && metric.title !== t('resolvedRequests')) ? (
                                 <TrendingUp className="h-3 w-3" />
                               ) : (
                                 <TrendingDown className="h-3 w-3" />
