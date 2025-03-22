@@ -117,6 +117,7 @@ export const useVendorList = () => {
     reviewDialogOpen,
     setReviewDialogOpen,
     selectedVendorForReview,
+    setSelectedVendorForReview, // This was missing from the return value
     
     // Data
     vendors,
