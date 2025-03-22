@@ -99,12 +99,6 @@ export const MaintenancePageContainer = () => {
         urgentRequests={urgentRequests}
       />
       
-      {showCharts && (
-        <div className="mb-6">
-          <MaintenanceCharts propertyId={mockFinancialData.propertyId} />
-        </div>
-      )}
-      
       <div id="maintenance-section">
         <MaintenanceTabs 
           propertyId={mockFinancialData.propertyId}
@@ -113,6 +107,12 @@ export const MaintenancePageContainer = () => {
           onRequestClick={handleViewRequest}
         />
       </div>
+      
+      {showCharts && (
+        <div className="mt-6">
+          <MaintenanceCharts propertyId={mockFinancialData.propertyId} />
+        </div>
+      )}
 
       <AddTaskDialog 
         onAddTask={handleAddTask}
