@@ -12,12 +12,14 @@ import { MaintenanceRequestDialog } from "./request/MaintenanceRequestDialog";
 import { MaintenanceRequest, NewTask } from "./types";
 import { mockFinancialData } from "./mocks/financialData";
 import { MAINTENANCE_STATUSES, MAINTENANCE_PRIORITIES, useMaintenanceRequests } from "./hooks/useMaintenanceRequests";
+import { MaintenanceCharts } from "./charts/MaintenanceCharts";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false);
+  const [showCharts, setShowCharts] = useState(true);
   
   const {
     filteredRequests,
@@ -105,6 +107,12 @@ export const MaintenancePageContainer = () => {
           onRequestClick={handleViewRequest}
         />
       </div>
+      
+      {showCharts && (
+        <div className="mt-6">
+          <MaintenanceCharts propertyId={mockFinancialData.propertyId} />
+        </div>
+      )}
 
       <AddTaskDialog 
         onAddTask={handleAddTask}
