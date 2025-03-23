@@ -7,7 +7,6 @@ import FinancialOverview from "@/components/finances/FinancialOverview";
 import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
 import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
-import { MaintenanceCharts } from "@/components/maintenance/charts/MaintenanceCharts";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -64,12 +63,6 @@ export default function Finances() {
           <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <FinancialOverview propertyId={selectedPropertyId} />
           </div>
-
-          {selectedPropertyId && (
-            <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
-              <MaintenanceCharts propertyId={selectedPropertyId} />
-            </div>
-          )}
         </div>
       </div>
     </div>
