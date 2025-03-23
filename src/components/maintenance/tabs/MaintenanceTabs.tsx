@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { MaintenanceCharts } from "../charts/MaintenanceCharts";
 import { MaintenanceTable } from "../financials/tables/MaintenanceTable";
 import { ExpensesTable } from "../financials/tables/ExpensesTable";
 import { MaintenanceRequestItem } from "../request/MaintenanceRequestItem";
@@ -54,11 +53,10 @@ export const MaintenanceTabs = ({
       onValueChange={setActiveTab}
       className="w-full"
     >
-      <TabsList className="grid w-full grid-cols-2 md:grid-cols-4 mb-4">
+      <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 mb-4">
         <TabsTrigger value="requests">{t('maintenanceRequests')}</TabsTrigger>
         <TabsTrigger value="preventive">{t('maintenanceTasks')}</TabsTrigger>
         <TabsTrigger value="financial">{t('financials')}</TabsTrigger>
-        <TabsTrigger value="analytics">{t('analytics')}</TabsTrigger>
       </TabsList>
       
       <TabsContent value="requests">
@@ -105,20 +103,6 @@ export const MaintenanceTabs = ({
           <MaintenanceTable maintenance={mockFinancialData.maintenance} />
           <ExpensesTable expenses={mockFinancialData.expenses} />
         </div>
-      </TabsContent>
-      
-      <TabsContent value="analytics">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('maintenanceAnalytics')}</CardTitle>
-            <CardDescription>
-              {t('maintenanceAnalyticsDescription')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <MaintenanceCharts propertyId={propertyId} />
-          </CardContent>
-        </Card>
       </TabsContent>
     </Tabs>
   );

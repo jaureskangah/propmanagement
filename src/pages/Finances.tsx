@@ -10,6 +10,8 @@ import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSe
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { MaintenanceCharts } from "@/components/maintenance/charts/MaintenanceCharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Finances() {
   const { user } = useAuth();
@@ -62,6 +64,20 @@ export default function Finances() {
           
           <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <FinancialOverview propertyId={selectedPropertyId} />
+          </div>
+
+          {/* Section des graphiques de maintenance */}
+          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <Card className="border-border/40 bg-card/50 backdrop-blur-sm shadow-md dark:bg-gray-800/40 transition-all duration-200 hover:shadow-lg hover:bg-card/60 font-sans">
+              <CardHeader>
+                <CardTitle className="text-sm font-semibold text-primary/90 dark:text-white/90">
+                  {t('maintenanceAnalytics')}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <MaintenanceCharts propertyId={selectedPropertyId || ''} />
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
