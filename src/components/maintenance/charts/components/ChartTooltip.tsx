@@ -5,7 +5,19 @@ interface TooltipProps {
   isExpense?: boolean;
 }
 
-export const ChartTooltip: React.FC<TooltipProps> = ({ isExpense = false }) => {
+interface TooltipConfig {
+  contentStyle: {
+    backgroundColor: string;
+    border: string;
+    borderRadius: string;
+    boxShadow: string;
+    fontSize: string;
+    padding: string;
+  };
+  formatter?: (value: number) => string[];
+}
+
+export const ChartTooltip: React.FC<TooltipProps> = ({ isExpense = false }): TooltipConfig => {
   return {
     contentStyle: {
       backgroundColor: 'white',

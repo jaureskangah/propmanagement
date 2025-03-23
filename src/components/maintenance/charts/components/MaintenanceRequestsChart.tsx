@@ -1,49 +1,47 @@
 
 import React from "react";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import {
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-  LineChart,
-  Line
-} from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { ChartTooltip } from "./ChartTooltip";
 
-interface MaintenanceRequestsChartProps {
-  maintenanceData: any[];
+interface MaintenanceData {
+  date: string;
+  requests: number;
+  status: string;
 }
 
-export const MaintenanceRequestsChart = ({ maintenanceData }: MaintenanceRequestsChartProps) => {
+interface MaintenanceRequestsChartProps {
+  maintenanceData: MaintenanceData[];
+}
+
+export const MaintenanceRequestsChart: React.FC<MaintenanceRequestsChartProps> = ({ 
+  maintenanceData 
+}) => {
   const { t } = useLocale();
-  
+  const tooltipConfig = ChartTooltip({ isExpense: false });
+
   return (
-    <Card className="overflow-hidden">
+    <Card>
       <CardHeader>
-        <CardTitle>{t('maintenanceRequestsTrends')}</CardTitle>
+        <CardTitle>{t('maintenanceRequestsOverTime')}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={maintenanceData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
-              <XAxis dataKey="month" />
-              <YAxis />
-              <Tooltip {...ChartTooltip()} />
-              <Legend />
-              <Line type="monotone" dataKey="requests" stroke="#8884d8" name={t('totalRequests')} />
-              <Line type="monotone" dataKey="completed" stroke="#4ade80" name={t('completedRequests')} />
-              <Line type="monotone" dataKey="urgent" stroke="#ef4444" name={t('urgentRequests')} />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
+      <CardContent className="h-80">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={maintenanceData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="date" />
+            <YAxis allowDecimals={false} />
+            <Tooltip 
+              contentStyle={tooltipConfig.contentStyle}
+              formatter={tooltipConfig.formatter}
+            />
+            <Bar dataKey="requests" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   );

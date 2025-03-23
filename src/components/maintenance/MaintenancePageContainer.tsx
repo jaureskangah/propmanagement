@@ -1,23 +1,18 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { useToast } from "@/hooks/use-toast";
 import { MaintenanceMetricsSection } from "./metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "./tabs/MaintenanceTabs";
 import MaintenancePageHeader from "./header/MaintenancePageHeader";
 import MaintenanceFiltersSection from "./filters/MaintenanceFiltersSection";
 import { AddTaskDialog } from "./AddTaskDialog";
-import { MaintenanceRequestDialog } from "./request/MaintenanceRequestDialog";
-import { MaintenanceRequest, NewTask } from "./types";
+import { RequestDialogContainer } from "./request/RequestDialogContainer";
 import { mockFinancialData } from "./mocks/financialData";
 import { MAINTENANCE_STATUSES, MAINTENANCE_PRIORITIES, useMaintenanceRequests } from "./hooks/useMaintenanceRequests";
+import { useAddTaskDialog } from "./hooks/useAddTaskDialog";
 
 export const MaintenancePageContainer = () => {
-  const { t } = useLocale();
   const isMobile = useIsMobile();
-  const { toast } = useToast();
-  const [isAddTaskDialogOpen, setIsAddTaskDialogOpen] = useState(false);
   
   const {
     filteredRequests,
@@ -38,7 +33,14 @@ export const MaintenancePageContainer = () => {
     urgentRequests
   } = useMaintenanceRequests();
 
-  const handleViewRequest = (request: MaintenanceRequest) => {
+  const {
+    isAddTaskDialogOpen,
+    setIsAddTaskDialogOpen,
+    handleCreateTask,
+    handleAddTask
+  } = useAddTaskDialog(refetch);
+
+  const handleViewRequest = (request) => {
     setSelectedRequest(request);
   };
 
@@ -50,20 +52,6 @@ export const MaintenancePageContainer = () => {
       url.searchParams.delete('request');
       window.history.replaceState({}, '', url.toString());
     }
-  };
-
-  const handleCreateTask = () => {
-    setIsAddTaskDialogOpen(true);
-  };
-
-  const handleAddTask = (task: NewTask) => {
-    console.log("Adding task:", task);
-    toast({
-      title: t('success'),
-      description: t('taskAdded'),
-    });
-    refetch();
-    setIsAddTaskDialogOpen(false);
   };
 
   return (
@@ -112,13 +100,11 @@ export const MaintenancePageContainer = () => {
         onClose={() => setIsAddTaskDialogOpen(false)}
       />
 
-      {selectedRequest && (
-        <MaintenanceRequestDialog
-          request={selectedRequest}
-          onClose={handleCloseRequestDialog}
-          onUpdateSuccess={refetch}
-        />
-      )}
+      <RequestDialogContainer
+        selectedRequest={selectedRequest}
+        onClose={handleCloseRequestDialog}
+        onUpdateSuccess={refetch}
+      />
     </>
   );
 };
