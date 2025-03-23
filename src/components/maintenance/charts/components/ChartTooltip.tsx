@@ -5,7 +5,7 @@ interface TooltipProps {
   isExpense?: boolean;
 }
 
-interface TooltipConfig {
+export interface TooltipConfig {
   contentStyle: {
     backgroundColor: string;
     border: string;
@@ -17,7 +17,8 @@ interface TooltipConfig {
   formatter?: (value: number) => string[];
 }
 
-export const ChartTooltip: React.FC<TooltipProps> = ({ isExpense = false }): TooltipConfig => {
+// Change from FC to a regular function that returns TooltipConfig
+export const getChartTooltipConfig = ({ isExpense = false }: TooltipProps): TooltipConfig => {
   return {
     contentStyle: {
       backgroundColor: 'white',

@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { ChartTooltip } from "./ChartTooltip";
+import { getChartTooltipConfig } from "./ChartTooltip";
 
 interface MaintenanceData {
   date: string;
@@ -18,7 +18,7 @@ export const MaintenanceExpensesChart: React.FC<MaintenanceExpensesChartProps> =
   maintenanceData
 }) => {
   const { t } = useLocale();
-  const tooltipConfig = ChartTooltip({ isExpense: true });
+  const tooltipConfig = getChartTooltipConfig({ isExpense: true });
 
   return (
     <Card>
