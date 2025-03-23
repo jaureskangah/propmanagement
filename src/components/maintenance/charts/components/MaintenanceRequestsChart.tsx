@@ -8,7 +8,7 @@ import { getChartTooltipConfig } from "./ChartTooltip";
 interface MaintenanceData {
   date: string;
   requests: number;
-  status: string;
+  status?: string;
 }
 
 interface MaintenanceRequestsChartProps {

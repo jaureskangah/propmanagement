@@ -28,10 +28,8 @@ export const useMaintenanceData = (propertyId: string) => {
         for (let i = 5; i >= 0; i--) {
           const date = subMonths(today, i);
           mockData.push({
-            month: format(date, 'MMM yyyy'),
+            date: format(date, 'MMM yyyy'),
             requests: Math.floor(Math.random() * 7) + 1,
-            completed: Math.floor(Math.random() * 5) + 1,
-            urgent: Math.floor(Math.random() * 3),
             expenses: (Math.floor(Math.random() * 5) + 1) * 100
           });
         }
@@ -45,23 +43,13 @@ export const useMaintenanceData = (propertyId: string) => {
         
         if (!acc[month]) {
           acc[month] = { 
-            month, 
-            requests: 0, 
-            completed: 0, 
-            urgent: 0,
+            date: month, 
+            requests: 0,
             expenses: 0
           };
         }
         
         acc[month].requests += 1;
-        
-        if (request.status === 'completed' || request.status === 'resolved') {
-          acc[month].completed += 1;
-        }
-        
-        if (request.priority === 'urgent' || request.priority === 'high') {
-          acc[month].urgent += 1;
-        }
         
         if (request.estimated_cost) {
           acc[month].expenses += request.estimated_cost;

@@ -11,8 +11,12 @@ interface MaintenanceChartsProps {
 }
 
 export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
+  console.log("Rendering MaintenanceCharts with propertyId:", propertyId);
+  
   // Récupération des données de maintenance
   const { data: maintenanceData, isLoading: isLoadingMaintenance } = useMaintenanceData(propertyId);
+  
+  console.log("Maintenance data:", maintenanceData);
   
   // Afficher le chargement
   if (isLoadingMaintenance) {
