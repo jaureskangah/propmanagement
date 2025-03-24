@@ -22,6 +22,9 @@ const chartData = [
 export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
   const { t } = useLocale();
   
+  console.log("Rendering MaintenanceCharts with propertyId:", propertyId);
+  console.log("Chart data:", chartData);
+  
   return (
     <div className="space-y-6">
       <Card className="overflow-hidden">
@@ -38,7 +41,16 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    fontSize: '11px',
+                    padding: '8px',
+                  }}
+                />
                 <Legend />
                 <Line type="monotone" dataKey="requests" stroke="#8884d8" name={t('totalRequests')} />
                 <Line type="monotone" dataKey="completed" stroke="#4ade80" name={t('completedRequests')} />
@@ -63,7 +75,16 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
                 <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip />
+                <Tooltip 
+                  contentStyle={{
+                    backgroundColor: 'white',
+                    border: '1px solid #e5e7eb',
+                    borderRadius: '6px',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                    fontSize: '11px',
+                    padding: '8px',
+                  }}
+                />
                 <Bar dataKey="expenses" fill="#82ca9d" name={t('expenses')} />
               </BarChart>
             </ResponsiveContainer>

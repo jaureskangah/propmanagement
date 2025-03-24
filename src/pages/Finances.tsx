@@ -39,6 +39,8 @@ export default function Finances() {
     enabled: !!user?.id
   });
 
+  console.log("Finances page - selectedPropertyId:", selectedPropertyId);
+
   return (
     <div className="flex h-screen">
       <AppSidebar />
