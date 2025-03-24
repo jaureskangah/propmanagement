@@ -89,7 +89,7 @@ export const VendorRatingDetails = ({ reviews }: VendorRatingDetailsProps) => {
       </div>
       
       <div className="text-xs text-muted-foreground text-center pt-2">
-        {t('basedOn')} {totalReviews} {totalReviews === 1 ? t('review') : t('reviews')}
+        {t('basedOn')} {totalReviews} {totalReviews === 1 ? t('reviewSingular') : t('reviewsPlural')}
       </div>
     </div>
   );

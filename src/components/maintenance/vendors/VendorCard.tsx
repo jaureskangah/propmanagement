@@ -60,7 +60,7 @@ export const VendorCard = ({
           )}
         </div>
         <div className="flex items-center mt-1">
-          <Rating value={vendor.rating} onChange={() => {}} max={5} readonly />
+          <Rating value={vendor.rating} onChange={() => {}} max={5} readonly={true} />
           <span className="ml-1 text-sm text-muted-foreground">
             {vendor.rating.toFixed(1)}
           </span>

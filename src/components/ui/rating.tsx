@@ -5,11 +5,12 @@ import { Star } from "lucide-react";
 interface RatingProps {
   value: number;
   onChange: (value: number) => void;
-  max: number;
+  max?: number;
   className?: string;
+  readonly?: boolean;
 }
 
-export function Rating({ value, onChange, max = 5, className }: RatingProps) {
+export function Rating({ value, onChange, max = 5, className, readonly = false }: RatingProps) {
   const [hoverValue, setHoverValue] = useState(0);
 
   return (
@@ -21,12 +22,12 @@ export function Rating({ value, onChange, max = 5, className }: RatingProps) {
         return (
           <Star 
             key={i}
-            className={`h-5 w-5 cursor-pointer transition-colors ${
+            className={`h-5 w-5 ${readonly ? '' : 'cursor-pointer'} transition-colors ${
               filled ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
             }`}
-            onMouseEnter={() => setHoverValue(index)}
-            onMouseLeave={() => setHoverValue(0)}
-            onClick={() => onChange(index)}
+            onMouseEnter={() => !readonly && setHoverValue(index)}
+            onMouseLeave={() => !readonly && setHoverValue(0)}
+            onClick={() => !readonly && onChange(index)}
           />
         );
       })}

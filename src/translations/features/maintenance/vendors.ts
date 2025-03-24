@@ -49,9 +49,8 @@ export const enVendors = {
   phone: "Phone",
   emergency: "Emergency",
   photos: "Photos",
-  documents: "Documents",
+  documents: "Documents", 
   edit: "Edit",
-  review: "Review",
   delete: "Delete",
   completed: "Completed",
   cancelled: "Cancelled",
@@ -65,8 +64,8 @@ export const enVendors = {
   price: "Price",
   punctuality: "Punctuality",
   basedOn: "Based on",
-  review: "review",
-  reviews: "reviews"
+  reviewSingular: "review",
+  reviewsPlural: "reviews"
 };
 
 export const frVendors = {
@@ -121,7 +120,6 @@ export const frVendors = {
   photos: "Photos",
   documents: "Documents", 
   edit: "Modifier",
-  review: "Évaluer",
   delete: "Supprimer",
   completed: "Terminé",
   cancelled: "Annulé",
@@ -135,6 +133,6 @@ export const frVendors = {
   price: "Prix",
   punctuality: "Ponctualité",
   basedOn: "Basé sur",
-  review: "avis",
-  reviews: "avis"
+  reviewSingular: "avis",
+  reviewsPlural: "avis"
 };
