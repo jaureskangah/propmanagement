@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VendorDialog } from "./VendorDialog";
 import { VendorMainList } from "./main/VendorMainList";
@@ -12,8 +12,11 @@ import { VendorSearchFilters } from "./filters/VendorSearchFilters";
 import { VendorSpecialtyFilters } from "./filters/VendorSpecialtyFilters";
 import { useVendorList } from "./hooks/useVendorList";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { VendorAppointmentsTab } from "./appointments/VendorAppointmentsTab";
+import { VendorAdvancedFilters } from "./filters/VendorAdvancedFilters";
 
 export const VendorList = () => {
+  const { t } = useLocale();
   const {
     // State
     selectedSpecialty,
@@ -45,8 +48,10 @@ export const VendorList = () => {
     handleDelete,
     handleOpenReviewDialog
   } = useVendorList();
-
-  const { t } = useLocale();
+  
+  // Nouveaux états pour les filtres avancés
+  const [showAvailableOnly, setShowAvailableOnly] = useState(false);
+  const [selectedAvailability, setSelectedAvailability] = useState<string | null>(null);
 
   return (
     <div className="space-y-6">
@@ -56,20 +61,39 @@ export const VendorList = () => {
         <TabsList>
           <TabsTrigger value="all">{t('allVendors')}</TabsTrigger>
           <TabsTrigger value="emergency">{t('emergencyContacts')}</TabsTrigger>
+          <TabsTrigger value="appointments">{t('appointments')}</TabsTrigger>
           <TabsTrigger value="reviews">{t('reviews')}</TabsTrigger>
           <TabsTrigger value="history">{t('history')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all">
           <div className="space-y-4">
-            <VendorSearchFilters
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              selectedRating={selectedRating}
-              setSelectedRating={setSelectedRating}
-              showEmergencyOnly={showEmergencyOnly}
-              setShowEmergencyOnly={setShowEmergencyOnly}
-            />
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <VendorSearchFilters
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  selectedRating={selectedRating}
+                  setSelectedRating={setSelectedRating}
+                  showEmergencyOnly={showEmergencyOnly}
+                  setShowEmergencyOnly={setShowEmergencyOnly}
+                />
+              </div>
+              
+              <VendorAdvancedFilters
+                specialties={specialties}
+                selectedSpecialty={selectedSpecialty}
+                onSpecialtyChange={setSelectedSpecialty}
+                selectedRating={selectedRating}
+                onRatingChange={setSelectedRating}
+                showEmergencyOnly={showEmergencyOnly}
+                onEmergencyChange={setShowEmergencyOnly}
+                showAvailableOnly={showAvailableOnly}
+                onAvailableChange={setShowAvailableOnly}
+                selectedAvailability={selectedAvailability}
+                onAvailabilityChange={setSelectedAvailability}
+              />
+            </div>
 
             <VendorSpecialtyFilters
               specialties={specialties}
@@ -81,6 +105,7 @@ export const VendorList = () => {
               vendors={filteredVendors}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              onReview={handleOpenReviewDialog}
             />
           </div>
         </TabsContent>
@@ -92,6 +117,8 @@ export const VendorList = () => {
             onDelete={handleDelete}
           />
         </TabsContent>
+        
+        <VendorAppointmentsTab vendors={filteredVendors} />
 
         <TabsContent value="reviews">
           <VendorReviewList

@@ -20,6 +20,10 @@ export const useVendorList = () => {
     name: string;
   } | null>(null);
   
+  // Availability filters (pour la simulation)
+  const [showAvailableOnly, setShowAvailableOnly] = useState(false);
+  const [selectedAvailability, setSelectedAvailability] = useState<string | null>(null);
+  
   const { toast } = useToast();
   const { t } = useLocale();
 
@@ -59,8 +63,37 @@ export const useVendorList = () => {
       vendor.email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesRating = !selectedRating || vendor.rating >= parseInt(selectedRating);
     const matchesEmergency = !showEmergencyOnly || vendor.emergency_contact;
+    
+    // Simulation de la disponibilité - dans une véritable application, 
+    // cela viendrait de la base de données ou d'une API
+    const isAvailableNow = vendor.id.charAt(0) <= 'c'; // Juste une simulation basée sur l'ID
+    const matchesAvailability = !showAvailableOnly || isAvailableNow;
+    
+    // Simulation du filtrage par disponibilité
+    let matchesAvailabilityFilter = true;
+    if (selectedAvailability) {
+      // Cette logique serait remplacée par une vérification réelle de la disponibilité
+      switch (selectedAvailability) {
+        case 'today':
+          matchesAvailabilityFilter = isAvailableNow || vendor.id.charAt(0) <= 'f';
+          break;
+        case 'this-week':
+          matchesAvailabilityFilter = vendor.id.charAt(0) <= 'm';
+          break;
+        case 'next-week':
+          matchesAvailabilityFilter = true; // Tous disponibles la semaine prochaine
+          break;
+        default:
+          matchesAvailabilityFilter = true;
+      }
+    }
 
-    return matchesSpecialty && matchesSearch && matchesRating && matchesEmergency;
+    return matchesSpecialty && 
+           matchesSearch && 
+           matchesRating && 
+           matchesEmergency && 
+           matchesAvailability &&
+           matchesAvailabilityFilter;
   });
 
   const emergencyContacts = vendors.filter(vendor => vendor.emergency_contact);
@@ -117,7 +150,11 @@ export const useVendorList = () => {
     reviewDialogOpen,
     setReviewDialogOpen,
     selectedVendorForReview,
-    setSelectedVendorForReview, // This was missing from the return value
+    setSelectedVendorForReview,
+    showAvailableOnly,
+    setShowAvailableOnly,
+    selectedAvailability,
+    setSelectedAvailability,
     
     // Data
     vendors,
