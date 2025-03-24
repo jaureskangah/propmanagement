@@ -9,6 +9,7 @@ import { ExpensesTable } from "../financials/tables/ExpensesTable";
 import { MaintenanceRequestItem } from "../request/MaintenanceRequestItem";
 import { PreventiveMaintenance } from "../PreventiveMaintenance";
 import { MaintenanceRequest } from "@/components/maintenance/types";
+import { MaintenanceCharts } from "../charts/MaintenanceCharts";
 
 interface FinancialData {
   propertyId: string;
@@ -56,7 +57,7 @@ export const MaintenanceTabs = ({
       <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 mb-4">
         <TabsTrigger value="requests">{t('maintenanceRequests')}</TabsTrigger>
         <TabsTrigger value="preventive">{t('maintenanceTasks')}</TabsTrigger>
-        <TabsTrigger value="financial">{t('financials')}</TabsTrigger>
+        <TabsTrigger value="analytics">{t('maintenanceAnalytics')}</TabsTrigger>
       </TabsList>
       
       <TabsContent value="requests">
@@ -98,8 +99,30 @@ export const MaintenanceTabs = ({
         <PreventiveMaintenance />
       </TabsContent>
       
-      <TabsContent value="financial">
-        <div className="grid grid-cols-1 gap-4">
+      <TabsContent value="analytics">
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('maintenanceAnalytics')}</CardTitle>
+            <CardDescription>
+              {t('maintenanceAnalyticsDescription')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <MaintenanceCharts propertyId={propertyId} />
+            </div>
+          </CardContent>
+          <CardFooter className="flex justify-between">
+            <div className="text-sm text-muted-foreground">
+              {t('dataBasedOnMaintenanceRecords')}
+            </div>
+            <Button variant="outline" size="sm">
+              {t('exportData')}
+            </Button>
+          </CardFooter>
+        </Card>
+        
+        <div className="mt-6 grid grid-cols-1 gap-4">
           <MaintenanceTable maintenance={mockFinancialData.maintenance} />
           <ExpensesTable expenses={mockFinancialData.expenses} />
         </div>

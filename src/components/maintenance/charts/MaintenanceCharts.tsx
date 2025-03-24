@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ChartContainer } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, Legend } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -23,7 +22,6 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
   const { t } = useLocale();
   
   console.log("Rendering MaintenanceCharts with propertyId:", propertyId);
-  console.log("Chart data:", chartData);
   
   return (
     <div className="space-y-6">
