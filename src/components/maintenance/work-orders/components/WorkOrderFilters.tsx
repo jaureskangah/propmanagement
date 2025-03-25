@@ -1,8 +1,8 @@
 
-import { Search } from "lucide-react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { Search } from "lucide-react";
 
 interface WorkOrderFiltersProps {
   searchQuery: string;
@@ -21,42 +21,43 @@ export const WorkOrderFilters = ({
   sortBy,
   setSortBy
 }: WorkOrderFiltersProps) => {
-  const { t } = useLocale();
-
   return (
-    <div className="space-y-4 animate-fade-in">
+    <div className="space-y-4 mb-6">
       <div className="flex flex-col md:flex-row gap-4">
+        {/* Search input */}
         <div className="flex-1">
           <div className="relative">
-            <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500 dark:text-gray-400" />
+            <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500" />
             <Input
-              placeholder={t('searchPlaceholder')}
+              placeholder="Rechercher par titre ou propriété..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 transition-all duration-300 hover:border-primary focus:ring-2 focus:ring-primary/20 bg-background"
+              className="pl-8"
             />
           </div>
         </div>
 
+        {/* Status filter */}
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-background">
-            <SelectValue placeholder={t('filterByStatus')} />
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filtrer par statut" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">{t('allStatuses')}</SelectItem>
-            <SelectItem value="In Progress">{t('statusInProgress')}</SelectItem>
-            <SelectItem value="Scheduled">{t('statusPending')}</SelectItem>
-            <SelectItem value="Completed">{t('statusCompleted')}</SelectItem>
+            <SelectItem value="all">Tous les statuts</SelectItem>
+            <SelectItem value="En cours">En cours</SelectItem>
+            <SelectItem value="Planifié">Planifié</SelectItem>
+            <SelectItem value="Terminé">Terminé</SelectItem>
           </SelectContent>
         </Select>
 
+        {/* Sort selection */}
         <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
-          <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-background">
-            <SelectValue placeholder={t('sortBy')} />
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Trier par" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="date">{t('date')}</SelectItem>
-            <SelectItem value="cost">{t('cost')}</SelectItem>
+            <SelectItem value="date">Date</SelectItem>
+            <SelectItem value="cost">Coût</SelectItem>
           </SelectContent>
         </Select>
       </div>

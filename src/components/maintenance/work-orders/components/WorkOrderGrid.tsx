@@ -1,6 +1,7 @@
 
-import { WorkOrder } from "@/types/workOrder";
+import React from "react";
 import { WorkOrderCard } from "./WorkOrderCard";
+import { WorkOrder } from "@/types/workOrder";
 
 interface WorkOrderGridProps {
   orders: WorkOrder[];

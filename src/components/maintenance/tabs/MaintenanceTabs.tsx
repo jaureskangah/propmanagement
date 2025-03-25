@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PreventiveMaintenance } from "../PreventiveMaintenance";
 import { MaintenanceList } from "../MaintenanceList";
-import { WorkOrderList } from "../WorkOrderList";
+import { WorkOrderList } from "../work-orders/MainWorkOrderList";
 import { PropertyFinancials } from "../PropertyFinancials";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { WorkOrder } from "@/types/workOrder";
