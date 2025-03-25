@@ -1,3 +1,4 @@
+
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
 import { enCommon } from './features/common';
@@ -19,6 +20,7 @@ import { enStatus } from './features/status';
 import { enTenant } from './features/tenant';
 import { enToasts } from './features/toasts';
 import { enFinances } from './features/finances';
+import { enVendors } from './features/maintenance/vendors';
 
 const translations = {
   ...enAdmin,
@@ -42,6 +44,7 @@ const translations = {
   ...enTenant,
   ...enToasts,
   ...enFinances,
+  ...enVendors,
 };
 
 export default translations;

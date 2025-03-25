@@ -108,4 +108,10 @@ export interface MaintenanceTranslations {
   totalRequestsDesc: string;
   pendingRequestsDesc: string;
   resolvedRequestsDesc: string;
+  // Vendor-specific properties
+  appointments?: string;
+  availability?: string;
+  rating?: string;
+  specialty?: string;
+  review?: string;
 }
