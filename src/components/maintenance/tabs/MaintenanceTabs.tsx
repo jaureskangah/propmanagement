@@ -6,6 +6,7 @@ import { MaintenanceList } from "../MaintenanceList";
 import { WorkOrderList } from "../WorkOrderList";
 import { PropertyFinancials } from "../PropertyFinancials";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { WorkOrder } from "@/types/workOrder";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -21,6 +22,49 @@ export const MaintenanceTabs = ({
   onRequestClick
 }: MaintenanceTabsProps) => {
   const { t } = useLocale();
+  
+  // Mock work orders for the WorkOrderList component
+  const mockWorkOrders: WorkOrder[] = [
+    {
+      id: "wo1",
+      title: "Fix broken pipe",
+      property: "Sunset Apartments",
+      unit: "101",
+      status: "En cours",
+      vendor: "Plomberie Express",
+      cost: 250,
+      date: "2023-09-15",
+      priority: "high"
+    },
+    {
+      id: "wo2",
+      title: "Replace light fixtures",
+      property: "Mountain View Condos",
+      unit: "305",
+      status: "Planifié",
+      vendor: "ElectroPro",
+      cost: 180,
+      date: "2023-09-22",
+      priority: "medium"
+    },
+    {
+      id: "wo3",
+      title: "HVAC maintenance",
+      property: "Sunset Apartments",
+      unit: "205",
+      status: "Terminé",
+      vendor: "Cool Air Services",
+      cost: 350,
+      date: "2023-09-10",
+      priority: "high"
+    }
+  ];
+  
+  // Handler for creating new work orders
+  const handleCreateWorkOrder = () => {
+    console.log("Create work order clicked");
+    // In a real implementation, this would open a dialog to create a new work order
+  };
   
   return (
     <Tabs defaultValue="preventive" className="w-full">
@@ -43,11 +87,14 @@ export const MaintenanceTabs = ({
       </TabsContent>
       
       <TabsContent value="workorders" className="pt-6">
-        <WorkOrderList />
+        <WorkOrderList 
+          workOrders={mockWorkOrders}
+          onCreateWorkOrder={handleCreateWorkOrder}
+        />
       </TabsContent>
       
       <TabsContent value="costs" className="pt-6">
-        <PropertyFinancials propertyId={propertyId} mockData={mockFinancialData} />
+        <PropertyFinancials propertyId={propertyId} />
       </TabsContent>
     </Tabs>
   );
