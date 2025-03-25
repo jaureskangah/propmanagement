@@ -10,36 +10,72 @@ interface FilterOptions {
   dateRange: { from: Date | undefined; to: Date | undefined };
   priorityFilter: string;
   vendorSearch: string;
+  buildingFilter: string;
+  problemTypeFilter: string;
 }
 
 export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOptions) => {
-  const { statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch } = options;
+  const { 
+    statusFilter, 
+    searchQuery, 
+    sortBy, 
+    dateRange, 
+    priorityFilter, 
+    vendorSearch,
+    buildingFilter,
+    problemTypeFilter
+  } = options;
 
   const filteredAndSortedOrders = useMemo(() => {
     return workOrders
       .filter((order) => {
+        // Basic filters
         const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-        const matchesSearch = 
-          order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.property?.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        // Global search - search in multiple fields
+        const matchesSearch = !searchQuery || [
+          order.title,
+          order.description,
+          order.property,
+          order.vendor,
+          order.status,
+          order.unit
+        ].some(field => field && field.toLowerCase().includes(searchQuery.toLowerCase()));
+        
         const matchesVendor = 
           !vendorSearch || 
           order.vendor.toLowerCase().includes(vendorSearch.toLowerCase());
+        
         const matchesPriority = 
           priorityFilter === "all" || 
           order.priority === priorityFilter;
         
+        // New advanced filters
+        const matchesBuilding = 
+          buildingFilter === "all" || 
+          (order.property && order.property === buildingFilter);
+        
+        const matchesProblemType = 
+          problemTypeFilter === "all" || 
+          (order.description && order.description.toLowerCase().includes(problemTypeFilter.toLowerCase()));
+        
         // Date range filter
         let matchesDateRange = true;
-        if (dateRange.from && dateRange.to) {
-          const orderDate = parseISO(order.date || "");
-          matchesDateRange = isWithinInterval(orderDate, {
-            start: dateRange.from,
-            end: dateRange.to
-          });
+        if (dateRange.from && dateRange.to && order.date) {
+          try {
+            const orderDate = parseISO(order.date);
+            matchesDateRange = isWithinInterval(orderDate, {
+              start: dateRange.from,
+              end: dateRange.to
+            });
+          } catch (error) {
+            console.error("Error parsing date:", error);
+          }
         }
 
-        return matchesStatus && matchesSearch && matchesVendor && matchesPriority && matchesDateRange;
+        return matchesStatus && matchesSearch && matchesVendor && 
+               matchesPriority && matchesDateRange && 
+               matchesBuilding && matchesProblemType;
       })
       .sort((a, b) => {
         switch (sortBy) {
@@ -56,7 +92,17 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
             return 0;
         }
       });
-  }, [workOrders, statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch]);
+  }, [
+    workOrders, 
+    statusFilter, 
+    searchQuery, 
+    sortBy, 
+    dateRange, 
+    priorityFilter, 
+    vendorSearch,
+    buildingFilter,
+    problemTypeFilter
+  ]);
 
   return filteredAndSortedOrders;
 };
