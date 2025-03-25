@@ -1,4 +1,5 @@
 
+
 export interface Tenant {
   id: string;
   name: string;
@@ -60,3 +61,4 @@ export interface Task {
   completed: boolean;
   user_id: string;
 }
+

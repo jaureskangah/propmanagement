@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { Plus, CalendarIcon, RotateCw, CheckCircle } from "lucide-react";
+import { Plus, CalendarIcon } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { format } from "date-fns";
@@ -14,8 +14,6 @@ import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { NewTask } from "./types";
-import { Switch } from "@/components/ui/switch";
-import { Separator } from "@/components/ui/separator";
 
 interface AddTaskDialogProps {
   onAddTask: (task: NewTask) => void;
@@ -29,10 +27,6 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [recurrenceFrequency, setRecurrenceFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
-  const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
-  
   const { t, language } = useLocale();
   
   // Déterminer la locale pour date-fns
@@ -45,41 +39,24 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps
         title,
         date,
         type,
-        priority,
-        is_recurring: isRecurring,
-        recurrence_pattern: isRecurring ? {
-          frequency: recurrenceFrequency,
-          interval: recurrenceInterval,
-          weekdays: [],
-          end_date: undefined
-        } : undefined
+        priority
       });
       if (onClose) {
         onClose();
       } else {
         setInternalOpen(false);
       }
-      resetForm();
+      setTitle("");
+      setDate(new Date());
+      setType("regular");
+      setPriority("medium");
     }
-  };
-
-  const resetForm = () => {
-    setTitle("");
-    setDate(new Date());
-    setType("regular");
-    setPriority("medium");
-    setIsRecurring(false);
-    setRecurrenceFrequency("weekly");
-    setRecurrenceInterval(1);
   };
 
   // Determine if we're using controlled or uncontrolled open state
   const open = isOpen !== undefined ? isOpen : internalOpen;
   const setOpen = onClose ? (value: boolean) => {
-    if (!value) {
-      resetForm();
-      onClose();
-    }
+    if (!value) onClose();
   } : setInternalOpen;
 
   return (
@@ -166,67 +143,7 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps
               </Select>
             </div>
             
-            <div className="pt-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="isRecurring" className="flex items-center gap-2">
-                  <RotateCw className="h-4 w-4" />
-                  {t('makeRecurring')}
-                </Label>
-                <Switch
-                  id="isRecurring"
-                  checked={isRecurring}
-                  onCheckedChange={setIsRecurring}
-                />
-              </div>
-            </div>
-            
-            {isRecurring && (
-              <div className="space-y-4 pt-2 pl-4 border-l-2 border-muted">
-                <div className="space-y-2">
-                  <Label>{t('recurrenceFrequency')}</Label>
-                  <Select 
-                    value={recurrenceFrequency} 
-                    onValueChange={(value: "daily" | "weekly" | "monthly") => setRecurrenceFrequency(value)}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="daily">{t('daily')}</SelectItem>
-                      <SelectItem value="weekly">{t('weekly')}</SelectItem>
-                      <SelectItem value="monthly">{t('monthly')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label>{t('recurrenceInterval')}</Label>
-                  <div className="flex items-center gap-2">
-                    <Label>{t('every')}</Label>
-                    <Input
-                      type="number"
-                      min="1"
-                      max="30"
-                      value={recurrenceInterval}
-                      onChange={(e) => setRecurrenceInterval(parseInt(e.target.value) || 1)}
-                      className="w-20"
-                    />
-                    <Label>
-                      {recurrenceFrequency === "daily" && (recurrenceInterval > 1 ? t('days') : t('day'))}
-                      {recurrenceFrequency === "weekly" && (recurrenceInterval > 1 ? t('weeks') : t('week'))}
-                      {recurrenceFrequency === "monthly" && (recurrenceInterval > 1 ? t('months') : t('month'))}
-                    </Label>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            <Separator className="my-2" />
-            
-            <Button type="submit" className="w-full">
-              <CheckCircle className="h-4 w-4 mr-2" />
-              {t('addTask')}
-            </Button>
+            <Button type="submit" className="w-full">{t('addTask')}</Button>
           </form>
         </ScrollArea>
       </DialogContent>

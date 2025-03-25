@@ -152,59 +152,6 @@ export const useMaintenanceTasks = () => {
     }
   };
 
-  // New function to handle adding multiple tasks
-  const handleAddMultipleTasks = async (newTasks: NewTask[]) => {
-    if (!user?.id || newTasks.length === 0) {
-      return;
-    }
-
-    try {
-      const { data: lastTask } = await supabase
-        .from('maintenance_tasks')
-        .select('position')
-        .order('position', { ascending: false })
-        .limit(1);
-
-      let nextPosition = (lastTask?.[0]?.position ?? -1) + 1;
-
-      const tasksToInsert = newTasks.map((task, index) => ({
-        title: task.title,
-        date: format(task.date, 'yyyy-MM-dd'),
-        type: task.type,
-        priority: task.priority || 'medium',
-        completed: false,
-        user_id: user.id,
-        position: nextPosition + index,
-        is_recurring: task.is_recurring || false,
-        recurrence_pattern: task.recurrence_pattern ? {
-          frequency: task.recurrence_pattern.frequency,
-          interval: task.recurrence_pattern.interval,
-          weekdays: task.recurrence_pattern.weekdays,
-          end_date: task.recurrence_pattern.end_date
-        } : null
-      }));
-
-      const { error } = await supabase
-        .from('maintenance_tasks')
-        .insert(tasksToInsert);
-
-      if (error) throw error;
-
-      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-      toast({
-        title: "Success",
-        description: `${tasksToInsert.length} tasks added successfully`,
-      });
-    } catch (error) {
-      console.error("Error adding batch tasks:", error);
-      toast({
-        title: "Error",
-        description: "Unable to add tasks in batch",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleUpdateTaskPosition = async (taskId: string, newPosition: number) => {
     try {
       const { error } = await supabase
@@ -231,7 +178,6 @@ export const useMaintenanceTasks = () => {
     handleTaskCompletion,
     handleDeleteTask,
     handleAddTask,
-    handleAddMultipleTasks,
     handleUpdateTaskPosition,
   };
 };
