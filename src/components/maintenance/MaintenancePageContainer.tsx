@@ -73,6 +73,9 @@ export const MaintenancePageContainer = () => {
     request.status !== "Resolved" && request.status !== "Cancelled"
   );
 
+  // Calculate urgent requests count
+  const urgentRequests = requests.filter(r => r.priority === "Urgent").length;
+
   return (
     <div className="space-y-6">
       <MaintenanceHeader />
@@ -81,6 +84,7 @@ export const MaintenancePageContainer = () => {
         totalRequests={requests.length} 
         pendingRequests={requests.filter(r => r.status === "Pending").length}
         resolvedRequests={requests.filter(r => r.status === "Resolved").length}
+        urgentRequests={urgentRequests}
       />
 
       <Tabs defaultValue="maintenance" className="w-full">
