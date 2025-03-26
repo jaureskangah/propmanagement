@@ -10,7 +10,6 @@ import { SavedFilter } from "../hooks/useWorkOrderFilterState";
 import { ListFilter, X } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Badge } from "@/components/ui/badge";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface SavedFiltersMenuProps {
   savedFilters: SavedFilter[];

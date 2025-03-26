@@ -49,6 +49,10 @@ export const WorkOrderFilters = ({
     problemTypeFilter !== "all" ? 1 : 0
   ].reduce((a, b) => a + b, 0);
 
+  // Filter out any empty values from buildings and problemTypes arrays
+  const validBuildings = buildings.filter(building => building && building.trim() !== "");
+  const validProblemTypes = problemTypes.filter(type => type && type.trim() !== "");
+
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="flex flex-col md:flex-row gap-4">
@@ -118,7 +122,7 @@ export const WorkOrderFilters = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('allBuildings')}</SelectItem>
-                  {buildings.map(building => (
+                  {validBuildings.map(building => (
                     <SelectItem key={building} value={building}>
                       {building}
                     </SelectItem>
@@ -139,7 +143,7 @@ export const WorkOrderFilters = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">{t('allProblemTypes')}</SelectItem>
-                  {problemTypes.map(type => (
+                  {validProblemTypes.map(type => (
                     <SelectItem key={type} value={type}>
                       {type}
                     </SelectItem>

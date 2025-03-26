@@ -1,3 +1,4 @@
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface TypeFilterProps {
@@ -11,6 +12,9 @@ export const TypeFilter = ({ value, onChange, types, placeholder = "Filter by ty
   console.log("TypeFilter - Current value:", value);
   console.log("TypeFilter - Available types:", types);
 
+  // Filter out empty or undefined types
+  const validTypes = types.filter(type => type && type.trim() !== "");
+
   return (
     <Select 
       value={value || undefined} 
@@ -20,12 +24,10 @@ export const TypeFilter = ({ value, onChange, types, placeholder = "Filter by ty
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
-        {types.map((type) => (
-          type && (
-            <SelectItem key={type} value={type}>
-              {type.charAt(0).toUpperCase() + type.slice(1)}
-            </SelectItem>
-          )
+        {validTypes.map((type) => (
+          <SelectItem key={type} value={type}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </SelectItem>
         ))}
       </SelectContent>
     </Select>
