@@ -1,4 +1,3 @@
-
 export interface Tenant {
   id: string;
   name: string;
@@ -17,6 +16,13 @@ export interface MaintenanceRequest {
   tenant_id: string;
   tenant_notified: boolean;
   tenants?: Tenant;
+  photos?: string[];
+  description?: string;
+  tenant_feedback?: string;
+  tenant_rating?: number;
+  deadline?: string;
+  updated_at?: string;
+  title?: string;
 }
 
 export interface NewTask {
