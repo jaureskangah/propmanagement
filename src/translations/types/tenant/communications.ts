@@ -74,4 +74,13 @@ export interface TenantCommunicationsTranslations {
   sortNewestFirst: string;
   sortOldestFirst: string;
   sortBy: string;
+  directMessaging: string;
+  typeYourMessage: string;
+  messageSent: string;
+  errorSendingMessage: string;
+  noMessages: string;
+  fromTenant: string;
+  maintenanceIssue: string;
+  noTenantAssociated: string;
+  errorLoadingMessages: string;
 }

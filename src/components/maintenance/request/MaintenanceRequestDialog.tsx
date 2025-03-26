@@ -1,139 +1,136 @@
 
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { MaintenanceRequest } from "@/components/maintenance/types";
 import { supabase } from "@/lib/supabase";
+import { MaintenanceDetailsTab } from "./tabs/MaintenanceDetailsTab";
+import { MaintenancePhotosTab } from "./tabs/MaintenancePhotosTab";
+import { MaintenanceHistoryTab } from "./tabs/MaintenanceHistoryTab";
+import { MaintenanceFeedbackTab } from "./tabs/MaintenanceFeedbackTab";
+import { DirectMessaging } from "@/components/tenant/communications/DirectMessaging";
+import { Communication } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
-import { MaintenanceRequest } from "../types";
-import { formatDate } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceRequestDialogProps {
-  request: MaintenanceRequest | null;
+  isOpen: boolean;
   onClose: () => void;
-  onUpdateSuccess: () => void;
+  request: MaintenanceRequest | null;
+  onUpdate: () => void;
 }
 
-export const MaintenanceRequestDialog = ({ 
-  request, 
+export const MaintenanceRequestDialog = ({
+  isOpen,
   onClose,
-  onUpdateSuccess 
+  request,
+  onUpdate,
 }: MaintenanceRequestDialogProps) => {
+  const [activeTab, setActiveTab] = useState("details");
+  const [tenantMessages, setTenantMessages] = useState<Communication[]>([]);
   const { t } = useLocale();
   const { toast } = useToast();
-  const [isUpdating, setIsUpdating] = useState(false);
 
-  const handleStatusUpdate = async (requestId: string, newStatus: string) => {
+  useEffect(() => {
+    if (isOpen && request?.tenant_id) {
+      fetchTenantMessages();
+    }
+  }, [isOpen, request?.tenant_id]);
+
+  const fetchTenantMessages = async () => {
+    if (!request?.tenant_id) return;
+    
     try {
-      setIsUpdating(true);
-      
-      const { error } = await supabase
-        .from('maintenance_requests')
-        .update({ 
-          status: newStatus,
-          tenant_notified: true 
-        })
-        .eq('id', requestId);
-
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .select('*')
+        .eq('tenant_id', request.tenant_id)
+        .eq('category', 'maintenance')
+        .order('created_at', { ascending: false })
+        .limit(10);
+        
       if (error) throw error;
-
-      toast({
-        title: t('success'),
-        description: t('maintenanceStatusUpdated'),
-      });
-
-      onUpdateSuccess();
-      onClose();
+      
+      setTenantMessages(data || []);
     } catch (error) {
-      console.error('Error updating maintenance status:', error);
+      console.error("Error fetching tenant messages:", error);
       toast({
         title: t('error'),
-        description: t('errorUpdatingStatus'),
+        description: t('errorLoadingMessages'),
         variant: "destructive",
       });
-    } finally {
-      setIsUpdating(false);
     }
   };
 
   if (!request) return null;
 
   return (
-    <Dialog open={!!request} onOpenChange={onClose}>
-      <DialogContent>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t("maintenanceRequest")}</DialogTitle>
+          <DialogTitle>{request.title || request.issue}</DialogTitle>
         </DialogHeader>
-        
-        <div className="space-y-4">
-          <div>
-            <h4 className="font-medium mb-1">{t("issue")}</h4>
-            <p>{request.issue}</p>
-          </div>
+
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
+          <TabsList className="grid grid-cols-5 mb-4">
+            <TabsTrigger value="details">Details</TabsTrigger>
+            <TabsTrigger value="photos">Photos</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
+            <TabsTrigger value="feedback">Feedback</TabsTrigger>
+            <TabsTrigger value="messages">Messages</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="details">
+            <MaintenanceDetailsTab 
+              request={request} 
+              onUpdate={onUpdate} 
+            />
+          </TabsContent>
+
+          <TabsContent value="photos">
+            <MaintenancePhotosTab photos={request.photos || []} />
+          </TabsContent>
+
+          <TabsContent value="history">
+            <MaintenanceHistoryTab requestId={request.id} />
+          </TabsContent>
+
+          <TabsContent value="feedback">
+            <MaintenanceFeedbackTab 
+              feedback={request.tenant_feedback || ""} 
+              rating={request.tenant_rating || 0}
+            />
+          </TabsContent>
           
-          <div>
-            <h4 className="font-medium mb-1">{t("createdOn")}</h4>
-            <p>{formatDate(request.created_at)}</p>
-          </div>
-          
-          {request.tenants && (
-            <div>
-              <h4 className="font-medium mb-1">{t("tenant")}</h4>
-              <p>{request.tenants.name}</p>
-              <p className="text-sm text-muted-foreground">
-                {request.tenants.properties?.name}, {t("unit")} {request.tenants.unit_number}
-              </p>
-            </div>
-          )}
-          
-          <div>
-            <h4 className="font-medium mb-1">{t("status")}</h4>
-            <div className="flex flex-wrap gap-2">
-              {["Pending", "In Progress", "Resolved"].map((status) => (
-                <Button
-                  key={status}
-                  size="sm"
-                  variant={request.status === status ? "default" : "outline"}
-                  onClick={() => handleStatusUpdate(request.id, status)}
-                  disabled={isUpdating}
-                  className={
-                    request.status === status 
-                      ? status === "Resolved" 
-                        ? "bg-green-600 hover:bg-green-700"
-                        : status === "In Progress"
-                          ? "bg-blue-600 hover:bg-blue-700"
-                          : "bg-yellow-600 hover:bg-yellow-700"
-                      : ""
-                  }
-                >
-                  {status}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-1">{t("priority")}</h4>
-            <Badge 
-              variant={request.priority === "Urgent" ? "destructive" : "default"}
-            >
-              {request.priority}
-            </Badge>
-          </div>
-        </div>
-        
-        <DialogFooter>
+          <TabsContent value="messages">
+            {request.tenant_id ? (
+              <DirectMessaging 
+                tenantId={request.tenant_id}
+                onMessageSent={() => {
+                  fetchTenantMessages();
+                  onUpdate();
+                }}
+                latestMessages={tenantMessages}
+              />
+            ) : (
+              <div className="text-center p-6 text-gray-500">
+                {t('noTenantAssociated')}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+
+        <div className="flex justify-end mt-4">
           <Button variant="outline" onClick={onClose}>
-            {t("close")}
+            Close
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

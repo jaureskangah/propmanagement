@@ -1,3 +1,4 @@
+
 import type { TenantCommunicationsTranslations } from '../../../types/tenant/communications';
 
 export const enCommunications: TenantCommunicationsTranslations = {
@@ -74,5 +75,14 @@ export const enCommunications: TenantCommunicationsTranslations = {
   viewMessages: "View Messages",
   sortNewestFirst: "Newest first",
   sortOldestFirst: "Oldest first",
-  sortBy: "Sort by"
+  sortBy: "Sort by",
+  directMessaging: "Direct Messaging",
+  typeYourMessage: "Type your message here...",
+  messageSent: "Message sent successfully",
+  errorSendingMessage: "Error sending message",
+  noMessages: "No messages yet",
+  fromTenant: "From tenant",
+  maintenanceIssue: "Maintenance Issue",
+  noTenantAssociated: "No tenant associated with this request",
+  errorLoadingMessages: "Error loading messages"
 };

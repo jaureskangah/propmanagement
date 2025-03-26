@@ -1,3 +1,4 @@
+
 import type { TenantCommunicationsTranslations } from '../../../types/tenant/communications';
 
 export const frCommunications: TenantCommunicationsTranslations = {
@@ -74,5 +75,14 @@ export const frCommunications: TenantCommunicationsTranslations = {
   viewMessages: "Voir les Messages",
   sortNewestFirst: "Plus récents d'abord",
   sortOldestFirst: "Plus anciens d'abord",
-  sortBy: "Trier par"
+  sortBy: "Trier par",
+  directMessaging: "Messagerie Directe",
+  typeYourMessage: "Tapez votre message ici...",
+  messageSent: "Message envoyé avec succès",
+  errorSendingMessage: "Erreur lors de l'envoi du message",
+  noMessages: "Pas encore de messages",
+  fromTenant: "Du locataire",
+  maintenanceIssue: "Problème de maintenance",
+  noTenantAssociated: "Aucun locataire associé à cette demande",
+  errorLoadingMessages: "Erreur lors du chargement des messages"
 };
