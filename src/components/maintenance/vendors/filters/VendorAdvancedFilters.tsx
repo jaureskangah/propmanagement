@@ -51,9 +51,6 @@ export const VendorAdvancedFilters = ({
   
   const activeFiltersCount = getActiveFiltersCount();
 
-  // Filter out any empty specialties
-  const filteredSpecialties = specialties.filter(specialty => specialty && specialty.trim() !== "");
-
   return (
     <div className="mb-4">
       <Popover>
@@ -73,15 +70,15 @@ export const VendorAdvancedFilters = ({
             <div className="space-y-2">
               <Label htmlFor="specialty">{t('specialty')}</Label>
               <Select 
-                value={selectedSpecialty || "all"}
-                onValueChange={(value) => onSpecialtyChange(value === "all" ? null : value)}
+                value={selectedSpecialty || ""}
+                onValueChange={(value) => onSpecialtyChange(value === "" ? null : value)}
               >
                 <SelectTrigger id="specialty">
                   <SelectValue placeholder={t('allSpecialties')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('allSpecialties')}</SelectItem>
-                  {filteredSpecialties.map(specialty => (
+                  <SelectItem value="">{t('allSpecialties')}</SelectItem>
+                  {specialties.map(specialty => (
                     <SelectItem key={specialty} value={specialty}>
                       {specialty}
                     </SelectItem>
@@ -93,14 +90,14 @@ export const VendorAdvancedFilters = ({
             <div className="space-y-2">
               <Label htmlFor="rating">{t('rating')}</Label>
               <Select 
-                value={selectedRating || "all"}
-                onValueChange={(value) => onRatingChange(value === "all" ? null : value)}
+                value={selectedRating || ""}
+                onValueChange={(value) => onRatingChange(value === "" ? null : value)}
               >
                 <SelectTrigger id="rating">
                   <SelectValue placeholder={t('allRatings')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('allRatings')}</SelectItem>
+                  <SelectItem value="">{t('allRatings')}</SelectItem>
                   <SelectItem value="4">4+ {t('stars')}</SelectItem>
                   <SelectItem value="3">3+ {t('stars')}</SelectItem>
                   <SelectItem value="2">2+ {t('stars')}</SelectItem>
@@ -111,14 +108,14 @@ export const VendorAdvancedFilters = ({
             <div className="space-y-2">
               <Label htmlFor="availability">{t('availability')}</Label>
               <Select 
-                value={selectedAvailability || "all"}
-                onValueChange={(value) => onAvailabilityChange(value === "all" ? null : value)}
+                value={selectedAvailability || ""}
+                onValueChange={(value) => onAvailabilityChange(value === "" ? null : value)}
               >
                 <SelectTrigger id="availability">
                   <SelectValue placeholder={t('anyAvailability')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('anyAvailability')}</SelectItem>
+                  <SelectItem value="">{t('anyAvailability')}</SelectItem>
                   <SelectItem value="today">{t('availableToday')}</SelectItem>
                   <SelectItem value="this-week">{t('availableThisWeek')}</SelectItem>
                   <SelectItem value="next-week">{t('availableNextWeek')}</SelectItem>
