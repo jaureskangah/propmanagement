@@ -135,11 +135,37 @@ export function useRealtimeNotifications() {
         ),
       });
     } else if (payload.eventType === 'UPDATE') {
-      // Notification pour mise à jour de l'état
+      // Enhanced notification for status updates
+      if (payload.old.status !== payload.new.status) {
+        const statusMessage = `Status changed from "${payload.old.status}" to "${payload.new.status}"`;
+        
+        toast({
+          title: t('maintenanceStatusUpdate'),
+          description: `${payload.new.issue}: ${statusMessage}`,
+          action: (
+            <ToastAction 
+              altText={t('view')}
+              onClick={() => navigate(`/maintenance?request=${payload.new.id}`)}
+            >
+              {t('view')}
+            </ToastAction>
+          ),
+        });
+      }
+      
+      // Notification for tenant being notified
       if (payload.new.tenant_notified && !payload.old.tenant_notified) {
         toast({
-          title: t('maintenanceNotification'),
-          description: `${t('maintenance')} "${payload.new.title}" ${t('status')}: ${payload.new.status}`,
+          title: t('tenantNotified'),
+          description: `Tenant was notified about "${payload.new.issue}" (${payload.new.status})`,
+        });
+      }
+      
+      // Notification for priority changes
+      if (payload.old.priority !== payload.new.priority) {
+        toast({
+          title: t('priorityChanged'),
+          description: `Priority for "${payload.new.issue}" changed from ${payload.old.priority} to ${payload.new.priority}`,
         });
       }
       

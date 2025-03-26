@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface MaintenanceDetailsTabProps {
   request: MaintenanceRequest;
@@ -17,22 +18,63 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
   const [status, setStatus] = useState(request.status);
   const [priority, setPriority] = useState(request.priority);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [notifyTenant, setNotifyTenant] = useState(false);
   const { toast } = useToast();
+
+  const sendStatusUpdate = async () => {
+    if (!request.tenant_id || !notifyTenant) return;
+    
+    try {
+      const { error } = await supabase.functions.invoke('send-tenant-email', {
+        body: {
+          tenantId: request.tenant_id,
+          subject: `Maintenance Request Status Update: ${status}`,
+          content: `Your maintenance request "${request.issue}" has been updated to status: ${status}. Priority: ${priority}.`,
+          category: 'maintenance'
+        }
+      });
+      
+      if (error) throw error;
+      
+      toast({
+        title: "Notification sent",
+        description: "The tenant has been notified of the status change."
+      });
+      
+      return true;
+    } catch (error) {
+      console.error("Error sending notification:", error);
+      toast({
+        title: "Notification failed",
+        description: "Failed to send notification to tenant.",
+        variant: "destructive"
+      });
+      
+      return false;
+    }
+  };
 
   const handleUpdateRequest = async () => {
     setIsUpdating(true);
     
     try {
+      // First update the maintenance request
       const { error } = await supabase
         .from('maintenance_requests')
         .update({
           status,
           priority,
+          tenant_notified: notifyTenant,
           updated_at: new Date().toISOString()
         })
         .eq('id', request.id);
         
       if (error) throw error;
+      
+      // Then send notification if required
+      if (notifyTenant) {
+        await sendStatusUpdate();
+      }
       
       toast({
         title: "Request updated",
@@ -103,10 +145,21 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
           </div>
           
           <div>
-            <span className="font-medium text-sm text-gray-500">Tenant Notified:</span>
-            <p className="mt-1">{request.tenant_notified ? "Yes" : "No"}</p>
+            <span className="font-medium text-sm text-gray-500">Last Updated:</span>
+            <p className="mt-1">{request.updated_at ? formatDate(request.updated_at) : "Not updated yet"}</p>
           </div>
         </div>
+      </div>
+      
+      <div className="flex items-center space-x-2">
+        <Checkbox 
+          id="notify-tenant" 
+          checked={notifyTenant}
+          onCheckedChange={(checked) => setNotifyTenant(checked as boolean)}
+        />
+        <Label htmlFor="notify-tenant" className="cursor-pointer">
+          Notify tenant about this status update
+        </Label>
       </div>
       
       <div className="flex justify-end">

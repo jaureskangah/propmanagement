@@ -114,4 +114,12 @@ export interface MaintenanceTranslations {
   rating?: string;
   specialty?: string;
   review?: string;
+  // New status update notifications
+  maintenanceStatusUpdate: string;
+  tenantNotified: string;
+  priorityChanged: string;
+  notifyTenant: string;
+  statusChanged: string;
+  feedbackReceivedFor: string;
+  tenantFeedbackReceived: string;
 }

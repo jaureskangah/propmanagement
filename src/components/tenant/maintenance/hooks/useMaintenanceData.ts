@@ -93,12 +93,16 @@ export const useMaintenanceData = () => {
         },
         (payload) => {
           console.log("Realtime notification received:", payload);
+          
+          // Show toast notification for status updates
           if (payload.eventType === 'UPDATE' && payload.new.status !== payload.old.status) {
             toast({
               title: t('maintenanceNotification'),
               description: `${t('maintenanceRequestTitle')} "${payload.new.issue}" ${t('statusChanged')} ${payload.new.status}`,
             });
           }
+          
+          // Always refresh data after any change
           fetchMaintenanceRequests();
         }
       )
