@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -41,6 +42,9 @@ export const VendorStatusFields = ({
     },
   });
 
+  // Filter out any vendors with invalid IDs or names
+  const validVendors = vendors.filter(vendor => vendor && vendor.id && vendor.name && vendor.name.trim() !== "");
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
@@ -50,7 +54,7 @@ export const VendorStatusFields = ({
             <SelectValue placeholder={isLoading ? "Loading..." : "Select a vendor"} />
           </SelectTrigger>
           <SelectContent>
-            {vendors.map((vendor) => (
+            {validVendors.map((vendor) => (
               <SelectItem key={vendor.id} value={vendor.id}>
                 {vendor.name}
               </SelectItem>

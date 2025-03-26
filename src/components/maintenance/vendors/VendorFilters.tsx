@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,9 @@ export const VendorFilters = ({
   showEmergencyOnly,
   onEmergencyChange,
 }: VendorFiltersProps) => {
+  // Filter out any empty specialties
+  const validSpecialties = specialties.filter(specialty => specialty && specialty.trim() !== "");
+
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -46,7 +50,7 @@ export const VendorFilters = ({
         >
           All specialties
         </Button>
-        {specialties.map(specialty => (
+        {validSpecialties.map(specialty => (
           <Button
             key={specialty}
             variant={selectedSpecialty === specialty ? "default" : "outline"}

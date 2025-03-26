@@ -27,6 +27,10 @@ const MaintenanceFiltersSection = ({
 
   if (!showFilters) return null;
 
+  // Make sure we filter out any empty strings
+  const validStatuses = statuses.filter(status => status && status.trim() !== "");
+  const validPriorities = priorities.filter(priority => priority && priority.trim() !== "");
+
   return (
     <div className="mb-6 p-4 border rounded-lg bg-background shadow-sm animate-fade-in space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -40,7 +44,7 @@ const MaintenanceFiltersSection = ({
               </div>
             </SelectTrigger>
             <SelectContent>
-              {statuses.map((status) => (
+              {validStatuses.map((status) => (
                 <SelectItem
                   key={status}
                   value={status}
@@ -63,7 +67,7 @@ const MaintenanceFiltersSection = ({
               </div>
             </SelectTrigger>
             <SelectContent>
-              {priorities.map((priority) => (
+              {validPriorities.map((priority) => (
                 <SelectItem
                   key={priority}
                   value={priority}
