@@ -108,17 +108,7 @@ export interface MaintenanceTranslations {
   totalRequestsDesc: string;
   pendingRequestsDesc: string;
   resolvedRequestsDesc: string;
-  filterByBuilding: string;
-  filterByProblemType: string;
-  selectBuilding: string;
-  selectProblemType: string;
-  allBuildings: string;
-  allProblemTypes: string;
-  saveFilterName: string;
-  saveFilter: string;
-  savedFilters: string;
-  filter: string;
-  filters: string;
+  // Vendor-specific properties
   appointments?: string;
   availability?: string;
   rating?: string;

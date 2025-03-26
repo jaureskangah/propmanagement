@@ -38,9 +38,6 @@ export const VendorAdvancedFilters = ({
 }: VendorAdvancedFiltersProps) => {
   const { t } = useLocale();
   
-  // Filter out any empty specialties
-  const validSpecialties = specialties.filter(specialty => specialty && specialty.trim() !== "");
-  
   // Calculer le nombre de filtres actifs
   const getActiveFiltersCount = () => {
     let count = 0;
@@ -81,7 +78,7 @@ export const VendorAdvancedFilters = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="">{t('allSpecialties')}</SelectItem>
-                  {validSpecialties.map(specialty => (
+                  {specialties.map(specialty => (
                     <SelectItem key={specialty} value={specialty}>
                       {specialty}
                     </SelectItem>

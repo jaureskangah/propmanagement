@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 
@@ -13,9 +12,6 @@ export const VendorSpecialtyFilters = ({
   selectedSpecialty,
   onSpecialtyChange,
 }: VendorSpecialtyFiltersProps) => {
-  // Filter out any empty specialties
-  const validSpecialties = specialties.filter(specialty => specialty && specialty.trim() !== "");
-  
   return (
     <div className="flex gap-2 flex-wrap">
       <Button
@@ -24,7 +20,7 @@ export const VendorSpecialtyFilters = ({
       >
         All
       </Button>
-      {validSpecialties.map(specialty => (
+      {specialties.map(specialty => (
         <Button
           key={specialty}
           variant={selectedSpecialty === specialty ? "default" : "outline"}
