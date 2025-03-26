@@ -20,16 +20,14 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceRequestDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
   request: MaintenanceRequest | null;
+  onClose: () => void;
   onUpdate: () => void;
 }
 
 export const MaintenanceRequestDialog = ({
-  isOpen,
-  onClose,
   request,
+  onClose,
   onUpdate,
 }: MaintenanceRequestDialogProps) => {
   const [activeTab, setActiveTab] = useState("details");
@@ -38,10 +36,10 @@ export const MaintenanceRequestDialog = ({
   const { toast } = useToast();
 
   useEffect(() => {
-    if (isOpen && request?.tenant_id) {
+    if (request?.tenant_id) {
       fetchTenantMessages();
     }
-  }, [isOpen, request?.tenant_id]);
+  }, [request?.tenant_id]);
 
   const fetchTenantMessages = async () => {
     if (!request?.tenant_id) return;
@@ -71,10 +69,10 @@ export const MaintenanceRequestDialog = ({
   if (!request) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{request.title || request.issue}</DialogTitle>
+          <DialogTitle>{request.issue}</DialogTitle>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">

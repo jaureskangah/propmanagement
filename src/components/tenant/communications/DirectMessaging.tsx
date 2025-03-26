@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Send, MessageSquare } from "lucide-react";
 import { Communication } from "@/types/tenant";
+import { supabase } from "@/lib/supabase";
 
 interface DirectMessagingProps {
   tenantId: string;

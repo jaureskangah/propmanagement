@@ -65,7 +65,7 @@ export const MaintenanceList = ({
       <MaintenanceRequestDialog
         request={selectedRequest}
         onClose={handleCloseDialog}
-        onUpdateSuccess={onMaintenanceUpdate}
+        onUpdate={onMaintenanceUpdate}
       />
     </>
   );

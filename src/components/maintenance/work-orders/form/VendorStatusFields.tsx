@@ -42,8 +42,8 @@ export const VendorStatusFields = ({
     },
   });
 
-  // Filtrer les fournisseurs pour éliminer les valeurs potentiellement problématiques
-  const filteredVendors = vendors.filter(vendor => vendor && vendor.id && vendor.id.trim() !== "");
+  // Filter out invalid vendors - those with null/undefined/empty id or name
+  const filteredVendors = vendors.filter(v => v && v.id && v.id.trim() !== "" && v.name && v.name.trim() !== "");
 
   return (
     <div className="grid grid-cols-2 gap-4">

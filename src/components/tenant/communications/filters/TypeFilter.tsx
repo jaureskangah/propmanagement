@@ -12,7 +12,7 @@ export const TypeFilter = ({ value, onChange, types, placeholder = "Filter by ty
   console.log("TypeFilter - Current value:", value);
   console.log("TypeFilter - Available types:", types);
 
-  // Filtrer les types pour éliminer les chaînes vides
+  // Filter out empty strings and null/undefined values
   const filteredTypes = types.filter(type => type && type.trim() !== "");
 
   return (
