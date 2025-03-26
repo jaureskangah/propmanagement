@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 
@@ -13,8 +12,8 @@ interface WorkOrderFiltersProps {
   setSearchQuery: (value: string) => void;
   statusFilter: string;
   setStatusFilter: (value: string) => void;
-  sortBy: "date" | "cost";
-  setSortBy: (value: "date" | "cost") => void;
+  sortBy: "date" | "cost" | "priority";
+  setSortBy: (value: "date" | "cost" | "priority") => void;
   buildingFilter?: string;
   setBuildingFilter?: (value: string) => void;
   problemTypeFilter?: string;
@@ -78,13 +77,14 @@ export const WorkOrderFilters = ({
             </SelectContent>
           </Select>
 
-          <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
+          <Select value={sortBy} onValueChange={(value: "date" | "cost" | "priority") => setSortBy(value)}>
             <SelectTrigger className="w-[180px] transition-all duration-300 hover:border-primary bg-background">
               <SelectValue placeholder={t('sortBy')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="date">{t('date')}</SelectItem>
               <SelectItem value="cost">{t('cost')}</SelectItem>
+              <SelectItem value="priority">{t('priority')}</SelectItem>
             </SelectContent>
           </Select>
 

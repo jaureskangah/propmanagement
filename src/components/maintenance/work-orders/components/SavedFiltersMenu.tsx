@@ -7,9 +7,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SavedFilter } from "../hooks/useWorkOrderFilterState";
-import { ListFilter, Save, X } from "lucide-react";
+import { ListFilter, X } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Badge } from "@/components/ui/badge";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface SavedFiltersMenuProps {
   savedFilters: SavedFilter[];

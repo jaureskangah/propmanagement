@@ -10,6 +10,8 @@ interface UseWorkOrdersProps {
   dateRange: { from: Date | undefined; to: Date | undefined };
   priorityFilter: string;
   vendorSearch: string;
+  buildingFilter: string;
+  problemTypeFilter: string;
 }
 
 export const useWorkOrders = ({ 
@@ -18,7 +20,9 @@ export const useWorkOrders = ({
   sortBy,
   dateRange,
   priorityFilter,
-  vendorSearch
+  vendorSearch,
+  buildingFilter,
+  problemTypeFilter
 }: UseWorkOrdersProps) => {
   // Get raw work orders data
   const { workOrders, isLoading, refetch } = useWorkOrdersData();
@@ -30,7 +34,9 @@ export const useWorkOrders = ({
     sortBy,
     dateRange,
     priorityFilter,
-    vendorSearch
+    vendorSearch,
+    buildingFilter,
+    problemTypeFilter
   });
 
   return {

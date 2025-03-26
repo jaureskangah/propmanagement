@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import { WorkOrder } from "@/types/workOrder";
 import { isWithinInterval, parseISO } from "date-fns";
 
-interface FilterOptions {
+export interface FilterOptions {
   statusFilter: string;
   searchQuery: string;
   sortBy: "date" | "cost" | "priority";

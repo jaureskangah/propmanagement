@@ -1,3 +1,4 @@
+
 import type { MaintenanceTranslations } from '../types/maintenance';
 
 export const enMaintenance: MaintenanceTranslations = {
@@ -120,7 +121,6 @@ export const enMaintenance: MaintenanceTranslations = {
   savedFilters: "Saved Filters",
   filter: "Filter",
   filters: "Filters",
-  delete: "Delete",
   appointments: "Appointments",
   availability: "Availability",
   rating: "Rating",
@@ -248,10 +248,9 @@ export const frMaintenance: MaintenanceTranslations = {
   savedFilters: "Filtres Enregistrés",
   filter: "Filtre",
   filters: "Filtres",
-  delete: "Supprimer",
-    appointments: "Rendez-vous",
-    availability: "Disponibilité",
-    rating: "Évaluation",
-    specialty: "Spécialité",
-    review: "Avis",
+  appointments: "Rendez-vous",
+  availability: "Disponibilité",
+  rating: "Évaluation",
+  specialty: "Spécialité",
+  review: "Avis",
 };
