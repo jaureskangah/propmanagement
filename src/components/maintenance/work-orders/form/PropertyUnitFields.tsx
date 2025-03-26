@@ -1,3 +1,4 @@
+
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
@@ -43,15 +44,16 @@ export const PropertyUnitFields = ({
     enabled: !!propertyId,
   });
 
-  // Get unique unit numbers
-  const uniqueUnits = Array.from(new Set(tenants.map(t => t.unit_number)));
+  // Get unique unit numbers and filter out empty ones
+  const uniqueUnits = Array.from(new Set(tenants.map(t => t.unit_number)))
+    .filter(unitNumber => unitNumber && unitNumber.trim() !== "");
 
   return (
     <>
       <div className="space-y-2">
         <Label htmlFor="property">Property</Label>
         <Select
-          value={propertyId || ''}
+          value={propertyId || undefined}
           onValueChange={setPropertyId}
         >
           <SelectTrigger>
@@ -70,9 +72,9 @@ export const PropertyUnitFields = ({
       <div className="space-y-2">
         <Label htmlFor="unit">Unit</Label>
         <Select
-          value={unit}
+          value={unit || undefined}
           onValueChange={setUnit}
-          disabled={!propertyId}
+          disabled={!propertyId || uniqueUnits.length === 0}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select a unit" />

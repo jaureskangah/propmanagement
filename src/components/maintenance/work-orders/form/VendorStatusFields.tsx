@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -45,7 +46,7 @@ export const VendorStatusFields = ({
     <div className="grid grid-cols-2 gap-4">
       <div className="space-y-2">
         <Label>Vendor</Label>
-        <Select value={vendor} onValueChange={setVendor}>
+        <Select value={vendor || undefined} onValueChange={setVendor}>
           <SelectTrigger>
             <SelectValue placeholder={isLoading ? "Loading..." : "Select a vendor"} />
           </SelectTrigger>
@@ -61,9 +62,9 @@ export const VendorStatusFields = ({
 
       <div className="space-y-2">
         <Label htmlFor="status">Status</Label>
-        <Select value={status} onValueChange={setStatus}>
+        <Select value={status || undefined} onValueChange={setStatus}>
           <SelectTrigger>
-            <SelectValue />
+            <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Scheduled">Scheduled</SelectItem>
