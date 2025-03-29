@@ -3,6 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
+import { Users, Activity } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface VendorStatusFieldsProps {
   vendor: string;
@@ -46,36 +48,46 @@ export const VendorStatusFields = ({
   const filteredVendors = vendors.filter(v => v && v.id && v.id.trim() !== "" && v.name && v.name.trim() !== "");
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <div className="space-y-2">
-        <Label>Vendor</Label>
-        <Select value={vendor} onValueChange={setVendor}>
-          <SelectTrigger>
-            <SelectValue placeholder={isLoading ? "Loading..." : "Select a vendor"} />
-          </SelectTrigger>
-          <SelectContent>
-            {filteredVendors.map((vendor) => (
-              <SelectItem key={vendor.id} value={vendor.id}>
-                {vendor.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+    <Card className="border-blue-100">
+      <CardContent className="pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <Label className="flex items-center text-base font-medium">
+              <Users className="h-4 w-4 mr-2 text-blue-500" />
+              Prestataire
+            </Label>
+            <Select value={vendor} onValueChange={setVendor}>
+              <SelectTrigger className={isLoading ? "animate-pulse" : ""}>
+                <SelectValue placeholder={isLoading ? "Chargement..." : "Sélectionner un prestataire"} />
+              </SelectTrigger>
+              <SelectContent>
+                {filteredVendors.map((vendor) => (
+                  <SelectItem key={vendor.id} value={vendor.id}>
+                    {vendor.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="status">Status</Label>
-        <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Scheduled">Scheduled</SelectItem>
-            <SelectItem value="In Progress">In Progress</SelectItem>
-            <SelectItem value="Completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+          <div className="space-y-2">
+            <Label htmlFor="status" className="flex items-center text-base font-medium">
+              <Activity className="h-4 w-4 mr-2 text-blue-500" />
+              Statut
+            </Label>
+            <Select value={status} onValueChange={setStatus}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Scheduled">Planifié</SelectItem>
+                <SelectItem value="In Progress">En cours</SelectItem>
+                <SelectItem value="Completed">Terminé</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };

@@ -1,49 +1,35 @@
 
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, Clock, CheckCircle2, Wrench } from "lucide-react";
+import { Activity } from "lucide-react";
 
 interface WorkOrderStatusProps {
   status: string;
 }
 
-export const getStatusConfig = (status: string) => {
-  switch (status) {
-    case "In Progress":
-      return {
-        variant: "default" as const,
-        icon: <AlertCircle className="h-4 w-4 mr-1 animate-pulse" />,
-        className: "bg-blue-600 text-white font-medium shadow-sm"
-      };
-    case "Scheduled":
-      return {
-        variant: "secondary" as const,
-        icon: <Clock className="h-4 w-4 mr-1 animate-spin-slow" />,
-        className: "bg-orange-500 text-white font-medium shadow-sm"
-      };
-    case "Completed":
-      return {
-        variant: "outline" as const,
-        icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
-        className: "bg-green-600 text-white font-medium shadow-sm"
-      };
-    default:
-      return {
-        variant: "default" as const,
-        icon: <Wrench className="h-4 w-4 mr-1" />,
-        className: "bg-gray-600 text-white font-medium shadow-sm"
-      };
-  }
-};
-
 export const WorkOrderStatus = ({ status }: WorkOrderStatusProps) => {
-  const statusConfig = getStatusConfig(status);
-  
+  const getStatusColor = () => {
+    switch (status) {
+      case "Completed":
+      case "Terminé":
+        return "bg-green-100 text-green-800 border-green-200";
+      case "In Progress":
+      case "En cours":
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case "Scheduled":
+      case "Planifié":
+        return "bg-purple-100 text-purple-800 border-purple-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
+  };
+
   return (
-    <Badge className={`${statusConfig.className} transition-all duration-200 hover:scale-105`}>
-      <div className="flex items-center">
-        {statusConfig.icon}
+    <div className="flex items-center">
+      <Activity className="h-4 w-4 text-gray-500 mr-2" />
+      <span className="text-sm font-medium text-gray-500 mr-2">Status:</span>
+      <Badge className={`${getStatusColor()} font-medium`}>
         {status}
-      </div>
-    </Badge>
+      </Badge>
+    </div>
   );
 };

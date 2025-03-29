@@ -1,10 +1,11 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { WorkOrder } from "@/types/workOrder";
 import { WorkOrderHeader } from "./card/WorkOrderHeader";
 import { WorkOrderStatus } from "./card/WorkOrderStatus";
 import { WorkOrderDetails } from "./card/WorkOrderDetails";
 import { WorkOrderActions } from "./card/WorkOrderActions";
+import { motion } from "framer-motion";
 
 interface WorkOrderCardProps {
   order: WorkOrder;
@@ -14,27 +15,39 @@ interface WorkOrderCardProps {
 
 export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps) => {
   return (
-    <Card className="group transition-all duration-200 hover:shadow-lg hover:-translate-y-1">
-      <WorkOrderHeader title={order.title} />
-      <CardContent>
-        <div className="space-y-2">
-          <WorkOrderDetails
-            property={order.property}
-            unit={order.unit}
-            vendor={order.vendor}
-            cost={order.cost}
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      whileHover={{ scale: 1.02 }}
+      className="h-full"
+    >
+      <Card className="h-full shadow-sm border-gray-200 hover:shadow-md transition-shadow">
+        <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-t-lg">
+          <WorkOrderHeader 
+            title={order.title} 
+            priority={order.priority} 
           />
-          <div className="flex items-center gap-2 mt-2">
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="space-y-4">
             <WorkOrderStatus status={order.status} />
+            <WorkOrderDetails
+              property={order.property}
+              unit={order.unit}
+              vendor={order.vendor}
+              cost={order.cost}
+              date={order.date}
+            />
+            <WorkOrderActions 
+              order={order}
+              onStatusChange={onUpdate}
+              onDelete={onDelete}
+              onUpdate={onUpdate}
+            />
           </div>
-          <WorkOrderActions 
-            order={order}
-            onStatusChange={onUpdate}
-            onDelete={onDelete}
-            onUpdate={onUpdate}
-          />
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };

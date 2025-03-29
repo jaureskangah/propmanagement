@@ -9,6 +9,8 @@ import { CostDateFields } from "./form/CostDateFields";
 import { VendorStatusFields } from "./form/VendorStatusFields";
 import { PhotoUpload } from "./form/PhotoUpload";
 import { PropertyUnitFields } from "./form/PropertyUnitFields";
+import { Separator } from "@/components/ui/separator";
+import { ChevronRight, Save } from "lucide-react";
 
 interface CreateWorkOrderDialogProps {
   isOpen: boolean;
@@ -33,7 +35,10 @@ export const CreateWorkOrderDialog = ({
   const [vendor, setVendor] = useState("");
   const [photos, setPhotos] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1);
   const { toast } = useToast();
+
+  const totalSteps = 3;
 
   const resetForm = () => {
     setTitle("");
@@ -45,6 +50,13 @@ export const CreateWorkOrderDialog = ({
     setVendor("");
     setPhotos([]);
     setStatus("Scheduled");
+    setCurrentStep(1);
+  };
+
+  const navigateToStep = (step: number) => {
+    if (step >= 1 && step <= totalSteps) {
+      setCurrentStep(step);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -131,6 +143,89 @@ export const CreateWorkOrderDialog = ({
     }
   };
 
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-medium text-gray-700">Informations de base</h3>
+            <BasicInfoFields
+              title={title}
+              setTitle={setTitle}
+              description={description}
+              setDescription={setDescription}
+            />
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-medium text-gray-700">Localisation</h3>
+            <PropertyUnitFields
+              propertyId={propertyId}
+              setPropertyId={setPropertyId}
+              unit={unit}
+              setUnit={setUnit}
+            />
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-medium text-gray-700">Détails du travail</h3>
+            <CostDateFields
+              cost={cost}
+              setCost={setCost}
+              date={date}
+              setDate={setDate}
+            />
+            <VendorStatusFields
+              vendor={vendor}
+              setVendor={setVendor}
+              status={status}
+              setStatus={setStatus}
+            />
+            <Separator className="my-4" />
+            <PhotoUpload
+              handlePhotoChange={handlePhotoChange}
+              photos={photos}
+            />
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderStepIndicator = () => {
+    return (
+      <div className="flex items-center justify-between my-6 px-2">
+        {Array.from({ length: totalSteps }).map((_, index) => (
+          <div key={index} className="flex items-center">
+            <button
+              type="button"
+              onClick={() => navigateToStep(index + 1)}
+              className={`flex items-center justify-center w-8 h-8 rounded-full font-medium transition-colors ${
+                currentStep >= index + 1
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-500"
+              }`}
+            >
+              {index + 1}
+            </button>
+            {index < totalSteps - 1 && (
+              <div 
+                className={`h-1 w-full min-w-[3rem] mx-2 ${
+                  currentStep > index + 1 ? "bg-blue-600" : "bg-gray-200"
+                }`}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
       if (!open) {
@@ -140,52 +235,43 @@ export const CreateWorkOrderDialog = ({
     }}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Créer un nouveau bon de travail</DialogTitle>
+          <DialogTitle className="text-xl font-bold">Créer un nouveau bon de travail</DialogTitle>
         </DialogHeader>
+        
+        {renderStepIndicator()}
+        
         <form onSubmit={handleSubmit} className="space-y-4">
-          <BasicInfoFields
-            title={title}
-            setTitle={setTitle}
-            description={description}
-            setDescription={setDescription}
-          />
+          {renderStepContent()}
 
-          <PropertyUnitFields
-            propertyId={propertyId}
-            setPropertyId={setPropertyId}
-            unit={unit}
-            setUnit={setUnit}
-          />
-
-          <CostDateFields
-            cost={cost}
-            setCost={setCost}
-            date={date}
-            setDate={setDate}
-          />
-
-          <VendorStatusFields
-            vendor={vendor}
-            setVendor={setVendor}
-            status={status}
-            setStatus={setStatus}
-          />
-
-          <PhotoUpload
-            handlePhotoChange={handlePhotoChange}
-            photos={photos}
-          />
-
-          <div className="flex justify-end gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Annuler
-            </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Création..." : "Créer le bon"}
-            </Button>
+          <div className="flex justify-between gap-2 pt-4">
+            {currentStep > 1 && (
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => navigateToStep(currentStep - 1)}
+              >
+                Précédent
+              </Button>
+            )}
+            <div className="flex-1" />
+            {currentStep < totalSteps ? (
+              <Button
+                type="button"
+                onClick={() => navigateToStep(currentStep + 1)}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                Suivant <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="bg-green-600 hover:bg-green-700"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                {isSubmitting ? "Création..." : "Enregistrer"}
+              </Button>
+            )}
           </div>
         </form>
       </DialogContent>

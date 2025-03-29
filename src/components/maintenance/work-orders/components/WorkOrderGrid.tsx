@@ -1,23 +1,41 @@
 
-import React from "react";
-import { WorkOrderCard } from "../WorkOrderCard";
 import { WorkOrder } from "@/types/workOrder";
+import { WorkOrderCard } from "../WorkOrderCard";
+import { useState } from "react";
+import { Wrench } from "lucide-react";
 
 interface WorkOrderGridProps {
   orders: WorkOrder[];
-  onUpdate?: () => void;
-  onDelete?: () => void;
 }
 
-export const WorkOrderGrid = ({ orders, onUpdate = () => {}, onDelete = () => {} }: WorkOrderGridProps) => {
+export const WorkOrderGrid = ({ orders }: WorkOrderGridProps) => {
+  const [refreshKey, setRefreshKey] = useState(0);
+  
+  const handleOrderUpdate = () => {
+    // Force a re-render of the grid
+    setRefreshKey(prev => prev + 1);
+  };
+  
+  if (orders.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-10 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+        <Wrench className="h-12 w-12 text-gray-400 mb-4" />
+        <h3 className="text-lg font-medium text-gray-900">Aucun ordre de travail</h3>
+        <p className="text-gray-500 text-center mt-2">
+          Les ordres de travail que vous créez apparaîtront ici.
+        </p>
+      </div>
+    );
+  }
+  
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div key={refreshKey} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {orders.map((order) => (
-        <WorkOrderCard 
-          key={order.id} 
-          order={order} 
-          onUpdate={onUpdate}
-          onDelete={onDelete}
+        <WorkOrderCard
+          key={order.id}
+          order={order}
+          onUpdate={handleOrderUpdate}
+          onDelete={handleOrderUpdate}
         />
       ))}
     </div>
