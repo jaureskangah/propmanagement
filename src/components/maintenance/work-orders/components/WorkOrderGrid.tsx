@@ -1,7 +1,8 @@
 
 import { WorkOrder } from "@/types/workOrder";
-import { WorkOrderCard } from "../WorkOrderCard";
+import { WorkOrderCard } from "../../work-orders/WorkOrderCard";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Wrench } from "lucide-react";
 
 interface WorkOrderGridProps {
@@ -18,18 +19,29 @@ export const WorkOrderGrid = ({ orders }: WorkOrderGridProps) => {
   
   if (orders.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center p-10 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center p-10 bg-gray-50 rounded-lg border border-dashed border-gray-300"
+      >
         <Wrench className="h-12 w-12 text-gray-400 mb-4" />
         <h3 className="text-lg font-medium text-gray-900">Aucun ordre de travail</h3>
         <p className="text-gray-500 text-center mt-2">
           Les ordres de travail que vous créez apparaîtront ici.
         </p>
-      </div>
+      </motion.div>
     );
   }
   
   return (
-    <div key={refreshKey} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <motion.div
+      key={refreshKey}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+    >
       {orders.map((order) => (
         <WorkOrderCard
           key={order.id}
@@ -38,6 +50,6 @@ export const WorkOrderGrid = ({ orders }: WorkOrderGridProps) => {
           onDelete={handleOrderUpdate}
         />
       ))}
-    </div>
+    </motion.div>
   );
 };

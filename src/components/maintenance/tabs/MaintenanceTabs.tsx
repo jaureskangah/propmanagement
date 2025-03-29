@@ -22,6 +22,7 @@ export const MaintenanceTabs = ({
   onRequestClick
 }: MaintenanceTabsProps) => {
   const { t } = useLocale();
+  const [activeTab, setActiveTab] = useState("preventive");
   
   // Mock work orders for the WorkOrderList component
   const mockWorkOrders: WorkOrder[] = [
@@ -63,11 +64,16 @@ export const MaintenanceTabs = ({
   // Handler for creating new work orders
   const handleCreateWorkOrder = () => {
     console.log("Create work order clicked");
-    // In a real implementation, this would open a dialog to create a new work order
+    // This will now be handled by the WorkOrderList component
+  };
+
+  // Handle tab change
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
   };
   
   return (
-    <Tabs defaultValue="preventive" className="w-full">
+    <Tabs defaultValue="preventive" className="w-full" onValueChange={handleTabChange}>
       <TabsList className="w-full grid grid-cols-4">
         <TabsTrigger value="preventive">{t('preventiveMaintenance')}</TabsTrigger>
         <TabsTrigger value="requests">{t('maintenanceRequestTitle')}</TabsTrigger>

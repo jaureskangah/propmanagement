@@ -4,6 +4,7 @@ import { WorkOrderHeader } from "./components/WorkOrderHeader";
 import { WorkOrderFilters } from "./components/WorkOrderFilters";
 import { WorkOrderGrid } from "./components/WorkOrderGrid";
 import { WorkOrder } from "@/types/workOrder";
+import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
 
 interface WorkOrderListProps {
   workOrders: WorkOrder[];
@@ -15,6 +16,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "cost">("date");
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   // Filter and sort work orders
   const filteredAndSortedOrders = useMemo(() => {
@@ -35,9 +37,23 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
       });
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
+  const handleCreateWorkOrder = () => {
+    setIsCreateDialogOpen(true);
+    onCreateWorkOrder(); // Call the parent handler if needed
+  };
+
+  const handleDialogClose = () => {
+    setIsCreateDialogOpen(false);
+  };
+
+  const handleWorkOrderCreated = () => {
+    // This would typically trigger a refresh of the work orders list
+    console.log("Work order created, refreshing list...");
+  };
+
   return (
     <>
-      <WorkOrderHeader onCreateWorkOrder={onCreateWorkOrder} />
+      <WorkOrderHeader onCreateWorkOrder={handleCreateWorkOrder} />
 
       <WorkOrderFilters 
         searchQuery={searchQuery} 
@@ -49,6 +65,12 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
       />
 
       <WorkOrderGrid orders={filteredAndSortedOrders} />
+
+      <CreateWorkOrderDialog
+        isOpen={isCreateDialogOpen}
+        onClose={handleDialogClose}
+        onSuccess={handleWorkOrderCreated}
+      />
     </>
   );
 };
