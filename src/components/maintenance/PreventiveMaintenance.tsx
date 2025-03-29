@@ -61,7 +61,7 @@ export const PreventiveMaintenance = () => {
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
       <Card className="lg:col-span-2">
         <CardHeader className="flex flex-row items-center justify-between flex-wrap gap-2">
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-base">
             <CalendarIcon className="h-5 w-5" />
             {t('maintenanceCalendar')}
           </CardTitle>
@@ -116,7 +116,7 @@ export const PreventiveMaintenance = () => {
 
       <Card className="lg:col-span-1">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-base">
             <BellRing className="h-5 w-5" />
             {t('recurringTasks')}
           </CardTitle>
