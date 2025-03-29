@@ -12,7 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { X } from "lucide-react";
+import { CalendarCheck2, Check, X } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface BatchSchedulingDialogProps {
   isOpen: boolean;
@@ -22,25 +23,46 @@ interface BatchSchedulingDialogProps {
 
 export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSchedulingDialogProps) => {
   const { t, language } = useLocale();
+  const { toast } = useToast();
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [batchTitle, setBatchTitle] = useState("");
   const [batchType, setBatchType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [batchPriority, setBatchPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const dateLocale = language === 'fr' ? fr : undefined;
   
   const handleScheduleBatch = () => {
     if (!batchTitle || selectedDates.length === 0) return;
     
-    const tasks: NewTask[] = selectedDates.map((date, index) => ({
-      title: `${batchTitle} ${index + 1}`,
-      date,
-      type: batchType,
-      priority: batchPriority
-    }));
+    setIsSubmitting(true);
     
-    onSchedule(tasks);
-    resetForm();
+    try {
+      const tasks: NewTask[] = selectedDates.map((date, index) => ({
+        title: `${batchTitle} ${index + 1}`,
+        date,
+        type: batchType,
+        priority: batchPriority,
+        is_recurring: false
+      }));
+      
+      onSchedule(tasks);
+      resetForm();
+      
+      toast({
+        title: t('success'),
+        description: t('multipleTasksAdded'),
+      });
+    } catch (error) {
+      console.error("Error scheduling tasks:", error);
+      toast({
+        title: t('error'),
+        description: t('errorAddingTasks'),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   
   const resetForm = () => {
@@ -157,12 +179,23 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
         </ScrollArea>
         
         <DialogFooter className="p-6 pt-2">
-          <Button variant="outline" onClick={handleClose}>{t('cancel')}</Button>
+          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
+            <X className="h-4 w-4 mr-2" />
+            {t('cancel')}
+          </Button>
           <Button 
             onClick={handleScheduleBatch}
-            disabled={!batchTitle || selectedDates.length === 0}
+            disabled={!batchTitle || selectedDates.length === 0 || isSubmitting}
+            className="gap-2"
           >
-            {t('scheduleTasks')}
+            {isSubmitting ? (
+              t('schedulingTasks')
+            ) : (
+              <>
+                <CalendarCheck2 className="h-4 w-4" />
+                {t('scheduleTasks')}
+              </>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
