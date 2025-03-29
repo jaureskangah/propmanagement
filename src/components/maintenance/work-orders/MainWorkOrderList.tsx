@@ -25,7 +25,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         const matchesStatus = statusFilter === "all" || order.status === statusFilter;
         const matchesSearch = 
           order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          order.property?.toLowerCase().includes(searchQuery.toLowerCase());
+          (order.property && order.property.toLowerCase().includes(searchQuery.toLowerCase()));
         return matchesStatus && matchesSearch;
       })
       .sort((a, b) => {
@@ -49,10 +49,11 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   const handleWorkOrderCreated = () => {
     // This would typically trigger a refresh of the work orders list
     console.log("Work order created, refreshing list...");
+    setIsCreateDialogOpen(false);
   };
 
   return (
-    <>
+    <div className="animate-fade-in">
       <WorkOrderHeader onCreateWorkOrder={handleCreateWorkOrder} />
 
       <WorkOrderFilters 
@@ -71,6 +72,6 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
         onClose={handleDialogClose}
         onSuccess={handleWorkOrderCreated}
       />
-    </>
+    </div>
   );
 };

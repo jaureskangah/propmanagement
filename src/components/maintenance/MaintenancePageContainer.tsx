@@ -9,10 +9,12 @@ import { Separator } from "@/components/ui/separator";
 import { VendorList } from "./vendors/VendorList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState("requests");
+  const isMobile = useIsMobile();
   
   // Mock data for the financial section
   const mockFinancialData = {
@@ -88,9 +90,13 @@ export const MaintenancePageContainer = () => {
       />
 
       <Tabs defaultValue="maintenance" className="w-full">
-        <TabsList className="w-full grid grid-cols-2">
-          <TabsTrigger value="maintenance">{t('maintenanceAndRepairs')}</TabsTrigger>
-          <TabsTrigger value="vendors">{t('vendors')}</TabsTrigger>
+        <TabsList className={`w-full ${isMobile ? "flex flex-wrap" : "grid grid-cols-2"}`}>
+          <TabsTrigger value="maintenance" className={isMobile ? "flex-1" : ""}>
+            {t('maintenanceAndRepairs')}
+          </TabsTrigger>
+          <TabsTrigger value="vendors" className={isMobile ? "flex-1" : ""}>
+            {t('vendors')}
+          </TabsTrigger>
         </TabsList>
         
         <TabsContent value="maintenance" className="pt-4">
