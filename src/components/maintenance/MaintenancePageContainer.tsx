@@ -10,11 +10,14 @@ import { VendorList } from "./vendors/VendorList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
+import MaintenancePageHeader from "./header/MaintenancePageHeader";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState("requests");
   const isMobile = useIsMobile();
+  const [showFilters, setShowFilters] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   // Mock data for the financial section
   const mockFinancialData = {
@@ -70,6 +73,11 @@ export const MaintenancePageContainer = () => {
     // Handle request click (could open a modal, etc.)
   };
 
+  const handleCreateTask = () => {
+    console.log("Create task clicked");
+    // Handle task creation (could open a modal, etc.)
+  };
+
   // Filter for active requests
   const filteredRequests = requests.filter(request => 
     request.status !== "Resolved" && request.status !== "Cancelled"
@@ -80,7 +88,18 @@ export const MaintenancePageContainer = () => {
 
   return (
     <div className="space-y-6 font-sans">
-      <MaintenanceHeader />
+      <MaintenancePageHeader 
+        totalRequests={requests.length} 
+        pendingRequests={requests.filter(r => r.status === "Pending").length}
+        resolvedRequests={requests.filter(r => r.status === "Resolved").length}
+        urgentRequests={urgentRequests}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+        isMobile={isMobile}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onCreateTask={handleCreateTask}
+      />
 
       <MaintenanceMetricsSection 
         totalRequests={requests.length} 
