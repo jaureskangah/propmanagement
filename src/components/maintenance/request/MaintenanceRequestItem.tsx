@@ -34,14 +34,16 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
   return (
     <div
       key={request.id}
-      className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${cardStyle}`}
+      className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${cardStyle} font-sans`}
       onClick={() => onClick(request)}
     >
       <div className="flex items-center gap-3">
         <Wrench className="h-5 w-5 text-[#ea384c]" />
         <div>
           <div className="flex items-center gap-2">
-            <p className="font-medium">{request.issue}</p>
+            <p className="font-medium">
+              {request.issue}
+            </p>
             {request.priority === "Urgent" && (
               <AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />
             )}
@@ -58,7 +60,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       </div>
       <Badge
         variant={request.status === "Resolved" ? "default" : "secondary"}
-        className={getBadgeStyle(request.status)}
+        className={`${getBadgeStyle(request.status)} font-sans text-xs`}
       >
         {request.status}
       </Badge>

@@ -79,7 +79,7 @@ export const MaintenancePageContainer = () => {
   const urgentRequests = requests.filter(r => r.priority === "Urgent").length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-sans">
       <MaintenanceHeader />
 
       <MaintenanceMetricsSection 
@@ -91,10 +91,10 @@ export const MaintenancePageContainer = () => {
 
       <Tabs defaultValue="maintenance" className="w-full">
         <TabsList className={`w-full ${isMobile ? "flex flex-wrap" : "grid grid-cols-2"}`}>
-          <TabsTrigger value="maintenance" className={isMobile ? "flex-1" : ""}>
+          <TabsTrigger value="maintenance" className={`${isMobile ? "flex-1" : ""} font-sans text-sm`}>
             {t('maintenanceAndRepairs')}
           </TabsTrigger>
-          <TabsTrigger value="vendors" className={isMobile ? "flex-1" : ""}>
+          <TabsTrigger value="vendors" className={`${isMobile ? "flex-1" : ""} font-sans text-sm`}>
             {t('vendors')}
           </TabsTrigger>
         </TabsList>
