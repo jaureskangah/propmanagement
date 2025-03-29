@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 interface MaintenancePageHeaderProps {
   totalRequests: number;
   pendingRequests: number;
-  resolvedRequests: number;  // Ajout de la propriété manquante
+  resolvedRequests: number;
   urgentRequests: number;
   showFilters: boolean;
   setShowFilters: (show: boolean) => void;
@@ -23,7 +23,7 @@ interface MaintenancePageHeaderProps {
 const MaintenancePageHeader = ({
   totalRequests,
   pendingRequests,
-  resolvedRequests,  // Ajout du paramètre pour recevoir la propriété
+  resolvedRequests,
   urgentRequests,
   showFilters,
   setShowFilters,
@@ -60,7 +60,7 @@ const MaintenancePageHeader = ({
             onClick={onCreateTask}
           >
             <Plus className="h-4 w-4" />
-            {t('addNewTask')}
+            + Ajouter une tâche
           </Button>
         </div>
       </div>
