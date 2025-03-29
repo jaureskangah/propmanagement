@@ -14,7 +14,7 @@ import { MaintenanceDetailsTab } from "./tabs/MaintenanceDetailsTab";
 import { MaintenancePhotosTab } from "./tabs/MaintenancePhotosTab";
 import { MaintenanceHistoryTab } from "./tabs/MaintenanceHistoryTab";
 import { MaintenanceFeedbackTab } from "./tabs/MaintenanceFeedbackTab";
-import { DirectMessaging } from "@/components/tenant/communications/DirectMessaging";
+import { DirectMessaging } from "@/components/tenant/maintenance/components/DirectMessaging";
 import { Communication } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";

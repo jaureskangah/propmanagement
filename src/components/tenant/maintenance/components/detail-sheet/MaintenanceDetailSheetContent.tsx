@@ -4,10 +4,15 @@ import { SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components
 import { MaintenanceRequest } from "@/types/tenant";
 import { MaintenanceInfo } from "./MaintenanceInfo";
 import { FeedbackSection } from "./FeedbackSection";
+import { DirectMessaging } from "../DirectMessaging";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DeleteMaintenanceDialog } from "../../DeleteMaintenanceDialog";
+import { Communication } from "@/types/tenant";
+import { supabase } from "@/lib/supabase";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
 
 interface MaintenanceDetailSheetContentProps {
   request: MaintenanceRequest;
@@ -23,7 +28,39 @@ export const MaintenanceDetailSheetContent = ({
   canRate,
 }: MaintenanceDetailSheetContentProps) => {
   const { t } = useLocale();
+  const { toast } = useToast();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("details");
+  const [messages, setMessages] = useState<Communication[]>([]);
+  
+  const fetchMessages = async () => {
+    if (!request.tenant_id) return;
+    
+    try {
+      const { data, error } = await supabase
+        .from('tenant_communications')
+        .select('*')
+        .eq('tenant_id', request.tenant_id)
+        .eq('category', 'maintenance')
+        .order('created_at', { ascending: false })
+        .limit(20);
+        
+      if (error) throw error;
+      
+      setMessages(data || []);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      toast({
+        title: t('error'),
+        description: t('errorLoadingMessages'),
+        variant: "destructive",
+      });
+    }
+  };
+  
+  useEffect(() => {
+    fetchMessages();
+  }, [request.tenant_id]);
   
   return (
     <SheetContent className="sm:max-w-md p-0">
@@ -41,18 +78,42 @@ export const MaintenanceDetailSheetContent = ({
         </div>
       </SheetHeader>
 
-      <div className="px-6 py-4 max-h-[calc(100vh-10rem)] overflow-y-auto space-y-6">
-        <MaintenanceInfo request={request} />
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid grid-cols-2 m-6 mb-2">
+          <TabsTrigger value="details">{t('details')}</TabsTrigger>
+          <TabsTrigger value="messages">{t('messages')}</TabsTrigger>
+        </TabsList>
         
-        {canRate && (
-          <FeedbackSection 
-            requestId={request.id} 
-            existingFeedback={request.tenant_feedback} 
-            existingRating={request.tenant_rating}
-            onFeedbackSubmitted={onUpdate}
-          />
-        )}
-      </div>
+        <TabsContent value="details" className="px-6 py-4 max-h-[calc(100vh-15rem)] overflow-y-auto space-y-6">
+          <MaintenanceInfo request={request} />
+          
+          {canRate && (
+            <FeedbackSection 
+              requestId={request.id} 
+              existingFeedback={request.tenant_feedback} 
+              existingRating={request.tenant_rating}
+              onFeedbackSubmitted={onUpdate}
+            />
+          )}
+        </TabsContent>
+        
+        <TabsContent value="messages" className="px-6 py-4 max-h-[calc(100vh-15rem)] overflow-y-auto">
+          {request.tenant_id ? (
+            <DirectMessaging 
+              tenantId={request.tenant_id}
+              onMessageSent={() => {
+                fetchMessages();
+                onUpdate();
+              }}
+              latestMessages={messages}
+            />
+          ) : (
+            <div className="text-center p-6 text-gray-500">
+              {t('noTenantAssociated')}
+            </div>
+          )}
+        </TabsContent>
+      </Tabs>
       
       <SheetFooter className="px-6 py-4 border-t">
         <Button 
