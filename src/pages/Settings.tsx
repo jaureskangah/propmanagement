@@ -11,6 +11,7 @@ import { SecuritySection } from "@/components/settings/SecuritySection";
 import { NotificationsSection } from "@/components/settings/NotificationsSection";
 import { AppearanceSection } from "@/components/settings/AppearanceSection";
 import { LanguageSection } from "@/components/settings/LanguageSection";
+import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -63,10 +64,8 @@ export default function Settings() {
     <div className="flex h-screen">
       <AppSidebar />
       <div className="flex-1 overflow-y-auto">
-        <div className="space-y-8 p-8 pb-16 max-w-3xl mx-auto">
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">{t('settings')}</h1>
-          </div>
+        <div className="p-4 pb-16 max-w-5xl mx-auto">
+          <SettingsPageHeader userEmail={user?.email} />
 
           <div className="space-y-8">
             <ProfileSection
