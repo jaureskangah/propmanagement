@@ -63,12 +63,6 @@ export const MaintenanceTabs = ({
     }
   ];
   
-  // Handler for creating new work orders
-  const handleCreateWorkOrder = () => {
-    console.log("Create work order clicked");
-    // This will now be handled by the WorkOrderList component
-  };
-
   // Handle tab change
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -105,7 +99,7 @@ export const MaintenanceTabs = ({
       <TabsContent value="workorders" className="pt-6">
         <WorkOrderList 
           workOrders={mockWorkOrders}
-          onCreateWorkOrder={handleCreateWorkOrder}
+          onCreateWorkOrder={() => {}} 
         />
       </TabsContent>
       
