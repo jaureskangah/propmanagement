@@ -4,7 +4,7 @@ import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2 } from "luc
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MaintenanceCalendar } from "./calendar/MaintenanceCalendar";
 import { TypeFilter } from "./calendar/TypeFilter";
-import { AddTaskDialog } from "./AddTaskDialog";
+import { AddTaskDialog } from "./task-dialog/AddTaskDialog";
 import { TaskList } from "./TaskList";
 import { useMaintenanceTasks } from "./tasks/useMaintenanceTasks";
 import { useLocale } from "@/components/providers/LocaleProvider";
