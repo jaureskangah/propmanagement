@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 interface MaintenancePageHeaderProps {
   totalRequests: number;
   pendingRequests: number;
+  resolvedRequests: number;  // Ajout de la propriété manquante
   urgentRequests: number;
   showFilters: boolean;
   setShowFilters: (show: boolean) => void;
@@ -22,6 +23,7 @@ interface MaintenancePageHeaderProps {
 const MaintenancePageHeader = ({
   totalRequests,
   pendingRequests,
+  resolvedRequests,  // Ajout du paramètre pour recevoir la propriété
   urgentRequests,
   showFilters,
   setShowFilters,
