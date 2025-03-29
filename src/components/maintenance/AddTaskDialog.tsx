@@ -84,14 +84,8 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {!isOpen && (
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            {t('add')}
-          </Button>
-        </DialogTrigger>
-      )}
+      {/* IMPORTANT: On supprime complètement le DialogTrigger qui ajoute le bouton + Ajouter 
+          lorsque ce composant est utilisé en mode contrôlé (avec isOpen) */}
       <DialogContent className="max-h-[90vh] p-0">
         <DialogHeader className="px-6 pt-6">
           <DialogTitle>{t('addNewTask')}</DialogTitle>

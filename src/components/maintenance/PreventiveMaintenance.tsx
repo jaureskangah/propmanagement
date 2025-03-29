@@ -141,6 +141,7 @@ export const PreventiveMaintenance = () => {
         </CardContent>
       </Card>
 
+      {/* Important: Nous utilisons uniquement la version contrôlée de AddTaskDialog, sans trigger */}
       <AddTaskDialog
         onAddTask={onAddTask}
         isOpen={isAddTaskOpen}
