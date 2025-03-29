@@ -39,11 +39,17 @@ export const MaintenanceList = ({
   }, [searchParams, requests, setSearchParams]);
 
   const handleRequestClick = (request: MaintenanceRequest) => {
+    console.log("Maintenance request clicked:", request.id);
     setSelectedRequest(request);
   };
 
   const handleCloseDialog = () => {
     setSelectedRequest(null);
+  };
+
+  const handleMaintenanceUpdateAndClose = () => {
+    onMaintenanceUpdate();
+    // Nous gardons le dialogue ouvert pour permettre à l'utilisateur de continuer à voir les messages
   };
 
   if (requests.length === 0) {
@@ -65,7 +71,7 @@ export const MaintenanceList = ({
       <MaintenanceRequestDialog
         request={selectedRequest}
         onClose={handleCloseDialog}
-        onUpdate={onMaintenanceUpdate}
+        onUpdate={handleMaintenanceUpdateAndClose}
       />
     </>
   );

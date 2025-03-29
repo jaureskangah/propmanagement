@@ -84,5 +84,9 @@
   "maintenanceIssue": "Problème de maintenance",
   "noTenantAssociated": "Aucun locataire associé à cette demande",
   "errorLoadingMessages": "Erreur lors du chargement des messages",
-  "details": "Détails"
+  "details": "Détails",
+  "photos": "Photos",
+  "history": "Historique",
+  "feedback": "Commentaires",
+  "maintenanceRequestDetails": "Détails de la demande de maintenance"
 }

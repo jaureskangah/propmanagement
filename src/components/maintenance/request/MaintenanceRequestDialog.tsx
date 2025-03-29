@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequest } from "@/components/maintenance/types";
@@ -73,15 +74,18 @@ export const MaintenanceRequestDialog = ({
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{request.issue}</DialogTitle>
+          <DialogDescription>
+            {t('maintenanceRequestDetails')}
+          </DialogDescription>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4">
           <TabsList className="grid grid-cols-5 mb-4">
-            <TabsTrigger value="details">Details</TabsTrigger>
-            <TabsTrigger value="photos">Photos</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-            <TabsTrigger value="feedback">Feedback</TabsTrigger>
-            <TabsTrigger value="messages">Messages</TabsTrigger>
+            <TabsTrigger value="details">{t('details')}</TabsTrigger>
+            <TabsTrigger value="photos">{t('photos')}</TabsTrigger>
+            <TabsTrigger value="history">{t('history')}</TabsTrigger>
+            <TabsTrigger value="feedback">{t('feedback')}</TabsTrigger>
+            <TabsTrigger value="messages">{t('messages')}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="details">
@@ -126,7 +130,7 @@ export const MaintenanceRequestDialog = ({
 
         <div className="flex justify-end mt-4">
           <Button variant="outline" onClick={onClose}>
-            Close
+            {t('close')}
           </Button>
         </div>
       </DialogContent>

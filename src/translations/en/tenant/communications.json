@@ -84,5 +84,9 @@
   "maintenanceIssue": "Maintenance Issue",
   "noTenantAssociated": "No tenant associated with this request",
   "errorLoadingMessages": "Error loading messages",
-  "details": "Details"
+  "details": "Details",
+  "photos": "Photos",
+  "history": "History",
+  "feedback": "Feedback",
+  "maintenanceRequestDetails": "Maintenance Request Details"
 }
