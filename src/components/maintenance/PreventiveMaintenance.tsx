@@ -91,15 +91,7 @@ export const PreventiveMaintenance = () => {
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-medium">{t('scheduledTasks')}</h3>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setIsAddTaskOpen(true)}
-                className="flex items-center gap-1"
-              >
-                <PlusIcon className="h-4 w-4" />
-                {t('addTask')}
-              </Button>
+              {/* Removing the Add Task button as requested */}
             </div>
             <TaskList 
               tasks={filteredTasks.filter(task => 
