@@ -28,7 +28,7 @@ export const frNavigation: NavigationTranslations = {
   freeTrial: "Essai gratuit",
   signIn: "Connexion",
   signOut: "Déconnexion",
-  dashboard: "Tableau de Bord", // Already properly capitalized in French
+  dashboard: "Dashboard", // Changed from "Tableau de Bord" to "Dashboard" with capital D
   language: "Langue",
   units: "Unités",
   metric: "Métrique",
