@@ -152,8 +152,6 @@ export const PreventiveMaintenance = () => {
         onClose={() => setIsBatchSchedulingOpen(false)}
         onSchedule={onAddMultipleTasks}
       />
-      
-      {/* Le bouton "+ Ajouter" en bas de la page a été supprimé */}
     </div>
   );
 };
