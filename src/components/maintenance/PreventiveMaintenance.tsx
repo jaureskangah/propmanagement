@@ -8,7 +8,7 @@ import { AddTaskDialog } from "./task-dialog/AddTaskDialog";
 import { TaskList } from "./TaskList";
 import { useMaintenanceTasks } from "./tasks/useMaintenanceTasks";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { NewTask } from "./types";
+import { NewTask, Task } from "./types";
 import { Button } from "@/components/ui/button";
 import { BatchSchedulingDialog } from "./scheduling/BatchSchedulingDialog";
 import { useToast } from "@/hooks/use-toast";

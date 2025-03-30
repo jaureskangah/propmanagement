@@ -7,16 +7,7 @@ import { Trash2 } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
-
-interface Task {
-  id: string;
-  title: string;
-  date: Date;
-  completed: boolean;
-  type: "regular" | "inspection" | "seasonal";
-  priority?: "low" | "medium" | "high" | "urgent";
-  user_id: string;
-}
+import { Task } from "./types"; // Import Task from the types file
 
 interface TaskListProps {
   tasks: Task[];
