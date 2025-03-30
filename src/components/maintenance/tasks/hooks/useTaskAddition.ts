@@ -34,7 +34,8 @@ export const useTaskAddition = () => {
             tenant_id: newTask.tenant_id,
             property_id: newTask.property_id,
             has_reminder: newTask.has_reminder || false,
-            reminder_date: newTask.reminder_date
+            reminder_date: newTask.reminder_date,
+            reminder_method: newTask.reminder_method
           }
         ])
         .select();
@@ -74,7 +75,8 @@ export const useTaskAddition = () => {
         tenant_id: task.tenant_id,
         property_id: task.property_id,
         has_reminder: task.has_reminder || false,
-        reminder_date: task.reminder_date
+        reminder_date: task.reminder_date,
+        reminder_method: task.reminder_method
       }));
 
       const { data, error } = await supabase
