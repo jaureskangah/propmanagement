@@ -1,3 +1,4 @@
+
 export interface Tenant {
   id: string;
   name: string;
@@ -41,6 +42,8 @@ export interface NewTask {
     weekdays: string[];
     end_date?: string;
   };
+  has_reminder?: boolean;
+  reminder_date?: Date;
 }
 
 export interface Task {
@@ -65,4 +68,6 @@ export interface Task {
   date: Date;
   completed: boolean;
   user_id: string;
+  has_reminder: boolean;
+  reminder_date?: Date;
 }

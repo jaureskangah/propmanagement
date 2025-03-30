@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, RotateCw, CheckCircle } from "lucide-react";
+import { CalendarIcon, RotateCw, CheckCircle, BellRing } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -14,6 +14,7 @@ import { NewTask } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { RecurrenceSettings } from "./RecurrenceSettings";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -32,6 +33,8 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceFrequency, setRecurrenceFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
+  const [hasReminder, setHasReminder] = useState(false);
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate);
   
   const { t, language } = useLocale();
   
@@ -42,8 +45,12 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
     if (title && date && type) {
       // Créer une nouvelle date avec seulement année/mois/jour pour éviter les problèmes de fuseau horaire
       const submissionDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const submissionReminderDate = reminderDate 
+        ? new Date(reminderDate.getFullYear(), reminderDate.getMonth(), reminderDate.getDate())
+        : undefined;
       
       console.log("Submitting task with date:", submissionDate, "Original selected date:", date);
+      console.log("Reminder date:", submissionReminderDate, "has reminder:", hasReminder);
       
       onSubmit({ 
         title,
@@ -56,7 +63,9 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
           interval: recurrenceInterval,
           weekdays: [],
           end_date: undefined
-        } : undefined
+        } : undefined,
+        has_reminder: hasReminder,
+        reminder_date: hasReminder ? submissionReminderDate : undefined
       });
     }
   };
@@ -68,6 +77,16 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
       setDate(selectedDate);
     } else {
       setDate(undefined);
+    }
+  };
+
+  const handleReminderDateSelect = (newDate: Date | undefined) => {
+    if (newDate) {
+      // Créer une nouvelle date avec seulement année/mois/jour
+      const selectedDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
+      setReminderDate(selectedDate);
+    } else {
+      setReminderDate(undefined);
     }
   };
 
@@ -149,6 +168,51 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
         recurrenceInterval={recurrenceInterval}
         setRecurrenceInterval={setRecurrenceInterval}
       />
+      
+      {/* Nouvelle section pour les rappels */}
+      <div className="pt-2">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="hasReminder" className="flex items-center gap-2">
+            <BellRing className="h-4 w-4" />
+            {t('addReminder')}
+          </Label>
+          <Switch
+            id="hasReminder"
+            checked={hasReminder}
+            onCheckedChange={setHasReminder}
+          />
+        </div>
+      </div>
+      
+      {hasReminder && (
+        <div className="space-y-2 pt-2 pl-4 border-l-2 border-muted">
+          <Label>{t('reminderDate')}</Label>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant={"outline"}
+                className={cn(
+                  "w-full justify-start text-left font-normal",
+                  !reminderDate && "text-muted-foreground"
+                )}
+              >
+                <BellRing className="mr-2 h-4 w-4" />
+                {reminderDate ? format(reminderDate, "PPP", { locale: dateLocale }) : <span>{t('selectDate')}</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={reminderDate}
+                onSelect={handleReminderDateSelect}
+                initialFocus
+                locale={dateLocale}
+                className="pointer-events-auto"
+              />
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
       
       <Separator className="my-2" />
       

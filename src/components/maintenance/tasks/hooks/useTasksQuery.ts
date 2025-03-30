@@ -30,6 +30,8 @@ export const useTasksQuery = () => {
           status: (task.status || "pending") as "pending" | "in_progress" | "completed",
           completed: Boolean(task.completed),
           is_recurring: Boolean(task.is_recurring),
+          has_reminder: Boolean(task.has_reminder),
+          reminder_date: task.reminder_date ? new Date(task.reminder_date) : undefined,
           recurrence_pattern: task.recurrence_pattern ? {
             frequency: task.recurrence_pattern.frequency || "daily",
             interval: task.recurrence_pattern.interval || 1,
@@ -41,6 +43,7 @@ export const useTasksQuery = () => {
       
       console.log("Processed tasks after fetch:", formattedTasks);
       console.log("Recurring tasks count:", formattedTasks.filter(task => task.is_recurring).length);
+      console.log("Reminder tasks count:", formattedTasks.filter(task => task.has_reminder).length);
       
       return formattedTasks;
     },
@@ -49,6 +52,10 @@ export const useTasksQuery = () => {
   // Filtre des tâches récurrentes (utile pour le débogage)
   const recurringTasks = tasks.filter(task => task.is_recurring);
   console.log("Filtered recurring tasks:", recurringTasks);
+  
+  // Filtre des tâches avec rappel (utile pour le débogage)
+  const reminderTasks = tasks.filter(task => task.has_reminder);
+  console.log("Filtered reminder tasks:", reminderTasks);
 
   return { tasks, isLoading };
 };

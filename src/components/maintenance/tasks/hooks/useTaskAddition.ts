@@ -1,144 +1,103 @@
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
 import { NewTask } from "../../types";
 
 export const useTaskAddition = () => {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   const { user } = useAuth();
 
-  const getNextPosition = async () => {
-    const { data: lastTask } = await supabase
-      .from('maintenance_tasks')
-      .select('position')
-      .order('position', { ascending: false })
-      .limit(1);
+  const addTaskMutation = useMutation({
+    mutationFn: async (newTask: NewTask) => {
+      console.log("Adding new task with data:", newTask);
       
-    return (lastTask?.[0]?.position ?? -1) + 1;
-  };
-  
-  // Fonction améliorée pour formater les dates au format attendu par Supabase
-  const formatTaskDate = (date: Date) => {
-    // Format standard YYYY-MM-DD pour la base de données
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    
-    return `${year}-${month}-${day}`;
-  };
+      if (!user?.id) {
+        throw new Error("User not authenticated");
+      }
 
-  const handleAddTask = async (newTask: NewTask) => {
-    if (!user?.id) {
-      toast({
-        title: "Error",
-        description: "You must be logged in to add tasks",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const nextPosition = await getNextPosition();
-      const formattedDate = formatTaskDate(newTask.date);
-      
-      console.log("Adding task with date:", formattedDate, "Original date:", newTask.date);
-      console.log("Task is recurring:", newTask.is_recurring);
-      console.log("Recurrence pattern:", newTask.recurrence_pattern);
-
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('maintenance_tasks')
-        .insert({
-          title: newTask.title,
-          date: formattedDate,
-          type: newTask.type,
-          priority: newTask.priority || 'medium',
-          completed: false,
-          user_id: user.id,
-          position: nextPosition,
-          is_recurring: newTask.is_recurring || false,
-          recurrence_pattern: newTask.recurrence_pattern ? {
-            frequency: newTask.recurrence_pattern.frequency,
-            interval: newTask.recurrence_pattern.interval,
-            weekdays: newTask.recurrence_pattern.weekdays || [],
-            end_date: newTask.recurrence_pattern.end_date 
-              ? formatTaskDate(new Date(newTask.recurrence_pattern.end_date)) 
-              : null
-          } : null
-        });
+        .insert([
+          {
+            title: newTask.title,
+            description: newTask.description || '',
+            status: 'pending',
+            priority: newTask.priority,
+            due_date: newTask.deadline,
+            date: newTask.date,
+            type: newTask.type,
+            is_recurring: newTask.is_recurring || false,
+            recurrence_pattern: newTask.recurrence_pattern,
+            user_id: user.id,
+            completed: false,
+            tenant_id: newTask.tenant_id,
+            property_id: newTask.property_id,
+            has_reminder: newTask.has_reminder || false,
+            reminder_date: newTask.reminder_date
+          }
+        ])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error adding task:", error);
+        throw error;
+      }
 
+      return data;
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-      toast({
-        title: "Success",
-        description: "Task added successfully",
-      });
-    } catch (error) {
-      console.error("Error adding task:", error);
-      toast({
-        title: "Error",
-        description: "Unable to add task",
-        variant: "destructive",
-      });
     }
-  };
+  });
 
-  const handleAddMultipleTasks = async (newTasks: NewTask[]) => {
-    if (!user?.id || newTasks.length === 0) {
-      return;
-    }
+  const addMultipleTasksMutation = useMutation({
+    mutationFn: async (newTasks: NewTask[]) => {
+      console.log("Adding multiple tasks with data:", newTasks);
 
-    try {
-      const nextPosition = await getNextPosition();
-      
-      const tasksToInsert = newTasks.map((task, index) => {
-        const formattedDate = formatTaskDate(task.date);
-        console.log(`Task ${index + 1} date:`, formattedDate, "Original date:", task.date);
-        console.log(`Task ${index + 1} is recurring:`, task.is_recurring);
-        
-        return {
-          title: task.title,
-          date: formattedDate,
-          type: task.type,
-          priority: task.priority || 'medium',
-          completed: false,
-          user_id: user.id,
-          position: nextPosition + index,
-          is_recurring: task.is_recurring || false,
-          recurrence_pattern: task.recurrence_pattern ? {
-            frequency: task.recurrence_pattern.frequency,
-            interval: task.recurrence_pattern.interval,
-            weekdays: task.recurrence_pattern.weekdays || [],
-            end_date: task.recurrence_pattern.end_date 
-              ? formatTaskDate(new Date(task.recurrence_pattern.end_date)) 
-              : null
-          } : null
-        };
-      });
+      if (!user?.id) {
+        throw new Error("User not authenticated");
+      }
 
-      const { error } = await supabase
+      const tasks = newTasks.map(task => ({
+        title: task.title,
+        description: task.description || '',
+        status: 'pending',
+        priority: task.priority,
+        due_date: task.deadline,
+        date: task.date,
+        type: task.type,
+        is_recurring: task.is_recurring || false,
+        recurrence_pattern: task.recurrence_pattern,
+        user_id: user.id,
+        completed: false,
+        tenant_id: task.tenant_id,
+        property_id: task.property_id,
+        has_reminder: task.has_reminder || false,
+        reminder_date: task.reminder_date
+      }));
+
+      const { data, error } = await supabase
         .from('maintenance_tasks')
-        .insert(tasksToInsert);
+        .insert(tasks)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error adding multiple tasks:", error);
+        throw error;
+      }
 
+      return data;
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-      toast({
-        title: "Success",
-        description: `${tasksToInsert.length} tasks added successfully`,
-      });
-    } catch (error) {
-      console.error("Error adding batch tasks:", error);
-      toast({
-        title: "Error",
-        description: "Unable to add tasks in batch",
-        variant: "destructive",
-      });
     }
-  };
+  });
 
-  return { handleAddTask, handleAddMultipleTasks };
+  return {
+    handleAddTask: (newTask: NewTask) => addTaskMutation.mutateAsync(newTask),
+    handleAddMultipleTasks: (newTasks: NewTask[]) => addMultipleTasksMutation.mutateAsync(newTasks),
+    isAddingTask: addTaskMutation.isPending,
+    isAddingMultipleTasks: addMultipleTasksMutation.isPending
+  };
 };

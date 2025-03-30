@@ -58,7 +58,17 @@ export const enTasks = {
   daily: "Daily",
   weekly: "Weekly",
   monthly: "Monthly",
-  date: "Date"
+  date: "Date",
+  // New translations for reminders
+  reminders: "Reminders",
+  addReminder: "Add reminder",
+  reminderDate: "Reminder date",
+  noReminders: "No reminders scheduled",
+  today: "Today",
+  tomorrow: "Tomorrow",
+  thisWeek: "This week",
+  later: "Later",
+  hasReminder: "Has reminder"
 };
 
 export const frTasks = {
@@ -120,5 +130,15 @@ export const frTasks = {
   daily: "Quotidienne",
   weekly: "Hebdomadaire",
   monthly: "Mensuelle",
-  date: "Date"
+  date: "Date",
+  // New translations for reminders
+  reminders: "Rappels",
+  addReminder: "Ajouter un rappel",
+  reminderDate: "Date de rappel",
+  noReminders: "Aucun rappel planifié",
+  today: "Aujourd'hui",
+  tomorrow: "Demain",
+  thisWeek: "Cette semaine",
+  later: "Plus tard",
+  hasReminder: "A un rappel"
 };

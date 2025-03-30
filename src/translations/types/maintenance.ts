@@ -122,4 +122,14 @@ export interface MaintenanceTranslations {
   statusChanged: string;
   feedbackReceivedFor: string;
   tenantFeedbackReceived: string;
+  // New reminders support
+  reminders?: string;
+  addReminder?: string;
+  reminderDate?: string;
+  noReminders?: string;
+  today?: string;
+  tomorrow?: string;
+  thisWeek?: string;
+  later?: string;
+  hasReminder?: string;
 }
