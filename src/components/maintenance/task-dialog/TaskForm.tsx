@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, RotateCw, CheckCircle, BellRing } from "lucide-react";
+import { CalendarIcon, RotateCw, CheckCircle, BellRing, Mail, Smartphone } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -15,6 +15,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { RecurrenceSettings } from "./RecurrenceSettings";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -35,6 +36,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
   const [hasReminder, setHasReminder] = useState(false);
   const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate);
+  const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">("app");
   
   const { t, language } = useLocale();
   
@@ -50,7 +52,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
         : undefined;
       
       console.log("Submitting task with date:", submissionDate, "Original selected date:", date);
-      console.log("Reminder date:", submissionReminderDate, "has reminder:", hasReminder);
+      console.log("Reminder date:", submissionReminderDate, "has reminder:", hasReminder, "method:", reminderMethod);
       
       onSubmit({ 
         title,
@@ -65,7 +67,8 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
           end_date: undefined
         } : undefined,
         has_reminder: hasReminder,
-        reminder_date: hasReminder ? submissionReminderDate : undefined
+        reminder_date: hasReminder ? submissionReminderDate : undefined,
+        reminder_method: hasReminder ? reminderMethod : undefined
       });
     }
   };
@@ -185,32 +188,69 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
       </div>
       
       {hasReminder && (
-        <div className="space-y-2 pt-2 pl-4 border-l-2 border-muted">
-          <Label>{t('reminderDate')}</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !reminderDate && "text-muted-foreground"
-                )}
-              >
-                <BellRing className="mr-2 h-4 w-4" />
-                {reminderDate ? format(reminderDate, "PPP", { locale: dateLocale }) : <span>{t('selectDate')}</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={reminderDate}
-                onSelect={handleReminderDateSelect}
-                initialFocus
-                locale={dateLocale}
-                className="pointer-events-auto"
-              />
-            </PopoverContent>
-          </Popover>
+        <div className="space-y-4 pt-2 pl-4 border-l-2 border-muted">
+          <div className="space-y-2">
+            <Label>{t('reminderDate')}</Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-start text-left font-normal",
+                    !reminderDate && "text-muted-foreground"
+                  )}
+                >
+                  <BellRing className="mr-2 h-4 w-4" />
+                  {reminderDate ? format(reminderDate, "PPP", { locale: dateLocale }) : <span>{t('selectDate')}</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={reminderDate}
+                  onSelect={handleReminderDateSelect}
+                  initialFocus
+                  locale={dateLocale}
+                  className="pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          
+          {/* Nouvelle section pour la méthode de notification */}
+          <div className="space-y-2">
+            <Label>{t('reminderMethod')}</Label>
+            <RadioGroup 
+              value={reminderMethod} 
+              onValueChange={(value: "app" | "email" | "both") => setReminderMethod(value)}
+              className="flex flex-col space-y-1"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="app" id="app" />
+                <Label htmlFor="app" className="flex items-center cursor-pointer">
+                  <Smartphone className="h-4 w-4 mr-2" />
+                  {t('reminderViaApp')}
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="email" id="email" />
+                <Label htmlFor="email" className="flex items-center cursor-pointer">
+                  <Mail className="h-4 w-4 mr-2" />
+                  {t('reminderViaEmail')}
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="both" id="both" />
+                <Label htmlFor="both" className="flex items-center cursor-pointer">
+                  <Smartphone className="h-4 w-4 mr-2" />
+                  <Mail className="h-4 w-4 mr-2" />
+                  {t('reminderViaBoth')}
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
         </div>
       )}
       

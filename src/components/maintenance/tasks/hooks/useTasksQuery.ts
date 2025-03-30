@@ -32,6 +32,7 @@ export const useTasksQuery = () => {
           is_recurring: Boolean(task.is_recurring),
           has_reminder: Boolean(task.has_reminder),
           reminder_date: task.reminder_date ? new Date(task.reminder_date) : undefined,
+          reminder_method: task.reminder_method || "app",
           recurrence_pattern: task.recurrence_pattern ? {
             frequency: task.recurrence_pattern.frequency || "daily",
             interval: task.recurrence_pattern.interval || 1,

@@ -3,71 +3,37 @@ export interface Tenant {
   id: string;
   name: string;
   unit_number: string;
-  properties?: {
-    name: string;
-  };
+  email: string;
+  phone?: string;
+  property_id?: string;
 }
 
-export interface MaintenanceRequest {
-  id: string;
-  issue: string;
-  status: string;
-  priority: string;
-  created_at: string;
-  tenant_id: string;
-  tenant_notified: boolean;
-  tenants?: Tenant;
-  photos?: string[];
-  description?: string;
-  tenant_feedback?: string;
-  tenant_rating?: number;
-  deadline?: string;
-  updated_at?: string;
-  title?: string;
+export interface RecurrencePattern {
+  frequency: "daily" | "weekly" | "monthly";
+  interval: number;
+  weekdays?: string[];
+  end_date?: Date;
 }
 
 export interface NewTask {
   title: string;
-  description?: string;
-  tenant_id?: string;
-  property_id?: string;
-  priority: string;
-  deadline?: string;
   date: Date;
-  type: 'regular' | 'inspection' | 'seasonal';
+  type: "regular" | "inspection" | "seasonal";
+  priority: "low" | "medium" | "high" | "urgent";
   is_recurring?: boolean;
-  recurrence_pattern?: {
-    frequency: string;
-    interval: number;
-    weekdays: string[];
-    end_date?: string;
-  };
+  recurrence_pattern?: RecurrencePattern;
   has_reminder?: boolean;
   reminder_date?: Date;
+  reminder_method?: "app" | "email" | "both";
 }
 
-export interface Task {
+export interface Task extends NewTask {
   id: string;
-  title: string;
-  description: string;
-  status: string;
-  priority: string;
-  created_at: string;
-  due_date: string;
-  is_recurring: boolean;
-  recurrence_pattern?: {
-    frequency: string;
-    interval: number;
-    weekdays: string[];
-    end_date?: string;
-  };
-  type: 'regular' | 'inspection' | 'seasonal';
-  assigned_to?: string;
-  property_id?: string;
-  tenant_id?: string;
-  date: Date;
-  completed: boolean;
   user_id: string;
-  has_reminder: boolean;
-  reminder_date?: Date;
+  completed: boolean;
+  status: "pending" | "in_progress" | "completed";
+  created_at: string;
+  updated_at: string;
+  photos: string[];
+  position: number;
 }

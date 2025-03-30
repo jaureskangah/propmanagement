@@ -71,7 +71,12 @@ export const enTasks = {
   tomorrow: "Tomorrow",
   thisWeek: "This week",
   later: "Later",
-  hasReminder: "Has reminder"
+  hasReminder: "Has reminder",
+  // New reminder method options
+  reminderMethod: "Reminder method",
+  reminderViaApp: "Via App",
+  reminderViaEmail: "Via Email",
+  reminderViaBoth: "Via App & Email"
 };
 
 export const frTasks = {
@@ -143,5 +148,10 @@ export const frTasks = {
   tomorrow: "Demain",
   thisWeek: "Cette semaine",
   later: "Plus tard",
-  hasReminder: "A un rappel"
+  hasReminder: "A un rappel",
+  // New reminder method options
+  reminderMethod: "Méthode de rappel",
+  reminderViaApp: "Via l'application",
+  reminderViaEmail: "Via email",
+  reminderViaBoth: "Via app & email"
 };

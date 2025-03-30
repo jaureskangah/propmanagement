@@ -132,4 +132,9 @@ export interface MaintenanceTranslations {
   // Removed conflicting "thisWeek" property to resolve type conflict
   later?: string;
   hasReminder?: string;
+  // New reminder method options
+  reminderMethod?: string;
+  reminderViaApp?: string;
+  reminderViaEmail?: string;
+  reminderViaBoth?: string;
 }
