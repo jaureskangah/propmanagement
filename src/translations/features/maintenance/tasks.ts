@@ -1,3 +1,4 @@
+
 export const enTasks = {
   regularTask: "Regular Task",
   inspection: "Inspection",
@@ -30,8 +31,8 @@ export const enTasks = {
   errorAddingTasks: "Error adding tasks. Please try again.",
   // New translations for recurring tasks
   recurringTasks: "Recurring Tasks",
-  upcoming: "Upcoming",
-  patterns: "Patterns",
+  upcomingView: "Upcoming",
+  patternsView: "Patterns",
   noRecurringTasks: "No recurring tasks scheduled",
   noRecurringTasksInRange: "No recurring tasks in the selected time range",
   upcomingRecurring: "Upcoming Occurrences",
@@ -67,8 +68,6 @@ export const enTasks = {
   emailNotification: "Email",
   appNotification: "In-app",
   bothNotifications: "Email & In-app",
-  upcoming: "Upcoming",
-  patterns: "Patterns",
   reminders: "Reminders",
   upcomingReminders: "Upcoming reminders",
   noReminders: "No reminders scheduled",
@@ -113,8 +112,8 @@ export const frTasks = {
   errorAddingTasks: "Erreur lors de l'ajout des tâches. Veuillez réessayer.",
   // New translations for recurring tasks
   recurringTasks: "Tâches récurrentes",
-  upcoming: "À venir",
-  patterns: "Modèles",
+  upcomingView: "À venir",
+  patternsView: "Modèles",
   noRecurringTasks: "Aucune tâche récurrente planifiée",
   noRecurringTasksInRange: "Aucune tâche récurrente dans la période sélectionnée",
   upcomingRecurring: "Prochaines occurrences",
@@ -150,8 +149,6 @@ export const frTasks = {
   emailNotification: "Email",
   appNotification: "Application",
   bothNotifications: "Email & Application",
-  upcoming: "À venir",
-  patterns: "Modèles",
   reminders: "Rappels",
   upcomingReminders: "Rappels à venir",
   noReminders: "Aucun rappel planifié",

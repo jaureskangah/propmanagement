@@ -162,8 +162,8 @@ export const PreventiveMaintenance = () => {
               <div className="mt-2">
                 <Tabs defaultValue="upcoming" className="w-full">
                   <TabsList className="w-full grid grid-cols-2">
-                    <TabsTrigger value="upcoming">{t('upcoming')}</TabsTrigger>
-                    <TabsTrigger value="patterns">{t('patterns')}</TabsTrigger>
+                    <TabsTrigger value="upcoming">{t('upcomingView')}</TabsTrigger>
+                    <TabsTrigger value="patterns">{t('patternsView')}</TabsTrigger>
                   </TabsList>
                   
                   <TabsContent value="upcoming" className="mt-4">
