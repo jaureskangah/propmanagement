@@ -26,7 +26,7 @@ export const useTaskAddition = () => {
         console.log("Reminder settings:", newTask.reminder);
       }
       
-      // Create a copy of the task without unsupported properties
+      // Create a task with all necessary properties
       const taskToAdd = {
         title: newTask.title,
         date: newTask.date,
@@ -34,13 +34,11 @@ export const useTaskAddition = () => {
         priority: newTask.priority || 'medium',
         is_recurring: newTask.is_recurring || false,
         recurrence_pattern: newTask.recurrence_pattern,
-        // Store reminder info in metadata field
-        metadata: newTask.reminder ? {
-          reminder: {
-            ...newTask.reminder,
-            date: newTask.reminder.date ? newTask.reminder.date : newTask.date
-          }
-        } : null
+        // Add reminder fields directly to the task
+        reminder_enabled: newTask.reminder?.enabled || false,
+        reminder_time: newTask.reminder?.time || null,
+        reminder_date: newTask.reminder?.date || null,
+        reminder_notification_type: newTask.reminder?.notification_type || null
       };
       
       console.log("Task being inserted into Supabase:", taskToAdd);
@@ -73,7 +71,7 @@ export const useTaskAddition = () => {
   // Function to add multiple tasks
   const addMultipleTasksMutation = useMutation({
     mutationFn: async (newTasks: NewTask[]) => {
-      // Prepare tasks to add without unsupported properties
+      // Prepare tasks to add with all necessary properties
       const tasksToAdd = newTasks.map(task => ({
         title: task.title,
         date: task.date,
@@ -81,12 +79,11 @@ export const useTaskAddition = () => {
         priority: task.priority || "medium",
         is_recurring: task.is_recurring || false,
         recurrence_pattern: task.recurrence_pattern,
-        metadata: task.reminder ? {
-          reminder: {
-            ...task.reminder,
-            date: task.reminder.date ? task.reminder.date : task.date
-          }
-        } : null
+        // Add reminder fields directly to the task
+        reminder_enabled: task.reminder?.enabled || false,
+        reminder_time: task.reminder?.time || null,
+        reminder_date: task.reminder?.date || null,
+        reminder_notification_type: task.reminder?.notification_type || null
       }));
       
       console.log("Multiple tasks being inserted:", tasksToAdd);

@@ -33,7 +33,6 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
-  // Log pour débogage
   console.log("All tasks:", tasks);
   console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
   console.log("Tasks with reminders:", tasks.filter(task => task.reminder?.enabled));
@@ -42,7 +41,7 @@ export const PreventiveMaintenance = () => {
     selectedType === "all" ? true : task.type === selectedType
   );
 
-  // Filtrer les tâches par date sélectionnée
+  // Filter tasks by selected date
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return true;
     
@@ -77,8 +76,9 @@ export const PreventiveMaintenance = () => {
     setIsBatchSchedulingOpen(false);
   };
 
-  const recurringTasks = tasks.filter(task => task.is_recurring === true);
-  const tasksWithReminders = tasks.filter(task => task.reminder?.enabled === true);
+  // Use all tasks for the recurring and reminders views
+  // Don't filter them by selectedType or selectedDate
+  const allTasks = tasks;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -154,7 +154,7 @@ export const PreventiveMaintenance = () => {
           <Tabs defaultValue="reminders" className="w-full">
             <TabsContent value="reminders">
               <div className="mt-2">
-                <RemindersView tasks={tasksWithReminders} />
+                <RemindersView tasks={allTasks} />
               </div>
             </TabsContent>
             
@@ -167,7 +167,7 @@ export const PreventiveMaintenance = () => {
                   </TabsList>
                   
                   <TabsContent value="upcoming" className="mt-4">
-                    <RecurringTasksView tasks={recurringTasks} />
+                    <RecurringTasksView tasks={allTasks} />
                   </TabsContent>
                   
                   <TabsContent value="patterns" className="mt-4">

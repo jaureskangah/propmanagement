@@ -21,10 +21,7 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       
       const formattedTasks = data.map(task => {
-        // Extract reminder info from metadata if available
-        const metadata = task.metadata || {};
-        const reminderInfo = metadata.reminder || null;
-        
+        // Create base task object
         const formattedTask: Task = {
           ...task,
           date: new Date(task.date),
@@ -41,14 +38,14 @@ export const useTasksQuery = () => {
           } : undefined
         };
         
-        // Only add reminder if it exists in metadata and is enabled
-        if (reminderInfo && reminderInfo.enabled) {
+        // Add reminder if it exists with direct fields
+        if (task.reminder_enabled) {
           formattedTask.reminder = {
             enabled: true,
-            time: reminderInfo.time || "09:00",
-            date: reminderInfo.date ? new Date(reminderInfo.date) : new Date(task.date),
-            notification_type: reminderInfo.notification_type || "app",
-            last_sent: reminderInfo.last_sent
+            time: task.reminder_time || "09:00",
+            date: task.reminder_date ? new Date(task.reminder_date) : new Date(task.date),
+            notification_type: task.reminder_notification_type || "app",
+            last_sent: null
           };
         }
         
