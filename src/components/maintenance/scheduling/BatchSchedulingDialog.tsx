@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -38,14 +37,24 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
     setIsSubmitting(true);
     
     try {
-      const tasks: NewTask[] = selectedDates.map((date, index) => ({
-        title: `${batchTitle} ${index + 1}`,
-        // Normaliser la date pour éviter les problèmes de fuseau horaire
-        date: startOfDay(date),
-        type: batchType,
-        priority: batchPriority,
-        is_recurring: false
-      }));
+      const tasks: NewTask[] = selectedDates.map((date, index) => {
+        const normalizedDate = new Date(Date.UTC(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          12, 0, 0, 0
+        ));
+        
+        console.log(`Creating task ${index + 1} with date:`, normalizedDate, "Original selected date:", date);
+        
+        return {
+          title: `${batchTitle} ${index + 1}`,
+          date: normalizedDate,
+          type: batchType,
+          priority: batchPriority,
+          is_recurring: false
+        };
+      });
       
       onSchedule(tasks);
       resetForm();
@@ -78,10 +87,16 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
     onClose();
   };
   
-  // Handler pour normaliser les dates sélectionnées
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (dates) {
-      setSelectedDates(dates.map(date => startOfDay(date)));
+      setSelectedDates(dates.map(date => {
+        return new Date(Date.UTC(
+          date.getFullYear(), 
+          date.getMonth(), 
+          date.getDate(),
+          12, 0, 0, 0
+        ));
+      }));
     } else {
       setSelectedDates([]);
     }

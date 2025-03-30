@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,8 +20,16 @@ interface TaskFormProps {
 }
 
 export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
+  const today = new Date();
+  const utcToday = new Date(Date.UTC(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    12, 0, 0, 0
+  ));
+  
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()));
+  const [date, setDate] = useState<Date | undefined>(utcToday);
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
   const [isRecurring, setIsRecurring] = useState(false);
@@ -31,14 +38,19 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   
   const { t, language } = useLocale();
   
-  // Determine the locale for date-fns
   const dateLocale = language === 'fr' ? fr : undefined;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title && date && type) {
-      // Ensure date is set to midnight to avoid timezone issues
-      const normalizedDate = startOfDay(date);
+      const normalizedDate = new Date(Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        12, 0, 0, 0
+      ));
+      
+      console.log("Submitting task with date:", normalizedDate, "Original date:", date);
       
       onSubmit({ 
         title,
@@ -56,10 +68,15 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
     }
   };
 
-  // Handler to normalize the date selection
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      setDate(startOfDay(newDate));
+      const normalizedDate = new Date(Date.UTC(
+        newDate.getFullYear(),
+        newDate.getMonth(),
+        newDate.getDate(),
+        12, 0, 0, 0
+      ));
+      setDate(normalizedDate);
     } else {
       setDate(undefined);
     }

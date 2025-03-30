@@ -21,8 +21,17 @@ export const useTaskAddition = () => {
     return (lastTask?.[0]?.position ?? -1) + 1;
   };
   
+  // Modifié pour s'assurer que la date n'est pas affectée par le fuseau horaire
   const formatTaskDate = (date: Date) => {
-    const normalizedDate = startOfDay(date);
+    // Normaliser la date en utilisant UTC pour éviter les décalages liés au fuseau horaire
+    const normalizedDate = new Date(Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      12, 0, 0, 0
+    ));
+    
+    // Format standard ISO pour la date (YYYY-MM-DD)
     return format(normalizedDate, 'yyyy-MM-dd');
   };
 
@@ -40,7 +49,7 @@ export const useTaskAddition = () => {
       const nextPosition = await getNextPosition();
       const formattedDate = formatTaskDate(newTask.date);
       
-      console.log("Adding task with date:", formattedDate);
+      console.log("Adding task with date:", formattedDate, "Original date:", newTask.date);
 
       const { error } = await supabase
         .from('maintenance_tasks')
@@ -88,6 +97,8 @@ export const useTaskAddition = () => {
       
       const tasksToInsert = newTasks.map((task, index) => {
         const formattedDate = formatTaskDate(task.date);
+        console.log(`Task ${index + 1} date:`, formattedDate, "Original date:", task.date);
+        
         return {
           title: task.title,
           date: formattedDate,
