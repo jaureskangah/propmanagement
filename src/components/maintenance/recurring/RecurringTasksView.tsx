@@ -15,21 +15,21 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filtrer uniquement les tâches récurrentes
+  // Filter only recurring tasks
   const recurringTasks = tasks.filter(task => task.is_recurring === true);
   
   console.log("All tasks count:", tasks.length);
   console.log("Recurring tasks count in view:", recurringTasks.length);
   console.log("Recurring task data:", recurringTasks);
   
-  // Trier les tâches par date
+  // Sort tasks by date
   const sortedTasks = [...recurringTasks].sort((a, b) => {
     const dateA = new Date(a.date);
     const dateB = new Date(b.date);
     return dateA.getTime() - dateB.getTime();
   });
   
-  // Filtrer pour n'afficher que les tâches des 30 prochains jours
+  // Filter to show only tasks for the next 30 days
   const today = new Date();
   const nextMonth = addDays(today, 30);
   
@@ -64,7 +64,7 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
         {upcomingTasks.map((task) => {
           const taskDate = new Date(task.date);
           
-          // Simplifier l'affichage de la fréquence
+          // Simplify frequency display
           let frequencyText = "";
           if (task.recurrence_pattern) {
             const { frequency, interval } = task.recurrence_pattern;

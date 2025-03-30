@@ -10,35 +10,40 @@ export const useTaskAddition = () => {
   const { toast } = useToast();
   const { t } = useLocale();
 
-  // Fonction pour ajouter une nouvelle tâche
+  // Function to add a new task
   const addTaskMutation = useMutation({
     mutationFn: async (newTask: NewTask) => {
       console.log("Adding task with date:", newTask.date, "Original date:", newTask.date);
       
-      // Log si la tâche est récurrente
+      // Log if the task is recurring
       console.log("Task is recurring:", newTask.is_recurring);
       if (newTask.is_recurring && newTask.recurrence_pattern) {
         console.log("Recurrence pattern:", newTask.recurrence_pattern);
       }
       
-      // Log si la tâche a un rappel
+      // Log if the task has a reminder
       if (newTask.reminder) {
         console.log("Reminder settings:", newTask.reminder);
       }
       
-      // Créer une copie de la tâche sans les propriétés non supportées
+      // Create a copy of the task without unsupported properties
       const taskToAdd = {
         title: newTask.title,
         date: newTask.date,
         type: newTask.type,
-        priority: newTask.priority,
-        is_recurring: newTask.is_recurring,
+        priority: newTask.priority || 'medium',
+        is_recurring: newTask.is_recurring || false,
         recurrence_pattern: newTask.recurrence_pattern,
-        // Stockons les infos de rappel dans un champ metadata plutôt qu'utiliser reminder directement
-        metadata: {
-          reminder: newTask.reminder
-        }
+        // Store reminder info in metadata field
+        metadata: newTask.reminder ? {
+          reminder: {
+            ...newTask.reminder,
+            date: newTask.reminder.date ? newTask.reminder.date : newTask.date
+          }
+        } : null
       };
+      
+      console.log("Task being inserted into Supabase:", taskToAdd);
       
       const { data, error } = await supabase
         .from('maintenance_tasks')
@@ -65,10 +70,10 @@ export const useTaskAddition = () => {
     },
   });
 
-  // Fonction pour ajouter plusieurs tâches
+  // Function to add multiple tasks
   const addMultipleTasksMutation = useMutation({
     mutationFn: async (newTasks: NewTask[]) => {
-      // Préparer les tâches à ajouter sans les propriétés non supportées
+      // Prepare tasks to add without unsupported properties
       const tasksToAdd = newTasks.map(task => ({
         title: task.title,
         date: task.date,
@@ -76,10 +81,15 @@ export const useTaskAddition = () => {
         priority: task.priority || "medium",
         is_recurring: task.is_recurring || false,
         recurrence_pattern: task.recurrence_pattern,
-        metadata: {
-          reminder: task.reminder
-        }
+        metadata: task.reminder ? {
+          reminder: {
+            ...task.reminder,
+            date: task.reminder.date ? task.reminder.date : task.date
+          }
+        } : null
       }));
+      
+      console.log("Multiple tasks being inserted:", tasksToAdd);
       
       const { data, error } = await supabase
         .from('maintenance_tasks')

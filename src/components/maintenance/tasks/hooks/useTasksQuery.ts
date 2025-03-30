@@ -21,11 +21,11 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       
       const formattedTasks = data.map(task => {
-        // Récupérer les informations de rappel depuis le champ metadata si disponible
-        const reminderInfo = task.metadata?.reminder || null;
+        // Extract reminder info from metadata if available
+        const metadata = task.metadata || {};
+        const reminderInfo = metadata.reminder || null;
         
-        // Normalisation des structures pour garantir la conformité à l'interface Task
-        return {
+        const formattedTask: Task = {
           ...task,
           date: new Date(task.date),
           type: task.type as "regular" | "inspection" | "seasonal",
@@ -38,15 +38,21 @@ export const useTasksQuery = () => {
             interval: task.recurrence_pattern.interval || 1,
             weekdays: task.recurrence_pattern.weekdays || [],
             end_date: task.recurrence_pattern.end_date ? new Date(task.recurrence_pattern.end_date) : undefined
-          } : undefined,
-          reminder: reminderInfo ? {
-            enabled: Boolean(reminderInfo.enabled),
+          } : undefined
+        };
+        
+        // Only add reminder if it exists in metadata and is enabled
+        if (reminderInfo && reminderInfo.enabled) {
+          formattedTask.reminder = {
+            enabled: true,
             time: reminderInfo.time || "09:00",
             date: reminderInfo.date ? new Date(reminderInfo.date) : new Date(task.date),
             notification_type: reminderInfo.notification_type || "app",
             last_sent: reminderInfo.last_sent
-          } : undefined
-        } as Task;
+          };
+        }
+        
+        return formattedTask;
       });
       
       console.log("Processed tasks after fetch:", formattedTasks);
@@ -57,7 +63,7 @@ export const useTasksQuery = () => {
     },
   });
 
-  // Filtres pour le débogage
+  // Debug filtering
   const recurringTasks = tasks.filter(task => task.is_recurring);
   const tasksWithReminders = tasks.filter(task => task.reminder?.enabled);
   

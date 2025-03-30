@@ -15,9 +15,9 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filtrer les tâches qui ont des rappels
+  // Filter tasks with enabled reminders and not completed
   const tasksWithReminders = tasks.filter(task => 
-    task.reminder?.enabled && 
+    task.reminder && task.reminder.enabled && 
     !task.completed
   );
   
@@ -25,14 +25,14 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   console.log("Tasks with reminders count in view:", tasksWithReminders.length);
   console.log("Reminder tasks data:", tasksWithReminders);
   
-  // Trier les rappels par date
+  // Sort reminders by date
   const sortedReminders = [...tasksWithReminders].sort((a, b) => {
     const dateA = a.reminder?.date ? new Date(a.reminder.date) : new Date(a.date);
     const dateB = b.reminder?.date ? new Date(b.reminder.date) : new Date(b.date);
     return dateA.getTime() - dateB.getTime();
   });
   
-  // Filtrer pour n'afficher que les rappels des 7 prochains jours
+  // Filter to show only reminders for the next 7 days
   const today = new Date();
   const nextWeek = addDays(today, 7);
   
