@@ -53,14 +53,6 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
     }
   };
 
-  // Ajout d'un gestionnaire spécifique pour la sélection de date
-  const handleDateSelect = (newDate: Date | undefined) => {
-    // Si une date est sélectionnée, on l'utilise telle quelle sans modification
-    if (newDate) {
-      setDate(newDate);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -93,7 +85,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={handleDateSelect}
+              onSelect={setDate}
               initialFocus
               locale={dateLocale}
               className="pointer-events-auto"

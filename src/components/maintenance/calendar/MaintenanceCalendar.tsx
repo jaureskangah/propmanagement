@@ -62,17 +62,12 @@ export const MaintenanceCalendar = ({
   // Obtenir la locale appropriée pour date-fns
   const dateFnsLocale = language === 'fr' ? fr : undefined;
 
-  // Gérer la sélection de date sans modification
-  const handleDateSelect = (date: Date | undefined) => {
-    onSelectDate(date);
-  };
-
   return (
     <TooltipProvider>
       <Calendar
         mode="single"
         selected={selectedDate}
-        onSelect={handleDateSelect}
+        onSelect={onSelectDate}
         className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
         modifiers={{
           hasTasks: (date) => getTasksForDate(date).length > 0,

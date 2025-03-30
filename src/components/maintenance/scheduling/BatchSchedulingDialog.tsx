@@ -77,14 +77,6 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
     onClose();
   };
   
-  // Ajout d'un gestionnaire spécifique pour la sélection de date
-  const handleDateSelect = (dates: Date[] | undefined) => {
-    if (dates) {
-      // Utiliser directement les dates sélectionnées sans modification
-      setSelectedDates(dates);
-    }
-  };
-  
   const removeDate = (dateToRemove: Date) => {
     setSelectedDates(selectedDates.filter(
       date => date.getTime() !== dateToRemove.getTime()
@@ -147,7 +139,7 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
                 <Calendar
                   mode="multiple"
                   selected={selectedDates}
-                  onSelect={handleDateSelect}
+                  onSelect={setSelectedDates}
                   className="pointer-events-auto w-full"
                   locale={dateLocale}
                   initialFocus
