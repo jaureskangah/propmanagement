@@ -14,6 +14,7 @@ interface Task {
   date: Date;
   completed: boolean;
   type: "regular" | "inspection" | "seasonal";
+  priority?: "low" | "medium" | "high" | "urgent";
   user_id: string;
 }
 
@@ -63,6 +64,17 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                   {format(taskDate, "dd/MM/yyyy", { locale: language === 'fr' ? fr : undefined })}
                 </Badge>
                 <Badge variant="outline">{t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}</Badge>
+                {task.priority && (
+                  <Badge 
+                    variant={
+                      task.priority === 'urgent' ? 'destructive' : 
+                      task.priority === 'high' ? 'default' :
+                      task.priority === 'medium' ? 'secondary' : 'outline'
+                    }
+                  >
+                    {t(task.priority)}
+                  </Badge>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"

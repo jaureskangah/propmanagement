@@ -32,9 +32,21 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
-  const filteredTasks = tasks.filter((task) =>
+  const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
   );
+
+  // Filtrer les tâches par date sélectionnée
+  const filteredTasksByDate = filteredTasksByType.filter(task => {
+    if (!selectedDate) return true;
+    
+    const taskDate = new Date(task.date);
+    return (
+      taskDate.getFullYear() === selectedDate.getFullYear() &&
+      taskDate.getMonth() === selectedDate.getMonth() &&
+      taskDate.getDate() === selectedDate.getDate()
+    );
+  });
 
   if (isLoading) {
     return <div>{t('loading')}</div>;
@@ -102,11 +114,7 @@ export const PreventiveMaintenance = () => {
               </Button>
             </div>
             <TaskList 
-              tasks={filteredTasks.filter(task => 
-                selectedDate ? 
-                  new Date(task.date).toDateString() === selectedDate.toDateString() 
-                  : true
-              )} 
+              tasks={filteredTasksByDate} 
               onTaskComplete={handleTaskCompletion} 
               onTaskDelete={handleDeleteTask}
             />
