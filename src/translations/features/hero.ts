@@ -3,7 +3,7 @@ import { HeroTranslations } from '../types';
 
 export const enHero: HeroTranslations = {
   heroTitle: "Simplified Property Management in Canada",
-  heroSubtitle: "Complete solution for Canadian properties, compliant with provincial laws. Perfect for property owners and managers from coast to coast.",
+  heroSubtitle: "Complete solution for Canadian properties, compliant with provincial laws. Perfect for small property owners and managers from coast to coast.",
   heroGetStarted: "Get Started Now",
   learnMore: "Learn More"
 };
