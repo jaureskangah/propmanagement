@@ -10,7 +10,7 @@ export const enHero: HeroTranslations = {
 
 export const frHero: HeroTranslations = {
   heroTitle: "La Gestion Immobilière Simplifiée au Canada",
-  heroSubtitle: "Solution complète pour gérer vos propriétés canadiennes. Idéal pour les petits propriétaires et gestionnaires immobiliers de l'Ontario au Québec.",
+  heroSubtitle: "Solution complète pour gérer vos propriétés canadiennes. Idéal pour les petits propriétaires et gestionnaires immobiliers de la côte atlantique à la côte pacifique.",
   heroGetStarted: "Commencer maintenant",
   learnMore: "En savoir plus"
 };
