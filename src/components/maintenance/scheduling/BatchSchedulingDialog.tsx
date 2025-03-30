@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { NewTask } from "../types";
 import { Calendar } from "@/components/ui/calendar";
-import { format, addDays } from "date-fns";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,8 +77,10 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
     onClose();
   };
   
+  // Ajout d'un gestionnaire spécifique pour la sélection de date
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (dates) {
+      // Utiliser directement les dates sélectionnées sans modification
       setSelectedDates(dates);
     }
   };
