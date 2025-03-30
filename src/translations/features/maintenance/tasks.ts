@@ -1,3 +1,4 @@
+
 export const enTasks = {
   regularTask: "Regular Task",
   inspection: "Inspection",
@@ -32,8 +33,6 @@ export const enTasks = {
   recurringTasks: "Recurring Tasks",
   upcoming: "Upcoming",
   patterns: "Patterns",
-  week: "Week",
-  month: "Month",
   noRecurringTasks: "No recurring tasks scheduled",
   noRecurringTasksInRange: "No recurring tasks in the selected time range",
   upcomingRecurring: "Upcoming Occurrences",
@@ -44,15 +43,22 @@ export const enTasks = {
   days: "days",
   day: "day",
   weeks: "weeks",
-  week: "week",
+  weekSingular: "week",
   months: "months",
-  month: "month",
+  monthSingular: "month",
   recurringTasksPatterns: "View and manage recurring task patterns",
   success: "Success",
   low: "Low",
   medium: "Medium",
   high: "High",
-  urgent: "Urgent"
+  urgent: "Urgent",
+  makeRecurring: "Make recurring",
+  recurrenceFrequency: "Frequency",
+  recurrenceInterval: "Interval",
+  daily: "Daily",
+  weekly: "Weekly",
+  monthly: "Monthly",
+  date: "Date"
 };
 
 export const frTasks = {
@@ -89,8 +95,6 @@ export const frTasks = {
   recurringTasks: "Tâches récurrentes",
   upcoming: "À venir",
   patterns: "Modèles",
-  week: "Semaine",
-  month: "Mois",
   noRecurringTasks: "Aucune tâche récurrente planifiée",
   noRecurringTasksInRange: "Aucune tâche récurrente dans la période sélectionnée",
   upcomingRecurring: "Prochaines occurrences",
@@ -101,13 +105,20 @@ export const frTasks = {
   days: "jours",
   day: "jour",
   weeks: "semaines",
-  week: "semaine",
+  weekSingular: "semaine",
   months: "mois",
-  month: "mois",
+  monthSingular: "mois",
   recurringTasksPatterns: "Visualiser et gérer les modèles de tâches récurrentes",
   success: "Succès",
   low: "Faible",
   medium: "Moyenne",
   high: "Haute",
-  urgent: "Urgente"
+  urgent: "Urgente",
+  makeRecurring: "Rendre récurrente",
+  recurrenceFrequency: "Fréquence",
+  recurrenceInterval: "Intervalle",
+  daily: "Quotidienne",
+  weekly: "Hebdomadaire",
+  monthly: "Mensuelle",
+  date: "Date"
 };

@@ -74,8 +74,8 @@ export const RecurrenceSettings = ({
               />
               <Label>
                 {recurrenceFrequency === "daily" && (recurrenceInterval > 1 ? t('days') : t('day'))}
-                {recurrenceFrequency === "weekly" && (recurrenceInterval > 1 ? t('weeks') : t('week'))}
-                {recurrenceFrequency === "monthly" && (recurrenceInterval > 1 ? t('months') : t('month'))}
+                {recurrenceFrequency === "weekly" && (recurrenceInterval > 1 ? t('weeks') : t('weekSingular'))}
+                {recurrenceFrequency === "monthly" && (recurrenceInterval > 1 ? t('months') : t('monthSingular'))}
               </Label>
             </div>
           </div>

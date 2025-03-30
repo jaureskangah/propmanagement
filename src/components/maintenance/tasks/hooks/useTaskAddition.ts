@@ -63,7 +63,9 @@ export const useTaskAddition = () => {
             frequency: newTask.recurrence_pattern.frequency,
             interval: newTask.recurrence_pattern.interval,
             weekdays: newTask.recurrence_pattern.weekdays || [],
-            end_date: newTask.recurrence_pattern.end_date ? formatTaskDate(newTask.recurrence_pattern.end_date) : null
+            end_date: newTask.recurrence_pattern.end_date 
+              ? formatTaskDate(new Date(newTask.recurrence_pattern.end_date)) 
+              : null
           } : null
         });
 
@@ -110,7 +112,9 @@ export const useTaskAddition = () => {
             frequency: task.recurrence_pattern.frequency,
             interval: task.recurrence_pattern.interval,
             weekdays: task.recurrence_pattern.weekdays || [],
-            end_date: task.recurrence_pattern.end_date ? formatTaskDate(task.recurrence_pattern.end_date) : null
+            end_date: task.recurrence_pattern.end_date 
+              ? formatTaskDate(new Date(task.recurrence_pattern.end_date)) 
+              : null
           } : null
         };
       });
