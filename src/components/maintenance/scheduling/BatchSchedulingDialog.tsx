@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { NewTask } from "../types";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,7 +40,8 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
     try {
       const tasks: NewTask[] = selectedDates.map((date, index) => ({
         title: `${batchTitle} ${index + 1}`,
-        date,
+        // Normaliser la date pour éviter les problèmes de fuseau horaire
+        date: startOfDay(date),
         type: batchType,
         priority: batchPriority,
         is_recurring: false
@@ -75,6 +76,15 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
   const handleClose = () => {
     resetForm();
     onClose();
+  };
+  
+  // Handler pour normaliser les dates sélectionnées
+  const handleDateSelect = (dates: Date[] | undefined) => {
+    if (dates) {
+      setSelectedDates(dates.map(date => startOfDay(date)));
+    } else {
+      setSelectedDates([]);
+    }
   };
   
   const removeDate = (dateToRemove: Date) => {
@@ -139,7 +149,7 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
                 <Calendar
                   mode="multiple"
                   selected={selectedDates}
-                  onSelect={setSelectedDates}
+                  onSelect={handleDateSelect}
                   className="pointer-events-auto w-full"
                   locale={dateLocale}
                   initialFocus

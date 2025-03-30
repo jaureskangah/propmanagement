@@ -1,6 +1,6 @@
 
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -22,10 +22,21 @@ export const MaintenanceCalendar = ({
   const { t, language } = useLocale();
 
   const getTasksForDate = (date: Date) => {
+    // Normaliser la date pour la comparaison
+    const normalizedDate = startOfDay(date);
+    const formattedTargetDate = format(normalizedDate, "yyyy-MM-dd");
+    
     return tasks.filter(
-      (task) =>
-        format(task.date, "yyyy-MM-dd") === format(date, "yyyy-MM-dd") &&
-        (selectedType === "all" || task.type === selectedType)
+      (task) => {
+        // Normaliser la date de la tâche également
+        const taskDate = new Date(task.date);
+        const formattedTaskDate = format(taskDate, "yyyy-MM-dd");
+        
+        return (
+          formattedTaskDate === formattedTargetDate &&
+          (selectedType === "all" || task.type === selectedType)
+        );
+      }
     );
   };
 
@@ -61,13 +72,23 @@ export const MaintenanceCalendar = ({
 
   // Obtenir la locale appropriée pour date-fns
   const dateFnsLocale = language === 'fr' ? fr : undefined;
+  
+  // Gérer la sélection de date en normalisant
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      // Normaliser la date pour éviter les problèmes de fuseau horaire
+      onSelectDate(startOfDay(date));
+    } else {
+      onSelectDate(undefined);
+    }
+  };
 
   return (
     <TooltipProvider>
       <Calendar
         mode="single"
         selected={selectedDate}
-        onSelect={onSelectDate}
+        onSelect={handleDateSelect}
         className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
         modifiers={{
           hasTasks: (date) => getTasksForDate(date).length > 0,

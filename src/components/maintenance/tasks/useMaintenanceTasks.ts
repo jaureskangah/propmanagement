@@ -2,7 +2,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { Task, NewTask } from "../types";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -115,12 +115,18 @@ export const useMaintenanceTasks = () => {
         .limit(1);
 
       const nextPosition = (lastTask?.[0]?.position ?? -1) + 1;
+      
+      // Normaliser la date pour éviter les problèmes de fuseau horaire
+      const normalizedDate = startOfDay(newTask.date);
+      const formattedDate = format(normalizedDate, 'yyyy-MM-dd');
+      
+      console.log("Adding task with date:", formattedDate);
 
       const { error } = await supabase
         .from('maintenance_tasks')
         .insert({
           title: newTask.title,
-          date: format(newTask.date, 'yyyy-MM-dd'),
+          date: formattedDate,
           type: newTask.type,
           priority: newTask.priority || 'medium',
           completed: false,
@@ -167,22 +173,26 @@ export const useMaintenanceTasks = () => {
 
       let nextPosition = (lastTask?.[0]?.position ?? -1) + 1;
 
-      const tasksToInsert = newTasks.map((task, index) => ({
-        title: task.title,
-        date: format(task.date, 'yyyy-MM-dd'),
-        type: task.type,
-        priority: task.priority || 'medium',
-        completed: false,
-        user_id: user.id,
-        position: nextPosition + index,
-        is_recurring: task.is_recurring || false,
-        recurrence_pattern: task.recurrence_pattern ? {
-          frequency: task.recurrence_pattern.frequency,
-          interval: task.recurrence_pattern.interval,
-          weekdays: task.recurrence_pattern.weekdays,
-          end_date: task.recurrence_pattern.end_date
-        } : null
-      }));
+      const tasksToInsert = newTasks.map((task, index) => {
+        // Normaliser la date pour éviter les problèmes de fuseau horaire
+        const normalizedDate = startOfDay(task.date);
+        return {
+          title: task.title,
+          date: format(normalizedDate, 'yyyy-MM-dd'),
+          type: task.type,
+          priority: task.priority || 'medium',
+          completed: false,
+          user_id: user.id,
+          position: nextPosition + index,
+          is_recurring: task.is_recurring || false,
+          recurrence_pattern: task.recurrence_pattern ? {
+            frequency: task.recurrence_pattern.frequency,
+            interval: task.recurrence_pattern.interval,
+            weekdays: task.recurrence_pattern.weekdays,
+            end_date: task.recurrence_pattern.end_date
+          } : null
+        };
+      });
 
       const { error } = await supabase
         .from('maintenance_tasks')

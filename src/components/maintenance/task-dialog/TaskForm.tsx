@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, RotateCw, CheckCircle } from "lucide-react";
-import { format } from "date-fns";
+import { format, parseISO, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -22,7 +22,7 @@ interface TaskFormProps {
 
 export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>(startOfDay(new Date()));
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
   const [isRecurring, setIsRecurring] = useState(false);
@@ -37,9 +37,12 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title && date && type) {
+      // Ensure date is set to midnight to avoid timezone issues
+      const normalizedDate = startOfDay(date);
+      
       onSubmit({ 
         title,
-        date,
+        date: normalizedDate,
         type,
         priority,
         is_recurring: isRecurring,
@@ -50,6 +53,15 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
           end_date: undefined
         } : undefined
       });
+    }
+  };
+
+  // Handler to normalize the date selection
+  const handleDateSelect = (newDate: Date | undefined) => {
+    if (newDate) {
+      setDate(startOfDay(newDate));
+    } else {
+      setDate(undefined);
     }
   };
 
@@ -85,7 +97,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
             <Calendar
               mode="single"
               selected={date}
-              onSelect={setDate}
+              onSelect={handleDateSelect}
               initialFocus
               locale={dateLocale}
               className="pointer-events-auto"
