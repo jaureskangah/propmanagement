@@ -21,6 +21,10 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
     !task.completed
   );
   
+  console.log("All tasks count:", tasks.length);
+  console.log("Tasks with reminders count in view:", tasksWithReminders.length);
+  console.log("Reminder tasks data:", tasksWithReminders);
+  
   // Trier les rappels par date
   const sortedReminders = [...tasksWithReminders].sort((a, b) => {
     const dateA = a.reminder?.date ? new Date(a.reminder.date) : new Date(a.date);
@@ -89,7 +93,7 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
               
               <div className="flex gap-2 mt-2">
                 <Badge variant="outline" className="text-xs">
-                  {t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}
+                  {t(task.type)}
                 </Badge>
                 <Badge variant="outline" className="text-xs flex items-center gap-1 bg-amber-50 text-amber-800 border-amber-200">
                   <BellRing className="h-3 w-3" />

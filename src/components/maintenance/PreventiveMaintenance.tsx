@@ -33,7 +33,7 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
-  // Log to check if recurring tasks exist
+  // Log pour débogage
   console.log("All tasks:", tasks);
   console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
   console.log("Tasks with reminders:", tasks.filter(task => task.reminder?.enabled));
@@ -77,8 +77,8 @@ export const PreventiveMaintenance = () => {
     setIsBatchSchedulingOpen(false);
   };
 
-  const recurringTasks = tasks.filter(task => task.is_recurring);
-  const tasksWithReminders = tasks.filter(task => task.reminder?.enabled);
+  const recurringTasks = tasks.filter(task => task.is_recurring === true);
+  const tasksWithReminders = tasks.filter(task => task.reminder?.enabled === true);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -182,7 +182,6 @@ export const PreventiveMaintenance = () => {
         </CardContent>
       </Card>
 
-      {/* Important: Nous utilisons uniquement la version contrôlée de AddTaskDialog, sans trigger */}
       <AddTaskDialog
         onAddTask={onAddTask}
         isOpen={isAddTaskOpen}

@@ -21,6 +21,9 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       
       const formattedTasks = data.map(task => {
+        // Récupérer les informations de rappel depuis le champ metadata si disponible
+        const reminderInfo = task.metadata?.reminder || null;
+        
         // Normalisation des structures pour garantir la conformité à l'interface Task
         return {
           ...task,
@@ -36,12 +39,12 @@ export const useTasksQuery = () => {
             weekdays: task.recurrence_pattern.weekdays || [],
             end_date: task.recurrence_pattern.end_date ? new Date(task.recurrence_pattern.end_date) : undefined
           } : undefined,
-          reminder: task.reminder ? {
-            enabled: Boolean(task.reminder.enabled),
-            time: task.reminder.time || "09:00",
-            date: task.reminder.date ? new Date(task.reminder.date) : new Date(task.date),
-            notification_type: task.reminder.notification_type || "app",
-            last_sent: task.reminder.last_sent
+          reminder: reminderInfo ? {
+            enabled: Boolean(reminderInfo.enabled),
+            time: reminderInfo.time || "09:00",
+            date: reminderInfo.date ? new Date(reminderInfo.date) : new Date(task.date),
+            notification_type: reminderInfo.notification_type || "app",
+            last_sent: reminderInfo.last_sent
           } : undefined
         } as Task;
       });

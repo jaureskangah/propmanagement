@@ -16,7 +16,11 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   const dateLocale = language === 'fr' ? fr : undefined;
   
   // Filtrer uniquement les tâches récurrentes
-  const recurringTasks = tasks.filter(task => task.is_recurring);
+  const recurringTasks = tasks.filter(task => task.is_recurring === true);
+  
+  console.log("All tasks count:", tasks.length);
+  console.log("Recurring tasks count in view:", recurringTasks.length);
+  console.log("Recurring task data:", recurringTasks);
   
   // Trier les tâches par date
   const sortedTasks = [...recurringTasks].sort((a, b) => {
@@ -33,6 +37,8 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
     const taskDate = new Date(task.date);
     return isAfter(taskDate, today) && isBefore(taskDate, nextMonth);
   });
+  
+  console.log("Upcoming recurring tasks count:", upcomingTasks.length);
   
   if (recurringTasks.length === 0) {
     return (
