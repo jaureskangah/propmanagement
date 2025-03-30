@@ -7,9 +7,10 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocale } from "../providers/LocaleProvider";
 import { LanguageSelector } from "./LanguageSelector";
+import { motion } from "framer-motion";
 
 interface HeaderProps {
   onShowAuthModal: () => void;
@@ -19,7 +20,21 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
   const { user, session, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { t } = useLocale();
+
+  // Effet de détection du scroll pour changer l'apparence du header
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 20;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [scrolled]);
 
   const { data: profile } = useQuery({
     queryKey: ["profile", user?.id],
@@ -91,27 +106,33 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
   const NavLinks = () => (
     <>
-      <div 
-        className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
+      <motion.div 
+        className={`flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer font-medium ${scrolled ? 'text-slate-700' : ''}`}
         onClick={() => scrollToSection('everything-you-need')}
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
       >
         <List className="h-4 w-4" />
         <span>{t('features')}</span>
-      </div>
-      <div 
-        className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
+      </motion.div>
+      <motion.div 
+        className={`flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer font-medium ${scrolled ? 'text-slate-700' : ''}`}
         onClick={() => scrollToSection('pricing')}
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
       >
         <DollarSign className="h-4 w-4" />
         <span>{t('pricing')}</span>
-      </div>
-      <div 
-        className="flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer"
+      </motion.div>
+      <motion.div 
+        className={`flex items-center gap-1 text-slate-600 hover:text-[#ea384c] transition-colors cursor-pointer font-medium ${scrolled ? 'text-slate-700' : ''}`}
         onClick={() => scrollToSection('pricing')}
+        whileHover={{ scale: 1.05 }}
+        transition={{ type: "spring", stiffness: 400, damping: 10 }}
       >
         <Gift className="h-4 w-4" />
         <span>{t('freeTrial')}</span>
-      </div>
+      </motion.div>
 
       <div className="flex items-center gap-4">
         <LanguageSelector />
@@ -119,48 +140,70 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
 
       {isAuthenticated ? (
         <>
-          <Button 
-            variant="ghost"
-            className="text-slate-600 hover:text-[#ea384c] hover:bg-slate-100"
-            onClick={handleDashboardClick}
-          >
-            <LayoutDashboard className="h-4 w-4 mr-2" />
-            {t('dashboard')}
-          </Button>
-          <Button
-            variant="ghost"
-            className="text-slate-600 hover:text-[#ea384c] hover:bg-slate-100"
-            onClick={handleSignOut}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            {t('signOut')}
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button 
+              variant="ghost"
+              className={`text-slate-600 hover:text-[#ea384c] hover:bg-slate-100 font-medium ${scrolled ? 'text-slate-700' : ''}`}
+              onClick={handleDashboardClick}
+            >
+              <LayoutDashboard className="h-4 w-4 mr-2" />
+              {t('dashboard')}
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }}>
+            <Button
+              variant="ghost"
+              className={`text-slate-600 hover:text-[#ea384c] hover:bg-slate-100 font-medium ${scrolled ? 'text-slate-700' : ''}`}
+              onClick={handleSignOut}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              {t('signOut')}
+            </Button>
+          </motion.div>
         </>
       ) : (
-        <Button
-          variant="default"
-          size="sm"
-          className="bg-[#ea384c] hover:bg-[#ea384c]/90 text-white"
-          onClick={onShowAuthModal}
+        <motion.div 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
         >
-          <LogIn className="h-4 w-4 mr-2" />
-          {t('signIn')}
-        </Button>
+          <Button
+            variant="default"
+            size="sm"
+            className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-md hover:shadow-lg transition-all duration-300"
+            onClick={onShowAuthModal}
+          >
+            <LogIn className="h-4 w-4 mr-2" />
+            {t('signIn')}
+          </Button>
+        </motion.div>
       )}
     </>
   );
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-gray-200">
+    <motion.header 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200' 
+          : 'bg-transparent'
+      }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div 
+          <motion.div 
             className="flex items-center gap-2 cursor-pointer" 
             onClick={handleHomeClick}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <Building2 className="h-8 w-8 text-[#ea384c]" />
-            <span className="text-xl font-bold text-black">PropManagement</span>
-          </div>
+            <span className={`text-xl font-bold ${scrolled ? 'bg-gradient-to-r from-[#ea384c] to-[#d31c3f] bg-clip-text text-transparent' : 'text-black'}`}>
+              PropManagement
+            </span>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
@@ -182,6 +225,6 @@ export default function Header({ onShowAuthModal }: HeaderProps) {
           </Sheet>
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }

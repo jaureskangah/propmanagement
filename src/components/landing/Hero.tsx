@@ -1,7 +1,8 @@
 
-import { ArrowRight } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
-import { useLocale } from "../providers/LocaleProvider";
+import { ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface HeroProps {
   onShowAuthModal: () => void;
@@ -10,39 +11,90 @@ interface HeroProps {
 export default function Hero({ onShowAuthModal }: HeroProps) {
   const { t } = useLocale();
 
-  const scrollToHowItWorks = () => {
-    const howItWorksSection = document.querySelector('#how-it-works');
-    howItWorksSection?.scrollIntoView({ behavior: 'smooth' });
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-      <div className="text-center space-y-6 md:space-y-8">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold bg-gradient-to-r from-[#ea384c] to-[#d41f32] bg-clip-text text-transparent animate-fade-in leading-tight">
-          {t('heroTitle')}
-        </h1>
-        <p className="text-slate-600 text-lg sm:text-xl md:text-2xl max-w-3xl mx-auto animate-fade-in delay-100 px-4">
-          {t('heroSubtitle')}
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 animate-fade-in delay-200 px-4">
-          <Button 
-            size="lg" 
-            className="w-full sm:w-auto group bg-[#ea384c] hover:bg-[#d41f32] text-white shadow-lg hover:shadow-xl transition-all duration-300"
-            onClick={onShowAuthModal}
+    <motion.section
+      initial="hidden"
+      animate="show"
+      variants={container}
+      className="relative pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden"
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-red-50 to-white" />
+      
+      {/* Cercles décoratifs */}
+      <div className="absolute top-10 right-10 w-64 h-64 rounded-full bg-gradient-to-r from-pink-100 to-red-100 opacity-30 blur-3xl" />
+      <div className="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 opacity-30 blur-3xl" />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-4xl mx-auto text-center">
+          <motion.h1 
+            variants={item}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6"
           >
-            {t('heroGetStarted')}
-            <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-          </Button>
-          <Button 
-            variant="outline" 
-            size="lg" 
-            className="w-full sm:w-auto bg-white text-[#ea384c] border-red-100 hover:border-[#ea384c] shadow-lg hover:shadow-xl transition-all duration-300"
-            onClick={scrollToHowItWorks}
+            {t('heroTitle')}
+          </motion.h1>
+          
+          <motion.p 
+            variants={item}
+            className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed"
           >
-            {t('learnMore')}
-          </Button>
+            {t('heroSubtitle')}
+          </motion.p>
+          
+          <motion.div 
+            variants={item}
+            className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
+          >
+            <Button
+              size="lg"
+              onClick={onShowAuthModal}
+              className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6"
+            >
+              {t('heroGetStarted')}
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => {
+                document
+                  .getElementById("everything-you-need")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="group border-gray-300 hover:border-[#ea384c] hover:text-[#ea384c] transition-colors rounded-full px-8 py-6"
+            >
+              {t('learnMore')}
+              <ChevronDown className="h-4 w-4 group-hover:animate-bounce" />
+            </Button>
+          </motion.div>
+          
+          <motion.div 
+            variants={item}
+            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden"
+          >
+            <img 
+              src="/placeholder.svg" 
+              alt="PropManagement Dashboard" 
+              className="w-full h-auto rounded-2xl transform hover:scale-[1.02] transition-transform duration-500"
+            />
+          </motion.div>
         </div>
       </div>
-    </div>
+    </motion.section>
   );
 }
