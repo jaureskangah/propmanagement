@@ -47,6 +47,17 @@ export const useTaskAddition = () => {
       console.log("Adding task with date:", formattedDate, "Original date:", newTask.date);
       console.log("Task is recurring:", newTask.is_recurring);
       console.log("Recurrence pattern:", newTask.recurrence_pattern);
+      console.log("Reminder settings:", newTask.reminder);
+
+      // Préparer les informations de rappel si nécessaire
+      const reminderData = newTask.reminder?.enabled 
+        ? {
+            enabled: true,
+            time: newTask.reminder.time,
+            date: newTask.reminder.date ? formatTaskDate(newTask.reminder.date) : formattedDate,
+            notification_type: newTask.reminder.notification_type
+          }
+        : null;
 
       const { error } = await supabase
         .from('maintenance_tasks')
@@ -66,7 +77,8 @@ export const useTaskAddition = () => {
             end_date: newTask.recurrence_pattern.end_date 
               ? formatTaskDate(new Date(newTask.recurrence_pattern.end_date)) 
               : null
-          } : null
+          } : null,
+          reminder: reminderData
         });
 
       if (error) throw error;
@@ -74,7 +86,9 @@ export const useTaskAddition = () => {
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
       toast({
         title: "Success",
-        description: "Task added successfully",
+        description: newTask.reminder?.enabled 
+          ? "Task added successfully with reminder" 
+          : "Task added successfully",
       });
     } catch (error) {
       console.error("Error adding task:", error);
@@ -99,6 +113,16 @@ export const useTaskAddition = () => {
         console.log(`Task ${index + 1} date:`, formattedDate, "Original date:", task.date);
         console.log(`Task ${index + 1} is recurring:`, task.is_recurring);
         
+        // Préparer les informations de rappel si nécessaire
+        const reminderData = task.reminder?.enabled 
+          ? {
+              enabled: true,
+              time: task.reminder.time,
+              date: task.reminder.date ? formatTaskDate(task.reminder.date) : formattedDate,
+              notification_type: task.reminder.notification_type
+            }
+          : null;
+          
         return {
           title: task.title,
           date: formattedDate,
@@ -115,7 +139,8 @@ export const useTaskAddition = () => {
             end_date: task.recurrence_pattern.end_date 
               ? formatTaskDate(new Date(task.recurrence_pattern.end_date)) 
               : null
-          } : null
+          } : null,
+          reminder: reminderData
         };
       });
 

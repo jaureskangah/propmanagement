@@ -1,4 +1,3 @@
-
 export const enTasks = {
   regularTask: "Regular Task",
   inspection: "Inspection",
@@ -58,7 +57,28 @@ export const enTasks = {
   daily: "Daily",
   weekly: "Weekly",
   monthly: "Monthly",
-  date: "Date"
+  date: "Date",
+  // New translations for reminders
+  enableReminder: "Enable reminder",
+  reminderSettings: "Reminder settings",
+  reminderDate: "Reminder date",
+  reminderTime: "Reminder time",
+  notificationType: "Notification type",
+  emailNotification: "Email",
+  appNotification: "In-app",
+  bothNotifications: "Email & In-app",
+  upcoming: "Upcoming",
+  patterns: "Patterns",
+  reminders: "Reminders",
+  upcomingReminders: "Upcoming reminders",
+  noReminders: "No reminders scheduled",
+  sameAsTaskDate: "Same as task date",
+  customDate: "Custom date",
+  today: "Today",
+  tomorrow: "Tomorrow",
+  nextWeek: "Next week",
+  reminderSaved: "Reminder set successfully",
+  taskWithReminder: "Task with reminder",
 };
 
 export const frTasks = {
@@ -120,5 +140,26 @@ export const frTasks = {
   daily: "Quotidienne",
   weekly: "Hebdomadaire",
   monthly: "Mensuelle",
-  date: "Date"
+  date: "Date",
+  // New translations for reminders
+  enableReminder: "Activer le rappel",
+  reminderSettings: "Paramètres de rappel",
+  reminderDate: "Date du rappel",
+  reminderTime: "Heure du rappel",
+  notificationType: "Type de notification",
+  emailNotification: "Email",
+  appNotification: "Application",
+  bothNotifications: "Email & Application",
+  upcoming: "À venir",
+  patterns: "Modèles",
+  reminders: "Rappels",
+  upcomingReminders: "Rappels à venir",
+  noReminders: "Aucun rappel planifié",
+  sameAsTaskDate: "Même date que la tâche",
+  customDate: "Date personnalisée",
+  today: "Aujourd'hui",
+  tomorrow: "Demain",
+  nextWeek: "Semaine prochaine",
+  reminderSaved: "Rappel configuré avec succès",
+  taskWithReminder: "Tâche avec rappel",
 };

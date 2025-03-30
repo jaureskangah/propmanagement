@@ -35,20 +35,31 @@ export const useTasksQuery = () => {
             interval: task.recurrence_pattern.interval || 1,
             weekdays: task.recurrence_pattern.weekdays || [],
             end_date: task.recurrence_pattern.end_date ? new Date(task.recurrence_pattern.end_date) : undefined
+          } : undefined,
+          reminder: task.reminder ? {
+            enabled: Boolean(task.reminder.enabled),
+            time: task.reminder.time || "09:00",
+            date: task.reminder.date ? new Date(task.reminder.date) : new Date(task.date),
+            notification_type: task.reminder.notification_type || "app",
+            last_sent: task.reminder.last_sent
           } : undefined
         } as Task;
       });
       
       console.log("Processed tasks after fetch:", formattedTasks);
       console.log("Recurring tasks count:", formattedTasks.filter(task => task.is_recurring).length);
+      console.log("Tasks with reminders count:", formattedTasks.filter(task => task.reminder?.enabled).length);
       
       return formattedTasks;
     },
   });
 
-  // Filtre des tâches récurrentes (utile pour le débogage)
+  // Filtres pour le débogage
   const recurringTasks = tasks.filter(task => task.is_recurring);
+  const tasksWithReminders = tasks.filter(task => task.reminder?.enabled);
+  
   console.log("Filtered recurring tasks:", recurringTasks);
+  console.log("Filtered tasks with reminders:", tasksWithReminders);
 
   return { tasks, isLoading };
 };

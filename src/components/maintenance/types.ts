@@ -1,3 +1,4 @@
+
 export interface Tenant {
   id: string;
   name: string;
@@ -41,6 +42,12 @@ export interface NewTask {
     weekdays: string[];
     end_date?: string;
   };
+  reminder?: {
+    enabled: boolean;
+    time?: string; // Format HH:MM
+    date?: Date; // Si différent de la date de tâche
+    notification_type: 'email' | 'app' | 'both';
+  };
 }
 
 export interface Task {
@@ -65,4 +72,11 @@ export interface Task {
   date: Date;
   completed: boolean;
   user_id: string;
+  reminder?: {
+    enabled: boolean;
+    time?: string; // Format HH:MM
+    date?: Date;
+    notification_type: 'email' | 'app' | 'both';
+    last_sent?: string;
+  };
 }

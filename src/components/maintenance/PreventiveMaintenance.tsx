@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { BatchSchedulingDialog } from "./scheduling/BatchSchedulingDialog";
 import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
+import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const PreventiveMaintenance = () => {
@@ -35,6 +36,7 @@ export const PreventiveMaintenance = () => {
   // Log to check if recurring tasks exist
   console.log("All tasks:", tasks);
   console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
+  console.log("Tasks with reminders:", tasks.filter(task => task.reminder?.enabled));
 
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -60,7 +62,9 @@ export const PreventiveMaintenance = () => {
     handleAddTask(newTask);
     toast({
       title: t('success'),
-      description: t('taskAdded'),
+      description: newTask.reminder?.enabled 
+        ? t('reminderSaved') 
+        : t('taskAdded'),
     });
   };
 
@@ -74,6 +78,7 @@ export const PreventiveMaintenance = () => {
   };
 
   const recurringTasks = tasks.filter(task => task.is_recurring);
+  const tasksWithReminders = tasks.filter(task => task.reminder?.enabled);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -131,24 +136,46 @@ export const PreventiveMaintenance = () => {
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
-            <Repeat className="h-5 w-5" />
-            {t('recurringTasks')}
+            <Tabs defaultValue="reminders" className="w-full">
+              <TabsList className="w-full grid grid-cols-2">
+                <TabsTrigger value="reminders" className="flex items-center gap-1">
+                  <BellRing className="h-4 w-4" />
+                  {t('reminders')}
+                </TabsTrigger>
+                <TabsTrigger value="recurring" className="flex items-center gap-1">
+                  <Repeat className="h-4 w-4" />
+                  {t('recurringTasks')}
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="upcoming" className="w-full">
-            <TabsList className="w-full grid grid-cols-2">
-              <TabsTrigger value="upcoming">{t('upcoming')}</TabsTrigger>
-              <TabsTrigger value="patterns">{t('patterns')}</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="upcoming" className="mt-4">
-              <RecurringTasksView tasks={recurringTasks} />
+          <Tabs defaultValue="reminders" className="w-full">
+            <TabsContent value="reminders">
+              <div className="mt-2">
+                <RemindersView tasks={tasksWithReminders} />
+              </div>
             </TabsContent>
             
-            <TabsContent value="patterns" className="mt-4">
-              <div className="text-sm text-muted-foreground">
-                {t('recurringTasksPatterns')}
+            <TabsContent value="recurring">
+              <div className="mt-2">
+                <Tabs defaultValue="upcoming" className="w-full">
+                  <TabsList className="w-full grid grid-cols-2">
+                    <TabsTrigger value="upcoming">{t('upcoming')}</TabsTrigger>
+                    <TabsTrigger value="patterns">{t('patterns')}</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="upcoming" className="mt-4">
+                    <RecurringTasksView tasks={recurringTasks} />
+                  </TabsContent>
+                  
+                  <TabsContent value="patterns" className="mt-4">
+                    <div className="text-sm text-muted-foreground">
+                      {t('recurringTasksPatterns')}
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </TabsContent>
           </Tabs>
