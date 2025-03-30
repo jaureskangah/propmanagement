@@ -1,4 +1,7 @@
 
+import { CommonPriorityTranslations, CommonTimeTranslations } from '../../types/common-translations';
+
+// Adding partial interfaces to ensure consistency with shared translations
 export const enTasks = {
   regularTask: "Regular Task",
   inspection: "Inspection",

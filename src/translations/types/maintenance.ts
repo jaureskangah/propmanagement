@@ -122,14 +122,14 @@ export interface MaintenanceTranslations {
   statusChanged: string;
   feedbackReceivedFor: string;
   tenantFeedbackReceived: string;
-  // New reminders support
+  // New reminders support - These properties now align with dashboard translations
   reminders?: string;
   addReminder?: string;
   reminderDate?: string;
   noReminders?: string;
   today?: string;
   tomorrow?: string;
-  thisWeek?: string;
+  // Removed conflicting "thisWeek" property to resolve type conflict
   later?: string;
   hasReminder?: string;
 }

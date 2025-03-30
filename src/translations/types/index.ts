@@ -20,6 +20,7 @@ import type { DashboardTranslations } from './dashboard';
 import type { SettingsTranslations } from './settings';
 import type { ModalTranslations } from './modal';
 import type { FinancesTranslations } from './finances';
+import type { SharedTranslations } from './common-translations';
 
 export type { AdminDashboardTranslations as AdminTranslations };
 export type { AuthTranslations };
@@ -43,30 +44,33 @@ export type { DashboardTranslations };
 export type { SettingsTranslations };
 export type { ModalTranslations };
 export type { FinancesTranslations };
+export type { SharedTranslations };
 
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
+// Extend translations using a type intersection to avoid property conflicts
 export interface Translations extends 
-  AdminDashboardTranslations,
-  AuthTranslations,
-  ContactTranslations,
-  CTATranslations,
-  FAQTranslations,
-  FeaturesTranslations,
-  FooterTranslations,
-  HeroTranslations,
-  HowItWorksTranslations,
-  MaintenanceTranslations,
-  NavigationTranslations,
-  PricingTranslations,
-  PlanFeaturesTranslations,
-  PropertyManagementTranslations,
-  StatusTranslations,
-  TenantTranslations,
-  ToastTranslations,
-  CommonTranslations,
-  DashboardTranslations,
-  SettingsTranslations,
-  ModalTranslations,
-  FinancesTranslations {}
+  Omit<AdminDashboardTranslations, keyof SharedTranslations>,
+  Omit<AuthTranslations, keyof SharedTranslations>,
+  Omit<ContactTranslations, keyof SharedTranslations>,
+  Omit<CTATranslations, keyof SharedTranslations>,
+  Omit<FAQTranslations, keyof SharedTranslations>,
+  Omit<FeaturesTranslations, keyof SharedTranslations>,
+  Omit<FooterTranslations, keyof SharedTranslations>,
+  Omit<HeroTranslations, keyof SharedTranslations>,
+  Omit<HowItWorksTranslations, keyof SharedTranslations>,
+  Omit<MaintenanceTranslations, keyof SharedTranslations>,
+  Omit<NavigationTranslations, keyof SharedTranslations>,
+  Omit<PricingTranslations, keyof SharedTranslations>,
+  Omit<PlanFeaturesTranslations, keyof SharedTranslations>,
+  Omit<PropertyManagementTranslations, keyof SharedTranslations>,
+  Omit<StatusTranslations, keyof SharedTranslations>,
+  Omit<TenantTranslations, keyof SharedTranslations>,
+  Omit<ToastTranslations, keyof SharedTranslations>,
+  Omit<CommonTranslations, keyof SharedTranslations>,
+  Omit<DashboardTranslations, keyof SharedTranslations>,
+  Omit<SettingsTranslations, keyof SharedTranslations>,
+  Omit<ModalTranslations, keyof SharedTranslations>,
+  Omit<FinancesTranslations, keyof SharedTranslations>,
+  SharedTranslations {}
