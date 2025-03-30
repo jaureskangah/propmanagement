@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +53,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
       console.log("Submitting task with date:", submissionDate, "Original selected date:", date);
       console.log("Reminder date:", submissionReminderDate, "has reminder:", hasReminder, "method:", reminderMethod);
       
-      onSubmit({ 
+      const newTask: NewTask = { 
         title,
         date: submissionDate,
         type,
@@ -69,7 +68,10 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
         has_reminder: hasReminder,
         reminder_date: hasReminder ? submissionReminderDate : undefined,
         reminder_method: hasReminder ? reminderMethod : undefined
-      });
+      };
+      
+      console.log("Full task data being submitted:", newTask);
+      onSubmit(newTask);
     }
   };
 

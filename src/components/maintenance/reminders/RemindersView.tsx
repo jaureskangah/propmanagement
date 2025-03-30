@@ -16,7 +16,7 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   const dateLocale = language === 'fr' ? fr : undefined;
   
   // Filtrer uniquement les tâches avec rappel
-  const tasksWithReminder = tasks.filter(task => task.has_reminder && task.reminder_date);
+  const tasksWithReminder = tasks.filter(task => Boolean(task.has_reminder) === true && task.reminder_date);
   
   console.log("RemindersView received tasks:", tasks.length);
   console.log("Tasks with reminders:", tasksWithReminder.length);

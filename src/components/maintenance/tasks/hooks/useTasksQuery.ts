@@ -21,17 +21,26 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       
       const formattedTasks = data.map(task => {
+        // Assurer que les dates sont correctement converties en objets Date
+        const taskDate = task.date ? new Date(task.date) : new Date();
+        let reminderDate = undefined;
+        
+        if (task.reminder_date) {
+          // S'assurer que la date de rappel est un objet Date valide
+          reminderDate = new Date(task.reminder_date);
+        }
+        
         // Normalisation des structures pour garantir la conformité à l'interface Task
         return {
           ...task,
-          date: new Date(task.date),
+          date: taskDate,
           type: task.type as "regular" | "inspection" | "seasonal",
           priority: (task.priority || "medium") as "low" | "medium" | "high" | "urgent",
           status: (task.status || "pending") as "pending" | "in_progress" | "completed",
           completed: Boolean(task.completed),
           is_recurring: Boolean(task.is_recurring),
           has_reminder: Boolean(task.has_reminder),
-          reminder_date: task.reminder_date ? new Date(task.reminder_date) : undefined,
+          reminder_date: reminderDate,
           reminder_method: task.reminder_method || "app",
           recurrence_pattern: task.recurrence_pattern ? {
             frequency: task.recurrence_pattern.frequency || "daily",
@@ -50,13 +59,10 @@ export const useTasksQuery = () => {
     },
   });
 
-  // Filtre des tâches récurrentes (utile pour le débogage)
-  const recurringTasks = tasks.filter(task => task.is_recurring);
-  console.log("Filtered recurring tasks:", recurringTasks);
-  
-  // Filtre des tâches avec rappel (utile pour le débogage)
-  const reminderTasks = tasks.filter(task => task.has_reminder);
-  console.log("Filtered reminder tasks:", reminderTasks);
+  // Plus de logs pour diagnostiquer les problèmes
+  console.log("All tasks:", tasks);
+  console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
+  console.log("Reminder tasks:", tasks.filter(task => task.has_reminder));
 
   return { tasks, isLoading };
 };

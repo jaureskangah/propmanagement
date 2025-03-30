@@ -15,11 +15,13 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Vérifions que les tâches récurrentes existent
-  console.log("RecurringTasksView received tasks:", tasks);
-  console.log("Recurring tasks count:", tasks.length);
+  // Filtrer uniquement les tâches récurrentes
+  const recurringTasks = tasks.filter(task => Boolean(task.is_recurring) === true);
   
-  if (!tasks || tasks.length === 0) {
+  console.log("RecurringTasksView received tasks:", tasks);
+  console.log("Recurring tasks count:", recurringTasks.length);
+  
+  if (!recurringTasks || recurringTasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-4 text-center text-muted-foreground">
         <RotateCw className="h-10 w-10 mb-2 opacity-50" />
@@ -31,7 +33,7 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   return (
     <ScrollArea className="h-[300px]">
       <div className="space-y-3">
-        {tasks.map((task) => {
+        {recurringTasks.map((task) => {
           // Format récurrence texte
           let recurrenceText = "";
           if (task.recurrence_pattern) {
@@ -51,6 +53,9 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
                 : t('repeatsMonthly');
             }
           }
+          
+          // S'assurer que la date est un objet Date valide
+          const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
           
           return (
             <div 
@@ -83,7 +88,7 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
                 </Badge>
                 <Badge variant="outline" className="text-xs flex items-center gap-1">
                   <CalendarClock className="h-3 w-3" />
-                  {format(new Date(task.date), 'dd MMM yyyy', { locale: dateLocale })}
+                  {format(taskDate, 'dd MMM yyyy', { locale: dateLocale })}
                 </Badge>
               </div>
             </div>
