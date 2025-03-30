@@ -88,7 +88,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
             className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden"
           >
             <img 
-              src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8dGVjaHx8fHx8fDE2NjE5ODgxNDk&ixlib=rb-1.2.1&q=80&w=1080"
+              src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218MHx8ZGFzaGJvYXJkfHx8fHx8MTY2MTk4ODE0OQ&ixlib=rb-1.2.1&q=80&w=1080"
               alt="PropManagement Dashboard" 
               className="w-full h-auto rounded-2xl transform hover:scale-[1.02] transition-transform duration-500"
             />
