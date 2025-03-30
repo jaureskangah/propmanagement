@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { NewTask } from "../types";
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfDay } from "date-fns";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,18 +38,13 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
     
     try {
       const tasks: NewTask[] = selectedDates.map((date, index) => {
-        const normalizedDate = new Date(Date.UTC(
-          date.getFullYear(),
-          date.getMonth(),
-          date.getDate(),
-          12, 0, 0, 0
-        ));
+        const taskDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         
-        console.log(`Creating task ${index + 1} with date:`, normalizedDate, "Original selected date:", date);
+        console.log(`Creating task ${index + 1} with date:`, taskDate, "Original selected date:", date);
         
         return {
           title: `${batchTitle} ${index + 1}`,
-          date: normalizedDate,
+          date: taskDate,
           type: batchType,
           priority: batchPriority,
           is_recurring: false
@@ -90,12 +85,7 @@ export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSche
   const handleDateSelect = (dates: Date[] | undefined) => {
     if (dates) {
       setSelectedDates(dates.map(date => {
-        return new Date(Date.UTC(
-          date.getFullYear(), 
-          date.getMonth(), 
-          date.getDate(),
-          12, 0, 0, 0
-        ));
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
       }));
     } else {
       setSelectedDates([]);

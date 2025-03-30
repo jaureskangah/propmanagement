@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, RotateCw, CheckCircle } from "lucide-react";
-import { format, parseISO, startOfDay } from "date-fns";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -20,16 +21,12 @@ interface TaskFormProps {
 }
 
 export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
+  // Créer la date d'aujourd'hui sans composante temporelle pour éviter les problèmes de fuseau horaire
   const today = new Date();
-  const utcToday = new Date(Date.UTC(
-    today.getFullYear(),
-    today.getMonth(),
-    today.getDate(),
-    12, 0, 0, 0
-  ));
+  const initialDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState<Date | undefined>(utcToday);
+  const [date, setDate] = useState<Date | undefined>(initialDate);
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
   const [isRecurring, setIsRecurring] = useState(false);
@@ -43,18 +40,14 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title && date && type) {
-      const normalizedDate = new Date(Date.UTC(
-        date.getFullYear(),
-        date.getMonth(),
-        date.getDate(),
-        12, 0, 0, 0
-      ));
+      // Créer une nouvelle date avec seulement année/mois/jour pour éviter les problèmes de fuseau horaire
+      const submissionDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
       
-      console.log("Submitting task with date:", normalizedDate, "Original date:", date);
+      console.log("Submitting task with date:", submissionDate, "Original selected date:", date);
       
       onSubmit({ 
         title,
-        date: normalizedDate,
+        date: submissionDate,
         type,
         priority,
         is_recurring: isRecurring,
@@ -70,13 +63,9 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      const normalizedDate = new Date(Date.UTC(
-        newDate.getFullYear(),
-        newDate.getMonth(),
-        newDate.getDate(),
-        12, 0, 0, 0
-      ));
-      setDate(normalizedDate);
+      // Créer une nouvelle date avec seulement année/mois/jour
+      const selectedDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
+      setDate(selectedDate);
     } else {
       setDate(undefined);
     }

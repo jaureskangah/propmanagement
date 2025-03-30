@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
 import { NewTask } from "../../types";
-import { format, startOfDay } from "date-fns";
+import { format } from "date-fns";
 
 export const useTaskAddition = () => {
   const queryClient = useQueryClient();
@@ -21,18 +21,16 @@ export const useTaskAddition = () => {
     return (lastTask?.[0]?.position ?? -1) + 1;
   };
   
-  // Modifié pour s'assurer que la date n'est pas affectée par le fuseau horaire
+  // Fonction améliorée pour traiter correctement les dates
   const formatTaskDate = (date: Date) => {
-    // Normaliser la date en utilisant UTC pour éviter les décalages liés au fuseau horaire
-    const normalizedDate = new Date(Date.UTC(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate(),
-      12, 0, 0, 0
-    ));
+    // Créer une nouvelle date en utilisant la même année, mois et jour
+    // Cela garantit que la date est cohérente indépendamment du fuseau horaire
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
     
-    // Format standard ISO pour la date (YYYY-MM-DD)
-    return format(normalizedDate, 'yyyy-MM-dd');
+    // Format standard YYYY-MM-DD pour la base de données
+    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
   };
 
   const handleAddTask = async (newTask: NewTask) => {
