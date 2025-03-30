@@ -4,7 +4,6 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
 import { NewTask } from "../../types";
-import { format } from "date-fns";
 
 export const useTaskAddition = () => {
   const queryClient = useQueryClient();
@@ -21,16 +20,14 @@ export const useTaskAddition = () => {
     return (lastTask?.[0]?.position ?? -1) + 1;
   };
   
-  // Fonction améliorée pour traiter correctement les dates
+  // Fonction améliorée pour formater les dates au format attendu par Supabase
   const formatTaskDate = (date: Date) => {
-    // Créer une nouvelle date en utilisant la même année, mois et jour
-    // Cela garantit que la date est cohérente indépendamment du fuseau horaire
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = date.getDate();
-    
     // Format standard YYYY-MM-DD pour la base de données
-    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
   };
 
   const handleAddTask = async (newTask: NewTask) => {
@@ -48,6 +45,8 @@ export const useTaskAddition = () => {
       const formattedDate = formatTaskDate(newTask.date);
       
       console.log("Adding task with date:", formattedDate, "Original date:", newTask.date);
+      console.log("Task is recurring:", newTask.is_recurring);
+      console.log("Recurrence pattern:", newTask.recurrence_pattern);
 
       const { error } = await supabase
         .from('maintenance_tasks')
@@ -63,8 +62,8 @@ export const useTaskAddition = () => {
           recurrence_pattern: newTask.recurrence_pattern ? {
             frequency: newTask.recurrence_pattern.frequency,
             interval: newTask.recurrence_pattern.interval,
-            weekdays: newTask.recurrence_pattern.weekdays,
-            end_date: newTask.recurrence_pattern.end_date
+            weekdays: newTask.recurrence_pattern.weekdays || [],
+            end_date: newTask.recurrence_pattern.end_date ? formatTaskDate(newTask.recurrence_pattern.end_date) : null
           } : null
         });
 
@@ -96,6 +95,7 @@ export const useTaskAddition = () => {
       const tasksToInsert = newTasks.map((task, index) => {
         const formattedDate = formatTaskDate(task.date);
         console.log(`Task ${index + 1} date:`, formattedDate, "Original date:", task.date);
+        console.log(`Task ${index + 1} is recurring:`, task.is_recurring);
         
         return {
           title: task.title,
@@ -109,8 +109,8 @@ export const useTaskAddition = () => {
           recurrence_pattern: task.recurrence_pattern ? {
             frequency: task.recurrence_pattern.frequency,
             interval: task.recurrence_pattern.interval,
-            weekdays: task.recurrence_pattern.weekdays,
-            end_date: task.recurrence_pattern.end_date
+            weekdays: task.recurrence_pattern.weekdays || [],
+            end_date: task.recurrence_pattern.end_date ? formatTaskDate(task.recurrence_pattern.end_date) : null
           } : null
         };
       });

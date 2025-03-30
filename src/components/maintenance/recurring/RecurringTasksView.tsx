@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Task } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { format, addDays, addWeeks, addMonths } from "date-fns";
-import { CalendarRange } from "lucide-react";
+import { CalendarRange, Repeat } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 
@@ -15,18 +15,23 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   const { t } = useLocale();
   const [viewRange, setViewRange] = useState<'week' | 'month'>('week');
   
+  // Add logging to debug what tasks are being passed
+  console.log("RecurringTasksView received tasks:", tasks);
+  console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
+  
   // Calculate next occurrences based on recurrence patterns
   const getNextOccurrences = (task: Task, limit = 5): Date[] => {
     if (!task.is_recurring || !task.recurrence_pattern) {
-      return [task.date];
+      return [new Date(task.date)];
     }
     
     const occurrences: Date[] = [];
     const { frequency, interval } = task.recurrence_pattern;
     
     let currentDate = new Date(task.date);
+    occurrences.push(new Date(currentDate)); // Include the first occurrence
     
-    for (let i = 0; i < limit; i++) {
+    for (let i = 0; i < limit - 1; i++) { // -1 because we already added the first occurrence
       if (frequency === 'daily') {
         currentDate = addDays(currentDate, interval || 1);
       } else if (frequency === 'weekly') {
@@ -42,13 +47,17 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   };
   
   // Group and sort upcoming occurrences
-  const upcomingOccurrences = tasks.flatMap(task => {
-    const occurrences = getNextOccurrences(task);
-    return occurrences.map(date => ({
-      ...task,
-      nextDate: date
-    }));
-  }).sort((a, b) => a.nextDate.getTime() - b.nextDate.getTime());
+  const upcomingOccurrences = tasks
+    .filter(task => task.is_recurring && task.recurrence_pattern) // Ensure we only process recurring tasks
+    .flatMap(task => {
+      const occurrences = getNextOccurrences(task);
+      return occurrences.map(date => ({
+        ...task,
+        nextDate: date
+      }));
+    }).sort((a, b) => a.nextDate.getTime() - b.nextDate.getTime());
+  
+  console.log("Upcoming occurrences:", upcomingOccurrences);
   
   // Filter based on view range
   const today = new Date();
@@ -62,10 +71,18 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
     }
   });
 
-  if (filteredOccurrences.length === 0) {
+  if (tasks.filter(task => task.is_recurring).length === 0) {
     return (
       <div className="text-center py-4 text-muted-foreground">
         {t('noRecurringTasks')}
+      </div>
+    );
+  }
+  
+  if (filteredOccurrences.length === 0) {
+    return (
+      <div className="text-center py-4 text-muted-foreground">
+        {t('noRecurringTasksInRange')}
       </div>
     );
   }
@@ -115,7 +132,8 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
                 <span>{format(task.nextDate, 'PPP')}</span>
               </div>
               
-              <div className="mt-1 text-xs text-muted-foreground">
+              <div className="flex items-center mt-1 text-xs text-muted-foreground">
+                <Repeat className="h-3 w-3 mr-1" />
                 {task.recurrence_pattern?.frequency === 'daily' && t('repeatsDaily')}
                 {task.recurrence_pattern?.frequency === 'weekly' && t('repeatsWeekly')}
                 {task.recurrence_pattern?.frequency === 'monthly' && t('repeatsMonthly')}

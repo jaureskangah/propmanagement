@@ -18,6 +18,8 @@ export const useTasksQuery = () => {
         throw error;
       }
       
+      console.log("Raw task data from Supabase:", data);
+      
       return data.map(task => ({
         ...task,
         date: new Date(task.date),
@@ -29,12 +31,16 @@ export const useTasksQuery = () => {
         recurrence_pattern: task.recurrence_pattern ? {
           frequency: (task.recurrence_pattern as any).frequency || "daily",
           interval: (task.recurrence_pattern as any).interval || 1,
-          weekdays: (task.recurrence_pattern as any).weekdays,
-          end_date: (task.recurrence_pattern as any).end_date
+          weekdays: (task.recurrence_pattern as any).weekdays || [],
+          end_date: (task.recurrence_pattern as any).end_date ? new Date((task.recurrence_pattern as any).end_date) : undefined
         } : undefined
       })) as Task[];
     },
   });
+
+  // Add debugging to check for recurring tasks
+  console.log("Processed tasks after fetch:", tasks);
+  console.log("Recurring tasks count:", tasks.filter(task => task.is_recurring).length);
 
   return { tasks, isLoading };
 };

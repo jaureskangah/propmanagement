@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2 } from "lucide-react";
+import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MaintenanceCalendar } from "./calendar/MaintenanceCalendar";
 import { TypeFilter } from "./calendar/TypeFilter";
@@ -31,6 +31,10 @@ export const PreventiveMaintenance = () => {
     handleAddTask,
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
+
+  // Log to check if recurring tasks exist
+  console.log("All tasks:", tasks);
+  console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
 
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -68,6 +72,8 @@ export const PreventiveMaintenance = () => {
     });
     setIsBatchSchedulingOpen(false);
   };
+
+  const recurringTasks = tasks.filter(task => task.is_recurring);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -125,7 +131,7 @@ export const PreventiveMaintenance = () => {
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
-            <BellRing className="h-5 w-5" />
+            <Repeat className="h-5 w-5" />
             {t('recurringTasks')}
           </CardTitle>
         </CardHeader>
@@ -137,7 +143,7 @@ export const PreventiveMaintenance = () => {
             </TabsList>
             
             <TabsContent value="upcoming" className="mt-4">
-              <RecurringTasksView tasks={tasks.filter(task => task.is_recurring)} />
+              <RecurringTasksView tasks={recurringTasks} />
             </TabsContent>
             
             <TabsContent value="patterns" className="mt-4">
