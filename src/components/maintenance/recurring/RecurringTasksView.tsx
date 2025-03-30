@@ -1,11 +1,11 @@
 
+import { Task } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Task } from "../types";
-import { format, isToday, isAfter, isBefore, addDays } from "date-fns";
+import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { CalendarClock, RotateCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Repeat } from "lucide-react";
 
 interface RecurringTasksViewProps {
   tasks: Task[];
@@ -15,45 +15,15 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filter only recurring tasks
-  const recurringTasks = tasks.filter(task => task.is_recurring === true);
+  // Vérifions que les tâches récurrentes existent
+  console.log("RecurringTasksView received tasks:", tasks);
+  console.log("Recurring tasks count:", tasks.length);
   
-  console.log("All tasks count:", tasks.length);
-  console.log("Recurring tasks count in view:", recurringTasks.length);
-  console.log("Recurring task data:", recurringTasks);
-  
-  // Sort tasks by date
-  const sortedTasks = [...recurringTasks].sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateA.getTime() - dateB.getTime();
-  });
-  
-  // Filter to show only tasks for the next 30 days
-  const today = new Date();
-  const nextMonth = addDays(today, 30);
-  
-  const upcomingTasks = sortedTasks.filter(task => {
-    const taskDate = new Date(task.date);
-    return isAfter(taskDate, today) && isBefore(taskDate, nextMonth);
-  });
-  
-  console.log("Upcoming recurring tasks count:", upcomingTasks.length);
-  
-  if (recurringTasks.length === 0) {
+  if (!tasks || tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-4 text-center text-muted-foreground">
-        <Repeat className="h-10 w-10 mb-2 opacity-50" />
+        <RotateCw className="h-10 w-10 mb-2 opacity-50" />
         <p>{t('noRecurringTasks')}</p>
-      </div>
-    );
-  }
-  
-  if (upcomingTasks.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center p-4 text-center text-muted-foreground">
-        <Repeat className="h-10 w-10 mb-2 opacity-50" />
-        <p>{t('noRecurringTasksInRange')}</p>
       </div>
     );
   }
@@ -61,26 +31,24 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   return (
     <ScrollArea className="h-[300px]">
       <div className="space-y-3">
-        {upcomingTasks.map((task) => {
-          const taskDate = new Date(task.date);
-          
-          // Simplify frequency display
-          let frequencyText = "";
+        {tasks.map((task) => {
+          // Format récurrence texte
+          let recurrenceText = "";
           if (task.recurrence_pattern) {
             const { frequency, interval } = task.recurrence_pattern;
             
             if (frequency === "daily") {
-              frequencyText = interval === 1 ? 
-                t('repeatsDaily') : 
-                `${t('repeatsDaily')} ${t('every')} ${interval} ${interval === 1 ? t('day') : t('days')}`;
+              recurrenceText = interval > 1 
+                ? `${t('repeatsDaily')}, ${t('every')} ${interval} ${t('days')}`
+                : t('repeatsDaily');
             } else if (frequency === "weekly") {
-              frequencyText = interval === 1 ? 
-                t('repeatsWeekly') : 
-                `${t('repeatsWeekly')} ${t('every')} ${interval} ${interval === 1 ? t('weekSingular') : t('weeks')}`;
+              recurrenceText = interval > 1 
+                ? `${t('repeatsWeekly')}, ${t('every')} ${interval} ${t('weeks')}`
+                : t('repeatsWeekly');
             } else if (frequency === "monthly") {
-              frequencyText = interval === 1 ? 
-                t('repeatsMonthly') : 
-                `${t('repeatsMonthly')} ${t('every')} ${interval} ${interval === 1 ? t('monthSingular') : t('months')}`;
+              recurrenceText = interval > 1 
+                ? `${t('repeatsMonthly')}, ${t('every')} ${interval} ${t('months')}`
+                : t('repeatsMonthly');
             }
           }
           
@@ -92,9 +60,10 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
               <div className="flex items-start justify-between">
                 <div>
                   <h4 className="font-medium">{task.title}</h4>
-                  <div className="text-xs text-muted-foreground">
-                    {format(taskDate, 'dd MMM yyyy', { locale: dateLocale })}
-                  </div>
+                  <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                    <RotateCw className="h-3 w-3" />
+                    {recurrenceText}
+                  </p>
                 </div>
                 <Badge 
                   variant={
@@ -110,11 +79,11 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
               
               <div className="flex gap-2 mt-2">
                 <Badge variant="outline" className="text-xs">
-                  {t(task.type)}
+                  {t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}
                 </Badge>
-                <Badge variant="outline" className="text-xs flex items-center gap-1 bg-blue-50 text-blue-800 border-blue-200">
-                  <Repeat className="h-3 w-3" />
-                  {frequencyText}
+                <Badge variant="outline" className="text-xs flex items-center gap-1">
+                  <CalendarClock className="h-3 w-3" />
+                  {format(new Date(task.date), 'dd MMM yyyy', { locale: dateLocale })}
                 </Badge>
               </div>
             </div>

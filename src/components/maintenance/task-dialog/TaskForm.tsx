@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, RotateCw, CheckCircle, BellRing } from "lucide-react";
+import { CalendarIcon, RotateCw, CheckCircle } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -13,9 +13,7 @@ import { cn } from "@/lib/utils";
 import { NewTask } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { RecurrenceSettings } from "./RecurrenceSettings";
-import { ReminderSettings } from "./ReminderSettings";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -31,17 +29,9 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   const [date, setDate] = useState<Date | undefined>(initialDate);
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
-  
-  // États pour les paramètres de récurrence
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceFrequency, setRecurrenceFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
-  
-  // États pour les paramètres de rappel
-  const [isReminderEnabled, setIsReminderEnabled] = useState(false);
-  const [reminderTime, setReminderTime] = useState("09:00");
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate);
-  const [notificationType, setNotificationType] = useState<"email" | "app" | "both">("app");
   
   const { t, language } = useLocale();
   
@@ -55,7 +45,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
       
       console.log("Submitting task with date:", submissionDate, "Original selected date:", date);
       
-      const newTask: NewTask = {
+      onSubmit({ 
         title,
         date: submissionDate,
         type,
@@ -67,19 +57,7 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
           weekdays: [],
           end_date: undefined
         } : undefined
-      };
-      
-      // Ajouter les informations de rappel si activé
-      if (isReminderEnabled) {
-        newTask.reminder = {
-          enabled: true,
-          time: reminderTime,
-          date: reminderDate,
-          notification_type: notificationType
-        };
-      }
-      
-      onSubmit(newTask);
+      });
     }
   };
 
@@ -88,11 +66,6 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
       // Créer une nouvelle date avec seulement année/mois/jour
       const selectedDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
       setDate(selectedDate);
-      
-      // Si le rappel utilise la même date que la tâche, mettre à jour aussi
-      if (!isReminderEnabled || reminderDate === date) {
-        setReminderDate(selectedDate);
-      }
     } else {
       setDate(undefined);
     }
@@ -168,43 +141,14 @@ export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
         </Select>
       </div>
       
-      <Tabs defaultValue="recurrence" className="w-full">
-        <TabsList className="w-full grid grid-cols-2">
-          <TabsTrigger value="recurrence" className="flex items-center gap-1">
-            <RotateCw className="h-4 w-4" />
-            {t('recurringTasks')}
-          </TabsTrigger>
-          <TabsTrigger value="reminder" className="flex items-center gap-1">
-            <BellRing className="h-4 w-4" />
-            {t('reminders')}
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="recurrence" className="pt-2">
-          <RecurrenceSettings 
-            isRecurring={isRecurring}
-            setIsRecurring={setIsRecurring}
-            recurrenceFrequency={recurrenceFrequency}
-            setRecurrenceFrequency={setRecurrenceFrequency}
-            recurrenceInterval={recurrenceInterval}
-            setRecurrenceInterval={setRecurrenceInterval}
-          />
-        </TabsContent>
-        
-        <TabsContent value="reminder" className="pt-2">
-          <ReminderSettings 
-            isReminderEnabled={isReminderEnabled}
-            setIsReminderEnabled={setIsReminderEnabled}
-            reminderTime={reminderTime}
-            setReminderTime={setReminderTime}
-            reminderDate={reminderDate}
-            setReminderDate={setReminderDate}
-            notificationType={notificationType}
-            setNotificationType={setNotificationType}
-            taskDate={date}
-          />
-        </TabsContent>
-      </Tabs>
+      <RecurrenceSettings 
+        isRecurring={isRecurring}
+        setIsRecurring={setIsRecurring}
+        recurrenceFrequency={recurrenceFrequency}
+        setRecurrenceFrequency={setRecurrenceFrequency}
+        recurrenceInterval={recurrenceInterval}
+        setRecurrenceInterval={setRecurrenceInterval}
+      />
       
       <Separator className="my-2" />
       

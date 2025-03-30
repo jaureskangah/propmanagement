@@ -21,8 +21,8 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       
       const formattedTasks = data.map(task => {
-        // Create base task object
-        const formattedTask: Task = {
+        // Normalisation des structures pour garantir la conformité à l'interface Task
+        return {
           ...task,
           date: new Date(task.date),
           type: task.type as "regular" | "inspection" | "seasonal",
@@ -36,36 +36,19 @@ export const useTasksQuery = () => {
             weekdays: task.recurrence_pattern.weekdays || [],
             end_date: task.recurrence_pattern.end_date ? new Date(task.recurrence_pattern.end_date) : undefined
           } : undefined
-        };
-        
-        // Add reminder if it exists with direct fields
-        if (task.reminder_enabled) {
-          formattedTask.reminder = {
-            enabled: true,
-            time: task.reminder_time || "09:00",
-            date: task.reminder_date ? new Date(task.reminder_date) : new Date(task.date),
-            notification_type: task.reminder_notification_type || "app",
-            last_sent: null
-          };
-        }
-        
-        return formattedTask;
+        } as Task;
       });
       
       console.log("Processed tasks after fetch:", formattedTasks);
       console.log("Recurring tasks count:", formattedTasks.filter(task => task.is_recurring).length);
-      console.log("Tasks with reminders count:", formattedTasks.filter(task => task.reminder?.enabled).length);
       
       return formattedTasks;
     },
   });
 
-  // Debug filtering
+  // Filtre des tâches récurrentes (utile pour le débogage)
   const recurringTasks = tasks.filter(task => task.is_recurring);
-  const tasksWithReminders = tasks.filter(task => task.reminder?.enabled);
-  
   console.log("Filtered recurring tasks:", recurringTasks);
-  console.log("Filtered tasks with reminders:", tasksWithReminders);
 
   return { tasks, isLoading };
 };

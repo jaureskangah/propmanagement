@@ -1,122 +1,144 @@
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { NewTask } from "../../types";
 import { useToast } from "@/hooks/use-toast";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useAuth } from "@/components/AuthProvider";
+import { NewTask } from "../../types";
 
 export const useTaskAddition = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { user } = useAuth();
 
-  // Function to add a new task
-  const addTaskMutation = useMutation({
-    mutationFn: async (newTask: NewTask) => {
-      console.log("Adding task with date:", newTask.date, "Original date:", newTask.date);
+  const getNextPosition = async () => {
+    const { data: lastTask } = await supabase
+      .from('maintenance_tasks')
+      .select('position')
+      .order('position', { ascending: false })
+      .limit(1);
       
-      // Log if the task is recurring
+    return (lastTask?.[0]?.position ?? -1) + 1;
+  };
+  
+  // Fonction améliorée pour formater les dates au format attendu par Supabase
+  const formatTaskDate = (date: Date) => {
+    // Format standard YYYY-MM-DD pour la base de données
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    
+    return `${year}-${month}-${day}`;
+  };
+
+  const handleAddTask = async (newTask: NewTask) => {
+    if (!user?.id) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to add tasks",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const nextPosition = await getNextPosition();
+      const formattedDate = formatTaskDate(newTask.date);
+      
+      console.log("Adding task with date:", formattedDate, "Original date:", newTask.date);
       console.log("Task is recurring:", newTask.is_recurring);
-      if (newTask.is_recurring && newTask.recurrence_pattern) {
-        console.log("Recurrence pattern:", newTask.recurrence_pattern);
-      }
-      
-      // Log if the task has a reminder
-      if (newTask.reminder) {
-        console.log("Reminder settings:", newTask.reminder);
-      }
-      
-      // Create a task with all necessary properties
-      const taskToAdd = {
-        title: newTask.title,
-        date: newTask.date,
-        type: newTask.type,
-        priority: newTask.priority || 'medium',
-        is_recurring: newTask.is_recurring || false,
-        recurrence_pattern: newTask.recurrence_pattern,
-        // Add reminder fields directly to the task
-        reminder_enabled: newTask.reminder?.enabled || false,
-        reminder_time: newTask.reminder?.time || null,
-        reminder_date: newTask.reminder?.date || null,
-        reminder_notification_type: newTask.reminder?.notification_type || null
-      };
-      
-      console.log("Task being inserted into Supabase:", taskToAdd);
-      
-      const { data, error } = await supabase
+      console.log("Recurrence pattern:", newTask.recurrence_pattern);
+
+      const { error } = await supabase
         .from('maintenance_tasks')
-        .insert(taskToAdd)
-        .select();
-      
-      if (error) {
-        console.error("Error adding task:", error);
-        throw error;
-      }
-      
-      return data[0];
-    },
-    onSuccess: () => {
+        .insert({
+          title: newTask.title,
+          date: formattedDate,
+          type: newTask.type,
+          priority: newTask.priority || 'medium',
+          completed: false,
+          user_id: user.id,
+          position: nextPosition,
+          is_recurring: newTask.is_recurring || false,
+          recurrence_pattern: newTask.recurrence_pattern ? {
+            frequency: newTask.recurrence_pattern.frequency,
+            interval: newTask.recurrence_pattern.interval,
+            weekdays: newTask.recurrence_pattern.weekdays || [],
+            end_date: newTask.recurrence_pattern.end_date 
+              ? formatTaskDate(new Date(newTask.recurrence_pattern.end_date)) 
+              : null
+          } : null
+        });
+
+      if (error) throw error;
+
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-    },
-    onError: (error) => {
+      toast({
+        title: "Success",
+        description: "Task added successfully",
+      });
+    } catch (error) {
       console.error("Error adding task:", error);
       toast({
-        title: t('error'),
-        description: t('errorAddingTasks'),
+        title: "Error",
+        description: "Unable to add task",
         variant: "destructive",
       });
-    },
-  });
-
-  // Function to add multiple tasks
-  const addMultipleTasksMutation = useMutation({
-    mutationFn: async (newTasks: NewTask[]) => {
-      // Prepare tasks to add with all necessary properties
-      const tasksToAdd = newTasks.map(task => ({
-        title: task.title,
-        date: task.date,
-        type: task.type,
-        priority: task.priority || "medium",
-        is_recurring: task.is_recurring || false,
-        recurrence_pattern: task.recurrence_pattern,
-        // Add reminder fields directly to the task
-        reminder_enabled: task.reminder?.enabled || false,
-        reminder_time: task.reminder?.time || null,
-        reminder_date: task.reminder?.date || null,
-        reminder_notification_type: task.reminder?.notification_type || null
-      }));
-      
-      console.log("Multiple tasks being inserted:", tasksToAdd);
-      
-      const { data, error } = await supabase
-        .from('maintenance_tasks')
-        .insert(tasksToAdd)
-        .select();
-      
-      if (error) {
-        console.error("Error adding multiple tasks:", error);
-        throw error;
-      }
-      
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-    },
-    onError: (error) => {
-      console.error("Error adding multiple tasks:", error);
-      toast({
-        title: t('error'),
-        description: t('errorAddingTasks'),
-        variant: "destructive",
-      });
-    },
-  });
-
-  return {
-    handleAddTask: (task: NewTask) => addTaskMutation.mutate(task),
-    handleAddMultipleTasks: (tasks: NewTask[]) => addMultipleTasksMutation.mutate(tasks),
-    isAdding: addTaskMutation.isPending,
-    isAddingMultiple: addMultipleTasksMutation.isPending,
+    }
   };
+
+  const handleAddMultipleTasks = async (newTasks: NewTask[]) => {
+    if (!user?.id || newTasks.length === 0) {
+      return;
+    }
+
+    try {
+      const nextPosition = await getNextPosition();
+      
+      const tasksToInsert = newTasks.map((task, index) => {
+        const formattedDate = formatTaskDate(task.date);
+        console.log(`Task ${index + 1} date:`, formattedDate, "Original date:", task.date);
+        console.log(`Task ${index + 1} is recurring:`, task.is_recurring);
+        
+        return {
+          title: task.title,
+          date: formattedDate,
+          type: task.type,
+          priority: task.priority || 'medium',
+          completed: false,
+          user_id: user.id,
+          position: nextPosition + index,
+          is_recurring: task.is_recurring || false,
+          recurrence_pattern: task.recurrence_pattern ? {
+            frequency: task.recurrence_pattern.frequency,
+            interval: task.recurrence_pattern.interval,
+            weekdays: task.recurrence_pattern.weekdays || [],
+            end_date: task.recurrence_pattern.end_date 
+              ? formatTaskDate(new Date(task.recurrence_pattern.end_date)) 
+              : null
+          } : null
+        };
+      });
+
+      const { error } = await supabase
+        .from('maintenance_tasks')
+        .insert(tasksToInsert);
+
+      if (error) throw error;
+
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      toast({
+        title: "Success",
+        description: `${tasksToInsert.length} tasks added successfully`,
+      });
+    } catch (error) {
+      console.error("Error adding batch tasks:", error);
+      toast({
+        title: "Error",
+        description: "Unable to add tasks in batch",
+        variant: "destructive",
+      });
+    }
+  };
+
+  return { handleAddTask, handleAddMultipleTasks };
 };
