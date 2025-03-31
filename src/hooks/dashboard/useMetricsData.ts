@@ -23,7 +23,9 @@ export const useMetricsData = (
     totalNotificationCount,
     showUnreadDialog, 
     setShowUnreadDialog,
-    markAllMessagesAsRead
+    markAllMessagesAsRead,
+    refreshUnreadMessages,
+    refreshMaintenanceRequests
   } = useRealtimeNotifications();
 
   useEffect(() => {
@@ -42,6 +44,8 @@ export const useMetricsData = (
     showUnreadDialog,
     setShowUnreadDialog,
     markAllMessagesAsRead,
+    refreshUnreadMessages,
+    refreshMaintenanceRequests,
     staticUnreadMessages
   };
 };

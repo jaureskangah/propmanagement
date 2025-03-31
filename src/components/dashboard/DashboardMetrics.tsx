@@ -2,7 +2,7 @@
 import { useMetricsData } from "@/hooks/dashboard/useMetricsData";
 import { NotificationBell } from "./NotificationBell";
 import { MetricsGrid } from "./metrics/MetricsGrid";
-import { UnreadMessagesDialog } from "./UnreadMessagesDialog";
+import { UnreadMessagesDialog } from "./notifications/UnreadMessagesDialog";
 import { DateRange } from "./DashboardDateFilter";
 import { useEffect, useState } from "react";
 
