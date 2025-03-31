@@ -28,7 +28,7 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
     priceId: "price_basic",
     gradient: "from-blue-50 via-indigo-50 to-sky-100",
     borderColor: "border-blue-500",
-    iconColor: "text-blue-500",
+    iconColor: "text-blue-600",
   },
   {
     name: t('proPlan'),
@@ -60,6 +60,6 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
     priceId: "price_pro",
     gradient: "from-violet-50 via-purple-50 to-fuchsia-100",
     borderColor: "border-purple-600",
-    iconColor: "text-purple-600",
+    iconColor: "text-purple-700",
   },
 ];

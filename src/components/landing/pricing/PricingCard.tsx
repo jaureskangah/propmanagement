@@ -46,7 +46,7 @@ export const PricingCard = ({
         </div>
       )}
       <CardHeader className="pb-0">
-        <CardTitle className="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+        <CardTitle className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
           {name}
         </CardTitle>
       </CardHeader>
