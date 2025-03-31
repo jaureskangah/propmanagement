@@ -9,58 +9,48 @@ import { useNavigate } from "react-router-dom";
 import { useLocale } from "../providers/LocaleProvider";
 
 const formatPrice = (price: string | number) => {
-  if (price === "Free") return price;
-  return `CA$${price}`;
+  return `$${price}`;
 };
 
 const getPlans = (t: (key: string) => string) => [
   {
     name: t('freemiumPlan'),
-    price: "Free",
+    price: "15",
     features: [
       t('upTo2Properties'),
+      t('basicPropertyCards'),
       t('rentManagement'),
       t('digitalDocuments'),
-      t('basicPropertyCards'),
       t('emailNotifications'),
     ],
     buttonText: "pricingStartFree",
-    priceId: null,
+    priceId: "price_basic",
   },
   {
     name: t('proPlan'),
-    price: "39.99",
+    price: "35",
     popular: true,
     features: [
       t('upTo5Properties'),
-      t('rentManagement'),
-      t('digitalDocuments'),
       t('tenantVerification'),
-      t('prioritySupport'),
       t('advancedDashboard'),
-      t('financialReports'),
-      t('maintenanceManagement'),
+      t('prioritySupport'),
     ],
     buttonText: "pricingGetStarted",
-    priceId: "price_1QdEX1A44huL2zb1OfGwbzzn",
+    priceId: "price_standard",
   },
   {
     name: t('enterprisePlan'),
-    price: "99.99",
+    price: "60",
     features: [
       t('upTo20Properties'),
-      t('rentManagement'),
-      t('digitalDocuments'),
-      t('tenantVerification'),
-      t('dedicatedSupport'),
-      t('customDashboard'),
-      t('advancedFinancialReports'),
+      t('financialReports'),
       t('maintenanceManagement'),
-      t('userTraining'),
-      t('dailyBackup'),
+      t('customDashboard'),
+      t('dedicatedSupport'),
     ],
     buttonText: "pricingGetStarted",
-    priceId: "price_1QdEXVA44huL2zb1cvLhmUtK",
+    priceId: "price_pro",
   },
 ];
 
@@ -159,14 +149,8 @@ export default function Pricing() {
               </CardHeader>
               <CardContent className="flex-1">
                 <div className="mt-2 flex items-baseline text-gray-900">
-                  {plan.price === "Free" ? (
-                    <span className="text-4xl font-bold tracking-tight">{t('free')}</span>
-                  ) : (
-                    <>
-                      <span className="text-4xl font-bold tracking-tight">{formatPrice(plan.price)}</span>
-                      <span className="ml-1 text-sm font-semibold">{t('month')}</span>
-                    </>
-                  )}
+                  <span className="text-4xl font-bold tracking-tight">{formatPrice(plan.price)}</span>
+                  <span className="ml-1 text-sm font-semibold">/{t('month')}</span>
                 </div>
                 <ul className="mt-8 space-y-4">
                   {plan.features.map((feature) => (
