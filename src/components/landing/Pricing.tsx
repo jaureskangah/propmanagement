@@ -5,11 +5,15 @@ import { PricingCard } from "./pricing/PricingCard";
 import { getPlans } from "./pricing/getPricingPlans";
 import { formatPrice } from "./pricing/utils";
 import { useSubscription } from "./pricing/useSubscription";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { PlanComparisonModal } from "./pricing/PlanComparisonModal";
 
 export default function Pricing() {
   const { t } = useLocale();
   const plans = getPlans(t);
   const { handleSubscribe } = useSubscription(t);
+  const [isComparisonOpen, setIsComparisonOpen] = useState(false);
 
   const container = {
     hidden: { opacity: 0 },
@@ -56,6 +60,24 @@ export default function Pricing() {
             </motion.div>
           ))}
         </motion.div>
+
+        <div className="mt-16 text-center">
+          <Button 
+            variant="outline" 
+            size="lg" 
+            onClick={() => setIsComparisonOpen(true)}
+            className="border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+          >
+            {t('comparePlans')}
+          </Button>
+        </div>
+
+        <PlanComparisonModal 
+          isOpen={isComparisonOpen} 
+          onClose={() => setIsComparisonOpen(false)} 
+          plans={plans}
+          t={t}
+        />
       </div>
     </section>
   );

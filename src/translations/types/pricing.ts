@@ -10,6 +10,9 @@ export interface PricingTranslations {
   pricingSubtitle: string;
   pricingStartFree: string;
   pricingGetStarted: string;
+  comparePlans: string;
+  comparePlansTitle: string;
+  feature: string;
 }
 
 export interface PlanFeaturesTranslations {

@@ -1,4 +1,3 @@
-
 import { PricingTranslations, PlanFeaturesTranslations } from '../types';
 
 export const enPricing: PricingTranslations = {
@@ -11,7 +10,10 @@ export const enPricing: PricingTranslations = {
   pricingTitle: "Simple, Transparent Pricing",
   pricingSubtitle: "Choose the plan that works best for you",
   pricingStartFree: "Get Started",
-  pricingGetStarted: "Get Started"
+  pricingGetStarted: "Get Started",
+  comparePlans: "Compare Plans",
+  comparePlansTitle: "Plan Feature Comparison",
+  feature: "Feature"
 };
 
 export const frPricing: PricingTranslations = {
@@ -24,7 +26,10 @@ export const frPricing: PricingTranslations = {
   pricingTitle: "Tarification simple et transparente",
   pricingSubtitle: "Choisissez le plan qui vous convient le mieux",
   pricingStartFree: "Commencer",
-  pricingGetStarted: "Commencer"
+  pricingGetStarted: "Commencer",
+  comparePlans: "Comparer les plans",
+  comparePlansTitle: "Comparaison des fonctionnalités",
+  feature: "Fonctionnalité"
 };
 
 export const enPlanFeatures: PlanFeaturesTranslations = {
