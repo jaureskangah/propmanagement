@@ -1,3 +1,4 @@
+
 import { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -23,7 +24,7 @@ export function useActivities() {
   const { t, language } = useLocale();
   const [activityTypeFilter, setActivityTypeFilter] = useState<string>("all");
   const [visibleActivitiesCount, setVisibleActivitiesCount] = useState<number>(5);
-  const [showAll, setShowAll] = useState<boolean>(false);
+  const ACTIVITIES_PER_PAGE = 5; // Nombre d'activités à charger à chaque clic sur "Voir plus"
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ["recent_tenants"],
@@ -32,7 +33,7 @@ export function useActivities() {
         .from("tenants")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(10);
       if (error) throw error;
       return data;
     },
@@ -54,7 +55,7 @@ export function useActivities() {
           )
         `)
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(10);
       if (error) throw error;
       return data;
     },
@@ -71,7 +72,7 @@ export function useActivities() {
         .from("maintenance_requests")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(10);
       if (error) throw error;
       return data;
     },
@@ -118,11 +119,8 @@ export function useActivities() {
   }, [allActivities, activityTypeFilter]);
 
   const limitedActivities = useMemo(() => {
-    if (showAll) {
-      return filteredActivities;
-    }
     return filteredActivities.slice(0, visibleActivitiesCount);
-  }, [filteredActivities, visibleActivitiesCount, showAll]);
+  }, [filteredActivities, visibleActivitiesCount]);
 
   const groupedActivities = useMemo(() => {
     const grouped: GroupedActivities = {};
@@ -158,7 +156,7 @@ export function useActivities() {
   const hasMoreActivities = filteredActivities.length > limitedActivities.length;
 
   const showMoreActivities = () => {
-    setShowAll(true);
+    setVisibleActivitiesCount(prev => prev + ACTIVITIES_PER_PAGE);
   };
 
   return {
