@@ -27,8 +27,8 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
     show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
   };
 
-  // Nouvelle animation pour les éléments décoratifs
-  const decorCircle = {
+  // Animation for decorative elements
+  const decorCircleAnimation = {
     initial: { scale: 0.8, opacity: 0.5 },
     animate: { 
       scale: [0.8, 1.1, 0.9, 1],
@@ -36,7 +36,25 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
       transition: { 
         duration: 8,
         repeat: Infinity,
-        repeatType: "reverse" 
+        repeatType: "reverse" as const
+      }
+    }
+  };
+
+  const decorCircleAnimation2 = {
+    initial: "initial",
+    animate: "animate",
+    variants: {
+      initial: { scale: 0.8, opacity: 0.5 },
+      animate: { 
+        scale: [0.8, 1.1, 0.9, 1],
+        opacity: [0.5, 0.7, 0.6, 0.8],
+        transition: { 
+          duration: 8,
+          delay: 1.5,
+          repeat: Infinity,
+          repeatType: "reverse" as const
+        }
       }
     }
   };
@@ -50,23 +68,14 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white via-red-50 to-white" />
       
-      {/* Cercles décoratifs animés */}
+      {/* Animated decorative circles */}
       <motion.div 
-        initial="initial"
-        animate="animate"
-        variants={decorCircle}
+        initial={decorCircleAnimation.initial}
+        animate={decorCircleAnimation.animate}
         className="absolute top-10 right-10 w-64 h-64 rounded-full bg-gradient-to-r from-pink-100 to-red-100 opacity-30 blur-3xl" 
       />
       <motion.div 
-        initial="initial"
-        animate="animate"
-        variants={{
-          ...decorCircle,
-          animate: {
-            ...decorCircle.animate,
-            transition: { ...decorCircle.animate.transition, delay: 1.5 }
-          }
-        }}
+        {...decorCircleAnimation2}
         className="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 opacity-30 blur-3xl" 
       />
       
@@ -90,35 +99,37 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
             variants={item}
             className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
           >
-            <Button
-              size="lg"
-              onClick={onShowAuthModal}
-              className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6"
-              // Ajout d'animation sur le bouton
-              as={motion.button}
+            <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              {t('heroGetStarted')}
-            </Button>
+              <Button
+                size="lg"
+                onClick={onShowAuthModal}
+                className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6"
+              >
+                {t('heroGetStarted')}
+              </Button>
+            </motion.div>
             
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => {
-                document
-                  .getElementById("everything-you-need")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="group border-gray-300 hover:border-[#ea384c] hover:text-[#ea384c] transition-colors rounded-full px-8 py-6"
-              // Ajout d'animation sur le bouton
-              as={motion.button}
+            <motion.div
               whileHover={{ scale: 1.05, borderColor: "#ea384c" }}
               whileTap={{ scale: 0.95 }}
             >
-              {t('learnMore')}
-              <ChevronDown className="h-4 w-4 group-hover:animate-bounce" />
-            </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => {
+                  document
+                    .getElementById("everything-you-need")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="group border-gray-300 hover:border-[#ea384c] hover:text-[#ea384c] transition-colors rounded-full px-8 py-6"
+              >
+                {t('learnMore')}
+                <ChevronDown className="h-4 w-4 group-hover:animate-bounce" />
+              </Button>
+            </motion.div>
           </motion.div>
           
           <motion.div 

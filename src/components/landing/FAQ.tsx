@@ -125,7 +125,7 @@ export default function FAQ() {
           variants={container}
         >
           <Accordion type="single" collapsible className="space-y-3 md:space-y-4">
-            {faqItems.map((item, index) => (
+            {faqItems.map((faqItem, index) => (
               <motion.div 
                 key={index}
                 variants={item}
@@ -136,10 +136,10 @@ export default function FAQ() {
                   className="bg-white border border-red-100 rounded-lg px-3 md:px-4 hover:shadow-md transition-shadow"
                 >
                   <AccordionTrigger className="text-left hover:no-underline py-3 md:py-4 text-slate-900 font-medium text-sm md:text-base pr-2">
-                    {item.question}
+                    {faqItem.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-slate-600 text-sm md:text-base pb-3 md:pb-4">
-                    {item.answer}
+                    {faqItem.answer}
                   </AccordionContent>
                 </AccordionItem>
               </motion.div>
