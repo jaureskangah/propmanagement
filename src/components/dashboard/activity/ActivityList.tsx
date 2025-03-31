@@ -1,7 +1,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { Activity } from "../RecentActivity";
-import { NoActivity } from "./NoActivity";
 import { ActivityGroup } from "./ActivityGroup";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
@@ -30,48 +29,42 @@ export const ActivityList = ({
       }
     }
   };
-  
-  const isEmpty = Object.keys(groupedActivities).length === 0;
 
   return (
     <AnimatePresence mode="wait">
-      {isEmpty ? (
-        <NoActivity />
-      ) : (
-        <motion.div 
-          key="activity-groups"
-          className="space-y-6"
-          variants={container}
-          initial="hidden"
-          animate="show"
-        >
-          {Object.entries(groupedActivities).map(([dateGroup, activities]) => (
-            <ActivityGroup 
-              key={dateGroup} 
-              dateGroup={dateGroup} 
-              activities={activities} 
-            />
-          ))}
-          
-          {hasMoreActivities && onShowMore && (
-            <motion.div 
-              className="flex justify-center mt-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
+      <motion.div 
+        key="activity-groups"
+        className="space-y-6"
+        variants={container}
+        initial="hidden"
+        animate="show"
+      >
+        {Object.entries(groupedActivities).map(([dateGroup, activities]) => (
+          <ActivityGroup 
+            key={dateGroup} 
+            dateGroup={dateGroup} 
+            activities={activities} 
+          />
+        ))}
+        
+        {hasMoreActivities && onShowMore && (
+          <motion.div 
+            className="flex justify-center mt-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onShowMore}
+              className="flex items-center gap-1 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
             >
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onShowMore}
-                className="flex items-center gap-1 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
-              >
-                {t('viewAll')} <ChevronDown className="h-4 w-4" />
-              </Button>
-            </motion.div>
-          )}
-        </motion.div>
-      )}
+              {t('viewAll')} <ChevronDown className="h-4 w-4" />
+            </Button>
+          </motion.div>
+        )}
+      </motion.div>
     </AnimatePresence>
   );
 };

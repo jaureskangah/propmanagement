@@ -111,19 +111,30 @@ export function useActivities() {
     );
   }, [tenants, payments, maintenance]);
 
-  // Correction du filtrage pour les activités
+  // Improved the filtering logic with better debugging
   const filteredActivities = useMemo(() => {
-    console.log("Filtering activities with type filter:", activityTypeFilter);
-    console.log("All activities before filtering:", allActivities.length);
+    console.log(`Filtering activities with filter type: "${activityTypeFilter}"`);
+    console.log(`Total activities before filtering: ${allActivities.length}`);
     
-    // Si le filtre est "all", retourner toutes les activités
     if (activityTypeFilter === "all") {
       return allActivities;
     }
     
-    // Sinon, filtrer par le type spécifié
-    const filtered = allActivities.filter(activity => activity.type === activityTypeFilter);
+    // Filter activities by type
+    const filtered = allActivities.filter(activity => {
+      const match = activity.type === activityTypeFilter;
+      return match;
+    });
+    
     console.log(`Found ${filtered.length} activities of type "${activityTypeFilter}"`);
+    
+    // Log specific activities that match or don't match for debugging
+    if (filtered.length === 0 && allActivities.length > 0) {
+      console.log("No matches found. First few activity types available:", 
+        allActivities.slice(0, 3).map(a => a.type)
+      );
+    }
+    
     return filtered;
   }, [allActivities, activityTypeFilter]);
 

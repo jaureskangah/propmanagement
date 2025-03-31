@@ -11,7 +11,6 @@ interface ActivityFilterProps {
 export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
   const { t } = useLocale();
   
-  // Fonction pour gérer le changement de valeur
   const handleValueChange = (newValue: string) => {
     console.log("Activity filter changed to:", newValue);
     onChange(newValue);
