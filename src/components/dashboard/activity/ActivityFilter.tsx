@@ -11,11 +11,17 @@ interface ActivityFilterProps {
 export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
   const { t } = useLocale();
   
+  // Fonction pour gérer le changement de valeur
+  const handleValueChange = (newValue: string) => {
+    console.log("Activity filter changed to:", newValue);
+    onChange(newValue);
+  };
+  
   return (
     <div className="mb-4 flex justify-end">
       <div className="flex items-center space-x-2">
         <Filter className="h-4 w-4 text-muted-foreground" />
-        <Select value={value} onValueChange={onChange}>
+        <Select value={value} onValueChange={handleValueChange}>
           <SelectTrigger className="w-[180px] dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
             <SelectValue placeholder={t('filterBy')} />
           </SelectTrigger>

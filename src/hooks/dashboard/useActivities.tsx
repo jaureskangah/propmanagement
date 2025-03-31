@@ -111,11 +111,21 @@ export function useActivities() {
     );
   }, [tenants, payments, maintenance]);
 
+  // Correction du filtrage pour les activités
   const filteredActivities = useMemo(() => {
+    console.log("Filtering activities with type filter:", activityTypeFilter);
+    
+    // Si le filtre est "all", retourner toutes les activités
     if (activityTypeFilter === "all") {
       return allActivities;
     }
-    return allActivities.filter(activity => activity.type === activityTypeFilter);
+    
+    // Sinon, filtrer par le type spécifié
+    return allActivities.filter(activity => {
+      // Vérifier si le type d'activité correspond au filtre sélectionné
+      const match = activity.type === activityTypeFilter;
+      return match;
+    });
   }, [allActivities, activityTypeFilter]);
 
   const limitedActivities = useMemo(() => {

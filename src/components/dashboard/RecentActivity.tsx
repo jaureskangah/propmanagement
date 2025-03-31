@@ -19,11 +19,17 @@ export const RecentActivity = () => {
     showMoreActivities
   } = useActivities();
 
+  // Fonction de gestion du changement de filtre
+  const handleFilterChange = (newFilter: string) => {
+    console.log("Setting activity filter to:", newFilter);
+    setActivityTypeFilter(newFilter);
+  };
+
   return (
     <ActivityCard title={t('recentActivity')} isLoading={isLoading}>
       <ActivityFilter 
         value={activityTypeFilter} 
-        onChange={setActivityTypeFilter} 
+        onChange={handleFilterChange} 
       />
       <ActivityList 
         groupedActivities={groupedActivities} 
