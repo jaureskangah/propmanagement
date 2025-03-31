@@ -35,10 +35,23 @@ export function useRealtimeNotifications() {
   useEffect(() => {
     fetchUnreadMessages();
     fetchPendingMaintenance();
+    
+    // Set an interval to refresh notification data every 5 minutes
+    const refreshInterval = setInterval(() => {
+      fetchUnreadMessages();
+      fetchPendingMaintenance();
+    }, 5 * 60 * 1000);
+    
+    return () => clearInterval(refreshInterval);
   }, []);
   
   // Update total notification count
   useEffect(() => {
+    console.log("Updating notification count:", { 
+      unreadMessages: unreadMessages.length, 
+      maintenanceRequests: maintenanceRequests.length 
+    });
+    
     setTotalNotificationCount(unreadMessages.length + maintenanceRequests.length);
   }, [unreadMessages, maintenanceRequests]);
   

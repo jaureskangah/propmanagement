@@ -24,7 +24,7 @@ export function useUnreadMessages() {
       
       if (data) {
         console.log("Found unread messages:", data);
-        setUnreadMessages(data);
+        setUnreadMessages(data || []);
         
         // Show dialog if we're on the dashboard and there are messages
         if (window.location.pathname === '/dashboard' && data.length > 0) {
@@ -35,6 +35,8 @@ export function useUnreadMessages() {
       }
     } catch (error) {
       console.error("Error fetching unread messages:", error);
+      // Set to empty array in case of error to avoid showing stale data
+      setUnreadMessages([]);
     }
   };
 

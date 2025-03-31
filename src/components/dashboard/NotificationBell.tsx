@@ -49,7 +49,7 @@ export const NotificationBell = ({
                   initial={{ scale: 0.5 }}
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 0.3, repeat: 3, repeatType: "reverse" }}
-                  className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-purple-600 text-[11px] text-white flex items-center justify-center"
+                  className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-purple-600 text-[10px] text-white flex items-center justify-center"
                 >
                   {unreadCount}
                 </motion.span>
