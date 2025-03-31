@@ -66,7 +66,7 @@ export default function Pricing() {
             variant="outline" 
             size="lg" 
             onClick={() => setIsComparisonOpen(true)}
-            className="border-primary text-primary hover:bg-primary hover:text-white transition-colors"
+            className="bg-gradient-to-r from-[#ea384c] to-[#d41f32] text-white border-none hover:bg-gradient-to-r hover:from-[#d41f32] hover:to-[#c01226] transition-all duration-300 hover:scale-105 hover:shadow-md"
           >
             {t('comparePlans')}
           </Button>
