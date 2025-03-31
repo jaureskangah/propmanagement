@@ -1,19 +1,23 @@
 
 import { motion } from "framer-motion";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { ActivityType } from "lucide-react";
 
 export const NoActivity = () => {
   const { t } = useLocale();
   
   return (
-    <motion.p 
+    <motion.div 
       key="no-activity"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="text-center py-4 text-muted-foreground italic"
+      className="text-center py-8 flex flex-col items-center space-y-4"
     >
-      {t('noActivity')}
-    </motion.p>
+      <ActivityType className="h-12 w-12 text-muted-foreground opacity-40" />
+      <p className="text-muted-foreground italic">
+        {t('noActivity')}
+      </p>
+    </motion.div>
   );
 };

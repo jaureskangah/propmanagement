@@ -114,6 +114,7 @@ export function useActivities() {
   // Correction du filtrage pour les activités
   const filteredActivities = useMemo(() => {
     console.log("Filtering activities with type filter:", activityTypeFilter);
+    console.log("All activities before filtering:", allActivities.length);
     
     // Si le filtre est "all", retourner toutes les activités
     if (activityTypeFilter === "all") {
@@ -121,11 +122,9 @@ export function useActivities() {
     }
     
     // Sinon, filtrer par le type spécifié
-    return allActivities.filter(activity => {
-      // Vérifier si le type d'activité correspond au filtre sélectionné
-      const match = activity.type === activityTypeFilter;
-      return match;
-    });
+    const filtered = allActivities.filter(activity => activity.type === activityTypeFilter);
+    console.log(`Found ${filtered.length} activities of type "${activityTypeFilter}"`);
+    return filtered;
   }, [allActivities, activityTypeFilter]);
 
   const limitedActivities = useMemo(() => {

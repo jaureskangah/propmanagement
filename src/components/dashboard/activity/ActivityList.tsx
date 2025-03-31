@@ -31,9 +31,11 @@ export const ActivityList = ({
     }
   };
   
+  const isEmpty = Object.keys(groupedActivities).length === 0;
+
   return (
     <AnimatePresence mode="wait">
-      {Object.keys(groupedActivities).length === 0 ? (
+      {isEmpty ? (
         <NoActivity />
       ) : (
         <motion.div 
