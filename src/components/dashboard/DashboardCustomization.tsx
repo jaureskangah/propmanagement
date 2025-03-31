@@ -36,31 +36,27 @@ export function DashboardCustomization() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="icon" 
-          className="ml-auto dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
-        >
+        <Button variant="outline" size="icon" className="ml-auto">
           <Settings className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent className="dark:bg-gray-900 dark:border-gray-800">
+      <SheetContent>
         <SheetHeader>
-          <SheetTitle className="dark:text-white">{t('dashboardCustomization')}</SheetTitle>
-          <SheetDescription className="dark:text-gray-400">
+          <SheetTitle>{t('dashboardCustomization')}</SheetTitle>
+          <SheetDescription>
             {t('customizeDescription')}
           </SheetDescription>
         </SheetHeader>
 
         <div className="mt-6">
-          <h3 className="text-sm font-medium mb-4 dark:text-gray-300">{t('visibleSections')}</h3>
+          <h3 className="text-sm font-medium mb-4">{t('visibleSections')}</h3>
           <div className="space-y-4">
             {AVAILABLE_SECTIONS.map((section) => (
               <div
                 key={section.id}
                 className="flex items-center justify-between"
               >
-                <Label htmlFor={section.id} className="cursor-pointer dark:text-gray-300">
+                <Label htmlFor={section.id} className="cursor-pointer">
                   {section.label}
                 </Label>
                 <Switch

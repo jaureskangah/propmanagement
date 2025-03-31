@@ -56,11 +56,10 @@ export function DashboardMetric({
       "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing min-h-[200px]",
       "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
       "after:absolute after:inset-0 after:rounded-lg after:border-2 after:border-transparent after:transition-colors hover:after:border-primary/20",
-      "dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100",
       className
     )}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors dark:text-gray-300 dark:group-hover:text-gray-100">
+        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
           {title}
         </CardTitle>
         <div className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 text-primary">
@@ -69,7 +68,7 @@ export function DashboardMetric({
       </CardHeader>
       <CardContent>
         <div className="flex flex-col space-y-2">
-          <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in dark:text-gray-100">
+          <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
             {value}
           </div>
           {description && (
@@ -91,10 +90,10 @@ export function DashboardMetric({
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         return (
-                          <div className="rounded-lg border bg-background p-2 shadow-md animate-fade-in dark:bg-gray-800 dark:border-gray-700">
+                          <div className="rounded-lg border bg-background p-2 shadow-md animate-fade-in">
                             <div className="grid grid-cols-2 gap-2">
-                              <span className="font-medium text-muted-foreground dark:text-gray-400">Valeur:</span>
-                              <span className="font-bold text-primary dark:text-blue-400">
+                              <span className="font-medium text-muted-foreground">Valeur:</span>
+                              <span className="font-bold text-primary">
                                 {typeof payload[0].value === 'number' 
                                   ? payload[0].value.toLocaleString()
                                   : payload[0].value}
@@ -133,11 +132,11 @@ export function DashboardMetric({
             {card}
           </TooltipTrigger>
           <TooltipContent 
-            className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in dark:bg-gray-800/95 dark:border-gray-700/10"
+            className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in"
             side="top"
             align="center"
           >
-            <p className="text-sm text-gray-600 dark:text-gray-300">{tooltip}</p>
+            <p className="text-sm text-gray-600">{tooltip}</p>
           </TooltipContent>
         </UITooltip>
       </TooltipProvider>
