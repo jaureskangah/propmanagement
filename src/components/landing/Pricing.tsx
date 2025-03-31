@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useLocale } from "../providers/LocaleProvider";
+import { motion } from "framer-motion";
 
 const formatPrice = (price: string | number) => {
   return `$${price}`;
@@ -25,6 +26,9 @@ const getPlans = (t: (key: string) => string) => [
     ],
     buttonText: "pricingStartFree",
     priceId: "price_basic",
+    gradient: "from-blue-50 to-blue-100",
+    borderColor: "border-blue-200",
+    iconColor: "text-blue-500",
   },
   {
     name: t('proPlan'),
@@ -38,6 +42,9 @@ const getPlans = (t: (key: string) => string) => [
     ],
     buttonText: "pricingGetStarted",
     priceId: "price_standard",
+    gradient: "from-red-50 to-pink-100",
+    borderColor: "border-[#ea384c]",
+    iconColor: "text-[#ea384c]",
   },
   {
     name: t('enterprisePlan'),
@@ -51,6 +58,9 @@ const getPlans = (t: (key: string) => string) => [
     ],
     buttonText: "pricingGetStarted",
     priceId: "price_pro",
+    gradient: "from-purple-50 to-purple-100",
+    borderColor: "border-purple-200",
+    iconColor: "text-purple-500",
   },
 ];
 
@@ -118,8 +128,24 @@ export default function Pricing() {
     }
   };
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <section className="py-24 bg-gray-50" id="pricing">
+    <section className="py-24 bg-gradient-to-b from-white to-gray-50" id="pricing">
       <div className="container px-4 md:px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -129,49 +155,59 @@ export default function Pricing() {
             {t('pricingSubtitle')}
           </p>
         </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
+        >
           {plans.map((plan) => (
-            <Card 
-              key={plan.name}
-              className={`relative flex flex-col ${
-                plan.popular ? 'border-[#ea384c] shadow-lg' : ''
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <span className="bg-[#ea384c] text-white text-sm font-medium px-3 py-1 rounded-full">
-                    {t('mostPopular')}
-                  </span>
-                </div>
-              )}
-              <CardHeader>
-                <CardTitle className="text-xl">{plan.name}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-1">
-                <div className="mt-2 flex items-baseline text-gray-900">
-                  <span className="text-4xl font-bold tracking-tight">{formatPrice(plan.price)}</span>
-                  <span className="ml-1 text-sm font-semibold">/{t('month')}</span>
-                </div>
-                <ul className="mt-8 space-y-4">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-center">
-                      <Check className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button 
-                  className="w-full bg-[#ea384c] hover:bg-[#d41f32] text-white"
-                  onClick={() => handleSubscribe(plan.priceId)}
-                >
-                  {t(plan.buttonText)}
-                </Button>
-              </CardFooter>
-            </Card>
+            <motion.div key={plan.name} variants={item}>
+              <Card 
+                className={`relative h-full flex flex-col shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden
+                  bg-gradient-to-br ${plan.gradient} ${plan.popular ? `border-2 ${plan.borderColor}` : 'border border-gray-200'}`}
+              >
+                {plan.popular && (
+                  <div className="absolute -right-12 top-8 w-40 transform rotate-45 bg-[#ea384c]">
+                    <p className="py-1 text-center text-sm font-medium text-white">
+                      {t('mostPopular')}
+                    </p>
+                  </div>
+                )}
+                <CardHeader className="pb-0">
+                  <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-1 pt-4">
+                  <div className="mt-2 flex items-baseline">
+                    <span className="text-5xl font-extrabold tracking-tight">{formatPrice(plan.price)}</span>
+                    <span className="ml-1 text-xl font-medium text-gray-500">/{t('month')}</span>
+                  </div>
+                  <ul className="mt-8 space-y-4">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-center">
+                        <Check className={`h-5 w-5 ${plan.iconColor} mr-2 flex-shrink-0`} />
+                        <span className="text-gray-700">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter className="pt-4">
+                  <Button 
+                    className={`w-full py-6 ${
+                      plan.popular 
+                        ? 'bg-[#ea384c] hover:bg-[#d41f32] text-white' 
+                        : 'bg-white border border-gray-300 text-gray-800 hover:bg-gray-50'
+                    } shadow-sm transition-colors duration-200`}
+                    onClick={() => handleSubscribe(plan.priceId)}
+                  >
+                    {t(plan.buttonText)}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
