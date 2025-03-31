@@ -22,9 +22,11 @@ export const NotificationBellButton = ({ unreadCount }: NotificationBellButtonPr
             size="icon"
             className={cn(
               "absolute -top-12 right-0 h-10 w-10 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 dark:bg-gray-800",
-              "border border-purple-100 hover:border-purple-200 dark:border-purple-900"
+              "border border-purple-100 hover:border-purple-200 dark:border-purple-900",
+              "cursor-pointer"
             )}
             aria-label={`${unreadCount} unread notifications`}
+            type="button"
           >
             <Bell className="h-4 w-4 text-purple-600 dark:text-purple-400" />
             <AnimatePresence>

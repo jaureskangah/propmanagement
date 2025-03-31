@@ -36,7 +36,9 @@ export const NotificationDropdown = ({
     >
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <NotificationBellButton unreadCount={unreadCount} />
+          <div>
+            <NotificationBellButton unreadCount={unreadCount} />
+          </div>
         </DropdownMenuTrigger>
         
         <DropdownMenuContent className="w-72" align="end">
