@@ -16,14 +16,14 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
       <div className="flex items-center space-x-2">
         <Filter className="h-4 w-4 text-muted-foreground" />
         <Select value={value} onValueChange={onChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
             <SelectValue placeholder={t('filterBy')} />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">{t('all')}</SelectItem>
-            <SelectItem value="tenant">{t('tenant')}</SelectItem>
-            <SelectItem value="payment">{t('payment')}</SelectItem>
-            <SelectItem value="maintenance">{t('maintenance')}</SelectItem>
+          <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
+            <SelectItem value="all" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('all')}</SelectItem>
+            <SelectItem value="tenant" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('tenant')}</SelectItem>
+            <SelectItem value="payment" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('payment')}</SelectItem>
+            <SelectItem value="maintenance" className="dark:text-gray-200 dark:focus:bg-gray-700">{t('maintenance')}</SelectItem>
           </SelectContent>
         </Select>
       </div>

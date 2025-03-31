@@ -62,7 +62,7 @@ export const ActivityList = ({
                 variant="outline"
                 size="sm"
                 onClick={onShowMore}
-                className="flex items-center gap-1"
+                className="flex items-center gap-1 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-700"
               >
                 {t('viewAll')} <ChevronDown className="h-4 w-4" />
               </Button>

@@ -68,12 +68,12 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                   return (
                     <div
                       key={task.id}
-                      className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                      className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700/50"
                     >
                       <AlertTriangle className="h-5 w-5 text-red-500 mt-0.5" />
                       <div className="w-full">
-                        <h4 className="font-medium">{task.title || task.issue}</h4>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <h4 className="font-medium dark:text-white">{task.title || task.issue}</h4>
+                        <p className="text-sm text-muted-foreground mt-1 dark:text-gray-300">
                           {task.description || t('urgentMaintenanceRequest')}
                         </p>
                         <div className="flex flex-wrap gap-2 mt-2">
@@ -95,7 +95,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                             <TooltipProvider delayDuration={300}>
                               <Tooltip>
                                 <TooltipTrigger asChild>
-                                  <Badge variant="outline" className="text-xs flex items-center gap-1 cursor-pointer">
+                                  <Badge variant="outline" className="text-xs flex items-center gap-1 cursor-pointer dark:bg-gray-700 dark:text-gray-200">
                                     <User className="h-3 w-3" />
                                     {tenant.name}
                                   </Badge>
@@ -140,27 +140,27 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                 {upcomingTasks.map((task) => (
                   <div
                     key={task.id}
-                    className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+                    className="flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700/50"
                   >
                     <Calendar className="h-5 w-5 text-blue-500 mt-0.5" />
                     <div className="flex-1">
-                      <h4 className="font-medium">{task.title}</h4>
+                      <h4 className="font-medium dark:text-white">{task.title}</h4>
                       <div className="flex gap-2 mt-2 flex-wrap">
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
                           {format(new Date(task.date), 'dd MMM yyyy', { locale: dateLocale })}
                         </Badge>
                         <Badge 
                           variant="outline" 
                           className={`text-xs ${
-                            task.priority === 'urgent' ? 'bg-red-50 border-red-200 text-red-700' :
-                            task.priority === 'high' ? 'bg-orange-50 border-orange-200 text-orange-700' :
-                            task.priority === 'medium' ? 'bg-yellow-50 border-yellow-200 text-yellow-700' :
-                            'bg-green-50 border-green-200 text-green-700'
+                            task.priority === 'urgent' ? 'bg-red-50 border-red-200 text-red-700 dark:bg-red-900/30 dark:border-red-700 dark:text-red-400' :
+                            task.priority === 'high' ? 'bg-orange-50 border-orange-200 text-orange-700 dark:bg-orange-900/30 dark:border-orange-700 dark:text-orange-400' :
+                            task.priority === 'medium' ? 'bg-yellow-50 border-yellow-200 text-yellow-700 dark:bg-yellow-900/30 dark:border-yellow-700 dark:text-yellow-400' :
+                            'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/30 dark:border-green-700 dark:text-green-400'
                           }`}
                         >
                           {t(task.priority)}
                         </Badge>
-                        <Badge variant="secondary" className="text-xs">
+                        <Badge variant="secondary" className="text-xs dark:bg-gray-700 dark:text-gray-200">
                           {t(task.type)}
                         </Badge>
                       </div>

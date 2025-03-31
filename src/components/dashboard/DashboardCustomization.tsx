@@ -36,33 +36,34 @@ export function DashboardCustomization() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="ml-auto">
+        <Button variant="outline" size="icon" className="ml-auto dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-200">
           <Settings className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100">
         <SheetHeader>
-          <SheetTitle>{t('dashboardCustomization')}</SheetTitle>
-          <SheetDescription>
+          <SheetTitle className="dark:text-white">{t('dashboardCustomization')}</SheetTitle>
+          <SheetDescription className="dark:text-gray-400">
             {t('customizeDescription')}
           </SheetDescription>
         </SheetHeader>
 
         <div className="mt-6">
-          <h3 className="text-sm font-medium mb-4">{t('visibleSections')}</h3>
+          <h3 className="text-sm font-medium mb-4 dark:text-gray-200">{t('visibleSections')}</h3>
           <div className="space-y-4">
             {AVAILABLE_SECTIONS.map((section) => (
               <div
                 key={section.id}
                 className="flex items-center justify-between"
               >
-                <Label htmlFor={section.id} className="cursor-pointer">
+                <Label htmlFor={section.id} className="cursor-pointer dark:text-gray-300">
                   {section.label}
                 </Label>
                 <Switch
                   id={section.id}
                   checked={!preferences.hidden_sections.includes(section.id)}
                   onCheckedChange={() => toggleSection(section.id)}
+                  className="dark:data-[state=checked]:bg-blue-600"
                 />
               </div>
             ))}

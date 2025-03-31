@@ -67,7 +67,7 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full"></div>
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full dark:border-white dark:border-t-transparent"></div>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
 
   return (
     <div className="space-y-8 pb-10">
-      <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm">
+      <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
         <DashboardMetrics 
           propertiesData={propertiesData}
           maintenanceData={maintenanceData}
@@ -86,7 +86,7 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
       </div>
 
       {!isHidden('priority') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <PrioritySection
             maintenanceData={maintenanceData}
             tenantsData={tenantsData}
@@ -96,13 +96,13 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
       )}
 
       {!isHidden('revenue') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <RevenueChart />
         </div>
       )}
 
       {!isHidden('activity') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md">
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <RecentActivity />
         </div>
       )}
