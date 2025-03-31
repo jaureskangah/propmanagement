@@ -37,9 +37,9 @@ export const RevenueChart = () => {
   if (isLoading) {
     console.log("RevenueChart is loading");
     return (
-      <Card className="animate-pulse">
+      <Card className="animate-pulse dark:bg-gray-800 dark:border-gray-700">
         <CardContent className="flex items-center justify-center h-[350px]">
-          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          <Loader2 className="h-5 w-5 animate-spin text-primary dark:text-blue-400" />
         </CardContent>
       </Card>
     );
@@ -53,19 +53,19 @@ export const RevenueChart = () => {
   });
 
   return (
-    <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in">
+    <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in dark:bg-gray-800 dark:border-gray-700">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="text-base font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+        <CardTitle className="text-base font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-500">
           {t('revenue')} & {t('expenses')}
         </CardTitle>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
             <div className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" />
-            <span className="text-xs text-muted-foreground">{t('revenue')}</span>
+            <span className="text-xs text-muted-foreground dark:text-gray-400">{t('revenue')}</span>
           </div>
           <div className="flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
             <div className="h-2.5 w-2.5 rounded-full bg-blue-200 animate-pulse" />
-            <span className="text-xs text-muted-foreground">{t('expenses')}</span>
+            <span className="text-xs text-muted-foreground dark:text-gray-400">{t('expenses')}</span>
           </div>
         </div>
       </CardHeader>
@@ -85,7 +85,7 @@ export const RevenueChart = () => {
               </defs>
               <CartesianGrid 
                 strokeDasharray="3 3" 
-                className="stroke-muted/50" 
+                className="stroke-muted/50 dark:stroke-gray-700/50" 
                 vertical={false}
               />
               <XAxis
@@ -95,6 +95,7 @@ export const RevenueChart = () => {
                 tickLine={false}
                 axisLine={false}
                 dy={5}
+                className="dark:text-gray-400"
               />
               <YAxis
                 stroke="#888888"
@@ -103,6 +104,7 @@ export const RevenueChart = () => {
                 axisLine={false}
                 tickFormatter={(value) => `$${value.toLocaleString()}`}
                 dx={-5}
+                className="dark:text-gray-400"
               />
               <Tooltip content={RevenueChartTooltip} />
               <Area
@@ -119,7 +121,7 @@ export const RevenueChart = () => {
                   stroke: '#3B82F6',
                   strokeWidth: 1.5,
                   fill: 'white',
-                  className: 'animate-pulse'
+                  className: 'animate-pulse dark:fill-gray-900'
                 }}
               />
               <Area
@@ -136,7 +138,7 @@ export const RevenueChart = () => {
                   stroke: '#93C5FD',
                   strokeWidth: 1.5,
                   fill: 'white',
-                  className: 'animate-pulse'
+                  className: 'animate-pulse dark:fill-gray-900'
                 }}
               />
             </AreaChart>

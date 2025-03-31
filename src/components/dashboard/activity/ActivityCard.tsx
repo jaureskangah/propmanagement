@@ -1,35 +1,29 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 interface ActivityCardProps {
   title: string;
-  isLoading: boolean;
   children: ReactNode;
+  isLoading?: boolean;
+  className?: string;
 }
 
-export const ActivityCard = ({ title, isLoading, children }: ActivityCardProps) => {
-  if (isLoading) {
-    return (
-      <Card className="dark:bg-gray-900">
-        <CardContent className="flex items-center justify-center h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin dark:text-gray-400" />
-        </CardContent>
-      </Card>
-    );
-  }
-
+export function ActivityCard({ title, children, isLoading = false, className }: ActivityCardProps) {
   return (
-    <Card className="font-sans dark:bg-gray-900">
-      <CardHeader>
-        <CardTitle className="dark:text-white">{title}</CardTitle>
+    <Card className={cn("transition-all duration-300 animate-fade-in dark:bg-gray-800 dark:border-gray-700", className)}>
+      <CardHeader className="pb-3">
+        <CardTitle className="text-base font-medium dark:text-white">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {children}
-        </div>
+      <CardContent className="pt-0">
+        {isLoading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-6 w-6 animate-spin text-primary dark:text-blue-400" />
+          </div>
+        ) : children}
       </CardContent>
     </Card>
   );
-};
+}

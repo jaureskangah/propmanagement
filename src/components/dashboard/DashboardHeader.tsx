@@ -45,15 +45,15 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   };
 
   return (
-    <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
+    <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm dark:from-gray-800 dark:to-gray-900/30 dark:border-gray-700/40">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <LayoutDashboard className="h-5 w-5 text-primary" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center dark:bg-primary/20">
+            <LayoutDashboard className="h-5 w-5 text-primary dark:text-blue-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{title}</h1>
-            <p className="text-muted-foreground mt-1">{welcomeMessage}</p>
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-600">{title}</h1>
+            <p className="text-muted-foreground mt-1 dark:text-gray-400">{welcomeMessage}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -64,7 +64,7 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
             size="icon" 
             onClick={toggleTheme} 
             type="button"
-            className="h-9 w-9"
+            className="h-9 w-9 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
             title={theme === "dark" ? t('lightMode') : t('darkMode')}
           >
             {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
