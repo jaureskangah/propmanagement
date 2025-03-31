@@ -46,7 +46,9 @@ export const PricingCard = ({
         </div>
       )}
       <CardHeader className="pb-0">
-        <CardTitle className="text-2xl font-bold">{name}</CardTitle>
+        <CardTitle className="text-2xl md:text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400">
+          {name}
+        </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pt-4">
         <div className="mt-2 flex items-baseline">
