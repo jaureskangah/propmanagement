@@ -169,7 +169,7 @@ export default function Pricing() {
                   bg-gradient-to-br ${plan.gradient} ${plan.popular ? `border-2 ${plan.borderColor}` : 'border border-gray-200'}`}
               >
                 {plan.popular && (
-                  <div className="absolute -right-12 top-8 w-40 transform rotate-45 bg-[#ea384c]">
+                  <div className="absolute -right-12 top-8 w-40 transform rotate-45 bg-[#ea384c] shadow-md">
                     <p className="py-1 text-center text-sm font-medium text-white">
                       {t('mostPopular')}
                     </p>
@@ -180,8 +180,8 @@ export default function Pricing() {
                 </CardHeader>
                 <CardContent className="flex-1 pt-4">
                   <div className="mt-2 flex items-baseline">
-                    <span className="text-5xl font-extrabold tracking-tight">{formatPrice(plan.price)}</span>
-                    <span className="ml-1 text-xl font-medium text-gray-500">/{t('month')}</span>
+                    <span className="text-5xl font-extrabold tracking-tight text-gray-900">{formatPrice(plan.price)}</span>
+                    <span className="ml-1 text-xl font-medium text-gray-600">/{t('month')}</span>
                   </div>
                   <ul className="mt-8 space-y-4">
                     {plan.features.map((feature) => (
