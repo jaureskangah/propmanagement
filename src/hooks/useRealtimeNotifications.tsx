@@ -36,11 +36,11 @@ export function useRealtimeNotifications() {
     fetchUnreadMessages();
     fetchPendingMaintenance();
     
-    // Set an interval to refresh notification data every 5 minutes
+    // Set an interval to refresh notification data every 2 minutes
     const refreshInterval = setInterval(() => {
       fetchUnreadMessages();
       fetchPendingMaintenance();
-    }, 5 * 60 * 1000);
+    }, 2 * 60 * 1000);
     
     return () => clearInterval(refreshInterval);
   }, []);

@@ -103,9 +103,13 @@ export const UnreadMessagesDialog = ({
 
       if (error) throw error;
       
-      // Fermer le dialogue et actualiser
+      // Close the dialog and refresh
       onOpenChange(false);
-      window.location.reload();
+      
+      // Force an immediate refresh of data instead of waiting for the page reload
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
     } catch (error) {
       console.error("Error marking messages as read:", error);
     }

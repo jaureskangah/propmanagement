@@ -27,6 +27,8 @@ export const DashboardMetrics = ({
     showUnreadDialog,
     setShowUnreadDialog,
     markAllMessagesAsRead,
+    refreshUnreadMessages,
+    refreshMaintenanceRequests,
     staticUnreadMessages
   } = useMetricsData(propertiesData, maintenanceData, tenantsData, dateRange);
 
@@ -51,6 +53,9 @@ export const DashboardMetrics = ({
   const handleDialogOpenChange = (open: boolean) => {
     if (!open && showUnreadDialog) {
       markAllMessagesAsRead();
+      // Force refresh notifications to immediately update the count
+      refreshUnreadMessages();
+      refreshMaintenanceRequests();
     }
     setShowUnreadDialog(open);
   };
