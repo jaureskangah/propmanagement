@@ -1,6 +1,7 @@
 
 import { ReactNode } from "react";
 import { motion } from "framer-motion";
+import { itemVariants } from "./featuresAnimations";
 
 interface FeatureCardProps {
   icon: ReactNode;
@@ -11,14 +12,7 @@ interface FeatureCardProps {
 export function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
     <motion.div 
-      variants={{
-        hidden: { opacity: 0, y: 20 },
-        visible: { 
-          opacity: 1, 
-          y: 0,
-          transition: { duration: 0.5 }
-        }
-      }}
+      variants={itemVariants}
       whileHover={{ 
         y: -10, 
         boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
