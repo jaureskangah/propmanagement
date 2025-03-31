@@ -39,13 +39,13 @@ export const PricingCard = ({
         bg-gradient-to-br ${gradient} ${popular ? `border-2 ${borderColor}` : 'border border-gray-200'}`}
     >
       {popular && (
-        <div className="absolute -top-3 left-0 right-0 text-center">
-          <span className="inline-block py-1 px-4 bg-[#ea384c] text-white text-sm font-medium rounded-full shadow-sm">
+        <div className="absolute -right-12 top-8 w-40 transform rotate-45 bg-[#ea384c] shadow-sm">
+          <p className="py-1 text-center text-sm font-medium text-white">
             {t('mostPopular')}
-          </span>
+          </p>
         </div>
       )}
-      <CardHeader className="pb-0 pt-6">
+      <CardHeader className="pb-0">
         <CardTitle className="text-2xl md:text-3xl font-extrabold tracking-tight text-black">
           {name}
         </CardTitle>
