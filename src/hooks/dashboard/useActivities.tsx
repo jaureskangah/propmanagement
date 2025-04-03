@@ -1,5 +1,5 @@
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { TenantActivity } from "@/components/dashboard/activity/TenantActivity";
@@ -82,6 +82,15 @@ export function useActivities() {
     refetchInterval: false
   });
 
+  // Déboguer les données récupérées
+  useEffect(() => {
+    console.log("Données récupérées:", {
+      tenants: tenants.length,
+      payments: payments.length,
+      maintenance: maintenance.length
+    });
+  }, [tenants, payments, maintenance]);
+
   const allActivities = useMemo(() => {
     if (!tenants || !payments || !maintenance) return [];
 
@@ -106,24 +115,40 @@ export function useActivities() {
       }))
     ];
 
-    return combinedActivities.sort((a, b) => 
+    // Tri par date décroissante
+    const sorted = combinedActivities.sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
+    
+    console.log("Toutes les activités combinées:", sorted.length);
+    return sorted;
   }, [tenants, payments, maintenance]);
 
-  // Amélioration du filtrage avec meilleur debugging
+  // Amélioration du filtrage avec débogage amélioré
   const filteredActivities = useMemo(() => {
-    console.log(`Filtering activities with filter type: "${activityTypeFilter}"`);
-    console.log(`Total activities before filtering: ${allActivities.length}`);
+    console.log(`Filtrage des activités avec le type: "${activityTypeFilter}"`);
+    console.log(`Nombre total d'activités avant filtrage: ${allActivities.length}`);
     
     if (activityTypeFilter === "all") {
+      console.log("Retour de toutes les activités sans filtrage");
       return allActivities;
     }
     
     // Filtrer les activités par type
-    const filtered = allActivities.filter(activity => activity.type === activityTypeFilter);
+    const filtered = allActivities.filter(activity => {
+      const isMatch = activity.type === activityTypeFilter;
+      console.log(`Activité de type ${activity.type} correspond au filtre ${activityTypeFilter}? ${isMatch}`);
+      return isMatch;
+    });
     
-    console.log(`Found ${filtered.length} activities of type "${activityTypeFilter}"`);
+    console.log(`Trouvé ${filtered.length} activités de type "${activityTypeFilter}"`);
+    
+    // Afficher les types disponibles si aucune correspondance
+    if (filtered.length === 0 && allActivities.length > 0) {
+      console.log("Types d'activités disponibles:", 
+        [...new Set(allActivities.map(a => a.type))]
+      );
+    }
     
     return filtered;
   }, [allActivities, activityTypeFilter]);
@@ -134,6 +159,11 @@ export function useActivities() {
 
   const groupedActivities = useMemo(() => {
     const grouped: GroupedActivities = {};
+    
+    if (limitedActivities.length === 0) {
+      console.log("Aucune activité à grouper après filtrage");
+      return grouped;
+    }
     
     limitedActivities.forEach(activity => {
       const date = new Date(activity.created_at);
@@ -159,6 +189,7 @@ export function useActivities() {
       grouped[dateKey].push(activity);
     });
     
+    console.log("Activités groupées par période:", Object.keys(grouped));
     return grouped;
   }, [limitedActivities, t, language]);
 

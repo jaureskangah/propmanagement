@@ -23,19 +23,19 @@ export const RecentActivity = () => {
 
   // Function to handle filter changes
   const handleFilterChange = (newFilter: string) => {
-    console.log("Setting activity filter to:", newFilter);
+    console.log("Changement du filtre d'activité vers:", newFilter);
     setActivityTypeFilter(newFilter);
   };
 
   // For debugging
   useEffect(() => {
-    console.log("Current activityTypeFilter:", activityTypeFilter);
-    console.log("Grouped activities:", groupedActivities);
-    console.log("Groups count:", Object.keys(groupedActivities).length);
+    console.log("Filtre d'activité actuel:", activityTypeFilter);
+    console.log("Activités groupées:", groupedActivities);
+    console.log("Nombre de groupes:", Object.keys(groupedActivities).length);
   }, [activityTypeFilter, groupedActivities]);
 
   // Check if there are any activities to display
-  const isEmpty = Object.keys(groupedActivities).length === 0;
+  const isEmpty = Object.keys(groupedActivities).length === 0 && !isLoading;
 
   return (
     <ActivityCard title={t('recentActivity')} isLoading={isLoading}>
