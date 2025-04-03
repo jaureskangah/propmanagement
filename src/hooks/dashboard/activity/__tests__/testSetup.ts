@@ -1,4 +1,5 @@
 
+import React from "react";
 import { Activity } from "../../activityTypes";
 
 // Mock activity data for testing

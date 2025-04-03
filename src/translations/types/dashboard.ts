@@ -58,4 +58,9 @@ export interface DashboardTranslations {
   
   // Ajout de la clé pour "yesterday"
   yesterday: string;
+  
+  // Export options
+  export: string;
+  exportCSV: string;
+  exportPDF: string;
 }

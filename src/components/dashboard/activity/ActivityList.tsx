@@ -5,6 +5,7 @@ import { ActivityGroup } from "./ActivityGroup";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { ExportButton } from "./ExportButton";
 
 interface ActivityListProps {
   groupedActivities: {[key: string]: Activity[]};
@@ -30,6 +31,9 @@ export const ActivityList = ({
     }
   };
 
+  // Check if there are any activities
+  const hasActivities = Object.keys(groupedActivities).length > 0;
+
   return (
     <AnimatePresence mode="wait">
       <motion.div 
@@ -39,6 +43,14 @@ export const ActivityList = ({
         initial="hidden"
         animate="show"
       >
+        {/* Add export button row */}
+        <div className="flex justify-end">
+          <ExportButton 
+            groupedActivities={groupedActivities} 
+            hasActivities={hasActivities} 
+          />
+        </div>
+        
         {Object.entries(groupedActivities).map(([dateGroup, activities]) => (
           <ActivityGroup 
             key={dateGroup} 
