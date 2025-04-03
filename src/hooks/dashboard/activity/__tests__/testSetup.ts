@@ -8,25 +8,25 @@ export const mockActivities: Activity[] = [
     id: "tenant-1",
     created_at: new Date(2023, 6, 1).toISOString(), // July 1, 2023
     type: "tenant",
-    component: <div data-testid="tenant-component">Tenant Activity</div>
+    component: React.createElement("div", { "data-testid": "tenant-component" }, "Tenant Activity")
   },
   {
     id: "payment-1",
     created_at: new Date(2023, 7, 15).toISOString(), // August 15, 2023
     type: "payment",
-    component: <div data-testid="payment-component">Payment Activity</div>
+    component: React.createElement("div", { "data-testid": "payment-component" }, "Payment Activity")
   },
   {
     id: "maintenance-1",
     created_at: new Date().toISOString(), // Today
     type: "maintenance",
-    component: <div data-testid="maintenance-component">Maintenance Activity</div>
+    component: React.createElement("div", { "data-testid": "maintenance-component" }, "Maintenance Activity")
   },
   {
     id: "payment-2",
     created_at: new Date(2023, 8, 5).toISOString(), // September 5, 2023
     type: "payment",
-    component: <div data-testid="payment-component-2">Another Payment</div>
+    component: React.createElement("div", { "data-testid": "payment-component-2" }, "Another Payment")
   }
 ];
 
