@@ -1,3 +1,4 @@
+
 import { PricingTranslations, PlanFeaturesTranslations } from '../types';
 
 export const enPricing: PricingTranslations = {
