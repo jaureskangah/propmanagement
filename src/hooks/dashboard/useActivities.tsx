@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { TenantActivity } from "@/components/dashboard/activity/TenantActivity";
@@ -124,6 +124,12 @@ export function useActivities() {
     return sorted;
   }, [tenants, payments, maintenance]);
 
+  // Reset visible activities count when filter changes
+  useEffect(() => {
+    console.log("Le filtre a changé, réinitialisation du compteur d'activités visibles");
+    setVisibleActivitiesCount(5);
+  }, [activityTypeFilter]);
+
   // Amélioration du filtrage avec débogage amélioré
   const filteredActivities = useMemo(() => {
     console.log(`Filtrage des activités avec le type: "${activityTypeFilter}"`);
@@ -137,7 +143,7 @@ export function useActivities() {
     // Filtrer les activités par type
     const filtered = allActivities.filter(activity => {
       const isMatch = activity.type === activityTypeFilter;
-      console.log(`Activité de type ${activity.type} correspond au filtre ${activityTypeFilter}? ${isMatch}`);
+      console.log(`Activité id=${activity.id} de type ${activity.type} correspond au filtre ${activityTypeFilter}? ${isMatch}`);
       return isMatch;
     });
     
@@ -193,18 +199,24 @@ export function useActivities() {
     return grouped;
   }, [limitedActivities, t, language]);
 
+  // Fonction explicite pour changer le filtre
+  const setActivityFilter = useCallback((newFilter: string) => {
+    console.log(`Changement de filtre de "${activityTypeFilter}" à "${newFilter}"`);
+    setActivityTypeFilter(newFilter);
+  }, [activityTypeFilter]);
+
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
   const hasMoreActivities = filteredActivities.length > limitedActivities.length;
 
-  const showMoreActivities = () => {
+  const showMoreActivities = useCallback(() => {
     setVisibleActivitiesCount(prev => prev + ACTIVITIES_PER_PAGE);
-  };
+  }, [ACTIVITIES_PER_PAGE]);
 
   return {
     groupedActivities,
     isLoading,
     activityTypeFilter,
-    setActivityTypeFilter,
+    setActivityTypeFilter: setActivityFilter,
     hasMoreActivities,
     showMoreActivities
   };
