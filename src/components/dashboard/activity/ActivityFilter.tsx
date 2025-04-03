@@ -9,7 +9,7 @@ interface ActivityFilterProps {
 }
 
 export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   
   const handleValueChange = (newValue: string) => {
     console.log("Activity filter changed to:", newValue);

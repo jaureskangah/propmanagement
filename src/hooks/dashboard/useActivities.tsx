@@ -111,7 +111,7 @@ export function useActivities() {
     );
   }, [tenants, payments, maintenance]);
 
-  // Improved the filtering logic with better debugging
+  // Amélioration du filtrage avec meilleur debugging
   const filteredActivities = useMemo(() => {
     console.log(`Filtering activities with filter type: "${activityTypeFilter}"`);
     console.log(`Total activities before filtering: ${allActivities.length}`);
@@ -120,20 +120,10 @@ export function useActivities() {
       return allActivities;
     }
     
-    // Filter activities by type
-    const filtered = allActivities.filter(activity => {
-      const match = activity.type === activityTypeFilter;
-      return match;
-    });
+    // Filtrer les activités par type
+    const filtered = allActivities.filter(activity => activity.type === activityTypeFilter);
     
     console.log(`Found ${filtered.length} activities of type "${activityTypeFilter}"`);
-    
-    // Log specific activities that match or don't match for debugging
-    if (filtered.length === 0 && allActivities.length > 0) {
-      console.log("No matches found. First few activity types available:", 
-        allActivities.slice(0, 3).map(a => a.type)
-      );
-    }
     
     return filtered;
   }, [allActivities, activityTypeFilter]);
@@ -156,7 +146,7 @@ export function useActivities() {
       } else if (isSameWeek(date, new Date(), { weekStartsOn: 1 })) {
         dateKey = t('thisWeek');
       } else {
-        // Format as month and year for older activities
+        // Format en mois et année pour les activités plus anciennes
         dateKey = format(date, "MMMM yyyy", {
           locale: language === 'fr' ? fr : undefined
         });
