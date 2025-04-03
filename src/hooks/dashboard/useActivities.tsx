@@ -28,6 +28,15 @@ export function useActivities() {
 
   const allActivities = useTransformedActivities(tenants, payments, maintenance);
   
+  // Log the transformed activities to help debugging
+  useEffect(() => {
+    console.log("Activités transformées:", {
+      count: allActivities.length,
+      types: [...new Set(allActivities.map(a => a.type))],
+      firstFew: allActivities.slice(0, 3)
+    });
+  }, [allActivities]);
+  
   const {
     limitedActivities,
     activityTypeFilter,

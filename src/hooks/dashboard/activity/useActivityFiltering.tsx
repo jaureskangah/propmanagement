@@ -23,6 +23,12 @@ export function useActivityFiltering(allActivities: Activity[]) {
       return allActivities;
     }
     
+    // Check if we have activities before filtering
+    if (allActivities.length === 0) {
+      console.log("Aucune activité à filtrer");
+      return [];
+    }
+    
     // Filter activities by type
     const filtered = allActivities.filter(activity => {
       const isMatch = activity.type === activityTypeFilter;
