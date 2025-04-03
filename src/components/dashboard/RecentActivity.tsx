@@ -3,12 +3,12 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { ActivityCard } from "./activity/ActivityCard";
 import { ActivityFilter } from "./activity/ActivityFilter";
 import { ActivityList } from "./activity/ActivityList";
-import { useActivities, Activity } from "@/hooks/dashboard/useActivities";
+import { useActivities } from "@/hooks/dashboard/useActivities";
 import { useEffect } from "react";
 import { NoActivity } from "./activity/NoActivity";
 
-// Export Activity type for other components
-export type { Activity };
+// Export types from the hook
+export type { Activity } from "@/hooks/dashboard/activityTypes";
 
 export const RecentActivity = () => {
   const { t } = useLocale();
