@@ -122,10 +122,10 @@ export default function HowItWorks() {
               {index < steps.length - 1 && (
                 <motion.div 
                   className="hidden md:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-0"
-                  initial={{ x: -5, opacity: 0.3 }}
+                  initial={{ x: -5, opacity: 0.7 }}
                   whileInView={{ 
                     x: [0, 5, 0], 
-                    opacity: [0.3, 0.7, 0.3],
+                    opacity: [0.7, 1, 0.7],
                     transition: { 
                       duration: 2, 
                       repeat: Infinity, 
@@ -134,7 +134,7 @@ export default function HowItWorks() {
                   }}
                   viewport={{ once: true }}
                 >
-                  <ArrowRight className="w-8 h-8 text-[#ea384c]/30" />
+                  <ArrowRight className="w-8 h-8 text-[#ea384c] filter drop-shadow-md" />
                 </motion.div>
               )}
             </motion.div>
