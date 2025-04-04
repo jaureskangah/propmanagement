@@ -1,6 +1,4 @@
 
-import { ToastTranslations } from '../types/toasts';
-
 export const enToasts: ToastTranslations = {
   authRequired: "Authentication required",
   pleaseSignInToSubscribe: "Please sign in to subscribe",

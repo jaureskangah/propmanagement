@@ -31,6 +31,15 @@ export const enDashboardCore = {
   noScheduledTasks: "No scheduled tasks",
   eventsOn: "Events on",
   urgentMaintenanceRequest: "Urgent Maintenance Request",
+  welcomeTenant: "Welcome, {name}",
+  welcomeGeneric: "Welcome to your dashboard",
+  manageApartmentInfo: "Manage your apartment information and communications",
+  refreshing: "Refreshing",
+  filterBy: "Filter by",
+  lightMode: "Light mode",
+  darkMode: "Dark mode",
+  revenue: "Revenue",
+  expenses: "Expenses",
 };
 
 export const frDashboardCore = {
@@ -65,4 +74,13 @@ export const frDashboardCore = {
   noScheduledTasks: "Aucune tâche programmée",
   eventsOn: "Événements le",
   urgentMaintenanceRequest: "Demande de Maintenance Urgente",
+  welcomeTenant: "Bienvenue, {name}",
+  welcomeGeneric: "Bienvenue sur votre tableau de bord",
+  manageApartmentInfo: "Gérez les informations et communications de votre appartement",
+  refreshing: "Actualisation",
+  filterBy: "Filtrer par",
+  lightMode: "Mode clair",
+  darkMode: "Mode sombre",
+  revenue: "Revenus",
+  expenses: "Dépenses",
 };

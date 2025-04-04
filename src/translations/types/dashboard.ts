@@ -125,4 +125,7 @@ export interface DashboardTranslations {
   paymentAlert: string;
   trendAlert: string;
   paymentNotification: string;
+  welcomeTenant: string;
+  welcomeGeneric: string;
+  manageApartmentInfo: string;
 }
