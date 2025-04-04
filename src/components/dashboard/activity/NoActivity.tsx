@@ -56,7 +56,7 @@ export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProp
           className="mt-4 flex items-center gap-2"
         >
           <RefreshCcw className="h-4 w-4" />
-          {t('refreshActivities', 'Rafraîchir les activités')}
+          {t('refreshActivities')}
         </Button>
       )}
     </motion.div>
