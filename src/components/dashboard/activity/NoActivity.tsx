@@ -15,11 +15,26 @@ export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProp
   
   const isFiltered = filterType !== "all";
   
-  // Log pour le débogage
+  // Improved logging for debugging
   useEffect(() => {
     console.log("[NoActivity] Rendu du composant NoActivity avec filterType:", filterType);
     console.log("[NoActivity] Le filtre est-il actif?", isFiltered);
-  }, [filterType, isFiltered]);
+    console.log("[NoActivity] Une fonction de réinitialisation est-elle disponible?", !!onResetFilter);
+  }, [filterType, isFiltered, onResetFilter]);
+  
+  const handleReset = () => {
+    console.log("[NoActivity] Demande de réinitialisation du filtre");
+    if (onResetFilter) {
+      onResetFilter();
+    }
+  };
+  
+  const handleRefresh = () => {
+    console.log("[NoActivity] Demande de rafraîchissement des activités");
+    if (onResetFilter) {
+      onResetFilter();
+    }
+  };
   
   return (
     <motion.div 
@@ -40,7 +55,7 @@ export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProp
         <Button
           variant="outline"
           size="sm"
-          onClick={onResetFilter}
+          onClick={handleReset}
           className="mt-4 flex items-center gap-2"
         >
           <RotateCcw className="h-4 w-4" />
@@ -52,7 +67,7 @@ export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProp
         <Button
           variant="outline"
           size="sm"
-          onClick={onResetFilter}
+          onClick={handleRefresh}
           className="mt-4 flex items-center gap-2"
         >
           <RefreshCcw className="h-4 w-4" />

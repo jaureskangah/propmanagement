@@ -4,7 +4,7 @@ import { ActivityCard } from "./activity/ActivityCard";
 import { ActivityFilter } from "./activity/ActivityFilter";
 import { ActivityList } from "./activity/ActivityList";
 import { useActivities } from "@/hooks/dashboard/useActivities";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { NoActivity } from "./activity/NoActivity";
 import { toast } from "sonner";
 
@@ -13,7 +13,9 @@ export type { Activity } from "@/hooks/dashboard/activityTypes";
 
 export const RecentActivity = () => {
   const { t } = useLocale();
+  const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
   const [lastFilterChange, setLastFilterChange] = useState<number>(Date.now());
+  const resetInProgress = useRef(false);
   
   const { 
     groupedActivities, 
@@ -25,51 +27,75 @@ export const RecentActivity = () => {
     refreshActivities
   } = useActivities();
 
+  // Function to force a complete refresh of activities
+  const forceCompleteRefresh = () => {
+    console.log("[RecentActivity] Forçage d'un rafraîchissement complet");
+    setForceUpdateKey(Date.now());
+    refreshActivities();
+  };
+
   // Function to handle filter changes
   const handleFilterChange = (newFilter: string) => {
-    console.log("[RecentActivity] Changement du filtre d'activité vers:", newFilter);
+    console.log("[RecentActivity] Changement du filtre d'activité vers:", newFilter, "depuis:", activityTypeFilter);
+    
+    // Marquer le changement de filtre même si c'est le même filtre (pour forcer un rafraîchissement)
+    setLastFilterChange(Date.now());
+    
+    // Si on est déjà en train de réinitialiser, ne pas déclencher une autre réinitialisation
+    if (resetInProgress.current) {
+      console.log("[RecentActivity] Réinitialisation déjà en cours, ignoré");
+      return;
+    }
+    
+    // Appliquer le nouveau filtre
     setActivityTypeFilter(newFilter);
-    setLastFilterChange(Date.now());  // Marquer le changement de filtre
+    
+    // Si c'est le même filtre, forcer un rafraîchissement
+    if (newFilter === activityTypeFilter) {
+      console.log("[RecentActivity] Même filtre sélectionné, rafraîchissement forcé");
+      forceCompleteRefresh();
+    }
   };
 
   // Pour assurer la réactivité
   useEffect(() => {
     console.log("[RecentActivity] Mise à jour des activités après changement de filtre à:", activityTypeFilter);
     console.log("[RecentActivity] Timestamp de dernière modification:", lastFilterChange);
-  }, [activityTypeFilter, lastFilterChange]);
+    console.log("[RecentActivity] Nombre de groupes d'activités:", Object.keys(groupedActivities).length);
+  }, [activityTypeFilter, lastFilterChange, groupedActivities]);
 
-  // For debugging
+  // Force reload of activities when component mounts or forceUpdateKey changes
   useEffect(() => {
-    console.log("[RecentActivity] Filtre d'activité actuel:", activityTypeFilter);
-    console.log("[RecentActivity] Activités groupées:", groupedActivities);
-    console.log("[RecentActivity] Nombre de groupes:", Object.keys(groupedActivities).length);
-    
-    // Notification si changement de filtre sans activités
-    if (Object.keys(groupedActivities).length === 0 && !isLoading) {
-      console.log(`[RecentActivity] Aucune activité trouvée pour le filtre: ${activityTypeFilter}`);
-    }
-  }, [activityTypeFilter, groupedActivities, isLoading]);
-
-  // Force reload of activities when component mounts
-  useEffect(() => {
-    console.log("[RecentActivity] Composant monté, déclenchement du rafraîchissement initial");
+    console.log("[RecentActivity] Composant monté ou rafraîchissement forcé, déclenchement du rafraîchissement");
     refreshActivities();
-  }, []);
+  }, [forceUpdateKey]);
 
   // Check if there are any activities to display
   const isEmpty = Object.keys(groupedActivities).length === 0 && !isLoading;
 
   // Handler pour le bouton de réinitialisation du filtre
   const handleResetFilter = () => {
-    console.log("[RecentActivity] Réinitialisation du filtre demandée");
-    handleFilterChange("all");
-    toast.success("Filtre réinitialisé");
+    console.log("[RecentActivity] Réinitialisation du filtre demandée de:", activityTypeFilter, "vers: all");
     
-    // Force refresh activities
+    // Marquer qu'une réinitialisation est en cours pour éviter les boucles
+    resetInProgress.current = true;
+    
+    // Réinitialiser le filtre à "all"
+    setActivityTypeFilter("all");
+    
+    // Marquer le changement de filtre
+    setLastFilterChange(Date.now());
+    
+    // Forcer un rafraîchissement complet
+    forceCompleteRefresh();
+    
+    // Notification
+    toast.success(t('filterReset'));
+    
+    // Après un délai, terminer la réinitialisation
     setTimeout(() => {
-      console.log("[RecentActivity] Rafraîchissement forcé après réinitialisation");
-      refreshActivities();
-    }, 100);
+      resetInProgress.current = false;
+    }, 500);
   };
 
   return (

@@ -63,4 +63,11 @@ export interface DashboardTranslations {
   export: string;
   exportCSV: string;
   exportPDF: string;
+  
+  // Activity filtering translations
+  resetFilter: string;
+  refreshActivities: string;
+  noActivityFiltered: string;
+  filterReset: string;
+  refreshing: string;
 }

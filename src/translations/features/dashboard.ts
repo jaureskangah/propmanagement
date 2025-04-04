@@ -106,7 +106,13 @@ export const enDashboard = {
   budgetAlert: "Budget Alert",
   paymentAlert: "Payment Alert",
   trendAlert: "Trend Alert",
-  paymentNotification: "Payment Notification"
+  paymentNotification: "Payment Notification",
+  // Added translations for activity filtering
+  resetFilter: "Reset Filter",
+  refreshActivities: "Refresh Activities",
+  noActivityFiltered: "No {filter} activity found",
+  filterReset: "Filter has been reset",
+  refreshing: "Refreshing"
 };
 
 export const frDashboard = {
@@ -216,5 +222,11 @@ export const frDashboard = {
   budgetAlert: "Alerte Budget",
   paymentAlert: "Alerte Paiement",
   trendAlert: "Alerte Tendance",
-  paymentNotification: "Notification de Paiement"
+  paymentNotification: "Notification de Paiement",
+  // Added translations for activity filtering
+  resetFilter: "Réinitialiser le Filtre",
+  refreshActivities: "Actualiser les Activités",
+  noActivityFiltered: "Aucune activité de type {filter} trouvée",
+  filterReset: "Le filtre a été réinitialisé",
+  refreshing: "Actualisation"
 };

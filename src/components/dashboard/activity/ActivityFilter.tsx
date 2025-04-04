@@ -11,14 +11,18 @@ interface ActivityFilterProps {
 }
 
 export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
-  const { t, language } = useLocale();
+  const { t } = useLocale();
   const initialRender = useRef(true);
   const [internalValue, setInternalValue] = useState(value);
+  const prevValueRef = useRef(value);
   
   // Synchroniser la valeur interne avec la valeur externe
   useEffect(() => {
-    console.log("[ActivityFilter] Valeur externe mise à jour:", value);
-    setInternalValue(value);
+    console.log("[ActivityFilter] Valeur externe mise à jour:", value, "Ancienne valeur:", prevValueRef.current);
+    if (value !== prevValueRef.current) {
+      setInternalValue(value);
+      prevValueRef.current = value;
+    }
   }, [value]);
   
   // Détecter les sélections successives du même filtre
@@ -28,7 +32,7 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
       return;
     }
     
-    console.log("[ActivityFilter] Valeur du filtre ActivityFilter:", value);
+    console.log("[ActivityFilter] Valeur actuelle du filtre:", value);
   }, [value]);
   
   const handleValueChange = (newValue: string) => {
@@ -38,9 +42,10 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
     // Gérer le cas où on sélectionne le même filtre à nouveau
     if (newValue === value) {
       console.log("[ActivityFilter] Même filtre sélectionné à nouveau: forçage du rafraîchissement");
-      toast.info(`Rafraîchissement du filtre: ${t(newValue)}`);
+      toast.info(`${t('refreshing')}: ${t(newValue)}`);
     }
     
+    // Toujours appeler onChange, même si la valeur est la même
     onChange(newValue);
   };
   
