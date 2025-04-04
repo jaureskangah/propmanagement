@@ -1,7 +1,9 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { toast } from "sonner";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export interface DashboardPreferences {
   id?: string;
@@ -13,6 +15,7 @@ export interface DashboardPreferences {
 export const useDashboardPreferences = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { t } = useLocale();
 
   const { data: preferences, isLoading } = useQuery({
     queryKey: ["dashboard-preferences"],
@@ -62,11 +65,11 @@ export const useDashboardPreferences = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dashboard-preferences"] });
-      toast.success("Dashboard preferences updated");
+      toast.success(t('dashboardPreferencesUpdated'));
     },
     onError: (error) => {
       console.error("Error updating preferences:", error);
-      toast.error("Failed to update dashboard preferences");
+      toast.error(t('generalError'));
     },
   });
 

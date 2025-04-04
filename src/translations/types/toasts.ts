@@ -22,4 +22,7 @@ export interface ToastTranslations {
   tryAgain: string;
   missingInformation: string;
   close: string;
+  dashboardPreferencesUpdated: string;
+  refreshing: string;
+  filterReset: string;
 }

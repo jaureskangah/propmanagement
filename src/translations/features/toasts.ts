@@ -24,6 +24,9 @@ export const enToasts: ToastTranslations = {
   tryAgain: "Please try again",
   missingInformation: "Missing required information",
   close: "Close",
+  dashboardPreferencesUpdated: "Dashboard preferences updated",
+  refreshing: "Refreshing...",
+  filterReset: "Filters reset",
 };
 
 export const frToasts: ToastTranslations = {
@@ -49,4 +52,7 @@ export const frToasts: ToastTranslations = {
   tryAgain: "Veuillez réessayer",
   missingInformation: "Informations requises manquantes",
   close: "Fermer",
+  dashboardPreferencesUpdated: "Préférences du tableau de bord mises à jour",
+  refreshing: "Actualisation...",
+  filterReset: "Filtres réinitialisés",
 };
