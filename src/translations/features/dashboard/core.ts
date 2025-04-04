@@ -25,6 +25,12 @@ export const enDashboardCore = {
   newThisMonth: "New This Month",
   messagesRequiringAttention: "Messages Requiring Attention",
   messageRequiringAttention: "Message Requiring Attention",
+  priorityTasks: "Priority Tasks",
+  importantEvents: "Important Events",
+  noUrgentTasks: "No urgent tasks",
+  noScheduledTasks: "No scheduled tasks",
+  eventsOn: "Events on",
+  urgentMaintenanceRequest: "Urgent Maintenance Request",
 };
 
 export const frDashboardCore = {
@@ -53,4 +59,10 @@ export const frDashboardCore = {
   newThisMonth: "Nouveau ce Mois",
   messagesRequiringAttention: "Messages Nécessitant Attention",
   messageRequiringAttention: "Message Nécessitant Attention",
+  priorityTasks: "Tâches Prioritaires",
+  importantEvents: "Événements Importants",
+  noUrgentTasks: "Aucune tâche urgente",
+  noScheduledTasks: "Aucune tâche programmée",
+  eventsOn: "Événements le",
+  urgentMaintenanceRequest: "Demande de Maintenance Urgente",
 };
