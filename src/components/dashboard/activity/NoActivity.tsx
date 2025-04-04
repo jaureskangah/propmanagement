@@ -1,8 +1,9 @@
 
 import { motion } from "framer-motion";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Activity, RotateCcw } from "lucide-react";
+import { Activity, RefreshCcw, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
 
 interface NoActivityProps {
   filterType?: string;
@@ -14,9 +15,15 @@ export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProp
   
   const isFiltered = filterType !== "all";
   
+  // Log pour le débogage
+  useEffect(() => {
+    console.log("[NoActivity] Rendu du composant NoActivity avec filterType:", filterType);
+    console.log("[NoActivity] Le filtre est-il actif?", isFiltered);
+  }, [filterType, isFiltered]);
+  
   return (
     <motion.div 
-      key="no-activity"
+      key={`no-activity-${filterType}`}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -38,6 +45,18 @@ export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProp
         >
           <RotateCcw className="h-4 w-4" />
           {t('resetFilter')}
+        </Button>
+      )}
+      
+      {!isFiltered && onResetFilter && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onResetFilter}
+          className="mt-4 flex items-center gap-2"
+        >
+          <RefreshCcw className="h-4 w-4" />
+          {t('refreshActivities', 'Rafraîchir les activités')}
         </Button>
       )}
     </motion.div>

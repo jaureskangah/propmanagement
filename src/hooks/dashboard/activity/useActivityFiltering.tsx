@@ -1,54 +1,81 @@
 
-import { useMemo, useCallback, useState, useEffect } from "react";
+import { useMemo, useCallback, useState, useEffect, useRef } from "react";
 import { Activity } from "../activityTypes";
+import { toast } from "sonner";
 
 export function useActivityFiltering(allActivities: Activity[]) {
   const [activityTypeFilter, setActivityTypeFilter] = useState<string>("all");
   const [visibleActivitiesCount, setVisibleActivitiesCount] = useState<number>(5);
+  const previousFilterRef = useRef<string>("all");
+  const [forceUpdate, setForceUpdate] = useState<number>(Date.now());
   const ACTIVITIES_PER_PAGE = 5;
+
+  // Afficher le nombre total d'activités disponibles au chargement
+  useEffect(() => {
+    console.log(`[useActivityFiltering] Nombre total d'activités chargées: ${allActivities.length}`);
+    console.log("[useActivityFiltering] Types d'activités disponibles:", 
+      [...new Set(allActivities.map(a => a.type))]);
+    
+    // Liste détaillée des activités pour le débogage
+    allActivities.forEach((activity, index) => {
+      console.log(`[useActivityFiltering] Activité ${index}: type=${activity.type}, id=${activity.id}`);
+    });
+  }, [allActivities]);
 
   // Reset visible activities count when filter changes
   useEffect(() => {
-    console.log("Le filtre a changé, réinitialisation du compteur d'activités visibles");
+    console.log(`[useActivityFiltering] Le filtre a changé de "${previousFilterRef.current}" à "${activityTypeFilter}". Réinitialisation du compteur.`);
     setVisibleActivitiesCount(5);
+    previousFilterRef.current = activityTypeFilter;
+    
+    // Forcer une mise à jour
+    setForceUpdate(Date.now());
   }, [activityTypeFilter]);
 
   // Enhanced filtering with improved debugging
   const filteredActivities = useMemo(() => {
-    console.log(`Filtrage des activités avec le type: "${activityTypeFilter}"`);
-    console.log(`Nombre total d'activités disponibles: ${allActivities.length}`);
+    console.log(`[useActivityFiltering] Recalcul des activités filtrées. Filtre actuel: "${activityTypeFilter}". Force update: ${forceUpdate}`);
+    console.log(`[useActivityFiltering] Nombre total d'activités disponibles: ${allActivities.length}`);
     
     if (activityTypeFilter === "all") {
-      console.log("Retour de toutes les activités sans filtrage");
+      console.log("[useActivityFiltering] Retour de toutes les activités sans filtrage");
       return allActivities;
     }
     
     // Check if we have activities before filtering
     if (allActivities.length === 0) {
-      console.log("Aucune activité à filtrer");
+      console.log("[useActivityFiltering] Aucune activité à filtrer");
       return [];
     }
     
     // Log available types for debugging
     const availableTypes = [...new Set(allActivities.map(a => a.type))];
-    console.log("Types d'activités disponibles:", availableTypes);
+    console.log("[useActivityFiltering] Types d'activités disponibles:", availableTypes);
     
     // Filter activities by type
     const filtered = allActivities.filter(activity => {
       return activity.type === activityTypeFilter;
     });
     
-    console.log(`Trouvé ${filtered.length} activités de type "${activityTypeFilter}"`);
+    console.log(`[useActivityFiltering] Trouvé ${filtered.length} activités de type "${activityTypeFilter}"`);
     return filtered;
-  }, [allActivities, activityTypeFilter]);
+  }, [allActivities, activityTypeFilter, forceUpdate]);
 
   const limitedActivities = useMemo(() => {
-    console.log(`Limitant à ${visibleActivitiesCount} activités sur ${filteredActivities.length} disponibles`);
+    console.log(`[useActivityFiltering] Limitant à ${visibleActivitiesCount} activités sur ${filteredActivities.length} disponibles`);
     return filteredActivities.slice(0, visibleActivitiesCount);
   }, [filteredActivities, visibleActivitiesCount]);
 
   const setActivityFilter = useCallback((newFilter: string) => {
-    console.log(`Changement de filtre de "${activityTypeFilter}" à "${newFilter}"`);
+    console.log(`[useActivityFiltering] Changement de filtre demandé de "${activityTypeFilter}" à "${newFilter}"`);
+    
+    // Si on sélectionne le même filtre, forcer un rafraîchissement
+    if (newFilter === activityTypeFilter) {
+      console.log("[useActivityFiltering] Même filtre sélectionné à nouveau, forçage du rafraîchissement");
+      setForceUpdate(Date.now());
+      toast.info("Rafraîchissement des activités");
+    }
+    
     setActivityTypeFilter(newFilter);
   }, [activityTypeFilter]);
 
@@ -64,6 +91,7 @@ export function useActivityFiltering(allActivities: Activity[]) {
     activityTypeFilter,
     setActivityFilter,
     hasMoreActivities,
-    showMoreActivities
+    showMoreActivities,
+    forceUpdate
   };
 }

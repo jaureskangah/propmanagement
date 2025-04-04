@@ -2,7 +2,8 @@
 import { Filter } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 interface ActivityFilterProps {
   value: string;
@@ -12,6 +13,13 @@ interface ActivityFilterProps {
 export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
   const { t, language } = useLocale();
   const initialRender = useRef(true);
+  const [internalValue, setInternalValue] = useState(value);
+  
+  // Synchroniser la valeur interne avec la valeur externe
+  useEffect(() => {
+    console.log("[ActivityFilter] Valeur externe mise à jour:", value);
+    setInternalValue(value);
+  }, [value]);
   
   // Détecter les sélections successives du même filtre
   useEffect(() => {
@@ -20,15 +28,17 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
       return;
     }
     
-    console.log("Valeur du filtre ActivityFilter:", value);
+    console.log("[ActivityFilter] Valeur du filtre ActivityFilter:", value);
   }, [value]);
   
   const handleValueChange = (newValue: string) => {
-    console.log("Activity filter changed to:", newValue);
+    console.log("[ActivityFilter] Changement de filtre demandé:", newValue, "depuis:", internalValue);
+    setInternalValue(newValue); // Mettre à jour la valeur interne immédiatement
     
-    // Pour forcer une mise à jour même si on revient sur la même valeur
+    // Gérer le cas où on sélectionne le même filtre à nouveau
     if (newValue === value) {
-      console.log("Même filtre sélectionné à nouveau: forçage du rafraîchissement");
+      console.log("[ActivityFilter] Même filtre sélectionné à nouveau: forçage du rafraîchissement");
+      toast.info(`Rafraîchissement du filtre: ${t(newValue)}`);
     }
     
     onChange(newValue);
@@ -38,7 +48,7 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
     <div className="mb-4 flex justify-end">
       <div className="flex items-center space-x-2">
         <Filter className="h-4 w-4 text-muted-foreground" />
-        <Select value={value} onValueChange={handleValueChange}>
+        <Select value={internalValue} onValueChange={handleValueChange}>
           <SelectTrigger className="w-[180px] dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200">
             <SelectValue placeholder={t('filterBy')} />
           </SelectTrigger>

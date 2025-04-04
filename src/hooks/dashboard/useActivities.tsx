@@ -1,5 +1,5 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { 
   useTenantActivities, 
   usePaymentActivities, 
@@ -15,6 +15,8 @@ export type { GroupedActivities } from "./activityTypes";
 export function useActivities() {
   // Référence pour suivre les changements d'activités
   const activitiesRef = useRef<any[]>([]);
+  // Forcer le rafraîchissement des activités
+  const [refreshTrigger, setRefreshTrigger] = useState<number>(Date.now());
   
   const { data: tenants = [], isLoading: isLoadingTenants } = useTenantActivities();
   const { data: payments = [], isLoading: isLoadingPayments } = usePaymentActivities();
@@ -22,7 +24,7 @@ export function useActivities() {
 
   // Debug the retrieved data
   useEffect(() => {
-    console.log("Données récupérées:", {
+    console.log("[useActivities] Données récupérées:", {
       tenants: tenants.length,
       payments: payments.length,
       maintenance: maintenance.length
@@ -37,14 +39,14 @@ export function useActivities() {
     const prevActivitiesCount = activitiesRef.current.length;
     
     if (allActivitiesCount !== prevActivitiesCount) {
-      console.log(`Changement détecté dans les activités: avant=${prevActivitiesCount}, après=${allActivitiesCount}`);
+      console.log(`[useActivities] Changement détecté dans les activités: avant=${prevActivitiesCount}, après=${allActivitiesCount}`);
       activitiesRef.current = allActivities;
     }
   }, [allActivities]);
   
   // Log the transformed activities to help debugging
   useEffect(() => {
-    console.log("Activités transformées:", {
+    console.log("[useActivities] Activités transformées:", {
       count: allActivities.length,
       types: [...new Set(allActivities.map(a => a.type))],
       firstFew: allActivities.slice(0, 3)
@@ -56,7 +58,8 @@ export function useActivities() {
     activityTypeFilter,
     setActivityFilter,
     hasMoreActivities,
-    showMoreActivities
+    showMoreActivities,
+    forceUpdate
   } = useActivityFiltering(allActivities);
 
   // Force update groupedActivities when filter changes
@@ -64,12 +67,19 @@ export function useActivities() {
   
   // Debug the final grouped activities
   useEffect(() => {
-    console.log("Activités groupées après filtrage:", {
+    console.log("[useActivities] Activités groupées après filtrage:", {
       filtre: activityTypeFilter,
       groupes: Object.keys(groupedActivities),
-      nombreTotal: Object.values(groupedActivities).flat().length
+      nombreTotal: Object.values(groupedActivities).flat().length,
+      forceUpdate: forceUpdate
     });
-  }, [groupedActivities, activityTypeFilter]);
+  }, [groupedActivities, activityTypeFilter, forceUpdate]);
+
+  // Fonction pour forcer le rafraîchissement complet des activités
+  const refreshActivities = () => {
+    console.log("[useActivities] Forçage du rafraîchissement complet des activités");
+    setRefreshTrigger(Date.now());
+  };
 
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 
@@ -79,6 +89,7 @@ export function useActivities() {
     activityTypeFilter,
     setActivityTypeFilter: setActivityFilter,
     hasMoreActivities,
-    showMoreActivities
+    showMoreActivities,
+    refreshActivities
   };
 }
