@@ -94,8 +94,20 @@ export function useActivityFiltering(allActivities: Activity[]) {
   const hasMoreActivities = filteredActivities.length > limitedActivities.length;
 
   const showMoreActivities = useCallback(() => {
-    setVisibleActivitiesCount(prev => prev + ACTIVITIES_PER_PAGE);
-  }, []);
+    console.log("[useActivityFiltering] Affichage de plus d'activités demandé");
+    // Si toutes les activités sont déjà visibles, on ne fait rien
+    if (!hasMoreActivities) {
+      console.log("[useActivityFiltering] Toutes les activités sont déjà visibles");
+      return;
+    }
+    
+    // Sinon on augmente le nombre d'activités visibles
+    setVisibleActivitiesCount(prev => {
+      const newCount = prev + ACTIVITIES_PER_PAGE;
+      console.log(`[useActivityFiltering] Augmentation du nombre d'activités visibles de ${prev} à ${newCount}`);
+      return newCount;
+    });
+  }, [hasMoreActivities, ACTIVITIES_PER_PAGE]);
 
   return {
     filteredActivities,
