@@ -23,6 +23,7 @@ import { frModal } from './features/modal';
 import { frTasks } from './features/maintenance/tasks';
 import { frList } from './features/tenant/fr/list';
 import { frFinances } from './features/finances';
+import { frDocumentGenerator } from './features/documents/fr';
 
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
 import { frProfile } from './features/tenant/fr/profile';
@@ -59,7 +60,8 @@ const translations = {
   ...frDocuments,
   ...frTenantMaintenance,
   ...frCommunications,
-  ...frFinances
+  ...frFinances,
+  ...frDocumentGenerator
 };
 
 export default translations;

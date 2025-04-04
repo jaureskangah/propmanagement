@@ -21,6 +21,7 @@ import { enTenant } from './features/tenant';
 import { enToasts } from './features/toasts';
 import { enFinances } from './features/finances';
 import { enVendors } from './features/maintenance/vendors';
+import { enDocumentGenerator } from './features/documents/en';
 
 const translations = {
   ...enAdmin,
@@ -45,6 +46,7 @@ const translations = {
   ...enToasts,
   ...enFinances,
   ...enVendors,
+  ...enDocumentGenerator,
 };
 
 export default translations;

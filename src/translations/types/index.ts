@@ -20,6 +20,7 @@ import type { DashboardTranslations } from './dashboard';
 import type { SettingsTranslations } from './settings';
 import type { ModalTranslations } from './modal';
 import type { FinancesTranslations } from './finances';
+import type { DocumentGeneratorTranslations } from './documents';
 import type { SharedTranslations } from './common-translations';
 
 export type { AdminDashboardTranslations as AdminTranslations };
@@ -44,6 +45,7 @@ export type { DashboardTranslations };
 export type { SettingsTranslations };
 export type { ModalTranslations };
 export type { FinancesTranslations };
+export type { DocumentGeneratorTranslations };
 export type { SharedTranslations };
 
 export type Language = 'en' | 'fr';
@@ -73,4 +75,5 @@ export interface Translations extends
   Omit<SettingsTranslations, keyof SharedTranslations>,
   Omit<ModalTranslations, keyof SharedTranslations>,
   Omit<FinancesTranslations, keyof SharedTranslations>,
+  Omit<DocumentGeneratorTranslations, keyof SharedTranslations>,
   SharedTranslations {}
