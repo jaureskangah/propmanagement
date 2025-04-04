@@ -46,7 +46,13 @@ export const enFinances = {
   occupancyRate: "Occupancy Rate",
   occupancyRateDescription: "Units currently occupied",
   unpaidRent: "Unpaid Rent",
-  unpaidRentDescription: "Outstanding rental payments"
+  unpaidRentDescription: "Outstanding rental payments",
+  // Traductions pour le graphique d'évolution des paiements
+  paymentEvolution: "Payment Evolution",
+  paid: "Paid",
+  pending: "Pending", 
+  late: "Late",
+  cumulativeTotal: "Cumulative Total"
 };
 
 export const frFinances = {
@@ -96,5 +102,11 @@ export const frFinances = {
   occupancyRate: "Taux d'occupation",
   occupancyRateDescription: "Unités actuellement occupées",
   unpaidRent: "Loyers impayés",
-  unpaidRentDescription: "Paiements de loyer en attente"
+  unpaidRentDescription: "Paiements de loyer en attente",
+  // Traductions pour le graphique d'évolution des paiements
+  paymentEvolution: "Évolution des paiements",
+  paid: "Payés",
+  pending: "En attente", 
+  late: "En retard",
+  cumulativeTotal: "Total cumulé"
 };

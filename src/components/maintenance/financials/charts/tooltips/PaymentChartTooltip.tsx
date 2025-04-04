@@ -1,5 +1,6 @@
 
 import React from "react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PaymentChartTooltipProps {
   active?: boolean;
@@ -8,6 +9,8 @@ interface PaymentChartTooltipProps {
 }
 
 export const PaymentChartTooltip = ({ active, payload, label }: PaymentChartTooltipProps) => {
+  const { t } = useLocale();
+  
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200 text-xs">

@@ -16,6 +16,7 @@ import {
 import { format, parseISO } from "date-fns";
 import { usePaymentChartData } from "./hooks/usePaymentChartData";
 import { PaymentChartTooltip } from "./tooltips/PaymentChartTooltip";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PaymentEvolutionChartProps {
   propertyId: string;
@@ -23,11 +24,12 @@ interface PaymentEvolutionChartProps {
 
 export const PaymentEvolutionChart = ({ propertyId }: PaymentEvolutionChartProps) => {
   const { data: paymentData = [] } = usePaymentChartData(propertyId);
+  const { t } = useLocale();
 
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-base">Payment Evolution</CardTitle>
+        <CardTitle className="text-base">{t('paymentEvolution')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[350px]">
@@ -91,7 +93,7 @@ export const PaymentEvolutionChart = ({ propertyId }: PaymentEvolutionChartProps
                 stroke="#22C55E"
                 strokeWidth={1.5}
                 fill="url(#colorPaid)"
-                name="Paid"
+                name={t('paid')}
               />
               <Area
                 type="monotone"
@@ -100,7 +102,7 @@ export const PaymentEvolutionChart = ({ propertyId }: PaymentEvolutionChartProps
                 stroke="#EAB308"
                 strokeWidth={1.5}
                 fill="url(#colorPending)"
-                name="Pending"
+                name={t('pending')}
               />
               <Area
                 type="monotone"
@@ -109,7 +111,7 @@ export const PaymentEvolutionChart = ({ propertyId }: PaymentEvolutionChartProps
                 stroke="#EF4444"
                 strokeWidth={1.5}
                 fill="url(#colorLate)"
-                name="Late"
+                name={t('late')}
               />
               <Area
                 type="monotone"
@@ -117,7 +119,7 @@ export const PaymentEvolutionChart = ({ propertyId }: PaymentEvolutionChartProps
                 stroke="#3B82F6"
                 strokeWidth={1.5}
                 fill="none"
-                name="Cumulative Total"
+                name={t('cumulativeTotal')}
                 dot={{ r: 2.5 }}
               />
             </AreaChart>
