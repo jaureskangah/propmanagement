@@ -22,6 +22,20 @@ export const frDocumentGenerator = {
   templateLoaded: "Modèle Chargé",
   templateLoadedDescription: "Le modèle a été chargé. Vous pouvez maintenant le modifier.",
   
+  // AI integration
+  aiAssistant: "Assistant IA",
+  aiAssistantDescription: "Fournissez des instructions à l'IA pour vous aider à générer ou améliorer le contenu de votre document.",
+  aiInstructions: "Instructions pour l'IA",
+  aiInstructionsPlaceholder: "ex: Rendre ce document plus formel, ajouter une section sur les responsabilités d'entretien, etc.",
+  aiGenerate: "Générer avec l'IA",
+  aiGenerating: "Génération en cours...",
+  aiSuccess: "Contenu Généré",
+  aiGenerated: "L'IA a généré du contenu pour votre document.",
+  aiError: "Échec de la Génération",
+  aiErrorDescription: "Une erreur s'est produite lors de la génération du contenu. Veuillez réessayer.",
+  selectTemplateFirst: "Veuillez d'abord sélectionner un modèle ou entrer du contenu.",
+  cancel: "Annuler",
+  
   // Document categories
   leaseDocuments: "Documents de Bail",
   paymentDocuments: "Documents de Paiement",

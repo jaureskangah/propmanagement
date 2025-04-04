@@ -15,7 +15,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 interface DocumentTemplateSelectorProps {
   selectedTemplate: string;
-  onSelectTemplate: (template: string) => void;
+  onSelectTemplate: (template: string, templateName: string) => void;
   onGenerateContent: (content: string) => void;
   setIsGenerating: (isGenerating: boolean) => void;
 }
@@ -82,9 +82,9 @@ export function DocumentTemplateSelector({
     }
   ];
 
-  const handleTemplateClick = (templateId: string) => {
+  const handleTemplateClick = (templateId: string, templateName: string) => {
     setIsGenerating(true);
-    onSelectTemplate(templateId);
+    onSelectTemplate(templateId, templateName);
     
     // Generate dummy content based on template
     const dummyContent = generateDummyContent(templateId);
@@ -147,7 +147,7 @@ export function DocumentTemplateSelector({
                     className={`w-full justify-start ${
                       selectedTemplate === template.id ? "bg-secondary/20" : ""
                     }`}
-                    onClick={() => handleTemplateClick(template.id)}
+                    onClick={() => handleTemplateClick(template.id, template.name)}
                   >
                     <div className="flex items-center justify-between w-full">
                       <span>{template.name}</span>

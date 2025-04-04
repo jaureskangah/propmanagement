@@ -22,6 +22,20 @@ export const enDocumentGenerator = {
   templateLoaded: "Template Loaded",
   templateLoadedDescription: "The template has been loaded. You can now edit it.",
   
+  // AI integration
+  aiAssistant: "AI Assistant",
+  aiAssistantDescription: "Provide instructions for the AI to help you generate or improve your document content.",
+  aiInstructions: "Instructions for AI",
+  aiInstructionsPlaceholder: "e.g., Make this document more formal, add a section about maintenance responsibilities, etc.",
+  aiGenerate: "Generate with AI",
+  aiGenerating: "Generating...",
+  aiSuccess: "Content Generated",
+  aiGenerated: "AI has generated content for your document.",
+  aiError: "Generation Failed",
+  aiErrorDescription: "There was an error generating content. Please try again.",
+  selectTemplateFirst: "Please select a template or enter some content first.",
+  cancel: "Cancel",
+  
   // Document categories
   leaseDocuments: "Lease Documents",
   paymentDocuments: "Payment Documents",

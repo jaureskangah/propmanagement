@@ -13,10 +13,16 @@ import { DocumentPreview } from "@/components/documents/DocumentPreview";
 const DocumentGenerator = () => {
   const { t } = useLocale();
   const [selectedTemplate, setSelectedTemplate] = useState("");
+  const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [documentContent, setDocumentContent] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const handleSelectTemplate = (templateId: string, templateName: string) => {
+    setSelectedTemplate(templateId);
+    setSelectedTemplateName(templateName);
+  };
 
   return (
     <div className="flex h-screen bg-background">
@@ -45,7 +51,7 @@ const DocumentGenerator = () => {
                   <CardContent className="pt-6">
                     <DocumentTemplateSelector 
                       selectedTemplate={selectedTemplate}
-                      onSelectTemplate={setSelectedTemplate}
+                      onSelectTemplate={handleSelectTemplate}
                       onGenerateContent={(content) => {
                         setDocumentContent(content);
                         setPreviewUrl(null);
@@ -89,6 +95,7 @@ const DocumentGenerator = () => {
                             }, 1000);
                           }}
                           isGenerating={isGenerating}
+                          templateName={selectedTemplateName}
                         />
                       </TabsContent>
                       <TabsContent value="preview" className="mt-0">
