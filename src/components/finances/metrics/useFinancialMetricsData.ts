@@ -174,10 +174,10 @@ export function useFinancialMetricsData(propertyId: string | null) {
         .reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
       
       // TREND CALCULATIONS
-      // Calculate trends (percentage changes)
+      // Calculate trends (percentage changes) - now rounding to whole numbers
       const calculateTrend = (current: number, previous: number): number => {
         if (previous === 0) return current > 0 ? 100 : 0;
-        return Number((((current - previous) / previous) * 100).toFixed(1));
+        return Math.round(((current - previous) / previous) * 100);
       };
       
       const totalIncomeTrend = calculateTrend(totalIncome, prevTotalIncome);
