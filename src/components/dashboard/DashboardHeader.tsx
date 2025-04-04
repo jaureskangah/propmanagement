@@ -22,18 +22,21 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   const [displayName, setDisplayName] = useState<string>("");
   
   useEffect(() => {
-    // Log user information for debugging
+    // Enhanced debugging logs
     console.log("User in DashboardHeader:", user);
     console.log("User metadata:", user?.user_metadata);
     
     // Extract first name from user metadata
     const firstName = user?.user_metadata?.first_name || "";
+    console.log("Extracted first name:", firstName);
     setDisplayName(firstName);
     
-    console.log("Extracted first name:", firstName);
+    console.log("Display name set to:", firstName);
     console.log("Dashboard title:", title);
     
+    // Show welcome toast only if we have a name
     if (firstName) {
+      console.log("Showing welcome toast for:", firstName);
       toast({
         title: t('success'),
         description: t('welcomeTenant', { name: firstName }),
@@ -42,10 +45,15 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
     }
   }, [user, title, t, toast]);
   
+  // Log the current state of displayName for debugging
+  console.log("Current displayName in render:", displayName);
+  
   // Personalised welcome message with translation
   const welcomeMessage = displayName
     ? t('welcomeTenant', { name: displayName })
     : t('welcomeGeneric');
+    
+  console.log("Constructed welcome message:", welcomeMessage);
 
   // Handle date range change
   const handleDateRangeChange = (newDateRange: DateRange) => {
