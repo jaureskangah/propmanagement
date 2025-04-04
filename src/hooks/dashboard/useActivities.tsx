@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { 
   useTenantActivities, 
   usePaymentActivities, 
@@ -13,6 +13,9 @@ export type { Activity } from "./activityTypes";
 export type { GroupedActivities } from "./activityTypes";
 
 export function useActivities() {
+  // Référence pour suivre les changements d'activités
+  const activitiesRef = useRef<any[]>([]);
+  
   const { data: tenants = [], isLoading: isLoadingTenants } = useTenantActivities();
   const { data: payments = [], isLoading: isLoadingPayments } = usePaymentActivities();
   const { data: maintenance = [], isLoading: isLoadingMaintenance } = useMaintenanceActivities();
@@ -27,6 +30,17 @@ export function useActivities() {
   }, [tenants, payments, maintenance]);
 
   const allActivities = useTransformedActivities(tenants, payments, maintenance);
+  
+  // Vérifier si les activités ont changé
+  useEffect(() => {
+    const allActivitiesCount = allActivities.length;
+    const prevActivitiesCount = activitiesRef.current.length;
+    
+    if (allActivitiesCount !== prevActivitiesCount) {
+      console.log(`Changement détecté dans les activités: avant=${prevActivitiesCount}, après=${allActivitiesCount}`);
+      activitiesRef.current = allActivities;
+    }
+  }, [allActivities]);
   
   // Log the transformed activities to help debugging
   useEffect(() => {

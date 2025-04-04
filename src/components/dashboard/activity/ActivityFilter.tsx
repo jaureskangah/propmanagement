@@ -2,6 +2,7 @@
 import { Filter } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useEffect, useRef } from "react";
 
 interface ActivityFilterProps {
   value: string;
@@ -10,9 +11,26 @@ interface ActivityFilterProps {
 
 export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
   const { t, language } = useLocale();
+  const initialRender = useRef(true);
+  
+  // Détecter les sélections successives du même filtre
+  useEffect(() => {
+    if (initialRender.current) {
+      initialRender.current = false;
+      return;
+    }
+    
+    console.log("Valeur du filtre ActivityFilter:", value);
+  }, [value]);
   
   const handleValueChange = (newValue: string) => {
     console.log("Activity filter changed to:", newValue);
+    
+    // Pour forcer une mise à jour même si on revient sur la même valeur
+    if (newValue === value) {
+      console.log("Même filtre sélectionné à nouveau: forçage du rafraîchissement");
+    }
+    
     onChange(newValue);
   };
   

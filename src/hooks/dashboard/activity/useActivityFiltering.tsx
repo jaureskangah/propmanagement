@@ -35,8 +35,7 @@ export function useActivityFiltering(allActivities: Activity[]) {
     
     // Filter activities by type
     const filtered = allActivities.filter(activity => {
-      const isMatch = activity.type === activityTypeFilter;
-      return isMatch;
+      return activity.type === activityTypeFilter;
     });
     
     console.log(`Trouvé ${filtered.length} activités de type "${activityTypeFilter}"`);
@@ -44,6 +43,7 @@ export function useActivityFiltering(allActivities: Activity[]) {
   }, [allActivities, activityTypeFilter]);
 
   const limitedActivities = useMemo(() => {
+    console.log(`Limitant à ${visibleActivitiesCount} activités sur ${filteredActivities.length} disponibles`);
     return filteredActivities.slice(0, visibleActivitiesCount);
   }, [filteredActivities, visibleActivitiesCount]);
 

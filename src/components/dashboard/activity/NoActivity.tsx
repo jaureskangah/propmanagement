@@ -1,10 +1,18 @@
 
 import { motion } from "framer-motion";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Activity } from "lucide-react";
+import { Activity, RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export const NoActivity = () => {
+interface NoActivityProps {
+  filterType?: string;
+  onResetFilter?: () => void;
+}
+
+export const NoActivity = ({ filterType = "all", onResetFilter }: NoActivityProps) => {
   const { t } = useLocale();
+  
+  const isFiltered = filterType !== "all";
   
   return (
     <motion.div 
@@ -16,8 +24,22 @@ export const NoActivity = () => {
     >
       <Activity className="h-12 w-12 text-muted-foreground opacity-40" />
       <p className="text-muted-foreground italic">
-        {t('noActivity')}
+        {isFiltered 
+          ? t('noActivityFiltered', { filter: t(filterType) }) 
+          : t('noActivity')}
       </p>
+      
+      {isFiltered && onResetFilter && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onResetFilter}
+          className="mt-4 flex items-center gap-2"
+        >
+          <RotateCcw className="h-4 w-4" />
+          {t('resetFilter')}
+        </Button>
+      )}
     </motion.div>
   );
 };
