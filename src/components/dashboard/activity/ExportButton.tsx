@@ -28,7 +28,7 @@ export const ExportButton = ({ groupedActivities, hasActivities }: ExportButtonP
             <Button 
               variant="outline" 
               size="sm" 
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600"
               onClick={exportToCSV}
             >
               <Download className="h-4 w-4" />
@@ -47,7 +47,7 @@ export const ExportButton = ({ groupedActivities, hasActivities }: ExportButtonP
             <Button 
               variant="outline" 
               size="sm" 
-              className="flex items-center gap-1"
+              className="flex items-center gap-1 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600"
               onClick={exportToPDF}
             >
               <Download className="h-4 w-4" />
