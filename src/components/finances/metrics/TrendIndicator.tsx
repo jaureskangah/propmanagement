@@ -1,31 +1,29 @@
 
-import React from "react";
-import { ArrowDown, ArrowUp } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { FinancialMetricTrendProps } from "./types";
+import React from 'react';
+import { ArrowUp, ArrowDown } from 'lucide-react';
 
-export function TrendIndicator({ trend, isPositiveMetric }: FinancialMetricTrendProps) {
-  if (trend === undefined) return null;
-  
-  const isTrendPositive = trend > 0;
-  const isTrendNegative = trend < 0;
-  const isTrendNeutral = trend === 0;
-  
-  // Determine the color based on the metric type and trend direction
-  // For metrics like income, a positive trend is good
-  // For metrics like expenses or unpaid rent, a negative trend is good
-  const isPositiveIndicator = isPositiveMetric ? isTrendPositive : isTrendNegative;
-  const isNegativeIndicator = isPositiveMetric ? isTrendNegative : isTrendPositive;
-  
+interface TrendIndicatorProps {
+  trend: number;
+  isPositiveMetric?: boolean;
+}
+
+export const TrendIndicator = ({ trend, isPositiveMetric = true }: TrendIndicatorProps) => {
+  // Si c'est une métrique négative (comme les dépenses), on inverse l'interprétation de la tendance
+  const isPositiveTrend = isPositiveMetric ? trend > 0 : trend < 0;
+  const absoluteTrend = Math.abs(trend);
+
+  if (trend === 0) {
+    return null;
+  }
+
   return (
-    <div className={cn(
-      "flex items-center text-xs font-medium ml-1 px-1.5 py-0.5 rounded transition-colors",
-      isPositiveIndicator && "text-green-700 bg-green-100 dark:text-green-400 dark:bg-green-900/40",
-      isNegativeIndicator && "text-red-700 bg-red-100 dark:text-red-400 dark:bg-red-900/40",
-      isTrendNeutral && "text-gray-700 bg-gray-100 dark:text-gray-400 dark:bg-gray-800/60"
-    )}>
-      {isTrendPositive ? <ArrowUp className="h-2.5 w-2.5 mr-0.5" /> : isTrendNegative ? <ArrowDown className="h-2.5 w-2.5 mr-0.5" /> : null}
-      {isTrendPositive ? "+" : ""}{isTrendNegative ? "-" : ""}{Math.abs(trend)}%
+    <div className={`flex items-center text-xs font-medium ${isPositiveTrend ? 'text-green-500' : 'text-red-500'}`}>
+      {isPositiveTrend ? (
+        <ArrowUp className="h-3 w-3 mr-0.5" />
+      ) : (
+        <ArrowDown className="h-3 w-3 mr-0.5" />
+      )}
+      <span>{absoluteTrend}%</span>
     </div>
   );
-}
+};

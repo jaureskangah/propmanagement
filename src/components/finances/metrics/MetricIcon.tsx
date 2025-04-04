@@ -1,22 +1,21 @@
 
-import React, { ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import React, { ReactNode } from 'react';
 
 interface MetricIconProps {
   icon: ReactNode;
-  chartColor: string;
+  chartColor?: string;
 }
 
-export function MetricIcon({ icon, chartColor }: MetricIconProps) {
+export const MetricIcon = ({ icon, chartColor = "#3B82F6" }: MetricIconProps) => {
+  // Créer un style avec une couleur de fond légèrement transparente basée sur la couleur du graphique
+  const bgColor = `${chartColor}15`; // Ajoute 15 en hexadécimal pour 8% d'opacité
+
   return (
-    <span className={cn(
-      "flex items-center justify-center rounded-full p-2 mr-3",
-      chartColor === "#22C55E" && "bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400",
-      chartColor === "#F43F5E" && "bg-red-100 text-red-600 dark:bg-red-900/40 dark:text-red-400",
-      chartColor === "#3B82F6" && "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400",
-      chartColor === "#8B5CF6" && "bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-400"
-    )}>
+    <div 
+      className="mr-2 p-1.5 rounded-full" 
+      style={{ backgroundColor: bgColor, color: chartColor }}
+    >
       {icon}
-    </span>
+    </div>
   );
-}
+};

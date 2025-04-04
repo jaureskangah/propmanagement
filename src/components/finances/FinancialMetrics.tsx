@@ -1,6 +1,6 @@
 
 import React from "react";
-import { DollarSign, TrendingDown, BarChart } from "lucide-react";
+import { DollarSign, TrendingDown, BarChart, Home, AlertCircle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
 import { NoPropertySelected } from "./metrics/NoPropertySelected";
@@ -23,18 +23,22 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
     return <NoPropertySelected />;
   }
 
-  // Calculate ROI
+  // Récupérer les données des métriques
   const totalIncome = financialData?.totalIncome || 0;
   const totalExpenses = financialData?.totalExpenses || 0;
-  const propertyValue = 500000; // This is a default value as we don't have the actual property value
+  const occupancyRate = financialData?.occupancyRate || 0;
+  const unpaidRent = financialData?.unpaidRent || 0;
+  
+  // Calculer le ROI (maintenant basé sur le revenu net)
   const netIncome = totalIncome - totalExpenses;
+  const propertyValue = 500000; // Valeur par défaut en attendant une valeur réelle de la propriété
   const roi = propertyValue > 0 ? (netIncome / propertyValue) * 100 : 0;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <FinancialMetricCard
         title={t('totalIncome')}
-        value={`$${(totalIncome).toLocaleString()}`}
+        value={`$${totalIncome.toLocaleString()}`}
         icon={<DollarSign className="h-5 w-5" />}
         description={t('allTimeIncome')}
         chartColor="#22C55E"
@@ -43,7 +47,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
       
       <FinancialMetricCard
         title={t('totalExpenses')}
-        value={`$${(totalExpenses).toLocaleString()}`}
+        value={`$${totalExpenses.toLocaleString()}`}
         icon={<TrendingDown className="h-5 w-5" />}
         description={t('allTimeExpenses')}
         chartColor="#F43F5E"
@@ -51,12 +55,21 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
       />
       
       <FinancialMetricCard
-        title="ROI"
-        value={`${roi.toFixed(2)}%`}
-        icon={<BarChart className="h-5 w-5" />}
-        description={t('returnOnInvestment')}
+        title={t('occupancyRate')}
+        value={`${occupancyRate.toFixed(0)}%`}
+        icon={<Home className="h-5 w-5" />}
+        description={t('occupancyRateDescription')}
         chartColor="#3B82F6"
         trend={5}
+      />
+      
+      <FinancialMetricCard
+        title={t('unpaidRent')}
+        value={`$${unpaidRent.toLocaleString()}`}
+        icon={<AlertCircle className="h-5 w-5" />}
+        description={t('unpaidRentDescription')}
+        chartColor="#F59E0B"
+        trend={3}
       />
     </div>
   );
