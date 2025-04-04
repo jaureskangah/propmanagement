@@ -5,6 +5,9 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { DashboardCustomization } from "./DashboardCustomization";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/components/AuthProvider";
 import {
   Tooltip,
   TooltipContent,
@@ -34,9 +37,47 @@ export function DashboardHeader({
 }: DashboardHeaderProps) {
   const { t } = useLocale();
   const { theme, setTheme } = useTheme();
+  const { user } = useAuth();
+  const [displayName, setDisplayName] = useState<string>("");
   
-  // Use first name if available, otherwise use full tenant name
-  const displayName = firstName || tenantName;
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      // First try to get name from props
+      let firstNameToUse = firstName || "";
+      
+      // Then try from user metadata if not provided in props
+      if (!firstNameToUse && user?.user_metadata?.first_name) {
+        firstNameToUse = user.user_metadata.first_name;
+      }
+      
+      // If still not found and we have a user id, try to get from profiles table
+      if (!firstNameToUse && user?.id) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('first_name')
+            .eq('id', user.id)
+            .single();
+            
+          if (data && data.first_name) {
+            firstNameToUse = data.first_name;
+          }
+        } catch (error) {
+          console.error("Error fetching tenant profile:", error);
+        }
+      }
+      
+      // Last resort, use tenant name
+      if (!firstNameToUse) {
+        firstNameToUse = tenantName;
+      }
+      
+      console.log("Tenant dashboard using name:", firstNameToUse);
+      setDisplayName(firstNameToUse);
+    };
+    
+    fetchUserProfile();
+  }, [firstName, tenantName, user]);
   
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");

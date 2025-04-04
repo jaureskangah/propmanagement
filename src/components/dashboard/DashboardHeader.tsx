@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun, LayoutDashboard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 interface DashboardHeaderProps {
   title: string;
@@ -22,28 +23,54 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   const [displayName, setDisplayName] = useState<string>("");
   
   useEffect(() => {
-    // Enhanced debugging logs
-    console.log("User in DashboardHeader:", user);
-    console.log("User metadata:", user?.user_metadata);
+    const fetchUserProfile = async () => {
+      // First try to get name from user metadata
+      let firstName = user?.user_metadata?.first_name || "";
+      console.log("Initial first name from metadata:", firstName);
+      
+      // If not found in metadata, try to get from profiles table
+      if (!firstName && user?.id) {
+        try {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('first_name')
+            .eq('id', user.id)
+            .single();
+            
+          console.log("Profile data from database:", data);
+          
+          if (data && data.first_name) {
+            firstName = data.first_name;
+            console.log("First name from profiles table:", firstName);
+          }
+          
+          if (error) {
+            console.error("Error fetching profile:", error);
+          }
+        } catch (error) {
+          console.error("Error in profile fetch:", error);
+        }
+      }
+      
+      console.log("Final first name to display:", firstName);
+      setDisplayName(firstName);
+      
+      // Show welcome toast only if we have a name
+      if (firstName) {
+        console.log("Showing welcome toast for:", firstName);
+        toast({
+          title: t('success'),
+          description: t('welcomeTenant', { name: firstName }),
+          duration: 3000,
+        });
+      }
+    };
     
-    // Extract first name from user metadata
-    const firstName = user?.user_metadata?.first_name || "";
-    console.log("Extracted first name:", firstName);
-    setDisplayName(firstName);
-    
-    console.log("Display name set to:", firstName);
-    console.log("Dashboard title:", title);
-    
-    // Show welcome toast only if we have a name
-    if (firstName) {
-      console.log("Showing welcome toast for:", firstName);
-      toast({
-        title: t('success'),
-        description: t('welcomeTenant', { name: firstName }),
-        duration: 3000,
-      });
+    if (user) {
+      fetchUserProfile();
     }
-  }, [user, title, t, toast]);
+    
+  }, [user, t, toast]);
   
   // Log the current state of displayName for debugging
   console.log("Current displayName in render:", displayName);
