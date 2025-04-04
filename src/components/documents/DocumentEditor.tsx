@@ -1,4 +1,3 @@
-
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -150,7 +149,7 @@ export function DocumentEditor({
         ref={textareaRef}
         value={content}
         onChange={handleChange}
-        className="min-h-[500px] font-mono text-sm"
+        className="min-h-[500px] font-mono text-sm bg-white dark:bg-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600"
         placeholder={t('startTypingDocument')}
       />
       
@@ -196,17 +195,17 @@ export function DocumentEditor({
 
       {/* AI Assistant Dialog */}
       <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
-        <DialogContent>
+        <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
           <DialogHeader>
-            <DialogTitle>{t('aiAssistant')}</DialogTitle>
-            <DialogDescription>{t('aiAssistantDescription')}</DialogDescription>
+            <DialogTitle className="dark:text-gray-100">{t('aiAssistant')}</DialogTitle>
+            <DialogDescription className="dark:text-gray-300">{t('aiAssistantDescription')}</DialogDescription>
           </DialogHeader>
           
           <div className="py-4">
-            <Label htmlFor="instructions">{t('aiInstructions')}</Label>
+            <Label htmlFor="instructions" className="dark:text-gray-200">{t('aiInstructions')}</Label>
             <Input 
               id="instructions"
-              className="mt-2"
+              className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
               value={aiInstructions}
               onChange={(e) => setAIInstructions(e.target.value)}
               placeholder={t('aiInstructionsPlaceholder')}
@@ -214,10 +213,11 @@ export function DocumentEditor({
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAIDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setIsAIDialogOpen(false)}
+                   className="dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
               {t('cancel')}
             </Button>
-            <Button onClick={handleAIGenerate} disabled={isGeneratingAI} className="bg-purple-600 hover:bg-purple-700">
+            <Button onClick={handleAIGenerate} disabled={isGeneratingAI} className="bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600">
               {isGeneratingAI ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -236,18 +236,18 @@ export function DocumentEditor({
 
       {/* Share Document Dialog */}
       <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
-        <DialogContent>
+        <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
           <DialogHeader>
-            <DialogTitle>{t('shareDocument')}</DialogTitle>
-            <DialogDescription>{t('shareDocumentDescription')}</DialogDescription>
+            <DialogTitle className="dark:text-gray-100">{t('shareDocument')}</DialogTitle>
+            <DialogDescription className="dark:text-gray-300">{t('shareDocumentDescription')}</DialogDescription>
           </DialogHeader>
           
           <div className="py-4">
-            <Label htmlFor="email">{t('recipientEmail')}</Label>
+            <Label htmlFor="email" className="dark:text-gray-200">{t('recipientEmail')}</Label>
             <Input 
               id="email"
               type="email"
-              className="mt-2"
+              className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
               placeholder="email@example.com"
@@ -255,10 +255,11 @@ export function DocumentEditor({
           </div>
           
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsShareDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setIsShareDialogOpen(false)}
+                   className="dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
               {t('cancel')}
             </Button>
-            <Button onClick={handleShareDocument} disabled={isSending} className="bg-blue-600 hover:bg-blue-700">
+            <Button onClick={handleShareDocument} disabled={isSending} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
               {isSending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
