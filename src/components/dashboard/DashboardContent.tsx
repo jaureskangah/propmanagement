@@ -76,14 +76,16 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
 
   return (
     <div className="space-y-8 pb-10">
-      <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
-        <DashboardMetrics 
-          propertiesData={propertiesData}
-          maintenanceData={maintenanceData}
-          tenantsData={tenantsData}
-          dateRange={dateRange}
-        />
-      </div>
+      {!isHidden('metrics') && (
+        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
+          <DashboardMetrics 
+            propertiesData={propertiesData}
+            maintenanceData={maintenanceData}
+            tenantsData={tenantsData}
+            dateRange={dateRange}
+          />
+        </div>
+      )}
 
       {!isHidden('priority') && (
         <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
