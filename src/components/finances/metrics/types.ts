@@ -14,3 +14,16 @@ export interface FinancialMetricTrendProps {
   trend?: number;
   isPositiveMetric?: boolean;
 }
+
+export interface FinancialData {
+  totalIncome: number;
+  totalExpenses: number;
+  occupancyRate: number;
+  unpaidRent: number;
+  trends: {
+    totalIncomeTrend: number;
+    totalExpensesTrend: number;
+    occupancyRateTrend: number;
+    unpaidRentTrend: number;
+  };
+}

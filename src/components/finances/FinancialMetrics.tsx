@@ -29,11 +29,14 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
   const occupancyRate = financialData?.occupancyRate || 0;
   const unpaidRent = financialData?.unpaidRent || 0;
   
-  // Calculer le ROI (maintenant basé sur le revenu net)
-  const netIncome = totalIncome - totalExpenses;
-  const propertyValue = 500000; // Valeur par défaut en attendant une valeur réelle de la propriété
-  const roi = propertyValue > 0 ? (netIncome / propertyValue) * 100 : 0;
-
+  // Récupérer les tendances
+  const trends = financialData?.trends || {
+    totalIncomeTrend: 0,
+    totalExpensesTrend: 0,
+    occupancyRateTrend: 0,
+    unpaidRentTrend: 0
+  };
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <FinancialMetricCard
@@ -42,7 +45,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<DollarSign className="h-5 w-5" />}
         description={t('allTimeIncome')}
         chartColor="#22C55E"
-        trend={15}
+        trend={trends.totalIncomeTrend}
       />
       
       <FinancialMetricCard
@@ -51,7 +54,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<TrendingDown className="h-5 w-5" />}
         description={t('allTimeExpenses')}
         chartColor="#F43F5E"
-        trend={-8}
+        trend={trends.totalExpensesTrend}
       />
       
       <FinancialMetricCard
@@ -60,7 +63,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<Home className="h-5 w-5" />}
         description={t('occupancyRateDescription')}
         chartColor="#3B82F6"
-        trend={5}
+        trend={trends.occupancyRateTrend}
       />
       
       <FinancialMetricCard
@@ -69,7 +72,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<AlertCircle className="h-5 w-5" />}
         description={t('unpaidRentDescription')}
         chartColor="#F59E0B"
-        trend={3}
+        trend={trends.unpaidRentTrend}
       />
     </div>
   );

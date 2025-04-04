@@ -1,13 +1,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-
-interface FinancialData {
-  totalIncome: number;
-  totalExpenses: number;
-  occupancyRate: number;
-  unpaidRent: number;
-}
+import { FinancialData } from "./types";
+import { subMonths, startOfMonth, endOfMonth, format } from "date-fns";
 
 export function useFinancialMetricsData(propertyId: string | null) {
   return useQuery({
@@ -16,8 +11,13 @@ export function useFinancialMetricsData(propertyId: string | null) {
       if (!propertyId) return null;
 
       console.log("Fetching financial metrics for property:", propertyId);
-
-      // Fetch payments for this property (via tenants)
+      
+      // Current date range
+      const currentDate = new Date();
+      const previousMonthStart = startOfMonth(subMonths(currentDate, 1));
+      const previousMonthEnd = endOfMonth(subMonths(currentDate, 1));
+      
+      // Fetch payments for this property (via tenants) - current period
       const { data: tenants } = await supabase
         .from('tenants')
         .select('id, unit_number, rent_amount')
@@ -25,16 +25,23 @@ export function useFinancialMetricsData(propertyId: string | null) {
 
       const tenantIds = tenants?.map(t => t.id) || [];
       
-      // Si aucun locataire, retourner des données par défaut
+      // If no tenants, return default data
       if (tenantIds.length === 0) {
         return {
           totalIncome: 0,
           totalExpenses: 0,
           occupancyRate: 0,
-          unpaidRent: 0
+          unpaidRent: 0,
+          trends: {
+            totalIncomeTrend: 0,
+            totalExpensesTrend: 0,
+            occupancyRateTrend: 0,
+            unpaidRentTrend: 0
+          }
         };
       }
 
+      // Current period data
       // Récupérer le revenu total des paiements des locataires
       const { data: payments, error: paymentsError } = await supabase
         .from('tenant_payments')
@@ -50,7 +57,7 @@ export function useFinancialMetricsData(propertyId: string | null) {
       // 1. maintenance_expenses
       const { data: maintenanceExpenses, error: maintenanceExpensesError } = await supabase
         .from('maintenance_expenses')
-        .select('amount')
+        .select('amount, date')
         .eq('property_id', propertyId);
       
       if (maintenanceExpensesError) {
@@ -61,7 +68,7 @@ export function useFinancialMetricsData(propertyId: string | null) {
       // 2. vendor_interventions (inclus comme dépenses)
       const { data: vendorInterventions, error: vendorInterventionsError } = await supabase
         .from('vendor_interventions')
-        .select('cost')
+        .select('cost, date')
         .eq('property_id', propertyId);
         
       if (vendorInterventionsError) {
@@ -76,6 +83,37 @@ export function useFinancialMetricsData(propertyId: string | null) {
         .eq('id', propertyId)
         .single();
       
+      // Previous period data - Get payments from previous month
+      const { data: previousPayments } = await supabase
+        .from('tenant_payments')
+        .select('amount, status, tenant_id, payment_date')
+        .in('tenant_id', tenantIds)
+        .gte('payment_date', previousMonthStart.toISOString().split('T')[0])
+        .lte('payment_date', previousMonthEnd.toISOString().split('T')[0]);
+
+      // Previous period expenses
+      const { data: prevMaintenanceExpenses } = await supabase
+        .from('maintenance_expenses')
+        .select('amount, date')
+        .eq('property_id', propertyId)
+        .gte('date', previousMonthStart.toISOString().split('T')[0])
+        .lte('date', previousMonthEnd.toISOString().split('T')[0]);
+
+      const { data: prevVendorInterventions } = await supabase
+        .from('vendor_interventions')
+        .select('cost, date')
+        .eq('property_id', propertyId)
+        .gte('date', previousMonthStart.toISOString().split('T')[0])
+        .lte('date', previousMonthEnd.toISOString().split('T')[0]);
+        
+      // Previous month tenant count for occupancy calculation
+      const { data: previousTenants } = await supabase
+        .from('tenants')
+        .select('id, unit_number')
+        .eq('property_id', propertyId)
+        .lte('created_at', previousMonthEnd.toISOString());
+        
+      // CURRENT PERIOD CALCULATIONS
       // Calcul du revenu total
       const totalIncome = payments?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
       
@@ -115,13 +153,51 @@ export function useFinancialMetricsData(propertyId: string | null) {
       // Loyers impayés = montant attendu pour le mois - montant déjà payé + paiements en attente ou en retard
       const unpaidRent = Math.max(0, expectedRent - currentMonthPaid) + pendingPayments;
       
+      // PREVIOUS PERIOD CALCULATIONS
+      // Previous period income
+      const prevTotalIncome = previousPayments?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+      
+      // Previous period expenses
+      const prevMaintenanceTotal = prevMaintenanceExpenses?.reduce((sum, expense) => sum + Number(expense.amount), 0) || 0;
+      const prevInterventionsTotal = prevVendorInterventions?.reduce((sum, intervention) => sum + Number(intervention.cost || 0), 0) || 0;
+      const prevTotalExpenses = prevMaintenanceTotal + prevInterventionsTotal;
+      
+      // Previous period occupancy rate
+      const prevOccupiedUnits = previousTenants ? new Set(previousTenants.map(t => t.unit_number)).size : 0;
+      const prevOccupancyRate = totalUnits > 0 ? (prevOccupiedUnits / totalUnits) * 100 : 0;
+
+      // Previous period unpaid rent - simplified calculation for comparison
+      // We'll use the percentage of unpaid rent to total expected rent for trend calculation
+      const prevMonthExpectedRent = expectedRent; // Assuming similar rent expectations
+      const prevUnpaidRent = previousPayments
+        ?.filter(payment => payment.status === 'pending' || payment.status === 'overdue')
+        .reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+      
+      // TREND CALCULATIONS
+      // Calculate trends (percentage changes)
+      const calculateTrend = (current: number, previous: number): number => {
+        if (previous === 0) return current > 0 ? 100 : 0;
+        return Number((((current - previous) / previous) * 100).toFixed(1));
+      };
+      
+      const totalIncomeTrend = calculateTrend(totalIncome, prevTotalIncome);
+      const totalExpensesTrend = calculateTrend(totalExpenses, prevTotalExpenses);
+      const occupancyRateTrend = calculateTrend(occupancyRate, prevOccupancyRate);
+      const unpaidRentTrend = calculateTrend(unpaidRent, prevUnpaidRent);
+      
       console.log("Financial metrics calculated:", {
         totalIncome,
+        prevTotalIncome,
+        totalIncomeTrend,
         totalExpenses,
-        maintenanceExpensesTotal,
-        vendorInterventionsTotal,
+        prevTotalExpenses,
+        totalExpensesTrend,
         occupancyRate,
+        prevOccupancyRate,
+        occupancyRateTrend,
         unpaidRent,
+        prevUnpaidRent,
+        unpaidRentTrend,
         expectedRent,
         currentMonthPaid,
         pendingPayments
@@ -131,7 +207,13 @@ export function useFinancialMetricsData(propertyId: string | null) {
         totalIncome,
         totalExpenses,
         occupancyRate,
-        unpaidRent
+        unpaidRent,
+        trends: {
+          totalIncomeTrend,
+          totalExpensesTrend,
+          occupancyRateTrend,
+          unpaidRentTrend
+        }
       };
     },
     enabled: !!propertyId
