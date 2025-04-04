@@ -57,6 +57,7 @@ export function useActivities() {
     limitedActivities,
     activityTypeFilter,
     setActivityFilter,
+    resetFilter,
     hasMoreActivities,
     showMoreActivities,
     forceUpdate
@@ -88,6 +89,7 @@ export function useActivities() {
     isLoading,
     activityTypeFilter,
     setActivityTypeFilter: setActivityFilter,
+    resetFilter,
     hasMoreActivities,
     showMoreActivities,
     refreshActivities

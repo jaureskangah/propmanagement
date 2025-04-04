@@ -2,8 +2,10 @@
 import { useMemo, useCallback, useState, useEffect, useRef } from "react";
 import { Activity } from "../activityTypes";
 import { toast } from "sonner";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export function useActivityFiltering(allActivities: Activity[]) {
+  const { t } = useLocale();
   const [activityTypeFilter, setActivityTypeFilter] = useState<string>("all");
   const [visibleActivitiesCount, setVisibleActivitiesCount] = useState<number>(5);
   const previousFilterRef = useRef<string>("all");
@@ -17,9 +19,12 @@ export function useActivityFiltering(allActivities: Activity[]) {
       [...new Set(allActivities.map(a => a.type))]);
     
     // Liste détaillée des activités pour le débogage
-    allActivities.forEach((activity, index) => {
-      console.log(`[useActivityFiltering] Activité ${index}: type=${activity.type}, id=${activity.id}`);
-    });
+    if (allActivities.length > 0) {
+      console.log(`[useActivityFiltering] Premiers exemples d'activités:`);
+      allActivities.slice(0, 3).forEach((activity, index) => {
+        console.log(`[useActivityFiltering] Activité ${index}: type=${activity.type}, id=${activity.id}, date=${activity.created_at}`);
+      });
+    }
   }, [allActivities]);
 
   // Reset visible activities count when filter changes
@@ -37,15 +42,15 @@ export function useActivityFiltering(allActivities: Activity[]) {
     console.log(`[useActivityFiltering] Recalcul des activités filtrées. Filtre actuel: "${activityTypeFilter}". Force update: ${forceUpdate}`);
     console.log(`[useActivityFiltering] Nombre total d'activités disponibles: ${allActivities.length}`);
     
-    if (activityTypeFilter === "all") {
-      console.log("[useActivityFiltering] Retour de toutes les activités sans filtrage");
-      return allActivities;
-    }
-    
     // Check if we have activities before filtering
     if (allActivities.length === 0) {
       console.log("[useActivityFiltering] Aucune activité à filtrer");
       return [];
+    }
+    
+    if (activityTypeFilter === "all") {
+      console.log("[useActivityFiltering] Retour de toutes les activités sans filtrage");
+      return allActivities;
     }
     
     // Log available types for debugging
@@ -73,23 +78,31 @@ export function useActivityFiltering(allActivities: Activity[]) {
     if (newFilter === activityTypeFilter) {
       console.log("[useActivityFiltering] Même filtre sélectionné à nouveau, forçage du rafraîchissement");
       setForceUpdate(Date.now());
-      toast.info("Rafraîchissement des activités");
+      toast.info(t('refreshing'));
+    } else {
+      setActivityTypeFilter(newFilter);
     }
-    
-    setActivityTypeFilter(newFilter);
-  }, [activityTypeFilter]);
+  }, [activityTypeFilter, t]);
+
+  const resetFilter = useCallback(() => {
+    console.log("[useActivityFiltering] Réinitialisation complète du filtre");
+    setActivityTypeFilter("all");
+    setForceUpdate(Date.now());
+    toast.success(t('filterReset'));
+  }, [t]);
 
   const hasMoreActivities = filteredActivities.length > limitedActivities.length;
 
   const showMoreActivities = useCallback(() => {
     setVisibleActivitiesCount(prev => prev + ACTIVITIES_PER_PAGE);
-  }, [ACTIVITIES_PER_PAGE]);
+  }, []);
 
   return {
     filteredActivities,
     limitedActivities,
     activityTypeFilter,
     setActivityFilter,
+    resetFilter,
     hasMoreActivities,
     showMoreActivities,
     forceUpdate

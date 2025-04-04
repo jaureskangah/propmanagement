@@ -14,7 +14,6 @@ export type { Activity } from "@/hooks/dashboard/activityTypes";
 export const RecentActivity = () => {
   const { t } = useLocale();
   const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
-  const [lastFilterChange, setLastFilterChange] = useState<number>(Date.now());
   const resetInProgress = useRef(false);
   
   const { 
@@ -27,19 +26,21 @@ export const RecentActivity = () => {
     refreshActivities
   } = useActivities();
 
+  // Force reload of activities when component mounts or forceUpdateKey changes
+  useEffect(() => {
+    console.log("[RecentActivity] Composant monté ou rafraîchissement forcé, déclenchement du rafraîchissement");
+    refreshActivities();
+  }, [forceUpdateKey, refreshActivities]);
+
   // Function to force a complete refresh of activities
   const forceCompleteRefresh = () => {
     console.log("[RecentActivity] Forçage d'un rafraîchissement complet");
     setForceUpdateKey(Date.now());
-    refreshActivities();
   };
 
   // Function to handle filter changes
   const handleFilterChange = (newFilter: string) => {
     console.log("[RecentActivity] Changement du filtre d'activité vers:", newFilter, "depuis:", activityTypeFilter);
-    
-    // Marquer le changement de filtre même si c'est le même filtre (pour forcer un rafraîchissement)
-    setLastFilterChange(Date.now());
     
     // Si on est déjà en train de réinitialiser, ne pas déclencher une autre réinitialisation
     if (resetInProgress.current) {
@@ -60,15 +61,8 @@ export const RecentActivity = () => {
   // Pour assurer la réactivité
   useEffect(() => {
     console.log("[RecentActivity] Mise à jour des activités après changement de filtre à:", activityTypeFilter);
-    console.log("[RecentActivity] Timestamp de dernière modification:", lastFilterChange);
     console.log("[RecentActivity] Nombre de groupes d'activités:", Object.keys(groupedActivities).length);
-  }, [activityTypeFilter, lastFilterChange, groupedActivities]);
-
-  // Force reload of activities when component mounts or forceUpdateKey changes
-  useEffect(() => {
-    console.log("[RecentActivity] Composant monté ou rafraîchissement forcé, déclenchement du rafraîchissement");
-    refreshActivities();
-  }, [forceUpdateKey]);
+  }, [activityTypeFilter, groupedActivities]);
 
   // Check if there are any activities to display
   const isEmpty = Object.keys(groupedActivities).length === 0 && !isLoading;
@@ -82,9 +76,6 @@ export const RecentActivity = () => {
     
     // Réinitialiser le filtre à "all"
     setActivityTypeFilter("all");
-    
-    // Marquer le changement de filtre
-    setLastFilterChange(Date.now());
     
     // Forcer un rafraîchissement complet
     forceCompleteRefresh();

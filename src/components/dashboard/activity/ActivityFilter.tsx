@@ -15,6 +15,7 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
   const initialRender = useRef(true);
   const [internalValue, setInternalValue] = useState(value);
   const prevValueRef = useRef(value);
+  const lastChangeTimeRef = useRef<number>(0);
   
   // Synchroniser la valeur interne avec la valeur externe
   useEffect(() => {
@@ -37,6 +38,15 @@ export const ActivityFilter = ({ value, onChange }: ActivityFilterProps) => {
   
   const handleValueChange = (newValue: string) => {
     console.log("[ActivityFilter] Changement de filtre demandé:", newValue, "depuis:", internalValue);
+    
+    // Prévenir les multiples clics très rapides
+    const now = Date.now();
+    if (now - lastChangeTimeRef.current < 300) {
+      console.log("[ActivityFilter] Clics trop rapides, ignoré");
+      return;
+    }
+    lastChangeTimeRef.current = now;
+    
     setInternalValue(newValue); // Mettre à jour la valeur interne immédiatement
     
     // Gérer le cas où on sélectionne le même filtre à nouveau

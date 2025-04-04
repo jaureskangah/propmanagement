@@ -8,6 +8,7 @@ export const enDashboardActivity = {
   noActivityFiltered: "No {filter} activity found",
   filterReset: "Filter has been reset",
   refreshing: "Refreshing",
+  viewAll: "View All",
   
   // Activity types
   tenant: "Tenant",
@@ -30,6 +31,7 @@ export const frDashboardActivity = {
   noActivityFiltered: "Aucune activité de type {filter} trouvée",
   filterReset: "Le filtre a été réinitialisé",
   refreshing: "Actualisation",
+  viewAll: "Voir Tout",
   
   // Activity types
   tenant: "Locataire",
