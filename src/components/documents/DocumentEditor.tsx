@@ -1,7 +1,15 @@
 
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Loader2, FileDown, FileCheck, Sparkles } from "lucide-react";
+import { 
+  Loader2, 
+  FileDown, 
+  FileCheck, 
+  Sparkles, 
+  Save, 
+  Share2, 
+  Send
+} from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -36,8 +44,11 @@ export function DocumentEditor({
   const { toast } = useToast();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [aiInstructions, setAIInstructions] = useState("");
   const [isGeneratingAI, setIsGeneratingAI] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onContentChange(e.target.value);
@@ -92,6 +103,47 @@ export function DocumentEditor({
     }
   };
 
+  const handleShareDocument = async () => {
+    if (!recipientEmail || !content) {
+      toast({
+        title: t('error'),
+        description: t('emailAndContentRequired'),
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSending(true);
+    
+    try {
+      const { error } = await supabase.functions.invoke('share-document', {
+        body: {
+          recipientEmail,
+          documentContent: content,
+          documentTitle: templateName || t('customDocument'),
+        }
+      });
+
+      if (error) throw error;
+      
+      toast({
+        title: t('shareSuccess'),
+        description: t('documentShared')
+      });
+      setIsShareDialogOpen(false);
+      setRecipientEmail("");
+    } catch (error) {
+      console.error('Error sharing document:', error);
+      toast({
+        title: t('shareError'),
+        description: t('shareErrorDescription'),
+        variant: "destructive"
+      });
+    } finally {
+      setIsSending(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <Textarea
@@ -102,35 +154,47 @@ export function DocumentEditor({
         placeholder={t('startTypingDocument')}
       />
       
-      <div className="flex justify-between space-x-2">
-        <Button
-          variant="outline"
-          onClick={() => setIsAIDialogOpen(true)}
-          className="gap-2"
-        >
-          <Sparkles className="h-4 w-4" />
-          {t('aiAssistant')}
-        </Button>
+      <div className="flex flex-wrap gap-2 justify-between">
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setIsAIDialogOpen(true)}
+            className="gap-2 bg-purple-50 border-purple-200 hover:bg-purple-100 hover:text-purple-700"
+          >
+            <Sparkles className="h-4 w-4 text-purple-500" />
+            {t('aiAssistant')}
+          </Button>
+          
+          <Button
+            variant="outline"
+            onClick={() => setIsShareDialogOpen(true)}
+            className="gap-2 bg-blue-50 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
+          >
+            <Share2 className="h-4 w-4 text-blue-500" />
+            {t('shareDocument')}
+          </Button>
+        </div>
         
         <Button
-          variant="outline"
           onClick={handleGeneratePreview}
           disabled={!content || isGenerating}
+          className="gap-2 bg-green-600 hover:bg-green-700 text-white"
         >
           {isGenerating ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
               {t('generating')}
             </>
           ) : (
             <>
-              <FileCheck className="mr-2 h-4 w-4" />
+              <FileCheck className="h-4 w-4" />
               {t('generatePreview')}
             </>
           )}
         </Button>
       </div>
 
+      {/* AI Assistant Dialog */}
       <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -153,7 +217,7 @@ export function DocumentEditor({
             <Button variant="outline" onClick={() => setIsAIDialogOpen(false)}>
               {t('cancel')}
             </Button>
-            <Button onClick={handleAIGenerate} disabled={isGeneratingAI}>
+            <Button onClick={handleAIGenerate} disabled={isGeneratingAI} className="bg-purple-600 hover:bg-purple-700">
               {isGeneratingAI ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -163,6 +227,47 @@ export function DocumentEditor({
                 <>
                   <Sparkles className="mr-2 h-4 w-4" />
                   {t('aiGenerate')}
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Share Document Dialog */}
+      <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('shareDocument')}</DialogTitle>
+            <DialogDescription>{t('shareDocumentDescription')}</DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <Label htmlFor="email">{t('recipientEmail')}</Label>
+            <Input 
+              id="email"
+              type="email"
+              className="mt-2"
+              value={recipientEmail}
+              onChange={(e) => setRecipientEmail(e.target.value)}
+              placeholder="email@example.com"
+            />
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsShareDialogOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button onClick={handleShareDocument} disabled={isSending} className="bg-blue-600 hover:bg-blue-700">
+              {isSending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('sending')}
+                </>
+              ) : (
+                <>
+                  <Send className="mr-2 h-4 w-4" />
+                  {t('send')}
                 </>
               )}
             </Button>

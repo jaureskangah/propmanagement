@@ -3,20 +3,30 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Loader2, Download, Save, AlertTriangle } from "lucide-react";
+import { 
+  Loader2, 
+  Download, 
+  Save, 
+  AlertTriangle, 
+  Check, 
+  File, 
+  Share2 
+} from "lucide-react";
 
 interface DocumentPreviewProps {
   previewUrl: string | null;
   isGenerating: boolean;
   documentContent: string;
   templateName: string;
+  onShare?: () => void;
 }
 
 export function DocumentPreview({
   previewUrl,
   isGenerating,
   documentContent,
-  templateName
+  templateName,
+  onShare
 }: DocumentPreviewProps) {
   const { t } = useLocale();
   const { toast } = useToast();
@@ -78,7 +88,9 @@ export function DocumentPreview({
   if (!previewUrl) {
     return (
       <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4">
-        <AlertTriangle className="h-12 w-12 text-muted-foreground mb-4" />
+        <div className="bg-muted/30 p-4 rounded-full mb-4">
+          <File className="h-12 w-12 text-muted-foreground" />
+        </div>
         <h3 className="text-lg font-medium mb-2">{t('noPreviewAvailable')}</h3>
         <p className="text-muted-foreground text-center max-w-md">
           {t('generatePreviewDescription')}
@@ -89,7 +101,7 @@ export function DocumentPreview({
 
   return (
     <div className="space-y-4">
-      <div className="border rounded-md h-[500px] overflow-auto bg-white">
+      <div className="border rounded-md h-[500px] overflow-auto bg-white shadow-sm">
         <iframe
           src={previewUrl}
           title="Document Preview"
@@ -97,11 +109,12 @@ export function DocumentPreview({
         />
       </div>
 
-      <div className="flex justify-end space-x-2">
+      <div className="flex flex-wrap justify-end gap-3">
         <Button
           variant="outline"
           onClick={handleSaveToSystem}
           disabled={isSaving}
+          className="bg-blue-50 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
         >
           {isSaving ? (
             <>
@@ -110,12 +123,28 @@ export function DocumentPreview({
             </>
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4" />
+              <Save className="mr-2 h-4 w-4 text-blue-500" />
               {t('saveDocument')}
             </>
           )}
         </Button>
-        <Button onClick={handleDownload} disabled={isDownloading}>
+        
+        {onShare && (
+          <Button 
+            variant="outline"
+            onClick={onShare}
+            className="bg-purple-50 border-purple-200 hover:bg-purple-100 hover:text-purple-700"
+          >
+            <Share2 className="mr-2 h-4 w-4 text-purple-500" />
+            {t('shareDocument')}
+          </Button>
+        )}
+        
+        <Button 
+          onClick={handleDownload} 
+          disabled={isDownloading}
+          className="bg-green-600 hover:bg-green-700 text-white"
+        >
           {isDownloading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -128,6 +157,18 @@ export function DocumentPreview({
             </>
           )}
         </Button>
+      </div>
+
+      <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md flex items-start">
+        <div className="mr-2 mt-1">
+          <AlertTriangle className="h-5 w-5 text-blue-500" />
+        </div>
+        <div>
+          <h4 className="text-sm font-medium text-blue-700">{t('documentTip')}</h4>
+          <p className="text-xs text-blue-600">
+            {t('documentTipDescription')}
+          </p>
+        </div>
       </div>
     </div>
   );

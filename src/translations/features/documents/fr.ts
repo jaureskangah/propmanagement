@@ -36,6 +36,22 @@ export const frDocumentGenerator = {
   selectTemplateFirst: "Veuillez d'abord sélectionner un modèle ou entrer du contenu.",
   cancel: "Annuler",
   
+  // Document sharing
+  shareDocument: "Partager Document",
+  shareDocumentDescription: "Entrez l'email du destinataire pour partager ce document avec lui.",
+  recipientEmail: "Email du Destinataire",
+  emailAndContentRequired: "L'adresse email et le contenu du document sont requis.",
+  send: "Envoyer",
+  sending: "Envoi en cours...",
+  shareSuccess: "Document Partagé",
+  documentShared: "Le document a été partagé avec le destinataire.",
+  shareError: "Échec du Partage",
+  shareErrorDescription: "Une erreur s'est produite lors du partage du document. Veuillez réessayer.",
+  
+  // Document tips
+  documentTip: "Conseil Document",
+  documentTipDescription: "Pour les documents juridiques, consultez toujours un professionnel qualifié avant envoi pour garantir qu'ils répondent à vos besoins spécifiques.",
+  
   // Document categories
   leaseDocuments: "Documents de Bail",
   paymentDocuments: "Documents de Paiement",

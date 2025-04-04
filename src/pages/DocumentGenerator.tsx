@@ -5,7 +5,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { FileText, FileCheck, FilePlus } from "lucide-react";
+import { FileText, FileCheck, FilePlus, Share2 } from "lucide-react";
 import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
 import { DocumentPreview } from "@/components/documents/DocumentPreview";
@@ -18,10 +18,23 @@ const DocumentGenerator = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [activeTab, setActiveTab] = useState("editor");
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
 
   const handleSelectTemplate = (templateId: string, templateName: string) => {
     setSelectedTemplate(templateId);
     setSelectedTemplateName(templateName);
+  };
+
+  const handleGeneratePreview = (content: string) => {
+    setIsGenerating(true);
+    // Generate preview logic would go here
+    setTimeout(() => {
+      // Mock generating a preview URL
+      setPreviewUrl(`data:application/pdf;base64,${btoa(content)}`);
+      setIsGenerating(false);
+      setActiveTab("preview");
+    }, 1000);
   };
 
   return (
@@ -66,7 +79,7 @@ const DocumentGenerator = () => {
               <div className="lg:col-span-8">
                 <Card className="h-full">
                   <CardHeader className="border-b">
-                    <Tabs defaultValue="editor" className="w-full">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="editor">
                           <FileCheck className="h-4 w-4 mr-2" />
@@ -80,20 +93,12 @@ const DocumentGenerator = () => {
                     </Tabs>
                   </CardHeader>
                   <CardContent className="pt-6">
-                    <Tabs defaultValue="editor" className="w-full">
+                    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                       <TabsContent value="editor" className="mt-0">
                         <DocumentEditor
                           content={documentContent}
                           onContentChange={setDocumentContent}
-                          onGeneratePreview={(content) => {
-                            setIsGenerating(true);
-                            // Generate preview logic would go here
-                            setTimeout(() => {
-                              // Mock generating a preview URL
-                              setPreviewUrl(`data:application/pdf;base64,${btoa(content)}`);
-                              setIsGenerating(false);
-                            }, 1000);
-                          }}
+                          onGeneratePreview={handleGeneratePreview}
                           isGenerating={isGenerating}
                           templateName={selectedTemplateName}
                         />
@@ -104,6 +109,7 @@ const DocumentGenerator = () => {
                           isGenerating={isGenerating}
                           documentContent={documentContent}
                           templateName={selectedTemplate}
+                          onShare={() => setIsShareDialogOpen(true)}
                         />
                       </TabsContent>
                     </Tabs>

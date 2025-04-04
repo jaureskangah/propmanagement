@@ -36,6 +36,22 @@ export const enDocumentGenerator = {
   selectTemplateFirst: "Please select a template or enter some content first.",
   cancel: "Cancel",
   
+  // Document sharing
+  shareDocument: "Share Document",
+  shareDocumentDescription: "Enter the recipient's email to share this document with them.",
+  recipientEmail: "Recipient Email",
+  emailAndContentRequired: "Email address and document content are required.",
+  send: "Send",
+  sending: "Sending...",
+  shareSuccess: "Document Shared",
+  documentShared: "The document has been shared with the recipient.",
+  shareError: "Sharing Failed",
+  shareErrorDescription: "There was an error sharing the document. Please try again.",
+  
+  // Document tips
+  documentTip: "Document Tip",
+  documentTipDescription: "For legal documents, always review the content with a qualified professional before sending to ensure it meets your specific requirements.",
+  
   // Document categories
   leaseDocuments: "Lease Documents",
   paymentDocuments: "Payment Documents",
