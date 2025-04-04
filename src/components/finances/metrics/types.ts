@@ -8,6 +8,7 @@ export interface FinancialMetricCardProps {
   icon: ReactNode;
   chartColor?: string;
   trend?: number;
+  isPositiveMetric?: boolean;
 }
 
 export interface FinancialMetricTrendProps {
