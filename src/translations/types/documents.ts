@@ -1,0 +1,41 @@
+
+export interface DocumentsTranslations {
+  documentGenerator: string;
+  templates: string;
+  savedDocuments: string;
+  selectTemplateToStart: string;
+  noSavedDocuments: string;
+  all: string;
+  property: string;
+  tenant: string;
+  payments: string;
+  notices: string;
+  documentName: string;
+  enterDocumentName: string;
+  pleaseEnterDocumentName: string;
+  pleaseSelectProperty: string;
+  enterDocumentContent: string;
+  generating: string;
+  preview: string;
+  edit: string;
+  save: string;
+  close: string;
+  download: string;
+  error: string;
+  success: string;
+  noContentToPreview: string;
+  failedToGenerateDocument: string;
+  documentSaved: string;
+  documentDownloaded: string;
+  clearSelection: string;
+  leaseAgreement: string;
+  leaseAgreementDescription: string;
+  noticeToVacate: string;
+  noticeToVacateDescription: string;
+  rentReceipt: string;
+  rentReceiptDescription: string;
+  propertyInspection: string;
+  propertyInspectionDescription: string;
+  welcomeLetter: string;
+  welcomeLetterDescription: string;
+}

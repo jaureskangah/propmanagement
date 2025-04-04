@@ -1,76 +1,71 @@
 
-import type { AdminDashboardTranslations } from './admin';
-import type { AuthTranslations } from './auth';
-import type { ContactTranslations } from './contact';
-import type { CTATranslations } from './cta';
-import type { FAQTranslations } from './faq';
-import type { FeaturesTranslations } from './features';
-import type { FooterTranslations } from './footer';
-import type { HeroTranslations } from './hero';
-import type { HowItWorksTranslations } from './how-it-works';
-import type { MaintenanceTranslations } from './maintenance';
-import type { NavigationTranslations } from './navigation';
-import type { PricingTranslations, PlanFeaturesTranslations } from './pricing';
-import type { PropertyManagementTranslations } from './property';
-import type { StatusTranslations } from './status';
-import type { TenantTranslations } from './tenant';
-import type { ToastTranslations } from './toasts';
-import type { CommonTranslations } from './common';
-import type { DashboardTranslations } from './dashboard';
-import type { SettingsTranslations } from './settings';
-import type { ModalTranslations } from './modal';
-import type { FinancesTranslations } from './finances';
-import type { SharedTranslations } from './common-translations';
+import { NavigationTranslations } from "./navigation";
+import { PricingTranslations } from "./pricing";
+import { AuthTranslations } from "./auth";
+import { HeroTranslations } from "./hero";
+import { FeaturesTranslations } from "./features";
+import { HowItWorksTranslations } from "./how-it-works";
+import { FAQTranslations } from "./faq";
+import { ContactTranslations } from "./contact";
+import { CTATranslations } from "./cta";
+import { FooterTranslations } from "./footer";
+import { CommonTranslations } from "./common-translations";
+import { ModalTranslations } from "./modal";
+import { PropertyTranslations } from "./property";
+import { DashboardTranslations } from "./dashboard";
+import { TenantTranslations } from "./tenant";
+import { StatusTranslations } from "./status";
+import { SettingsTranslations } from "./settings";
+import { MaintenanceTranslations } from "./maintenance";
+import { AdminTranslations } from "./admin";
+import { FinancesTranslations } from "./finances";
+import { DocumentsTranslations } from "./documents";
 
-export type { AdminDashboardTranslations as AdminTranslations };
-export type { AuthTranslations };
-export type { ContactTranslations };
-export type { CTATranslations };
-export type { FAQTranslations };
-export type { FeaturesTranslations };
-export type { FooterTranslations };
-export type { HeroTranslations };
-export type { HowItWorksTranslations };
-export type { MaintenanceTranslations };
-export type { NavigationTranslations };
-export type { PricingTranslations };
-export type { PlanFeaturesTranslations };
-export type { PropertyManagementTranslations };
-export type { StatusTranslations };
-export type { TenantTranslations };
-export type { ToastTranslations };
-export type { CommonTranslations };
-export type { DashboardTranslations };
-export type { SettingsTranslations };
-export type { ModalTranslations };
-export type { FinancesTranslations };
-export type { SharedTranslations };
+export type Language = "en" | "fr";
+export type UnitSystem = "metric" | "imperial";
 
-export type Language = 'en' | 'fr';
-export type UnitSystem = 'metric' | 'imperial';
+export interface Translations {
+  navigation: NavigationTranslations;
+  pricing: PricingTranslations;
+  auth: AuthTranslations;
+  hero: HeroTranslations;
+  features: FeaturesTranslations;
+  howItWorks: HowItWorksTranslations;
+  faq: FAQTranslations;
+  contact: ContactTranslations;
+  cta: CTATranslations;
+  footer: FooterTranslations;
+  common: CommonTranslations;
+  modal: ModalTranslations;
+  property: PropertyTranslations;
+  dashboard: DashboardTranslations;
+  tenant: TenantTranslations;
+  status: StatusTranslations;
+  settings: SettingsTranslations;
+  maintenance: MaintenanceTranslations;
+  admin: AdminTranslations;
+  finances: FinancesTranslations;
+  documents: DocumentsTranslations;
+}
 
-// Extend translations using a type intersection to avoid property conflicts
-export interface Translations extends 
-  Omit<AdminDashboardTranslations, keyof SharedTranslations>,
-  Omit<AuthTranslations, keyof SharedTranslations>,
-  Omit<ContactTranslations, keyof SharedTranslations>,
-  Omit<CTATranslations, keyof SharedTranslations>,
-  Omit<FAQTranslations, keyof SharedTranslations>,
-  Omit<FeaturesTranslations, keyof SharedTranslations>,
-  Omit<FooterTranslations, keyof SharedTranslations>,
-  Omit<HeroTranslations, keyof SharedTranslations>,
-  Omit<HowItWorksTranslations, keyof SharedTranslations>,
-  Omit<MaintenanceTranslations, keyof SharedTranslations>,
-  Omit<NavigationTranslations, keyof SharedTranslations>,
-  Omit<PricingTranslations, keyof SharedTranslations>,
-  Omit<PlanFeaturesTranslations, keyof SharedTranslations>,
-  Omit<PropertyManagementTranslations, keyof SharedTranslations>,
-  Omit<StatusTranslations, keyof SharedTranslations>,
-  Omit<TenantTranslations, keyof SharedTranslations>,
-  Omit<ToastTranslations, keyof SharedTranslations>,
-  Omit<CommonTranslations, keyof SharedTranslations>,
-  Omit<DashboardTranslations, keyof SharedTranslations>,
-  Omit<SettingsTranslations, keyof SharedTranslations>,
-  Omit<ModalTranslations, keyof SharedTranslations>,
-  Omit<FinancesTranslations, keyof SharedTranslations>,
-  SharedTranslations {}
+export * from "./navigation";
+export * from "./pricing";
+export * from "./auth";
+export * from "./hero";
+export * from "./features";
+export * from "./how-it-works";
+export * from "./faq";
+export * from "./contact";
+export * from "./cta";
+export * from "./footer";
+export * from "./common-translations";
+export * from "./modal";
+export * from "./property";
+export * from "./dashboard";
+export * from "./tenant";
+export * from "./status";
+export * from "./settings";
+export * from "./maintenance";
+export * from "./admin";
+export * from "./finances";
+export * from "./documents";
