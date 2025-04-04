@@ -28,10 +28,10 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   // Extraction du prénom de l'utilisateur depuis les métadonnées
   const firstName = user?.user_metadata?.first_name || "";
   
-  // Message d'accueil personnalisé
+  // Message d'accueil personnalisé avec traduction
   const welcomeMessage = firstName 
-    ? `Bienvenue, ${firstName} !` 
-    : "Bienvenue sur votre tableau de bord !";
+    ? t('welcomeTenant', { name: firstName }) 
+    : t('welcomeGeneric');
 
   // Gestion du changement de plage de dates
   const handleDateRangeChange = (newDateRange: DateRange) => {
