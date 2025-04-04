@@ -55,6 +55,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         description={t('allTimeExpenses')}
         chartColor="#F43F5E"
         trend={trends.totalExpensesTrend}
+        isPositiveMetric={false}
       />
       
       <FinancialMetricCard
@@ -73,6 +74,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         description={t('unpaidRentDescription')}
         chartColor="#F59E0B"
         trend={trends.unpaidRentTrend}
+        isPositiveMetric={false}
       />
     </div>
   );
