@@ -46,15 +46,27 @@ export function useFinancialMetricsData(propertyId: string | null) {
         throw paymentsError;
       }
       
-      // Récupérer les dépenses pour cette propriété
-      const { data: expenses, error: expensesError } = await supabase
+      // Récupérer TOUTES les dépenses pour cette propriété
+      // 1. maintenance_expenses
+      const { data: maintenanceExpenses, error: maintenanceExpensesError } = await supabase
         .from('maintenance_expenses')
         .select('amount')
         .eq('property_id', propertyId);
       
-      if (expensesError) {
-        console.error("Error fetching expenses:", expensesError);
-        throw expensesError;
+      if (maintenanceExpensesError) {
+        console.error("Error fetching maintenance expenses:", maintenanceExpensesError);
+        throw maintenanceExpensesError;
+      }
+      
+      // 2. vendor_interventions (inclus comme dépenses)
+      const { data: vendorInterventions, error: vendorInterventionsError } = await supabase
+        .from('vendor_interventions')
+        .select('cost')
+        .eq('property_id', propertyId);
+        
+      if (vendorInterventionsError) {
+        console.error("Error fetching vendor interventions:", vendorInterventionsError);
+        throw vendorInterventionsError;
       }
       
       // Récupérer les détails de la propriété pour calculer le taux d'occupation
@@ -64,9 +76,13 @@ export function useFinancialMetricsData(propertyId: string | null) {
         .eq('id', propertyId)
         .single();
       
-      // Calcul du revenu total et des dépenses
+      // Calcul du revenu total
       const totalIncome = payments?.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
-      const totalExpenses = expenses?.reduce((sum, expense) => sum + Number(expense.amount), 0) || 0;
+      
+      // Calcul des dépenses totales (maintenance + interventions)
+      const maintenanceExpensesTotal = maintenanceExpenses?.reduce((sum, expense) => sum + Number(expense.amount), 0) || 0;
+      const vendorInterventionsTotal = vendorInterventions?.reduce((sum, intervention) => sum + Number(intervention.cost || 0), 0) || 0;
+      const totalExpenses = maintenanceExpensesTotal + vendorInterventionsTotal;
       
       // Calcul du taux d'occupation (nombre d'unités avec locataires / total des unités)
       const totalUnits = property?.units || 0;
@@ -102,6 +118,8 @@ export function useFinancialMetricsData(propertyId: string | null) {
       console.log("Financial metrics calculated:", {
         totalIncome,
         totalExpenses,
+        maintenanceExpensesTotal,
+        vendorInterventionsTotal,
         occupancyRate,
         unpaidRent,
         expectedRent,
