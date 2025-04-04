@@ -114,7 +114,7 @@ export function DocumentPreview({
           variant="outline"
           onClick={handleSaveToSystem}
           disabled={isSaving}
-          className="bg-blue-50 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
+          className="bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700"
         >
           {isSaving ? (
             <>
@@ -123,7 +123,7 @@ export function DocumentPreview({
             </>
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4 text-blue-500" />
+              <Save className="mr-2 h-4 w-4 text-blue-600" />
               {t('saveDocument')}
             </>
           )}
@@ -133,9 +133,9 @@ export function DocumentPreview({
           <Button 
             variant="outline"
             onClick={onShare}
-            className="bg-purple-50 border-purple-200 hover:bg-purple-100 hover:text-purple-700"
+            className="bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700"
           >
-            <Share2 className="mr-2 h-4 w-4 text-purple-500" />
+            <Share2 className="mr-2 h-4 w-4 text-purple-600" />
             {t('shareDocument')}
           </Button>
         )}
