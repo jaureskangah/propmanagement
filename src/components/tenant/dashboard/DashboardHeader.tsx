@@ -67,17 +67,17 @@ export function DashboardHeader({
         }
       }
       
-      // Last resort, use tenant name
-      if (!firstNameToUse) {
-        firstNameToUse = tenantName;
-      }
-      
       console.log("Tenant dashboard using name:", firstNameToUse);
       setDisplayName(firstNameToUse);
     };
     
     fetchUserProfile();
   }, [firstName, tenantName, user]);
+  
+  // Determine welcome message based on availability of first name
+  const welcomeMessage = displayName
+    ? t('welcomeTenant', { name: displayName })
+    : t('welcomeGeneric');
   
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -100,7 +100,7 @@ export function DashboardHeader({
             </div>
             <div className="space-y-1.5">
               <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans dark:from-blue-400 dark:to-blue-600">
-                {displayName ? t('welcomeTenant', { name: displayName }) : t('welcomeGeneric')}
+                {welcomeMessage}
               </h1>
               <p className="text-muted-foreground text-sm font-sans dark:text-gray-400">
                 {t('manageApartmentInfo', { fallback: 'Manage your apartment information and communications' })}

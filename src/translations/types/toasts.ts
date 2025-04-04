@@ -26,4 +26,5 @@ export interface ToastTranslations {
   refreshing: string;
   filterReset: string;
   welcomeTenant: string;
+  welcomeGeneric: string;
 }

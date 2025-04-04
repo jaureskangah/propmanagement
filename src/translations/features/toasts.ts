@@ -28,6 +28,7 @@ export const enToasts: ToastTranslations = {
   refreshing: "Refreshing...",
   filterReset: "Filters reset",
   welcomeTenant: "Welcome, {name}!",
+  welcomeGeneric: "Welcome to your dashboard",
 };
 
 export const frToasts: ToastTranslations = {
@@ -57,4 +58,5 @@ export const frToasts: ToastTranslations = {
   refreshing: "Actualisation...",
   filterReset: "Filtres réinitialisés",
   welcomeTenant: "Bienvenue, {name} !",
+  welcomeGeneric: "Bienvenue sur votre tableau de bord",
 };
