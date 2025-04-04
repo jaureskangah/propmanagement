@@ -159,18 +159,18 @@ export function DocumentEditor({
           <Button
             variant="outline"
             onClick={() => setIsAIDialogOpen(true)}
-            className="gap-2 bg-purple-50 border-purple-200 hover:bg-purple-100 hover:text-purple-700"
+            className="gap-2 bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700"
           >
-            <Sparkles className="h-4 w-4 text-purple-500" />
+            <Sparkles className="h-4 w-4 text-purple-600" />
             {t('aiAssistant')}
           </Button>
           
           <Button
             variant="outline"
             onClick={() => setIsShareDialogOpen(true)}
-            className="gap-2 bg-blue-50 border-blue-200 hover:bg-blue-100 hover:text-blue-700"
+            className="gap-2 bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700"
           >
-            <Share2 className="h-4 w-4 text-blue-500" />
+            <Share2 className="h-4 w-4 text-blue-600" />
             {t('shareDocument')}
           </Button>
         </div>
