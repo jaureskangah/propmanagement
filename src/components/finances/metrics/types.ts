@@ -9,3 +9,8 @@ export interface FinancialMetricCardProps {
   chartColor?: string;
   trend?: number;
 }
+
+export interface FinancialMetricTrendProps {
+  trend?: number;
+  isPositiveMetric?: boolean;
+}

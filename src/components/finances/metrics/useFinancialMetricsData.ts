@@ -38,7 +38,7 @@ export function useFinancialMetricsData(propertyId: string | null) {
       // Récupérer le revenu total des paiements des locataires
       const { data: payments, error: paymentsError } = await supabase
         .from('tenant_payments')
-        .select('amount, status, tenant_id')
+        .select('amount, status, tenant_id, payment_date')
         .in('tenant_id', tenantIds);
       
       if (paymentsError) {
@@ -85,6 +85,7 @@ export function useFinancialMetricsData(propertyId: string | null) {
       
       // Recherche des paiements pour le mois en cours
       const currentMonthPayments = payments?.filter(payment => {
+        if (!payment.payment_date) return false;
         const paymentDate = new Date(payment.payment_date);
         return paymentDate.getMonth() === currentMonth && paymentDate.getFullYear() === currentYear;
       });
