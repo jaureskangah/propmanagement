@@ -26,7 +26,7 @@ export function FinancialMetricCard({
             <MetricIcon icon={icon} chartColor={chartColor} />
             <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
           </div>
-          <TrendIndicator trend={trend} isPositiveMetric={isPositiveMetric} />
+          {trend !== undefined && <TrendIndicator trend={trend} isPositiveMetric={isPositiveMetric} />}
         </div>
         <div className="mt-1">
           <div className="text-xl font-bold">{value}</div>

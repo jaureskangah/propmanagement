@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendIndicator } from "../TrendIndicator";
+import { TrendIndicator } from "./TrendIndicator";
 import { MetricIcon } from "./MetricIcon";
 import { FinancialMetricCardProps } from "./types";
 
@@ -26,7 +26,7 @@ export function FinancialMetricCard({
             <MetricIcon icon={icon} chartColor={chartColor} />
             <h3 className="text-sm font-medium text-muted-foreground dark:text-gray-300">{title}</h3>
           </div>
-          <TrendIndicator trend={trend} isPositiveMetric={isPositiveMetric} />
+          {trend !== undefined && <TrendIndicator trend={trend} isPositiveMetric={isPositiveMetric} />}
         </div>
         <div className="mt-1">
           <div className="text-xl font-bold dark:text-white">{value}</div>
