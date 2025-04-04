@@ -45,7 +45,17 @@ export function useActivities() {
     showMoreActivities
   } = useActivityFiltering(allActivities);
 
+  // Force update groupedActivities when filter changes
   const groupedActivities = useActivityGrouping(limitedActivities);
+  
+  // Debug the final grouped activities
+  useEffect(() => {
+    console.log("Activités groupées après filtrage:", {
+      filtre: activityTypeFilter,
+      groupes: Object.keys(groupedActivities),
+      nombreTotal: Object.values(groupedActivities).flat().length
+    });
+  }, [groupedActivities, activityTypeFilter]);
 
   const isLoading = isLoadingTenants || isLoadingPayments || isLoadingMaintenance;
 

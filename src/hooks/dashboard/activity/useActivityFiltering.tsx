@@ -16,7 +16,7 @@ export function useActivityFiltering(allActivities: Activity[]) {
   // Enhanced filtering with improved debugging
   const filteredActivities = useMemo(() => {
     console.log(`Filtrage des activités avec le type: "${activityTypeFilter}"`);
-    console.log(`Nombre total d'activités avant filtrage: ${allActivities.length}`);
+    console.log(`Nombre total d'activités disponibles: ${allActivities.length}`);
     
     if (activityTypeFilter === "all") {
       console.log("Retour de toutes les activités sans filtrage");
@@ -29,22 +29,17 @@ export function useActivityFiltering(allActivities: Activity[]) {
       return [];
     }
     
+    // Log available types for debugging
+    const availableTypes = [...new Set(allActivities.map(a => a.type))];
+    console.log("Types d'activités disponibles:", availableTypes);
+    
     // Filter activities by type
     const filtered = allActivities.filter(activity => {
       const isMatch = activity.type === activityTypeFilter;
-      console.log(`Activité id=${activity.id} de type ${activity.type} correspond au filtre ${activityTypeFilter}? ${isMatch}`);
       return isMatch;
     });
     
     console.log(`Trouvé ${filtered.length} activités de type "${activityTypeFilter}"`);
-    
-    // Display available types if no matches
-    if (filtered.length === 0 && allActivities.length > 0) {
-      console.log("Types d'activités disponibles:", 
-        [...new Set(allActivities.map(a => a.type))]
-      );
-    }
-    
     return filtered;
   }, [allActivities, activityTypeFilter]);
 
