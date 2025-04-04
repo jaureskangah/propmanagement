@@ -4,9 +4,10 @@ import { DashboardCustomization } from "./DashboardCustomization";
 import { DashboardDateFilter, DateRange } from "./DashboardDateFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useAuth } from "@/components/AuthProvider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun, LayoutDashboard } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface DashboardHeaderProps {
   title: string;
@@ -17,23 +18,36 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   const { t } = useLocale();
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
+  const [displayName, setDisplayName] = useState<string>("");
   
-  // Log user information to debug
   useEffect(() => {
+    // Log user information for debugging
     console.log("User in DashboardHeader:", user);
-    console.log("First name:", user?.user_metadata?.first_name);
+    console.log("User metadata:", user?.user_metadata);
+    
+    // Extract first name from user metadata
+    const firstName = user?.user_metadata?.first_name || "";
+    setDisplayName(firstName);
+    
+    console.log("Extracted first name:", firstName);
     console.log("Dashboard title:", title);
-  }, [user, title]);
+    
+    if (firstName) {
+      toast({
+        title: t('success'),
+        description: t('welcomeTenant', { name: firstName }),
+        duration: 3000,
+      });
+    }
+  }, [user, title, t, toast]);
   
-  // Extraction du prénom de l'utilisateur depuis les métadonnées
-  const firstName = user?.user_metadata?.first_name || "";
-  
-  // Message d'accueil personnalisé avec traduction
-  const welcomeMessage = firstName 
-    ? t('welcomeTenant', { name: firstName }) 
+  // Personalised welcome message with translation
+  const welcomeMessage = displayName
+    ? t('welcomeTenant', { name: displayName })
     : t('welcomeGeneric');
 
-  // Gestion du changement de plage de dates
+  // Handle date range change
   const handleDateRangeChange = (newDateRange: DateRange) => {
     console.log("DashboardHeader date range changed:", newDateRange);
     onDateRangeChange(newDateRange);
