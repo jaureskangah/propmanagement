@@ -63,7 +63,7 @@ export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) 
         icon={<Home className="h-5 w-5" />}
         description={t('occupancyRateDescription')}
         chartColor="#3B82F6"
-        trend={trends.occupancyRateTrend}
+        // Pas de tendance affichée pour le taux d'occupation comme demandé
       />
       
       <FinancialMetricCard
