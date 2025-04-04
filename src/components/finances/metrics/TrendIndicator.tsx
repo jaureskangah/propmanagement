@@ -8,7 +8,7 @@ interface TrendIndicatorProps {
 }
 
 export const TrendIndicator = ({ trend, isPositiveMetric = true }: TrendIndicatorProps) => {
-  // Si c'est une métrique négative (comme les dépenses), on inverse l'interprétation de la tendance
+  // Pour les métriques négatives (comme les dépenses), on inverse l'interprétation de la tendance
   const isPositiveTrend = isPositiveMetric ? trend > 0 : trend < 0;
   const absoluteTrend = Math.abs(trend);
 
