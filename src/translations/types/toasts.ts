@@ -25,4 +25,5 @@ export interface ToastTranslations {
   dashboardPreferencesUpdated: string;
   refreshing: string;
   filterReset: string;
+  welcomeTenant: string;
 }
