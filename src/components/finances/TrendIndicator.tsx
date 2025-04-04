@@ -4,7 +4,7 @@ import { ArrowDown, ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { FinancialMetricTrendProps } from "./metrics/types";
 
-export function TrendIndicator({ trend, isPositiveMetric }: FinancialMetricTrendProps) {
+export function TrendIndicator({ trend, isPositiveMetric = true }: FinancialMetricTrendProps) {
   if (trend === undefined) return null;
   
   const isTrendPositive = trend > 0;
