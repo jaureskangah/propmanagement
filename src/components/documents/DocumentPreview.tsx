@@ -33,39 +33,46 @@ export function DocumentPreview({
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const objectRef = useRef<HTMLObjectElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   // Log when the previewUrl changes
   useEffect(() => {
     console.log("DocumentPreview: previewUrl updated:", previewUrl ? previewUrl.substring(0, 30) + "..." : "null");
   }, [previewUrl]);
   
-  // Add an onLoad handler for the iframe to check its background
+  // Add an effect to enforce white background
   useEffect(() => {
-    const checkIframeBackground = () => {
-      if (iframeRef.current) {
+    if (containerRef.current) {
+      console.log("DocumentPreview: Enforcing white background on container");
+      containerRef.current.style.backgroundColor = "#ffffff";
+    }
+
+    if (previewUrl) {
+      console.log("DocumentPreview: Applying PDF styles");
+      
+      // Give time for the iframe/object to load
+      const timer = setTimeout(() => {
         try {
-          console.log("Iframe loaded, attempting to access contentDocument...");
-          // Try to access iframe content if same origin
-          const iframeDoc = iframeRef.current.contentDocument || 
-            (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
+          // Try to apply styles directly if same-origin
+          if (iframeRef.current && iframeRef.current.contentDocument) {
+            console.log("DocumentPreview: Direct access to iframe content possible");
+            const iframeDoc = iframeRef.current.contentDocument;
+            if (iframeDoc.body) {
+              iframeDoc.body.style.backgroundColor = "#ffffff";
+              console.log("DocumentPreview: Applied white background to iframe body");
+            }
+          }
           
-          if (iframeDoc) {
-            console.log("Iframe body background:", 
-              iframeDoc.body ? 
-              window.getComputedStyle(iframeDoc.body).backgroundColor : 
-              "No body element");
-          } else {
-            console.log("Cannot access iframe content document - likely due to cross-origin restrictions");
+          if (objectRef.current) {
+            objectRef.current.style.backgroundColor = "#ffffff";
+            console.log("DocumentPreview: Applied white background to object element");
           }
         } catch (e) {
-          console.log("Error accessing iframe content:", e);
+          console.log("DocumentPreview: Cannot access iframe content:", e);
         }
-      }
-    };
-    
-    // Delay check to ensure iframe has loaded
-    if (previewUrl) {
-      const timer = setTimeout(checkIframeBackground, 1000);
+      }, 500);
+      
       return () => clearTimeout(timer);
     }
   }, [previewUrl]);
@@ -143,18 +150,30 @@ export function DocumentPreview({
     );
   }
 
-  console.log("DocumentPreview: Rendering document preview");
+  console.log("DocumentPreview: Rendering document preview with URL:", previewUrl.substring(0, 30) + "...");
   return (
     <div className="space-y-4">
       <div 
-        className="border rounded-md h-[500px] overflow-hidden shadow-sm" 
-        style={{ background: "#ffffff" }}
+        ref={containerRef}
+        className="border rounded-md h-[500px] overflow-hidden shadow-sm pdf-frame-container" 
+        style={{ 
+          backgroundColor: "#ffffff",
+          position: "relative"
+        }}
       >
+        {/* Use both object and iframe for maximum compatibility */}
         <object
+          ref={objectRef}
           data={previewUrl}
           type="application/pdf"
           className="w-full h-full pdf-viewer"
-          style={{ backgroundColor: "#ffffff" }}
+          style={{ 
+            backgroundColor: "#ffffff",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: 1
+          }}
         >
           <iframe
             ref={iframeRef}
@@ -163,13 +182,27 @@ export function DocumentPreview({
             className="w-full h-full pdf-viewer"
             style={{ 
               backgroundColor: "#ffffff",
-              display: "block"
+              display: "block",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%"
             }}
             onLoad={() => {
-              console.log("Iframe onLoad event fired");
-              if (iframeRef.current) {
-                console.log("Iframe element:", iframeRef.current);
-                console.log("Iframe style:", window.getComputedStyle(iframeRef.current));
+              console.log("DocumentPreview: Iframe loaded");
+              try {
+                // Try to access iframe content if same-origin
+                if (iframeRef.current && iframeRef.current.contentDocument) {
+                  console.log("DocumentPreview: Attempting to style iframe content");
+                  const doc = iframeRef.current.contentDocument;
+                  if (doc && doc.body) {
+                    doc.body.style.backgroundColor = "#ffffff";
+                    console.log("DocumentPreview: Applied white background to iframe body");
+                  }
+                }
+              } catch (e) {
+                console.log("DocumentPreview: Error styling iframe:", e);
               }
             }}
           />

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,10 +26,21 @@ const DocumentGenerator = () => {
     setSelectedTemplateName(templateName);
   };
 
+  // Add debug logging when tab changes
+  useEffect(() => {
+    console.log("DocumentGenerator: Active tab changed to:", activeTab);
+  }, [activeTab]);
+
+  // Add debug logging when preview URL changes
+  useEffect(() => {
+    console.log("DocumentGenerator: Preview URL updated:", previewUrl ? `${previewUrl.substring(0, 30)}...` : "null");
+  }, [previewUrl]);
+
   const handleGeneratePreview = (content: string) => {
     console.log("=== DEBUG: Starting preview generation ===");
     console.log("Content length:", content.length);
     setIsGenerating(true);
+    
     // Generate preview logic would go here
     setTimeout(() => {
       // Mock generating a preview URL
@@ -40,6 +51,7 @@ const DocumentGenerator = () => {
       setIsGenerating(false);
       setActiveTab("preview");
       console.log("=== DEBUG: Preview generation completed ===");
+      console.log("=== DEBUG: Switching to preview tab ===");
     }, 1000);
   };
 
@@ -74,6 +86,7 @@ const DocumentGenerator = () => {
                       onGenerateContent={(content) => {
                         setDocumentContent(content);
                         setPreviewUrl(null);
+                        console.log("DocumentGenerator: Template content generated, length:", content.length);
                       }}
                       setIsGenerating={setIsGenerating}
                     />
@@ -91,7 +104,13 @@ const DocumentGenerator = () => {
                           <FileCheck className="h-4 w-4 mr-2" />
                           {t('editContent')}
                         </TabsTrigger>
-                        <TabsTrigger value="preview">
+                        <TabsTrigger value="preview" onClick={() => {
+                          console.log("DocumentGenerator: Preview tab clicked");
+                          if (!previewUrl && documentContent) {
+                            console.log("DocumentGenerator: No previewUrl yet, generating preview");
+                            handleGeneratePreview(documentContent);
+                          }
+                        }}>
                           <FilePlus className="h-4 w-4 mr-2" />
                           {t('preview')}
                         </TabsTrigger>

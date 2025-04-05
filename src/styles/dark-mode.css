@@ -20,6 +20,7 @@
     @apply dark:bg-gray-800/80 dark:border-gray-700;
   }
   
+  /* PDF Viewer Classes - Enhanced with !important flags */
   .pdf-viewer {
     background-color: #ffffff !important;
     display: block !important;
@@ -35,11 +36,24 @@
   /* Higher specificity rule to override dark mode */
   html.dark .pdf-viewer,
   .dark .pdf-viewer,
+  html[data-theme="dark"] .pdf-viewer,
   [data-theme="dark"] .pdf-viewer {
     background-color: #ffffff !important;
   }
   
-  .pdf-viewer-dark {
-    @apply dark:bg-gray-900;
+  /* PDF frame container override */
+  .pdf-frame-container {
+    background-color: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+  }
+  
+  /* Force iframe and object to have white background */
+  iframe.pdf-viewer,
+  object.pdf-viewer {
+    background-color: #ffffff !important;
+    border: none !important;
   }
 }

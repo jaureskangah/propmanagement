@@ -29,7 +29,10 @@ export const DocumentPreview = ({
   onDownload,
 }: DocumentPreviewProps) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const objectRef = useRef<HTMLObjectElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
+  // Log when component mounts or updates
   useEffect(() => {
     console.log("TenantDocumentPreview: Preview modal displayed:", showPreview);
     console.log("TenantDocumentPreview: Is editing mode:", isEditing);
@@ -39,19 +42,47 @@ export const DocumentPreview = ({
     }
   }, [showPreview, isEditing, generatedPdfUrl]);
 
-  // Add an onLoad handler for the iframe to check its background
+  // Apply white background styles when component mounts
   useEffect(() => {
-    if (!showPreview || isEditing || !generatedPdfUrl || !iframeRef.current) return;
+    if (containerRef.current) {
+      console.log("TenantDocumentPreview: Enforcing white background on container");
+      containerRef.current.style.backgroundColor = "#ffffff";
+    }
+  }, []);
+
+  // Add an effect to enforce white background on PDF content
+  useEffect(() => {
+    if (!showPreview || isEditing || !generatedPdfUrl) return;
+    
+    console.log("TenantDocumentPreview: Preparing to style PDF viewer");
     
     const timer = setTimeout(() => {
-      if (iframeRef.current) {
-        try {
-          console.log("TenantDocumentPreview: Iframe loaded, checking styles");
-          console.log("TenantDocumentPreview: Iframe style:", 
-            window.getComputedStyle(iframeRef.current).backgroundColor);
-        } catch (e) {
-          console.log("TenantDocumentPreview: Error accessing iframe:", e);
+      try {
+        // Try to apply styles to the iframe content if same-origin
+        if (iframeRef.current) {
+          iframeRef.current.style.backgroundColor = "#ffffff";
+          console.log("TenantDocumentPreview: Applied white background to iframe");
+          
+          try {
+            // Try to access iframe content if same-origin
+            const iframeDoc = iframeRef.current.contentDocument || 
+              (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
+            
+            if (iframeDoc && iframeDoc.body) {
+              iframeDoc.body.style.backgroundColor = "#ffffff";
+              console.log("TenantDocumentPreview: Applied white background to iframe body");
+            }
+          } catch (e) {
+            console.log("TenantDocumentPreview: Cannot access iframe content:", e);
+          }
         }
+        
+        if (objectRef.current) {
+          objectRef.current.style.backgroundColor = "#ffffff";
+          console.log("TenantDocumentPreview: Applied white background to object element");
+        }
+      } catch (e) {
+        console.log("TenantDocumentPreview: Error styling PDF elements:", e);
       }
     }, 500);
     
@@ -89,9 +120,14 @@ export const DocumentPreview = ({
               />
             </div>
           ) : (
-            <div className="flex-1 min-h-0 bg-white">
+            <div 
+              ref={containerRef}
+              className="flex-1 min-h-0 pdf-frame-container"
+              style={{ backgroundColor: "#ffffff" }}
+            >
               {generatedPdfUrl && (
                 <object
+                  ref={objectRef}
                   data={generatedPdfUrl}
                   type="application/pdf"
                   className="w-full h-full rounded-md border pdf-viewer"
@@ -105,9 +141,13 @@ export const DocumentPreview = ({
                     style={{ backgroundColor: "#ffffff" }}
                     onLoad={() => {
                       console.log("TenantDocumentPreview: Iframe onLoad event fired");
-                      if (iframeRef.current) {
-                        console.log("TenantDocumentPreview: Iframe style:", 
-                          window.getComputedStyle(iframeRef.current).backgroundColor);
+                      try {
+                        if (iframeRef.current && iframeRef.current.contentDocument) {
+                          iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff";
+                          console.log("TenantDocumentPreview: Applied white background to iframe content");
+                        }
+                      } catch (e) {
+                        console.log("TenantDocumentPreview: Cannot access iframe content:", e);
                       }
                     }}
                   />
