@@ -25,7 +25,7 @@ interface UserTemplatesProps {
 }
 
 export function UserTemplates({ onSelectTemplate }: UserTemplatesProps) {
-  const { t, currentLocale } = useLocale();
+  const { t, locale } = useLocale();
   const { fetchTemplates, deleteTemplate, isLoading } = useTemplates();
   const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -55,7 +55,7 @@ export function UserTemplates({ onSelectTemplate }: UserTemplatesProps) {
     : templates.filter(t => t.category === selectedCategory);
     
   const getLocale = () => {
-    return currentLocale === 'fr' ? fr : enUS;
+    return locale === 'fr' ? fr : enUS;
   };
   
   const formatDate = (dateString: string) => {
