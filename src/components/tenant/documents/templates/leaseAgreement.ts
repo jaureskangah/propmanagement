@@ -1,10 +1,12 @@
+
 import pdfMake from "pdfmake/build/pdfmake";
 import type { TDocumentDefinitions } from "pdfmake/build/pdfmake";
 import type { Tenant } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "./utils";
 
 // Import fonts directly from the vfs_fonts file
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { getDefaultStyles } from "./utils/pdfStyles";
 
 // Initialize pdfMake with the fonts
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
@@ -17,7 +19,7 @@ export const generateLeaseAgreement = async (tenant: Tenant) => {
       {
         text: [
           { text: 'THIS LEASE AGREEMENT', bold: true },
-          ` is made on ${formatDate(new Date().toISOString())} between the Landlord and Tenant:`,
+          ` is made on ${formatDate(new Date())} between the Landlord and Tenant:`,
         ]
       },
       { text: '\n' },
@@ -41,25 +43,13 @@ export const generateLeaseAgreement = async (tenant: Tenant) => {
       { text: 'LEASE TERMS', style: 'subheader' },
       {
         ul: [
-          `Lease Start Date: ${formatDate(tenant.lease_start)}`,
-          `Lease End Date: ${formatDate(tenant.lease_end)}`,
+          `Lease Start Date: ${formatDate(new Date(tenant.lease_start))}`,
+          `Lease End Date: ${formatDate(new Date(tenant.lease_end))}`,
           `Monthly Rent: $${tenant.rent_amount}`,
         ]
       },
     ],
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 10]
-      },
-      subheader: {
-        fontSize: 14,
-        bold: true,
-        margin: [0, 10, 0, 5]
-      }
-    }
+    styles: getDefaultStyles()
   };
 
   return new Promise<Blob>((resolve, reject) => {

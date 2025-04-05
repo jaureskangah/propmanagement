@@ -1,10 +1,12 @@
+
 import pdfMake from "pdfmake/build/pdfmake";
 import type { TDocumentDefinitions } from "pdfmake/build/pdfmake";
 import type { Tenant } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "./utils";
 
 // Import fonts directly from the vfs_fonts file
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { getDefaultStyles } from "./utils/pdfStyles";
 
 // Initialize pdfMake with the fonts
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
@@ -15,7 +17,7 @@ export const generateRentalReceipt = async (tenant: Tenant) => {
       { text: 'RENTAL RECEIPT', style: 'header' },
       { text: '\n' },
       {
-        text: `Date: ${formatDate(new Date().toISOString())}`,
+        text: `Date: ${formatDate(new Date())}`,
         alignment: 'right'
       },
       { text: '\n' },
@@ -32,7 +34,7 @@ export const generateRentalReceipt = async (tenant: Tenant) => {
       {
         ul: [
           `Amount: $${tenant.rent_amount}`,
-          `Payment Period: ${formatDate(new Date().toISOString())}`,
+          `Payment Period: ${formatDate(new Date())}`,
           'Payment Method: ______________',
         ]
       },
@@ -50,19 +52,7 @@ export const generateRentalReceipt = async (tenant: Tenant) => {
         ]
       }
     ],
-    styles: {
-      header: {
-        fontSize: 18,
-        bold: true,
-        alignment: 'center',
-        margin: [0, 0, 0, 10]
-      },
-      subheader: {
-        fontSize: 14,
-        bold: true,
-        margin: [0, 10, 0, 5]
-      }
-    }
+    styles: getDefaultStyles()
   };
 
   return new Promise<Blob>((resolve, reject) => {
