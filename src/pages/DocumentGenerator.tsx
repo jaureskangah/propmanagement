@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { FileText, FileCheck, FilePlus, Share2 } from "lucide-react";
+import { FileText, FileCheck, FilePlus } from "lucide-react";
 import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
 import { DocumentPreview } from "@/components/documents/DocumentPreview";
@@ -30,12 +29,10 @@ const DocumentGenerator = () => {
     setSelectedTemplateName(templateName);
   };
 
-  // Add debug logging when tab changes
   useEffect(() => {
     console.log("DocumentGenerator: Active tab changed to:", activeTab);
   }, [activeTab]);
 
-  // Add debug logging when preview URL changes
   useEffect(() => {
     console.log("DocumentGenerator: Preview URL updated:", previewUrl ? `${previewUrl.substring(0, 30)}...` : "null");
   }, [previewUrl]);
@@ -52,10 +49,8 @@ const DocumentGenerator = () => {
       }
       
       try {
-        // Generate PDF with actual content and enhanced formatting
         console.log("DocumentGenerator: Generating enhanced PDF with actual content");
         
-        // Extract document title from content (first line or default)
         const lines = content.split('\n');
         const title = lines.length > 0 ? lines[0].trim() : 'Document';
         
@@ -89,7 +84,6 @@ const DocumentGenerator = () => {
     }
   };
 
-  // Cleanup object URLs when component unmounts or previewUrl changes
   useEffect(() => {
     return () => {
       if (previewUrl && previewUrl.startsWith('blob:')) {
@@ -114,7 +108,6 @@ const DocumentGenerator = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* Document templates selection - Left side */}
               <div className="lg:col-span-4">
                 <Card className="h-full">
                   <CardHeader className="border-b">
@@ -139,7 +132,6 @@ const DocumentGenerator = () => {
                 </Card>
               </div>
 
-              {/* Editor and Preview - Right side */}
               <div className="lg:col-span-8">
                 <Card className="h-full">
                   <CardHeader className="border-b">
