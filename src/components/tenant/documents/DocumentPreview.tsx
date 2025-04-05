@@ -1,7 +1,7 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Edit, Check } from "lucide-react";
+import { X, Edit, Check, Download, AlertTriangle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -31,6 +31,7 @@ export const DocumentPreview = ({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const objectRef = useRef<HTMLObjectElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [loadError, setLoadError] = useState(false);
   
   // Log when component mounts or updates
   useEffect(() => {
@@ -39,6 +40,11 @@ export const DocumentPreview = ({
     console.log("TenantDocumentPreview: PDF URL available:", !!generatedPdfUrl);
     if (generatedPdfUrl) {
       console.log("TenantDocumentPreview: PDF URL starts with:", generatedPdfUrl.substring(0, 30) + "...");
+    }
+    
+    // Reset error state when dialog opens
+    if (showPreview) {
+      setLoadError(false);
     }
   }, [showPreview, isEditing, generatedPdfUrl]);
 
@@ -91,9 +97,13 @@ export const DocumentPreview = ({
 
   const handleDownload = async () => {
     console.log("TenantDocumentPreview: Starting download");
-    await onDownload();
-    setShowPreview(false);
-    console.log("TenantDocumentPreview: Download completed");
+    try {
+      await onDownload();
+      setShowPreview(false);
+      console.log("TenantDocumentPreview: Download completed");
+    } catch (error) {
+      console.error("TenantDocumentPreview: Download error:", error);
+    }
   };
 
   const handleSaveEdit = () => {
@@ -101,6 +111,11 @@ export const DocumentPreview = ({
     onSaveEdit();
     setShowPreview(false);
     console.log("TenantDocumentPreview: Edits saved");
+  };
+
+  const handleError = () => {
+    console.log("TenantDocumentPreview: Error loading PDF");
+    setLoadError(true);
   };
 
   return (
@@ -126,32 +141,53 @@ export const DocumentPreview = ({
               style={{ backgroundColor: "#ffffff" }}
             >
               {generatedPdfUrl && (
-                <object
-                  ref={objectRef}
-                  data={generatedPdfUrl}
-                  type="application/pdf"
-                  className="w-full h-full rounded-md border pdf-viewer"
-                  style={{ backgroundColor: "#ffffff" }}
-                >
-                  <iframe
-                    ref={iframeRef}
-                    src={generatedPdfUrl}
-                    className="w-full h-full rounded-md border pdf-viewer"
-                    title="PDF Preview"
-                    style={{ backgroundColor: "#ffffff" }}
-                    onLoad={() => {
-                      console.log("TenantDocumentPreview: Iframe onLoad event fired");
-                      try {
-                        if (iframeRef.current && iframeRef.current.contentDocument) {
-                          iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff";
-                          console.log("TenantDocumentPreview: Applied white background to iframe content");
-                        }
-                      } catch (e) {
-                        console.log("TenantDocumentPreview: Cannot access iframe content:", e);
-                      }
-                    }}
-                  />
-                </object>
+                <>
+                  {loadError ? (
+                    <div className="flex flex-col items-center justify-center h-full bg-gray-50 rounded-md border border-gray-200">
+                      <AlertTriangle className="h-12 w-12 text-amber-500 mb-4" />
+                      <h3 className="text-lg font-medium mb-2">Impossible d'afficher le PDF</h3>
+                      <p className="text-sm text-gray-500 text-center mb-4 max-w-md">
+                        Le document ne peut pas être affiché. Vous pouvez tout de même le télécharger.
+                      </p>
+                      <Button 
+                        onClick={handleDownload}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        <Download className="mr-2 h-4 w-4" />
+                        Télécharger le document
+                      </Button>
+                    </div>
+                  ) : (
+                    <object
+                      ref={objectRef}
+                      data={generatedPdfUrl}
+                      type="application/pdf"
+                      className="w-full h-full rounded-md border pdf-viewer"
+                      style={{ backgroundColor: "#ffffff" }}
+                      onError={handleError}
+                    >
+                      <iframe
+                        ref={iframeRef}
+                        src={generatedPdfUrl}
+                        className="w-full h-full rounded-md border pdf-viewer"
+                        title="PDF Preview"
+                        style={{ backgroundColor: "#ffffff" }}
+                        onError={handleError}
+                        onLoad={() => {
+                          console.log("TenantDocumentPreview: Iframe onLoad event fired");
+                          try {
+                            if (iframeRef.current && iframeRef.current.contentDocument) {
+                              iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff";
+                              console.log("TenantDocumentPreview: Applied white background to iframe content");
+                            }
+                          } catch (e) {
+                            console.log("TenantDocumentPreview: Cannot access iframe content:", e);
+                          }
+                        }}
+                      />
+                    </object>
+                  )}
+                </>
               )}
             </div>
           )}
@@ -172,7 +208,7 @@ export const DocumentPreview = ({
                   Edit
                 </Button>
                 <Button onClick={handleDownload}>
-                  <Check className="mr-2 h-4 w-4" />
+                  <Download className="mr-2 h-4 w-4" />
                   Save & Download
                 </Button>
               </>

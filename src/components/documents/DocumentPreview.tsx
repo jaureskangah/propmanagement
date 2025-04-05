@@ -32,6 +32,7 @@ export function DocumentPreview({
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const objectRef = useRef<HTMLObjectElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,6 +40,11 @@ export function DocumentPreview({
   // Log when the previewUrl changes
   useEffect(() => {
     console.log("DocumentPreview: previewUrl updated:", previewUrl ? previewUrl.substring(0, 30) + "..." : "null");
+    
+    // Reset error state when previewUrl changes
+    if (previewUrl) {
+      setPreviewError(null);
+    }
   }, [previewUrl]);
   
   // Add an effect to enforce white background
@@ -70,6 +76,7 @@ export function DocumentPreview({
           }
         } catch (e) {
           console.log("DocumentPreview: Cannot access iframe content:", e);
+          setPreviewError("Cannot access iframe content");
         }
       }, 500);
       
@@ -83,9 +90,7 @@ export function DocumentPreview({
     console.log("DocumentPreview: Starting download process");
     setIsDownloading(true);
     
-    // Here we would normally convert the content to a PDF
-    // For demo purposes, we'll simulate a download delay
-    setTimeout(() => {
+    try {
       console.log("DocumentPreview: Creating download link");
       // Create a link element to trigger the download
       const link = document.createElement("a");
@@ -101,7 +106,15 @@ export function DocumentPreview({
         description: t('downloadStartedDescription')
       });
       console.log("DocumentPreview: Download completed");
-    }, 1000);
+    } catch (error) {
+      console.error("DocumentPreview: Download error:", error);
+      setIsDownloading(false);
+      toast({
+        title: "Error",
+        description: "Failed to download document",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSaveToSystem = () => {
@@ -129,6 +142,21 @@ export function DocumentPreview({
         <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
         <p className="text-muted-foreground text-center">
           {t('generatingPreview')}
+        </p>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (previewError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
+        <div className="bg-red-100 p-4 rounded-full mb-4 dark:bg-red-900/30">
+          <AlertTriangle className="h-12 w-12 text-red-500" />
+        </div>
+        <h3 className="text-lg font-medium mb-2">Error Generating Preview</h3>
+        <p className="text-muted-foreground text-center max-w-md">
+          {previewError}
         </p>
       </div>
     );
