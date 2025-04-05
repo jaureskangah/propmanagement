@@ -1,152 +1,130 @@
 
-import { useState } from "react";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/components/AuthProvider";
+import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useToast } from './use-toast';
 
-export type DocumentTemplate = {
+export interface DocumentTemplate {
   id: string;
   name: string;
   content: string;
-  description?: string;
-  category: string;
+  category?: string;
   created_at: string;
-  updated_at: string;
-};
+  updated_at?: string;
+  user_id?: string;
+}
 
 export function useTemplates() {
-  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
-  
-  const fetchTemplates = async (): Promise<DocumentTemplate[]> => {
-    if (!user) return [];
-    
+  const [isLoading, setIsLoading] = useState(false);
+  const [templates, setTemplates] = useState<DocumentTemplate[]>([]);
+
+  const fetchTemplates = async () => {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from('document_templates')
         .select('*')
-        .order('name');
-        
+        .order('created_at', { ascending: false });
+
       if (error) throw error;
       
+      setTemplates(data || []);
       return data || [];
     } catch (error: any) {
       console.error('Error fetching templates:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de charger les modèles de documents",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to load templates.',
+        variant: 'destructive',
       });
       return [];
     } finally {
       setIsLoading(false);
     }
   };
-  
+
   const saveTemplate = async (template: Omit<DocumentTemplate, 'id' | 'created_at' | 'updated_at'>) => {
-    if (!user) return null;
-    
-    setIsLoading(true);
     try {
       const { data, error } = await supabase
         .from('document_templates')
-        .insert({
-          ...template,
-          user_id: user.id,
-        })
-        .select()
-        .single();
-        
+        .insert([template])
+        .select();
+
       if (error) throw error;
       
       toast({
-        title: "Succès",
-        description: "Le modèle a été sauvegardé",
+        title: 'Success',
+        description: 'Template saved successfully.',
       });
       
-      return data;
+      return data?.[0];
     } catch (error: any) {
       console.error('Error saving template:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder le modèle",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to save template.',
+        variant: 'destructive',
       });
       return null;
-    } finally {
-      setIsLoading(false);
     }
   };
-  
-  const updateTemplate = async (id: string, updates: Partial<Omit<DocumentTemplate, 'id' | 'created_at' | 'updated_at'>>) => {
-    if (!user) return false;
-    
-    setIsLoading(true);
+
+  const updateTemplate = async (id: string, updates: Partial<DocumentTemplate>) => {
     try {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('document_templates')
-        .update({
-          ...updates,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', id);
-        
+        .update(updates)
+        .eq('id', id)
+        .select();
+
       if (error) throw error;
-      
+
       toast({
-        title: "Succès",
-        description: "Le modèle a été mis à jour",
+        title: 'Success',
+        description: 'Template updated successfully.',
       });
-      
-      return true;
+
+      return data?.[0];
     } catch (error: any) {
       console.error('Error updating template:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le modèle",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to update template.',
+        variant: 'destructive',
       });
-      return false;
-    } finally {
-      setIsLoading(false);
+      return null;
     }
   };
-  
+
   const deleteTemplate = async (id: string) => {
-    if (!user) return false;
-    
-    setIsLoading(true);
     try {
       const { error } = await supabase
         .from('document_templates')
         .delete()
         .eq('id', id);
-        
+
       if (error) throw error;
-      
+
       toast({
-        title: "Succès",
-        description: "Le modèle a été supprimé",
+        title: 'Success',
+        description: 'Template deleted successfully.',
       });
-      
+
       return true;
     } catch (error: any) {
       console.error('Error deleting template:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le modèle",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Failed to delete template.',
+        variant: 'destructive',
       });
       return false;
-    } finally {
-      setIsLoading(false);
     }
   };
-  
+
   return {
     isLoading,
+    templates,
     fetchTemplates,
     saveTemplate,
     updateTemplate,
