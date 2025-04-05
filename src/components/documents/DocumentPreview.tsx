@@ -10,7 +10,8 @@ import {
   AlertTriangle, 
   Check, 
   File, 
-  Share2 
+  Share2, 
+  RefreshCw
 } from "lucide-react";
 
 interface DocumentPreviewProps {
@@ -19,6 +20,7 @@ interface DocumentPreviewProps {
   documentContent: string;
   templateName: string;
   onShare?: () => void;
+  previewError?: string | null;
 }
 
 export function DocumentPreview({
@@ -26,26 +28,27 @@ export function DocumentPreview({
   isGenerating,
   documentContent,
   templateName,
-  onShare
+  onShare,
+  previewError
 }: DocumentPreviewProps) {
   const { t } = useLocale();
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
-  const [previewError, setPreviewError] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<boolean>(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const objectRef = useRef<HTMLObjectElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   
-  // Log when the previewUrl changes
+  // Reset error states when props change
   useEffect(() => {
-    console.log("DocumentPreview: previewUrl updated:", previewUrl ? previewUrl.substring(0, 30) + "..." : "null");
-    
-    // Reset error state when previewUrl changes
     if (previewUrl) {
-      setPreviewError(null);
+      setLoadError(false);
     }
-  }, [previewUrl]);
+    
+    console.log("DocumentPreview: previewUrl updated:", previewUrl ? previewUrl.substring(0, 30) + "..." : "null");
+    console.log("DocumentPreview: previewError:", previewError);
+  }, [previewUrl, previewError]);
   
   // Add an effect to enforce white background
   useEffect(() => {
@@ -54,35 +57,41 @@ export function DocumentPreview({
       containerRef.current.style.backgroundColor = "#ffffff";
     }
 
-    if (previewUrl) {
+    if (!isGenerating && !previewError && previewUrl) {
       console.log("DocumentPreview: Applying PDF styles");
       
       // Give time for the iframe/object to load
       const timer = setTimeout(() => {
         try {
-          // Try to apply styles directly if same-origin
-          if (iframeRef.current && iframeRef.current.contentDocument) {
-            console.log("DocumentPreview: Direct access to iframe content possible");
-            const iframeDoc = iframeRef.current.contentDocument;
-            if (iframeDoc.body) {
-              iframeDoc.body.style.backgroundColor = "#ffffff";
-              console.log("DocumentPreview: Applied white background to iframe body");
-            }
-          }
-          
           if (objectRef.current) {
-            objectRef.current.style.backgroundColor = "#ffffff";
+            objectRef.current.style.backgroundColor = "#ffffff !important";
             console.log("DocumentPreview: Applied white background to object element");
           }
+          
+          // Try to apply styles directly if same-origin
+          if (iframeRef.current) {
+            iframeRef.current.style.backgroundColor = "#ffffff !important";
+            console.log("DocumentPreview: Applied background to iframe");
+            try {
+              const iframeDoc = iframeRef.current.contentDocument || 
+                (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
+                
+              if (iframeDoc && iframeDoc.body) {
+                iframeDoc.body.style.backgroundColor = "#ffffff !important";
+                console.log("DocumentPreview: Applied white background to iframe body");
+              }
+            } catch (e) {
+              console.log("DocumentPreview: Cannot access iframe content:", e);
+            }
+          }
         } catch (e) {
-          console.log("DocumentPreview: Cannot access iframe content:", e);
-          setPreviewError("Cannot access iframe content");
+          console.log("DocumentPreview: Error styling PDF elements:", e);
         }
       }, 500);
       
       return () => clearTimeout(timer);
     }
-  }, [previewUrl]);
+  }, [previewUrl, isGenerating, previewError]);
 
   const handleDownload = () => {
     if (!previewUrl) return;
@@ -110,8 +119,8 @@ export function DocumentPreview({
       console.error("DocumentPreview: Download error:", error);
       setIsDownloading(false);
       toast({
-        title: "Error",
-        description: "Failed to download document",
+        title: "Erreur",
+        description: "Échec du téléchargement du document",
         variant: "destructive",
       });
     }
@@ -134,6 +143,17 @@ export function DocumentPreview({
     }, 1500);
   };
 
+  const handleRetryLoad = () => {
+    setLoadError(false);
+    if (previewUrl) {
+      console.log("DocumentPreview: Retrying load of preview");
+      // Force reload by clearing and resetting URL with a small delay
+      const currentUrl = previewUrl;
+      setPreviewUrl(null);
+      setTimeout(() => setPreviewUrl(currentUrl), 100);
+    }
+  };
+
   // Show loading state
   if (isGenerating) {
     console.log("DocumentPreview: Showing loading state");
@@ -147,17 +167,53 @@ export function DocumentPreview({
     );
   }
 
-  // Show error state
+  // Show error state from parent component
   if (previewError) {
     return (
       <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
         <div className="bg-red-100 p-4 rounded-full mb-4 dark:bg-red-900/30">
           <AlertTriangle className="h-12 w-12 text-red-500" />
         </div>
-        <h3 className="text-lg font-medium mb-2">Error Generating Preview</h3>
-        <p className="text-muted-foreground text-center max-w-md">
+        <h3 className="text-lg font-medium mb-2">Erreur de génération</h3>
+        <p className="text-muted-foreground text-center max-w-md mb-6">
           {previewError}
         </p>
+        <Button 
+          onClick={handleRetryLoad}
+          variant="outline"
+          className="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          <RefreshCw className="mr-2 h-4 w-4" /> Réessayer
+        </Button>
+      </div>
+    );
+  }
+
+  // Show load error state
+  if (loadError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
+        <div className="bg-amber-100 p-4 rounded-full mb-4 dark:bg-amber-900/30">
+          <AlertTriangle className="h-12 w-12 text-amber-500" />
+        </div>
+        <h3 className="text-lg font-medium mb-2">Impossible d'afficher le PDF</h3>
+        <p className="text-muted-foreground text-center max-w-md mb-6">
+          Le document ne peut pas être affiché. Vous pouvez réessayer ou télécharger directement le document.
+        </p>
+        <div className="flex space-x-3">
+          <Button 
+            onClick={handleRetryLoad}
+            variant="outline"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" /> Réessayer
+          </Button>
+          <Button 
+            onClick={handleDownload}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
+            <Download className="mr-2 h-4 w-4" /> Télécharger
+          </Button>
+        </div>
       </div>
     );
   }
@@ -185,7 +241,7 @@ export function DocumentPreview({
         ref={containerRef}
         className="border rounded-md h-[500px] overflow-hidden shadow-sm pdf-frame-container" 
         style={{ 
-          backgroundColor: "#ffffff",
+          backgroundColor: "#ffffff !important",
           position: "relative"
         }}
       >
@@ -196,11 +252,15 @@ export function DocumentPreview({
           type="application/pdf"
           className="w-full h-full pdf-viewer"
           style={{ 
-            backgroundColor: "#ffffff",
+            backgroundColor: "#ffffff !important",
             position: "absolute",
             top: 0,
             left: 0,
             zIndex: 1
+          }}
+          onError={() => {
+            console.log("DocumentPreview: Object error event fired");
+            setLoadError(true);
           }}
         >
           <iframe
@@ -209,13 +269,17 @@ export function DocumentPreview({
             title="Document Preview"
             className="w-full h-full pdf-viewer"
             style={{ 
-              backgroundColor: "#ffffff",
+              backgroundColor: "#ffffff !important",
               display: "block",
               position: "absolute",
               top: 0,
               left: 0,
               width: "100%",
               height: "100%"
+            }}
+            onError={() => {
+              console.log("DocumentPreview: Iframe error event fired");
+              setLoadError(true);
             }}
             onLoad={() => {
               console.log("DocumentPreview: Iframe loaded");
@@ -225,7 +289,7 @@ export function DocumentPreview({
                   console.log("DocumentPreview: Attempting to style iframe content");
                   const doc = iframeRef.current.contentDocument;
                   if (doc && doc.body) {
-                    doc.body.style.backgroundColor = "#ffffff";
+                    doc.body.style.backgroundColor = "#ffffff !important";
                     console.log("DocumentPreview: Applied white background to iframe body");
                   }
                 }

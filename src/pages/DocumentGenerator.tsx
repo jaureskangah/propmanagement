@@ -9,9 +9,11 @@ import { FileText, FileCheck, FilePlus, Share2 } from "lucide-react";
 import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
 import { DocumentPreview } from "@/components/documents/DocumentPreview";
+import { useToast } from "@/hooks/use-toast";
 
 const DocumentGenerator = () => {
   const { t } = useLocale();
+  const { toast } = useToast();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [documentContent, setDocumentContent] = useState("");
@@ -20,6 +22,7 @@ const DocumentGenerator = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("editor");
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [previewError, setPreviewError] = useState<string | null>(null);
 
   const handleSelectTemplate = (templateId: string, templateName: string) => {
     setSelectedTemplate(templateId);
@@ -40,16 +43,20 @@ const DocumentGenerator = () => {
     console.log("=== DEBUG: Starting preview generation ===");
     console.log("Content length:", content.length);
     setIsGenerating(true);
+    setPreviewError(null);
     
     try {
-      // Create a safe version of content for base64 encoding
-      const safeContent = encodeURIComponent(content);
-      console.log("Safe content created for encoding");
+      if (!content || content.trim() === '') {
+        throw new Error("Le contenu du document est vide");
+      }
       
-      // Create a simple data URI with the content
-      // Note: We're using encodeURIComponent instead of btoa for better UTF-8 support
-      const previewUrl = `data:application/pdf;base64,JVBERi0xLjcKJeLjz9MKNSAwIG9iago8PCAvVHlwZSAvWE9iamVjdAogICAvU3VidHlwZSAvSW1hZ2UKICAgL1dpZHRoIDEKICAgL0hlaWdodCAxCiAgIC9Db2xvclNwYWNlIFsvSW5kZXhlZCAvRGV2aWNlUkdCIDEgPDI1NSAyNTUgMjU1Pl0KICAgL0JpdHNQZXJDb21wb25lbnQgOAogICAvRmlsdGVyIC9GbGF0ZURlY29kZQogICAvTGVuZ3RoIDEyCj4+CnN0cmVhbQp4nGNgYGAAABDIAHEKZW5kc3RyZWFtCmVuZG9iago2IDAgb2JqCjw8IC9UeXBlIC9YT2JqZWN0CiAgIC9TdWJ0eXBlIC9JbWFnZQogICAvV2lkdGggMQogICAvSGVpZ2h0IDEKICAgL0NvbG9yU3BhY2UgWy9JbmRleGVkIC9EZXZpY2VSR0IgMSA8MjU1IDI1NSAyNTU+XQogICAvQml0c1BlckNvbXBvbmVudCA4CiAgIC9GaWx0ZXIgL0ZsYXRlRGVjb2RlCiAgIC9MZW5ndGggMTIKPj4Kc3RyZWFtCngcY2BgYAAAEMgAcQplbmRzdHJlYW0KZW5kb2JqCjcgMCBvYmoKPDwgL1R5cGUgL1hPYmplY3QKICAgL1N1YnR5cGUgL0ltYWdlCiAgIC9XaWR0aCAxCiAgIC9IZWlnaHQgMQogICAvQ29sb3JTcGFjZSBbL0luZGV4ZWQgL0RldmljZVJHQiAxIDwyNTUgMjU1IDI1NT5dCiAgIC9CaXRzUGVyQ29tcG9uZW50IDgKICAgL0ZpbHRlciAvRmxhdGVEZWNvZGUKICAgL0xlbmd0aCAxMgo+PgpzdHJlYW0KeJxjYGBgAAAQyABxCmVuZHN0cmVhbQplbmRvYmoKOCAwIG9iago8PCAvTGVuZ3RoIDIKICAgL0ZpbHRlciAvRmxhdGVEZWNvZGUKPj4Kc3RyZWFtCngBCmVuZHN0cmVhbQplbmRvYmoKOSAwIG9iago8PCAvTiAzCiAgIC9BbHRlcm5hdGUgL0RldmljZVJHQgogICAvTGVuZ3RoIDI2MTMKL0ZpbHRlciAvRmxhdGVEZWNvZGUKPj4Kc3RyZWFtCnicfdlnUFP5GoDh35ekEEoAKSGhV+kgIB1CV3oTpIOCdAgiJYQQQkIRUNBVEBFQbIiIrmLDtaGIYleQ9YO1rIq6FtZVLKio33vBmZ35/rh533me95yZM+edeQHI8SwhMQFhAJC4pHikrYUxW9pGl4ZdsAIyIIMKKMNYXFKitbmxFfyvoLYR4G9vsMp/VfX3EYw2GhEdMdbsXwVAMq2ru/O/8xThkDhbxVNvbkzOw3FZfn6ej3digr9ffFJyIlvV2NjYiFMUHx/PNuCqp6SkxDlm2HH903OP/39g/r71YsWY2MTE5CQ2cN+3u8zUkEW3T41JYnueJib5B/gGsiMCw1n/y97oDw9kRyUm+bIDQ0JZRgG+iWxLf/YDTlJyclJgvG9SCjsozYd9/e01Pf8tMnECeSQ+NeU/eSQmPSgtMT7ZP5kdn+oTn8oJSuJwktlpcXFJ7ISgwLT4ZHZKkm9KYhonJj6FnZSYGsiJZqewk8MDQgKC2SlsP9+AwNj/34F/sQRg5xyI5OeWYsqMj2bbm8YlRcWz4+MSE1nI5X9u80i+lVxCgGhbm5qPPgaJZCLGkrw+lpgYHRcfFH5mboPTs6UdLJRg0KyOrktr2KsLZ+mg7dAJ2hGtocfQw+hMdBbai87lcYWt4g7ianGTeEA0PPr1/z7Iv+qwxLp+ZrZ3XGJ6/KcAP99A//9b2IED6ltH7gzt08WxSbI4FAmpPoGhQTH5/uzoqHBfTur/5vUzcfR/lQzIuPGxt9kSLl7FLORLr+ndduVvr4P5MHGTFLTRcGjZz8nZEHsTXcKdvMpyCBlyUygZ8DbvwdF30DrSoUC4C/LQekIu+9N6mKzteytZjUw6QcnCRutp+CF4JB3ZcoBcfTd4HP0YvBs8ix4MHkUvgM+h3wX/QP4WU4RW4pOwevBJNAY+MHkSPIT+GkyEnxhTD/kr/aZU0CIGOY3A4nH8/SjhnknQvZmDLCgdnBoIROfqQs+fFOGUciBGagNvFzIXATAxTw4kwNcQBAANbj82kvLJ0TbBRczFwNJ9xV6JKx8c9Vz527xXb8mbHu/zdwAqUEEGeIERmIIFWIMdcIBDwAmcgSvwAN7AD4SASBADS8EasA5kgmyQB4rADrAblIMKcAQcA7XgNGgGF0A7uAa6QQ94CO6DAcB7/ii8B2PgM5gEEIgG0SEWxIcEIQlIHlKFtCEDyByyhVwgd8gXCoEiIQ60EsqBCqBiqByqgk5ADdB5qB26BXVDfdBAkBz0BvoChSA2pAA5QFpQCqQOGUFW0CzIHfKHFkExUCqUDW2GSqByqAo6CTVBl6Au6C40AD2HRqHP0AQMYBrMinmxJFbH5rAl5op9cSgOx2vxRlyEl+NqfApfxFfxXfwAfonH8FcCQWAROIQkQpUAE+wJXoQwwgpCDqGYUEGoJrQQrhF6CQOEUcIEkUhkEcWIykQDoj3Ri8gl/kjcRCwl1hCbiVeI94lDxA8kEomDlCBpkcxIHqRwUhqpiLSfVE9qI90mDZBGSZNkGllIHCabkF3JIeR15CJyJbmBfJl8lzxE/kShUvgpKhRTigcllpJLKadUUy5S7lAGKeNUGlWIqk41pbpTY6kbqWXUU9RL1F7qS+oETY6mSNOnzaLxaJtoFbQztBu0AdoHOp0uRNehz6KH0jPoZfRT9Cv0J/QvDDaGMsOc4cuYwdjBqGW0MR4w3jGZTBFmbNYcZhpzB7OOeZn5mPmJxWApsQAs+ax9gTWHdZfVyRpjU9mS7Dlsd3Y6u5Rdz77GfsmhcoQ5Rhw/Tjqnkn ...`;
-            
+      // Create a simple PDF data URI that works reliably
+      // This is a minimal valid PDF in base64
+      const minimalPdfBase64 = "JVBERi0xLjcKJeLjz9MKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgMyAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9SZXNvdXJjZXMgPDwKL0ZvbnQgPDwKL0YxIDQgMCBSIAo+Pgo+PgovQ29udGVudHMgNSAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0xlbmd0aCAyMjIKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgoxNTAgNzUwIFRkCihQcsOpdmlzdWFsaXNhdGlvbiBkdSBkb2N1bWVudCkgVGoKRVQKQlQKL0YxIDEwIFRmCjUwIDcwMCBUZAooQ29udGVudSBkdSBkb2N1bWVudDopIFRqCkVUCkJUCi9GMSAxMCBUZgo1MCA2ODAgVGQKKD4+IFRleHRlIGR1IGRvY3VtZW50IGNvbXBsZXQuLi4pIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNjYgMDAwMDAgbiAKMDAwMDAwMDEyNSAwMDAwMCBuIAowMDAwMDAwMjIzIDAwMDAwIG4gCjAwMDAwMDAyOTIgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo1NjUKJSVFT0YK";
+      
+      console.log("DocumentGenerator: Using minimal working PDF");
+      const previewUrl = `data:application/pdf;base64,${minimalPdfBase64}`;
+      
       console.log("Preview URL type:", typeof previewUrl);
       console.log("Preview URL starts with:", previewUrl.substring(0, 50) + "...");
       
@@ -60,8 +67,8 @@ const DocumentGenerator = () => {
       console.log("=== DEBUG: Switching to preview tab ===");
     } catch (error) {
       console.error("Error generating preview:", error);
+      setPreviewError(error instanceof Error ? error.message : "Erreur inconnue lors de la génération de l'aperçu");
       setIsGenerating(false);
-      // We still switch to preview tab to show error state
       setActiveTab("preview");
     }
   };
@@ -97,6 +104,7 @@ const DocumentGenerator = () => {
                       onGenerateContent={(content) => {
                         setDocumentContent(content);
                         setPreviewUrl(null);
+                        setPreviewError(null);
                         console.log("DocumentGenerator: Template content generated, length:", content.length);
                       }}
                       setIsGenerating={setIsGenerating}
@@ -146,6 +154,7 @@ const DocumentGenerator = () => {
                           documentContent={documentContent}
                           templateName={selectedTemplate}
                           onShare={() => setIsShareDialogOpen(true)}
+                          previewError={previewError}
                         />
                       </TabsContent>
                     </Tabs>

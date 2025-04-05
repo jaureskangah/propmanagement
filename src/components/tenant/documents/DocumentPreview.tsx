@@ -1,7 +1,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Edit, Check, Download, AlertTriangle } from "lucide-react";
+import { X, Edit, Check, Download, AlertTriangle, RefreshCw } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -52,7 +52,7 @@ export const DocumentPreview = ({
   useEffect(() => {
     if (containerRef.current) {
       console.log("TenantDocumentPreview: Enforcing white background on container");
-      containerRef.current.style.backgroundColor = "#ffffff";
+      containerRef.current.style.backgroundColor = "#ffffff !important";
     }
   }, []);
 
@@ -66,7 +66,7 @@ export const DocumentPreview = ({
       try {
         // Try to apply styles to the iframe content if same-origin
         if (iframeRef.current) {
-          iframeRef.current.style.backgroundColor = "#ffffff";
+          iframeRef.current.style.backgroundColor = "#ffffff !important";
           console.log("TenantDocumentPreview: Applied white background to iframe");
           
           try {
@@ -75,7 +75,7 @@ export const DocumentPreview = ({
               (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
             
             if (iframeDoc && iframeDoc.body) {
-              iframeDoc.body.style.backgroundColor = "#ffffff";
+              iframeDoc.body.style.backgroundColor = "#ffffff !important";
               console.log("TenantDocumentPreview: Applied white background to iframe body");
             }
           } catch (e) {
@@ -84,7 +84,7 @@ export const DocumentPreview = ({
         }
         
         if (objectRef.current) {
-          objectRef.current.style.backgroundColor = "#ffffff";
+          objectRef.current.style.backgroundColor = "#ffffff !important";
           console.log("TenantDocumentPreview: Applied white background to object element");
         }
       } catch (e) {
@@ -113,9 +113,9 @@ export const DocumentPreview = ({
     console.log("TenantDocumentPreview: Edits saved");
   };
 
-  const handleError = () => {
-    console.log("TenantDocumentPreview: Error loading PDF");
-    setLoadError(true);
+  const handleRetryLoad = () => {
+    console.log("TenantDocumentPreview: Retrying load");
+    setLoadError(false);
   };
 
   return (
@@ -138,7 +138,7 @@ export const DocumentPreview = ({
             <div 
               ref={containerRef}
               className="flex-1 min-h-0 pdf-frame-container"
-              style={{ backgroundColor: "#ffffff" }}
+              style={{ backgroundColor: "#ffffff !important" }}
             >
               {generatedPdfUrl && (
                 <>
@@ -147,15 +147,24 @@ export const DocumentPreview = ({
                       <AlertTriangle className="h-12 w-12 text-amber-500 mb-4" />
                       <h3 className="text-lg font-medium mb-2">Impossible d'afficher le PDF</h3>
                       <p className="text-sm text-gray-500 text-center mb-4 max-w-md">
-                        Le document ne peut pas être affiché. Vous pouvez tout de même le télécharger.
+                        Le document ne peut pas être affiché. Vous pouvez réessayer ou le télécharger directement.
                       </p>
-                      <Button 
-                        onClick={handleDownload}
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                      >
-                        <Download className="mr-2 h-4 w-4" />
-                        Télécharger le document
-                      </Button>
+                      <div className="flex gap-3">
+                        <Button 
+                          onClick={handleRetryLoad}
+                          variant="outline"
+                        >
+                          <RefreshCw className="mr-2 h-4 w-4" />
+                          Réessayer
+                        </Button>
+                        <Button 
+                          onClick={handleDownload}
+                          className="bg-blue-600 hover:bg-blue-700 text-white"
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          Télécharger le document
+                        </Button>
+                      </div>
                     </div>
                   ) : (
                     <object
@@ -163,21 +172,27 @@ export const DocumentPreview = ({
                       data={generatedPdfUrl}
                       type="application/pdf"
                       className="w-full h-full rounded-md border pdf-viewer"
-                      style={{ backgroundColor: "#ffffff" }}
-                      onError={handleError}
+                      style={{ backgroundColor: "#ffffff !important" }}
+                      onError={() => {
+                        console.log("TenantDocumentPreview: Object error event fired");
+                        setLoadError(true);
+                      }}
                     >
                       <iframe
                         ref={iframeRef}
                         src={generatedPdfUrl}
                         className="w-full h-full rounded-md border pdf-viewer"
                         title="PDF Preview"
-                        style={{ backgroundColor: "#ffffff" }}
-                        onError={handleError}
+                        style={{ backgroundColor: "#ffffff !important" }}
+                        onError={() => {
+                          console.log("TenantDocumentPreview: Iframe error event fired");
+                          setLoadError(true);
+                        }}
                         onLoad={() => {
                           console.log("TenantDocumentPreview: Iframe onLoad event fired");
                           try {
                             if (iframeRef.current && iframeRef.current.contentDocument) {
-                              iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff";
+                              iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff !important";
                               console.log("TenantDocumentPreview: Applied white background to iframe content");
                             }
                           } catch (e) {
