@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { X, Edit, Check } from "lucide-react";
@@ -49,7 +50,7 @@ export const DocumentPreview = ({
               <Textarea
                 value={editedContent}
                 onChange={(e) => onEditContent(e.target.value)}
-                className="h-full"
+                className="h-full bg-white dark:bg-gray-800"
               />
             </div>
           ) : (
@@ -59,6 +60,7 @@ export const DocumentPreview = ({
                   src={generatedPdfUrl}
                   className="w-full h-full rounded-md border"
                   title="PDF Preview"
+                  style={{ backgroundColor: "white" }}
                 />
               )}
             </div>

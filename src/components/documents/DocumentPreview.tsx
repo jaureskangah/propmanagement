@@ -75,7 +75,7 @@ export function DocumentPreview({
   // Show loading state
   if (isGenerating) {
     return (
-      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-white dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
         <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
         <p className="text-muted-foreground text-center">
           {t('generatingPreview')}
@@ -87,7 +87,7 @@ export function DocumentPreview({
   // Show empty state when no preview is available
   if (!previewUrl) {
     return (
-      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-white dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
         <div className="bg-muted/30 p-4 rounded-full mb-4">
           <File className="h-12 w-12 text-muted-foreground" />
         </div>
@@ -101,7 +101,7 @@ export function DocumentPreview({
 
   return (
     <div className="space-y-4">
-      <div className="border rounded-md h-[500px] overflow-auto bg-white dark:bg-gray-900 shadow-sm">
+      <div className="border rounded-md h-[500px] overflow-auto shadow-sm bg-white">
         <iframe
           src={previewUrl}
           title="Document Preview"
