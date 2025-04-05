@@ -10,6 +10,7 @@ import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplat
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
 import { DocumentPreview } from "@/components/documents/DocumentPreview";
 import { useToast } from "@/hooks/use-toast";
+import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 
 const DocumentGenerator = () => {
   const { t } = useLocale();
@@ -39,8 +40,8 @@ const DocumentGenerator = () => {
     console.log("DocumentGenerator: Preview URL updated:", previewUrl ? `${previewUrl.substring(0, 30)}...` : "null");
   }, [previewUrl]);
 
-  const handleGeneratePreview = (content: string) => {
-    console.log("=== DEBUG: Starting preview generation ===");
+  const handleGeneratePreview = async (content: string) => {
+    console.log("=== DEBUG: Starting preview generation with actual content ===");
     console.log("Content length:", content.length);
     setIsGenerating(true);
     setPreviewError(null);
@@ -50,21 +51,25 @@ const DocumentGenerator = () => {
         throw new Error("Le contenu du document est vide");
       }
       
-      // Create a simple PDF data URI that works reliably
-      // This is a minimal valid PDF in base64
-      const minimalPdfBase64 = "JVBERi0xLjcKJeLjz9MKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFsgMyAwIFIgXQovQ291bnQgMQo+PgplbmRvYmoKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9SZXNvdXJjZXMgPDwKL0ZvbnQgPDwKL0YxIDQgMCBSIAo+Pgo+PgovQ29udGVudHMgNSAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9CYXNlRm9udCAvVGltZXMtUm9tYW4KPj4KZW5kb2JqCjUgMCBvYmoKPDwKL0xlbmd0aCAyMjIKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgoxNTAgNzUwIFRkCihQcsOpdmlzdWFsaXNhdGlvbiBkdSBkb2N1bWVudCkgVGoKRVQKQlQKL0YxIDEwIFRmCjUwIDcwMCBUZAooQ29udGVudSBkdSBkb2N1bWVudDopIFRqCkVUCkJUCi9GMSAxMCBUZgo1MCA2ODAgVGQKKD4+IFRleHRlIGR1IGRvY3VtZW50IGNvbXBsZXQuLi4pIFRqCkVUCmVuZHN0cmVhbQplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNjYgMDAwMDAgbiAKMDAwMDAwMDEyNSAwMDAwMCBuIAowMDAwMDAwMjIzIDAwMDAwIG4gCjAwMDAwMDAyOTIgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo1NjUKJSVFT0YK";
-      
-      console.log("DocumentGenerator: Using minimal working PDF");
-      const previewUrl = `data:application/pdf;base64,${minimalPdfBase64}`;
-      
-      console.log("Preview URL type:", typeof previewUrl);
-      console.log("Preview URL starts with:", previewUrl.substring(0, 50) + "...");
-      
-      setPreviewUrl(previewUrl);
-      setIsGenerating(false);
-      setActiveTab("preview");
-      console.log("=== DEBUG: Preview generation completed ===");
-      console.log("=== DEBUG: Switching to preview tab ===");
+      try {
+        // Generate PDF with actual content
+        console.log("DocumentGenerator: Generating PDF with actual content");
+        const pdfBuffer = await generateCustomPdf(content);
+        const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
+        const previewUrl = URL.createObjectURL(pdfBlob);
+        
+        console.log("Preview URL type:", typeof previewUrl);
+        console.log("Preview URL starts with:", previewUrl.substring(0, 50) + "...");
+        
+        setPreviewUrl(previewUrl);
+        setIsGenerating(false);
+        setActiveTab("preview");
+        console.log("=== DEBUG: Preview generation completed with actual content ===");
+        console.log("=== DEBUG: Switching to preview tab ===");
+      } catch (pdfError) {
+        console.error("Error generating PDF from content:", pdfError);
+        throw new Error("Erreur lors de la génération du PDF");
+      }
     } catch (error) {
       console.error("Error generating preview:", error);
       setPreviewError(error instanceof Error ? error.message : "Erreur inconnue lors de la génération de l'aperçu");
@@ -72,6 +77,16 @@ const DocumentGenerator = () => {
       setActiveTab("preview");
     }
   };
+
+  // Cleanup object URLs when component unmounts or previewUrl changes
+  useEffect(() => {
+    return () => {
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
+        console.log("DocumentGenerator: Cleaned up preview URL");
+      }
+    };
+  }, [previewUrl]);
 
   return (
     <div className="flex h-screen bg-background">
