@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { X, Edit, Check } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,14 +28,48 @@ export const DocumentPreview = ({
   onSaveEdit,
   onDownload,
 }: DocumentPreviewProps) => {
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  
+  useEffect(() => {
+    console.log("TenantDocumentPreview: Preview modal displayed:", showPreview);
+    console.log("TenantDocumentPreview: Is editing mode:", isEditing);
+    console.log("TenantDocumentPreview: PDF URL available:", !!generatedPdfUrl);
+    if (generatedPdfUrl) {
+      console.log("TenantDocumentPreview: PDF URL starts with:", generatedPdfUrl.substring(0, 30) + "...");
+    }
+  }, [showPreview, isEditing, generatedPdfUrl]);
+
+  // Add an onLoad handler for the iframe to check its background
+  useEffect(() => {
+    if (!showPreview || isEditing || !generatedPdfUrl || !iframeRef.current) return;
+    
+    const timer = setTimeout(() => {
+      if (iframeRef.current) {
+        try {
+          console.log("TenantDocumentPreview: Iframe loaded, checking styles");
+          console.log("TenantDocumentPreview: Iframe style:", 
+            window.getComputedStyle(iframeRef.current).backgroundColor);
+        } catch (e) {
+          console.log("TenantDocumentPreview: Error accessing iframe:", e);
+        }
+      }
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [showPreview, isEditing, generatedPdfUrl]);
+
   const handleDownload = async () => {
+    console.log("TenantDocumentPreview: Starting download");
     await onDownload();
     setShowPreview(false);
+    console.log("TenantDocumentPreview: Download completed");
   };
 
   const handleSaveEdit = () => {
+    console.log("TenantDocumentPreview: Saving edits");
     onSaveEdit();
     setShowPreview(false);
+    console.log("TenantDocumentPreview: Edits saved");
   };
 
   return (
@@ -60,14 +94,22 @@ export const DocumentPreview = ({
                 <object
                   data={generatedPdfUrl}
                   type="application/pdf"
-                  className="w-full h-full rounded-md border"
+                  className="w-full h-full rounded-md border pdf-viewer"
                   style={{ backgroundColor: "#ffffff" }}
                 >
                   <iframe
+                    ref={iframeRef}
                     src={generatedPdfUrl}
-                    className="w-full h-full rounded-md border"
+                    className="w-full h-full rounded-md border pdf-viewer"
                     title="PDF Preview"
                     style={{ backgroundColor: "#ffffff" }}
+                    onLoad={() => {
+                      console.log("TenantDocumentPreview: Iframe onLoad event fired");
+                      if (iframeRef.current) {
+                        console.log("TenantDocumentPreview: Iframe style:", 
+                          window.getComputedStyle(iframeRef.current).backgroundColor);
+                      }
+                    }}
                   />
                 </object>
               )}

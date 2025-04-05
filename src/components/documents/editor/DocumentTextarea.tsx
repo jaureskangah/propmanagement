@@ -1,5 +1,5 @@
 
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -11,6 +11,10 @@ interface DocumentTextareaProps {
 export const DocumentTextarea = forwardRef<HTMLTextAreaElement, DocumentTextareaProps>(
   ({ content, onChange }, ref) => {
     const { t } = useLocale();
+    
+    useEffect(() => {
+      console.log("DocumentTextarea: Rendered with content length:", content.length);
+    }, [content]);
 
     return (
       <Textarea

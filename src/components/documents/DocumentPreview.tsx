@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -32,15 +32,54 @@ export function DocumentPreview({
   const { toast } = useToast();
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  
+  // Log when the previewUrl changes
+  useEffect(() => {
+    console.log("DocumentPreview: previewUrl updated:", previewUrl ? previewUrl.substring(0, 30) + "..." : "null");
+  }, [previewUrl]);
+  
+  // Add an onLoad handler for the iframe to check its background
+  useEffect(() => {
+    const checkIframeBackground = () => {
+      if (iframeRef.current) {
+        try {
+          console.log("Iframe loaded, attempting to access contentDocument...");
+          // Try to access iframe content if same origin
+          const iframeDoc = iframeRef.current.contentDocument || 
+            (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
+          
+          if (iframeDoc) {
+            console.log("Iframe body background:", 
+              iframeDoc.body ? 
+              window.getComputedStyle(iframeDoc.body).backgroundColor : 
+              "No body element");
+          } else {
+            console.log("Cannot access iframe content document - likely due to cross-origin restrictions");
+          }
+        } catch (e) {
+          console.log("Error accessing iframe content:", e);
+        }
+      }
+    };
+    
+    // Delay check to ensure iframe has loaded
+    if (previewUrl) {
+      const timer = setTimeout(checkIframeBackground, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [previewUrl]);
 
   const handleDownload = () => {
     if (!previewUrl) return;
     
+    console.log("DocumentPreview: Starting download process");
     setIsDownloading(true);
     
     // Here we would normally convert the content to a PDF
     // For demo purposes, we'll simulate a download delay
     setTimeout(() => {
+      console.log("DocumentPreview: Creating download link");
       // Create a link element to trigger the download
       const link = document.createElement("a");
       link.href = previewUrl;
@@ -54,12 +93,14 @@ export function DocumentPreview({
         title: t('downloadStarted'),
         description: t('downloadStartedDescription')
       });
+      console.log("DocumentPreview: Download completed");
     }, 1000);
   };
 
   const handleSaveToSystem = () => {
     if (!documentContent) return;
     
+    console.log("DocumentPreview: Starting save process");
     setIsSaving(true);
     
     // Simulate saving to system with a delay
@@ -69,11 +110,13 @@ export function DocumentPreview({
         title: t('documentSaved'),
         description: t('documentSavedDescription')
       });
+      console.log("DocumentPreview: Save completed");
     }, 1500);
   };
 
   // Show loading state
   if (isGenerating) {
+    console.log("DocumentPreview: Showing loading state");
     return (
       <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
         <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
@@ -86,6 +129,7 @@ export function DocumentPreview({
 
   // Show empty state when no preview is available
   if (!previewUrl) {
+    console.log("DocumentPreview: Showing empty state");
     return (
       <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-background dark:bg-gray-800">
         <div className="bg-muted/30 p-4 rounded-full mb-4">
@@ -99,21 +143,34 @@ export function DocumentPreview({
     );
   }
 
+  console.log("DocumentPreview: Rendering document preview");
   return (
     <div className="space-y-4">
-      <div className="border rounded-md h-[500px] overflow-hidden shadow-sm" style={{ background: "#ffffff" }}>
+      <div 
+        className="border rounded-md h-[500px] overflow-hidden shadow-sm" 
+        style={{ background: "#ffffff" }}
+      >
         <object
           data={previewUrl}
           type="application/pdf"
-          className="w-full h-full"
+          className="w-full h-full pdf-viewer"
+          style={{ backgroundColor: "#ffffff" }}
         >
           <iframe
+            ref={iframeRef}
             src={previewUrl}
             title="Document Preview"
-            className="w-full h-full"
+            className="w-full h-full pdf-viewer"
             style={{ 
-              background: "#ffffff",
+              backgroundColor: "#ffffff",
               display: "block"
+            }}
+            onLoad={() => {
+              console.log("Iframe onLoad event fired");
+              if (iframeRef.current) {
+                console.log("Iframe element:", iframeRef.current);
+                console.log("Iframe style:", window.getComputedStyle(iframeRef.current));
+              }
             }}
           />
         </object>

@@ -27,13 +27,19 @@ const DocumentGenerator = () => {
   };
 
   const handleGeneratePreview = (content: string) => {
+    console.log("=== DEBUG: Starting preview generation ===");
+    console.log("Content length:", content.length);
     setIsGenerating(true);
     // Generate preview logic would go here
     setTimeout(() => {
       // Mock generating a preview URL
-      setPreviewUrl(`data:application/pdf;base64,${btoa(content)}`);
+      const previewUrl = `data:application/pdf;base64,${btoa(content)}`;
+      console.log("Preview URL type:", typeof previewUrl);
+      console.log("Preview URL starts with:", previewUrl.substring(0, 50) + "...");
+      setPreviewUrl(previewUrl);
       setIsGenerating(false);
       setActiveTab("preview");
+      console.log("=== DEBUG: Preview generation completed ===");
     }, 1000);
   };
 

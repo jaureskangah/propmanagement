@@ -22,6 +22,21 @@
   
   .pdf-viewer {
     background-color: #ffffff !important;
+    display: block !important;
+  }
+  
+  /* Force white background on PDF container */
+  [data-pdf-container],
+  .pdf-container,
+  .document-preview-container {
+    background-color: #ffffff !important;
+  }
+
+  /* Higher specificity rule to override dark mode */
+  html.dark .pdf-viewer,
+  .dark .pdf-viewer,
+  [data-theme="dark"] .pdf-viewer {
+    background-color: #ffffff !important;
   }
   
   .pdf-viewer-dark {
