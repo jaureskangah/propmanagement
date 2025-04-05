@@ -1,3 +1,4 @@
+
 export default {
   // General translations
   documentGenerator: "Générateur de Documents",

@@ -1,7 +1,7 @@
 import { en as enTranslation } from './en';
 import { DocumentGeneratorTranslations } from './types/documents';
-import { enDocumentGenerator } from './features/documents/en';
-import { frDocumentGenerator } from './features/documents/fr';
+import enDocumentGenerator from './features/documents/en';
+import frDocumentGenerator from './features/documents/fr';
 
 type Keys = keyof typeof enTranslation;
 
@@ -609,4 +609,4 @@ export const fr: { [key in Keys]: string | DocumentGeneratorTranslations } = {
 		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotified: 'Locataire notifié de la notification de la notification de la notification de la notification de la notification de la notification du statut',
 		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedDate: 'Date de notification du locataire sur la notification de la notification de la notification de la notification de la notification de la notification du statut',
 		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedComments: 'Commentaires de notification du locataire sur la notification de la notification de la notification de la notification de la notification de la notification du statut',
-		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedPhotos: 'Photos de notification du locataire sur la notification de
+		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedPhotos: 'Photos de notification du locataire sur la notification de la

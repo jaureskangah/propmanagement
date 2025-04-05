@@ -1,4 +1,6 @@
-export const enDocumentGenerator = {
+
+export default {
+  // General translations
   documentGenerator: "Document Generator",
   documentTemplates: "Document Templates",
   editContent: "Edit Content",
