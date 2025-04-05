@@ -1,4 +1,3 @@
-
 export default {
   // General translations
   documentGenerator: "Générateur de Documents",
@@ -64,17 +63,17 @@ export default {
   cancel: "Annuler",
   
   // Document history
-  documentHistory: "Historique des Documents",
+  documentHistory: "Historique des documents",
   history: "Historique",
   noDocumentHistory: "Aucun historique de document trouvé",
-  saveToHistory: "Sauvegarder dans l'Historique",
-  savingToHistory: "Sauvegarde...",
-  documentSavedToHistory: "Document sauvegardé dans l'historique",
-  documentSavedToHistoryDescription: "Votre document a été sauvegardé dans votre historique",
+  saveToHistory: "Enregistrer dans l'historique",
+  savingToHistory: "Enregistrement...",
+  documentSavedToHistory: "Document enregistré dans l'historique",
+  documentSavedToHistoryDescription: "Vous pouvez y accéder à tout moment depuis l'onglet historique",
   documentDeleted: "Document supprimé",
   documentDeleteSuccess: "Le document a été supprimé avec succès",
-  confirmDeleteDocument: "Supprimer le Document?",
-  documentDeleteWarning: "Cette action ne peut pas être annulée. Ce document sera définitivement supprimé.",
+  confirmDeleteDocument: "Supprimer le document",
+  documentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce document? Cette action ne peut pas être annulée.",
   errorDeletingDocument: "Erreur lors de la suppression du document",
   
   // Template related
@@ -90,4 +89,20 @@ export default {
   leaseAgreementContent: "# CONTRAT DE BAIL\n\nEntre les soussignés:\n\n**Le Bailleur**: [Nom du Bailleur]\n\n**Le Locataire**: [Nom du Locataire]\n\nIl a été convenu ce qui suit:\n\n## ARTICLE 1 - OBJET DU CONTRAT\n\nLe Bailleur donne à bail au Locataire qui accepte, le logement désigné ci-après.\n\n## ARTICLE 2 - DESCRIPTION DU LOGEMENT\n\n[Description du logement]",
   leaseRenewalContent: "# RENOUVELLEMENT DE BAIL\n\nEntre les soussignés:\n\n**Le Bailleur**: [Nom du Bailleur]\n\n**Le Locataire**: [Nom du Locataire]\n\nIl a été convenu ce qui suit:\n\nLe bail initialement signé le [date] expire le [date]. Les parties conviennent de renouveler ledit bail dans les conditions suivantes:",
   rentReceiptContent: "# REÇU DE LOYER\n\nJe soussigné [Nom du Bailleur], propriétaire du logement situé à [Adresse], déclare avoir reçu de [Nom du Locataire] la somme de [Montant] représentant le loyer pour [Période].\n\nFait à [Lieu], le [Date]\n\n[Signature]"
+};
+
+export const frDocumentGenerator = {
+  // Document history
+  documentHistory: "Historique des documents",
+  history: "Historique",
+  noDocumentHistory: "Aucun historique de document trouvé",
+  saveToHistory: "Enregistrer dans l'historique",
+  savingToHistory: "Enregistrement...",
+  documentSavedToHistory: "Document enregistré dans l'historique",
+  documentSavedToHistoryDescription: "Vous pouvez y accéder à tout moment depuis l'onglet historique",
+  documentDeleted: "Document supprimé",
+  documentDeleteSuccess: "Le document a été supprimé avec succès",
+  confirmDeleteDocument: "Supprimer le document",
+  documentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce document? Cette action ne peut pas être annulée.",
+  errorDeletingDocument: "Erreur lors de la suppression du document",
 };
