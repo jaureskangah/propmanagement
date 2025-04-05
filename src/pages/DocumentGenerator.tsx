@@ -52,9 +52,20 @@ const DocumentGenerator = () => {
       }
       
       try {
-        // Generate PDF with actual content
-        console.log("DocumentGenerator: Generating PDF with actual content");
-        const pdfBuffer = await generateCustomPdf(content);
+        // Generate PDF with actual content and enhanced formatting
+        console.log("DocumentGenerator: Generating enhanced PDF with actual content");
+        
+        // Extract document title from content (first line or default)
+        const lines = content.split('\n');
+        const title = lines.length > 0 ? lines[0].trim() : 'Document';
+        
+        const pdfBuffer = await generateCustomPdf(content, {
+          title: title,
+          headerText: selectedTemplateName || 'Document',
+          showPageNumbers: true,
+          showDate: true
+        });
+        
         const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
         const previewUrl = URL.createObjectURL(pdfBlob);
         
