@@ -1,28 +1,10 @@
-import { useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { 
-  Loader2, 
-  FileDown, 
-  FileCheck, 
-  Sparkles, 
-  Save, 
-  Share2, 
-  Send
-} from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase";
+
+import { useRef } from "react";
+import { useEditorState } from "./editor/useEditorState";
+import { AIAssistantDialog } from "./editor/AIAssistantDialog";
+import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
+import { EditorToolbar } from "./editor/EditorToolbar";
+import { DocumentTextarea } from "./editor/DocumentTextarea";
 
 interface DocumentEditorProps {
   content: string;
@@ -39,242 +21,51 @@ export function DocumentEditor({
   isGenerating,
   templateName = ""
 }: DocumentEditorProps) {
-  const { t } = useLocale();
-  const { toast } = useToast();
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
-  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
-  const [aiInstructions, setAIInstructions] = useState("");
-  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
-  const [recipientEmail, setRecipientEmail] = useState("");
-  const [isSending, setIsSending] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onContentChange(e.target.value);
-  };
+  const {
+    isAIDialogOpen,
+    setIsAIDialogOpen,
+    isShareDialogOpen,
+    setIsShareDialogOpen,
+    textareaRef,
+    handleChange
+  } = useEditorState(content, onContentChange);
 
   const handleGeneratePreview = () => {
     onGeneratePreview(content);
   };
 
-  const handleAIGenerate = async () => {
-    if (!content && !templateName) {
-      toast({
-        title: t('error'),
-        description: t('selectTemplateFirst'),
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsGeneratingAI(true);
-    
-    try {
-      const { data, error } = await supabase.functions.invoke('generate-document-content', {
-        body: {
-          templateType: templateName,
-          documentTitle: templateName,
-          existingContent: content,
-          instructions: aiInstructions
-        }
-      });
-
-      if (error) throw error;
-      
-      if (data && data.content) {
-        onContentChange(data.content);
-        toast({
-          title: t('aiSuccess'),
-          description: t('aiGenerated')
-        });
-      }
-    } catch (error) {
-      console.error('Error generating content with AI:', error);
-      toast({
-        title: t('aiError'),
-        description: t('aiErrorDescription'),
-        variant: "destructive"
-      });
-    } finally {
-      setIsGeneratingAI(false);
-      setIsAIDialogOpen(false);
-      setAIInstructions("");
-    }
-  };
-
-  const handleShareDocument = async () => {
-    if (!recipientEmail || !content) {
-      toast({
-        title: t('error'),
-        description: t('emailAndContentRequired'),
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsSending(true);
-    
-    try {
-      const { error } = await supabase.functions.invoke('share-document', {
-        body: {
-          recipientEmail,
-          documentContent: content,
-          documentTitle: templateName || t('customDocument'),
-        }
-      });
-
-      if (error) throw error;
-      
-      toast({
-        title: t('shareSuccess'),
-        description: t('documentShared')
-      });
-      setIsShareDialogOpen(false);
-      setRecipientEmail("");
-    } catch (error) {
-      console.error('Error sharing document:', error);
-      toast({
-        title: t('shareError'),
-        description: t('shareErrorDescription'),
-        variant: "destructive"
-      });
-    } finally {
-      setIsSending(false);
-    }
-  };
-
   return (
     <div className="space-y-4">
-      <Textarea
+      <DocumentTextarea
         ref={textareaRef}
-        value={content}
+        content={content}
         onChange={handleChange}
-        className="min-h-[500px] font-mono text-sm bg-white dark:bg-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600"
-        placeholder={t('startTypingDocument')}
       />
       
-      <div className="flex flex-wrap gap-2 justify-between">
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setIsAIDialogOpen(true)}
-            className="gap-2 bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700"
-          >
-            <Sparkles className="h-4 w-4 text-purple-600" />
-            {t('aiAssistant')}
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => setIsShareDialogOpen(true)}
-            className="gap-2 bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700"
-          >
-            <Share2 className="h-4 w-4 text-blue-600" />
-            {t('shareDocument')}
-          </Button>
-        </div>
-        
-        <Button
-          onClick={handleGeneratePreview}
-          disabled={!content || isGenerating}
-          className="gap-2 bg-green-600 hover:bg-green-700 text-white"
-        >
-          {isGenerating ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              {t('generating')}
-            </>
-          ) : (
-            <>
-              <FileCheck className="h-4 w-4" />
-              {t('generatePreview')}
-            </>
-          )}
-        </Button>
-      </div>
+      <EditorToolbar
+        onOpenAIDialog={() => setIsAIDialogOpen(true)}
+        onOpenShareDialog={() => setIsShareDialogOpen(true)}
+        onGeneratePreview={handleGeneratePreview}
+        isGenerating={isGenerating}
+        hasContent={!!content}
+      />
 
       {/* AI Assistant Dialog */}
-      <Dialog open={isAIDialogOpen} onOpenChange={setIsAIDialogOpen}>
-        <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
-          <DialogHeader>
-            <DialogTitle className="dark:text-gray-100">{t('aiAssistant')}</DialogTitle>
-            <DialogDescription className="dark:text-gray-300">{t('aiAssistantDescription')}</DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <Label htmlFor="instructions" className="dark:text-gray-200">{t('aiInstructions')}</Label>
-            <Input 
-              id="instructions"
-              className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
-              value={aiInstructions}
-              onChange={(e) => setAIInstructions(e.target.value)}
-              placeholder={t('aiInstructionsPlaceholder')}
-            />
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAIDialogOpen(false)}
-                   className="dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
-              {t('cancel')}
-            </Button>
-            <Button onClick={handleAIGenerate} disabled={isGeneratingAI} className="bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600">
-              {isGeneratingAI ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('aiGenerating')}
-                </>
-              ) : (
-                <>
-                  <Sparkles className="mr-2 h-4 w-4" />
-                  {t('aiGenerate')}
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AIAssistantDialog 
+        isOpen={isAIDialogOpen}
+        onClose={() => setIsAIDialogOpen(false)}
+        onGenerate={onContentChange}
+        content={content}
+        templateName={templateName}
+      />
 
       {/* Share Document Dialog */}
-      <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
-        <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
-          <DialogHeader>
-            <DialogTitle className="dark:text-gray-100">{t('shareDocument')}</DialogTitle>
-            <DialogDescription className="dark:text-gray-300">{t('shareDocumentDescription')}</DialogDescription>
-          </DialogHeader>
-          
-          <div className="py-4">
-            <Label htmlFor="email" className="dark:text-gray-200">{t('recipientEmail')}</Label>
-            <Input 
-              id="email"
-              type="email"
-              className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
-              value={recipientEmail}
-              onChange={(e) => setRecipientEmail(e.target.value)}
-              placeholder="email@example.com"
-            />
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsShareDialogOpen(false)}
-                   className="dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
-              {t('cancel')}
-            </Button>
-            <Button onClick={handleShareDocument} disabled={isSending} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
-              {isSending ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('sending')}
-                </>
-              ) : (
-                <>
-                  <Send className="mr-2 h-4 w-4" />
-                  {t('send')}
-                </>
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ShareDocumentDialog
+        isOpen={isShareDialogOpen}
+        onClose={() => setIsShareDialogOpen(false)}
+        content={content}
+        templateName={templateName}
+      />
     </div>
   );
 }
