@@ -48,6 +48,23 @@ export const enDocumentGenerator = {
   shareError: "Sharing Failed",
   shareErrorDescription: "There was an error sharing the document. Please try again.",
   
+  // Template management
+  saveAsTemplate: "Save as Template",
+  saveAsTemplateDescription: "Save this document as a template for future use.",
+  templateName: "Template Name",
+  templateNamePlaceholder: "Enter a name for your template",
+  templateDescriptionPlaceholder: "Enter a description (optional)",
+  saveTemplate: "Save Template",
+  myTemplates: "My Templates",
+  predefinedTemplates: "Predefined Templates",
+  customTemplates: "Custom Templates",
+  allTemplates: "All Templates",
+  noTemplatesFound: "No templates found",
+  createTemplateHint: "Save a document as template to see it here",
+  deleteTemplate: "Delete Template",
+  deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
+  delete: "Delete",
+  
   // Document tips
   documentTip: "Document Tip",
   documentTipDescription: "For legal documents, always review the content with a qualified professional before sending to ensure it meets your specific requirements.",

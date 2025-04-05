@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -9,9 +9,13 @@ import {
   FileWarning,
   FileCheck,
   FileCog,
-  ChevronRight
+  ChevronRight,
+  Save
 } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DocumentTemplate, useTemplates } from "@/hooks/useTemplates";
+import { UserTemplates } from "./UserTemplates";
 
 interface DocumentTemplateSelectorProps {
   selectedTemplate: string;
@@ -29,6 +33,23 @@ export function DocumentTemplateSelector({
   const { t } = useLocale();
   const { toast } = useToast();
   const [openCategory, setOpenCategory] = useState<string>("lease");
+  const [activeTab, setActiveTab] = useState("predefined"); // "predefined" or "custom"
+  const { fetchTemplates } = useTemplates();
+  const [userTemplates, setUserTemplates] = useState<DocumentTemplate[]>([]);
+  const [isLoadingTemplates, setIsLoadingTemplates] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === "custom") {
+      loadUserTemplates();
+    }
+  }, [activeTab]);
+
+  const loadUserTemplates = async () => {
+    setIsLoadingTemplates(true);
+    const templates = await fetchTemplates();
+    setUserTemplates(templates);
+    setIsLoadingTemplates(false);
+  };
 
   const documentCategories = [
     {
@@ -99,6 +120,20 @@ export function DocumentTemplateSelector({
     }, 800);
   };
 
+  const handleUserTemplateSelect = (template: DocumentTemplate) => {
+    setIsGenerating(true);
+    onSelectTemplate(template.id, template.name);
+    
+    setTimeout(() => {
+      onGenerateContent(template.content);
+      setIsGenerating(false);
+      toast({
+        title: t('templateLoaded'),
+        description: t('templateLoadedDescription')
+      });
+    }, 300);
+  };
+
   const generateDummyContent = (templateId: string): string => {
     // This would be replaced with actual template content logic
     const templates: Record<string, string> = {
@@ -123,43 +158,56 @@ export function DocumentTemplateSelector({
 
   return (
     <div className="space-y-4">
-      <Accordion
-        type="single"
-        collapsible
-        value={openCategory}
-        onValueChange={setOpenCategory}
-        className="w-full"
-      >
-        {documentCategories.map((category) => (
-          <AccordionItem key={category.id} value={category.id}>
-            <AccordionTrigger className="hover:bg-muted/50 px-2 rounded-md">
-              <div className="flex items-center gap-2">
-                <category.icon className="h-4 w-4 text-muted-foreground" />
-                <span>{category.name}</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="pl-6 space-y-1 py-2">
-                {category.templates.map((template) => (
-                  <Button
-                    key={template.id}
-                    variant={selectedTemplate === template.id ? "secondary" : "ghost"}
-                    className={`w-full justify-start ${
-                      selectedTemplate === template.id ? "bg-secondary/20" : ""
-                    }`}
-                    onClick={() => handleTemplateClick(template.id, template.name)}
-                  >
-                    <div className="flex items-center justify-between w-full">
-                      <span>{template.name}</span>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                  </Button>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="grid grid-cols-2 mb-4">
+          <TabsTrigger value="predefined">{t('predefinedTemplates')}</TabsTrigger>
+          <TabsTrigger value="custom">{t('myTemplates')}</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="predefined" className="mt-0">
+          <Accordion
+            type="single"
+            collapsible
+            value={openCategory}
+            onValueChange={setOpenCategory}
+            className="w-full"
+          >
+            {documentCategories.map((category) => (
+              <AccordionItem key={category.id} value={category.id}>
+                <AccordionTrigger className="hover:bg-muted/50 px-2 rounded-md">
+                  <div className="flex items-center gap-2">
+                    <category.icon className="h-4 w-4 text-muted-foreground" />
+                    <span>{category.name}</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="pl-6 space-y-1 py-2">
+                    {category.templates.map((template) => (
+                      <Button
+                        key={template.id}
+                        variant={selectedTemplate === template.id ? "secondary" : "ghost"}
+                        className={`w-full justify-start ${
+                          selectedTemplate === template.id ? "bg-secondary/20" : ""
+                        }`}
+                        onClick={() => handleTemplateClick(template.id, template.name)}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <span>{template.name}</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </TabsContent>
+        
+        <TabsContent value="custom" className="mt-0">
+          <UserTemplates onSelectTemplate={handleUserTemplateSelect} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

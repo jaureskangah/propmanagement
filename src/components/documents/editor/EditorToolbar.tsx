@@ -1,11 +1,12 @@
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Sparkles, Share2, FileCheck, Loader2 } from "lucide-react";
+import { Sparkles, Share2, FileCheck, Loader2, Save } from "lucide-react";
 
 interface EditorToolbarProps {
   onOpenAIDialog: () => void;
   onOpenShareDialog: () => void;
+  onOpenSaveTemplateDialog: () => void;
   onGeneratePreview: () => void;
   isGenerating: boolean;
   hasContent: boolean;
@@ -14,6 +15,7 @@ interface EditorToolbarProps {
 export function EditorToolbar({
   onOpenAIDialog,
   onOpenShareDialog,
+  onOpenSaveTemplateDialog,
   onGeneratePreview,
   isGenerating,
   hasContent
@@ -39,6 +41,16 @@ export function EditorToolbar({
         >
           <Share2 className="h-4 w-4 text-blue-600" />
           {t('shareDocument')}
+        </Button>
+        
+        <Button
+          variant="outline"
+          onClick={onOpenSaveTemplateDialog}
+          className="gap-2 bg-amber-100 border-amber-300 hover:bg-amber-200 hover:text-amber-800 text-amber-700"
+          disabled={!hasContent}
+        >
+          <Save className="h-4 w-4 text-amber-600" />
+          {t('saveAsTemplate')}
         </Button>
       </div>
       

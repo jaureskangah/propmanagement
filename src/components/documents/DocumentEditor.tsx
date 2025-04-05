@@ -1,8 +1,9 @@
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useEditorState } from "./editor/useEditorState";
 import { AIAssistantDialog } from "./editor/AIAssistantDialog";
 import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
+import { SaveTemplateDialog } from "./editor/SaveTemplateDialog";
 import { EditorToolbar } from "./editor/EditorToolbar";
 import { DocumentTextarea } from "./editor/DocumentTextarea";
 
@@ -29,6 +30,8 @@ export function DocumentEditor({
     textareaRef,
     handleChange
   } = useEditorState(content, onContentChange);
+  
+  const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
 
   const handleGeneratePreview = () => {
     onGeneratePreview(content);
@@ -45,6 +48,7 @@ export function DocumentEditor({
       <EditorToolbar
         onOpenAIDialog={() => setIsAIDialogOpen(true)}
         onOpenShareDialog={() => setIsShareDialogOpen(true)}
+        onOpenSaveTemplateDialog={() => setIsSaveTemplateDialogOpen(true)}
         onGeneratePreview={handleGeneratePreview}
         isGenerating={isGenerating}
         hasContent={!!content}
@@ -63,6 +67,14 @@ export function DocumentEditor({
       <ShareDocumentDialog
         isOpen={isShareDialogOpen}
         onClose={() => setIsShareDialogOpen(false)}
+        content={content}
+        templateName={templateName}
+      />
+      
+      {/* Save Template Dialog */}
+      <SaveTemplateDialog
+        isOpen={isSaveTemplateDialogOpen}
+        onClose={() => setIsSaveTemplateDialogOpen(false)}
         content={content}
         templateName={templateName}
       />

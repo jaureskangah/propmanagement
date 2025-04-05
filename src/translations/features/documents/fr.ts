@@ -48,6 +48,23 @@ export const frDocumentGenerator = {
   shareError: "Échec du Partage",
   shareErrorDescription: "Une erreur s'est produite lors du partage du document. Veuillez réessayer.",
   
+  // Template management
+  saveAsTemplate: "Enregistrer comme Modèle",
+  saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation ultérieure.",
+  templateName: "Nom du Modèle",
+  templateNamePlaceholder: "Entrez un nom pour votre modèle",
+  templateDescriptionPlaceholder: "Entrez une description (facultatif)",
+  saveTemplate: "Enregistrer le Modèle",
+  myTemplates: "Mes Modèles",
+  predefinedTemplates: "Modèles Prédéfinis",
+  customTemplates: "Modèles Personnalisés",
+  allTemplates: "Tous les Modèles",
+  noTemplatesFound: "Aucun modèle trouvé",
+  createTemplateHint: "Enregistrez un document comme modèle pour le voir ici",
+  deleteTemplate: "Supprimer le Modèle",
+  deleteTemplateConfirmation: "Êtes-vous sûr de vouloir supprimer ce modèle? Cette action ne peut pas être annulée.",
+  delete: "Supprimer",
+  
   // Document tips
   documentTip: "Conseil Document",
   documentTipDescription: "Pour les documents juridiques, consultez toujours un professionnel qualifié avant envoi pour garantir qu'ils répondent à vos besoins spécifiques.",
