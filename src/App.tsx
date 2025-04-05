@@ -1,91 +1,295 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './components/AuthProvider';
+import AppSidebar from './components/AppSidebar';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import PropertyList from './pages/PropertyList';
+import PropertyDetails from './pages/PropertyDetails';
+import AddProperty from './pages/AddProperty';
+import EditProperty from './pages/EditProperty';
+import TenantList from './pages/TenantList';
+import TenantDetails from './pages/TenantDetails';
+import AddTenant from './pages/AddTenant';
+import EditTenant from './pages/EditTenant';
+import MaintenanceRequestList from './pages/MaintenanceRequestList';
+import MaintenanceRequestDetails from './pages/MaintenanceRequestDetails';
+import AddMaintenanceRequest from './pages/AddMaintenanceRequest';
+import EditMaintenanceRequest from './pages/EditMaintenanceRequest';
+import CommunicationList from './pages/CommunicationList';
+import CommunicationDetails from './pages/CommunicationDetails';
+import AddCommunication from './pages/AddCommunication';
+import EditCommunication from './pages/EditCommunication';
+import FinanceDashboard from './pages/FinanceDashboard';
+import FinanceReport from './pages/FinanceReport';
+import AddFinanceRecord from './pages/AddFinanceRecord';
+import EditFinanceRecord from './pages/EditFinanceRecord';
+import DocumentGenerator from './pages/DocumentGenerator';
+import TenantDashboard from './pages/TenantDashboard';
+import TenantProfile from './pages/TenantProfile';
+import TenantMaintenanceRequests from './pages/TenantMaintenanceRequests';
+import TenantCommunications from './pages/TenantCommunications';
+import TenantDocuments from './pages/TenantDocuments';
+import Finances from './pages/Finances';
+import Vendors from './pages/Vendors';
+import AddVendor from './pages/AddVendor';
+import EditVendor from './pages/EditVendor';
+import TaskList from './pages/TaskList';
+import AddTask from './pages/AddTask';
+import EditTask from './pages/EditTask';
+import NotFound from './pages/NotFound';
+import { useLocale } from './components/providers/LocaleProvider';
+import { Toaster } from '@/components/ui/toaster';
 
-import { ThemeProvider } from "@/components/theme-provider";
-import { LocaleProvider } from "@/components/providers/LocaleProvider";
-import { Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
-import { Toaster } from "sonner";
-import LandingPage from "./pages/LandingPage";
-import AuthPage from "./pages/AuthPage";
-import Dashboard from "./pages/Dashboard";
-import Properties from "./pages/Properties";
-import Tenants from "./pages/Tenants";
-import Maintenance from "./pages/Maintenance";
-import Settings from "./pages/Settings";
-import Communications from "./pages/Communications";
-import AdminDashboard from "./pages/AdminDashboard";
-import TenantProfile from "./pages/TenantProfile";
-import TenantMaintenance from "./pages/tenant/TenantMaintenance";
-import TenantCommunications from "./pages/tenant/TenantCommunications";
-import TenantDashboard from "./pages/tenant/TenantDashboard";
-import TenantDocuments from "./pages/TenantDocuments";
-import TenantPayments from "./pages/TenantPayments";
-import About from "./pages/company/About";
-import Careers from "./pages/company/Careers";
-import Terms from "./pages/legal/Terms";
-import Privacy from "./pages/legal/Privacy";
-import Cookies from "./pages/legal/Cookies";
-import Finances from "./pages/Finances";
-import DocumentGenerator from "./pages/DocumentGenerator";
-import { ensureTenantDocumentsBucket } from "./utils/createStorageBucket";
+// Importation de la nouvelle page d'historique des documents
+import DocumentHistoryPage from "@/pages/DocumentHistoryPage";
 
-// Assurons-nous que la langue est initialisée au démarrage de l'application
-const initializeLanguage = () => {
-  const savedLanguage = localStorage.getItem('app-language');
-  if (!savedLanguage) {
-    // Si aucune langue n'est définie, utilisons la langue du navigateur ou l'anglais par défaut
-    const browserLang = navigator.language.split('-')[0];
-    const defaultLang = browserLang === 'fr' ? 'fr' : 'en';
-    localStorage.setItem('app-language', defaultLang);
-  }
-};
-
-function App() {
-  // Initialiser la langue au démarrage de l'application
-  initializeLanguage();
+const App = () => {
+  const { locale } = useLocale();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    // Initialize storage
-    ensureTenantDocumentsBucket().then((success) => {
-      if (success) {
-        console.log("Storage bucket setup complete");
-      } else {
-        console.error("Failed to setup storage bucket");
-      }
-    });
-  }, []);
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  const AuthRoute = ({ element, authRequired }: { element: React.ReactNode, authRequired: boolean }) => {
+    const { isLoggedIn } = useAuth();
+    return authRequired ? (isLoggedIn ? element : <Navigate to="/login" />) : element;
+  };
+
+  const routes = [
+    {
+      path: '/',
+      element: <Dashboard />,
+      authRequired: true
+    },
+    {
+      path: '/dashboard',
+      element: <Dashboard />,
+      authRequired: true
+    },
+    {
+      path: '/login',
+      element: <Login />,
+      authRequired: false
+    },
+    {
+      path: '/signup',
+      element: <Signup />,
+      authRequired: false
+    },
+    {
+      path: '/profile',
+      element: <Profile />,
+      authRequired: true
+    },
+    {
+      path: '/settings',
+      element: <Settings />,
+      authRequired: true
+    },
+    {
+      path: '/properties',
+      element: <PropertyList />,
+      authRequired: true
+    },
+    {
+      path: '/properties/:id',
+      element: <PropertyDetails />,
+      authRequired: true
+    },
+    {
+      path: '/properties/add',
+      element: <AddProperty />,
+      authRequired: true
+    },
+    {
+      path: '/properties/edit/:id',
+      element: <EditProperty />,
+      authRequired: true
+    },
+    {
+      path: '/tenants',
+      element: <TenantList />,
+      authRequired: true
+    },
+    {
+      path: '/tenants/:id',
+      element: <TenantDetails />,
+      authRequired: true
+    },
+    {
+      path: '/tenants/add',
+      element: <AddTenant />,
+      authRequired: true
+    },
+    {
+      path: '/tenants/edit/:id',
+      element: <EditTenant />,
+      authRequired: true
+    },
+    {
+      path: '/maintenance',
+      element: <MaintenanceRequestList />,
+      authRequired: true
+    },
+    {
+      path: '/maintenance/:id',
+      element: <MaintenanceRequestDetails />,
+      authRequired: true
+    },
+    {
+      path: '/maintenance/add',
+      element: <AddMaintenanceRequest />,
+      authRequired: true
+    },
+    {
+      path: '/maintenance/edit/:id',
+      element: <EditMaintenanceRequest />,
+      authRequired: true
+    },
+    {
+      path: '/communications',
+      element: <CommunicationList />,
+      authRequired: true
+    },
+    {
+      path: '/communications/:id',
+      element: <CommunicationDetails />,
+      authRequired: true
+    },
+    {
+      path: '/communications/add',
+      element: <AddCommunication />,
+      authRequired: true
+    },
+    {
+      path: '/communications/edit/:id',
+      element: <EditCommunication />,
+      authRequired: true
+    },
+    {
+      path: '/finances',
+      element: <FinanceDashboard />,
+      authRequired: true
+    },
+    {
+      path: '/finances/report',
+      element: <FinanceReport />,
+      authRequired: true
+    },
+    {
+      path: '/finances/add',
+      element: <AddFinanceRecord />,
+      authRequired: true
+    },
+    {
+      path: '/finances/edit/:id',
+      element: <EditFinanceRecord />,
+      authRequired: true
+    },
+    {
+      path: '/document-generator',
+      element: <DocumentGenerator />,
+      authRequired: true
+    },
+    {
+      path: '/tenant/dashboard',
+      element: <TenantDashboard />,
+      authRequired: true
+    },
+    {
+      path: '/tenant/profile',
+      element: <TenantProfile />,
+      authRequired: true
+    },
+    {
+      path: '/tenant/maintenance',
+      element: <TenantMaintenanceRequests />,
+      authRequired: true
+    },
+    {
+      path: '/tenant/communications',
+      element: <TenantCommunications />,
+      authRequired: true
+    },
+    {
+      path: '/tenant/documents',
+      element: <TenantDocuments />,
+      authRequired: true
+    },
+	  {
+      path: '/finances-new',
+      element: <Finances />,
+      authRequired: true
+    },
+    {
+      path: '/vendors',
+      element: <Vendors />,
+      authRequired: true
+    },
+    {
+      path: '/vendors/add',
+      element: <AddVendor />,
+      authRequired: true
+    },
+    {
+      path: '/vendors/edit/:id',
+      element: <EditVendor />,
+      authRequired: true
+    },
+    {
+      path: '/tasks',
+      element: <TaskList />,
+      authRequired: true
+    },
+    {
+      path: '/tasks/add',
+      element: <AddTask />,
+      authRequired: true
+    },
+    {
+      path: '/tasks/edit/:id',
+      element: <EditTask />,
+      authRequired: true
+    },
+	{
+    path: '/document-history',
+    element: <DocumentHistoryPage />,
+    authRequired: true
+  },
+    {
+      path: '*',
+      element: <NotFound />,
+      authRequired: false
+    }
+  ];
 
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <LocaleProvider>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/auth" element={<AuthPage />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/properties" element={<Properties />} />
-          <Route path="/tenants" element={<Tenants />} />
-          <Route path="/maintenance" element={<Maintenance />} />
-          <Route path="/communications" element={<Communications />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/finances" element={<Finances />} />
-          <Route path="/documents" element={<DocumentGenerator />} />
-          <Route path="/company/about" element={<About />} />
-          <Route path="/company/careers" element={<Careers />} />
-          <Route path="/legal/terms" element={<Terms />} />
-          <Route path="/legal/privacy" element={<Privacy />} />
-          <Route path="/legal/cookies" element={<Cookies />} />
-          <Route path="/tenant/profile" element={<TenantProfile />} />
-          <Route path="/tenant/maintenance" element={<TenantMaintenance />} />
-          <Route path="/tenant/communications" element={<TenantCommunications />} />
-          <Route path="/tenant/documents" element={<TenantDocuments />} />
-          <Route path="/tenant/payments" element={<TenantPayments />} />
-          <Route path="/tenant/dashboard" element={<TenantDashboard />} />
-          <Route path="/profile" element={<TenantProfile />} />
-        </Routes>
-        <Toaster position="top-right" />
-      </LocaleProvider>
-    </ThemeProvider>
+    <Router>
+      <AuthProvider>
+        <div className="flex h-screen bg-background">
+          {isLoggedIn() && <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />}
+          <div className="flex-1 overflow-auto">
+            <Routes>
+              {routes.map(route => (
+                <Route
+                  key={route.path}
+                  path={route.path}
+                  element={<AuthRoute element={route.element} authRequired={route.authRequired} />}
+                />
+              ))}
+            </Routes>
+          </div>
+        </div>
+        <Toaster />
+      </AuthProvider>
+    </Router>
   );
-}
+};
 
 export default App;

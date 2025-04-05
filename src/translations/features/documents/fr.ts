@@ -1,3 +1,4 @@
+
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -20,6 +21,16 @@ export default {
   generatingPreview: "Génération de l'aperçu en cours...",
   templateLoaded: "Modèle chargé",
   templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
+  
+  // Document history related translations
+  documentHistory: "Historique des documents",
+  noDocumentHistory: "Aucun historique de document disponible",
+  viewDocumentHistory: "Voir l'historique des documents",
+  documentHistoryDescription: "Consultez et gérez vos documents précédemment générés",
+  dateGenerated: "Date de génération",
+  documentName: "Nom du document",
+  documentCategory: "Catégorie",
+  documentActions: "Actions",
   
   // Document categories
   leaseDocuments: "Documents de bail",

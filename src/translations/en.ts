@@ -1,4 +1,5 @@
 
+import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
 import { enCommon } from './features/common';
@@ -46,7 +47,7 @@ const translations = {
   ...enToasts,
   ...enFinances,
   ...enVendors,
-  ...enDocumentGenerator,
+  documentGenerator: enDocumentGenerator,
 };
 
 export default translations;

@@ -22,6 +22,16 @@ export interface DocumentGeneratorTranslations {
   templateLoaded: string;
   templateLoadedDescription: string;
   
+  // Document history related translations
+  documentHistory: string;
+  noDocumentHistory: string;
+  viewDocumentHistory: string;
+  documentHistoryDescription: string;
+  dateGenerated: string;
+  documentName: string;
+  documentCategory: string;
+  documentActions: string;
+  
   // Document categories
   leaseDocuments: string;
   paymentDocuments: string;

@@ -61,7 +61,7 @@ const translations = {
   ...frTenantMaintenance,
   ...frCommunications,
   ...frFinances,
-  ...frDocumentGenerator
+  documentGenerator: frDocumentGenerator
 };
 
 export default translations;

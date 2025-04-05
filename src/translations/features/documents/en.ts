@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -21,6 +22,16 @@ export default {
   generatingPreview: "Generating preview...",
   templateLoaded: "Template loaded",
   templateLoadedDescription: "Template content has been loaded successfully",
+  
+  // Document history related translations
+  documentHistory: "Document History",
+  noDocumentHistory: "No document history available",
+  viewDocumentHistory: "View Document History",
+  documentHistoryDescription: "View and manage your previously generated documents",
+  dateGenerated: "Date Generated",
+  documentName: "Document Name",
+  documentCategory: "Category",
+  documentActions: "Actions",
   
   // Document categories
   leaseDocuments: "Lease Documents",

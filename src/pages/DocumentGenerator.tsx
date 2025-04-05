@@ -1,19 +1,25 @@
+
 import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { FileText, FileCheck, FilePlus } from "lucide-react";
+import { FileText, FileCheck, FilePlus, History } from "lucide-react";
 import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
 import { DocumentPreview } from "@/components/documents/DocumentPreview";
+import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
+import { useDocumentHistory } from "@/hooks/useDocumentHistory";
+import { useNavigate } from "react-router-dom";
 
 const DocumentGenerator = () => {
   const { t } = useLocale();
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { addToHistory } = useDocumentHistory();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [documentContent, setDocumentContent] = useState("");
@@ -84,6 +90,57 @@ const DocumentGenerator = () => {
     }
   };
 
+  // Fonction pour sauvegarder un document dans l'historique
+  const handleSaveToHistory = async (fileUrl: string | null) => {
+    if (!documentContent || !selectedTemplateName) return;
+    
+    const docName = selectedTemplateName || "Document";
+    const docCategory = selectedTemplate ? 
+      (selectedTemplate.includes("lease") ? "leaseDocuments" : 
+       selectedTemplate.includes("payment") ? "paymentDocuments" :
+       selectedTemplate.includes("notice") ? "noticeDocuments" :
+       selectedTemplate.includes("inspection") ? "inspectionDocuments" : "miscDocuments") 
+      : "miscDocuments";
+    
+    const historyEntry = {
+      name: docName,
+      category: docCategory,
+      documentType: selectedTemplate || "customDocument",
+      fileUrl: fileUrl,
+      content: documentContent
+    };
+    
+    const result = await addToHistory(historyEntry);
+    
+    if (result) {
+      toast({
+        title: t('documentSaved'),
+        description: t('documentSavedDescription')
+      });
+    }
+  };
+
+  // Fonction modifiée pour télécharger et sauvegarder dans l'historique
+  const handleDownload = async () => {
+    if (!previewUrl) return;
+    
+    // Télécharger le document
+    const link = document.createElement("a");
+    link.href = previewUrl;
+    link.download = `${selectedTemplateName || "document"}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Sauvegarder dans l'historique
+    await handleSaveToHistory(previewUrl);
+    
+    toast({
+      title: t('downloadStarted'),
+      description: t('downloadStartedDescription')
+    });
+  };
+
   useEffect(() => {
     return () => {
       if (previewUrl && previewUrl.startsWith('blob:')) {
@@ -105,6 +162,14 @@ const DocumentGenerator = () => {
           >
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-3xl font-bold">{t('documentGenerator')}</h1>
+              <Button 
+                variant="outline"
+                onClick={() => navigate('/document-history')}
+                className="flex items-center gap-2"
+              >
+                <History className="h-4 w-4" />
+                {t('documentHistory')}
+              </Button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -173,6 +238,7 @@ const DocumentGenerator = () => {
                           templateName={selectedTemplate}
                           onShare={() => setIsShareDialogOpen(true)}
                           previewError={previewError}
+                          onDownload={handleDownload}
                         />
                       </TabsContent>
                     </Tabs>
