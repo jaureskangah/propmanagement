@@ -1,25 +1,26 @@
-export const enDocumentGenerator = {
+export default {
+  // Existing translations
   documentGenerator: "Document Generator",
   documentTemplates: "Document Templates",
   editContent: "Edit Content",
   preview: "Preview",
   documentType: "Document Type",
   generatePreview: "Generate Preview",
-  downloadDocument: "Download Document",
-  saveDocument: "Save Document",
+  downloadDocument: "Download",
+  saveDocument: "Save",
   generating: "Generating...",
   downloading: "Downloading...",
   saving: "Saving...",
   noPreviewAvailable: "No preview available",
-  generatePreviewDescription: "Click to generate a preview of your document",
-  startTypingDocument: "Start typing to generate your document",
+  generatePreviewDescription: "Generate a preview to see the final document",
+  startTypingDocument: "Start typing your document here...",
   downloadStarted: "Download started",
-  downloadStartedDescription: "Your download will begin shortly",
+  downloadStartedDescription: "Your document will be downloaded shortly",
   documentSaved: "Document saved",
   documentSavedDescription: "Your document has been saved successfully",
-  generatingPreview: "Generating Preview...",
-  templateLoaded: "Template Loaded",
-  templateLoadedDescription: "The template has been loaded successfully",
+  generatingPreview: "Generating preview...",
+  templateLoaded: "Template loaded",
+  templateLoadedDescription: "Template content has been loaded successfully",
   
   // Document categories
   leaseDocuments: "Lease Documents",
@@ -38,20 +39,20 @@ export const enDocumentGenerator = {
   noticeToVacate: "Notice to Vacate",
   entryNotice: "Entry Notice",
   maintenanceNotice: "Maintenance Notice",
-  moveInChecklist: "Move-In Checklist",
-  moveOutChecklist: "Move-Out Checklist",
+  moveInChecklist: "Move-in Checklist",
+  moveOutChecklist: "Move-out Checklist",
   inspectionReport: "Inspection Report",
   tenantComplaint: "Tenant Complaint",
   propertyRules: "Property Rules",
   customDocument: "Custom Document",
   
-  // Advanced editing features
+  // New translations for advanced editing features
   advancedEditing: "Advanced Editing",
   bold: "Bold",
   italic: "Italic",
   bulletList: "Bullet List",
   insertImage: "Insert Image",
-  imageUrlPlaceholder: "Image URL",
+  imageUrlPlaceholder: "Enter image URL",
   insertTable: "Insert Table",
   rows: "Rows",
   columns: "Columns",
@@ -61,26 +62,17 @@ export const enDocumentGenerator = {
   clear: "Clear",
   cancel: "Cancel",
   
-  // Document history
-  documentHistory: "Document History",
-  history: "History",
-  noDocumentHistory: "No document history found",
-  saveToHistory: "Save to History",
-  savingToHistory: "Saving...",
-  documentSavedToHistory: "Document saved to history",
-  documentSavedToHistoryDescription: "You can access it anytime from the history tab",
-  documentDeleted: "Document deleted",
-  documentDeleteSuccess: "Document has been successfully deleted",
-  confirmDeleteDocument: "Delete document",
-  documentDeleteWarning: "Are you sure you want to delete this document? This action cannot be undone.",
-  errorDeletingDocument: "Error deleting document",
-  
   // Template related
   allTemplates: "All Templates",
   customTemplates: "Custom Templates",
   noTemplatesFound: "No templates found",
-  createTemplateHint: "Create your own template to get started!",
+  createTemplateHint: "Create a template by saving a document",
   deleteTemplate: "Delete Template",
-  deleteTemplateConfirmation: "Are you sure you want to delete this template?",
+  deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
   delete: "Delete",
+
+  // Dummy content for templates
+  leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
+  leaseRenewalContent: "# LEASE RENEWAL\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\nThe lease initially signed on [date] expires on [date]. The parties agree to renew said lease under the following conditions:",
+  rentReceiptContent: "# RENT RECEIPT\n\nI the undersigned [Landlord Name], owner of the accommodation located at [Address], declare having received from [Tenant Name] the amount of [Amount] representing the rent for [Period].\n\nDone at [Location], on [Date]\n\n[Signature]"
 };

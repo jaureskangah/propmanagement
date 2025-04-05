@@ -1,29 +1,52 @@
-import { DocumentGeneratorTranslations } from "./types/documents";
-import { enUS as enUSCore } from "@mui/material/locale";
-import { en as enCommon } from "./common";
-import { en as enErrors } from "./errors";
-import { en as enPages } from "./pages";
-import { en as enComponents } from "./components";
-import { en as enOnboarding } from "./onboarding";
-import { en as enMaintenance } from "./maintenance";
-import { en as enTenants } from "./tenants";
-import { en as enProperties } from "./properties";
-import { en as enVendors } from "./vendors";
-import { en as enFinances } from "./finances";
-// Import document translations
-import { enDocumentGenerator } from "./features/documents/en";
 
-export const en = {
-  core: enUSCore,
-  common: enCommon,
-  errors: enErrors,
-  pages: enPages,
-  components: enComponents,
-  onboarding: enOnboarding,
-  maintenance: enMaintenance,
-  tenants: enTenants,
-  properties: enProperties,
-  vendors: enVendors,
-  finances: enFinances,
-  documentGenerator: enDocumentGenerator,
-} as const;
+import { enAdmin } from './features/admin';
+import { enAuth } from './features/auth';
+import { enCommon } from './features/common';
+import { enContact } from './features/contact';
+import { enCTA } from './features/cta';
+import { enDashboard } from './features/dashboard';
+import { enFAQ } from './features/faq';
+import { enFeatures } from './features/features';
+import { enFooter } from './features/footer';
+import { enHero } from './features/hero';
+import { enHowItWorks } from './features/how-it-works';
+import { enMaintenance } from './features/maintenance';
+import { enModal } from './features/modal';
+import { enNavigation } from './features/navigation';
+import { enPricing } from './features/pricing';
+import { enProperty } from './features/property';
+import { enSettings } from './features/settings';
+import { enStatus } from './features/status';
+import { enTenant } from './features/tenant';
+import { enToasts } from './features/toasts';
+import { enFinances } from './features/finances';
+import { enVendors } from './features/maintenance/vendors';
+import enDocumentGenerator from './features/documents/en';
+
+const translations = {
+  ...enAdmin,
+  ...enAuth,
+  ...enCommon,
+  ...enContact,
+  ...enCTA,
+  ...enDashboard,
+  ...enFAQ,
+  ...enFeatures,
+  ...enFooter,
+  ...enHero,
+  ...enHowItWorks,
+  ...enMaintenance,
+  ...enModal,
+  ...enNavigation,
+  ...enPricing,
+  ...enProperty,
+  ...enSettings,
+  ...enStatus,
+  ...enTenant,
+  ...enToasts,
+  ...enFinances,
+  ...enVendors,
+  ...enDocumentGenerator,
+};
+
+export default translations;

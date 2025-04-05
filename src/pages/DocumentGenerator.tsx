@@ -1,15 +1,13 @@
-
 import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
-import { FileText, FileCheck, FilePlus, History } from "lucide-react";
+import { FileText, FileCheck, FilePlus } from "lucide-react";
 import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
 import { DocumentPreview } from "@/components/documents/DocumentPreview";
-import { DocumentHistoryView } from "@/components/documents/history/DocumentHistoryView";
 import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 
@@ -110,7 +108,7 @@ const DocumentGenerator = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-4 space-y-6">
+              <div className="lg:col-span-4">
                 <Card className="h-full">
                   <CardHeader className="border-b">
                     <div className="flex items-center space-x-2">
@@ -132,16 +130,13 @@ const DocumentGenerator = () => {
                     />
                   </CardContent>
                 </Card>
-                
-                {/* Document History */}
-                <DocumentHistoryView />
               </div>
 
               <div className="lg:col-span-8">
                 <Card className="h-full">
                   <CardHeader className="border-b">
                     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                      <TabsList className="grid w-full grid-cols-3">
+                      <TabsList className="grid w-full grid-cols-2">
                         <TabsTrigger value="editor">
                           <FileCheck className="h-4 w-4 mr-2" />
                           {t('editContent')}
@@ -155,10 +150,6 @@ const DocumentGenerator = () => {
                         }}>
                           <FilePlus className="h-4 w-4 mr-2" />
                           {t('preview')}
-                        </TabsTrigger>
-                        <TabsTrigger value="history">
-                          <History className="h-4 w-4 mr-2" />
-                          {t('history')}
                         </TabsTrigger>
                       </TabsList>
                     </Tabs>
@@ -183,9 +174,6 @@ const DocumentGenerator = () => {
                           onShare={() => setIsShareDialogOpen(true)}
                           previewError={previewError}
                         />
-                      </TabsContent>
-                      <TabsContent value="history" className="mt-0">
-                        <DocumentHistoryView />
                       </TabsContent>
                     </Tabs>
                   </CardContent>

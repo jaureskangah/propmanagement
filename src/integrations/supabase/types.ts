@@ -110,42 +110,6 @@ export type Database = {
           },
         ]
       }
-      document_history: {
-        Row: {
-          category: string | null
-          content: string
-          created_at: string
-          document_type: string | null
-          file_url: string
-          id: string
-          name: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          category?: string | null
-          content: string
-          created_at?: string
-          document_type?: string | null
-          file_url: string
-          id?: string
-          name: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          category?: string | null
-          content?: string
-          created_at?: string
-          document_type?: string | null
-          file_url?: string
-          id?: string
-          name?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       document_templates: {
         Row: {
           category: string
