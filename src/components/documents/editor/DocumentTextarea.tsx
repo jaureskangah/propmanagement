@@ -19,6 +19,7 @@ export const DocumentTextarea = forwardRef<HTMLTextAreaElement, DocumentTextarea
         onChange={onChange}
         className="min-h-[500px] font-mono text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-50 border-gray-300 dark:border-gray-600"
         placeholder={t('startTypingDocument')}
+        style={{ backgroundColor: "#ffffff" }}
       />
     );
   }

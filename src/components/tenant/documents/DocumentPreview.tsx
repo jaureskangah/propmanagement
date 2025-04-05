@@ -50,18 +50,26 @@ export const DocumentPreview = ({
               <Textarea
                 value={editedContent}
                 onChange={(e) => onEditContent(e.target.value)}
-                className="h-full bg-white dark:bg-gray-800"
+                className="h-full"
+                style={{ backgroundColor: "#ffffff" }}
               />
             </div>
           ) : (
-            <div className="flex-1 min-h-0">
+            <div className="flex-1 min-h-0 bg-white">
               {generatedPdfUrl && (
-                <iframe
-                  src={generatedPdfUrl}
+                <object
+                  data={generatedPdfUrl}
+                  type="application/pdf"
                   className="w-full h-full rounded-md border"
-                  title="PDF Preview"
-                  style={{ backgroundColor: "white" }}
-                />
+                  style={{ backgroundColor: "#ffffff" }}
+                >
+                  <iframe
+                    src={generatedPdfUrl}
+                    className="w-full h-full rounded-md border"
+                    title="PDF Preview"
+                    style={{ backgroundColor: "#ffffff" }}
+                  />
+                </object>
               )}
             </div>
           )}

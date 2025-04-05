@@ -19,4 +19,12 @@
   .dark-widget-content {
     @apply dark:bg-gray-800/80 dark:border-gray-700;
   }
+  
+  .pdf-viewer {
+    background-color: #ffffff !important;
+  }
+  
+  .pdf-viewer-dark {
+    @apply dark:bg-gray-900;
+  }
 }

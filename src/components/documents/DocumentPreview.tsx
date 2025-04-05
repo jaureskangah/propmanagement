@@ -101,13 +101,22 @@ export function DocumentPreview({
 
   return (
     <div className="space-y-4">
-      <div className="border rounded-md h-[500px] overflow-auto shadow-sm bg-white">
-        <iframe
-          src={previewUrl}
-          title="Document Preview"
+      <div className="border rounded-md h-[500px] overflow-hidden shadow-sm" style={{ background: "#ffffff" }}>
+        <object
+          data={previewUrl}
+          type="application/pdf"
           className="w-full h-full"
-          style={{ backgroundColor: "white" }}
-        />
+        >
+          <iframe
+            src={previewUrl}
+            title="Document Preview"
+            className="w-full h-full"
+            style={{ 
+              background: "#ffffff",
+              display: "block"
+            }}
+          />
+        </object>
       </div>
 
       <div className="flex flex-wrap justify-end gap-3">
