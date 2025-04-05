@@ -10,7 +10,7 @@ export const useMaintenanceData = () => {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
   const [tenantId, setTenantId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { session } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useLocale();
 
@@ -24,7 +24,7 @@ export const useMaintenanceData = () => {
       const { data: tenant, error } = await supabase
         .from('tenants')
         .select('id')
-        .eq('tenant_profile_id', session?.user?.id)
+        .eq('tenant_profile_id', user?.id)
         .maybeSingle();
 
       if (error) throw error;
@@ -33,7 +33,7 @@ export const useMaintenanceData = () => {
         console.log("Found tenant ID:", tenant.id);
         setTenantId(tenant.id);
       } else {
-        console.log("No tenant found for user:", session?.user?.id);
+        console.log("No tenant found for user:", user?.id);
         toast({
           title: t('error'),
           description: t('notLinkedToTenant'),
@@ -114,10 +114,10 @@ export const useMaintenanceData = () => {
   };
 
   useEffect(() => {
-    if (session?.user) {
+    if (user) {
       fetchTenantId();
     }
-  }, [session?.user]);
+  }, [user]);
 
   useEffect(() => {
     if (tenantId) {
