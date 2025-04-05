@@ -1,9 +1,9 @@
 
 import { ThemeProvider } from "@/components/theme-provider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
-import { Toaster } from "sonner";
 import { Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
+import { Toaster } from "sonner";
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import Dashboard from "./pages/Dashboard";
