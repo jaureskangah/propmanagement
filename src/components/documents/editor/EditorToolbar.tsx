@@ -1,24 +1,28 @@
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Sparkles, Share2, FileCheck, Loader2, Save } from "lucide-react";
+import { Sparkles, Share2, FileCheck, Loader2, Save, PenSquare } from "lucide-react";
 
 interface EditorToolbarProps {
   onOpenAIDialog: () => void;
   onOpenShareDialog: () => void;
   onOpenSaveTemplateDialog: () => void;
+  onToggleAdvancedEditing: () => void;
   onGeneratePreview: () => void;
   isGenerating: boolean;
   hasContent: boolean;
+  isAdvancedEditingEnabled: boolean;
 }
 
 export function EditorToolbar({
   onOpenAIDialog,
   onOpenShareDialog,
   onOpenSaveTemplateDialog,
+  onToggleAdvancedEditing,
   onGeneratePreview,
   isGenerating,
-  hasContent
+  hasContent,
+  isAdvancedEditingEnabled
 }: EditorToolbarProps) {
   const { t } = useLocale();
 
@@ -32,6 +36,19 @@ export function EditorToolbar({
         >
           <Sparkles className="h-4 w-4 text-purple-600" />
           {t('aiAssistant')}
+        </Button>
+        
+        <Button
+          variant={isAdvancedEditingEnabled ? "default" : "outline"}
+          onClick={onToggleAdvancedEditing}
+          className={`gap-2 ${
+            isAdvancedEditingEnabled 
+              ? "bg-indigo-600 hover:bg-indigo-700 text-white" 
+              : "bg-indigo-100 border-indigo-300 hover:bg-indigo-200 hover:text-indigo-800 text-indigo-700"
+          }`}
+        >
+          <PenSquare className={`h-4 w-4 ${isAdvancedEditingEnabled ? "text-white" : "text-indigo-600"}`} />
+          {t('advancedEditing')}
         </Button>
         
         <Button

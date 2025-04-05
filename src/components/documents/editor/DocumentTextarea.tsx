@@ -6,10 +6,11 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 interface DocumentTextareaProps {
   content: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onValueChange?: (content: string) => void; // Added for programmatic updates
 }
 
 export const DocumentTextarea = forwardRef<HTMLTextAreaElement, DocumentTextareaProps>(
-  ({ content, onChange }, ref) => {
+  ({ content, onChange, onValueChange }, ref) => {
     const { t } = useLocale();
     
     useEffect(() => {
@@ -20,7 +21,12 @@ export const DocumentTextarea = forwardRef<HTMLTextAreaElement, DocumentTextarea
       <Textarea
         ref={ref}
         value={content}
-        onChange={onChange}
+        onChange={(e) => {
+          onChange(e);
+          if (onValueChange) {
+            onValueChange(e.target.value);
+          }
+        }}
         className="min-h-[500px] font-mono text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-50 border-gray-300 dark:border-gray-600"
         placeholder={t('startTypingDocument')}
         style={{ 
