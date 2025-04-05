@@ -389,7 +389,7 @@ export const fr: { [key in Keys]: string | DocumentGeneratorTranslations } = {
 		tenantDocumentsSimplify: 'Simplifiez les documents',
 		tenantPaymentsSimplify: 'Simplifiez les paiements',
 		tenantCommunicationsSimplify: 'Simplifiez les communications',
-		tenantMaintenanceRequestsSimplify: 'Simplifiez les demandes de maintenance',
+		tenantMaintenanceRequestsSimplify: 'Rationalisez les demandes de maintenance',
 		tenantDocumentsCentralize: 'Centralisez les documents',
 		tenantPaymentsCentralize: 'Centralisez les paiements',
 		tenantCommunicationsCentralize: 'Centralisez les communications',
@@ -609,4 +609,4 @@ export const fr: { [key in Keys]: string | DocumentGeneratorTranslations } = {
 		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotified: 'Locataire notifié de la notification de la notification de la notification de la notification de la notification de la notification du statut',
 		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedDate: 'Date de notification du locataire sur la notification de la notification de la notification de la notification de la notification de la notification du statut',
 		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedComments: 'Commentaires de notification du locataire sur la notification de la notification de la notification de la notification de la notification de la notification du statut',
-		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedPhotos: 'Photos de notification du locataire sur la notification de la notification de la notification
+		requestStatusUpdatedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedTenantNotifiedPhotos: 'Photos de notification du locataire sur la notification de la
