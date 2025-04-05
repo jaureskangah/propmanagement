@@ -33,10 +33,12 @@ export function DocumentPreview({
   const {
     isSaving,
     isDownloading,
+    isSavingToHistory,
     loadError,
     setLoadError,
     handleDownload,
     handleSaveToSystem,
+    handleSaveToHistory,
     handleRetryLoad
   } = useDocumentPreview({ 
     previewUrl: currentPreviewUrl,
@@ -136,6 +138,8 @@ export function DocumentPreview({
         onShare={onShare}
         isSaving={isSaving}
         isDownloading={isDownloading}
+        onSaveToHistory={handleSaveToHistory}
+        isSavingToHistory={isSavingToHistory}
       />
 
       <DocumentTip />

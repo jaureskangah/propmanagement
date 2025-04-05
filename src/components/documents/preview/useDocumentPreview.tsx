@@ -1,95 +1,115 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useDocumentHistory } from "@/hooks/useDocumentHistory";
 
-export interface UseDocumentPreviewProps {
+interface UseDocumentPreviewProps {
   previewUrl: string | null;
-  documentContent?: string;
-  templateName?: string;
+  documentContent: string;
+  templateName: string;
 }
 
-export function useDocumentPreview({ previewUrl, documentContent, templateName }: UseDocumentPreviewProps) {
+export function useDocumentPreview({ 
+  previewUrl, 
+  documentContent,
+  templateName
+}: UseDocumentPreviewProps) {
   const { t } = useLocale();
   const { toast } = useToast();
+  const { saveToHistory, isLoading: isSavingToHistory } = useDocumentHistory();
   const [isSaving, setIsSaving] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [loadError, setLoadError] = useState(false);
-  
-  // Reset error state when previewUrl changes
-  useEffect(() => {
-    if (previewUrl) {
-      setLoadError(false);
-      console.log("useDocumentPreview: Preview URL updated:", previewUrl.substring(0, 30) + "...");
-    }
-  }, [previewUrl]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!previewUrl) return;
     
-    console.log("useDocumentPreview: Starting download process");
-    setIsDownloading(true);
-    
     try {
-      console.log("useDocumentPreview: Creating download link");
-      const link = document.createElement("a");
-      link.href = previewUrl;
-      link.download = `${templateName || "document"}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      setIsDownloading(true);
       
-      setIsDownloading(false);
+      // Create filename based on template and date
+      const fileName = `${templateName || 'document'}_${new Date().toISOString().split('T')[0]}.pdf`;
+      
+      // Create a link element and simulate click to download
+      const a = document.createElement('a');
+      a.href = previewUrl;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
       toast({
         title: t('downloadStarted'),
         description: t('downloadStartedDescription')
       });
-      console.log("useDocumentPreview: Download completed");
     } catch (error) {
-      console.error("useDocumentPreview: Download error:", error);
+      console.error('Error downloading document:', error);
+    } finally {
       setIsDownloading(false);
-      toast({
-        title: "Erreur",
-        description: "Échec du téléchargement du document",
-        variant: "destructive",
-      });
     }
   };
 
-  const handleSaveToSystem = () => {
-    if (!documentContent) return;
+  const handleSaveToSystem = async () => {
+    if (!previewUrl || !documentContent) return;
     
-    console.log("useDocumentPreview: Starting save process");
-    setIsSaving(true);
-    
-    // Simulate saving to system with a delay
-    setTimeout(() => {
-      setIsSaving(false);
+    try {
+      setIsSaving(true);
+      
+      // Additional save logic would go here
+      // For now just show success toast
+      
       toast({
         title: t('documentSaved'),
         description: t('documentSavedDescription')
       });
-      console.log("useDocumentPreview: Save completed");
-    }, 1500);
+    } catch (error) {
+      console.error('Error saving document:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveToHistory = async () => {
+    if (!previewUrl || !documentContent) return;
+    
+    try {
+      // Extract title from content (first line)
+      const lines = documentContent.split('\n');
+      const title = lines.length > 0 
+        ? lines[0].replace(/^#\s*/, '').trim() 
+        : templateName || 'Document';
+      
+      await saveToHistory({
+        name: title,
+        content: documentContent,
+        file_url: previewUrl,
+        document_type: templateName || 'custom',
+        category: 'generated'
+      });
+      
+      toast({
+        title: t('documentSavedToHistory'),
+        description: t('documentSavedToHistoryDescription')
+      });
+    } catch (error) {
+      console.error('Error saving to history:', error);
+    }
   };
 
   const handleRetryLoad = () => {
     setLoadError(false);
-    if (previewUrl) {
-      console.log("useDocumentPreview: Retrying load of preview");
-      // Force reload by clearing and resetting URL with a small delay
-      const currentUrl = previewUrl;
-      // We don't have access to setPreviewUrl here, this needs to be handled at the component level
-    }
   };
 
   return {
     isSaving,
     isDownloading,
+    isSavingToHistory,
     loadError,
     setLoadError,
     handleDownload,
     handleSaveToSystem,
+    handleSaveToHistory,
     handleRetryLoad
   };
 }

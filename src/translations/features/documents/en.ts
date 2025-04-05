@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -46,7 +47,7 @@ export default {
   propertyRules: "Property Rules",
   customDocument: "Custom Document",
   
-  // New translations for advanced editing features
+  // Advanced editing features
   advancedEditing: "Advanced Editing",
   bold: "Bold",
   italic: "Italic",
@@ -61,6 +62,20 @@ export default {
   saveSignature: "Save Signature",
   clear: "Clear",
   cancel: "Cancel",
+  
+  // Document history
+  documentHistory: "Document History",
+  history: "History",
+  noDocumentHistory: "No document history found",
+  saveToHistory: "Save to History",
+  savingToHistory: "Saving...",
+  documentSavedToHistory: "Document saved to history",
+  documentSavedToHistoryDescription: "Your document has been saved to your history",
+  documentDeleted: "Document deleted",
+  documentDeleteSuccess: "Document has been successfully deleted",
+  confirmDeleteDocument: "Delete Document?",
+  documentDeleteWarning: "This action cannot be undone. This document will be permanently deleted.",
+  errorDeletingDocument: "Error deleting document",
   
   // Template related
   allTemplates: "All Templates",

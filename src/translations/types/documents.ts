@@ -46,6 +46,45 @@ export interface DocumentGeneratorTranslations {
   propertyRules: string;
   customDocument: string;
   
+  // Advanced editing features
+  advancedEditing: string;
+  bold: string;
+  italic: string;
+  bulletList: string;
+  insertImage: string;
+  imageUrlPlaceholder: string;
+  insertTable: string;
+  rows: string;
+  columns: string;
+  insert: string;
+  addSignature: string;
+  saveSignature: string;
+  clear: string;
+  cancel: string;
+  
+  // Document history
+  documentHistory: string;
+  history: string;
+  noDocumentHistory: string;
+  saveToHistory: string;
+  savingToHistory: string;
+  documentSavedToHistory: string;
+  documentSavedToHistoryDescription: string;
+  documentDeleted: string;
+  documentDeleteSuccess: string;
+  confirmDeleteDocument: string;
+  documentDeleteWarning: string;
+  errorDeletingDocument: string;
+  
+  // Template related
+  allTemplates: string;
+  customTemplates: string;
+  noTemplatesFound: string;
+  createTemplateHint: string;
+  deleteTemplate: string;
+  deleteTemplateConfirmation: string;
+  delete: string;
+  
   // Dummy content for templates
   leaseAgreementContent?: string;
   leaseRenewalContent?: string;
