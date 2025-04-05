@@ -1,8 +1,10 @@
 
-import DocumentsPage from "@/components/tenant/documents/DocumentsPage";
+import React from 'react';
 
 const TenantDocuments = () => {
-  return <DocumentsPage />;
+  return (
+    <div>Tenant Documents Page</div>
+  );
 };
 
 export default TenantDocuments;

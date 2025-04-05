@@ -43,9 +43,15 @@ export function DocumentPreview({
         {isGenerating ? (
           <LoadingState />
         ) : previewError ? (
-          <ErrorState error={previewError} />
+          <ErrorState 
+            onRetry={() => {}} 
+            errorMessage={previewError} 
+          />
         ) : previewUrl ? (
-          <PdfViewer url={previewUrl} />
+          <PdfViewer 
+            pdfUrl={previewUrl} 
+            onError={() => {}} 
+          />
         ) : (
           <EmptyState />
         )}
