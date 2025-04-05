@@ -1,5 +1,5 @@
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface PdfViewerProps {
   pdfUrl: string;
@@ -10,14 +10,41 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const objectRef = useRef<HTMLObjectElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   
   useEffect(() => {
     if (containerRef.current) {
       console.log("TenantPdfViewer: Enforcing white background on container");
       containerRef.current.style.backgroundColor = "#ffffff !important";
+      
+      // Log initial container dimensions
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      console.log("TenantPdfViewer: Initial container dimensions:", { width, height });
+      setDimensions({ width, height });
     }
   }, []);
 
+  // Track container dimensions
+  useEffect(() => {
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        console.log("TenantPdfViewer: Container resized:", { width, height });
+        setDimensions({ width, height });
+      }
+    });
+    
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
+  }, []);
+  
   useEffect(() => {
     console.log("TenantPdfViewer: Preparing to style PDF viewer");
     

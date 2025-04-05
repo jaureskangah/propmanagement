@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PdfViewer } from "./preview/PdfViewer";
 import { ErrorState } from "./preview/ErrorState";
@@ -35,15 +35,35 @@ export const DocumentPreview = ({
     generatedPdfUrl
   });
   
+  const [dialogHeight, setDialogHeight] = useState("80vh");
+  const [contentHeight, setContentHeight] = useState("0px");
+  
   // Log when component mounts or updates
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("TenantDocumentPreview: Preview modal displayed:", showPreview);
     console.log("TenantDocumentPreview: Is editing mode:", isEditing);
     console.log("TenantDocumentPreview: PDF URL available:", !!generatedPdfUrl);
+    console.log("TenantDocumentPreview: Dialog dimensions:", { dialogHeight, contentHeight });
+    
     if (generatedPdfUrl) {
       console.log("TenantDocumentPreview: PDF URL starts with:", generatedPdfUrl.substring(0, 30) + "...");
     }
-  }, [showPreview, isEditing, generatedPdfUrl]);
+  }, [showPreview, isEditing, generatedPdfUrl, dialogHeight, contentHeight]);
+
+  // Set content height when dialog is shown
+  useEffect(() => {
+    if (showPreview) {
+      // Reserve space for header and buttons (adjust as needed)
+      const headerHeight = 60; // Approximate header height
+      const buttonsHeight = 60; // Approximate buttons section height
+      const spacing = 32; // Account for padding/margins
+      
+      const availableHeight = parseInt(dialogHeight) - headerHeight - buttonsHeight - spacing;
+      setContentHeight(`${availableHeight}px`);
+      
+      console.log("TenantDocumentPreview: Calculated content height:", `${availableHeight}px`);
+    }
+  }, [showPreview, dialogHeight]);
 
   const handleDownload = async () => {
     console.log("TenantDocumentPreview: Starting download");
@@ -65,44 +85,55 @@ export const DocumentPreview = ({
 
   return (
     <Dialog open={showPreview} onOpenChange={setShowPreview}>
-      <DialogContent className="max-w-4xl h-[80vh]">
+      <DialogContent className="max-w-4xl" style={{ height: dialogHeight }}>
         <DialogHeader>
           <DialogTitle>Document Preview</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col h-full space-y-4">
-          {isEditing ? (
-            <div className="flex-1 min-h-0">
+          <div 
+            className="flex-1 min-h-0" 
+            style={{ height: contentHeight }}
+          >
+            {isEditing ? (
               <EditContent 
                 editedContent={editedContent} 
                 onEditContent={onEditContent} 
               />
-            </div>
-          ) : (
-            <div className="flex-1 min-h-0">
-              {generatedPdfUrl && (
-                <>
-                  {loadError ? (
-                    <ErrorState
-                      onRetry={handleRetryLoad}
-                      onDownload={handleDownload}
-                    />
-                  ) : (
-                    <PdfViewer
-                      pdfUrl={generatedPdfUrl}
-                      onError={() => setLoadError(true)}
-                    />
-                  )}
-                </>
-              )}
-            </div>
-          )}
-          <ActionButtons
-            isEditing={isEditing}
-            onClose={() => setShowPreview(false)}
-            onEdit={onEdit}
-            onSaveEdit={handleSaveEdit}
-            onDownload={handleDownload}
-          />
+            ) : (
+              generatedPdfUrl && (
+                loadError ? (
+                  <ErrorState
+                    onRetry={handleRetryLoad}
+                    onDownload={handleDownload}
+                  />
+                ) : (
+                  <PdfViewer
+                    pdfUrl={generatedPdfUrl}
+                    onError={() => {
+                      console.log("TenantDocumentPreview: PdfViewer reported error");
+                      setLoadError(true);
+                    }}
+                  />
+                )
+              )
+            )}
+          </div>
+          
+          <div className="mt-auto">
+            <ActionButtons
+              isEditing={isEditing}
+              onClose={() => {
+                console.log("TenantDocumentPreview: Closing preview");
+                setShowPreview(false);
+              }}
+              onEdit={() => {
+                console.log("TenantDocumentPreview: Entering edit mode");
+                onEdit();
+              }}
+              onSaveEdit={handleSaveEdit}
+              onDownload={handleDownload}
+            />
+          </div>
         </div>
       </DialogContent>
     </Dialog>

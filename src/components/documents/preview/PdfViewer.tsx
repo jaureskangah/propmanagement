@@ -10,12 +10,39 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const objectRef = useRef<HTMLObjectElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   
   useEffect(() => {
     if (containerRef.current) {
       console.log("PdfViewer: Enforcing white background on container");
       containerRef.current.style.backgroundColor = "#ffffff !important";
+      
+      // Log initial container dimensions
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      console.log("PdfViewer: Initial container dimensions:", { width, height });
+      setDimensions({ width, height });
     }
+  }, []);
+
+  // Track container dimensions
+  useEffect(() => {
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect;
+        console.log("PdfViewer: Container resized:", { width, height });
+        setDimensions({ width, height });
+      }
+    });
+    
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+    
+    return () => {
+      if (containerRef.current) {
+        observer.unobserve(containerRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
