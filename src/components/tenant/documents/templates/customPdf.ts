@@ -154,17 +154,17 @@ export const generateCustomPdf = async (content: string, options: PdfOptions = {
   });
 };
 
-// Helper function to format date - Corrected version to fix TypeScript error
+// Helper function to format date - Fixed TypeScript error
 const formatDate = (date: Date, format: string = 'DD/MM/YYYY'): string => {
   const day = date.getDate().toString().padStart(2, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
-  const year = date.getFullYear();
+  const year = date.getFullYear().toString(); // Explicitly convert year to string
   
-  // Fix: Use explicit string replacement instead of relying on automatic method selection
+  // Fix: Use string literals for replacement to avoid TypeScript errors
   let result = format;
   result = result.replace(/DD/g, day);
   result = result.replace(/MM/g, month);
-  result = result.replace(/YYYY/g, year);
+  result = result.replace(/YYYY/g, year.toString()); // Ensure year is a string
   
   return result;
 };
