@@ -4,6 +4,7 @@ import { useAuth } from './components/AuthProvider';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Vendors from './pages/Vendors';
 import AddVendor from './pages/AddVendor';
@@ -12,6 +13,8 @@ import AddTask from './pages/AddTask';
 import EditTask from './pages/EditTask';
 import Finances from './pages/Finances';
 import AddTenant from './pages/AddTenant';
+import TenantDashboardPage from './pages/tenant/TenantDashboard';
+import AuthPage from './pages/AuthPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -21,10 +24,12 @@ function App() {
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/auth" element={<AuthPage />} />
 
       {/* Protected Routes - only accessible when logged in */}
       <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-      <Route path="/dashboard" element={isAuthenticated ? <div>Dashboard</div> : <Navigate to="/login" />} />
+      <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+      <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
       <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="/vendors" element={isAuthenticated ? <Vendors /> : <Navigate to="/login" />} />
       <Route path="/add-vendor" element={isAuthenticated ? <AddVendor /> : <Navigate to="/login" />} />
