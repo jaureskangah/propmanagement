@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from './use-toast';
@@ -11,6 +10,7 @@ export interface DocumentTemplate {
   created_at: string;
   updated_at?: string;
   user_id?: string;
+  description?: string;
 }
 
 export function useTemplates() {
