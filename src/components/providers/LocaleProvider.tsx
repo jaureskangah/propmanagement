@@ -1,8 +1,7 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Language, UnitSystem, Translations } from '@/translations/types';
-import { en } from '@/translations/en';
-import { fr } from '@/translations/fr';
+import translations from '@/translations/en';
+import frTranslations from '@/translations/fr';
 import { toast } from "@/hooks/use-toast";
 
 interface LocaleContextType {
@@ -16,9 +15,9 @@ interface LocaleContextType {
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
-const translationsMap: Record<Language, any> = {
-  en,
-  fr
+const translationsMap: Record<Language, Translations> = {
+  en: translations as unknown as Translations,
+  fr: frTranslations as unknown as Translations
 };
 
 const LANGUAGE_STORAGE_KEY = 'app-language';

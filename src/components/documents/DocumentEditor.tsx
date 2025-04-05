@@ -1,3 +1,4 @@
+
 import { useRef, useState } from "react";
 import { useEditorState } from "./editor/useEditorState";
 import { AIAssistantDialog } from "./editor/AIAssistantDialog";
@@ -8,7 +9,7 @@ import { EditorToolbar } from "./editor/EditorToolbar";
 import { DocumentTextarea } from "./editor/DocumentTextarea";
 import { FormatToolbar } from "./editor/FormatToolbar";
 
-export interface DocumentEditorProps {
+interface DocumentEditorProps {
   content: string;
   onContentChange: (content: string) => void;
   onGeneratePreview: (content: string) => void;
@@ -40,6 +41,7 @@ export function DocumentEditor({
     onGeneratePreview(content);
   };
 
+  // Format insertion helpers
   const insertTextAtCursor = (text: string) => {
     const textarea = textareaRef.current;
     
@@ -50,6 +52,7 @@ export function DocumentEditor({
       
       let newText;
       if (selectedText) {
+        // If text is selected, wrap it with the format
         if (text === "**text**") {
           newText = content.substring(0, start) + "**" + selectedText + "**" + content.substring(end);
         } else if (text === "*text*") {
@@ -58,11 +61,13 @@ export function DocumentEditor({
           newText = content.substring(0, start) + text + content.substring(end);
         }
       } else {
+        // If no text is selected, just insert the format
         newText = content.substring(0, start) + text + content.substring(end);
       }
       
       onContentChange(newText);
       
+      // Set cursor position after inserted text
       setTimeout(() => {
         textarea.focus();
         const newPosition = start + text.length;
@@ -81,18 +86,21 @@ export function DocumentEditor({
   const createTableMarkdown = (rows: number, cols: number) => {
     let markdown = "\n";
     
+    // Header row
     markdown += "|";
     for (let i = 0; i < cols; i++) {
       markdown += ` Column ${i + 1} |`;
     }
     markdown += "\n";
     
+    // Separator row
     markdown += "|";
     for (let i = 0; i < cols; i++) {
       markdown += " --- |";
     }
     markdown += "\n";
     
+    // Data rows
     for (let i = 0; i < rows - 1; i++) {
       markdown += "|";
       for (let j = 0; j < cols; j++) {
@@ -144,6 +152,7 @@ export function DocumentEditor({
         isAdvancedEditingEnabled={isAdvancedEditingEnabled}
       />
 
+      {/* AI Assistant Dialog */}
       <AIAssistantDialog 
         isOpen={isAIDialogOpen}
         onClose={() => setIsAIDialogOpen(false)}
@@ -152,6 +161,7 @@ export function DocumentEditor({
         templateName={templateName}
       />
 
+      {/* Share Document Dialog */}
       <ShareDocumentDialog
         isOpen={isShareDialogOpen}
         onClose={() => setIsShareDialogOpen(false)}
@@ -159,6 +169,7 @@ export function DocumentEditor({
         templateName={templateName}
       />
       
+      {/* Save Template Dialog */}
       <SaveTemplateDialog
         isOpen={isSaveTemplateDialogOpen}
         onClose={() => setIsSaveTemplateDialogOpen(false)}
@@ -166,6 +177,7 @@ export function DocumentEditor({
         templateName={templateName}
       />
       
+      {/* Signature Dialog */}
       <SignatureDialog
         isOpen={isSignatureDialogOpen}
         onClose={() => setIsSignatureDialogOpen(false)}

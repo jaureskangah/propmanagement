@@ -1,5 +1,4 @@
-
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DocumentTemplateSelect } from "@/components/documents/DocumentTemplateSelect";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
@@ -10,38 +9,17 @@ import { DocumentPreview } from "@/components/documents/DocumentPreview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useSearchParams } from "react-router-dom";
-import { DocumentHistory } from "@/components/documents/history/DocumentHistory";
+import { DocumentHistoryTab } from "@/components/documents/history/DocumentHistoryTab";
 
 export default function DocumentGeneratorPage() {
   const { t } = useLocale();
-  const { isLoading: isLoadingTemplates } = useTemplates();
+  const { templates, isLoading: isLoadingTemplates } = useTemplates();
   const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [documentContent, setDocumentContent] = useState<string>('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const debouncedContent = useDebounce(documentContent, 500);
-  const [templates, setTemplates] = useState<any[]>([]);
-
-  useEffect(() => {
-    // Initialize templates when needed
-    async function loadTemplates() {
-      const templateData = await fetchMockTemplates();
-      setTemplates(templateData);
-    }
-    
-    loadTemplates();
-  }, []);
-
-  const fetchMockTemplates = async () => {
-    // This is a temporary mock function until we connect to the actual template API
-    return [
-      { id: 'lease-agreement', name: 'Lease Agreement', content: 'Sample lease agreement content' },
-      { id: 'rent-receipt', name: 'Rent Receipt', content: 'Sample receipt content' },
-      { id: 'notice', name: 'Notice to Vacate', content: 'Sample notice content' }
-    ];
-  };
 
   const handleTemplateSelect = useCallback((templateId: string) => {
     setSelectedTemplate(templateId);
@@ -62,8 +40,6 @@ export default function DocumentGeneratorPage() {
 
   const handleGeneratePreview = async () => {
     try {
-      setIsGenerating(true);
-      
       // Call the edge function to generate the PDF
       const response = await fetch('/api/generate-pdf', {
         method: 'POST',
@@ -91,8 +67,6 @@ export default function DocumentGeneratorPage() {
         description: "Impossible de générer l'aperçu du document",
         variant: "destructive",
       });
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -120,8 +94,6 @@ export default function DocumentGeneratorPage() {
           <DocumentEditor
             content={documentContent}
             onContentChange={handleContentChange}
-            onGeneratePreview={handleGeneratePreview}
-            isGenerating={isGenerating}
           />
           <Button onClick={handleGeneratePreview}>
             {t('documentGenerator.generatePreview')}
@@ -129,7 +101,7 @@ export default function DocumentGeneratorPage() {
         </TabsContent>
           
         <TabsContent value="history">
-          <DocumentHistory />
+          <DocumentHistoryTab />
         </TabsContent>
       </Tabs>
         
@@ -137,7 +109,6 @@ export default function DocumentGeneratorPage() {
         previewUrl={previewUrl}
         documentContent={documentContent}
         templateName={selectedTemplate || 'custom'}
-        isGenerating={isGenerating}
       />
     </div>
   );

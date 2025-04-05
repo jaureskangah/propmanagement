@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -9,18 +8,12 @@ interface DocumentPreviewProps {
   previewUrl: string | null;
   documentContent: string;
   templateName: string;
-  isGenerating?: boolean; // Added this prop
-  onShare?: () => void;   // Made this optional
-  previewError?: string | null; // Made this optional
 }
 
 export function DocumentPreview({
   previewUrl,
   documentContent,
-  templateName,
-  isGenerating = false, // Provide default
-  onShare,
-  previewError = null
+  templateName
 }: DocumentPreviewProps) {
   const { t } = useLocale();
   const { toast } = useToast();
@@ -55,11 +48,7 @@ export function DocumentPreview({
         <h2 className="text-xl font-semibold">{t('preview')}</h2>
       </div>
       
-      {isGenerating ? (
-        <div className="flex flex-col items-center justify-center h-[400px] text-center">
-          <p className="text-gray-500">{t('generatingPreview')}</p>
-        </div>
-      ) : previewUrl && !loadError ? (
+      {previewUrl && !loadError ? (
         <>
           <div className="h-[500px] border rounded-md overflow-hidden">
             <iframe 
@@ -76,14 +65,13 @@ export function DocumentPreview({
             isDownloading={isDownloading}
             onSaveToHistory={handleSaveToHistory}
             isSavingToHistory={isSavingToHistory}
-            onShare={onShare}
           />
         </>
       ) : (
         <div className="flex flex-col items-center justify-center h-[400px] text-center">
-          {loadError || previewError ? (
+          {loadError ? (
             <>
-              <p className="text-red-500">{previewError || t('noPreviewAvailable')}</p>
+              <p className="text-red-500">{t('noPreviewAvailable')}</p>
               <button 
                 onClick={handleRetry} 
                 className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

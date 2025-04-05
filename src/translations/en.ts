@@ -1,4 +1,5 @@
-
+import { DocumentGeneratorTranslations } from "./types/documents";
+import { enUS as enUSCore } from "@mui/material/locale";
 import { en as enCommon } from "./common";
 import { en as enErrors } from "./errors";
 import { en as enPages } from "./pages";
@@ -10,9 +11,10 @@ import { en as enProperties } from "./properties";
 import { en as enVendors } from "./vendors";
 import { en as enFinances } from "./finances";
 // Import document translations
-import enDocumentGenerator from "./features/documents/en";
+import { enDocumentGenerator } from "./features/documents/en";
 
 export const en = {
+  core: enUSCore,
   common: enCommon,
   errors: enErrors,
   pages: enPages,
@@ -23,5 +25,5 @@ export const en = {
   properties: enProperties,
   vendors: enVendors,
   finances: enFinances,
-  documentGenerator: enDocumentGenerator
-};
+  documentGenerator: enDocumentGenerator,
+} as const;

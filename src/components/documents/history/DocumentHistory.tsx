@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
@@ -8,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Download, Eye, Trash2 } from "lucide-react";
 import { Loader2 } from "lucide-react";
-import { downloadDocument, viewDocument } from "./DocumentHistoryHelpers";
 
 interface DocumentHistoryEntry {
   id: string;
@@ -58,7 +58,13 @@ export function DocumentHistory() {
   const handleDownload = (document: DocumentHistoryEntry) => {
     if (!document.file_url) return;
     
-    downloadDocument(document.file_url, `${document.name || 'document'}.pdf`);
+    // Create a link element and simulate click to download
+    const a = document.createElement('a');
+    a.href = document.file_url;
+    a.download = `${document.name || 'document'}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
     
     toast({
       title: t('downloadStarted'),
@@ -68,7 +74,7 @@ export function DocumentHistory() {
 
   const handleView = (document: DocumentHistoryEntry) => {
     if (!document.file_url) return;
-    viewDocument(document.file_url);
+    window.open(document.file_url, '_blank');
   };
 
   const confirmDelete = (document: DocumentHistoryEntry) => {
