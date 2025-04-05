@@ -75,7 +75,7 @@ export function DocumentPreview({
   // Show loading state
   if (isGenerating) {
     return (
-      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4">
+      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-white dark:bg-gray-900">
         <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
         <p className="text-muted-foreground text-center">
           {t('generatingPreview')}
@@ -87,7 +87,7 @@ export function DocumentPreview({
   // Show empty state when no preview is available
   if (!previewUrl) {
     return (
-      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4">
+      <div className="flex flex-col items-center justify-center h-[500px] border border-dashed rounded-md p-4 bg-white dark:bg-gray-900">
         <div className="bg-muted/30 p-4 rounded-full mb-4">
           <File className="h-12 w-12 text-muted-foreground" />
         </div>
@@ -101,11 +101,12 @@ export function DocumentPreview({
 
   return (
     <div className="space-y-4">
-      <div className="border rounded-md h-[500px] overflow-auto bg-white shadow-sm">
+      <div className="border rounded-md h-[500px] overflow-auto bg-white dark:bg-gray-900 shadow-sm">
         <iframe
           src={previewUrl}
           title="Document Preview"
           className="w-full h-full"
+          style={{ backgroundColor: "white" }}
         />
       </div>
 
@@ -114,7 +115,7 @@ export function DocumentPreview({
           variant="outline"
           onClick={handleSaveToSystem}
           disabled={isSaving}
-          className="bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700"
+          className="bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700 dark:bg-blue-900 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-800"
         >
           {isSaving ? (
             <>
@@ -123,7 +124,7 @@ export function DocumentPreview({
             </>
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4 text-blue-600" />
+              <Save className="mr-2 h-4 w-4 text-blue-600 dark:text-blue-400" />
               {t('saveDocument')}
             </>
           )}
@@ -133,9 +134,9 @@ export function DocumentPreview({
           <Button 
             variant="outline"
             onClick={onShare}
-            className="bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700"
+            className="bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-800"
           >
-            <Share2 className="mr-2 h-4 w-4 text-purple-600" />
+            <Share2 className="mr-2 h-4 w-4 text-purple-600 dark:text-purple-400" />
             {t('shareDocument')}
           </Button>
         )}
@@ -143,7 +144,7 @@ export function DocumentPreview({
         <Button 
           onClick={handleDownload} 
           disabled={isDownloading}
-          className="bg-green-600 hover:bg-green-700 text-white"
+          className="bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-800"
         >
           {isDownloading ? (
             <>
@@ -159,13 +160,13 @@ export function DocumentPreview({
         </Button>
       </div>
 
-      <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md flex items-start">
+      <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md flex items-start dark:bg-blue-900/30 dark:border-blue-800">
         <div className="mr-2 mt-1">
-          <AlertTriangle className="h-5 w-5 text-blue-500" />
+          <AlertTriangle className="h-5 w-5 text-blue-500 dark:text-blue-400" />
         </div>
         <div>
-          <h4 className="text-sm font-medium text-blue-700">{t('documentTip')}</h4>
-          <p className="text-xs text-blue-600">
+          <h4 className="text-sm font-medium text-blue-700 dark:text-blue-300">{t('documentTip')}</h4>
+          <p className="text-xs text-blue-600 dark:text-blue-400">
             {t('documentTipDescription')}
           </p>
         </div>
