@@ -28,12 +28,13 @@ const DocumentViewer = ({ document, isOpen, onClose }: DocumentViewerProps) => {
   
   const handleDownload = () => {
     if (document.fileUrl) {
-      const link = document.createElement("a");
+      // Use window.document instead of document to avoid confusion with the parameter name
+      const link = window.document.createElement("a");
       link.href = document.fileUrl;
       link.download = `${document.name}.pdf`;
-      document.body.appendChild(link);
+      window.document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      window.document.body.removeChild(link);
       
       toast({
         title: t('downloadStarted'),
@@ -135,14 +136,15 @@ export const DocumentHistory = () => {
     }
   };
   
-  const handleDirectDownload = (document: DocumentHistoryEntry) => {
-    if (document.fileUrl) {
-      const link = document.createElement("a");
-      link.href = document.fileUrl;
-      link.download = `${document.name}.pdf`;
-      document.body.appendChild(link);
+  const handleDirectDownload = (doc: DocumentHistoryEntry) => {
+    if (doc.fileUrl) {
+      // Use window.document instead of document to avoid confusion with the parameter name
+      const link = window.document.createElement("a");
+      link.href = doc.fileUrl;
+      link.download = `${doc.name}.pdf`;
+      window.document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      window.document.body.removeChild(link);
       
       toast({
         title: t('downloadStarted'),
