@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -84,7 +85,7 @@ export default {
   // Dummy content for templates
   leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
   leaseRenewalContent: "# LEASE RENEWAL\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\nThe lease initially signed on [date] expires on [date]. The parties agree to renew said lease under the following conditions:",
-  rentReceiptContent: "# RENT RECEIPT\n\nI the undersigned [Landlord Name], owner of the accommodation located at [Address], declare having received from [Tenant Name] the amount of [Amount] representing the rent for [Period].\n\nDone at [Location], on [Date]\n\n[Signature]"
+  rentReceiptContent: "# RENT RECEIPT\n\nI the undersigned [Landlord Name], owner of the accommodation located at [Address], declare having received from [Tenant Name] the amount of [Amount] representing the rent for [Period].\n\nDone at [Location], on [Date]\n\n[Signature]",
   
   // New sharing translations
   shareDocument: "Share Document",
@@ -113,5 +114,5 @@ export default {
   note: "Note",
   usingDirectLink: "Using direct link - no expiration",
   cancel: "Cancel",
-  noFileToShare: "No file available to share",
+  noFileToShare: "No file available to share"
 };
