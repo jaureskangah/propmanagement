@@ -18,6 +18,7 @@ import AuthPage from './pages/AuthPage';
 import Documents from './pages/Documents';
 import DocumentHistory from './pages/DocumentHistory';
 import TenantDocuments from './pages/TenantDocuments';
+import DocumentGenerator from './pages/DocumentGenerator';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -42,11 +43,9 @@ function App() {
       <Route path="/finances" element={isAuthenticated ? <Finances /> : <Navigate to="/login" />} />
       <Route path="/add-tenant" element={isAuthenticated ? <AddTenant /> : <Navigate to="/login" />} />
       <Route path="/documents" element={isAuthenticated ? <Documents /> : <Navigate to="/login" />} />
+      <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
       <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
       <Route path="/tenant/documents" element={isAuthenticated ? <TenantDocuments /> : <Navigate to="/login" />} />
-
-      {/* 404 Page */}
-      <Route path="*" element={<NotFound />} />
     </Routes>
   );
 }

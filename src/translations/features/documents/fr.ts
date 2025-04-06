@@ -1,4 +1,3 @@
-
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -21,6 +20,10 @@ export default {
   generatingPreview: "Génération de l'aperçu en cours...",
   templateLoaded: "Modèle chargé",
   templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
+  document: "Document",
+  pdfGenerationError: "Erreur lors de la génération du PDF",
+  unknownError: "Erreur inconnue",
+  emptyDocument: "Le contenu du document est vide",
   
   // Document history related translations
   documentHistory: "Historique des documents",
@@ -131,5 +134,10 @@ export default {
   leaseEnd: "Fin de bail",
   rentAmount: "Montant du loyer",
   date: "Date",
-  currentDate: "Date actuelle"
+  currentDate: "Date actuelle",
+  
+  // Other keys
+  selectDocumentTemplate: "Sélectionner un modèle de document",
+  generateDocument: "Générer un document",
+  templateLoadError: "Impossible de charger le contenu du modèle"
 };
