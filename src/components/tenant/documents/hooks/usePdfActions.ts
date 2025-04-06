@@ -1,13 +1,11 @@
-
 import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "../templates/customPdf";
 import { generateTemplateContent } from "../templates/templateContent";
 import { uploadDocumentToStorage, generateFileName } from "../storage/documentStorage";
 import type { Tenant } from "@/types/tenant";
-import { TenantData } from "./useTenantData";
 
 interface UsePdfActionsProps {
-  tenant: TenantData | null;
+  tenant: Tenant;
   onDocumentGenerated: () => void;
   setShowPreview: (show: boolean) => void;
   setIsEditing: (editing: boolean) => void;
@@ -41,14 +39,14 @@ export const usePdfActions = ({
 
     setIsGenerating(true);
     try {
-      const initialContent = generateTemplateContent(selectedTemplate, tenant as any);
+      const initialContent = generateTemplateContent(selectedTemplate, tenant);
       console.log("Generating PDF with content:", initialContent);
       
       const pdfBuffer = await generateCustomPdf(initialContent);
       console.log("PDF buffer generated successfully");
 
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
-      const fileName = generateFileName(selectedTemplate, tenant as any);
+      const fileName = generateFileName(selectedTemplate, tenant);
       const pdfUrl = URL.createObjectURL(pdfBlob);
       
       setGeneratedPdfUrl(pdfUrl);
@@ -70,11 +68,11 @@ export const usePdfActions = ({
     if (!generatedPdfUrl || !selectedTemplate) return;
 
     try {
-      const fileName = generateFileName(selectedTemplate, tenant as any);
+      const fileName = generateFileName(selectedTemplate, tenant);
       const response = await fetch(generatedPdfUrl);
       const blob = await response.blob();
       
-      await uploadDocumentToStorage(blob, tenant as any, `${tenant?.id}/${fileName}`);
+      await uploadDocumentToStorage(blob, tenant, `${tenant.id}/${fileName}`);
 
       toast({
         title: "Success",

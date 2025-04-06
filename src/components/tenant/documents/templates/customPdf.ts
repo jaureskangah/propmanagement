@@ -5,57 +5,18 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { formatDate } from "./utils/dateUtils";
 import { parseContentIntoSections } from "./utils/contentParser";
 import { PdfOptions, getMergedOptions } from "./utils/pdfOptions";
-import type { Tenant } from "@/types/tenant";
 
 // Initialize pdfMake with fonts
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
-
-// Process dynamic fields in content
-const processDynamicFields = (content: string, tenant?: Tenant): string => {
-  if (!content) return content;
-  
-  let processedContent = content;
-  
-  // Replace date
-  processedContent = processedContent.replace(/{{currentDate}}/g, formatDate(new Date()));
-  
-  if (tenant) {
-    // Replace tenant fields
-    processedContent = processedContent.replace(/{{tenant\.name}}/g, tenant.name || '');
-    processedContent = processedContent.replace(/{{tenant\.email}}/g, tenant.email || '');
-    processedContent = processedContent.replace(/{{tenant\.phone}}/g, tenant.phone || 'Not provided');
-    processedContent = processedContent.replace(/{{tenant\.unit_number}}/g, tenant.unit_number || '');
-    processedContent = processedContent.replace(/{{tenant\.lease_start}}/g, tenant.lease_start || '');
-    processedContent = processedContent.replace(/{{tenant\.lease_end}}/g, tenant.lease_end || '');
-    processedContent = processedContent.replace(/{{tenant\.rent_amount}}/g, tenant.rent_amount?.toString() || '');
-    
-    // Replace property fields
-    if (tenant.properties) {
-      processedContent = processedContent.replace(/{{property\.name}}/g, tenant.properties.name || 'Not specified');
-    } else {
-      processedContent = processedContent.replace(/{{property\.name}}/g, 'Not specified');
-    }
-  }
-  
-  return processedContent;
-};
 
 /**
  * Generates a custom PDF document from text content
  * @param content The document content as text
  * @param options Configuration options for the PDF
- * @param tenant Optional tenant data for dynamic field replacement
  * @returns Promise resolving to a Uint8Array representing the PDF
  */
-export const generateCustomPdf = async (
-  content: string, 
-  options: PdfOptions = {},
-  tenant?: Tenant
-) => {
+export const generateCustomPdf = async (content: string, options: PdfOptions = {}) => {
   console.log("Generating PDF with content:", content);
-  
-  // Process dynamic fields in content before generating PDF
-  const processedContent = processDynamicFields(content, tenant);
   
   // Get merged options with defaults
   const mergedOptions = getMergedOptions(options);
@@ -96,7 +57,7 @@ export const generateCustomPdf = async (
   };
   
   // Parse content into sections
-  const contentSections = parseContentIntoSections(processedContent);
+  const contentSections = parseContentIntoSections(content);
   
   // Create document definition
   const documentDefinition: TDocumentDefinitions = {

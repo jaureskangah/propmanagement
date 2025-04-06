@@ -1,63 +1,62 @@
-
 import type { Tenant } from "@/types/tenant";
 
 export const generateTemplateContent = (template: string, tenant: Tenant): string => {
   switch (template) {
     case "lease":
-      return `CONTRAT DE BAIL
+      return `LEASE AGREEMENT
 
-Locataire: {{tenant.name}}
-Email: {{tenant.email}}
-Téléphone: {{tenant.phone}}
-Propriété: {{property.name}}
-Numéro d'unité: {{tenant.unit_number}}
-Date de début: {{tenant.lease_start}}
-Date de fin: {{tenant.lease_end}}
-Loyer mensuel: {{tenant.rent_amount}}€
+Tenant: ${tenant.name}
+Email: ${tenant.email}
+Phone: ${tenant.phone || 'Not provided'}
+Property: ${tenant.properties?.name || 'Not specified'}
+Unit Number: ${tenant.unit_number}
+Start Date: ${tenant.lease_start}
+End Date: ${tenant.lease_end}
+Monthly Rent: $${tenant.rent_amount}
 
-[Le reste du contrat peut être édité ici]`;
+[The rest of the contract can be edited here]`;
 
     case "receipt":
-      return `QUITTANCE DE LOYER
+      return `RENT RECEIPT
 
-Locataire: {{tenant.name}}
-Propriété: {{property.name}}
-Numéro d'unité: {{tenant.unit_number}}
-Montant: {{tenant.rent_amount}}€
-Date: {{currentDate}}
+Tenant: ${tenant.name}
+Property: ${tenant.properties?.name || 'Not specified'}
+Unit Number: ${tenant.unit_number}
+Amount: $${tenant.rent_amount}
+Date: ${new Date().toLocaleDateString()}
 
-[Les détails du paiement peuvent être édités ici]`;
+[Payment details can be edited here]`;
 
     case "notice":
-      return `AVIS DE DÉPART
+      return `NOTICE TO VACATE
 
-Date: {{currentDate}}
+Date: ${new Date().toLocaleDateString()}
 
-À: {{tenant.name}}
-{{property.name}}
-Unité {{tenant.unit_number}}
+To: ${tenant.name}
+${tenant.properties?.name || 'Property Address'}
+Unit ${tenant.unit_number}
 
-Cher/Chère {{tenant.name}},
+Dear ${tenant.name},
 
-Cette lettre sert d'avis formel vous demandant de quitter les lieux décrits ci-dessus.
+This letter serves as formal notice that you are required to vacate the premises described above. 
 
-Détails du bail actuel:
-- Date de début du bail: {{tenant.lease_start}}
-- Date de fin du bail: {{tenant.lease_end}}
-- Loyer mensuel: {{tenant.rent_amount}}€
+Current Lease Details:
+- Lease Start Date: ${tenant.lease_start}
+- Lease End Date: ${tenant.lease_end}
+- Monthly Rent: $${tenant.rent_amount}
 
-Veuillez vous assurer que:
-1. Tous les effets personnels sont retirés
-2. L'unité est soigneusement nettoyée
-3. Toutes les clés sont rendues
-4. Une adresse de réexpédition est fournie
+Please ensure that:
+1. All personal belongings are removed
+2. The unit is cleaned thoroughly
+3. All keys are returned
+4. A forwarding address is provided
 
-[Les conditions générales supplémentaires peuvent être modifiées ici]
+[Additional terms and conditions can be edited here]
 
-Cordialement,
-La Gestion Immobilière`;
+Sincerely,
+Property Management`;
 
     default:
-      throw new Error("Modèle non implémenté");
+      throw new Error("Template not implemented");
   }
 };

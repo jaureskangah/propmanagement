@@ -1,131 +1,90 @@
-import { useState, useEffect } from "react";
+
+import { useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
-import type { Tenant } from "@/types/tenant";
+import { Tenant } from "@/types/tenant";
 
-export interface TenantData {
-  id: string;
-  name: string;
-  email: string;
-  phone: string | null;
-  lease_start: string;
-  lease_end: string;
-  rent_amount: number | null;
-  unit_number: string;
-  properties?: {
-    name: string;
-    address: string;
-  };
-  // Other properties can be added as needed
-}
-
-export const convertToTenant = (tenantData: TenantData): Tenant => {
-  return {
-    id: tenantData.id,
-    name: tenantData.name,
-    email: tenantData.email,
-    phone: tenantData.phone,
-    property_id: null,  // Default values for required Tenant fields
-    properties: tenantData.properties ? { name: tenantData.properties.name } : undefined,
-    unit_number: tenantData.unit_number,
-    lease_start: tenantData.lease_start,
-    lease_end: tenantData.lease_end,
-    rent_amount: tenantData.rent_amount || 0,
-    user_id: "",  // Default value
-    created_at: "",  // Default value
-    updated_at: "",  // Default value
-    tenant_profile_id: null,  // Default value
-    documents: [],  // Default empty array
-    paymentHistory: [],  // Default empty array
-    maintenanceRequests: [],  // Default empty array
-    communications: []  // Default empty array
-  };
-};
-
-export const useTenantData = () => {
-  const { user } = useAuth();
-  const [tenant, setTenant] = useState<TenantData | null>(null);
+export const useTenantData = (userId: string | undefined, toast: any) => {
+  const [tenant, setTenant] = useState<Tenant | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  const fetchTenant = async () => {
-    if (!user?.id) {
+  const fetchTenantData = useCallback(async () => {
+    if (!userId) {
+      console.log("useTenantData: No user ID provided");
       setIsLoading(false);
       return null;
     }
-
+    
     try {
+      console.log("Fetching tenant data for user:", userId);
       setIsLoading(true);
-      setError(null);
-
-      // Fetch tenant data from profiles
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('id, full_name, email, phone')
-        .eq('id', user.id)
-        .single();
-
-      if (profileError) {
-        throw profileError;
-      }
-
-      if (!profileData) {
-        setTenant(null);
-        setIsLoading(false);
-        return null;
-      }
-
-      // Fetch tenant-specific data if it exists
       const { data: tenantData, error: tenantError } = await supabase
-        .from('tenant_profiles')
+        .from('tenants')
         .select(`
-          id, 
-          lease_start, 
-          lease_end, 
-          rent_amount, 
-          unit_number,
-          property_id,
-          properties:property_id (name, address)
+          *,
+          properties:property_id(name)
         `)
-        .eq('user_id', user.id)
+        .eq('tenant_profile_id', userId)
         .maybeSingle();
 
-      if (tenantError && tenantError.code !== 'PGRST116') {
+      if (tenantError) {
+        console.error('Error fetching tenant data:', tenantError);
         throw tenantError;
       }
-
-      // Combine profile and tenant data
-      const combinedTenantData: TenantData = {
-        id: profileData.id,
-        name: profileData.full_name,
-        email: profileData.email,
-        phone: profileData.phone,
-        lease_start: tenantData?.lease_start || '',
-        lease_end: tenantData?.lease_end || '',
-        rent_amount: tenantData?.rent_amount || null,
-        unit_number: tenantData?.unit_number || '',
-        properties: tenantData?.properties || undefined
-      };
-
-      setTenant(combinedTenantData);
-      return combinedTenantData;
-    } catch (err: any) {
-      console.error('Error fetching tenant data:', err);
-      setError(err.message || 'Failed to load tenant data');
+      
+      console.log("Tenant data result:", tenantData);
+      
+      // Ensure properties has the correct format
+      if (tenantData) {
+        // Handle properties data correctly
+        let formattedProperties: { name: string } = { name: "" };
+        
+        if (tenantData.properties) {
+          if (Array.isArray(tenantData.properties)) {
+            // If it's an array, take the first element if it exists
+            if (tenantData.properties.length > 0) {
+              const firstProperty = tenantData.properties[0];
+              if (firstProperty && typeof firstProperty === 'object') {
+                // Check if the 'name' property exists in the object
+                formattedProperties = { 
+                  name: 'name' in firstProperty ? String(firstProperty.name || "") : "" 
+                };
+              }
+            }
+          } else if (typeof tenantData.properties === 'object') {
+            // If it's already an object, use it directly
+            const propObj = tenantData.properties as Record<string, any>;
+            formattedProperties = { 
+              name: 'name' in propObj ? String(propObj.name || "") : "" 
+            };
+          }
+        }
+        
+        const formattedTenant = {
+          ...tenantData,
+          properties: formattedProperties
+        };
+        
+        setTenant(formattedTenant);
+        return formattedTenant;
+      }
+      
+      return null;
+    } catch (error) {
+      console.error('Error fetching tenant data:', error);
+      toast({
+        title: "Non lié",
+        description: "Votre compte n'est pas lié à un profil locataire",
+        variant: "destructive",
+      });
       return null;
     } finally {
       setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    fetchTenant();
-  }, [user?.id]);
+  }, [userId, toast]);
 
   return {
     tenant,
     isLoading,
-    error,
-    refreshTenant: fetchTenant
+    fetchTenantData
   };
 };

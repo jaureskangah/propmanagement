@@ -15,7 +15,7 @@ export const useDocumentState = (
   toast: any
 ) => {
   const [isInitialized, setIsInitialized] = useState(false);
-  const { tenant, isLoading: tenantLoading, refreshTenant } = useTenantData();
+  const { tenant, isLoading: tenantLoading, fetchTenantData } = useTenantData(user?.id, toast);
   const { documents, isLoading: documentsLoading, fetchDocuments, setDocuments, error } = useTenantDocuments(tenant?.id || null, toast);
   const { 
     filteredDocuments, 
@@ -39,12 +39,16 @@ export const useDocumentState = (
     console.log("useDocumentState - User ID:", user?.id);
     if (user?.id && !isInitialized) {
       console.log("Fetching tenant data for user:", user.id);
-      refreshTenant().then(() => {
-        console.log("Tenant data fetched");
+      fetchTenantData().then((tenantData) => {
+        console.log("Tenant data fetched:", tenantData);
         setIsInitialized(true);
+        
+        if (!tenantData) {
+          console.log("No tenant profile found for user:", user.id);
+        }
       });
     }
-  }, [user, refreshTenant, isInitialized]);
+  }, [user, fetchTenantData, isInitialized]);
 
   // Fetch documents when tenant ID is available
   useEffect(() => {
@@ -85,7 +89,7 @@ export const useDocumentState = (
     setSortBy,
     sortOrder,
     setSortOrder,
-    fetchTenantData: refreshTenant,
+    fetchTenantData,
     handleDocumentUpdate,
     handleDeleteDocument: (documentId: string, filename: string) => handleDeleteDocument(documentId, toast)
   };

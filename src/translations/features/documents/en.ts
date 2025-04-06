@@ -1,5 +1,5 @@
-
 export default {
+  // Existing translations
   documentGenerator: "Document Generator",
   documentTemplates: "Document Templates",
   editContent: "Edit Content",
@@ -35,7 +35,7 @@ export default {
   // Document categories
   leaseDocuments: "Lease Documents",
   paymentDocuments: "Payment Documents",
-  noticeDocuments: "Notices",
+  noticeDocuments: "Notice Documents",
   inspectionDocuments: "Inspection Documents",
   miscDocuments: "Miscellaneous Documents",
   
@@ -49,8 +49,8 @@ export default {
   noticeToVacate: "Notice to Vacate",
   entryNotice: "Entry Notice",
   maintenanceNotice: "Maintenance Notice",
-  moveInChecklist: "Move-In Checklist",
-  moveOutChecklist: "Move-Out Checklist",
+  moveInChecklist: "Move-in Checklist",
+  moveOutChecklist: "Move-out Checklist",
   inspectionReport: "Inspection Report",
   tenantComplaint: "Tenant Complaint",
   propertyRules: "Property Rules",
@@ -71,20 +71,6 @@ export default {
   saveSignature: "Save Signature",
   clear: "Clear",
   
-  // New translations for dynamic fields
-  insertDynamicField: "Insert Field",
-  dynamicFields: "Dynamic Fields",
-  currentDate: "Current Date",
-  tenantName: "Tenant Name",
-  tenantEmail: "Tenant Email",
-  tenantPhone: "Tenant Phone",
-  propertyName: "Property Name",
-  unitNumber: "Unit Number",
-  leaseStart: "Lease Start",
-  leaseEnd: "Lease End",
-  rentAmount: "Rent Amount",
-  dynamicFieldsDescription: "Insert fields that will be automatically replaced with data",
-  
   // Template related
   allTemplates: "All Templates",
   customTemplates: "Custom Templates",
@@ -93,23 +79,11 @@ export default {
   deleteTemplate: "Delete Template",
   deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
   delete: "Delete",
-  
-  // Save template related 
-  saveAsTemplate: "Save as Template",
-  saveAsTemplateDescription: "Save this document as a template for future use",
-  templateName: "Template Name",
-  templateNamePlaceholder: "Enter template name",
-  category: "Category",
-  selectCategory: "Select category",
-  description: "Description",
-  templateDescriptionPlaceholder: "Enter template description",
-  saveTemplate: "Save Template",
-  cancel: "Cancel",
 
   // Dummy content for templates
-  leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord hereby leases to the Tenant, who accepts, the dwelling described below.\n\n## ARTICLE 2 - DESCRIPTION OF THE DWELLING\n\n[Description of the dwelling]",
-  leaseRenewalContent: "# LEASE RENEWAL\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\nThe lease initially concluded on [date] expires on [date]. The parties agree to renew said lease under the following conditions:",
-  rentReceiptContent: "# RENT RECEIPT\n\nI, the undersigned [Landlord Name], owner of the property located at [Address], declare that I have received from [Tenant Name] the amount of [Amount] € representing the rent for the [Period].\n\nMade in [Location], on [Date]\n\n[Signature]",
+  leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
+  leaseRenewalContent: "# LEASE RENEWAL\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\nThe lease initially signed on [date] expires on [date]. The parties agree to renew said lease under the following conditions:",
+  rentReceiptContent: "# RENT RECEIPT\n\nI the undersigned [Landlord Name], owner of the accommodation located at [Address], declare having received from [Tenant Name] the amount of [Amount] representing the rent for [Period].\n\nDone at [Location], on [Date]\n\n[Signature]",
   
   // New sharing translations
   shareDocument: "Share Document",
@@ -117,7 +91,7 @@ export default {
   shareByEmail: "Email",
   shareByLink: "Link",
   recipients: "Recipients",
-  separateEmails: "Separate email addresses with commas",
+  separateEmails: "Separate multiple email addresses with commas",
   message: "Message",
   optionalMessage: "Add an optional message",
   send: "Send",
@@ -127,7 +101,7 @@ export default {
   generatingLink: "Generating...",
   shareableLink: "Shareable Link",
   linkValidFor7Days: "This link is valid for 7 days",
-  generateLinkDescription: "Generate a link to share this document",
+  generateLinkDescription: "Generate a shareable link for this document",
   successTitle: "Success",
   errorTitle: "Error",
   documentShared: "Document shared successfully",
@@ -137,10 +111,6 @@ export default {
   copyFailed: "Failed to copy link",
   noteTitle: "Note",
   usingDirectLink: "Using direct link - no expiration",
-  noFileToShare: "No file available to share",
-  
-  // Real-time preview related translations
-  realtimePreview: "Real-time preview",
-  realtimePreviewDescription: "Preview updates as you type",
-  generatingRealtimePreview: "Generating real-time preview..."
+  cancel: "Cancel",
+  noFileToShare: "No file available to share"
 };
