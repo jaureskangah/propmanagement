@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -19,7 +18,12 @@ interface FieldCategory {
   }>;
 }
 
-export function DynamicFieldsMenu({ onInsertField }: DynamicFieldsProps) {
+interface DynamicFieldsMenuProps {
+  onInsertField: (field: string) => void;
+  title?: string;
+}
+
+export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuProps) {
   const { t } = useLocale();
   const [open, setOpen] = useState(false);
 

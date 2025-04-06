@@ -35,7 +35,7 @@ export function EditorToolbar({
           className="gap-2 bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700"
         >
           <Sparkles className="h-4 w-4 text-purple-600" />
-          {t('aiAssistant') || "Assistant IA"}
+          {t('documentGenerator.aiAssistant') || "Assistant IA"}
         </Button>
         
         <Button
@@ -48,7 +48,7 @@ export function EditorToolbar({
           }`}
         >
           <PenSquare className={`h-4 w-4 ${isAdvancedEditingEnabled ? "text-white" : "text-indigo-600"}`} />
-          {t('advancedEditing') || "Édition avancée"}
+          {t('documentGenerator.advancedEditing') || "Édition avancée"}
         </Button>
         
         <Button
@@ -57,7 +57,7 @@ export function EditorToolbar({
           className="gap-2 bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700"
         >
           <Share2 className="h-4 w-4 text-blue-600" />
-          {t('shareDocument') || "Partager le document"}
+          {t('documentGenerator.shareDocument') || "Partager le document"}
         </Button>
         
         <Button
@@ -67,7 +67,7 @@ export function EditorToolbar({
           disabled={!hasContent}
         >
           <Save className="h-4 w-4 text-amber-600" />
-          {t('saveAsTemplate') || "Enregistrer comme modèle"}
+          {t('documentGenerator.saveAsTemplate') || "Enregistrer comme modèle"}
         </Button>
       </div>
       
@@ -79,12 +79,12 @@ export function EditorToolbar({
         {isGenerating ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            {t('generating') || "Génération..."}
+            {t('documentGenerator.generating') || "Génération..."}
           </>
         ) : (
           <>
             <FileCheck className="h-4 w-4" />
-            {t('generatePreview') || "Générer l'aperçu"}
+            {t('documentGenerator.generatePreview') || "Générer l'aperçu"}
           </>
         )}
       </Button>

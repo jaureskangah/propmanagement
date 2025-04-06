@@ -24,14 +24,14 @@ const DocumentGenerator = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-bold">{t('documentGenerator')}</h1>
+              <h1 className="text-3xl font-bold">{t('documentGenerator.documentGenerator') || "Générateur de documents"}</h1>
               <Button 
                 variant="outline"
                 onClick={() => navigate('/document-history')}
                 className="flex items-center gap-2"
               >
                 <History className="h-4 w-4" />
-                {t('documentHistory')}
+                {t('documentGenerator.documentHistory') || "Historique des documents"}
               </Button>
             </div>
 

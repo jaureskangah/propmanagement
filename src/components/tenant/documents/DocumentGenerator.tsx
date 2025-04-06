@@ -35,16 +35,16 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
     
     try {
       if (!content || content.trim() === '') {
-        throw new Error(t('emptyDocument') || "Document content is empty");
+        throw new Error(t('documentGenerator.emptyDocument') || "Le contenu du document est vide");
       }
       
       try {
         const lines = content.split('\n');
-        const title = lines.length > 0 ? lines[0].trim() : t('document') || 'Document';
+        const title = lines.length > 0 ? lines[0].trim() : t('documentGenerator.document') || 'Document';
         
         const pdfBuffer = await generateCustomPdf(content, {
           title: title,
-          headerText: selectedTemplateName || t('document') || 'Document',
+          headerText: selectedTemplateName || t('documentGenerator.document') || 'Document',
           showPageNumbers: true,
           showDate: true
         });
@@ -56,11 +56,11 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
         setActiveTab("preview");
       } catch (pdfError) {
         console.error("Error generating PDF from content:", pdfError);
-        throw new Error(t('pdfGenerationError') || "Error generating PDF");
+        throw new Error(t('documentGenerator.pdfGenerationError') || "Erreur lors de la génération du PDF");
       }
     } catch (error) {
       console.error("Error generating preview:", error);
-      setPreviewError(error instanceof Error ? error.message : t('unknownError') || "Unknown error");
+      setPreviewError(error instanceof Error ? error.message : t('documentGenerator.unknownError') || "Erreur inconnue");
       setActiveTab("preview");
     } finally {
       setIsGenerating(false);
@@ -70,8 +70,8 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
   const handleSaveToHistory = async () => {
     // Implement history saving logic here
     toast({
-      title: t('documentSaved'),
-      description: t('documentSavedDescription')
+      title: t('documentGenerator.documentSaved') || "Document enregistré",
+      description: t('documentGenerator.documentSavedDescription') || "Votre document a été enregistré avec succès"
     });
   };
 
@@ -80,7 +80,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
     
     const link = document.createElement("a");
     link.href = previewUrl;
-    link.download = `${selectedTemplateName || t('document') || "document"}.pdf`;
+    link.download = `${selectedTemplateName || t('documentGenerator.document') || "document"}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -88,8 +88,8 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
     await handleSaveToHistory();
     
     toast({
-      title: t('downloadStarted'),
-      description: t('downloadStartedDescription')
+      title: t('documentGenerator.downloadStarted') || "Téléchargement commencé",
+      description: t('documentGenerator.downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
     });
   };
 
@@ -108,7 +108,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
           <CardHeader className="border-b">
             <div className="flex items-center space-x-2">
               <FileText className="h-5 w-5 text-primary" />
-              <CardTitle>{t('documentTemplates')}</CardTitle>
+              <CardTitle>{t('documentGenerator.documentTemplates') || "Modèles de documents"}</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="pt-6">
@@ -134,7 +134,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="editor">
                   <FileCheck className="h-4 w-4 mr-2" />
-                  {t('editContent')}
+                  {t('documentGenerator.editContent') || "Éditer le contenu"}
                 </TabsTrigger>
                 <TabsTrigger value="preview" onClick={() => {
                   if (!previewUrl && documentContent) {
@@ -142,7 +142,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
                   }
                 }}>
                   <FilePlus className="h-4 w-4 mr-2" />
-                  {t('preview')}
+                  {t('documentGenerator.preview') || "Aperçu"}
                 </TabsTrigger>
               </TabsList>
             </Tabs>
@@ -156,17 +156,22 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
                   onGeneratePreview={handleGeneratePreview}
                   isGenerating={isGenerating}
                   templateName={selectedTemplateName}
-                  rightSlot={<DynamicFieldsMenu onInsertField={(field) => {
-                    setDocumentContent(prev => {
-                      const textarea = document.querySelector('textarea');
-                      if (!textarea) return prev + field;
-                      
-                      const start = textarea.selectionStart;
-                      const end = textarea.selectionEnd;
-                      
-                      return prev.substring(0, start) + field + prev.substring(end);
-                    });
-                  }} />}
+                  rightSlot={
+                    <DynamicFieldsMenu 
+                      onInsertField={(field) => {
+                        setDocumentContent(prev => {
+                          const textarea = document.querySelector('textarea');
+                          if (!textarea) return prev + field;
+                          
+                          const start = textarea.selectionStart;
+                          const end = textarea.selectionEnd;
+                          
+                          return prev.substring(0, start) + field + prev.substring(end);
+                        });
+                      }} 
+                      title={t('documentGenerator.insertDynamicField') || "Insérer un champ dynamique"}
+                    />
+                  }
                 />
               </TabsContent>
               <TabsContent value="preview" className="mt-0">

@@ -29,9 +29,9 @@ export function DocumentTemplateSelector({
   const [loading, setLoading] = useState(false);
 
   const templates = [
-    { id: "lease", name: t('leaseAgreement') || "Contrat de bail" },
-    { id: "receipt", name: t('rentReceipt') || "Quittance de loyer" },
-    { id: "notice", name: t('noticeToVacate') || "Avis de départ" },
+    { id: "lease", name: t('documentGenerator.leaseAgreement') || "Contrat de bail" },
+    { id: "receipt", name: t('documentGenerator.rentReceipt') || "Quittance de loyer" },
+    { id: "notice", name: t('documentGenerator.noticeToVacate') || "Avis de départ" },
   ];
 
   const handleSelectTemplate = (templateId: string) => {
@@ -61,14 +61,14 @@ export function DocumentTemplateSelector({
         
         onGenerateContent(content);
         toast({
-          title: t('templateLoaded'),
-          description: t('templateLoadedDescription')
+          title: t('documentGenerator.templateLoaded') || "Modèle chargé",
+          description: t('documentGenerator.templateLoadedDescription') || "Le contenu du modèle a été chargé avec succès"
         });
       } catch (error) {
         console.error("Error generating template content:", error);
         toast({
-          title: t('errorTitle') || "Erreur",
-          description: t('templateLoadError') || "Impossible de charger le contenu du modèle",
+          title: t('documentGenerator.errorTitle') || "Erreur",
+          description: t('documentGenerator.templateLoadError') || "Impossible de charger le contenu du modèle",
           variant: "destructive"
         });
       }
@@ -82,7 +82,7 @@ export function DocumentTemplateSelector({
     <div className="space-y-4">
       <Select value={selectedTemplate} onValueChange={handleSelectTemplate}>
         <SelectTrigger>
-          <SelectValue placeholder={t('selectDocumentTemplate') || "Sélectionner un modèle de document"} />
+          <SelectValue placeholder={t('documentGenerator.selectDocumentTemplate') || "Sélectionner un modèle de document"} />
         </SelectTrigger>
         <SelectContent>
           {templates.map((template) => (
@@ -99,7 +99,10 @@ export function DocumentTemplateSelector({
         className="w-full"
       >
         <FileText className="mr-2 h-4 w-4" />
-        {loading ? (t('generating') || "Génération...") : (t('generateDocument') || "Générer un document")}
+        {loading ? 
+          (t('documentGenerator.generating') || "Génération...") : 
+          (t('documentGenerator.generateDocument') || "Générer un document")
+        }
       </Button>
     </div>
   );
