@@ -19,7 +19,7 @@ const DocumentGenerator = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { tenant } = useTenantData({}, {});
+  const { tenant } = useTenantData();
   const { addToHistory } = useDocumentHistory();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +16,7 @@ export const DocumentGenerator = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const { addToHistory } = useDocumentHistory();
-  const { tenant } = useTenantData({}, {});
+  const { tenant } = useTenantData();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [documentContent, setDocumentContent] = useState("");
@@ -61,7 +62,7 @@ export const DocumentGenerator = () => {
         headerText: selectedTemplateName || 'Document',
         showPageNumbers: true,
         showDate: true
-      });
+      }, tenant);
       
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       

@@ -44,8 +44,8 @@ export function DocumentEditor({
     onGeneratePreview(content);
   });
   
-  // Get tenant data for dynamic fields - Fix the useTenantData call by passing required args
-  const { tenant } = useTenantData({}, {});
+  // Get tenant data for dynamic fields - Fix the useTenantData call by removing incorrect empty objects
+  const { tenant } = useTenantData();
   
   // Effect for real-time preview
   useEffect(() => {
