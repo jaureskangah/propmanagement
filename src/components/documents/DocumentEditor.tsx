@@ -39,6 +39,11 @@ export function DocumentEditor({
   const [isAdvancedEditingEnabled, setIsAdvancedEditingEnabled] = useState(false);
   const previewTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
+  // Create ref for the preview handler function so we can update it dynamically
+  const previewHandlerRef = useRef<(content: string) => void>((content) => {
+    onGeneratePreview(content);
+  });
+  
   // Get tenant data for dynamic fields
   const { tenant } = useTenantData();
 
@@ -54,7 +59,8 @@ export function DocumentEditor({
       // Set a delay before generating preview to avoid too many calls
       previewTimeoutRef.current = setTimeout(() => {
         console.log("Auto-generating preview after content change");
-        onGeneratePreview(content);
+        // Use the current handler from the ref
+        previewHandlerRef.current(content);
       }, 1500); // 1.5 second delay
     }
     
@@ -66,13 +72,55 @@ export function DocumentEditor({
     };
   }, [content, isGenerating, onGeneratePreview]);
 
+  // Regular preview handler that triggers preview without processing
   const handleGeneratePreview = () => {
     // Clear any pending automatic preview
     if (previewTimeoutRef.current) {
       clearTimeout(previewTimeoutRef.current);
     }
-    onGeneratePreview(content);
+    // Use the current handler from the ref
+    previewHandlerRef.current(content);
   };
+
+  // Process content and replace dynamic fields with actual values
+  const processContent = (inputContent: string): string => {
+    if (!tenant) return inputContent;
+    
+    let processedContent = inputContent;
+    
+    // Replace date
+    processedContent = processedContent.replace(/{{currentDate}}/g, new Date().toLocaleDateString());
+    
+    // Replace tenant fields
+    processedContent = processedContent.replace(/{{tenant\.name}}/g, tenant.name || '');
+    processedContent = processedContent.replace(/{{tenant\.email}}/g, tenant.email || '');
+    processedContent = processedContent.replace(/{{tenant\.phone}}/g, tenant.phone || '');
+    processedContent = processedContent.replace(/{{tenant\.unit_number}}/g, tenant.unit_number || '');
+    processedContent = processedContent.replace(/{{tenant\.lease_start}}/g, tenant.lease_start || '');
+    processedContent = processedContent.replace(/{{tenant\.lease_end}}/g, tenant.lease_end || '');
+    processedContent = processedContent.replace(/{{tenant\.rent_amount}}/g, tenant.rent_amount?.toString() || '');
+    
+    // Replace property fields
+    if (tenant.properties) {
+      processedContent = processedContent.replace(/{{property\.name}}/g, tenant.properties.name || '');
+    }
+    
+    return processedContent;
+  };
+  
+  // Process dynamic fields before generating preview
+  useEffect(() => {
+    // Create a function that processes content before generating preview
+    const processedPreviewHandler = (inputContent: string) => {
+      const processedContent = processContent(inputContent);
+      onGeneratePreview(processedContent);
+    };
+    
+    // Update the ref with our new handler function
+    previewHandlerRef.current = processedPreviewHandler;
+    
+    // No need for cleanup as we don't need to restore original handler
+  }, [content, tenant, onGeneratePreview]);
 
   // Format insertion helpers
   const insertTextAtCursor = (text: string) => {
@@ -170,54 +218,6 @@ export function DocumentEditor({
     // Fallback to regular insertion
     insertTextAtCursor(replacedText);
   };
-  
-  // Process content and replace dynamic fields with actual values
-  const processContent = (inputContent: string): string => {
-    if (!tenant) return inputContent;
-    
-    let processedContent = inputContent;
-    
-    // Replace date
-    processedContent = processedContent.replace(/{{currentDate}}/g, new Date().toLocaleDateString());
-    
-    // Replace tenant fields
-    processedContent = processedContent.replace(/{{tenant\.name}}/g, tenant.name || '');
-    processedContent = processedContent.replace(/{{tenant\.email}}/g, tenant.email || '');
-    processedContent = processedContent.replace(/{{tenant\.phone}}/g, tenant.phone || '');
-    processedContent = processedContent.replace(/{{tenant\.unit_number}}/g, tenant.unit_number || '');
-    processedContent = processedContent.replace(/{{tenant\.lease_start}}/g, tenant.lease_start || '');
-    processedContent = processedContent.replace(/{{tenant\.lease_end}}/g, tenant.lease_end || '');
-    processedContent = processedContent.replace(/{{tenant\.rent_amount}}/g, tenant.rent_amount?.toString() || '');
-    
-    // Replace property fields
-    if (tenant.properties) {
-      processedContent = processedContent.replace(/{{property\.name}}/g, tenant.properties.name || '');
-    }
-    
-    return processedContent;
-  };
-  
-  // Process dynamic fields before generating preview
-  useEffect(() => {
-    const originalHandleGeneratePreview = handleGeneratePreview;
-    
-    // Override the handleGeneratePreview function to process content
-    const overriddenHandleGeneratePreview = () => {
-      if (previewTimeoutRef.current) {
-        clearTimeout(previewTimeoutRef.current);
-      }
-      const processedContent = processContent(content);
-      onGeneratePreview(processedContent);
-    };
-    
-    // Replace the function
-    handleGeneratePreview = overriddenHandleGeneratePreview;
-    
-    return () => {
-      // Restore the original function when component unmounts
-      handleGeneratePreview = originalHandleGeneratePreview;
-    };
-  }, [content, tenant]);
 
   return (
     <div className="space-y-4">
