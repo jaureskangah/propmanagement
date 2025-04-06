@@ -1,4 +1,3 @@
-
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -71,7 +70,6 @@ export default {
   addSignature: "Add Signature",
   saveSignature: "Save Signature",
   clear: "Clear",
-  cancel: "Cancel",
   
   // Template related
   allTemplates: "All Templates",
@@ -100,18 +98,18 @@ export default {
   sending: "Sending...",
   sent: "Sent!",
   generateLink: "Generate Link",
-  generating: "Generating...",
+  generatingLink: "Generating...",
   shareableLink: "Shareable Link",
   linkValidFor7Days: "This link is valid for 7 days",
   generateLinkDescription: "Generate a shareable link for this document",
-  success: "Success",
-  error: "Error",
+  successTitle: "Success",
+  errorTitle: "Error",
   documentShared: "Document shared successfully",
   shareError: "Failed to share document",
   enterValidEmail: "Please enter at least one valid email address",
   linkCopied: "Link copied to clipboard",
   copyFailed: "Failed to copy link",
-  note: "Note",
+  noteTitle: "Note",
   usingDirectLink: "Using direct link - no expiration",
   cancel: "Cancel",
   noFileToShare: "No file available to share"

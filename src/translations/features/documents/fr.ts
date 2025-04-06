@@ -1,3 +1,4 @@
+
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -69,7 +70,6 @@ export default {
   addSignature: "Ajouter une signature",
   saveSignature: "Enregistrer la signature",
   clear: "Effacer",
-  cancel: "Annuler",
   
   // Template related
   allTemplates: "Tous les modèles",
@@ -98,19 +98,19 @@ export default {
   sending: "Envoi en cours...",
   sent: "Envoyé !",
   generateLink: "Générer un lien",
-  generating: "Génération...",
+  generatingLink: "Génération...",
   shareableLink: "Lien de partage",
   linkValidFor7Days: "Ce lien est valide pendant 7 jours",
   generateLinkDescription: "Générer un lien pour partager ce document",
-  success: "Succès",
-  error: "Erreur",
+  successTitle: "Succès",
+  errorTitle: "Erreur",
   documentShared: "Document partagé avec succès",
   shareError: "Échec du partage du document",
   enterValidEmail: "Veuillez saisir au moins une adresse email valide",
   linkCopied: "Lien copié dans le presse-papier",
   copyFailed: "Échec de la copie du lien",
-  note: "Note",
+  noteTitle: "Note",
   usingDirectLink: "Utilisation d'un lien direct - sans expiration",
   cancel: "Annuler",
-  noFileToShare: "Aucun fichier disponible à partager",
+  noFileToShare: "Aucun fichier disponible à partager"
 };

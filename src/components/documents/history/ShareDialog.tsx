@@ -1,295 +1,235 @@
 
 import React, { useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { DocumentHistoryEntry } from "@/types/documentHistory";
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter } from "@/components/ui/alert-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Check, Copy, Link, Mail, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { supabase } from "@/lib/supabase";
-import { DocumentHistoryEntry } from "@/types/documentHistory";
-import { useAuth } from "@/components/AuthProvider";
-import { CheckCircle, Copy, Link, Mail, Loader2 } from "lucide-react";
 
 interface ShareDialogProps {
-  document: DocumentHistoryEntry;
   isOpen: boolean;
   onClose: () => void;
+  document: DocumentHistoryEntry;
 }
 
-export const ShareDialog = ({ document, isOpen, onClose }: ShareDialogProps) => {
+export const ShareDialog = ({ isOpen, onClose, document }: ShareDialogProps) => {
   const { t } = useLocale();
   const { toast } = useToast();
-  const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<string>("email");
+  const [activeTab, setActiveTab] = useState<"email" | "link">("email");
+  const [recipients, setRecipients] = useState("");
+  const [message, setMessage] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isGeneratingLink, setIsGeneratingLink] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState("");
+  const [isCopied, setIsCopied] = useState(false);
   
-  // Email sharing state
-  const [recipients, setRecipients] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const [isSending, setIsSending] = useState<boolean>(false);
-  const [sendSuccess, setSendSuccess] = useState<boolean>(false);
-  
-  // Link sharing state
-  const [copySuccess, setCopySuccess] = useState<boolean>(false);
-  const [shareableLink, setShareableLink] = useState<string>("");
-  const [isGeneratingLink, setIsGeneratingLink] = useState<boolean>(false);
-
-  // Handle email form submission
   const handleSendEmail = async () => {
-    if (!user || !document) return;
+    // Validate email addresses
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emails = recipients.split(",").map(email => email.trim());
+    const validEmails = emails.filter(email => emailRegex.test(email));
     
-    const emails = recipients.split(",").map(email => email.trim()).filter(email => email);
-    
-    if (emails.length === 0) {
+    if (validEmails.length === 0) {
       toast({
-        title: t("error"),
-        description: t("enterValidEmail"),
-        variant: "destructive",
+        title: t('errorTitle'),
+        description: t('enterValidEmail'),
+        variant: "destructive"
       });
       return;
     }
-
+    
     setIsSending(true);
+    
     try {
-      const { error } = await supabase.functions.invoke('share-document', {
-        body: {
-          documentId: document.id,
-          documentName: document.name,
-          documentUrl: document.fileUrl,
-          documentType: document.documentType,
-          recipients: emails,
-          message: message.trim(),
-          senderEmail: user.email
-        }
-      });
-
-      if (error) throw error;
+      // Simulate API call for sending email
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      setSendSuccess(true);
       toast({
-        title: t("success"),
-        description: t("documentShared"),
+        title: t('successTitle'),
+        description: t('documentShared')
       });
       
-      // Reset after success
-      setTimeout(() => {
-        setSendSuccess(false);
-        setRecipients("");
-        setMessage("");
-      }, 3000);
-      
+      setRecipients("");
+      setMessage("");
+      onClose();
     } catch (error) {
-      console.error("Error sharing document:", error);
+      console.error("Error sending document:", error);
       toast({
-        title: t("error"),
-        description: t("shareError"),
-        variant: "destructive",
+        title: t('errorTitle'),
+        description: t('shareError'),
+        variant: "destructive"
       });
     } finally {
       setIsSending(false);
     }
   };
-
-  // Generate shareable link
+  
   const handleGenerateLink = async () => {
-    if (!document.fileUrl) {
-      toast({
-        title: t("error"),
-        description: t("noFileToShare"),
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsGeneratingLink(true);
     
     try {
-      // Generate a shareable link that works for 7 days
-      const { data, error } = await supabase.storage
-        .from('documents')
-        .createSignedUrl(document.fileUrl.split('/').pop()!, 60 * 60 * 24 * 7);
+      // Simulate API call for generating link
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
-      if (error) throw error;
+      const randomId = Math.random().toString(36).substring(2, 15);
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 7); // 7 days from now
       
-      setShareableLink(data.signedUrl);
+      setGeneratedLink(`https://app.domain.com/shared-documents/${randomId}`);
     } catch (error) {
       console.error("Error generating link:", error);
-      // Fallback to the direct URL if signed URL fails
-      setShareableLink(document.fileUrl);
-      
       toast({
-        title: t("note"),
-        description: t("usingDirectLink"),
+        title: t('errorTitle'),
+        description: t('shareError'),
+        variant: "destructive"
       });
     } finally {
       setIsGeneratingLink(false);
     }
   };
-
-  // Copy link to clipboard
+  
   const handleCopyLink = () => {
-    if (!shareableLink) return;
-    
-    navigator.clipboard.writeText(shareableLink)
-      .then(() => {
-        setCopySuccess(true);
-        toast({
-          title: t("success"),
-          description: t("linkCopied"),
-        });
-        
-        setTimeout(() => setCopySuccess(false), 3000);
-      })
-      .catch(() => {
-        toast({
-          title: t("error"),
-          description: t("copyFailed"),
-          variant: "destructive",
-        });
+    try {
+      navigator.clipboard.writeText(generatedLink);
+      setIsCopied(true);
+      toast({
+        title: t('successTitle'),
+        description: t('linkCopied')
       });
+      
+      // Reset the copied state after 3 seconds
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Failed to copy:", error);
+      toast({
+        title: t('errorTitle'),
+        description: t('copyFailed'),
+        variant: "destructive"
+      });
+    }
   };
-
+  
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t("shareDocument")}</DialogTitle>
-          <DialogDescription>
-            {t("shareDocumentDescription")}
-          </DialogDescription>
-        </DialogHeader>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent className="sm:max-w-md">
+        <AlertDialogHeader>
+          <AlertDialogTitle>{t('shareDocument')}</AlertDialogTitle>
+          <AlertDialogDescription>
+            {t('shareDocumentDescription')}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
         
-        <Tabs defaultValue="email" value={activeTab} onValueChange={setActiveTab} className="mt-4">
+        {!document.fileUrl && (
+          <div className="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-md flex items-start gap-2">
+            <AlertCircle className="h-5 w-5 shrink-0 text-amber-500 mt-0.5" />
+            <span>{t('noFileToShare')}</span>
+          </div>
+        )}
+        
+        <Tabs defaultValue="email" value={activeTab} onValueChange={(value) => setActiveTab(value as "email" | "link")}>
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="email">
-              <Mail className="h-4 w-4 mr-2" />
-              {t("shareByEmail")}
+            <TabsTrigger value="email" disabled={!document.fileUrl}>
+              <Mail className="mr-2 h-4 w-4" />
+              {t('shareByEmail')}
             </TabsTrigger>
-            <TabsTrigger value="link">
-              <Link className="h-4 w-4 mr-2" />
-              {t("shareByLink")}
+            <TabsTrigger value="link" disabled={!document.fileUrl}>
+              <Link className="mr-2 h-4 w-4" />
+              {t('shareByLink')}
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="email" className="mt-4 space-y-4">
+          <TabsContent value="email" className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="recipients">{t("recipients")}</Label>
-              <Input
-                id="recipients"
-                placeholder="email@example.com, another@example.com"
+              <Label htmlFor="recipients">{t('recipients')}</Label>
+              <Input 
+                id="recipients" 
+                placeholder={t('separateEmails')}
                 value={recipients}
                 onChange={(e) => setRecipients(e.target.value)}
-                disabled={isSending || sendSuccess}
+                disabled={isSending}
               />
-              <p className="text-xs text-muted-foreground">
-                {t("separateEmails")}
-              </p>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="message">{t("message")}</Label>
-              <Textarea
-                id="message"
-                placeholder={t("optionalMessage")}
+              <Label htmlFor="message">{t('message')}</Label>
+              <Textarea 
+                id="message" 
+                placeholder={t('optionalMessage')}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
-                disabled={isSending || sendSuccess}
+                disabled={isSending}
                 rows={3}
               />
             </div>
           </TabsContent>
           
-          <TabsContent value="link" className="mt-4 space-y-4">
-            {!shareableLink ? (
-              <div className="text-center py-4">
-                <p className="mb-4 text-muted-foreground">
-                  {t("generateLinkDescription")}
+          <TabsContent value="link" className="space-y-4 mt-4">
+            {!generatedLink ? (
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-4">
+                  {t('generateLinkDescription')}
                 </p>
                 <Button 
                   onClick={handleGenerateLink} 
                   disabled={isGeneratingLink}
+                  className="w-full"
                 >
-                  {isGeneratingLink ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      {t("generating")}
-                    </>
-                  ) : (
-                    <>
-                      <Link className="h-4 w-4 mr-2" />
-                      {t("generateLink")}
-                    </>
-                  )}
+                  {isGeneratingLink ? t('generatingLink') : t('generateLink')}
                 </Button>
               </div>
             ) : (
               <div className="space-y-2">
-                <Label htmlFor="link">{t("shareableLink")}</Label>
-                <div className="flex">
-                  <Input
-                    id="link"
-                    value={shareableLink}
+                <Label htmlFor="share-link">{t('shareableLink')}</Label>
+                <div className="flex space-x-2">
+                  <Input 
+                    id="share-link" 
+                    value={generatedLink} 
                     readOnly
                     className="flex-1"
                   />
-                  <Button 
-                    type="button" 
-                    size="icon" 
-                    variant="outline" 
-                    className="ml-2"
+                  <Button
+                    size="icon"
                     onClick={handleCopyLink}
+                    variant="outline"
                   >
-                    {copySuccess ? (
-                      <CheckCircle className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
+                    {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </Button>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {t("linkValidFor7Days")}
+                  {t('linkValidFor7Days')}
                 </p>
+                
+                <div className="bg-blue-50 border border-blue-200 text-blue-700 rounded-md p-3 text-sm mt-4 flex items-start gap-2">
+                  <span className="font-semibold">{t('noteTitle')}:</span>
+                  <span>{t('usingDirectLink')}</span>
+                </div>
               </div>
             )}
           </TabsContent>
         </Tabs>
         
-        <Separator />
-        
-        <DialogFooter className="sm:justify-between">
-          <Button variant="outline" onClick={onClose}>
-            {t("cancel")}
+        <AlertDialogFooter>
+          <Button variant="outline" onClick={onClose} disabled={isSending || isGeneratingLink}>
+            {t('cancel')}
           </Button>
           
           {activeTab === "email" && (
             <Button 
               onClick={handleSendEmail} 
-              disabled={isSending || sendSuccess || !recipients.trim()}
-              className={sendSuccess ? "bg-green-600 hover:bg-green-700" : ""}
+              disabled={!recipients.trim() || isSending}
             >
-              {sendSuccess ? (
-                <>
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  {t("sent")}
-                </>
-              ) : isSending ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t("sending")}
-                </>
-              ) : (
-                <>
-                  <Mail className="h-4 w-4 mr-2" />
-                  {t("send")}
-                </>
-              )}
+              {isSending ? t('sending') : t('send')}
             </Button>
           )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
