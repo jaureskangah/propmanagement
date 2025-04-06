@@ -1,5 +1,4 @@
-
-import { useCallback, useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import type { Tenant } from "@/types/tenant";
@@ -17,115 +16,116 @@ export interface TenantData {
     name: string;
     address: string;
   };
+  // Other properties can be added as needed
 }
 
-export function useTenantData() {
+export const convertToTenant = (tenantData: TenantData): Tenant => {
+  return {
+    id: tenantData.id,
+    name: tenantData.name,
+    email: tenantData.email,
+    phone: tenantData.phone,
+    property_id: null,  // Default values for required Tenant fields
+    properties: tenantData.properties ? { name: tenantData.properties.name } : undefined,
+    unit_number: tenantData.unit_number,
+    lease_start: tenantData.lease_start,
+    lease_end: tenantData.lease_end,
+    rent_amount: tenantData.rent_amount || 0,
+    user_id: "",  // Default value
+    created_at: "",  // Default value
+    updated_at: "",  // Default value
+    tenant_profile_id: null,  // Default value
+    documents: [],  // Default empty array
+    paymentHistory: [],  // Default empty array
+    maintenanceRequests: [],  // Default empty array
+    communications: []  // Default empty array
+  };
+};
+
+export const useTenantData = () => {
   const { user } = useAuth();
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchTenantData = useCallback(async () => {
-    if (!user) {
-      setTenant(null);
+  const fetchTenant = async () => {
+    if (!user?.id) {
       setIsLoading(false);
-      return;
+      return null;
     }
-    
+
     try {
       setIsLoading(true);
-      
-      // Query tenants table with join to properties
-      const { data, error } = await supabase
-        .from('tenants')
+      setError(null);
+
+      // Fetch tenant data from profiles
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('id, full_name, email, phone')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        throw profileError;
+      }
+
+      if (!profileData) {
+        setTenant(null);
+        setIsLoading(false);
+        return null;
+      }
+
+      // Fetch tenant-specific data if it exists
+      const { data: tenantData, error: tenantError } = await supabase
+        .from('tenant_profiles')
         .select(`
-          id,
-          name,
-          email,
-          phone,
-          lease_start,
-          lease_end,
-          rent_amount,
+          id, 
+          lease_start, 
+          lease_end, 
+          rent_amount, 
           unit_number,
-          properties (
-            name,
-            address
-          )
+          property_id,
+          properties:property_id (name, address)
         `)
         .eq('user_id', user.id)
-        .single();
-      
-      if (error) throw error;
-      
-      // Ensure proper typing for the tenant data
-      const typedData = data as any;
-      const tenantData: TenantData = {
-        id: typedData.id,
-        name: typedData.name,
-        email: typedData.email,
-        phone: typedData.phone,
-        lease_start: typedData.lease_start,
-        lease_end: typedData.lease_end,
-        rent_amount: typedData.rent_amount,
-        unit_number: typedData.unit_number,
-        properties: typedData.properties ? {
-          name: typedData.properties.name,
-          address: typedData.properties.address
-        } : undefined
-      };
-      
-      setTenant(tenantData);
-    } catch (err) {
-      console.error('Error fetching tenant data:', err);
-      setError(err as Error);
-      // For development purposes, set a mock tenant so dynamic fields work
-      if (import.meta.env.DEV) {
-        setTenant({
-          id: 'dev-tenant',
-          name: 'Development Tenant',
-          email: 'dev@example.com',
-          phone: '123-456-7890',
-          lease_start: '2023-01-01',
-          lease_end: '2023-12-31',
-          rent_amount: 1200,
-          unit_number: 'A101',
-          properties: {
-            name: 'Development Property',
-            address: '123 Test St, Dev City'
-          }
-        });
+        .maybeSingle();
+
+      if (tenantError && tenantError.code !== 'PGRST116') {
+        throw tenantError;
       }
+
+      // Combine profile and tenant data
+      const combinedTenantData: TenantData = {
+        id: profileData.id,
+        name: profileData.full_name,
+        email: profileData.email,
+        phone: profileData.phone,
+        lease_start: tenantData?.lease_start || '',
+        lease_end: tenantData?.lease_end || '',
+        rent_amount: tenantData?.rent_amount || null,
+        unit_number: tenantData?.unit_number || '',
+        properties: tenantData?.properties || undefined
+      };
+
+      setTenant(combinedTenantData);
+      return combinedTenantData;
+    } catch (err: any) {
+      console.error('Error fetching tenant data:', err);
+      setError(err.message || 'Failed to load tenant data');
+      return null;
     } finally {
       setIsLoading(false);
     }
-  }, [user]);
+  };
 
   useEffect(() => {
-    fetchTenantData();
-  }, [fetchTenantData]);
+    fetchTenant();
+  }, [user?.id]);
 
   return {
     tenant,
     isLoading,
     error,
-    refreshTenant: fetchTenantData
+    refreshTenant: fetchTenant
   };
-}
-
-// Helper function to convert TenantData to Tenant type when needed
-export function convertToTenant(tenantData: TenantData | null): Tenant | null {
-  if (!tenantData) return null;
-  
-  return {
-    ...tenantData,
-    property_id: null,
-    user_id: '',
-    created_at: '',
-    updated_at: '',
-    tenant_profile_id: null,
-    documents: [],
-    paymentHistory: [],
-    maintenanceRequests: [],
-    communications: []
-  };
-}
+};

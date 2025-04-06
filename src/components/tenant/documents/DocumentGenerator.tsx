@@ -54,7 +54,9 @@ export const DocumentGenerator = () => {
             {!showPreview ? (
               <TemplateSelector
                 selectedTemplate={selectedTemplate}
-                onSelectTemplate={setSelectedTemplate}
+                onTemplateChange={setSelectedTemplate}
+                onGenerate={() => generateDocument(selectedTemplate)}
+                isGenerating={isGenerating}
               />
             ) : (
               <div className="space-y-4">

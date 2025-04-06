@@ -63,7 +63,7 @@ export const parseContentIntoSections = (content: string): Content[] => {
  * @param tenant The tenant data to use for replacements
  * @returns The processed content with replaced placeholders
  */
-export const processDynamicFields = (content: string, tenant: TenantData): string => {
+export const processDynamicFields = (content: string, tenant: TenantData | null): string => {
   if (!tenant || !content) return content;
   
   let processedContent = content;
@@ -100,10 +100,12 @@ export const processDynamicFields = (content: string, tenant: TenantData): strin
     );
     
     // Replace property address if available
-    processedContent = processedContent.replace(
-      /\{property\.address\}/g,
-      tenant.properties.address || ''
-    );
+    if ('address' in tenant.properties) {
+      processedContent = processedContent.replace(
+        /\{property\.address\}/g,
+        tenant.properties.address || ''
+      );
+    }
   }
   
   return processedContent;
