@@ -20,7 +20,7 @@
     @apply dark:bg-gray-800/80 dark:border-gray-700;
   }
   
-  /* PDF Viewer Classes - Forcé en blanc */
+  /* PDF Viewer Classes - Always force white background */
   .pdf-viewer {
     background-color: #ffffff !important;
     display: block !important;
@@ -37,7 +37,8 @@
   html.dark .pdf-viewer,
   .dark .pdf-viewer,
   html[data-theme="dark"] .pdf-viewer,
-  [data-theme="dark"] .pdf-viewer {
+  [data-theme="dark"] .pdf-viewer,
+  :root[class*="dark"] .pdf-viewer {
     background-color: #ffffff !important;
   }
   
@@ -48,6 +49,7 @@
     margin: 0 !important;
     height: 100% !important;
     width: 100% !important;
+    min-height: 500px !important;
   }
   
   /* Force iframe and object to have white background */
@@ -55,5 +57,23 @@
   object.pdf-viewer {
     background-color: #ffffff !important;
     border: none !important;
+  }
+  
+  /* Special fix for dark mode */
+  .dark [data-pdf-container],
+  .dark .pdf-container,
+  .dark .document-preview-container,
+  .dark .pdf-frame-container,
+  .dark iframe.pdf-viewer,
+  .dark object.pdf-viewer {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  
+  /* Fix for rendering in nested containers */
+  .document-preview-container > div,
+  .document-preview-container > div > div {
+    background-color: #ffffff !important;
+    height: 100%;
   }
 }

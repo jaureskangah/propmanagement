@@ -39,7 +39,9 @@ export function DocumentPreview({
         />
       </div>
       
-      <Card className="flex-1 overflow-hidden p-0 relative border bg-white">
+      <Card className="flex-1 overflow-hidden p-0 relative bg-white border document-preview-container" 
+        style={{ backgroundColor: "#ffffff" }}
+        data-pdf-container="true">
         {isGenerating ? (
           <LoadingState />
         ) : previewError ? (
@@ -48,10 +50,14 @@ export function DocumentPreview({
             errorMessage={previewError} 
           />
         ) : previewUrl ? (
-          <PdfViewer 
-            pdfUrl={previewUrl} 
-            onError={() => {}} 
-          />
+          <div className="w-full h-full" style={{ backgroundColor: "#ffffff", minHeight: "500px" }}>
+            <PdfViewer 
+              pdfUrl={previewUrl} 
+              onError={() => {
+                console.log("DocumentPreview: PdfViewer error event fired");
+              }} 
+            />
+          </div>
         ) : (
           <EmptyState />
         )}

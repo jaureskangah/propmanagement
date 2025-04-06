@@ -10,44 +10,14 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const objectRef = useRef<HTMLObjectElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   
   useEffect(() => {
     if (containerRef.current) {
       console.log("PdfViewer: Enforcing white background on container");
       containerRef.current.style.backgroundColor = "#ffffff";
-      
-      // Log initial container dimensions
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      console.log("PdfViewer: Initial container dimensions:", { width, height });
-      setDimensions({ width, height });
-    }
-  }, []);
-
-  // Track container dimensions
-  useEffect(() => {
-    const observer = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        const { width, height } = entry.contentRect;
-        console.log("PdfViewer: Container resized:", { width, height });
-        setDimensions({ width, height });
-      }
-    });
-    
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
     }
     
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    console.log("PdfViewer: Preparing to style PDF viewer");
-    
+    // Apply background color to iframe and object after rendering
     const timer = setTimeout(() => {
       try {
         if (iframeRef.current) {
@@ -74,7 +44,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
       } catch (e) {
         console.log("PdfViewer: Error styling PDF elements:", e);
       }
-    }, 500);
+    }, 300);
     
     return () => clearTimeout(timer);
   }, [pdfUrl]);
@@ -82,64 +52,51 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   return (
     <div 
       ref={containerRef}
-      className="border rounded-md h-full overflow-hidden shadow-sm bg-white pdf-frame-container" 
+      className="pdf-frame-container w-full h-full"
+      data-pdf-container="true"
       style={{ 
         backgroundColor: "#ffffff",
-        position: "relative"
+        position: "relative",
+        width: "100%",
+        height: "100%",
+        overflow: "hidden"
       }}
     >
-      <object
-        ref={objectRef}
-        data={pdfUrl}
-        type="application/pdf"
-        className="w-full h-full bg-white pdf-viewer"
+      <iframe
+        ref={iframeRef}
+        src={pdfUrl}
+        title="Document Preview"
+        className="w-full h-full pdf-viewer"
         style={{ 
           backgroundColor: "#ffffff",
+          border: "none",
+          display: "block",
           position: "absolute",
           top: 0,
           left: 0,
-          zIndex: 1
+          width: "100%",
+          height: "100%"
         }}
         onError={() => {
-          console.log("PdfViewer: Object error event fired");
+          console.log("PdfViewer: Iframe error event fired");
           onError();
         }}
-      >
-        <iframe
-          ref={iframeRef}
-          src={pdfUrl}
-          title="Document Preview"
-          className="w-full h-full bg-white pdf-viewer"
-          style={{ 
-            backgroundColor: "#ffffff",
-            display: "block",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%"
-          }}
-          onError={() => {
-            console.log("PdfViewer: Iframe error event fired");
-            onError();
-          }}
-          onLoad={() => {
-            console.log("PdfViewer: Iframe loaded");
-            try {
-              if (iframeRef.current && iframeRef.current.contentDocument) {
-                console.log("PdfViewer: Attempting to style iframe content");
-                const doc = iframeRef.current.contentDocument;
-                if (doc && doc.body) {
-                  doc.body.style.backgroundColor = "#ffffff";
-                  console.log("PdfViewer: Applied white background to iframe body");
-                }
+        onLoad={() => {
+          console.log("PdfViewer: Iframe loaded");
+          try {
+            if (iframeRef.current && iframeRef.current.contentDocument) {
+              console.log("PdfViewer: Attempting to style iframe content");
+              const doc = iframeRef.current.contentDocument;
+              if (doc && doc.body) {
+                doc.body.style.backgroundColor = "#ffffff";
+                console.log("PdfViewer: Applied white background to iframe body");
               }
-            } catch (e) {
-              console.log("PdfViewer: Error styling iframe:", e);
             }
-          }}
-        />
-      </object>
+          } catch (e) {
+            console.log("PdfViewer: Error styling iframe:", e);
+          }
+        }}
+      />
     </div>
   );
 }
