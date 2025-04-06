@@ -1,3 +1,4 @@
+
 import type { Tenant } from "@/types/tenant";
 
 export const generateTemplateContent = (template: string, tenant: Tenant): string => {
@@ -5,45 +6,45 @@ export const generateTemplateContent = (template: string, tenant: Tenant): strin
     case "lease":
       return `LEASE AGREEMENT
 
-Tenant: ${tenant.name}
-Email: ${tenant.email}
-Phone: ${tenant.phone || 'Not provided'}
-Property: ${tenant.properties?.name || 'Not specified'}
-Unit Number: ${tenant.unit_number}
-Start Date: ${tenant.lease_start}
-End Date: ${tenant.lease_end}
-Monthly Rent: $${tenant.rent_amount}
+Tenant: {{tenant.name}}
+Email: {{tenant.email}}
+Phone: {{tenant.phone}}
+Property: {{property.name}}
+Unit Number: {{tenant.unit_number}}
+Start Date: {{tenant.lease_start}}
+End Date: {{tenant.lease_end}}
+Monthly Rent: ${{tenant.rent_amount}}
 
 [The rest of the contract can be edited here]`;
 
     case "receipt":
       return `RENT RECEIPT
 
-Tenant: ${tenant.name}
-Property: ${tenant.properties?.name || 'Not specified'}
-Unit Number: ${tenant.unit_number}
-Amount: $${tenant.rent_amount}
-Date: ${new Date().toLocaleDateString()}
+Tenant: {{tenant.name}}
+Property: {{property.name}}
+Unit Number: {{tenant.unit_number}}
+Amount: ${{tenant.rent_amount}}
+Date: {{currentDate}}
 
 [Payment details can be edited here]`;
 
     case "notice":
       return `NOTICE TO VACATE
 
-Date: ${new Date().toLocaleDateString()}
+Date: {{currentDate}}
 
-To: ${tenant.name}
-${tenant.properties?.name || 'Property Address'}
-Unit ${tenant.unit_number}
+To: {{tenant.name}}
+{{property.name}}
+Unit {{tenant.unit_number}}
 
-Dear ${tenant.name},
+Dear {{tenant.name}},
 
 This letter serves as formal notice that you are required to vacate the premises described above. 
 
 Current Lease Details:
-- Lease Start Date: ${tenant.lease_start}
-- Lease End Date: ${tenant.lease_end}
-- Monthly Rent: $${tenant.rent_amount}
+- Lease Start Date: {{tenant.lease_start}}
+- Lease End Date: {{tenant.lease_end}}
+- Monthly Rent: ${{tenant.rent_amount}}
 
 Please ensure that:
 1. All personal belongings are removed

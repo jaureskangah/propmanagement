@@ -8,6 +8,7 @@ import { SignatureDialog } from "./editor/SignatureDialog";
 import { EditorToolbar } from "./editor/EditorToolbar";
 import { DocumentTextarea } from "./editor/DocumentTextarea";
 import { FormatToolbar } from "./editor/FormatToolbar";
+import { useTenantData } from "../tenant/documents/hooks/useTenantData";
 
 interface DocumentEditorProps {
   content: string;
@@ -37,6 +38,9 @@ export function DocumentEditor({
   const [isSignatureDialogOpen, setIsSignatureDialogOpen] = useState(false);
   const [isAdvancedEditingEnabled, setIsAdvancedEditingEnabled] = useState(false);
   const previewTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Get tenant data for dynamic fields
+  const { tenant } = useTenantData();
 
   // Effect for real-time preview
   useEffect(() => {
@@ -152,6 +156,68 @@ export function DocumentEditor({
     const signatureMarkdown = `\n![Signature](${signatureDataUrl})\n`;
     insertTextAtCursor(signatureMarkdown);
   };
+  
+  // Process dynamic fields
+  const insertDynamicField = (fieldCode: string) => {
+    let replacedText = fieldCode;
+    
+    // Process the field if we're using the textarea's insertAtCursor method
+    if (textareaRef.current && (textareaRef.current as any).insertTextAtCursor) {
+      (textareaRef.current as any).insertTextAtCursor(replacedText);
+      return;
+    }
+    
+    // Fallback to regular insertion
+    insertTextAtCursor(replacedText);
+  };
+  
+  // Process content and replace dynamic fields with actual values
+  const processContent = (inputContent: string): string => {
+    if (!tenant) return inputContent;
+    
+    let processedContent = inputContent;
+    
+    // Replace date
+    processedContent = processedContent.replace(/{{currentDate}}/g, new Date().toLocaleDateString());
+    
+    // Replace tenant fields
+    processedContent = processedContent.replace(/{{tenant\.name}}/g, tenant.name || '');
+    processedContent = processedContent.replace(/{{tenant\.email}}/g, tenant.email || '');
+    processedContent = processedContent.replace(/{{tenant\.phone}}/g, tenant.phone || '');
+    processedContent = processedContent.replace(/{{tenant\.unit_number}}/g, tenant.unit_number || '');
+    processedContent = processedContent.replace(/{{tenant\.lease_start}}/g, tenant.lease_start || '');
+    processedContent = processedContent.replace(/{{tenant\.lease_end}}/g, tenant.lease_end || '');
+    processedContent = processedContent.replace(/{{tenant\.rent_amount}}/g, tenant.rent_amount?.toString() || '');
+    
+    // Replace property fields
+    if (tenant.properties) {
+      processedContent = processedContent.replace(/{{property\.name}}/g, tenant.properties.name || '');
+    }
+    
+    return processedContent;
+  };
+  
+  // Process dynamic fields before generating preview
+  useEffect(() => {
+    const originalHandleGeneratePreview = handleGeneratePreview;
+    
+    // Override the handleGeneratePreview function to process content
+    const overriddenHandleGeneratePreview = () => {
+      if (previewTimeoutRef.current) {
+        clearTimeout(previewTimeoutRef.current);
+      }
+      const processedContent = processContent(content);
+      onGeneratePreview(processedContent);
+    };
+    
+    // Replace the function
+    handleGeneratePreview = overriddenHandleGeneratePreview;
+    
+    return () => {
+      // Restore the original function when component unmounts
+      handleGeneratePreview = originalHandleGeneratePreview;
+    };
+  }, [content, tenant]);
 
   return (
     <div className="space-y-4">
@@ -161,6 +227,7 @@ export function DocumentEditor({
           onInsertImage={insertImageTag}
           onInsertTable={insertTable}
           onInsertSignature={() => setIsSignatureDialogOpen(true)}
+          onInsertDynamicField={insertDynamicField}
         />
       )}
       

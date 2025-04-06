@@ -1,5 +1,5 @@
 
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -41,6 +41,53 @@ export const DocumentTextarea = forwardRef<HTMLTextAreaElement, DocumentTextarea
         }
       };
     }, []);
+
+    // Method to insert text at cursor position (exposed for ref)
+    const insertTextAtCursor = (textToInsert: string) => {
+      const textareaElement = ref as React.RefObject<HTMLTextAreaElement>;
+      
+      if (textareaElement && textareaElement.current) {
+        const start = textareaElement.current.selectionStart;
+        const end = textareaElement.current.selectionEnd;
+        
+        const newContent = content.substring(0, start) + textToInsert + content.substring(end);
+        
+        // Create a synthetic event to trigger the onChange handler
+        const syntheticEvent = {
+          target: {
+            value: newContent
+          }
+        } as React.ChangeEvent<HTMLTextAreaElement>;
+        
+        onChange(syntheticEvent);
+        
+        // Set cursor position after inserted text
+        setTimeout(() => {
+          if (textareaElement.current) {
+            textareaElement.current.focus();
+            textareaElement.current.setSelectionRange(start + textToInsert.length, start + textToInsert.length);
+          }
+        }, 0);
+        
+        // If we have a value change callback, trigger it directly
+        if (onValueChange) {
+          if (changeTimeoutRef.current) {
+            clearTimeout(changeTimeoutRef.current);
+          }
+          
+          changeTimeoutRef.current = setTimeout(() => {
+            onValueChange(newContent);
+          }, 300);
+        }
+      }
+    };
+    
+    // Expose the insertTextAtCursor method through ref
+    useEffect(() => {
+      if (typeof ref === 'object' && ref !== null) {
+        (ref as any).insertTextAtCursor = insertTextAtCursor;
+      }
+    }, [ref, content, onChange, onValueChange]);
 
     return (
       <Textarea

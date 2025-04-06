@@ -71,6 +71,20 @@ export default {
   saveSignature: "Enregistrer la signature",
   clear: "Effacer",
   
+  // New translations for dynamic fields
+  insertDynamicField: "Insérer un champ",
+  dynamicFields: "Champs dynamiques",
+  currentDate: "Date actuelle",
+  tenantName: "Nom du locataire",
+  tenantEmail: "Email du locataire",
+  tenantPhone: "Téléphone du locataire",
+  propertyName: "Nom de la propriété",
+  unitNumber: "Numéro d'unité",
+  leaseStart: "Début du bail",
+  leaseEnd: "Fin du bail",
+  rentAmount: "Montant du loyer",
+  dynamicFieldsDescription: "Insérer des champs qui seront automatiquement remplacés par des données",
+  
   // Template related
   allTemplates: "Tous les modèles",
   customTemplates: "Modèles personnalisés",
@@ -79,6 +93,18 @@ export default {
   deleteTemplate: "Supprimer le modèle",
   deleteTemplateConfirmation: "Êtes-vous sûr de vouloir supprimer ce modèle ? Cette action est irréversible.",
   delete: "Supprimer",
+  
+  // Save template related 
+  saveAsTemplate: "Enregistrer comme modèle",
+  saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future",
+  templateName: "Nom du modèle",
+  templateNamePlaceholder: "Entrez le nom du modèle",
+  category: "Catégorie",
+  selectCategory: "Sélectionnez une catégorie",
+  description: "Description",
+  templateDescriptionPlaceholder: "Entrez la description du modèle",
+  saveTemplate: "Enregistrer le modèle",
+  cancel: "Annuler",
 
   // Dummy content for templates
   leaseAgreementContent: "# CONTRAT DE BAIL\n\nEntre les soussignés :\n\n**Le Bailleur**: [Nom du Bailleur]\n\n**Le Locataire**: [Nom du Locataire]\n\nIl a été convenu ce qui suit:\n\n## ARTICLE 1 - OBJET DU CONTRAT\n\nLe Bailleur donne en location au Locataire qui accepte, le logement ci-après désigné.\n\n## ARTICLE 2 - DÉSIGNATION DU LOGEMENT\n\n[Description du logement]",
@@ -111,7 +137,6 @@ export default {
   copyFailed: "Échec de la copie du lien",
   noteTitle: "Note",
   usingDirectLink: "Utilisation d'un lien direct - sans expiration",
-  cancel: "Annuler",
   noFileToShare: "Aucun fichier disponible à partager",
   
   // Real-time preview related translations

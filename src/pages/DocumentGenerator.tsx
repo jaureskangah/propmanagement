@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -13,11 +14,13 @@ import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 import { useDocumentHistory } from "@/hooks/useDocumentHistory";
 import { useNavigate } from "react-router-dom";
+import { useTenantData } from "@/components/tenant/documents/hooks/useTenantData";
 
 const DocumentGenerator = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { tenant } = useTenantData();
   const { addToHistory } = useDocumentHistory();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
@@ -66,7 +69,7 @@ const DocumentGenerator = () => {
         headerText: selectedTemplateName || 'Document',
         showPageNumbers: true,
         showDate: true
-      });
+      }, tenant);
       
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       
