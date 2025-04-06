@@ -74,7 +74,7 @@ export const DocumentHistory = () => {
   const { t, locale } = useLocale();
   const { history, isLoading, error, deleteFromHistory, fetchDocumentHistory } = useDocumentHistory();
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
   const [selectedDocument, setSelectedDocument] = useState<DocumentHistoryEntry | null>(null);
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
@@ -95,7 +95,7 @@ export const DocumentHistory = () => {
   
   const filteredHistory = history.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || doc.category === categoryFilter;
+    const matchesCategory = categoryFilter === "all" || doc.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
   
@@ -118,7 +118,7 @@ export const DocumentHistory = () => {
   };
   
   const categories = [
-    { value: "", label: t('allTemplates') },
+    { value: "all", label: t('allTemplates') },
     { value: "leaseDocuments", label: t('leaseDocuments') },
     { value: "paymentDocuments", label: t('paymentDocuments') },
     { value: "noticeDocuments", label: t('noticeDocuments') },
@@ -175,7 +175,7 @@ export const DocumentHistory = () => {
             <div className="text-center py-10 text-red-500">{error}</div>
           ) : filteredHistory.length === 0 ? (
             <div className="text-center py-10 text-muted-foreground">
-              {searchTerm || categoryFilter ? t('noSearchResults') : t('noDocumentHistory')}
+              {searchTerm || categoryFilter !== "all" ? t('noSearchResults') : t('noDocumentHistory')}
             </div>
           ) : (
             <div className="overflow-x-auto">
