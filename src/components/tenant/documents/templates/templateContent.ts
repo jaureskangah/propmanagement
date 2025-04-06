@@ -4,60 +4,60 @@ import type { Tenant } from "@/types/tenant";
 export const generateTemplateContent = (template: string, tenant: Tenant): string => {
   switch (template) {
     case "lease":
-      return `LEASE AGREEMENT
+      return `CONTRAT DE BAIL
 
-Tenant: {{tenant.name}}
+Locataire: {{tenant.name}}
 Email: {{tenant.email}}
-Phone: {{tenant.phone}}
-Property: {{property.name}}
-Unit Number: {{tenant.unit_number}}
-Start Date: {{tenant.lease_start}}
-End Date: {{tenant.lease_end}}
-Monthly Rent: ${{tenant.rent_amount}}
+Téléphone: {{tenant.phone}}
+Propriété: {{property.name}}
+Numéro d'unité: {{tenant.unit_number}}
+Date de début: {{tenant.lease_start}}
+Date de fin: {{tenant.lease_end}}
+Loyer mensuel: {{tenant.rent_amount}}€
 
-[The rest of the contract can be edited here]`;
+[Le reste du contrat peut être édité ici]`;
 
     case "receipt":
-      return `RENT RECEIPT
+      return `QUITTANCE DE LOYER
 
-Tenant: {{tenant.name}}
-Property: {{property.name}}
-Unit Number: {{tenant.unit_number}}
-Amount: ${{tenant.rent_amount}}
+Locataire: {{tenant.name}}
+Propriété: {{property.name}}
+Numéro d'unité: {{tenant.unit_number}}
+Montant: {{tenant.rent_amount}}€
 Date: {{currentDate}}
 
-[Payment details can be edited here]`;
+[Les détails du paiement peuvent être édités ici]`;
 
     case "notice":
-      return `NOTICE TO VACATE
+      return `AVIS DE DÉPART
 
 Date: {{currentDate}}
 
-To: {{tenant.name}}
+À: {{tenant.name}}
 {{property.name}}
-Unit {{tenant.unit_number}}
+Unité {{tenant.unit_number}}
 
-Dear {{tenant.name}},
+Cher/Chère {{tenant.name}},
 
-This letter serves as formal notice that you are required to vacate the premises described above. 
+Cette lettre sert d'avis formel vous demandant de quitter les lieux décrits ci-dessus.
 
-Current Lease Details:
-- Lease Start Date: {{tenant.lease_start}}
-- Lease End Date: {{tenant.lease_end}}
-- Monthly Rent: ${{tenant.rent_amount}}
+Détails du bail actuel:
+- Date de début du bail: {{tenant.lease_start}}
+- Date de fin du bail: {{tenant.lease_end}}
+- Loyer mensuel: {{tenant.rent_amount}}€
 
-Please ensure that:
-1. All personal belongings are removed
-2. The unit is cleaned thoroughly
-3. All keys are returned
-4. A forwarding address is provided
+Veuillez vous assurer que:
+1. Tous les effets personnels sont retirés
+2. L'unité est soigneusement nettoyée
+3. Toutes les clés sont rendues
+4. Une adresse de réexpédition est fournie
 
-[Additional terms and conditions can be edited here]
+[Les conditions générales supplémentaires peuvent être modifiées ici]
 
-Sincerely,
-Property Management`;
+Cordialement,
+La Gestion Immobilière`;
 
     default:
-      throw new Error("Template not implemented");
+      throw new Error("Modèle non implémenté");
   }
 };

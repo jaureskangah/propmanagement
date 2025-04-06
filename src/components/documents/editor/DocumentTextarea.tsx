@@ -95,7 +95,7 @@ export const DocumentTextarea = forwardRef<HTMLTextAreaElement, DocumentTextarea
         value={content}
         onChange={handleChange}
         className="min-h-[500px] font-mono text-sm bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-50 border-gray-300 dark:border-gray-600"
-        placeholder={t('startTypingDocument')}
+        placeholder={t('documentGenerator.startTypingDocument') || t('startTypingDocument')}
         style={{ 
           backgroundColor: "#ffffff", 
           color: "#000000"
