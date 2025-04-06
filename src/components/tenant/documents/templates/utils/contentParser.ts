@@ -1,5 +1,6 @@
 
 import type { Content } from "pdfmake/build/pdfmake";
+import type { TenantData } from "@/components/tenant/documents/hooks/useTenantData";
 
 /**
  * Parses text content into structured sections for PDF generation
@@ -54,4 +55,56 @@ export const parseContentIntoSections = (content: string): Content[] => {
   });
   
   return result;
+};
+
+/**
+ * Processes dynamic fields in a document content by replacing placeholders with tenant data
+ * @param content The document content with placeholders
+ * @param tenant The tenant data to use for replacements
+ * @returns The processed content with replaced placeholders
+ */
+export const processDynamicFields = (content: string, tenant: TenantData): string => {
+  if (!tenant || !content) return content;
+  
+  let processedContent = content;
+  
+  // Replace tenant name
+  processedContent = processedContent.replace(/\{tenant\.name\}/g, tenant.name || '');
+  
+  // Replace tenant email
+  processedContent = processedContent.replace(/\{tenant\.email\}/g, tenant.email || '');
+  
+  // Replace tenant phone
+  processedContent = processedContent.replace(/\{tenant\.phone\}/g, tenant.phone || '');
+  
+  // Replace tenant lease start date
+  processedContent = processedContent.replace(/\{tenant\.lease_start\}/g, tenant.lease_start || '');
+  
+  // Replace tenant lease end date
+  processedContent = processedContent.replace(/\{tenant\.lease_end\}/g, tenant.lease_end || '');
+  
+  // Replace tenant rent amount
+  processedContent = processedContent.replace(
+    /\{tenant\.rent_amount\}/g, 
+    tenant.rent_amount ? tenant.rent_amount.toString() : ''
+  );
+  
+  // Replace tenant unit number
+  processedContent = processedContent.replace(/\{tenant\.unit_number\}/g, tenant.unit_number || '');
+  
+  // Replace property name if available
+  if (tenant.properties) {
+    processedContent = processedContent.replace(
+      /\{property\.name\}/g,
+      tenant.properties.name || ''
+    );
+    
+    // Replace property address if available
+    processedContent = processedContent.replace(
+      /\{property\.address\}/g,
+      tenant.properties.address || ''
+    );
+  }
+  
+  return processedContent;
 };

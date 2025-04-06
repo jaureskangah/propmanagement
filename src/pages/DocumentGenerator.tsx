@@ -13,7 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 import { useDocumentHistory } from "@/hooks/useDocumentHistory";
 import { useNavigate } from "react-router-dom";
-import { useTenantData } from "@/components/tenant/documents/hooks/useTenantData";
+import { useTenantData, convertToTenant } from "@/components/tenant/documents/hooks/useTenantData";
 
 const DocumentGenerator = () => {
   const { t } = useLocale();
@@ -62,12 +62,14 @@ const DocumentGenerator = () => {
       const lines = content.split('\n');
       const title = lines.length > 0 ? lines[0].trim() : 'Document';
       
+      const tenantForPdf = tenant ? convertToTenant(tenant) : null;
+      
       const pdfBuffer = await generateCustomPdf(content, {
         title: title,
         headerText: selectedTemplateName || 'Document',
         showPageNumbers: true,
         showDate: true
-      }, tenant);
+      }, tenantForPdf);
       
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       
