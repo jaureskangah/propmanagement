@@ -29,9 +29,9 @@ export function DocumentTemplateSelector({
   const [loading, setLoading] = useState(false);
 
   const templates = [
-    { id: "lease", name: t('leaseAgreement') || "Lease Agreement" },
-    { id: "receipt", name: t('rentReceipt') || "Rent Receipt" },
-    { id: "notice", name: t('noticeToVacate') || "Notice to Vacate" },
+    { id: "lease", name: t('leaseAgreement') || "Contrat de bail" },
+    { id: "receipt", name: t('rentReceipt') || "Quittance de loyer" },
+    { id: "notice", name: t('noticeToVacate') || "Avis de départ" },
   ];
 
   const handleSelectTemplate = (templateId: string) => {
@@ -67,8 +67,8 @@ export function DocumentTemplateSelector({
       } catch (error) {
         console.error("Error generating template content:", error);
         toast({
-          title: t('errorTitle') || "Error",
-          description: t('templateLoadError') || "Failed to load template content",
+          title: t('errorTitle') || "Erreur",
+          description: t('templateLoadError') || "Impossible de charger le contenu du modèle",
           variant: "destructive"
         });
       }
@@ -82,7 +82,7 @@ export function DocumentTemplateSelector({
     <div className="space-y-4">
       <Select value={selectedTemplate} onValueChange={handleSelectTemplate}>
         <SelectTrigger>
-          <SelectValue placeholder={t('selectDocumentTemplate') || "Select document template"} />
+          <SelectValue placeholder={t('selectDocumentTemplate') || "Sélectionner un modèle de document"} />
         </SelectTrigger>
         <SelectContent>
           {templates.map((template) => (
@@ -99,7 +99,7 @@ export function DocumentTemplateSelector({
         className="w-full"
       >
         <FileText className="mr-2 h-4 w-4" />
-        {loading ? (t('generating') || "Generating...") : (t('generateDocument') || "Generate Document")}
+        {loading ? (t('generating') || "Génération...") : (t('generateDocument') || "Générer un document")}
       </Button>
     </div>
   );

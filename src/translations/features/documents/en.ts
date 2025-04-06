@@ -132,5 +132,9 @@ export default {
   leaseEnd: "Lease End",
   rentAmount: "Rent Amount",
   date: "Date",
-  currentDate: "Current Date"
+  currentDate: "Current Date",
+  
+  // AI Assistant
+  aiAssistant: "AI Assistant",
+  saveAsTemplate: "Save as Template"
 };

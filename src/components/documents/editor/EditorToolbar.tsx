@@ -35,7 +35,7 @@ export function EditorToolbar({
           className="gap-2 bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700"
         >
           <Sparkles className="h-4 w-4 text-purple-600" />
-          {t('aiAssistant')}
+          {t('aiAssistant') || "Assistant IA"}
         </Button>
         
         <Button
@@ -67,7 +67,7 @@ export function EditorToolbar({
           disabled={!hasContent}
         >
           <Save className="h-4 w-4 text-amber-600" />
-          {t('saveAsTemplate')}
+          {t('saveAsTemplate') || "Enregistrer comme modèle"}
         </Button>
       </div>
       

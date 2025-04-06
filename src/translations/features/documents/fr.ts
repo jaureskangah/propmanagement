@@ -1,3 +1,4 @@
+
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -139,5 +140,9 @@ export default {
   // Other keys
   selectDocumentTemplate: "Sélectionner un modèle de document",
   generateDocument: "Générer un document",
-  templateLoadError: "Impossible de charger le contenu du modèle"
+  templateLoadError: "Impossible de charger le contenu du modèle",
+  
+  // AI Assistant
+  aiAssistant: "Assistant IA",
+  saveAsTemplate: "Enregistrer comme modèle"
 };
