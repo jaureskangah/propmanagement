@@ -13,7 +13,7 @@ Property: {{properties.name}}
 Unit Number: {{unit_number}}
 Start Date: {{lease_start}}
 End Date: {{lease_end}}
-Monthly Rent: ${{rent_amount}}
+Monthly Rent: \${{rent_amount}}
 
 This LEASE AGREEMENT is made on {{currentDate}} between the Landlord and Tenant.
 
@@ -24,7 +24,7 @@ This LEASE AGREEMENT is made on {{currentDate}} between the Landlord and Tenant.
    The term of this lease begins on {{lease_start}} and ends on {{lease_end}}.
 
 3. RENT
-   The monthly rent for the premises is ${{rent_amount}} due on the first day of each month.
+   The monthly rent for the premises is \${{rent_amount}} due on the first day of each month.
 
 4. SECURITY DEPOSIT
    The Tenant will pay a security deposit of $________ upon signing this agreement.
@@ -48,10 +48,10 @@ Tenant: __________________________     Date: _____________`;
 Tenant: {{name}}
 Property: {{properties.name}}
 Unit Number: {{unit_number}}
-Amount: ${{rent_amount}}
+Amount: \${{rent_amount}}
 Date: {{currentDate}}
 
-This document certifies that the landlord has received payment from {{name}} for the amount of ${{rent_amount}} representing the monthly rent for the property located at {{properties.name}}, Unit {{unit_number}}.
+This document certifies that the landlord has received payment from {{name}} for the amount of \${{rent_amount}} representing the monthly rent for the property located at {{properties.name}}, Unit {{unit_number}}.
 
 Payment method: ________________
 Payment period: ________________
@@ -76,7 +76,7 @@ This letter serves as formal notice that you are required to vacate the premises
 Current Lease Details:
 - Lease Start Date: {{lease_start}}
 - Lease End Date: {{lease_end}}
-- Monthly Rent: ${{rent_amount}}
+- Monthly Rent: \${{rent_amount}}
 
 Please ensure that:
 1. All personal belongings are removed
