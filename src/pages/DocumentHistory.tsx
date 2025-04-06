@@ -4,9 +4,13 @@ import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DocumentHistory } from "@/components/documents/history/DocumentHistory";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
 
 const DocumentHistoryPage = () => {
   const { t } = useLocale();
+  const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -20,7 +24,15 @@ const DocumentHistoryPage = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-bold">{t('documentGenerator') || "Document History"}</h1>
+              <h1 className="text-3xl font-bold">{t('documentHistory') || "Document History"}</h1>
+              <Button 
+                variant="outline"
+                onClick={() => navigate('/documents')}
+                className="flex items-center gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                {t('documentGenerator') || "Document Generator"}
+              </Button>
             </div>
 
             <div className="space-y-6">

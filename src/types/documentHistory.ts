@@ -4,7 +4,7 @@ export interface DocumentHistoryEntry {
   name: string;
   category: string;
   documentType: string;
-  fileUrl?: string;
+  fileUrl?: string | null;
   content: string;
   createdAt: string;
   updatedAt: string;
