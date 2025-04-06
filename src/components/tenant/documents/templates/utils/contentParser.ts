@@ -1,5 +1,46 @@
 
 import type { Content } from "pdfmake/build/pdfmake";
+import { Tenant } from "@/types/tenant";
+
+/**
+ * Traite les champs dynamiques dans le texte, les remplaçant par les valeurs appropriées
+ * @param content Contenu du texte avec des champs dynamiques sous forme de {{champ}}
+ * @param data Données à utiliser pour remplacer les champs dynamiques
+ * @returns Le contenu avec les champs remplacés par leurs valeurs
+ */
+export const processDynamicFields = (content: string, data?: Tenant | null): string => {
+  if (!content || !data) return content;
+  
+  // Regex pour trouver les champs dynamiques de format {{champ}}
+  const regex = /\{\{([^}]+)\}\}/g;
+  
+  return content.replace(regex, (match, field) => {
+    // Traitement des champs imbriqués (ex: properties.name)
+    if (field.includes('.')) {
+      const parts = field.split('.');
+      let value: any = data;
+      
+      for (const part of parts) {
+        if (value && typeof value === 'object' && part in value) {
+          value = value[part as keyof typeof value];
+        } else {
+          return match; // Si le champ n'existe pas, on laisse le texte original
+        }
+      }
+      
+      return value !== null && value !== undefined ? String(value) : match;
+    }
+    
+    // Cas spéciaux
+    if (field === 'currentDate') {
+      return new Date().toLocaleDateString();
+    }
+    
+    // Champs directs
+    const value = data[field as keyof typeof data];
+    return value !== null && value !== undefined ? String(value) : match;
+  });
+};
 
 /**
  * Parses text content into structured sections for PDF generation

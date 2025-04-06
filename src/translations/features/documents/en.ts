@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -112,5 +113,24 @@ export default {
   noteTitle: "Note",
   usingDirectLink: "Using direct link - no expiration",
   cancel: "Cancel",
-  noFileToShare: "No file available to share"
+  noFileToShare: "No file available to share",
+
+  // Dynamic fields translations
+  insertDynamicField: "Insert Dynamic Field",
+  searchFields: "Search fields...",
+  noFieldsFound: "No fields found.",
+  tenant: "Tenant",
+  tenantName: "Tenant Name",
+  tenantEmail: "Tenant Email",
+  tenantPhone: "Tenant Phone",
+  unitNumber: "Unit Number",
+  property: "Property",
+  propertyName: "Property Name",
+  propertyAddress: "Property Address",
+  lease: "Lease",
+  leaseStart: "Lease Start",
+  leaseEnd: "Lease End",
+  rentAmount: "Rent Amount",
+  date: "Date",
+  currentDate: "Current Date"
 };

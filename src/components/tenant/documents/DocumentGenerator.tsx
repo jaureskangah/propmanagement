@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,8 +10,13 @@ import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 import { useDocumentHistory } from "@/hooks/useDocumentHistory";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { Tenant } from "@/types/tenant";
 
-export const DocumentGenerator = () => {
+interface DocumentGeneratorProps {
+  tenant?: Tenant | null;
+}
+
+export const DocumentGenerator = ({ tenant }: DocumentGeneratorProps) => {
   const { t } = useLocale();
   const { toast } = useToast();
   const { addToHistory } = useDocumentHistory();
@@ -58,7 +64,7 @@ export const DocumentGenerator = () => {
           headerText: selectedTemplateName || 'Document',
           showPageNumbers: true,
           showDate: true
-        });
+        }, tenant);
         
         const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
         const previewUrl = URL.createObjectURL(pdfBlob);
@@ -160,6 +166,7 @@ export const DocumentGenerator = () => {
                 console.log("DocumentGenerator: Template content generated, length:", content.length);
               }}
               setIsGenerating={setIsGenerating}
+              tenant={tenant}
             />
           </CardContent>
         </Card>
@@ -196,6 +203,7 @@ export const DocumentGenerator = () => {
                   onGeneratePreview={handleGeneratePreview}
                   isGenerating={isGenerating}
                   templateName={selectedTemplateName}
+                  tenant={tenant}
                 />
               </TabsContent>
               <TabsContent value="preview" className="mt-0">

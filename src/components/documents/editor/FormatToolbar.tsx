@@ -3,21 +3,24 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Bold, Italic, List, Image, Table, Signature } from "lucide-react";
+import { Bold, Italic, List, Image, Table, Signature, Variable } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { DynamicFieldsMenu } from "./DynamicFieldsMenu";
 
 interface FormatToolbarProps {
   onInsertFormat: (format: string) => void;
   onInsertImage: (url: string) => void;
   onInsertTable: (rows: number, cols: number) => void;
   onInsertSignature: () => void;
+  onInsertDynamicField: (field: string) => void;
 }
 
 export function FormatToolbar({
   onInsertFormat,
   onInsertImage,
   onInsertTable,
-  onInsertSignature
+  onInsertSignature,
+  onInsertDynamicField
 }: FormatToolbarProps) {
   const { t } = useLocale();
   const [imageUrl, setImageUrl] = useState("");
@@ -133,6 +136,8 @@ export function FormatToolbar({
       >
         <Signature className="h-4 w-4" />
       </Button>
+
+      <DynamicFieldsMenu onInsertField={onInsertDynamicField} />
     </div>
   );
 }

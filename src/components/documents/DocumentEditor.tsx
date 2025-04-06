@@ -8,6 +8,7 @@ import { SignatureDialog } from "./editor/SignatureDialog";
 import { EditorToolbar } from "./editor/EditorToolbar";
 import { DocumentTextarea } from "./editor/DocumentTextarea";
 import { FormatToolbar } from "./editor/FormatToolbar";
+import { Tenant } from "@/types/tenant";
 
 interface DocumentEditorProps {
   content: string;
@@ -15,6 +16,7 @@ interface DocumentEditorProps {
   onGeneratePreview: (content: string) => void;
   isGenerating: boolean;
   templateName?: string;
+  tenant?: Tenant | null;
 }
 
 export function DocumentEditor({
@@ -22,7 +24,8 @@ export function DocumentEditor({
   onContentChange,
   onGeneratePreview,
   isGenerating,
-  templateName = ""
+  templateName = "",
+  tenant = null
 }: DocumentEditorProps) {
   const {
     isAIDialogOpen,
@@ -124,6 +127,10 @@ export function DocumentEditor({
     insertTextAtCursor(signatureMarkdown);
   };
 
+  const insertDynamicField = (field: string) => {
+    insertTextAtCursor(field);
+  };
+
   return (
     <div className="space-y-4">
       {isAdvancedEditingEnabled && (
@@ -132,6 +139,7 @@ export function DocumentEditor({
           onInsertImage={insertImageTag}
           onInsertTable={insertTable}
           onInsertSignature={() => setIsSignatureDialogOpen(true)}
+          onInsertDynamicField={insertDynamicField}
         />
       )}
       

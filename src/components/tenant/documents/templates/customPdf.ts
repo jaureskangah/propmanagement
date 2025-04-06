@@ -3,8 +3,9 @@ import pdfMake from "pdfmake/build/pdfmake";
 import type { TDocumentDefinitions, Content } from "pdfmake/build/pdfmake";
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { formatDate } from "./utils/dateUtils";
-import { parseContentIntoSections } from "./utils/contentParser";
+import { parseContentIntoSections, processDynamicFields } from "./utils/contentParser";
 import { PdfOptions, getMergedOptions } from "./utils/pdfOptions";
+import { Tenant } from "@/types/tenant";
 
 // Initialize pdfMake with fonts
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
@@ -13,10 +14,14 @@ import { PdfOptions, getMergedOptions } from "./utils/pdfOptions";
  * Generates a custom PDF document from text content
  * @param content The document content as text
  * @param options Configuration options for the PDF
+ * @param tenant Optional tenant data for dynamic fields
  * @returns Promise resolving to a Uint8Array representing the PDF
  */
-export const generateCustomPdf = async (content: string, options: PdfOptions = {}) => {
+export const generateCustomPdf = async (content: string, options: PdfOptions = {}, tenant?: Tenant | null) => {
   console.log("Generating PDF with content:", content);
+  
+  // Process any dynamic fields in the content
+  const processedContent = processDynamicFields(content, tenant);
   
   // Get merged options with defaults
   const mergedOptions = getMergedOptions(options);
@@ -57,7 +62,7 @@ export const generateCustomPdf = async (content: string, options: PdfOptions = {
   };
   
   // Parse content into sections
-  const contentSections = parseContentIntoSections(content);
+  const contentSections = parseContentIntoSections(processedContent);
   
   // Create document definition
   const documentDefinition: TDocumentDefinitions = {

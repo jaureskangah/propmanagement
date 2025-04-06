@@ -112,5 +112,24 @@ export default {
   noteTitle: "Note",
   usingDirectLink: "Utilisation d'un lien direct - sans expiration",
   cancel: "Annuler",
-  noFileToShare: "Aucun fichier disponible à partager"
+  noFileToShare: "Aucun fichier disponible à partager",
+
+  // Champs dynamiques translations
+  insertDynamicField: "Insérer un champ dynamique",
+  searchFields: "Rechercher des champs...",
+  noFieldsFound: "Aucun champ trouvé.",
+  tenant: "Locataire",
+  tenantName: "Nom du locataire",
+  tenantEmail: "Email du locataire",
+  tenantPhone: "Téléphone du locataire",
+  unitNumber: "Numéro d'unité",
+  property: "Propriété",
+  propertyName: "Nom de la propriété",
+  propertyAddress: "Adresse de la propriété",
+  lease: "Bail",
+  leaseStart: "Début de bail",
+  leaseEnd: "Fin de bail",
+  rentAmount: "Montant du loyer",
+  date: "Date",
+  currentDate: "Date actuelle"
 };
