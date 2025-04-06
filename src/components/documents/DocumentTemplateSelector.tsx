@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -32,6 +31,13 @@ export function DocumentTemplateSelector({
     { id: "lease", name: t('documentGenerator.leaseAgreement') || "Contrat de bail" },
     { id: "receipt", name: t('documentGenerator.rentReceipt') || "Quittance de loyer" },
     { id: "notice", name: t('documentGenerator.noticeToVacate') || "Avis de départ" },
+    { id: "lease_renewal", name: t('documentGenerator.leaseRenewal') || "Renouvellement de bail" },
+    { id: "payment_reminder", name: t('documentGenerator.paymentReminder') || "Rappel de paiement" },
+    { id: "late_payment", name: t('documentGenerator.latePaymentNotice') || "Avis de retard de paiement" },
+    { id: "entry_notice", name: t('documentGenerator.entryNotice') || "Avis d'entrée" },
+    { id: "maintenance_notice", name: t('documentGenerator.maintenanceNotice') || "Avis de maintenance" },
+    { id: "move_in_checklist", name: t('documentGenerator.moveInChecklist') || "Liste de contrôle d'entrée" },
+    { id: "move_out_checklist", name: t('documentGenerator.moveOutChecklist') || "Liste de contrôle de sortie" },
   ];
 
   const handleSelectTemplate = (templateId: string) => {

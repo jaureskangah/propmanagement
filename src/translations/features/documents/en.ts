@@ -136,5 +136,8 @@ export default {
   
   // AI Assistant
   aiAssistant: "AI Assistant",
-  saveAsTemplate: "Save as Template"
+  saveAsTemplate: "Save as Template",
+  selectDocumentTemplate: "Select document template",
+  generateDocument: "Generate Document",
+  templateLoadError: "Unable to load template content"
 };
