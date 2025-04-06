@@ -9,6 +9,7 @@ import { EditorToolbar } from "./editor/EditorToolbar";
 import { DocumentTextarea } from "./editor/DocumentTextarea";
 import { FormatToolbar } from "./editor/FormatToolbar";
 import { Tenant } from "@/types/tenant";
+import { ReactNode } from "react";
 
 interface DocumentEditorProps {
   content: string;
@@ -17,6 +18,7 @@ interface DocumentEditorProps {
   isGenerating: boolean;
   templateName?: string;
   tenant?: Tenant | null;
+  rightSlot?: ReactNode;
 }
 
 export function DocumentEditor({
@@ -25,7 +27,8 @@ export function DocumentEditor({
   onGeneratePreview,
   isGenerating,
   templateName = "",
-  tenant = null
+  tenant = null,
+  rightSlot
 }: DocumentEditorProps) {
   const {
     isAIDialogOpen,
@@ -143,11 +146,20 @@ export function DocumentEditor({
         />
       )}
       
-      <DocumentTextarea
-        ref={textareaRef}
-        content={content}
-        onChange={handleChange}
-      />
+      <div className="flex items-start gap-2">
+        <div className="flex-1">
+          <DocumentTextarea
+            ref={textareaRef}
+            content={content}
+            onChange={handleChange}
+          />
+        </div>
+        {rightSlot && (
+          <div className="mt-3">
+            {rightSlot}
+          </div>
+        )}
+      </div>
       
       <EditorToolbar
         onOpenAIDialog={() => setIsAIDialogOpen(true)}
