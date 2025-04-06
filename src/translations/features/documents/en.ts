@@ -1,4 +1,3 @@
-
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -86,4 +85,33 @@ export default {
   leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
   leaseRenewalContent: "# LEASE RENEWAL\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\nThe lease initially signed on [date] expires on [date]. The parties agree to renew said lease under the following conditions:",
   rentReceiptContent: "# RENT RECEIPT\n\nI the undersigned [Landlord Name], owner of the accommodation located at [Address], declare having received from [Tenant Name] the amount of [Amount] representing the rent for [Period].\n\nDone at [Location], on [Date]\n\n[Signature]"
+  
+  // New sharing translations
+  shareDocument: "Share Document",
+  shareDocumentDescription: "Share this document with others",
+  shareByEmail: "Email",
+  shareByLink: "Link",
+  recipients: "Recipients",
+  separateEmails: "Separate multiple email addresses with commas",
+  message: "Message",
+  optionalMessage: "Add an optional message",
+  send: "Send",
+  sending: "Sending...",
+  sent: "Sent!",
+  generateLink: "Generate Link",
+  generating: "Generating...",
+  shareableLink: "Shareable Link",
+  linkValidFor7Days: "This link is valid for 7 days",
+  generateLinkDescription: "Generate a shareable link for this document",
+  success: "Success",
+  error: "Error",
+  documentShared: "Document shared successfully",
+  shareError: "Failed to share document",
+  enterValidEmail: "Please enter at least one valid email address",
+  linkCopied: "Link copied to clipboard",
+  copyFailed: "Failed to copy link",
+  note: "Note",
+  usingDirectLink: "Using direct link - no expiration",
+  cancel: "Cancel",
+  noFileToShare: "No file available to share",
 };

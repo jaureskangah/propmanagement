@@ -1,4 +1,3 @@
-
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -84,5 +83,34 @@ export default {
   // Dummy content for templates
   leaseAgreementContent: "# CONTRAT DE BAIL\n\nEntre les soussignés :\n\n**Le Bailleur**: [Nom du Bailleur]\n\n**Le Locataire**: [Nom du Locataire]\n\nIl a été convenu ce qui suit:\n\n## ARTICLE 1 - OBJET DU CONTRAT\n\nLe Bailleur donne en location au Locataire qui accepte, le logement ci-après désigné.\n\n## ARTICLE 2 - DÉSIGNATION DU LOGEMENT\n\n[Description du logement]",
   leaseRenewalContent: "# RENOUVELLEMENT DE BAIL\n\nEntre les soussignés :\n\n**Le Bailleur**: [Nom du Bailleur]\n\n**Le Locataire**: [Nom du Locataire]\n\nIl a été convenu ce qui suit:\n\nLe bail initialement conclu le [date] arrive à échéance le [date]. Les parties conviennent de renouveler ledit bail aux conditions suivantes:",
-  rentReceiptContent: "# QUITTANCE DE LOYER\n\nJe soussigné [Nom du Bailleur], propriétaire du logement situé [Adresse], déclare avoir reçu de [Nom du Locataire] la somme de [Montant] € représentant le loyer du [Période].\n\nFait à [Lieu], le [Date]\n\n[Signature]"
+  rentReceiptContent: "# QUITTANCE DE LOYER\n\nJe soussigné [Nom du Bailleur], propriétaire du logement situé [Adresse], déclare avoir reçu de [Nom du Locataire] la somme de [Montant] € représentant le loyer du [Période].\n\nFait à [Lieu], le [Date]\n\n[Signature]",
+  
+  // New sharing translations
+  shareDocument: "Partager le document",
+  shareDocumentDescription: "Partagez ce document avec d'autres personnes",
+  shareByEmail: "Email",
+  shareByLink: "Lien",
+  recipients: "Destinataires",
+  separateEmails: "Séparez les adresses email par des virgules",
+  message: "Message",
+  optionalMessage: "Ajoutez un message optionnel",
+  send: "Envoyer",
+  sending: "Envoi en cours...",
+  sent: "Envoyé !",
+  generateLink: "Générer un lien",
+  generating: "Génération...",
+  shareableLink: "Lien de partage",
+  linkValidFor7Days: "Ce lien est valide pendant 7 jours",
+  generateLinkDescription: "Générer un lien pour partager ce document",
+  success: "Succès",
+  error: "Erreur",
+  documentShared: "Document partagé avec succès",
+  shareError: "Échec du partage du document",
+  enterValidEmail: "Veuillez saisir au moins une adresse email valide",
+  linkCopied: "Lien copié dans le presse-papier",
+  copyFailed: "Échec de la copie du lien",
+  note: "Note",
+  usingDirectLink: "Utilisation d'un lien direct - sans expiration",
+  cancel: "Annuler",
+  noFileToShare: "Aucun fichier disponible à partager",
 };
