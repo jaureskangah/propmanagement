@@ -1,14 +1,13 @@
 
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 import { useEditorState } from "./editor/useEditorState";
-import { AIAssistantDialog } from "./editor/AIAssistantDialog";
-import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
-import { SaveTemplateDialog } from "./editor/SaveTemplateDialog";
-import { SignatureDialog } from "./editor/SignatureDialog";
 import { EditorToolbar } from "./editor/EditorToolbar";
 import { DocumentTextarea } from "./editor/DocumentTextarea";
 import { FormatToolbar } from "./editor/FormatToolbar";
 import { useTenantData } from "../tenant/documents/hooks/useTenantData";
+import { useFormatHelpers } from "./editor/useFormatHelpers";
+import { useDocumentProcessing } from "./editor/useDocumentProcessing";
+import { EditorDialogManager } from "./editor/EditorDialogManager";
 
 interface DocumentEditorProps {
   content: string;
@@ -25,6 +24,7 @@ export function DocumentEditor({
   isGenerating,
   templateName = ""
 }: DocumentEditorProps) {
+  // Editor state management
   const {
     isAIDialogOpen,
     setIsAIDialogOpen,
@@ -34,190 +34,30 @@ export function DocumentEditor({
     handleChange
   } = useEditorState(content, onContentChange);
   
+  // Additional dialog states
   const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
   const [isSignatureDialogOpen, setIsSignatureDialogOpen] = useState(false);
   const [isAdvancedEditingEnabled, setIsAdvancedEditingEnabled] = useState(false);
-  const previewTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
-  // Create ref for the preview handler function so we can update it dynamically
-  const previewHandlerRef = useRef<(content: string) => void>((content) => {
-    onGeneratePreview(content);
-  });
-  
-  // Get tenant data for dynamic fields - Fix the useTenantData call by removing incorrect empty objects
+  // Get tenant data for dynamic fields
   const { tenant } = useTenantData();
   
-  // Effect for real-time preview
-  useEffect(() => {
-    // Cancel any existing timeout
-    if (previewTimeoutRef.current) {
-      clearTimeout(previewTimeoutRef.current);
-    }
-    
-    // Only generate preview if we have content and aren't already generating
-    if (content && !isGenerating) {
-      // Set a delay before generating preview to avoid too many calls
-      previewTimeoutRef.current = setTimeout(() => {
-        console.log("Auto-generating preview after content change");
-        // Use the current handler from the ref
-        previewHandlerRef.current(content);
-      }, 1500); // 1.5 second delay
-    }
-    
-    // Cleanup
-    return () => {
-      if (previewTimeoutRef.current) {
-        clearTimeout(previewTimeoutRef.current);
-      }
-    };
-  }, [content, isGenerating, onGeneratePreview]);
-
-  // Regular preview handler that triggers preview without processing
-  const handleGeneratePreview = () => {
-    // Clear any pending automatic preview
-    if (previewTimeoutRef.current) {
-      clearTimeout(previewTimeoutRef.current);
-    }
-    // Use the current handler from the ref
-    previewHandlerRef.current(content);
-  };
-
-  // Process content and replace dynamic fields with actual values
-  const processContent = (inputContent: string): string => {
-    if (!tenant) return inputContent;
-    
-    let processedContent = inputContent;
-    
-    // Replace date
-    processedContent = processedContent.replace(/{{currentDate}}/g, new Date().toLocaleDateString());
-    
-    // Replace tenant fields
-    processedContent = processedContent.replace(/{{tenant\.name}}/g, tenant.name || '');
-    processedContent = processedContent.replace(/{{tenant\.email}}/g, tenant.email || '');
-    processedContent = processedContent.replace(/{{tenant\.phone}}/g, tenant.phone || '');
-    processedContent = processedContent.replace(/{{tenant\.unit_number}}/g, tenant.unit_number || '');
-    processedContent = processedContent.replace(/{{tenant\.lease_start}}/g, tenant.lease_start || '');
-    processedContent = processedContent.replace(/{{tenant\.lease_end}}/g, tenant.lease_end || '');
-    processedContent = processedContent.replace(/{{tenant\.rent_amount}}/g, tenant.rent_amount?.toString() || '');
-    
-    // Replace property fields
-    if (tenant.properties) {
-      processedContent = processedContent.replace(/{{property\.name}}/g, tenant.properties.name || '');
-    }
-    
-    return processedContent;
-  };
+  // Document content processing and preview
+  const { handleGeneratePreview } = useDocumentProcessing(
+    content, 
+    onGeneratePreview, 
+    tenant, 
+    isGenerating
+  );
   
-  // Process dynamic fields before generating preview
-  useEffect(() => {
-    // Create a function that processes content before generating preview
-    const processedPreviewHandler = (inputContent: string) => {
-      const processedContent = processContent(inputContent);
-      onGeneratePreview(processedContent);
-    };
-    
-    // Update the ref with our new handler function
-    previewHandlerRef.current = processedPreviewHandler;
-    
-    // No need for cleanup as we don't need to restore original handler
-  }, [content, tenant, onGeneratePreview]);
-
-  // Format insertion helpers
-  const insertTextAtCursor = (text: string) => {
-    const textarea = textareaRef.current;
-    
-    if (textarea) {
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      const selectedText = content.substring(start, end);
-      
-      let newText;
-      if (selectedText) {
-        // If text is selected, wrap it with the format
-        if (text === "**text**") {
-          newText = content.substring(0, start) + "**" + selectedText + "**" + content.substring(end);
-        } else if (text === "*text*") {
-          newText = content.substring(0, start) + "*" + selectedText + "*" + content.substring(end);
-        } else {
-          newText = content.substring(0, start) + text + content.substring(end);
-        }
-      } else {
-        // If no text is selected, just insert the format
-        newText = content.substring(0, start) + text + content.substring(end);
-      }
-      
-      onContentChange(newText);
-      
-      // Set cursor position after inserted text
-      setTimeout(() => {
-        textarea.focus();
-        const newPosition = start + text.length;
-        textarea.setSelectionRange(newPosition, newPosition);
-      }, 0);
-    }
-  };
-
-  const insertImageTag = (imageUrl: string) => {
-    if (!imageUrl) return;
-    
-    const imageMarkdown = `\n![Image](${imageUrl})\n`;
-    insertTextAtCursor(imageMarkdown);
-  };
-
-  const createTableMarkdown = (rows: number, cols: number) => {
-    let markdown = "\n";
-    
-    // Header row
-    markdown += "|";
-    for (let i = 0; i < cols; i++) {
-      markdown += ` Column ${i + 1} |`;
-    }
-    markdown += "\n";
-    
-    // Separator row
-    markdown += "|";
-    for (let i = 0; i < cols; i++) {
-      markdown += " --- |";
-    }
-    markdown += "\n";
-    
-    // Data rows
-    for (let i = 0; i < rows - 1; i++) {
-      markdown += "|";
-      for (let j = 0; j < cols; j++) {
-        markdown += `  |`;
-      }
-      markdown += "\n";
-    }
-    
-    return markdown + "\n";
-  };
-
-  const insertTable = (rows: number, cols: number) => {
-    const tableMarkdown = createTableMarkdown(rows, cols);
-    insertTextAtCursor(tableMarkdown);
-  };
-
-  const insertSignature = (signatureDataUrl: string) => {
-    if (!signatureDataUrl) return;
-    
-    const signatureMarkdown = `\n![Signature](${signatureDataUrl})\n`;
-    insertTextAtCursor(signatureMarkdown);
-  };
-  
-  // Process dynamic fields
-  const insertDynamicField = (fieldCode: string) => {
-    let replacedText = fieldCode;
-    
-    // Process the field if we're using the textarea's insertAtCursor method
-    if (textareaRef.current && (textareaRef.current as any).insertTextAtCursor) {
-      (textareaRef.current as any).insertTextAtCursor(replacedText);
-      return;
-    }
-    
-    // Fallback to regular insertion
-    insertTextAtCursor(replacedText);
-  };
+  // Text formatting helpers
+  const {
+    insertTextAtCursor,
+    insertImageTag,
+    insertTable,
+    insertSignature,
+    insertDynamicField
+  } = useFormatHelpers(textareaRef, content, onContentChange);
 
   return (
     <div className="space-y-4">
@@ -248,36 +88,19 @@ export function DocumentEditor({
         isAdvancedEditingEnabled={isAdvancedEditingEnabled}
       />
 
-      {/* AI Assistant Dialog */}
-      <AIAssistantDialog 
-        isOpen={isAIDialogOpen}
-        onClose={() => setIsAIDialogOpen(false)}
-        onGenerate={onContentChange}
+      <EditorDialogManager
+        isAIDialogOpen={isAIDialogOpen}
+        setIsAIDialogOpen={setIsAIDialogOpen}
+        isShareDialogOpen={isShareDialogOpen}
+        setIsShareDialogOpen={setIsShareDialogOpen}
+        isSaveTemplateDialogOpen={isSaveTemplateDialogOpen}
+        setIsSaveTemplateDialogOpen={setIsSaveTemplateDialogOpen}
+        isSignatureDialogOpen={isSignatureDialogOpen}
+        setIsSignatureDialogOpen={setIsSignatureDialogOpen}
+        onContentChange={onContentChange}
         content={content}
         templateName={templateName}
-      />
-
-      {/* Share Document Dialog */}
-      <ShareDocumentDialog
-        isOpen={isShareDialogOpen}
-        onClose={() => setIsShareDialogOpen(false)}
-        content={content}
-        templateName={templateName}
-      />
-      
-      {/* Save Template Dialog */}
-      <SaveTemplateDialog
-        isOpen={isSaveTemplateDialogOpen}
-        onClose={() => setIsSaveTemplateDialogOpen(false)}
-        content={content}
-        templateName={templateName}
-      />
-      
-      {/* Signature Dialog */}
-      <SignatureDialog
-        isOpen={isSignatureDialogOpen}
-        onClose={() => setIsSignatureDialogOpen(false)}
-        onSave={insertSignature}
+        insertSignature={insertSignature}
       />
     </div>
   );
