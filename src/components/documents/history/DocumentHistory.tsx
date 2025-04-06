@@ -4,84 +4,14 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useDocumentHistory } from "@/hooks/useDocumentHistory";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DocumentHistoryEntry } from "@/types/documentHistory";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Eye, FileText, Trash2, Download, RefreshCw } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { fr, enUS } from "date-fns/locale";
+import { FileText, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
-interface DocumentViewerProps {
-  document: DocumentHistoryEntry | null;
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const DocumentViewer = ({ document, isOpen, onClose }: DocumentViewerProps) => {
-  const { t } = useLocale();
-  const { toast } = useToast();
-  
-  if (!document) return null;
-  
-  const handleDownload = () => {
-    if (document.fileUrl) {
-      // Use window.document instead of document to avoid confusion with the parameter name
-      const link = window.document.createElement("a");
-      link.href = document.fileUrl;
-      link.download = `${document.name}.pdf`;
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
-      
-      toast({
-        title: t('downloadStarted'),
-        description: t('downloadStartedDescription')
-      });
-    }
-  };
-  
-  return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="max-w-4xl max-h-[80vh] flex flex-col">
-        <AlertDialogHeader>
-          <AlertDialogTitle>{document.name}</AlertDialogTitle>
-          <AlertDialogDescription>
-            {new Date(document.createdAt).toLocaleDateString()}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        
-        <div className="flex-1 overflow-auto my-4">
-          {document.fileUrl ? (
-            <iframe 
-              src={document.fileUrl}
-              className="w-full h-[500px] border-none"
-              title={document.name}
-            />
-          ) : (
-            <div className="whitespace-pre-wrap bg-gray-50 p-4 rounded-md">
-              {document.content}
-            </div>
-          )}
-        </div>
-        
-        <AlertDialogFooter>
-          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-          {document.fileUrl && (
-            <AlertDialogAction asChild>
-              <Button onClick={handleDownload}>
-                <Download className="mr-2 h-4 w-4" />
-                {t('downloadDocument')}
-              </Button>
-            </AlertDialogAction>
-          )}
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-};
+import { DocumentViewer } from "./DocumentViewer";
+import { DocumentHistoryItem } from "./DocumentHistoryItem";
+import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
+import { DocumentFilters } from "./DocumentFilters";
 
 export const DocumentHistory = () => {
   const { t, locale } = useLocale();
@@ -93,19 +23,6 @@ export const DocumentHistory = () => {
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [documentToDelete, setDocumentToDelete] = useState<string | null>(null);
-  
-  const dateLocale = locale === 'fr' ? fr : enUS;
-  
-  const formatDate = (dateString: string) => {
-    try {
-      return formatDistanceToNow(new Date(dateString), { 
-        addSuffix: true,
-        locale: dateLocale
-      });
-    } catch (e) {
-      return dateString;
-    }
-  };
   
   const filteredHistory = history.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -136,38 +53,6 @@ export const DocumentHistory = () => {
     }
   };
   
-  const handleDirectDownload = (doc: DocumentHistoryEntry) => {
-    if (doc.fileUrl) {
-      // Use window.document instead of document to avoid confusion with the parameter name
-      const link = window.document.createElement("a");
-      link.href = doc.fileUrl;
-      link.download = `${doc.name}.pdf`;
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
-      
-      toast({
-        title: t('downloadStarted'),
-        description: t('downloadStartedDescription')
-      });
-    } else {
-      toast({
-        title: t('downloadError') || "Erreur de téléchargement",
-        description: t('noFileAvailable') || "Aucun fichier disponible pour ce document",
-        variant: "destructive"
-      });
-    }
-  };
-  
-  const categories = [
-    { value: "all", label: t('allTemplates') },
-    { value: "leaseDocuments", label: t('leaseDocuments') },
-    { value: "paymentDocuments", label: t('paymentDocuments') },
-    { value: "noticeDocuments", label: t('noticeDocuments') },
-    { value: "inspectionDocuments", label: t('inspectionDocuments') },
-    { value: "miscDocuments", label: t('miscDocuments') }
-  ];
-  
   return (
     <>
       <Card className="w-full">
@@ -190,26 +75,12 @@ export const DocumentHistory = () => {
         </CardHeader>
         
         <CardContent className="p-4">
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <Input
-              placeholder={t('search')}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="md:w-1/2"
-            />
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="md:w-1/3">
-                <SelectValue placeholder={t('category')} />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.value} value={category.value}>
-                    {category.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <DocumentFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            categoryFilter={categoryFilter}
+            onCategoryChange={setCategoryFilter}
+          />
           
           {isLoading ? (
             <div className="flex justify-center py-10">
@@ -234,41 +105,13 @@ export const DocumentHistory = () => {
                 </TableHeader>
                 <TableBody>
                   {filteredHistory.map((document) => (
-                    <TableRow key={document.id}>
-                      <TableCell className="font-medium">{document.name}</TableCell>
-                      <TableCell>{t(document.category)}</TableCell>
-                      <TableCell>{formatDate(document.createdAt)}</TableCell>
-                      <TableCell>
-                        <div className="flex space-x-2">
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            onClick={() => handleViewDocument(document)}
-                            title={t('view')}
-                          >
-                            <Eye className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon"
-                            onClick={() => handleDirectDownload(document)}
-                            title={t('download')}
-                            disabled={!document.fileUrl}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
-                            className="text-destructive"
-                            onClick={() => handleDeleteClick(document.id)}
-                            title={t('delete')}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
+                    <DocumentHistoryItem 
+                      key={document.id}
+                      document={document}
+                      onView={handleViewDocument}
+                      onDelete={handleDeleteClick}
+                      locale={locale}
+                    />
                   ))}
                 </TableBody>
               </Table>
@@ -286,25 +129,11 @@ export const DocumentHistory = () => {
         }}
       />
       
-      <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('deleteTemplate')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('deleteTemplateConfirmation')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleConfirmDelete}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('delete')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <DeleteConfirmDialog
+        isOpen={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={handleConfirmDelete}
+      />
     </>
   );
 };
