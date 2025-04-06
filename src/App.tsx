@@ -15,6 +15,9 @@ import Finances from './pages/Finances';
 import AddTenant from './pages/AddTenant';
 import TenantDashboardPage from './pages/tenant/TenantDashboard';
 import AuthPage from './pages/AuthPage';
+import Documents from './pages/Documents';
+import DocumentHistory from './pages/DocumentHistory';
+import TenantDocuments from './pages/TenantDocuments';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -38,6 +41,9 @@ function App() {
       <Route path="/edit-task/:id" element={isAuthenticated ? <EditTask /> : <Navigate to="/login" />} />
       <Route path="/finances" element={isAuthenticated ? <Finances /> : <Navigate to="/login" />} />
       <Route path="/add-tenant" element={isAuthenticated ? <AddTenant /> : <Navigate to="/login" />} />
+      <Route path="/documents" element={isAuthenticated ? <Documents /> : <Navigate to="/login" />} />
+      <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
+      <Route path="/tenant/documents" element={isAuthenticated ? <TenantDocuments /> : <Navigate to="/login" />} />
 
       {/* 404 Page */}
       <Route path="*" element={<NotFound />} />
