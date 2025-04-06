@@ -15,7 +15,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   useEffect(() => {
     if (containerRef.current) {
       console.log("TenantPdfViewer: Enforcing white background on container");
-      containerRef.current.style.backgroundColor = "#ffffff !important";
+      containerRef.current.style.backgroundColor = "#ffffff";
       
       // Log initial container dimensions
       const { width, height } = containerRef.current.getBoundingClientRect();
@@ -51,7 +51,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
     const timer = setTimeout(() => {
       try {
         if (iframeRef.current) {
-          iframeRef.current.style.backgroundColor = "#ffffff !important";
+          iframeRef.current.style.backgroundColor = "#ffffff";
           console.log("TenantPdfViewer: Applied white background to iframe");
           
           try {
@@ -59,7 +59,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
               (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
             
             if (iframeDoc && iframeDoc.body) {
-              iframeDoc.body.style.backgroundColor = "#ffffff !important";
+              iframeDoc.body.style.backgroundColor = "#ffffff";
               console.log("TenantPdfViewer: Applied white background to iframe body");
             }
           } catch (e) {
@@ -68,7 +68,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
         }
         
         if (objectRef.current) {
-          objectRef.current.style.backgroundColor = "#ffffff !important";
+          objectRef.current.style.backgroundColor = "#ffffff";
           console.log("TenantPdfViewer: Applied white background to object element");
         }
       } catch (e) {
@@ -82,9 +82,9 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   return (
     <div 
       ref={containerRef}
-      className="pdf-frame-container"
+      className="pdf-frame-container bg-white"
       style={{ 
-        backgroundColor: "#ffffff !important",
+        backgroundColor: "#ffffff",
         position: "relative",
         width: "100%",
         height: "100%"
@@ -94,9 +94,9 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
         ref={objectRef}
         data={pdfUrl}
         type="application/pdf"
-        className="w-full h-full rounded-md border pdf-viewer"
+        className="w-full h-full rounded-md border pdf-viewer bg-white"
         style={{ 
-          backgroundColor: "#ffffff !important",
+          backgroundColor: "#ffffff",
           position: "absolute",
           top: 0,
           left: 0,
@@ -111,9 +111,9 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
           ref={iframeRef}
           src={pdfUrl}
           title="PDF Preview"
-          className="w-full h-full rounded-md border pdf-viewer"
+          className="w-full h-full rounded-md border pdf-viewer bg-white"
           style={{ 
-            backgroundColor: "#ffffff !important",
+            backgroundColor: "#ffffff",
             display: "block",
             position: "absolute",
             top: 0,
@@ -129,7 +129,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
             console.log("TenantPdfViewer: Iframe loaded");
             try {
               if (iframeRef.current && iframeRef.current.contentDocument) {
-                iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff !important";
+                iframeRef.current.contentDocument.body.style.backgroundColor = "#ffffff";
                 console.log("TenantPdfViewer: Applied white background to iframe body");
               }
             } catch (e) {

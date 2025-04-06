@@ -15,7 +15,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   useEffect(() => {
     if (containerRef.current) {
       console.log("PdfViewer: Enforcing white background on container");
-      containerRef.current.style.backgroundColor = "#ffffff !important";
+      containerRef.current.style.backgroundColor = "#ffffff";
       
       // Log initial container dimensions
       const { width, height } = containerRef.current.getBoundingClientRect();
@@ -51,7 +51,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
     const timer = setTimeout(() => {
       try {
         if (iframeRef.current) {
-          iframeRef.current.style.backgroundColor = "#ffffff !important";
+          iframeRef.current.style.backgroundColor = "#ffffff";
           console.log("PdfViewer: Applied white background to iframe");
           
           try {
@@ -59,7 +59,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
               (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
             
             if (iframeDoc && iframeDoc.body) {
-              iframeDoc.body.style.backgroundColor = "#ffffff !important";
+              iframeDoc.body.style.backgroundColor = "#ffffff";
               console.log("PdfViewer: Applied white background to iframe body");
             }
           } catch (e) {
@@ -68,7 +68,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
         }
         
         if (objectRef.current) {
-          objectRef.current.style.backgroundColor = "#ffffff !important";
+          objectRef.current.style.backgroundColor = "#ffffff";
           console.log("PdfViewer: Applied white background to object element");
         }
       } catch (e) {
@@ -82,9 +82,9 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
   return (
     <div 
       ref={containerRef}
-      className="border rounded-md h-[500px] overflow-hidden shadow-sm pdf-frame-container" 
+      className="border rounded-md h-full overflow-hidden shadow-sm bg-white pdf-frame-container" 
       style={{ 
-        backgroundColor: "#ffffff !important",
+        backgroundColor: "#ffffff",
         position: "relative"
       }}
     >
@@ -92,9 +92,9 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
         ref={objectRef}
         data={pdfUrl}
         type="application/pdf"
-        className="w-full h-full pdf-viewer"
+        className="w-full h-full bg-white pdf-viewer"
         style={{ 
-          backgroundColor: "#ffffff !important",
+          backgroundColor: "#ffffff",
           position: "absolute",
           top: 0,
           left: 0,
@@ -109,9 +109,9 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
           ref={iframeRef}
           src={pdfUrl}
           title="Document Preview"
-          className="w-full h-full pdf-viewer"
+          className="w-full h-full bg-white pdf-viewer"
           style={{ 
-            backgroundColor: "#ffffff !important",
+            backgroundColor: "#ffffff",
             display: "block",
             position: "absolute",
             top: 0,
@@ -130,7 +130,7 @@ export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
                 console.log("PdfViewer: Attempting to style iframe content");
                 const doc = iframeRef.current.contentDocument;
                 if (doc && doc.body) {
-                  doc.body.style.backgroundColor = "#ffffff !important";
+                  doc.body.style.backgroundColor = "#ffffff";
                   console.log("PdfViewer: Applied white background to iframe body");
                 }
               }

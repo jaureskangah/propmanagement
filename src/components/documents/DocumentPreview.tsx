@@ -39,7 +39,7 @@ export function DocumentPreview({
         />
       </div>
       
-      <Card className="flex-1 overflow-hidden p-0 relative border">
+      <Card className="flex-1 overflow-hidden p-0 relative border bg-white">
         {isGenerating ? (
           <LoadingState />
         ) : previewError ? (

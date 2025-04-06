@@ -20,7 +20,7 @@
     @apply dark:bg-gray-800/80 dark:border-gray-700;
   }
   
-  /* PDF Viewer Classes - Enhanced with !important flags */
+  /* PDF Viewer Classes - Forcé en blanc */
   .pdf-viewer {
     background-color: #ffffff !important;
     display: block !important;
