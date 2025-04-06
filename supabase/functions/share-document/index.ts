@@ -10,13 +10,9 @@ const corsHeaders = {
 };
 
 interface ShareDocumentRequest {
-  documentId: string;
-  documentName: string;
-  documentUrl: string;
-  documentType: string;
-  recipients: string[];
-  message: string;
-  senderEmail: string;
+  recipientEmail: string;
+  documentContent: string;
+  documentTitle: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -27,74 +23,44 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     const { 
-      documentId, 
-      documentName, 
-      documentUrl, 
-      documentType,
-      recipients, 
-      message, 
-      senderEmail 
+      recipientEmail, 
+      documentContent, 
+      documentTitle
     }: ShareDocumentRequest = await req.json();
 
-    console.log("Received share document request:", {
-      documentId,
-      documentName,
-      recipients,
-      senderEmail
-    });
-
-    if (!documentId || !documentName || !documentUrl || !recipients.length || !senderEmail) {
+    if (!recipientEmail || !documentContent || !documentTitle) {
       throw new Error("Missing required fields");
     }
 
-    // Send email to each recipient
-    const emailPromises = recipients.map(async (recipient) => {
-      try {
-        const documentTypeText = documentType === 'lease' ? 'Lease Agreement' : 
-                                documentType === 'receipt' ? 'Payment Receipt' : 
-                                'Document';
+    // Generate a basic HTML representation of the content
+    const htmlContent = `<div style="white-space: pre-wrap; font-family: Arial, sans-serif;">${documentContent.replace(/\n/g, '<br/>')}</div>`;
 
-        const emailResponse = await resend.emails.send({
-          from: `Document Sharing <onboarding@resend.dev>`,
-          to: [recipient],
-          subject: `${senderEmail} shared a ${documentTypeText} with you: ${documentName}`,
-          html: `
-            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #4f46e5;">${senderEmail} shared a document with you</h2>
-              <div style="border-left: 4px solid #4f46e5; padding-left: 20px; margin: 20px 0; color: #666;">
-                <p style="font-size: 16px; font-weight: bold;">${documentName}</p>
-                <p style="font-size: 14px; color: #666;">Document type: ${documentTypeText}</p>
-                ${message ? `<p style="font-style: italic; margin-top: 15px;">"${message}"</p>` : ''}
-              </div>
-              <div style="margin: 30px 0;">
-                <a href="${documentUrl}" style="background-color: #4f46e5; color: white; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-                  View Document
-                </a>
-              </div>
-              <p style="color: #666; font-size: 13px; margin-top: 40px;">
-                This is an automated email sent from our document sharing system. 
-                If you weren't expecting this document, please contact the sender.
-              </p>
-            </div>
-          `,
-        });
-
-        console.log(`Email sent to ${recipient}:`, emailResponse);
-        return emailResponse;
-      } catch (error) {
-        console.error(`Failed to send email to ${recipient}:`, error);
-        throw error;
-      }
+    const emailResponse = await resend.emails.send({
+      from: `Document Sharing <onboarding@resend.dev>`,
+      to: [recipientEmail],
+      subject: `Document shared with you: ${documentTitle}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #4f46e5;">${documentTitle}</h2>
+          <p style="margin-bottom: 20px;">A document has been shared with you:</p>
+          
+          <div style="border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 30px;">
+            ${htmlContent}
+          </div>
+          
+          <p style="color: #6b7280; font-size: 14px; margin-top: 30px;">
+            This document was shared via our document sharing system.
+          </p>
+        </div>
+      `,
     });
 
-    // Wait for all emails to be sent
-    await Promise.all(emailPromises);
-
-    // Record share activity in the database if needed
-    // This could be implemented to track share history
-
     return new Response(
-      JSON.stringify({ success: true, message: "Documents shared successfully" }),
+      JSON.stringify({ 
+        success: true, 
+        message: "Document shared successfully",
+        data: emailResponse 
+      }),
       {
         status: 200,
         headers: {

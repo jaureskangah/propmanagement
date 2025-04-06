@@ -1,5 +1,5 @@
 
 project_id = "jhjhzwbvmkurwfohjxlu"
 
-[functions.send-contact-email]
+[functions.share-document]
 verify_jwt = false

@@ -7,6 +7,8 @@ import { ErrorState } from "./preview/ErrorState";
 import { LoadingState } from "./preview/LoadingState";
 import { PdfViewer } from "./preview/PdfViewer";
 import { ActionButtons } from "./preview/ActionButtons";
+import { useState } from "react";
+import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
 
 interface DocumentPreviewProps {
   previewUrl: string | null;
@@ -28,6 +30,11 @@ export function DocumentPreview({
   onDownload
 }: DocumentPreviewProps) {
   const { t } = useLocale();
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  
+  const handleShare = () => {
+    setShareDialogOpen(true);
+  };
   
   return (
     <div className="flex flex-col h-full min-h-[500px] gap-4">
@@ -35,7 +42,7 @@ export function DocumentPreview({
         <h2 className="text-lg font-medium">{t('preview') || "Aperçu"}</h2>
         <ActionButtons 
           onDownload={onDownload}
-          onShare={onShare}
+          onShare={handleShare}
         />
       </div>
       
@@ -62,6 +69,13 @@ export function DocumentPreview({
           <EmptyState />
         )}
       </Card>
+      
+      <ShareDocumentDialog 
+        isOpen={shareDialogOpen}
+        onClose={() => setShareDialogOpen(false)}
+        content={documentContent}
+        templateName={templateName}
+      />
     </div>
   );
 }
