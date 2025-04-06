@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useEditorState } from "./editor/useEditorState";
 import { AIAssistantDialog } from "./editor/AIAssistantDialog";
 import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
@@ -36,8 +36,37 @@ export function DocumentEditor({
   const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
   const [isSignatureDialogOpen, setIsSignatureDialogOpen] = useState(false);
   const [isAdvancedEditingEnabled, setIsAdvancedEditingEnabled] = useState(false);
+  const previewTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Effect for real-time preview
+  useEffect(() => {
+    // Cancel any existing timeout
+    if (previewTimeoutRef.current) {
+      clearTimeout(previewTimeoutRef.current);
+    }
+    
+    // Only generate preview if we have content and aren't already generating
+    if (content && !isGenerating) {
+      // Set a delay before generating preview to avoid too many calls
+      previewTimeoutRef.current = setTimeout(() => {
+        console.log("Auto-generating preview after content change");
+        onGeneratePreview(content);
+      }, 1500); // 1.5 second delay
+    }
+    
+    // Cleanup
+    return () => {
+      if (previewTimeoutRef.current) {
+        clearTimeout(previewTimeoutRef.current);
+      }
+    };
+  }, [content, isGenerating, onGeneratePreview]);
 
   const handleGeneratePreview = () => {
+    // Clear any pending automatic preview
+    if (previewTimeoutRef.current) {
+      clearTimeout(previewTimeoutRef.current);
+    }
     onGeneratePreview(content);
   };
 

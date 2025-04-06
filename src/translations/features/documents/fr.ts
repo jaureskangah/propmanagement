@@ -112,5 +112,10 @@ export default {
   noteTitle: "Note",
   usingDirectLink: "Utilisation d'un lien direct - sans expiration",
   cancel: "Annuler",
-  noFileToShare: "Aucun fichier disponible à partager"
+  noFileToShare: "Aucun fichier disponible à partager",
+  
+  // Real-time preview related translations
+  realtimePreview: "Aperçu en temps réel",
+  realtimePreviewDescription: "L'aperçu se met à jour pendant que vous tapez",
+  generatingRealtimePreview: "Génération de l'aperçu en temps réel..."
 };

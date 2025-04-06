@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -112,5 +113,10 @@ export default {
   noteTitle: "Note",
   usingDirectLink: "Using direct link - no expiration",
   cancel: "Cancel",
-  noFileToShare: "No file available to share"
+  noFileToShare: "No file available to share",
+  
+  // Real-time preview related translations
+  realtimePreview: "Real-time Preview",
+  realtimePreviewDescription: "Preview updates as you type",
+  generatingRealtimePreview: "Generating real-time preview..."
 };

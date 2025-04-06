@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,6 +23,7 @@ export const DocumentGenerator = () => {
   const [activeTab, setActiveTab] = useState("editor");
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [autoPreviewEnabled, setAutoPreviewEnabled] = useState(true);
 
   const handleSelectTemplate = (templateId: string, templateName: string) => {
     setSelectedTemplate(templateId);
@@ -39,47 +41,47 @@ export const DocumentGenerator = () => {
   const handleGeneratePreview = async (content: string) => {
     console.log("=== DEBUG: Starting preview generation with actual content ===");
     console.log("Content length:", content.length);
+    
+    // Don't regenerate if already generating or content is empty
+    if (isGenerating || !content || content.trim() === '') {
+      return;
+    }
+    
     setIsGenerating(true);
     setPreviewError(null);
     
     try {
-      if (!content || content.trim() === '') {
-        throw new Error("Le contenu du document est vide");
+      console.log("DocumentGenerator: Generating enhanced PDF with actual content");
+      
+      const lines = content.split('\n');
+      const title = lines.length > 0 ? lines[0].trim() : 'Document';
+      
+      const pdfBuffer = await generateCustomPdf(content, {
+        title: title,
+        headerText: selectedTemplateName || 'Document',
+        showPageNumbers: true,
+        showDate: true
+      });
+      
+      const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
+      
+      // Revoke any existing URL to prevent memory leaks
+      if (previewUrl && previewUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(previewUrl);
       }
       
-      try {
-        console.log("DocumentGenerator: Generating enhanced PDF with actual content");
-        
-        const lines = content.split('\n');
-        const title = lines.length > 0 ? lines[0].trim() : 'Document';
-        
-        const pdfBuffer = await generateCustomPdf(content, {
-          title: title,
-          headerText: selectedTemplateName || 'Document',
-          showPageNumbers: true,
-          showDate: true
-        });
-        
-        const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
-        const previewUrl = URL.createObjectURL(pdfBlob);
-        
-        console.log("Preview URL type:", typeof previewUrl);
-        console.log("Preview URL starts with:", previewUrl.substring(0, 50) + "...");
-        
-        setPreviewUrl(previewUrl);
-        setIsGenerating(false);
-        setActiveTab("preview");
-        console.log("=== DEBUG: Preview generation completed with actual content ===");
-        console.log("=== DEBUG: Switching to preview tab ===");
-      } catch (pdfError) {
-        console.error("Error generating PDF from content:", pdfError);
-        throw new Error("Erreur lors de la génération du PDF");
-      }
+      const newPreviewUrl = URL.createObjectURL(pdfBlob);
+      
+      console.log("Preview URL type:", typeof newPreviewUrl);
+      console.log("Preview URL starts with:", newPreviewUrl.substring(0, 50) + "...");
+      
+      setPreviewUrl(newPreviewUrl);
+      console.log("=== DEBUG: Preview generation completed with actual content ===");
     } catch (error) {
       console.error("Error generating preview:", error);
       setPreviewError(error instanceof Error ? error.message : "Erreur inconnue lors de la génération de l'aperçu");
+    } finally {
       setIsGenerating(false);
-      setActiveTab("preview");
     }
   };
 
@@ -158,6 +160,11 @@ export const DocumentGenerator = () => {
                 setPreviewUrl(null);
                 setPreviewError(null);
                 console.log("DocumentGenerator: Template content generated, length:", content.length);
+                
+                // Automatically generate preview when template is selected
+                if (autoPreviewEnabled && content) {
+                  setTimeout(() => handleGeneratePreview(content), 500);
+                }
               }}
               setIsGenerating={setIsGenerating}
             />
@@ -174,13 +181,7 @@ export const DocumentGenerator = () => {
                   <FileCheck className="h-4 w-4 mr-2" />
                   {t('editContent') || "Edit Content"}
                 </TabsTrigger>
-                <TabsTrigger value="preview" onClick={() => {
-                  console.log("DocumentGenerator: Preview tab clicked");
-                  if (!previewUrl && documentContent) {
-                    console.log("DocumentGenerator: No previewUrl yet, generating preview");
-                    handleGeneratePreview(documentContent);
-                  }
-                }}>
+                <TabsTrigger value="preview">
                   <FilePlus className="h-4 w-4 mr-2" />
                   {t('preview') || "Preview"}
                 </TabsTrigger>
