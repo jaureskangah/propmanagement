@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -20,7 +19,7 @@ const DocumentGenerator = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { tenant } = useTenantData();
+  const { tenant } = useTenantData({}, {});
   const { addToHistory } = useDocumentHistory();
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
@@ -50,7 +49,6 @@ const DocumentGenerator = () => {
     console.log("=== DEBUG: Starting preview generation with actual content ===");
     console.log("Content length:", content.length);
     
-    // Don't regenerate if already generating or content is empty
     if (isGenerating || !content || content.trim() === '') {
       return;
     }
@@ -73,7 +71,6 @@ const DocumentGenerator = () => {
       
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       
-      // Revoke any existing URL to prevent memory leaks
       if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
@@ -128,7 +125,6 @@ const DocumentGenerator = () => {
   const handleDownload = async () => {
     if (!previewUrl) return;
     
-    // Télécharger le document
     const link = document.createElement("a");
     link.href = previewUrl;
     link.download = `${selectedTemplateName || "document"}.pdf`;
@@ -136,7 +132,6 @@ const DocumentGenerator = () => {
     link.click();
     document.body.removeChild(link);
     
-    // Sauvegarder dans l'historique
     await handleSaveToHistory(previewUrl);
     
     toast({
@@ -195,7 +190,6 @@ const DocumentGenerator = () => {
                         setPreviewError(null);
                         console.log("DocumentGenerator: Template content generated, length:", content.length);
                         
-                        // Automatically generate preview when template is selected
                         if (autoPreviewEnabled && content) {
                           setTimeout(() => handleGeneratePreview(content), 500);
                         }

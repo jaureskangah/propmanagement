@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,11 +9,13 @@ import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 import { useDocumentHistory } from "@/hooks/useDocumentHistory";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantData } from "./hooks/useTenantData";
 
 export const DocumentGenerator = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const { addToHistory } = useDocumentHistory();
+  const { tenant } = useTenantData({}, {});
   const [selectedTemplate, setSelectedTemplate] = useState("");
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [documentContent, setDocumentContent] = useState("");
@@ -42,7 +43,6 @@ export const DocumentGenerator = () => {
     console.log("=== DEBUG: Starting preview generation with actual content ===");
     console.log("Content length:", content.length);
     
-    // Don't regenerate if already generating or content is empty
     if (isGenerating || !content || content.trim() === '') {
       return;
     }
@@ -65,7 +65,6 @@ export const DocumentGenerator = () => {
       
       const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
       
-      // Revoke any existing URL to prevent memory leaks
       if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
@@ -161,7 +160,6 @@ export const DocumentGenerator = () => {
                 setPreviewError(null);
                 console.log("DocumentGenerator: Template content generated, length:", content.length);
                 
-                // Automatically generate preview when template is selected
                 if (autoPreviewEnabled && content) {
                   setTimeout(() => handleGeneratePreview(content), 500);
                 }
