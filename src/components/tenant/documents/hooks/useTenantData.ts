@@ -2,12 +2,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
+import type { Tenant } from "@/types/tenant";
 
 export interface TenantData {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  phone: string | null;
   lease_start: string;
   lease_end: string;
   rent_amount: number | null;
@@ -56,7 +57,24 @@ export function useTenantData() {
       
       if (error) throw error;
       
-      setTenant(data as TenantData);
+      // Ensure proper typing for the tenant data
+      const typedData = data as any;
+      const tenantData: TenantData = {
+        id: typedData.id,
+        name: typedData.name,
+        email: typedData.email,
+        phone: typedData.phone,
+        lease_start: typedData.lease_start,
+        lease_end: typedData.lease_end,
+        rent_amount: typedData.rent_amount,
+        unit_number: typedData.unit_number,
+        properties: typedData.properties ? {
+          name: typedData.properties.name,
+          address: typedData.properties.address
+        } : undefined
+      };
+      
+      setTenant(tenantData);
     } catch (err) {
       console.error('Error fetching tenant data:', err);
       setError(err as Error);
@@ -91,5 +109,23 @@ export function useTenantData() {
     isLoading,
     error,
     refreshTenant: fetchTenantData
+  };
+}
+
+// Helper function to convert TenantData to Tenant type when needed
+export function convertToTenant(tenantData: TenantData | null): Tenant | null {
+  if (!tenantData) return null;
+  
+  return {
+    ...tenantData,
+    property_id: null,
+    user_id: '',
+    created_at: '',
+    updated_at: '',
+    tenant_profile_id: null,
+    documents: [],
+    paymentHistory: [],
+    maintenanceRequests: [],
+    communications: []
   };
 }

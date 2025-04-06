@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useEditorState } from "./editor/useEditorState";
 import { EditorToolbar } from "./editor/EditorToolbar";

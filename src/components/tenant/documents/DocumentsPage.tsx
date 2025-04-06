@@ -101,10 +101,12 @@ const DocumentsPage = () => {
           transition={{ duration: 0.5 }}
           className="space-y-6 max-w-[1200px] mx-auto"
         >
-          <DocumentsHeader 
-            tenant={tenant} 
-            onDocumentUpdate={handleDocumentUpdate}
-          />
+          {tenant && (
+            <DocumentsHeader 
+              tenant={tenant} 
+              onDocumentUpdate={handleDocumentUpdate}
+            />
+          )}
           
           <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
             <DocumentsTabs

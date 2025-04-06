@@ -1,10 +1,11 @@
 
 import type { Tenant } from "@/types/tenant";
-import { useGenerationDocumentState } from "./useDocumentState";
+import { useGenerationDocumentState } from "./useGenerationDocumentState";
 import { usePdfActions } from "./usePdfActions";
+import { TenantData } from "./useTenantData";
 
 interface UseDocumentGenerationProps {
-  tenant: Tenant;
+  tenant: TenantData | null;
   onDocumentGenerated: () => void;
   setShowPreview: (show: boolean) => void;
   setIsEditing: (editing: boolean) => void;
