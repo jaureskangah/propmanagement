@@ -22,11 +22,15 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
+    console.log("Share document function called");
+    
     const { 
       recipientEmail, 
       documentContent, 
       documentTitle
     }: ShareDocumentRequest = await req.json();
+
+    console.log("Request data:", { recipientEmail, documentTitle, contentLength: documentContent?.length || 0 });
 
     if (!recipientEmail || !documentContent || !documentTitle) {
       throw new Error("Missing required fields");
@@ -35,6 +39,9 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate a basic HTML representation of the content
     const htmlContent = `<div style="white-space: pre-wrap; font-family: Arial, sans-serif;">${documentContent.replace(/\n/g, '<br/>')}</div>`;
 
+    console.log("Attempting to send email with Resend");
+    console.log("Resend API key available:", !!Deno.env.get("RESEND_API_KEY"));
+    
     const emailResponse = await resend.emails.send({
       from: `Document Sharing <onboarding@resend.dev>`,
       to: [recipientEmail],
@@ -54,6 +61,8 @@ const handler = async (req: Request): Promise<Response> => {
         </div>
       `,
     });
+
+    console.log("Email sent successfully:", emailResponse);
 
     return new Response(
       JSON.stringify({ 

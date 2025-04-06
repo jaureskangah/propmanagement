@@ -47,18 +47,12 @@ export function ShareDocumentDialog({
     setIsSending(true);
     
     try {
-      // Generate PDF from content
-      const pdfBlob = new Blob([content], { type: 'application/pdf' });
-      const pdfFile = new File([pdfBlob], `${templateName || 'document'}.pdf`, { type: 'application/pdf' });
-      
-      // Create form data with the PDF file and recipient email
-      const formData = new FormData();
-      formData.append('file', pdfFile);
-      formData.append('recipientEmail', recipientEmail);
-      formData.append('documentTitle', templateName || t('customDocument') || "Document personnalisé");
+      console.log("Sharing document...");
+      console.log("Content length:", content.length);
+      console.log("Recipient:", recipientEmail);
       
       // Call edge function to send email with attachment
-      const { error } = await supabase.functions.invoke('share-document', {
+      const { data, error } = await supabase.functions.invoke('share-document', {
         body: {
           recipientEmail,
           documentContent: content,
@@ -66,7 +60,12 @@ export function ShareDocumentDialog({
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error response from function:", error);
+        throw error;
+      }
+      
+      console.log("Share document function response:", data);
       
       toast({
         title: t('successTitle') || "Succès",
