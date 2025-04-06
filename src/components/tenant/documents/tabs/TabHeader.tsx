@@ -44,7 +44,7 @@ export function TabHeader({
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder={t("searchDocuments")}
+              placeholder={t("searchDocuments") || "Rechercher des documents"}
               className="pl-8 h-9"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -60,12 +60,12 @@ export function TabHeader({
             {filtersOpen ? (
               <>
                 <X className="h-4 w-4" />
-                {!isMobile && t("hideFilters")}
+                {!isMobile && (t("hideFilters") || "Masquer les filtres")}
               </>
             ) : (
               <>
                 <Filter className="h-4 w-4" />
-                {!isMobile && t("showFilters")}
+                {!isMobile && (t("showFilters") || "Afficher les filtres")}
               </>
             )}
           </Button>

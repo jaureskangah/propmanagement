@@ -48,7 +48,7 @@ export function EditorToolbar({
           }`}
         >
           <PenSquare className={`h-4 w-4 ${isAdvancedEditingEnabled ? "text-white" : "text-indigo-600"}`} />
-          {t('advancedEditing')}
+          {t('advancedEditing') || "Édition avancée"}
         </Button>
         
         <Button
@@ -57,7 +57,7 @@ export function EditorToolbar({
           className="gap-2 bg-blue-100 border-blue-300 hover:bg-blue-200 hover:text-blue-800 text-blue-700"
         >
           <Share2 className="h-4 w-4 text-blue-600" />
-          {t('shareDocument')}
+          {t('shareDocument') || "Partager le document"}
         </Button>
         
         <Button
@@ -79,12 +79,12 @@ export function EditorToolbar({
         {isGenerating ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            {t('generating')}
+            {t('generating') || "Génération..."}
           </>
         ) : (
           <>
             <FileCheck className="h-4 w-4" />
-            {t('generatePreview')}
+            {t('generatePreview') || "Générer l'aperçu"}
           </>
         )}
       </Button>

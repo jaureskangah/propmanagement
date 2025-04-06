@@ -39,8 +39,8 @@ export function AIAssistantDialog({
   const handleAIGenerate = async () => {
     if (!content && !templateName) {
       toast({
-        title: t('error'),
-        description: t('selectTemplateFirst'),
+        title: t('errorTitle') || "Erreur",
+        description: t('selectTemplateFirst') || "Veuillez d'abord sélectionner un modèle",
         variant: "destructive"
       });
       return;
@@ -63,15 +63,15 @@ export function AIAssistantDialog({
       if (data && data.content) {
         onGenerate(data.content);
         toast({
-          title: t('aiSuccess'),
-          description: t('aiGenerated')
+          title: t('successTitle') || "Succès",
+          description: t('aiGenerated') || "Contenu généré avec succès"
         });
       }
     } catch (error) {
       console.error('Error generating content with AI:', error);
       toast({
-        title: t('aiError'),
-        description: t('aiErrorDescription'),
+        title: t('errorTitle') || "Erreur",
+        description: t('aiErrorDescription') || "Impossible de générer le contenu avec l'IA",
         variant: "destructive"
       });
     } finally {
@@ -85,36 +85,36 @@ export function AIAssistantDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-100">{t('aiAssistant')}</DialogTitle>
-          <DialogDescription className="dark:text-gray-300">{t('aiAssistantDescription')}</DialogDescription>
+          <DialogTitle className="dark:text-gray-100">{t('aiAssistant') || "Assistant IA"}</DialogTitle>
+          <DialogDescription className="dark:text-gray-300">{t('aiAssistantDescription') || "Utiliser l'IA pour générer ou modifier du contenu"}</DialogDescription>
         </DialogHeader>
         
         <div className="py-4">
-          <Label htmlFor="instructions" className="dark:text-gray-200">{t('aiInstructions')}</Label>
+          <Label htmlFor="instructions" className="dark:text-gray-200">{t('aiInstructions') || "Instructions pour l'IA"}</Label>
           <Input 
             id="instructions"
             className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
             value={aiInstructions}
             onChange={(e) => setAIInstructions(e.target.value)}
-            placeholder={t('aiInstructionsPlaceholder')}
+            placeholder={t('aiInstructionsPlaceholder') || "Décrivez ce que vous souhaitez générer..."}
           />
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={onClose}
                  className="dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
-            {t('cancel')}
+            {t('cancel') || "Annuler"}
           </Button>
           <Button onClick={handleAIGenerate} disabled={isGeneratingAI} className="bg-purple-600 hover:bg-purple-700 dark:bg-purple-500 dark:hover:bg-purple-600">
             {isGeneratingAI ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('aiGenerating')}
+                {t('aiGenerating') || "Génération en cours..."}
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-4 w-4" />
-                {t('aiGenerate')}
+                {t('aiGenerate') || "Générer"}
               </>
             )}
           </Button>

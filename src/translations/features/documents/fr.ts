@@ -144,5 +144,23 @@ export default {
   
   // AI Assistant
   aiAssistant: "Assistant IA",
-  saveAsTemplate: "Enregistrer comme modèle"
+  saveAsTemplate: "Enregistrer comme modèle",
+  aiInstructions: "Instructions pour l'IA",
+  aiInstructionsPlaceholder: "Décrivez ce que vous souhaitez générer...",
+  aiGenerating: "Génération en cours...",
+  aiGenerate: "Générer",
+  aiGenerated: "Contenu généré avec succès",
+  aiError: "Erreur de génération",
+  aiErrorDescription: "Impossible de générer le contenu avec l'IA",
+  selectTemplateFirst: "Veuillez d'abord sélectionner un modèle",
+  
+  // Save template dialog
+  templateName: "Nom du modèle",
+  templateNamePlaceholder: "Entrez un nom pour votre modèle",
+  category: "Catégorie",
+  selectCategory: "Sélectionner une catégorie",
+  description: "Description",
+  templateDescriptionPlaceholder: "Décrivez brièvement votre modèle",
+  saveTemplate: "Enregistrer le modèle",
+  saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future"
 };

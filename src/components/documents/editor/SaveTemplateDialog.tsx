@@ -51,37 +51,37 @@ export function SaveTemplateDialog({
   };
   
   const categories = [
-    { id: "lease", name: t('leaseDocuments') },
-    { id: "payment", name: t('paymentDocuments') },
-    { id: "notice", name: t('noticeDocuments') },
-    { id: "inspection", name: t('inspectionDocuments') },
-    { id: "custom", name: t('miscDocuments') },
+    { id: "lease", name: t('leaseDocuments') || "Documents de bail" },
+    { id: "payment", name: t('paymentDocuments') || "Documents de paiement" },
+    { id: "notice", name: t('noticeDocuments') || "Avis" },
+    { id: "inspection", name: t('inspectionDocuments') || "Documents d'inspection" },
+    { id: "custom", name: t('miscDocuments') || "Documents divers" },
   ];
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{t('saveAsTemplate')}</DialogTitle>
-          <DialogDescription>{t('saveAsTemplateDescription')}</DialogDescription>
+          <DialogTitle>{t('saveAsTemplate') || "Enregistrer comme modèle"}</DialogTitle>
+          <DialogDescription>{t('saveAsTemplateDescription') || "Enregistrez ce document comme modèle pour une utilisation future"}</DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">{t('templateName')}</Label>
+            <Label htmlFor="name">{t('templateName') || "Nom du modèle"}</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder={t('templateNamePlaceholder')}
+              placeholder={t('templateNamePlaceholder') || "Entrez un nom pour votre modèle"}
               autoFocus
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="category">{t('category')}</Label>
+            <Label htmlFor="category">{t('category') || "Catégorie"}</Label>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
-                <SelectValue placeholder={t('selectCategory')} />
+                <SelectValue placeholder={t('selectCategory') || "Sélectionner une catégorie"} />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((cat) => (
@@ -94,26 +94,26 @@ export function SaveTemplateDialog({
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="description">{t('description')}</Label>
+            <Label htmlFor="description">{t('description') || "Description"}</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder={t('templateDescriptionPlaceholder')}
+              placeholder={t('templateDescriptionPlaceholder') || "Décrivez brièvement votre modèle"}
               rows={3}
             />
           </div>
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            {t('cancel')}
+            {t('cancel') || "Annuler"}
           </Button>
           <Button 
             onClick={handleSave} 
             disabled={isLoading || !name}
             className="gap-2"
           >
-            {isLoading ? t('saving') : t('saveTemplate')}
+            {isLoading ? (t('saving') || "Enregistrement...") : (t('saveTemplate') || "Enregistrer le modèle")}
           </Button>
         </DialogFooter>
       </DialogContent>

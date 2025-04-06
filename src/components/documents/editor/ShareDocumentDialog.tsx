@@ -37,8 +37,8 @@ export function ShareDocumentDialog({
   const handleShareDocument = async () => {
     if (!recipientEmail || !content) {
       toast({
-        title: t('error'),
-        description: t('emailAndContentRequired'),
+        title: t('errorTitle') || "Erreur",
+        description: t('emailAndContentRequired') || "L'adresse email et le contenu sont requis",
         variant: "destructive"
       });
       return;
@@ -51,23 +51,23 @@ export function ShareDocumentDialog({
         body: {
           recipientEmail,
           documentContent: content,
-          documentTitle: templateName || t('customDocument'),
+          documentTitle: templateName || t('customDocument') || "Document personnalisé",
         }
       });
 
       if (error) throw error;
       
       toast({
-        title: t('shareSuccess'),
-        description: t('documentShared')
+        title: t('successTitle') || "Succès",
+        description: t('documentShared') || "Document partagé avec succès"
       });
       onClose();
       setRecipientEmail("");
     } catch (error) {
       console.error('Error sharing document:', error);
       toast({
-        title: t('shareError'),
-        description: t('shareErrorDescription'),
+        title: t('errorTitle') || "Erreur",
+        description: t('shareError') || "Échec du partage du document",
         variant: "destructive"
       });
     } finally {
@@ -79,37 +79,37 @@ export function ShareDocumentDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-100">{t('shareDocument')}</DialogTitle>
-          <DialogDescription className="dark:text-gray-300">{t('shareDocumentDescription')}</DialogDescription>
+          <DialogTitle className="dark:text-gray-100">{t('shareDocument') || "Partager le document"}</DialogTitle>
+          <DialogDescription className="dark:text-gray-300">{t('shareDocumentDescription') || "Partagez ce document avec d'autres personnes"}</DialogDescription>
         </DialogHeader>
         
         <div className="py-4">
-          <Label htmlFor="email" className="dark:text-gray-200">{t('recipientEmail')}</Label>
+          <Label htmlFor="email" className="dark:text-gray-200">{t('recipientEmail') || "Email du destinataire"}</Label>
           <Input 
             id="email"
             type="email"
             className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
             value={recipientEmail}
             onChange={(e) => setRecipientEmail(e.target.value)}
-            placeholder="email@example.com"
+            placeholder="email@exemple.com"
           />
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={onClose}
                  className="dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600">
-            {t('cancel')}
+            {t('cancel') || "Annuler"}
           </Button>
           <Button onClick={handleShareDocument} disabled={isSending} className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600">
             {isSending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('sending')}
+                {t('sending') || "Envoi en cours..."}
               </>
             ) : (
               <>
                 <Send className="mr-2 h-4 w-4" />
-                {t('send')}
+                {t('send') || "Envoyer"}
               </>
             )}
           </Button>

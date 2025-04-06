@@ -33,7 +33,7 @@ export function FormatToolbar({
         variant="ghost"
         size="sm"
         onClick={() => onInsertFormat("**text**")}
-        title={t('bold')}
+        title={t('bold') || "Gras"}
       >
         <Bold className="h-4 w-4" />
       </Button>
@@ -42,7 +42,7 @@ export function FormatToolbar({
         variant="ghost"
         size="sm"
         onClick={() => onInsertFormat("*text*")}
-        title={t('italic')}
+        title={t('italic') || "Italique"}
       >
         <Italic className="h-4 w-4" />
       </Button>
@@ -51,23 +51,23 @@ export function FormatToolbar({
         variant="ghost"
         size="sm"
         onClick={() => onInsertFormat("\n- Item 1\n- Item 2\n- Item 3")}
-        title={t('bulletList')}
+        title={t('bulletList') || "Liste à puces"}
       >
         <List className="h-4 w-4" />
       </Button>
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" title={t('insertImage')}>
+          <Button variant="ghost" size="sm" title={t('insertImage') || "Insérer une image"}>
             <Image className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
           <div className="space-y-2">
-            <h4 className="font-medium">{t('insertImage')}</h4>
+            <h4 className="font-medium">{t('insertImage') || "Insérer une image"}</h4>
             <Input
               type="text"
-              placeholder={t('imageUrlPlaceholder')}
+              placeholder={t('imageUrlPlaceholder') || "Entrez l'URL de l'image"}
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
             />
@@ -79,7 +79,7 @@ export function FormatToolbar({
               disabled={!imageUrl}
               className="w-full"
             >
-              {t('insert')}
+              {t('insert') || "Insérer"}
             </Button>
           </div>
         </PopoverContent>
@@ -87,16 +87,16 @@ export function FormatToolbar({
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" title={t('insertTable')}>
+          <Button variant="ghost" size="sm" title={t('insertTable') || "Insérer un tableau"}>
             <Table className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
           <div className="space-y-2">
-            <h4 className="font-medium">{t('insertTable')}</h4>
+            <h4 className="font-medium">{t('insertTable') || "Insérer un tableau"}</h4>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="text-sm">{t('rows')}</label>
+                <label className="text-sm">{t('rows') || "Lignes"}</label>
                 <Input
                   type="number"
                   min="1"
@@ -106,7 +106,7 @@ export function FormatToolbar({
                 />
               </div>
               <div>
-                <label className="text-sm">{t('columns')}</label>
+                <label className="text-sm">{t('columns') || "Colonnes"}</label>
                 <Input
                   type="number"
                   min="1" 
@@ -122,7 +122,7 @@ export function FormatToolbar({
               }}
               className="w-full"
             >
-              {t('insert')}
+              {t('insert') || "Insérer"}
             </Button>
           </div>
         </PopoverContent>
@@ -132,7 +132,7 @@ export function FormatToolbar({
         variant="ghost"
         size="sm"
         onClick={onInsertSignature}
-        title={t('addSignature')}
+        title={t('addSignature') || "Ajouter une signature"}
       >
         <Signature className="h-4 w-4" />
       </Button>

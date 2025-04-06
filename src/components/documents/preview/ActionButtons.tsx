@@ -26,12 +26,12 @@ export function ActionButtons({ onSave, onDownload, onShare, isSaving = false, i
           {isSaving ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('saving')}
+              {t('saving') || "Enregistrement..."}
             </>
           ) : (
             <>
               <Save className="mr-2 h-4 w-4 text-blue-600 dark:text-blue-400" />
-              {t('saveDocument')}
+              {t('saveDocument') || "Enregistrer"}
             </>
           )}
         </Button>
@@ -44,7 +44,7 @@ export function ActionButtons({ onSave, onDownload, onShare, isSaving = false, i
           className="bg-purple-100 border-purple-300 hover:bg-purple-200 hover:text-purple-800 text-purple-700 dark:bg-purple-900 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-800"
         >
           <Share2 className="mr-2 h-4 w-4 text-purple-600 dark:text-purple-400" />
-          {t('shareDocument')}
+          {t('shareDocument') || "Partager le document"}
         </Button>
       )}
       
@@ -57,12 +57,12 @@ export function ActionButtons({ onSave, onDownload, onShare, isSaving = false, i
           {isDownloading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('downloading')}
+              {t('downloading') || "Téléchargement..."}
             </>
           ) : (
             <>
               <Download className="mr-2 h-4 w-4" />
-              {t('downloadDocument')}
+              {t('downloadDocument') || "Télécharger"}
             </>
           )}
         </Button>

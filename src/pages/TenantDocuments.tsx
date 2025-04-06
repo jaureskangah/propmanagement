@@ -20,7 +20,7 @@ const TenantDocuments = () => {
             transition={{ duration: 0.5 }}
           >
             <div className="flex items-center justify-between mb-6">
-              <h1 className="text-3xl font-bold">{t('documentGenerator')}</h1>
+              <h1 className="text-3xl font-bold">{t('documentGenerator.documentGenerator') || "Générateur de documents"}</h1>
             </div>
 
             <DocumentGenerator />
