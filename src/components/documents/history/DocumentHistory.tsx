@@ -9,9 +9,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DocumentHistoryEntry } from "@/types/documentHistory";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Eye, FileText, Trash2, Download } from "lucide-react";
+import { Eye, FileText, Trash2, Download, RefreshCw } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentViewerProps {
   document: DocumentHistoryEntry | null;
@@ -21,12 +22,23 @@ interface DocumentViewerProps {
 
 const DocumentViewer = ({ document, isOpen, onClose }: DocumentViewerProps) => {
   const { t } = useLocale();
+  const { toast } = useToast();
   
   if (!document) return null;
   
   const handleDownload = () => {
     if (document.fileUrl) {
-      window.open(document.fileUrl, '_blank');
+      const link = document.createElement("a");
+      link.href = document.fileUrl;
+      link.download = `${document.name}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: t('downloadStarted'),
+        description: t('downloadStartedDescription')
+      });
     }
   };
   
@@ -72,6 +84,7 @@ const DocumentViewer = ({ document, isOpen, onClose }: DocumentViewerProps) => {
 
 export const DocumentHistory = () => {
   const { t, locale } = useLocale();
+  const { toast } = useToast();
   const { history, isLoading, error, deleteFromHistory, fetchDocumentHistory } = useDocumentHistory();
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -114,6 +127,33 @@ export const DocumentHistory = () => {
       await deleteFromHistory(documentToDelete);
       setDeleteConfirmOpen(false);
       setDocumentToDelete(null);
+      
+      toast({
+        title: t('documentDeleted') || "Document supprimé",
+        description: t('documentDeletedDescription') || "Le document a été supprimé avec succès",
+      });
+    }
+  };
+  
+  const handleDirectDownload = (document: DocumentHistoryEntry) => {
+    if (document.fileUrl) {
+      const link = document.createElement("a");
+      link.href = document.fileUrl;
+      link.download = `${document.name}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: t('downloadStarted'),
+        description: t('downloadStartedDescription')
+      });
+    } else {
+      toast({
+        title: t('downloadError') || "Erreur de téléchargement",
+        description: t('noFileAvailable') || "Aucun fichier disponible pour ce document",
+        variant: "destructive"
+      });
     }
   };
   
@@ -139,7 +179,9 @@ export const DocumentHistory = () => {
               variant="outline" 
               onClick={() => fetchDocumentHistory()}
               disabled={isLoading}
+              className="flex items-center gap-2"
             >
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
               {t('refresh')}
             </Button>
           </div>
@@ -185,7 +227,7 @@ export const DocumentHistory = () => {
                     <TableHead>{t('documentName')}</TableHead>
                     <TableHead>{t('documentCategory')}</TableHead>
                     <TableHead>{t('dateGenerated')}</TableHead>
-                    <TableHead className="w-[100px]">{t('documentActions')}</TableHead>
+                    <TableHead className="w-[140px]">{t('documentActions')}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -203,6 +245,15 @@ export const DocumentHistory = () => {
                             title={t('view')}
                           >
                             <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => handleDirectDownload(document)}
+                            title={t('download')}
+                            disabled={!document.fileUrl}
+                          >
+                            <Download className="h-4 w-4" />
                           </Button>
                           <Button 
                             variant="ghost" 
