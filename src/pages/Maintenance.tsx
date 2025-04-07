@@ -10,9 +10,10 @@ const Maintenance = () => {
   const isTenantUser = user?.user_metadata?.is_tenant_user;
   
   return (
-    <div className="flex h-screen flex-col md:flex-row font-sans">
+    <div className="min-h-screen bg-background">
       <AppSidebar isTenant={isTenantUser} />
-      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 overflow-y-auto">
+      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
+        <h1 className="text-3xl font-bold mb-8">Maintenance</h1>
         {isTenantUser ? (
           <TenantUserContainer />
         ) : (

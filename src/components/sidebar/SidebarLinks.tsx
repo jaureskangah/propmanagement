@@ -29,7 +29,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
   
-  // Liens pour les locataires - redessinés pour être plus pertinents
+  // Liens pour les locataires
   const tenantLinks = [
     {
       href: "/tenant/dashboard",
@@ -68,7 +68,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     },
   ];
 
-  // Liens pour les propriétaires - accès complet
+  // Liens pour les propriétaires
   const ownerLinks = [
     {
       href: "/dashboard",

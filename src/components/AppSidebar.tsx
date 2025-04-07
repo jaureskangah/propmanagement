@@ -46,15 +46,6 @@ const AppSidebar = ({
         handleSupportClick={handleSupportClick}
         toggleCollapse={toggleCollapse}
       />
-
-      <div 
-        className={cn(
-          "min-h-screen transition-all duration-300 bg-background",
-          isCollapsed ? "md:pl-[80px]" : "md:pl-[270px]"
-        )}
-      >
-        {/* Page content will be rendered here */}
-      </div>
     </>
   );
 };
