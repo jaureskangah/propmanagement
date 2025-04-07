@@ -9,6 +9,7 @@ import { DocumentsTabs } from "./DocumentsTabs";
 import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { useDocumentState } from "./hooks/useDocumentState";
 import { motion } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const DocumentsPage = () => {
   const { user } = useAuth();
@@ -36,6 +37,7 @@ const DocumentsPage = () => {
 
   const [selectedDocument, setSelectedDocument] = useState<TenantDocument | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
+  const isMobile = useIsMobile();
   
   // Pour contrôler le sidebar
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -92,43 +94,45 @@ const DocumentsPage = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-background">
       <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div ref={containerRef} className="flex-1 container mx-auto p-4 md:p-6 font-sans">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-6 max-w-[1200px] mx-auto"
-        >
-          <DocumentsHeader 
-            tenant={tenant} 
-            onDocumentUpdate={handleDocumentUpdate}
-          />
-          
-          <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
-            <DocumentsTabs
-              documents={documents}
-              filteredDocuments={filteredDocuments}
-              isLoading={isLoading}
-              tenant={tenant}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              selectedDocType={selectedDocType}
-              setSelectedDocType={setSelectedDocType}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              onViewDocument={handleViewDocument}
-              onDeleteDocument={handleDeleteDocument}
+      <div ref={containerRef} className="flex-1 overflow-auto pt-24 md:pt-0">
+        <div className="container mx-auto p-4 md:p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6 max-w-[1200px] mx-auto"
+          >
+            <DocumentsHeader 
+              tenant={tenant} 
               onDocumentUpdate={handleDocumentUpdate}
-              error={error}
             />
-          </div>
-        </motion.div>
+            
+            <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
+              <DocumentsTabs
+                documents={documents}
+                filteredDocuments={filteredDocuments}
+                isLoading={isLoading}
+                tenant={tenant}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedDocType={selectedDocType}
+                setSelectedDocType={setSelectedDocType}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                onViewDocument={handleViewDocument}
+                onDeleteDocument={handleDeleteDocument}
+                onDocumentUpdate={handleDocumentUpdate}
+                error={error}
+              />
+            </div>
+          </motion.div>
+        </div>
         
         <DocumentViewerDialog 
           document={selectedDocument}

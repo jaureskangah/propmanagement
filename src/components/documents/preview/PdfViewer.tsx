@@ -1,102 +1,70 @@
 
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface PdfViewerProps {
   pdfUrl: string;
-  onError: () => void;
+  onError?: () => void;
 }
 
-export function PdfViewer({ pdfUrl, onError }: PdfViewerProps) {
+export const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onError }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const objectRef = useRef<HTMLObjectElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
-    if (containerRef.current) {
-      console.log("PdfViewer: Enforcing white background on container");
-      containerRef.current.style.backgroundColor = "#ffffff";
-    }
-    
-    // Apply background color to iframe and object after rendering
-    const timer = setTimeout(() => {
+    if (iframeRef.current) {
+      iframeRef.current.style.backgroundColor = "#ffffff";
+      
       try {
-        if (iframeRef.current) {
-          iframeRef.current.style.backgroundColor = "#ffffff";
-          console.log("PdfViewer: Applied white background to iframe");
-          
-          try {
-            const iframeDoc = iframeRef.current.contentDocument || 
-              (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
-            
-            if (iframeDoc && iframeDoc.body) {
-              iframeDoc.body.style.backgroundColor = "#ffffff";
-              console.log("PdfViewer: Applied white background to iframe body");
+        // Try to access iframe content document to apply styles
+        setTimeout(() => {
+          if (iframeRef.current) {
+            try {
+              const iframeDoc = iframeRef.current.contentDocument || 
+                (iframeRef.current.contentWindow && iframeRef.current.contentWindow.document);
+              
+              if (iframeDoc && iframeDoc.body) {
+                iframeDoc.body.style.backgroundColor = "#ffffff";
+                console.log("Applied white background to iframe body");
+              }
+            } catch (e) {
+              console.log("Cannot access iframe content:", e);
+              if (onError) onError();
             }
-          } catch (e) {
-            console.log("PdfViewer: Cannot access iframe content:", e);
           }
-        }
-        
-        if (objectRef.current) {
-          objectRef.current.style.backgroundColor = "#ffffff";
-          console.log("PdfViewer: Applied white background to object element");
-        }
+        }, 300);
       } catch (e) {
-        console.log("PdfViewer: Error styling PDF elements:", e);
+        console.log("Error accessing iframe:", e);
+        if (onError) onError();
       }
-    }, 300);
-    
-    return () => clearTimeout(timer);
-  }, [pdfUrl]);
-
+    }
+  }, [pdfUrl, onError]);
+  
   return (
     <div 
-      ref={containerRef}
-      className="pdf-frame-container w-full h-full"
-      data-pdf-container="true"
+      className="w-full h-full pdf-container"
       style={{ 
         backgroundColor: "#ffffff",
         position: "relative",
-        width: "100%",
-        height: "100%",
-        overflow: "hidden"
+        overflow: "hidden",
+        minHeight: "500px"
       }}
+      data-pdf-container="true"
     >
       <iframe
         ref={iframeRef}
         src={pdfUrl}
-        title="Document Preview"
         className="w-full h-full pdf-viewer"
+        title="PDF Document"
         style={{ 
+          border: "none", 
           backgroundColor: "#ffffff",
-          border: "none",
-          display: "block",
           position: "absolute",
           top: 0,
           left: 0,
           width: "100%",
           height: "100%"
         }}
-        onError={() => {
-          console.log("PdfViewer: Iframe error event fired");
-          onError();
-        }}
-        onLoad={() => {
-          console.log("PdfViewer: Iframe loaded");
-          try {
-            if (iframeRef.current && iframeRef.current.contentDocument) {
-              console.log("PdfViewer: Attempting to style iframe content");
-              const doc = iframeRef.current.contentDocument;
-              if (doc && doc.body) {
-                doc.body.style.backgroundColor = "#ffffff";
-                console.log("PdfViewer: Applied white background to iframe body");
-              }
-            }
-          } catch (e) {
-            console.log("PdfViewer: Error styling iframe:", e);
-          }
-        }}
+        onError={onError}
       />
     </div>
   );
-}
+};
