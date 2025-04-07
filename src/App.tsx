@@ -19,6 +19,9 @@ import Documents from './pages/Documents';
 import DocumentHistory from './pages/DocumentHistory';
 import TenantDocuments from './pages/TenantDocuments';
 import DocumentGenerator from './pages/DocumentGenerator';
+import Tenants from './pages/Tenants';
+import TenantCommunications from './pages/tenant/TenantCommunications';
+import TenantMaintenance from './pages/tenant/TenantMaintenance';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -46,6 +49,9 @@ function App() {
       <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
       <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
       <Route path="/tenant/documents" element={isAuthenticated ? <TenantDocuments /> : <Navigate to="/login" />} />
+      <Route path="/tenants" element={isAuthenticated ? <Tenants /> : <Navigate to="/login" />} />
+      <Route path="/tenant/communications" element={isAuthenticated ? <TenantCommunications /> : <Navigate to="/login" />} />
+      <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
     </Routes>
   );
 }

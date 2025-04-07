@@ -1,5 +1,5 @@
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -25,19 +25,9 @@ interface SidebarLinksProps {
 
 export default function SidebarLinks({ isTenant = false, collapsed = false }: SidebarLinksProps) {
   const location = useLocation();
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useLocale();
   const isAdmin = user?.email?.endsWith('@propmanagement.app');
-  
-  const handleNavigation = (path: string) => {
-    console.log("Navigating to:", path);
-    try {
-      navigate(path);
-    } catch (error) {
-      console.error("Navigation error:", error);
-    }
-  };
   
   // Liens pour les locataires - redessinés pour être plus pertinents
   const tenantLinks = [
@@ -134,11 +124,11 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   return (
     <nav className="space-y-1">
       {links.map((link) => (
-        <div
+        <Link
           key={link.href}
-          onClick={() => handleNavigation(link.href)}
+          to={link.href}
           className={cn(
-            "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150 cursor-pointer",
+            "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
             location.pathname === link.href
               ? "bg-gray-100 text-gray-900"
               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -155,7 +145,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
           {!collapsed && (
             <span className="truncate">{link.label}</span>
           )}
-        </div>
+        </Link>
       ))}
     </nav>
   );

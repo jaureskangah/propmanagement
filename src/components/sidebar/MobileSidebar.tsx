@@ -2,7 +2,6 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, X, HelpCircle } from "lucide-react";
-import { SidebarNavLink } from "./SidebarNavLink";
 import { SidebarLogo } from "./SidebarLogo";
 import SidebarLinks from "./SidebarLinks";
 import { useLocale } from "@/components/providers/LocaleProvider";

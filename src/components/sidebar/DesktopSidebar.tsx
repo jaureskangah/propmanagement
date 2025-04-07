@@ -2,9 +2,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { HelpCircle } from "lucide-react";
-import { SidebarNavLink } from "./SidebarNavLink";
-import { SidebarLogo } from "./SidebarLogo";
-import { SidebarToggle } from "./SidebarToggle";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import SidebarLinks from "./SidebarLinks";
