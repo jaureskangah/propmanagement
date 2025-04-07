@@ -12,12 +12,16 @@ import { NotificationsSection } from "@/components/settings/NotificationsSection
 import { AppearanceSection } from "@/components/settings/AppearanceSection";
 import { LanguageSection } from "@/components/settings/LanguageSection";
 import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
+import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Settings() {
   const { user } = useAuth();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
   const { t } = useLocale();
+  const isMobile = useIsMobile();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const { data: profile, isLoading, refetch } = useQuery({
     queryKey: ['profile', user?.id],
@@ -61,10 +65,10 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex h-screen">
-      <AppSidebar />
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-4 pb-16 max-w-5xl mx-auto">
+    <div className="flex min-h-screen bg-background">
+      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className="flex-1 overflow-y-auto pt-20 md:pt-0">
+        <div className="container p-4 pb-16 max-w-5xl mx-auto">
           <SettingsPageHeader userEmail={user?.email} />
 
           <div className="space-y-8">
