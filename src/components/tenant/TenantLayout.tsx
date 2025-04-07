@@ -48,6 +48,7 @@ export const TenantLayout = ({
               value={searchQuery}
               onChange={onSearchChange}
               onFilterChange={onFilterChange}
+              filters={searchFilters}
             />
           </div>
 

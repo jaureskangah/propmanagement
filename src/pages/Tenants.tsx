@@ -39,9 +39,9 @@ const Tenants = () => {
   }
 
   return (
-    <div className="flex h-screen">
+    <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="flex-1 container mx-auto p-6 overflow-y-auto">
+      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}

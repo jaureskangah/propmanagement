@@ -23,5 +23,8 @@ export const frList = {
   unitLabel: "Unité",
   noProperty: "Sans propriété",
   back: "Retour",
-  selectTenantToView: "Sélectionnez un locataire pour voir les détails"
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
+  filters: "Filtres",
+  resetFilters: "Réinitialiser",
+  applyFilters: "Appliquer"
 };

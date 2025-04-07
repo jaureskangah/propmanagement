@@ -23,5 +23,8 @@ export const enList = {
   unitLabel: "Unit",
   noProperty: "No Property",
   back: "Back",
-  selectTenantToView: "Select a tenant to view details"
+  selectTenantToView: "Select a tenant to view details",
+  filters: "Filters",
+  resetFilters: "Reset",
+  applyFilters: "Apply",
 };
