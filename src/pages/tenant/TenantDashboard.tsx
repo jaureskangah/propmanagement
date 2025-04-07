@@ -39,14 +39,13 @@ const TenantDashboardPage = () => {
 
   console.log("Rendering tenant dashboard page");
   return (
-    <div className="flex h-screen bg-background dark:bg-gray-900">
+    <div className="min-h-screen bg-background dark:bg-gray-900">
       <AppSidebar isTenant={true} />
-      <div className="flex-1 overflow-y-auto">
+      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="container mx-auto p-4 md:p-6 space-y-6"
         >
           <TenantDashboard />
         </motion.div>

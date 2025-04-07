@@ -51,16 +51,14 @@ const Dashboard = () => {
 
   console.log("Rendering owner dashboard");
   return (
-    <div className="flex h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="flex-1 overflow-y-auto">
-        <div className="container mx-auto p-4 md:p-6 space-y-6">
-          <DashboardHeader 
-            title={t('dashboard')} // Use translation for title
-            onDateRangeChange={handleDateRangeChange}
-          />
-          <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
-        </div>
+      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
+        <DashboardHeader 
+          title={t('dashboard')} // Use translation for title
+          onDateRangeChange={handleDateRangeChange}
+        />
+        <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
       </div>
     </div>
   );

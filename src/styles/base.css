@@ -43,6 +43,10 @@
     font-family: 'Open Sans', sans-serif;
     font-size: 16px;
   }
+
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 @layer base {
@@ -55,5 +59,11 @@
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-medium tracking-tight;
+  }
+}
+
+@layer utilities {
+  .dark-card-gradient {
+    @apply dark:bg-gradient-to-b dark:from-gray-800/60 dark:to-gray-900/90;
   }
 }
