@@ -52,4 +52,4 @@ export const MobileSidebar = ({
       </Sheet>
     </div>
   );
-}
+};
