@@ -11,7 +11,6 @@ import { DocumentPreview } from "@/components/documents/DocumentPreview";
 import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 import { Tenant } from "@/types/tenant";
-import { DynamicFieldsMenu } from "@/components/documents/editor/DynamicFieldsMenu";
 import { SaveTemplateDialog } from "@/components/documents/editor/SaveTemplateDialog";
 import { processDynamicFields } from "./templates/utils/contentParser";
 
@@ -179,12 +178,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
                   isGenerating={isGenerating}
                   templateName={selectedTemplateName}
                   onOpenSaveTemplateDialog={() => setIsSaveTemplateDialogOpen(true)}
-                  rightSlot={
-                    <DynamicFieldsMenu 
-                      onInsertField={handleInsertDynamicField}
-                      title={t('documentGenerator.insertDynamicField') || "Insérer un champ dynamique"}
-                    />
-                  }
+                  // Suppression du rightSlot pour donner plus d'espace à l'éditeur
                 />
               </TabsContent>
               <TabsContent value="preview" className="mt-0">
