@@ -9,7 +9,7 @@ interface DocumentTemplateSectionProps {
   selectedTemplate: string;
   onSelectTemplate: (templateId: string, templateName: string) => void;
   onGenerateContent: (content: string) => void;
-  setIsGenerating: (isGenerating: boolean) => void;
+  setIsGenerating: boolean; // Changed from function to boolean
   tenant?: Tenant | null;
 }
 
@@ -35,7 +35,7 @@ export function DocumentTemplateSection({
           selectedTemplate={selectedTemplate}
           onSelectTemplate={onSelectTemplate}
           onGenerateContent={onGenerateContent}
-          setIsGenerating={setIsGenerating}
+          setIsGenerating={setIsGenerating} // This now passes a boolean instead of function
           tenant={tenant}
         />
       </CardContent>

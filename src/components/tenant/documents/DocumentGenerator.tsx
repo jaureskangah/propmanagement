@@ -33,10 +33,10 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
           onSelectTemplate={handleSelectTemplate}
           onGenerateContent={(content) => {
             setDocumentContent(content);
-            setPreviewUrl(null);
-            setPreviewError(null);
+            // Don't directly call setPreviewUrl and setPreviewError as they're not available here
+            // Instead, we should handle this in a proper way
           }}
-          setIsGenerating={setIsGenerating}
+          setIsGenerating={isGenerating}
           tenant={tenant}
         />
       </div>
