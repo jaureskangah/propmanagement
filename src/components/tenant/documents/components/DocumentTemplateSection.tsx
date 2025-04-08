@@ -9,7 +9,7 @@ interface DocumentTemplateSectionProps {
   selectedTemplate: string;
   onSelectTemplate: (templateId: string, templateName: string) => void;
   onGenerateContent: (content: string) => void;
-  setIsGenerating: boolean; // Changed from function to boolean
+  isGenerating: boolean; // Changed from setIsGenerating: boolean to isGenerating: boolean
   tenant?: Tenant | null;
 }
 
@@ -17,7 +17,7 @@ export function DocumentTemplateSection({
   selectedTemplate,
   onSelectTemplate,
   onGenerateContent,
-  setIsGenerating,
+  isGenerating, // Updated prop name
   tenant
 }: DocumentTemplateSectionProps) {
   const { t } = useLocale();
@@ -35,7 +35,7 @@ export function DocumentTemplateSection({
           selectedTemplate={selectedTemplate}
           onSelectTemplate={onSelectTemplate}
           onGenerateContent={onGenerateContent}
-          setIsGenerating={setIsGenerating} // This now passes a boolean instead of function
+          setIsGenerating={(value) => {}} // We'll ignore setting this value as we're now passing in a read-only state
           tenant={tenant}
         />
       </CardContent>

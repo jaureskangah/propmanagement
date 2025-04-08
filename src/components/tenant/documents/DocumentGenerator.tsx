@@ -36,7 +36,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
             // Don't directly call setPreviewUrl and setPreviewError as they're not available here
             // Instead, we should handle this in a proper way
           }}
-          setIsGenerating={isGenerating}
+          isGenerating={isGenerating} // Changed from setIsGenerating to isGenerating
           tenant={tenant}
         />
       </div>

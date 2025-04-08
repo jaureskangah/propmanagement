@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -62,10 +61,8 @@ export function DocumentTemplateSelector({
       let content = '';
       
       try {
-        // Générer le contenu du modèle
         content = generateTemplateContent(selectedTemplate, tenant || undefined);
         
-        // Traiter les champs dynamiques dans le contenu si un locataire est fourni
         if (tenant) {
           content = processDynamicFields(content, tenant);
         }
@@ -125,7 +122,6 @@ export function DocumentTemplateSelector({
         }
       </Button>
       
-      {/* Bouton pour accéder aux modèles sauvegardés */}
       <Button
         onClick={() => setShowTemplatesDialog(true)}
         variant="outline"
@@ -135,7 +131,6 @@ export function DocumentTemplateSelector({
         {t('documentGenerator.mySavedTemplates') || "Mes modèles enregistrés"}
       </Button>
 
-      {/* Dialogue pour afficher les modèles enregistrés */}
       <Dialog open={showTemplatesDialog} onOpenChange={setShowTemplatesDialog}>
         <DialogContent className="sm:max-w-[700px] p-6">
           <DialogHeader>
