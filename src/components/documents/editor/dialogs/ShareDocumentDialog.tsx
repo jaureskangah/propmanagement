@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -14,18 +14,27 @@ interface ShareDocumentDialogProps {
   onClose: () => void;
   content: string;
   templateName?: string;
+  tenantEmail?: string;
 }
 
 export function ShareDocumentDialog({
   isOpen,
   onClose,
   content,
-  templateName = ""
+  templateName = "",
+  tenantEmail = ""
 }: ShareDocumentDialogProps) {
   const { t } = useLocale();
   const { toast } = useToast();
   const [recipientEmail, setRecipientEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
+  
+  // Mettre à jour le recipientEmail lorsque tenantEmail change ou lorsque le dialog s'ouvre
+  useEffect(() => {
+    if (isOpen && tenantEmail) {
+      setRecipientEmail(tenantEmail);
+    }
+  }, [isOpen, tenantEmail]);
 
   const handleShareDocument = async () => {
     if (!recipientEmail || !content) {
