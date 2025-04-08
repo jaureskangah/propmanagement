@@ -4,7 +4,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { useTenant } from "@/components/providers/TenantProvider";
 import { supabase } from "@/lib/supabase";
-import { templateContent } from "../templates/templateContent";
+import { generateTemplateContent } from "../templates/templateContent";
 import { useDocumentActions } from "./useDocumentActions";
 
 export const useDocumentGenerator = () => {
@@ -16,15 +16,14 @@ export const useDocumentGenerator = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { tenant } = useTenant();
-  const { saveDocumentToHistory } = useDocumentActions();
+  const { handleDeleteDocument } = useDocumentActions(() => {});
 
   // Update content when template changes
   const handleTemplateChange = (templateId: string, name: string) => {
     setTemplateName(name);
-    const template = templateContent[templateId];
     
-    if (template) {
-      let processedContent = template;
+    try {
+      let processedContent = generateTemplateContent(templateId, tenant);
       
       // Replace tenant placeholders if tenant data is available
       if (tenant) {
@@ -40,6 +39,13 @@ export const useDocumentGenerator = () => {
       }
       
       setContent(processedContent);
+    } catch (error) {
+      console.error('Error generating template content:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger le modèle",
+        variant: "destructive",
+      });
     }
   };
 
@@ -90,10 +96,12 @@ export const useDocumentGenerator = () => {
     if (!pdfUrl || !user) return;
     
     try {
-      await saveDocumentToHistory({
+      await supabase.from('document_history').insert({
         name: templateName || "Document personnalisé",
         content,
-        fileUrl: pdfUrl
+        file_url: pdfUrl,
+        user_id: user.id,
+        tenant_id: tenant?.id
       });
       
       toast({
@@ -113,7 +121,7 @@ export const useDocumentGenerator = () => {
   // Reset document content and preview
   const resetDocument = () => {
     setContent("");
-    setTemplateContent("");
+    setTemplateName("");
     setPreviewUrl(null);
     setPreviewError(null);
   };

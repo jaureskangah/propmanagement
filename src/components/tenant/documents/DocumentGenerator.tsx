@@ -72,7 +72,10 @@ export function DocumentGenerator() {
       <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
         <DocumentTemplateSelector
           onSelectTemplate={handleTemplateChange}
-          selectedTemplateName={templateName}
+          selectedTemplate={templateName}
+          onGenerateContent={setContent}
+          setIsGenerating={setIsGenerating}
+          tenant={tenant}
         />
         
         <div className="flex gap-2">
@@ -116,8 +119,11 @@ export function DocumentGenerator() {
           <DocumentEditor 
             content={content} 
             onContentChange={setContent} 
-            onAIClick={() => setIsAIDialogOpen(true)}
-            onSignatureClick={() => setIsSignatureDialogOpen(true)}
+            onGeneratePreview={handleGenerateDocument}
+            isGenerating={isGenerating}
+            templateName={templateName}
+            tenant={tenant}
+            onOpenSaveTemplateDialog={() => setIsTemplateDialogOpen(true)}
             placeholderText={t('documentGenerator.startTypingOrSelectTemplate')}
           />
           

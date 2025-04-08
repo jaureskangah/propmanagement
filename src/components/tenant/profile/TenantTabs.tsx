@@ -146,7 +146,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         
         <TabsContent value="documentGenerator" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className={cn("p-4 pt-6", isMobile ? "p-2 pt-4" : "")}>
-            <DocumentGenerator tenant={tenant} />
+            <DocumentGenerator />
           </CardContent>
         </TabsContent>
       </Tabs>
