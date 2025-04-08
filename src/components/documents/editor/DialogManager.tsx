@@ -1,10 +1,11 @@
 
-import { ReactNode } from "react";
-import { AIAssistantDialog } from "./AIAssistantDialog";
-import { ShareDocumentDialog } from "./ShareDocumentDialog";
-import { SaveTemplateDialog } from "./SaveTemplateDialog";
-import { SignatureDialog } from "./SignatureDialog";
 import { Tenant } from "@/types/tenant";
+import {
+  AIAssistantDialog,
+  ShareDocumentDialog,
+  SaveTemplateDialog,
+  SignatureDialog
+} from "./dialogs";
 
 interface DialogManagerProps {
   isAIDialogOpen: boolean;
@@ -38,12 +39,18 @@ export function DialogManager({
   templateName = "",
   onOpenSaveTemplateDialog
 }: DialogManagerProps) {
+  // Gérer la fermeture des différents dialogues
+  const handleCloseAIDialog = () => setIsAIDialogOpen(false);
+  const handleCloseShareDialog = () => setIsShareDialogOpen(false);
+  const handleCloseSaveTemplateDialog = () => setIsSaveTemplateDialogOpen(false);
+  const handleCloseSignatureDialog = () => setIsSignatureDialogOpen(false);
+
   return (
     <>
       {/* AI Assistant Dialog */}
       <AIAssistantDialog 
         isOpen={isAIDialogOpen}
-        onClose={() => setIsAIDialogOpen(false)}
+        onClose={handleCloseAIDialog}
         onGenerate={onContentChange}
         content={content}
         templateName={templateName}
@@ -52,7 +59,7 @@ export function DialogManager({
       {/* Share Document Dialog */}
       <ShareDocumentDialog
         isOpen={isShareDialogOpen}
-        onClose={() => setIsShareDialogOpen(false)}
+        onClose={handleCloseShareDialog}
         content={content}
         templateName={templateName}
       />
@@ -61,7 +68,7 @@ export function DialogManager({
       {!onOpenSaveTemplateDialog && (
         <SaveTemplateDialog
           isOpen={isSaveTemplateDialogOpen}
-          onClose={() => setIsSaveTemplateDialogOpen(false)}
+          onClose={handleCloseSaveTemplateDialog}
           content={content}
           templateName={templateName}
         />
@@ -70,7 +77,7 @@ export function DialogManager({
       {/* Signature Dialog */}
       <SignatureDialog
         isOpen={isSignatureDialogOpen}
-        onClose={() => setIsSignatureDialogOpen(false)}
+        onClose={handleCloseSignatureDialog}
         onSave={onInsertSignature}
       />
     </>
