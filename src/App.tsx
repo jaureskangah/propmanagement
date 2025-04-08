@@ -1,7 +1,7 @@
 
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ThemeProvider } from "./components/theme-provider";
 import { LocaleProvider } from "@/components/providers/LocaleProvider";
 import { AuthProvider } from "./components/AuthProvider";
 import { TenantProvider } from "./components/providers/TenantProvider";

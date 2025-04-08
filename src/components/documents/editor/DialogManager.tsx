@@ -29,7 +29,9 @@ export function DialogManager({
       <AIAssistantDialog 
         isOpen={aiDialogOpen} 
         onClose={() => setAiDialogOpen(false)} 
-        onInsertText={handleInsertText}
+        onGenerate={handleInsertText}
+        content={editorContent}
+        templateName={documentName}
       />
       
       <ShareDocumentDialog 
@@ -44,12 +46,13 @@ export function DialogManager({
         isOpen={saveDialogOpen} 
         onClose={() => setSaveDialogOpen(false)} 
         content={editorContent}
+        templateName={documentName}
       />
       
       <SignatureDialog 
         isOpen={signatureDialogOpen} 
         onClose={() => setSignatureDialogOpen(false)} 
-        onInsertText={handleInsertText}
+        onSave={handleInsertText}
       />
     </>
   );

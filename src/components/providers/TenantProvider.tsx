@@ -41,7 +41,17 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           email,
           property_id,
           properties:property_id(name),
-          unit_number
+          unit_number,
+          phone,
+          lease_start,
+          lease_end,
+          rent_amount,
+          security_deposit,
+          payment_due_day,
+          emergency_contact,
+          emergency_phone,
+          notes,
+          tenant_profile_id
         `)
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
@@ -52,7 +62,7 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
       
       if (data) {
-        setTenant(data);
+        setTenant(data as Tenant);
       } else {
         setTenant(null);
       }
