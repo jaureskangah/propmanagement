@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Variable } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -87,23 +87,25 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
             placeholder={t('documentGenerator.searchFields') || "Rechercher des champs..."} 
             className="h-9"
           />
-          <CommandEmpty>
-            {t('documentGenerator.noFieldsFound') || "Aucun champ trouvé."}
-          </CommandEmpty>
-          {fieldCategories.map((category) => (
-            <CommandGroup key={category.category} heading={category.category}>
-              {category.fields.map((field) => (
-                <CommandItem 
-                  key={field.id}
-                  onSelect={() => handleInsert(field.value)}
-                  className="flex items-center justify-between"
-                >
-                  <span>{field.name}</span>
-                  <code className="text-xs bg-muted px-1 py-0.5 rounded">{field.value}</code>
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          ))}
+          <CommandList>
+            <CommandEmpty>
+              {t('documentGenerator.noFieldsFound') || "Aucun champ trouvé."}
+            </CommandEmpty>
+            {fieldCategories.map((category) => (
+              <CommandGroup key={category.category} heading={category.category}>
+                {category.fields.map((field) => (
+                  <CommandItem 
+                    key={field.id}
+                    onSelect={() => handleInsert(field.value)}
+                    className="flex items-center justify-between"
+                  >
+                    <span>{field.name}</span>
+                    <code className="text-xs bg-muted px-1 py-0.5 rounded">{field.value}</code>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+          </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
