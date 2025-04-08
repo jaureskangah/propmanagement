@@ -19,6 +19,7 @@ interface DocumentEditorProps {
   templateName?: string;
   tenant?: Tenant | null;
   rightSlot?: ReactNode;
+  onOpenSaveTemplateDialog?: () => void;
 }
 
 export function DocumentEditor({
@@ -28,7 +29,8 @@ export function DocumentEditor({
   isGenerating,
   templateName = "",
   tenant = null,
-  rightSlot
+  rightSlot,
+  onOpenSaveTemplateDialog
 }: DocumentEditorProps) {
   const {
     isAIDialogOpen,
@@ -134,6 +136,14 @@ export function DocumentEditor({
     insertTextAtCursor(field);
   };
 
+  const handleOpenSaveTemplateDialog = () => {
+    if (onOpenSaveTemplateDialog) {
+      onOpenSaveTemplateDialog();
+    } else {
+      setIsSaveTemplateDialogOpen(true);
+    }
+  };
+
   return (
     <div className="space-y-4">
       {isAdvancedEditingEnabled && (
@@ -164,7 +174,7 @@ export function DocumentEditor({
       <EditorToolbar
         onOpenAIDialog={() => setIsAIDialogOpen(true)}
         onOpenShareDialog={() => setIsShareDialogOpen(true)}
-        onOpenSaveTemplateDialog={() => setIsSaveTemplateDialogOpen(true)}
+        onOpenSaveTemplateDialog={handleOpenSaveTemplateDialog}
         onToggleAdvancedEditing={() => setIsAdvancedEditingEnabled(!isAdvancedEditingEnabled)}
         onGeneratePreview={handleGeneratePreview}
         isGenerating={isGenerating}
@@ -189,13 +199,15 @@ export function DocumentEditor({
         templateName={templateName}
       />
       
-      {/* Save Template Dialog */}
-      <SaveTemplateDialog
-        isOpen={isSaveTemplateDialogOpen}
-        onClose={() => setIsSaveTemplateDialogOpen(false)}
-        content={content}
-        templateName={templateName}
-      />
+      {/* Save Template Dialog - Only shown if not using parent's dialog */}
+      {!onOpenSaveTemplateDialog && (
+        <SaveTemplateDialog
+          isOpen={isSaveTemplateDialogOpen}
+          onClose={() => setIsSaveTemplateDialogOpen(false)}
+          content={content}
+          templateName={templateName}
+        />
+      )}
       
       {/* Signature Dialog */}
       <SignatureDialog

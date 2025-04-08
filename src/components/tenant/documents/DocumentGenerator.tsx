@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
 import { Tenant } from "@/types/tenant";
 import { DynamicFieldsMenu } from "@/components/documents/editor/DynamicFieldsMenu";
+import { SaveTemplateDialog } from "@/components/documents/editor/SaveTemplateDialog";
 
 export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
   const { t } = useLocale();
@@ -23,6 +24,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [activeTab, setActiveTab] = useState("editor");
   const [previewError, setPreviewError] = useState<string | null>(null);
+  const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
 
   const handleSelectTemplate = (templateId: string, templateName: string) => {
     setSelectedTemplate(templateId);
@@ -156,6 +158,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
                   onGeneratePreview={handleGeneratePreview}
                   isGenerating={isGenerating}
                   templateName={selectedTemplateName}
+                  onOpenSaveTemplateDialog={() => setIsSaveTemplateDialogOpen(true)}
                   rightSlot={
                     <DynamicFieldsMenu 
                       onInsertField={(field) => {
@@ -189,6 +192,13 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
           </CardContent>
         </Card>
       </div>
+      
+      <SaveTemplateDialog
+        isOpen={isSaveTemplateDialogOpen}
+        onClose={() => setIsSaveTemplateDialogOpen(false)}
+        content={documentContent}
+        templateName={selectedTemplateName}
+      />
     </div>
   );
 }
