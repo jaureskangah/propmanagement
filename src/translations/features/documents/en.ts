@@ -1,4 +1,3 @@
-
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -22,6 +21,7 @@ export default {
   generatingPreview: "Generating preview...",
   templateLoaded: "Template loaded",
   templateLoadedDescription: "Template content has been loaded successfully",
+  description: "Create, manage and share important documents for your property management",
   
   // Document history related translations
   documentHistory: "Document History",

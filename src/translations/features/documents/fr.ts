@@ -1,4 +1,3 @@
-
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -21,6 +20,7 @@ export default {
   generatingPreview: "Génération de l'aperçu en cours...",
   templateLoaded: "Modèle chargé",
   templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
+  description: "Créez, gérez et partagez des documents importants pour votre gestion immobilière",
   document: "Document",
   pdfGenerationError: "Erreur lors de la génération du PDF",
   unknownError: "Erreur inconnue",

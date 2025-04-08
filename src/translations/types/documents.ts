@@ -21,6 +21,7 @@ export interface DocumentGeneratorTranslations {
   generatingPreview: string;
   templateLoaded: string;
   templateLoadedDescription: string;
+  description: string;
   
   // Document history related translations
   documentHistory: string;
