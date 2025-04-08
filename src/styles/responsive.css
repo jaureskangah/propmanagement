@@ -37,5 +37,12 @@
     .mobile-tabs-scroll::-webkit-scrollbar {
       display: none !important;
     }
+    
+    .toolbar-grid {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
   }
 }
