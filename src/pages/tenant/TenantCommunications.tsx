@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications";
 import { TenantCommunicationsContent } from "@/components/tenant/communications/TenantCommunicationsContent";
@@ -10,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MessageSquareOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const TenantCommunications = () => {
   const {
@@ -24,6 +26,7 @@ const TenantCommunications = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenantId || undefined);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Activer les notifications en temps réel
   useRealtimeNotifications();
@@ -61,8 +64,11 @@ const TenantCommunications = () => {
 
   return (
     <div className="flex">
-      <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6">
+      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
         {isLoading ? (
           <div className="flex flex-col justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>

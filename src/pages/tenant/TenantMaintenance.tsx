@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -10,12 +10,14 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { cn } from "@/lib/utils";
 
 const TenantMaintenance = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useLocale();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   // Activer les notifications en temps réel
   useRealtimeNotifications();
@@ -84,8 +86,11 @@ const TenantMaintenance = () => {
 
   return (
     <div className="flex">
-      <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6">
+      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
         <TenantMaintenanceView />
       </div>
     </div>
