@@ -39,9 +39,9 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
     <Card className="overflow-hidden">
       <Tabs defaultValue="documents" className="w-full" onValueChange={setActiveTab}>
         <div className="border-b px-3 overflow-auto">
-          <TabsList className="inline-flex h-9 items-center justify-center rounded-none bg-transparent p-0 w-auto">
+          <TabsList className="w-full flex justify-start overflow-x-auto py-2 scrollbar-none">
             <TabsTrigger
-              className="inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              className="inline-flex items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               value="documents"
             >
               <Files className="mr-2 h-4 w-4" />
@@ -49,7 +49,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
             </TabsTrigger>
 
             <TabsTrigger
-              className="inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              className="inline-flex items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               value="payments"
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -57,7 +57,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
             </TabsTrigger>
 
             <TabsTrigger
-              className="inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              className="inline-flex items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               value="communications"
             >
               <MessageSquare className="mr-2 h-4 w-4" />
@@ -65,7 +65,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
             </TabsTrigger>
 
             <TabsTrigger
-              className="inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              className="inline-flex items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               value="maintenance"
             >
               <Wrench className="mr-2 h-4 w-4" />
@@ -73,7 +73,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
             </TabsTrigger>
             
             <TabsTrigger
-              className="inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
+              className="inline-flex items-center justify-center rounded-sm px-4 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               value="documentGenerator"
             >
               <FileText className="mr-2 h-4 w-4" />
@@ -83,7 +83,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         </div>
 
         <TabsContent value="documents" className="focus-visible:outline-none focus-visible:ring-0">
-          <CardContent className="p-0">
+          <CardContent className="p-6">
             <TenantDocuments 
               documents={tenant.documents} 
               tenantId={tenant.id}
@@ -94,7 +94,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         </TabsContent>
 
         <TabsContent value="payments" className="focus-visible:outline-none focus-visible:ring-0">
-          <CardContent className="p-0">
+          <CardContent className="p-6">
             <TenantPayments 
               payments={tenant.paymentHistory || []} 
               tenantId={tenant.id}
@@ -104,7 +104,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         </TabsContent>
 
         <TabsContent value="communications" className="focus-visible:outline-none focus-visible:ring-0">
-          <CardContent className="p-0">
+          <CardContent className="p-6">
             <TenantCommunications 
               communications={tenant.communications} 
               tenantId={tenant.id}
@@ -117,7 +117,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         </TabsContent>
 
         <TabsContent value="maintenance" className="focus-visible:outline-none focus-visible:ring-0">
-          <CardContent className="p-0">
+          <CardContent className="p-6">
             <TenantMaintenance 
               requests={tenant.maintenanceRequests || []}
               tenantId={tenant.id}
@@ -127,7 +127,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         </TabsContent>
         
         <TabsContent value="documentGenerator" className="focus-visible:outline-none focus-visible:ring-0">
-          <CardContent className="p-4 pt-6">
+          <CardContent className="p-6">
             <DocumentGenerator tenant={tenant} />
           </CardContent>
         </TabsContent>
