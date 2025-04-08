@@ -1,4 +1,3 @@
-
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -121,6 +120,7 @@ export default {
   insertDynamicField: "Insert Dynamic Field",
   searchFields: "Search fields...",
   noFieldsFound: "No fields found.",
+  dynamicFields: "Dynamic Fields",
   tenant: "Tenant",
   tenantName: "Tenant Name",
   tenantEmail: "Tenant Email",

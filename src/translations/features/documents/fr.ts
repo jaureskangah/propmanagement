@@ -123,6 +123,7 @@ export default {
   insertDynamicField: "Insérer un champ dynamique",
   searchFields: "Rechercher des champs...",
   noFieldsFound: "Aucun champ trouvé.",
+  dynamicFields: "Champs dynamiques",
   tenant: "Locataire",
   tenantName: "Nom du locataire",
   tenantEmail: "Email du locataire",
