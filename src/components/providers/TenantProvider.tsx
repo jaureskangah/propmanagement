@@ -68,7 +68,9 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           name: data.name,
           email: data.email,
           property_id: data.property_id,
-          properties: data.properties, // This should be an object with a name property, not an array
+          properties: {
+            name: data.properties?.name || ""
+          }, // Fix here: ensure properties is an object with a name property
           unit_number: data.unit_number,
           phone: data.phone,
           lease_start: data.lease_start,

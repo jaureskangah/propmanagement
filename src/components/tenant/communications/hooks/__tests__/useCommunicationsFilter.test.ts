@@ -13,7 +13,13 @@ describe('useCommunicationsFilter', () => {
       created_at: '2023-01-01',
       status: 'unread',
       category: 'general',
-      tenant_id: '123'
+      tenant_id: '123',
+      // Add missing required properties
+      message: 'Test Message 1',
+      sender_id: 'sender-1',
+      sender_type: 'tenant',
+      read_status: false,
+      updated_at: '2023-01-01'
     },
     {
       id: '2',
@@ -23,7 +29,13 @@ describe('useCommunicationsFilter', () => {
       created_at: '2023-01-02',
       status: 'read',
       category: 'urgent',
-      tenant_id: '123'
+      tenant_id: '123',
+      // Add missing required properties
+      message: 'Test Message 2',
+      sender_id: 'sender-2',
+      sender_type: 'owner',
+      read_status: true,
+      updated_at: '2023-01-02'
     },
     {
       id: '3',
@@ -33,7 +45,13 @@ describe('useCommunicationsFilter', () => {
       created_at: '2023-01-03',
       status: 'unread',
       category: 'maintenance',
-      tenant_id: '123'
+      tenant_id: '123',
+      // Add missing required properties
+      message: 'Test Message 3',
+      sender_id: 'sender-3',
+      sender_type: 'system',
+      read_status: false,
+      updated_at: '2023-01-03'
     }
   ];
 
