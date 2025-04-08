@@ -12,6 +12,7 @@ import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
 import { cn } from "@/lib/utils";
+import { FileBarChart } from "lucide-react";
 
 const Finances = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
@@ -45,41 +46,48 @@ const Finances = () => {
           transition={{ duration: 0.35 }}
           className="space-y-6"
         >
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">{t('finances')}</h1>
-              <p className="text-sm text-muted-foreground mt-1">{t('financialOverview')}</p>
-            </div>
-            
-            <Card className="w-full md:w-64">
-              <CardContent className="p-3">
-                {isLoadingProperties ? (
-                  <div className="h-9 rounded-md bg-muted animate-pulse"></div>
-                ) : (
-                  <Select 
-                    value={selectedPropertyId || ""} 
-                    onValueChange={(value) => setSelectedPropertyId(value || null)}
-                  >
-                    <SelectTrigger className="w-full h-9">
-                      <SelectValue placeholder={t('selectProperty')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {properties?.length ? (
-                        properties.map((property) => (
-                          <SelectItem key={property.id} value={property.id}>
-                            {property.name}
+          <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <FileBarChart className="h-5 w-5 text-primary" />
+                </div>
+                <div>
+                  <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t('finances')}</h1>
+                  <p className="text-muted-foreground mt-1">{t('financialOverview')}</p>
+                </div>
+              </div>
+              
+              <Card className="w-full md:w-64">
+                <CardContent className="p-3">
+                  {isLoadingProperties ? (
+                    <div className="h-9 rounded-md bg-muted animate-pulse"></div>
+                  ) : (
+                    <Select 
+                      value={selectedPropertyId || ""} 
+                      onValueChange={(value) => setSelectedPropertyId(value || null)}
+                    >
+                      <SelectTrigger className="w-full h-9">
+                        <SelectValue placeholder={t('selectProperty')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {properties?.length ? (
+                          properties.map((property) => (
+                            <SelectItem key={property.id} value={property.id}>
+                              {property.name}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <SelectItem value="none" disabled>
+                            {t('noPropertiesAvailable')}
                           </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value="none" disabled>
-                          {t('noPropertiesAvailable')}
-                        </SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
-                )}
-              </CardContent>
-            </Card>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
           
           <div className="space-y-6">
