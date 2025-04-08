@@ -63,14 +63,28 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       
       if (data) {
         // Transform the data to match our Tenant type
+        let propertyName = "";
+        
+        // Handle properties data correctly
+        if (data.properties) {
+          // If properties is an object
+          if (typeof data.properties === 'object' && !Array.isArray(data.properties)) {
+            propertyName = data.properties.name || "";
+          }
+          // If properties is an array (taking first element's name)
+          else if (Array.isArray(data.properties) && data.properties.length > 0) {
+            propertyName = data.properties[0]?.name || "";
+          }
+        }
+        
         const tenantData: Tenant = {
           id: data.id,
           name: data.name,
           email: data.email,
           property_id: data.property_id,
           properties: {
-            name: data.properties?.name || ""
-          }, // Fix here: ensure properties is an object with a name property
+            name: propertyName
+          },
           unit_number: data.unit_number,
           phone: data.phone,
           lease_start: data.lease_start,
