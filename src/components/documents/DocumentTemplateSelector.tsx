@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FileText, BookmarkCheck } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { generateTemplateContent } from "@/components/tenant/documents/templates/templateContent";
@@ -129,7 +129,7 @@ export function DocumentTemplateSelector({
       <Button
         onClick={() => setShowTemplatesDialog(true)}
         variant="outline"
-        className="w-full"
+        className="w-full flex items-center"
       >
         <BookmarkCheck className="mr-2 h-4 w-4" />
         {t('documentGenerator.mySavedTemplates') || "Mes modèles enregistrés"}
@@ -137,7 +137,12 @@ export function DocumentTemplateSelector({
 
       {/* Dialogue pour afficher les modèles enregistrés */}
       <Dialog open={showTemplatesDialog} onOpenChange={setShowTemplatesDialog}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[700px] p-6">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-semibold">
+              {t('documentGenerator.mySavedTemplates') || "Mes modèles enregistrés"}
+            </DialogTitle>
+          </DialogHeader>
           <UserTemplates onSelectTemplate={handleSelectUserTemplate} />
         </DialogContent>
       </Dialog>

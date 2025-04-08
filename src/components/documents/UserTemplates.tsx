@@ -5,7 +5,7 @@ import { DocumentTemplate, useTemplates } from "@/hooks/useTemplates";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileText, Trash2, Edit, FileWarning } from "lucide-react";
+import { FileText, Trash2, FileWarning } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,29 +70,34 @@ export function UserTemplates({ onSelectTemplate }: UserTemplatesProps) {
   };
   
   const categories = [
-    { id: "all", name: t('allTemplates'), icon: FileText },
-    { id: "lease", name: t('leaseDocuments'), icon: FileText },
-    { id: "payment", name: t('paymentDocuments'), icon: FileText },
-    { id: "notice", name: t('noticeDocuments'), icon: FileText },
-    { id: "inspection", name: t('inspectionDocuments'), icon: FileText },
-    { id: "custom", name: t('miscDocuments'), icon: FileText },
+    { id: "all", name: t('documentGenerator.allTemplates') },
+    { id: "lease", name: t('documentGenerator.leaseDocuments') },
+    { id: "payment", name: t('documentGenerator.paymentDocuments') },
+    { id: "notice", name: t('documentGenerator.noticeDocuments') },
+    { id: "inspection", name: t('documentGenerator.inspectionDocuments') },
+    { id: "custom", name: t('documentGenerator.miscDocuments') },
   ];
   
   return (
-    <div className="space-y-4">
-      <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid grid-cols-3 mb-4">
-          <TabsTrigger value="all">{t('allTemplates')}</TabsTrigger>
-          <TabsTrigger value="custom">{t('customTemplates')}</TabsTrigger>
-          <TabsTrigger value="lease">{t('leaseDocuments')}</TabsTrigger>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-semibold mb-2">{t('documentGenerator.mySavedTemplates')}</h2>
+        <p className="text-muted-foreground">{t('documentGenerator.saveAsTemplateDescription')}</p>
+      </div>
+      
+      <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
+        <TabsList className="grid grid-cols-3 mb-6">
+          <TabsTrigger value="all" className="text-sm py-2">{t('documentGenerator.allTemplates')}</TabsTrigger>
+          <TabsTrigger value="custom" className="text-sm py-2">{t('documentGenerator.customTemplates')}</TabsTrigger>
+          <TabsTrigger value="lease" className="text-sm py-2">{t('documentGenerator.leaseDocuments')}</TabsTrigger>
         </TabsList>
         
-        <TabsContent value={selectedCategory}>
+        <TabsContent value={selectedCategory} className="mt-0">
           <ScrollArea className="h-[400px] pr-4">
             {isLoading ? (
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="flex items-center space-x-4 p-3 border rounded-md">
+                  <div key={i} className="flex items-center space-x-4 p-4 border rounded-lg bg-background">
                     <div className="w-10 h-10">
                       <Skeleton className="h-10 w-10 rounded-md" />
                     </div>
@@ -104,25 +109,28 @@ export function UserTemplates({ onSelectTemplate }: UserTemplatesProps) {
                 ))}
               </div>
             ) : filteredTemplates.length === 0 ? (
-              <div className="text-center py-8">
-                <FileWarning className="mx-auto h-12 w-12 text-muted-foreground mb-3" />
-                <p className="text-muted-foreground">{t('noTemplatesFound')}</p>
-                <p className="text-sm text-muted-foreground mt-1">{t('createTemplateHint')}</p>
+              <div className="text-center py-12 bg-muted/30 rounded-lg border border-dashed">
+                <FileWarning className="mx-auto h-12 w-12 text-muted-foreground mb-4 opacity-70" />
+                <h3 className="text-lg font-medium mb-1">{t('documentGenerator.noTemplatesFound')}</h3>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">{t('documentGenerator.createTemplateHint')}</p>
               </div>
             ) : (
               <div className="space-y-3">
                 {filteredTemplates.map((template) => (
                   <div
                     key={template.id}
-                    className="flex items-center justify-between p-3 border rounded-md hover:bg-accent transition-colors cursor-pointer"
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/40 transition-colors"
                   >
-                    <div className="flex items-center space-x-3" onClick={() => onSelectTemplate(template)}>
+                    <div 
+                      className="flex items-center space-x-4 flex-1 cursor-pointer" 
+                      onClick={() => onSelectTemplate(template)}
+                    >
                       <div className="flex items-center justify-center w-10 h-10 rounded-md bg-primary/10 text-primary">
                         <FileText className="h-5 w-5" />
                       </div>
                       <div>
-                        <p className="font-medium">{template.name}</p>
-                        <p className="text-xs text-muted-foreground">
+                        <h3 className="font-medium text-base">{template.name}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
                           {formatDate(template.created_at)}
                         </p>
                       </div>
@@ -134,7 +142,8 @@ export function UserTemplates({ onSelectTemplate }: UserTemplatesProps) {
                         e.stopPropagation();
                         setTemplateToDelete(template.id);
                       }}
-                      className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                      className="h-9 w-9 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-full"
+                      title={t('documentGenerator.deleteTemplate')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -147,15 +156,18 @@ export function UserTemplates({ onSelectTemplate }: UserTemplatesProps) {
       </Tabs>
       
       <AlertDialog open={!!templateToDelete} onOpenChange={(open) => !open && setTemplateToDelete(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-md">
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('deleteTemplate')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('deleteTemplateConfirmation')}</AlertDialogDescription>
+            <AlertDialogTitle>{t('documentGenerator.deleteTemplate')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('documentGenerator.deleteTemplateConfirmation')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteTemplate} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {t('delete')}
+          <AlertDialogFooter className="mt-4">
+            <AlertDialogCancel className="font-medium">{t('documentGenerator.cancel')}</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDeleteTemplate} 
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t('documentGenerator.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
