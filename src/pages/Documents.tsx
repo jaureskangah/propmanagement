@@ -40,7 +40,7 @@ const Documents = () => {
                       {t('documentGenerator.documentGenerator')}
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                      {t('documentGenerator.description')}
+                      {t('documentGenerator.documentDescription')}
                     </p>
                   </div>
                 </div>
