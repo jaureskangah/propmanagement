@@ -57,7 +57,7 @@ export function BaseDialog({
         <DialogFooter>
           {showCancelButton && (
             <Button variant="outline" onClick={onClose}>
-              {cancelText || t('cancel') || "Annuler"}
+              {cancelText || t('documentGenerator.cancel')}
             </Button>
           )}
           {footer}

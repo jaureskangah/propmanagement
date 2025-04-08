@@ -30,8 +30,8 @@ export function ShareDocumentDialog({
   const handleShareDocument = async () => {
     if (!recipientEmail || !content) {
       toast({
-        title: t('errorTitle') || "Erreur",
-        description: t('emailAndContentRequired') || "L'adresse email et le contenu sont requis",
+        title: t('documentGenerator.errorTitle'),
+        description: t('documentGenerator.enterValidEmail'),
         variant: "destructive"
       });
       return;
@@ -49,7 +49,7 @@ export function ShareDocumentDialog({
         body: {
           recipientEmail,
           documentContent: content,
-          documentTitle: templateName || t('customDocument') || "Document personnalisé",
+          documentTitle: templateName || t('documentGenerator.customDocument'),
         }
       });
 
@@ -61,16 +61,16 @@ export function ShareDocumentDialog({
       console.log("Share document function response:", data);
       
       toast({
-        title: t('successTitle') || "Succès",
-        description: t('documentShared') || "Document partagé avec succès"
+        title: t('documentGenerator.successTitle'),
+        description: t('documentGenerator.documentShared'),
       });
       onClose();
       setRecipientEmail("");
     } catch (error) {
       console.error('Error sharing document:', error);
       toast({
-        title: t('errorTitle') || "Erreur",
-        description: t('shareError') || "Échec du partage du document",
+        title: t('documentGenerator.errorTitle'),
+        description: t('documentGenerator.shareError'),
         variant: "destructive"
       });
     } finally {
@@ -83,12 +83,12 @@ export function ShareDocumentDialog({
       {isSending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {t('sending') || "Envoi en cours..."}
+          {t('documentGenerator.sending')}
         </>
       ) : (
         <>
           <Send className="mr-2 h-4 w-4" />
-          {t('send') || "Envoyer"}
+          {t('documentGenerator.send')}
         </>
       )}
     </Button>
@@ -98,12 +98,12 @@ export function ShareDocumentDialog({
     <BaseDialog
       isOpen={isOpen}
       onClose={onClose}
-      title={t('shareDocument') || "Partager le document"}
-      description={t('shareDocumentDescription') || "Partagez ce document avec d'autres personnes"}
+      title={t('documentGenerator.shareDocument')}
+      description={t('documentGenerator.shareDocumentDescription')}
       footer={dialogFooter}
       className="dark:bg-gray-800 dark:text-gray-100"
     >
-      <Label htmlFor="email" className="dark:text-gray-200">{t('recipientEmail') || "Email du destinataire"}</Label>
+      <Label htmlFor="email" className="dark:text-gray-200">{t('documentGenerator.recipients')}</Label>
       <Input 
         id="email"
         type="email"

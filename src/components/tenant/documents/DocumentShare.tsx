@@ -41,8 +41,8 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
     
     if (emails.length === 0) {
       toast({
-        title: t("error"),
-        description: "Please enter at least one email address",
+        title: t("documentGenerator.errorTitle"),
+        description: t("documentGenerator.enterValidEmail"),
         variant: "destructive",
       });
       return;
@@ -66,8 +66,8 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
       
       setSentSuccess(true);
       toast({
-        title: t("success"),
-        description: "Document shared successfully",
+        title: t("documentGenerator.successTitle"),
+        description: t("documentGenerator.documentShared"),
         variant: "default",
       });
       
@@ -82,8 +82,8 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
     } catch (error) {
       console.error("Error sharing document:", error);
       toast({
-        title: t("error"),
-        description: "Failed to share document. Please try again.",
+        title: t("documentGenerator.errorTitle"),
+        description: t("documentGenerator.shareError"),
         variant: "destructive",
       });
     } finally {
@@ -102,15 +102,15 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="sm:max-w-md">
         <SheetHeader>
-          <SheetTitle>{t("shareDocument")}</SheetTitle>
+          <SheetTitle>{t("documentGenerator.shareDocument")}</SheetTitle>
           <SheetDescription>
-            Share "{document?.name}" with others via email
+            {document?.name ? `${t("documentGenerator.shareDocumentDescription")} "${document.name}"` : t("documentGenerator.shareDocumentDescription")}
           </SheetDescription>
         </SheetHeader>
         
         <div className="mt-6 space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="recipients">{t("email")}</Label>
+            <Label htmlFor="recipients">{t("documentGenerator.recipients")}</Label>
             <Input
               id="recipients"
               placeholder="email@example.com, another@example.com"
@@ -119,15 +119,15 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
               disabled={isSending || sentSuccess}
             />
             <p className="text-xs text-muted-foreground">
-              Separate multiple email addresses with commas
+              {t("documentGenerator.separateEmails")}
             </p>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="message">{t("message")}</Label>
+            <Label htmlFor="message">{t("documentGenerator.message")}</Label>
             <Textarea
               id="message"
-              placeholder="Add an optional message"
+              placeholder={t("documentGenerator.optionalMessage")}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
@@ -143,7 +143,7 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
               disabled={isSending}
             >
               <X className="h-4 w-4 mr-2" />
-              {t("cancel")}
+              {t("documentGenerator.cancel")}
             </Button>
             <Button 
               onClick={handleShare}
@@ -154,17 +154,17 @@ export const DocumentShare = ({ document, open, onOpenChange }: DocumentSharePro
               {sentSuccess ? (
                 <>
                   <Check className="h-4 w-4 mr-2" />
-                  {t("sent")}
+                  {t("documentGenerator.sent")}
                 </>
               ) : isSending ? (
                 <>
                   <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
-                  {t("sending")}
+                  {t("documentGenerator.sending")}
                 </>
               ) : (
                 <>
                   <Send className="h-4 w-4 mr-2" />
-                  {t("shareDocument")}
+                  {t("documentGenerator.shareDocument")}
                 </>
               )}
             </Button>
