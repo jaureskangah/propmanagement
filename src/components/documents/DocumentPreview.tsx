@@ -8,7 +8,7 @@ import { LoadingState } from "./preview/LoadingState";
 import { PdfViewer } from "./preview/PdfViewer";
 import { ActionButtons } from "./preview/ActionButtons";
 import { useState } from "react";
-import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
+import { ShareDocumentDialog } from "./editor/dialogs/ShareDocumentDialog";
 import type { Tenant } from "@/types/tenant";
 
 interface DocumentPreviewProps {

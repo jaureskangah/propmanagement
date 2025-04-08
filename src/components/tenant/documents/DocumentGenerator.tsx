@@ -1,68 +1,216 @@
 
-import { motion } from "framer-motion";
-import { SaveTemplateDialog } from "@/components/documents/editor/SaveTemplateDialog";
-import { Tenant } from "@/types/tenant";
+import { useState, useEffect } from "react";
 import { useDocumentGenerator } from "./hooks/useDocumentGenerator";
-import { DocumentTemplateSection } from "./components/DocumentTemplateSection";
-import { DocumentEditorSection } from "./components/DocumentEditorSection";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DialogManager } from "@/components/documents/editor/DialogManager";
+import { DocumentEditor } from "@/components/documents/DocumentEditor";
+import { DocumentPreview } from "@/components/documents/DocumentPreview";
+import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
+import { Loader2, Send, Download } from "lucide-react";
+import { useTenant } from "@/components/providers/TenantProvider";
 
-export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
+export function DocumentGenerator() {
+  const { t } = useLocale();
+  const [activeTab, setActiveTab] = useState<string>("edit");
+  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
+  const [isSignatureDialogOpen, setIsSignatureDialogOpen] = useState(false);
+  const { tenant } = useTenant();
+  
   const {
-    selectedTemplate,
-    selectedTemplateName,
-    documentContent,
-    previewUrl,
+    content,
+    setContent,
+    templateName,
+    setTemplateName,
     isGenerating,
-    activeTab,
+    previewUrl,
     previewError,
-    isSaveTemplateDialogOpen,
-    handleSelectTemplate,
-    handleGeneratePreview,
-    handleDownload,
-    handleInsertDynamicField,
-    setDocumentContent,
-    setActiveTab,
-    setIsSaveTemplateDialogOpen
-  } = useDocumentGenerator(tenant);
+    handleTemplateChange,
+    generatePreview,
+    saveDocument,
+    resetDocument
+  } = useDocumentGenerator();
+  
+  // Automatically generate preview when switching to preview tab
+  useEffect(() => {
+    if (activeTab === "preview" && content && !previewUrl && !isGenerating && !previewError) {
+      generatePreview();
+    }
+  }, [activeTab]);
+  
+  const handleGenerateDocument = async () => {
+    await generatePreview();
+    setActiveTab("preview");
+  };
+  
+  const handleShareDocument = () => {
+    if (!previewUrl) {
+      generatePreview().then(() => {
+        setIsShareDialogOpen(true);
+      });
+    } else {
+      setIsShareDialogOpen(true);
+    }
+  };
+  
+  const handleDownload = () => {
+    if (previewUrl) {
+      window.open(previewUrl, '_blank');
+    }
+  };
+  
+  const handleInsertSignature = (signatureDataUrl: string) => {
+    setContent(prev => `${prev}\n\n${signatureDataUrl}`);
+  };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="lg:col-span-4">
-        <DocumentTemplateSection 
-          selectedTemplate={selectedTemplate}
-          onSelectTemplate={handleSelectTemplate}
-          onGenerateContent={(content) => {
-            setDocumentContent(content);
-            // Don't directly call setPreviewUrl and setPreviewError as they're not available here
-            // Instead, we should handle this in a proper way
-          }}
-          isGenerating={isGenerating} // Changed from setIsGenerating to isGenerating
-          tenant={tenant}
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
+        <DocumentTemplateSelector
+          onSelectTemplate={handleTemplateChange}
+          selectedTemplateName={templateName}
         />
-      </div>
-
-      <div className="lg:col-span-8">
-        <DocumentEditorSection 
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          documentContent={documentContent}
-          setDocumentContent={setDocumentContent}
-          handleGeneratePreview={handleGeneratePreview}
-          isGenerating={isGenerating}
-          selectedTemplateName={selectedTemplateName}
-          previewUrl={previewUrl}
-          previewError={previewError}
-          handleDownload={handleDownload}
-          selectedTemplate={selectedTemplate}
-          setIsSaveTemplateDialogOpen={setIsSaveTemplateDialogOpen}
-        />
+        
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsAIDialogOpen(true)}
+            className="flex-1 sm:flex-none"
+          >
+            {t('documentGenerator.aiAssistant')}
+          </Button>
+          
+          <Button
+            variant="default"
+            size="sm"
+            onClick={handleGenerateDocument}
+            disabled={!content || isGenerating}
+            className="flex-1 sm:flex-none"
+          >
+            {isGenerating ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {t('documentGenerator.generating')}
+              </>
+            ) : (
+              <>{t('documentGenerator.generatePreview')}</>
+            )}
+          </Button>
+        </div>
       </div>
       
-      <SaveTemplateDialog
-        isOpen={isSaveTemplateDialogOpen}
-        onClose={() => setIsSaveTemplateDialogOpen(false)}
-        content={documentContent}
-        templateName={selectedTemplateName}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList className="grid w-full grid-cols-2 sm:w-[400px]">
+          <TabsTrigger value="edit">{t('documentGenerator.edit')}</TabsTrigger>
+          <TabsTrigger value="preview" disabled={!content}>
+            {t('documentGenerator.preview')}
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="edit" className="space-y-4">
+          <DocumentEditor 
+            content={content} 
+            onContentChange={setContent} 
+            onAIClick={() => setIsAIDialogOpen(true)}
+            onSignatureClick={() => setIsSignatureDialogOpen(true)}
+            placeholderText={t('documentGenerator.startTypingOrSelectTemplate')}
+          />
+          
+          <div className="flex flex-wrap gap-3 mt-4">
+            <Button
+              variant="default"
+              onClick={handleGenerateDocument}
+              disabled={!content || isGenerating}
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {t('documentGenerator.generating')}
+                </>
+              ) : (
+                <>{t('documentGenerator.generatePreview')}</>
+              )}
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={() => setIsTemplateDialogOpen(true)}
+              disabled={!content}
+            >
+              {t('documentGenerator.saveTemplate')}
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={resetDocument}
+              disabled={!content}
+            >
+              {t('documentGenerator.reset')}
+            </Button>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="preview" className="h-[600px]">
+          <DocumentPreview
+            previewUrl={previewUrl}
+            isGenerating={isGenerating}
+            documentContent={content}
+            templateName={templateName}
+            onShare={handleShareDocument}
+            previewError={previewError}
+            onDownload={handleDownload}
+            tenant={tenant}
+          />
+          
+          <div className="flex flex-wrap gap-3 mt-4">
+            <Button
+              variant="default"
+              onClick={saveDocument}
+              disabled={!previewUrl || isGenerating}
+            >
+              {t('documentGenerator.saveDocument')}
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={handleShareDocument}
+              disabled={!previewUrl || isGenerating}
+            >
+              <Send className="mr-2 h-4 w-4" />
+              {t('documentGenerator.shareDocument')}
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={handleDownload}
+              disabled={!previewUrl || isGenerating}
+            >
+              <Download className="mr-2 h-4 w-4" />
+              {t('documentGenerator.download')}
+            </Button>
+          </div>
+        </TabsContent>
+      </Tabs>
+      
+      <DialogManager
+        isAIDialogOpen={isAIDialogOpen}
+        setIsAIDialogOpen={setIsAIDialogOpen}
+        isShareDialogOpen={isShareDialogOpen}
+        setIsShareDialogOpen={setIsShareDialogOpen}
+        isSaveTemplateDialogOpen={isTemplateDialogOpen}
+        setIsSaveTemplateDialogOpen={setIsTemplateDialogOpen}
+        isSignatureDialogOpen={isSignatureDialogOpen}
+        setIsSignatureDialogOpen={setIsSignatureDialogOpen}
+        content={content}
+        onContentChange={setContent}
+        onInsertSignature={handleInsertSignature}
+        templateName={templateName}
+        tenant={tenant}
       />
     </div>
   );

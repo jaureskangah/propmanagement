@@ -1,134 +1,135 @@
 
 import { useState, useEffect } from "react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
-import { generateCustomPdf } from "@/components/tenant/documents/templates/customPdf";
-import { Tenant } from "@/types/tenant";
-import { processDynamicFields } from "../templates/utils/contentParser";
+import { useTenant } from "@/components/providers/TenantProvider";
+import { supabase } from "@/lib/supabase";
+import { templateContent } from "../templates/templateContent";
+import { useDocumentActions } from "./useDocumentActions";
 
-export function useDocumentGenerator(tenant?: Tenant | null) {
-  const { t } = useLocale();
-  const { toast } = useToast();
-  const [selectedTemplate, setSelectedTemplate] = useState("");
-  const [selectedTemplateName, setSelectedTemplateName] = useState("");
-  const [documentContent, setDocumentContent] = useState("");
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+export const useDocumentGenerator = () => {
+  const [content, setContent] = useState("");
+  const [templateName, setTemplateName] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [activeTab, setActiveTab] = useState("editor");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [previewError, setPreviewError] = useState<string | null>(null);
-  const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const { tenant } = useTenant();
+  const { saveDocumentToHistory } = useDocumentActions();
 
-  const handleSelectTemplate = (templateId: string, templateName: string) => {
-    setSelectedTemplate(templateId);
-    setSelectedTemplateName(templateName);
+  // Update content when template changes
+  const handleTemplateChange = (templateId: string, name: string) => {
+    setTemplateName(name);
+    const template = templateContent[templateId];
+    
+    if (template) {
+      let processedContent = template;
+      
+      // Replace tenant placeholders if tenant data is available
+      if (tenant) {
+        processedContent = processedContent
+          .replace(/\{tenant_name\}/g, tenant.name || "")
+          .replace(/\{tenant_email\}/g, tenant.email || "")
+          .replace(/\{tenant_phone\}/g, tenant.phone || "")
+          .replace(/\{property_address\}/g, tenant.properties?.name || "")
+          .replace(/\{unit_number\}/g, tenant.unit_number || "")
+          .replace(/\{lease_start\}/g, tenant.lease_start || "")
+          .replace(/\{lease_end\}/g, tenant.lease_end || "")
+          .replace(/\{rent_amount\}/g, tenant.rent_amount?.toString() || "");
+      }
+      
+      setContent(processedContent);
+    }
   };
 
-  const handleGeneratePreview = async (content: string) => {
+  // Generate PDF preview from content
+  const generatePreview = async () => {
+    if (!content.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Le document est vide",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsGenerating(true);
     setPreviewError(null);
     
     try {
-      if (!content || content.trim() === '') {
-        throw new Error(t('documentGenerator.emptyDocument') || "Le contenu du document est vide");
-      }
-      
-      try {
-        const lines = content.split('\n');
-        const title = lines.length > 0 ? lines[0].trim() : t('documentGenerator.document') || 'Document';
-        
-        // Traiter les champs dynamiques si un locataire est fourni
-        let processedContent = content;
-        if (tenant) {
-          processedContent = processDynamicFields(content, tenant);
+      const { data, error } = await supabase.functions.invoke('generate-document-content', {
+        body: {
+          content,
+          format: 'pdf'
         }
-        
-        const pdfBuffer = await generateCustomPdf(processedContent, {
-          title: title,
-          headerText: selectedTemplateName || t('documentGenerator.document') || 'Document',
-          showPageNumbers: true,
-          showDate: true
-        }, tenant);
-        
-        const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
-        const previewUrl = URL.createObjectURL(pdfBlob);
-        
-        setPreviewUrl(previewUrl);
-        setActiveTab("preview");
-      } catch (pdfError) {
-        console.error("Error generating PDF from content:", pdfError);
-        throw new Error(t('documentGenerator.pdfGenerationError') || "Erreur lors de la génération du PDF");
+      });
+      
+      if (error) throw error;
+      
+      if (data?.url) {
+        setPreviewUrl(data.url);
+        return data.url;
+      } else {
+        throw new Error("No URL returned from document generation");
       }
     } catch (error) {
-      console.error("Error generating preview:", error);
-      setPreviewError(error instanceof Error ? error.message : t('documentGenerator.unknownError') || "Erreur inconnue");
-      setActiveTab("preview");
+      console.error('Error generating preview:', error);
+      setPreviewError("Erreur lors de la génération de l'aperçu");
+      setPreviewUrl(null);
+      return null;
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const handleSaveToHistory = async () => {
-    // Implement history saving logic here
-    toast({
-      title: t('documentGenerator.documentSaved') || "Document enregistré",
-      description: t('documentGenerator.documentSavedDescription') || "Votre document a été enregistré avec succès"
-    });
-  };
-
-  const handleDownload = async () => {
-    if (!previewUrl) return;
+  // Save document to history
+  const saveDocument = async () => {
+    const pdfUrl = previewUrl || await generatePreview();
     
-    const link = document.createElement("a");
-    link.href = previewUrl;
-    link.download = `${selectedTemplateName || t('documentGenerator.document') || "document"}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    if (!pdfUrl || !user) return;
     
-    await handleSaveToHistory();
-    
-    toast({
-      title: t('documentGenerator.downloadStarted') || "Téléchargement commencé",
-      description: t('documentGenerator.downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
-    });
-  };
-
-  // Fonction pour insérer un champ dynamique dans l'éditeur
-  const handleInsertDynamicField = (field: string) => {
-    setDocumentContent(prev => {
-      const textarea = document.querySelector('textarea');
-      if (!textarea) return prev + field;
+    try {
+      await saveDocumentToHistory({
+        name: templateName || "Document personnalisé",
+        content,
+        fileUrl: pdfUrl
+      });
       
-      const start = textarea.selectionStart;
-      const end = textarea.selectionEnd;
-      
-      return prev.substring(0, start) + field + prev.substring(end);
-    });
+      toast({
+        title: "Succès",
+        description: "Document enregistré dans l'historique",
+      });
+    } catch (error) {
+      console.error('Error saving document:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'enregistrer le document",
+        variant: "destructive",
+      });
+    }
   };
 
-  useEffect(() => {
-    return () => {
-      if (previewUrl && previewUrl.startsWith('blob:')) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
+  // Reset document content and preview
+  const resetDocument = () => {
+    setContent("");
+    setTemplateContent("");
+    setPreviewUrl(null);
+    setPreviewError(null);
+  };
 
   return {
-    selectedTemplate,
-    selectedTemplateName,
-    documentContent,
-    previewUrl,
+    content,
+    setContent,
+    templateName,
+    setTemplateName,
     isGenerating,
-    activeTab,
+    previewUrl,
     previewError,
-    isSaveTemplateDialogOpen,
-    handleSelectTemplate,
-    handleGeneratePreview,
-    handleDownload,
-    handleInsertDynamicField,
-    setDocumentContent,
-    setActiveTab,
-    setIsSaveTemplateDialogOpen
+    tenant,
+    handleTemplateChange,
+    generatePreview,
+    saveDocument,
+    resetDocument
   };
-}
+};
