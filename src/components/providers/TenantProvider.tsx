@@ -73,7 +73,9 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           }
           // If properties is an array (taking first element's name)
           else if (Array.isArray(data.properties) && data.properties.length > 0) {
-            propertyName = data.properties[0]?.name || "";
+            // Type assertion to handle the 'never' type issue
+            const firstProperty = data.properties[0] as { name?: string };
+            propertyName = firstProperty?.name || "";
           }
         }
         
