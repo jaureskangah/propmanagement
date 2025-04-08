@@ -1,9 +1,7 @@
 
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 export function useEditorState(initialContent: string, onContentChange: (content: string) => void) {
-  const [isAIDialogOpen, setIsAIDialogOpen] = useState(false);
-  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -11,10 +9,6 @@ export function useEditorState(initialContent: string, onContentChange: (content
   };
 
   return {
-    isAIDialogOpen,
-    setIsAIDialogOpen,
-    isShareDialogOpen,
-    setIsShareDialogOpen,
     textareaRef,
     handleChange,
   };
