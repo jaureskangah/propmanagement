@@ -67,7 +67,7 @@ export default function Settings() {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className="flex-1 overflow-y-auto pt-20 md:pt-0">
+      <div className="flex-1 overflow-y-auto pt-20 md:pt-0 md:ml-[270px] md:w-[calc(100%-270px)]">
         <div className="container p-4 pb-16 max-w-5xl mx-auto">
           <SettingsPageHeader userEmail={user?.email} />
 

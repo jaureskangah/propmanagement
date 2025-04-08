@@ -18,7 +18,7 @@ const Documents = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className="flex-1 overflow-auto pt-20 md:pt-0">
+      <div className="flex-1 overflow-auto pt-20 md:pt-0 md:ml-[270px] md:w-[calc(100%-270px)]">
         <div className="container mx-auto p-4 md:p-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

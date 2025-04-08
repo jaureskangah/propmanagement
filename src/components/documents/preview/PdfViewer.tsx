@@ -45,7 +45,8 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onError }) => {
         backgroundColor: "#ffffff",
         position: "relative",
         overflow: "hidden",
-        minHeight: "500px"
+        minHeight: "500px",
+        maxWidth: "100%"
       }}
       data-pdf-container="true"
     >
