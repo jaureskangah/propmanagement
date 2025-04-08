@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -138,10 +139,18 @@ export default {
   
   // AI Assistant
   aiAssistant: "AI Assistant",
+  aiAssistantDescription: "Use AI to generate or enhance document content based on your instructions",
   saveAsTemplate: "Save as Template",
   selectDocumentTemplate: "Select document template",
   generateDocument: "Generate Document",
   templateLoadError: "Unable to load template content",
+  aiInstructions: "AI Instructions",
+  aiInstructionsPlaceholder: "Describe what you want to generate...",
+  aiGenerating: "Generating...",
+  aiGenerate: "Generate",
+  aiGenerated: "Content generated successfully",
+  aiErrorDescription: "Unable to generate content with AI",
+  selectTemplateFirst: "Please select a template first",
   
   // Save template dialog
   templateName: "Template Name",

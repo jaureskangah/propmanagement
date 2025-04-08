@@ -139,22 +139,22 @@ export default {
   date: "Date",
   currentDate: "Date actuelle",
   
-  // Other keys
-  selectDocumentTemplate: "Sélectionner un modèle de document",
-  generateDocument: "Générer un document",
-  templateLoadError: "Impossible de charger le contenu du modèle",
-  
   // AI Assistant
   aiAssistant: "Assistant IA",
+  aiAssistantDescription: "Utilisez l'IA pour générer ou améliorer le contenu du document selon vos instructions",
   saveAsTemplate: "Enregistrer comme modèle",
   aiInstructions: "Instructions pour l'IA",
   aiInstructionsPlaceholder: "Décrivez ce que vous souhaitez générer...",
   aiGenerating: "Génération en cours...",
   aiGenerate: "Générer",
   aiGenerated: "Contenu généré avec succès",
-  aiError: "Erreur de génération",
   aiErrorDescription: "Impossible de générer le contenu avec l'IA",
   selectTemplateFirst: "Veuillez d'abord sélectionner un modèle",
+  
+  // Other keys
+  selectDocumentTemplate: "Sélectionner un modèle de document",
+  generateDocument: "Générer un document",
+  templateLoadError: "Impossible de charger le contenu du modèle",
   
   // Save template dialog
   templateName: "Nom du modèle",
