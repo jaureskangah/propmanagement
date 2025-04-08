@@ -70,24 +70,24 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           title={t('documentGenerator.insertDynamicField') || "Insérer un champ dynamique"}
-          className="flex items-center space-x-1"
+          className="flex items-center gap-2 bg-violet-50 border-violet-200 hover:bg-violet-100 hover:text-violet-900 text-violet-800"
         >
-          <Variable className="h-4 w-4" />
-          <span className="sr-only md:not-sr-only md:inline-block md:ml-1 text-xs">
-            {t('documentGenerator.fields') || "Champs"}
+          <Variable className="h-4 w-4 text-violet-600" />
+          <span className="hidden md:inline text-sm">
+            {t('documentGenerator.dynamicFields') || t('documentGenerator.fields') || "Champs dynamiques"}
           </span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-64 p-0" align="start">
+      <PopoverContent className="w-72 p-0" align="start">
         <Command>
           <CommandInput 
             placeholder={t('documentGenerator.searchFields') || "Rechercher des champs..."} 
             className="h-9"
           />
-          <CommandList>
+          <CommandList className="max-h-[300px]">
             <CommandEmpty>
               {t('documentGenerator.noFieldsFound') || "Aucun champ trouvé."}
             </CommandEmpty>
@@ -97,7 +97,7 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
                   <CommandItem 
                     key={field.id}
                     onSelect={() => handleInsert(field.value)}
-                    className="flex items-center justify-between"
+                    className="flex items-center justify-between cursor-pointer"
                   >
                     <span>{field.name}</span>
                     <code className="text-xs bg-muted px-1 py-0.5 rounded">{field.value}</code>
