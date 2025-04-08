@@ -1,4 +1,3 @@
-
 import { useRef, useState } from "react";
 import { useEditorState } from "./editor/useEditorState";
 import { AIAssistantDialog } from "./editor/AIAssistantDialog";
@@ -78,8 +77,16 @@ export function DocumentEditor({
       // Set cursor position after inserted text
       setTimeout(() => {
         textarea.focus();
-        const newPosition = start + text.length;
-        textarea.setSelectionRange(newPosition, newPosition);
+        if (selectedText) {
+          // If text was selected, keep the selection with formatting
+          const newSelectionStart = start + (text === "**text**" || text === "*text*" ? 2 : 0);
+          const newSelectionEnd = end + (text === "**text**" || text === "*text*" ? 2 : 0);
+          textarea.setSelectionRange(newSelectionStart, newSelectionEnd);
+        } else {
+          // If no selection, set cursor position after inserted text
+          const newPosition = start + text.length;
+          textarea.setSelectionRange(newPosition, newPosition);
+        }
       }, 0);
     }
   };

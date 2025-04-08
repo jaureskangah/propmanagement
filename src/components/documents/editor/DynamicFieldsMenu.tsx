@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -29,33 +30,33 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
 
   const fieldCategories: FieldCategory[] = [
     {
-      category: t('tenant') || "Tenant",
+      category: t('documentGenerator.tenant') || "Locataire",
       fields: [
-        { id: "tenant-name", name: t('tenantName') || "Tenant Name", value: "{{name}}" },
-        { id: "tenant-email", name: t('tenantEmail') || "Email", value: "{{email}}" },
-        { id: "tenant-phone", name: t('tenantPhone') || "Phone", value: "{{phone}}" },
-        { id: "tenant-unit", name: t('unitNumber') || "Unit Number", value: "{{unit_number}}" }
+        { id: "tenant-name", name: t('documentGenerator.tenantName') || "Nom du locataire", value: "{{name}}" },
+        { id: "tenant-email", name: t('documentGenerator.tenantEmail') || "Email", value: "{{email}}" },
+        { id: "tenant-phone", name: t('documentGenerator.tenantPhone') || "Téléphone", value: "{{phone}}" },
+        { id: "tenant-unit", name: t('documentGenerator.unitNumber') || "Numéro d'unité", value: "{{unit_number}}" }
       ]
     },
     {
-      category: t('property') || "Property",
+      category: t('documentGenerator.property') || "Propriété",
       fields: [
-        { id: "property-name", name: t('propertyName') || "Property Name", value: "{{properties.name}}" },
-        { id: "property-address", name: t('propertyAddress') || "Property Address", value: "{{properties.address}}" }
+        { id: "property-name", name: t('documentGenerator.propertyName') || "Nom de la propriété", value: "{{properties.name}}" },
+        { id: "property-address", name: t('documentGenerator.propertyAddress') || "Adresse de la propriété", value: "{{properties.address}}" }
       ]
     },
     {
-      category: t('lease') || "Lease",
+      category: t('documentGenerator.lease') || "Bail",
       fields: [
-        { id: "lease-start", name: t('leaseStart') || "Lease Start", value: "{{lease_start}}" },
-        { id: "lease-end", name: t('leaseEnd') || "Lease End", value: "{{lease_end}}" },
-        { id: "rent-amount", name: t('rentAmount') || "Rent Amount", value: "{{rent_amount}}" }
+        { id: "lease-start", name: t('documentGenerator.leaseStart') || "Début du bail", value: "{{lease_start}}" },
+        { id: "lease-end", name: t('documentGenerator.leaseEnd') || "Fin du bail", value: "{{lease_end}}" },
+        { id: "rent-amount", name: t('documentGenerator.rentAmount') || "Montant du loyer", value: "{{rent_amount}}" }
       ]
     },
     {
-      category: t('date') || "Date",
+      category: t('documentGenerator.date') || "Date",
       fields: [
-        { id: "current-date", name: t('currentDate') || "Current Date", value: "{{currentDate}}" }
+        { id: "current-date", name: t('documentGenerator.currentDate') || "Date actuelle", value: "{{currentDate}}" }
       ]
     }
   ];
@@ -71,19 +72,23 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
         <Button
           variant="ghost"
           size="sm"
-          title={t('insertDynamicField') || "Insert Dynamic Field"}
+          title={t('documentGenerator.insertDynamicField') || "Insérer un champ dynamique"}
+          className="flex items-center space-x-1"
         >
           <Variable className="h-4 w-4" />
+          <span className="sr-only md:not-sr-only md:inline-block md:ml-1 text-xs">
+            {t('documentGenerator.fields') || "Champs"}
+          </span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-64 p-0" align="start">
         <Command>
           <CommandInput 
-            placeholder={t('searchFields') || "Search fields..."} 
+            placeholder={t('documentGenerator.searchFields') || "Rechercher des champs..."} 
             className="h-9"
           />
           <CommandEmpty>
-            {t('noFieldsFound') || "No fields found."}
+            {t('documentGenerator.noFieldsFound') || "Aucun champ trouvé."}
           </CommandEmpty>
           {fieldCategories.map((category) => (
             <CommandGroup key={category.category} heading={category.category}>
@@ -91,8 +96,10 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
                 <CommandItem 
                   key={field.id}
                   onSelect={() => handleInsert(field.value)}
+                  className="flex items-center justify-between"
                 >
-                  {field.name}
+                  <span>{field.name}</span>
+                  <code className="text-xs bg-muted px-1 py-0.5 rounded">{field.value}</code>
                 </CommandItem>
               ))}
             </CommandGroup>

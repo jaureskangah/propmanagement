@@ -13,6 +13,7 @@ import { generateCustomPdf } from "@/components/tenant/documents/templates/custo
 import { Tenant } from "@/types/tenant";
 import { DynamicFieldsMenu } from "@/components/documents/editor/DynamicFieldsMenu";
 import { SaveTemplateDialog } from "@/components/documents/editor/SaveTemplateDialog";
+import { processDynamicFields } from "./templates/utils/contentParser";
 
 export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
   const { t } = useLocale();
@@ -44,12 +45,18 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
         const lines = content.split('\n');
         const title = lines.length > 0 ? lines[0].trim() : t('documentGenerator.document') || 'Document';
         
-        const pdfBuffer = await generateCustomPdf(content, {
+        // Traiter les champs dynamiques si un locataire est fourni
+        let processedContent = content;
+        if (tenant) {
+          processedContent = processDynamicFields(content, tenant);
+        }
+        
+        const pdfBuffer = await generateCustomPdf(processedContent, {
           title: title,
           headerText: selectedTemplateName || t('documentGenerator.document') || 'Document',
           showPageNumbers: true,
           showDate: true
-        });
+        }, tenant);
         
         const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
         const previewUrl = URL.createObjectURL(pdfBlob);
@@ -92,6 +99,19 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
     toast({
       title: t('documentGenerator.downloadStarted') || "Téléchargement commencé",
       description: t('documentGenerator.downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
+    });
+  };
+
+  // Fonction pour insérer un champ dynamique dans l'éditeur
+  const handleInsertDynamicField = (field: string) => {
+    setDocumentContent(prev => {
+      const textarea = document.querySelector('textarea');
+      if (!textarea) return prev + field;
+      
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      
+      return prev.substring(0, start) + field + prev.substring(end);
     });
   };
 
@@ -161,17 +181,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
                   onOpenSaveTemplateDialog={() => setIsSaveTemplateDialogOpen(true)}
                   rightSlot={
                     <DynamicFieldsMenu 
-                      onInsertField={(field) => {
-                        setDocumentContent(prev => {
-                          const textarea = document.querySelector('textarea');
-                          if (!textarea) return prev + field;
-                          
-                          const start = textarea.selectionStart;
-                          const end = textarea.selectionEnd;
-                          
-                          return prev.substring(0, start) + field + prev.substring(end);
-                        });
-                      }} 
+                      onInsertField={handleInsertDynamicField}
                       title={t('documentGenerator.insertDynamicField') || "Insérer un champ dynamique"}
                     />
                   }
