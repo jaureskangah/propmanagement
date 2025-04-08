@@ -1,3 +1,4 @@
+
 export default {
   documentGenerator: "Générateur de documents",
   documentTemplates: "Modèles de documents",
@@ -20,7 +21,7 @@ export default {
   generatingPreview: "Génération de l'aperçu...",
   templateLoaded: "Modèle chargé",
   templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
-  description: "Créer, gérer et partager des documents importants pour la gestion de vos propriétés",
+  documentDescription: "Créer, gérer et partager des documents importants pour la gestion de vos propriétés",
 
   documentHistory: "Historique des documents",
   noDocumentHistory: "Aucun historique de document disponible",
@@ -85,7 +86,7 @@ export default {
   templateNamePlaceholder: "Entrez un nom pour votre modèle",
   category: "Catégorie",
   selectCategory: "Sélectionner une catégorie",
-  description: "Description",
+  templateDescription: "Description",
   templateDescriptionPlaceholder: "Décrivez brièvement votre modèle",
   saveTemplate: "Enregistrer le modèle",
 

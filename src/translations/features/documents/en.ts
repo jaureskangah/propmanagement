@@ -21,7 +21,7 @@ export default {
   generatingPreview: "Generating preview...",
   templateLoaded: "Template loaded",
   templateLoadedDescription: "Template content has been loaded successfully",
-  description: "Create, manage and share important documents for your property management",
+  documentDescription: "Create, manage and share important documents for your property management",
   
   // Document history related translations
   documentHistory: "Document History",
@@ -93,7 +93,7 @@ export default {
   templateNamePlaceholder: "Enter a name for your template",
   category: "Category",
   selectCategory: "Select a category",
-  description: "Description",
+  templateDescription: "Description",
   templateDescriptionPlaceholder: "Briefly describe your template",
   saveTemplate: "Save Template",
 
@@ -128,7 +128,6 @@ export default {
   copyFailed: "Failed to copy link",
   noteTitle: "Note",
   usingDirectLink: "Using direct link - no expiration",
-  cancel: "Cancel",
   noFileToShare: "No file available to share",
 
   // Dynamic fields translations
