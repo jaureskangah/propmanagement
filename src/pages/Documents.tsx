@@ -32,11 +32,11 @@ const Documents = () => {
                     <FileText className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans">
+                    <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
                       {t('documentGenerator.documentGenerator')}
                     </h1>
-                    <p className="text-muted-foreground mt-1 text-sm font-normal">
-                      {t('documentGenerator.createAndManageDescription') || "Créez, gérez et partagez des documents importants pour votre gestion immobilière"}
+                    <p className="text-muted-foreground mt-1">
+                      {t('documentGenerator.description') || "Créez et gérez vos documents"}
                     </p>
                   </div>
                 </div>

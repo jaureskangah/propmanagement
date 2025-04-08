@@ -1,42 +1,37 @@
 
-import { DocumentGeneratorTranslations } from '../../types/documents';
-
-const enDocumentGenerator: DocumentGeneratorTranslations = {
+export default {
+  // Existing translations
   documentGenerator: "Document Generator",
   documentTemplates: "Document Templates",
   editContent: "Edit Content",
   preview: "Preview",
   documentType: "Document Type",
   generatePreview: "Generate Preview",
-  downloadDocument: "Download Document",
-  saveDocument: "Save Document",
+  downloadDocument: "Download",
+  saveDocument: "Save",
   generating: "Generating...",
   downloading: "Downloading...",
   saving: "Saving...",
   noPreviewAvailable: "No preview available",
-  generatePreviewDescription: "Generate a preview of your document",
-  startTypingDocument: "Start typing to create your document",
+  generatePreviewDescription: "Generate a preview to see the final document",
+  startTypingDocument: "Start typing your document here...",
   downloadStarted: "Download started",
-  downloadStartedDescription: "Your document is being downloaded",
+  downloadStartedDescription: "Your document will be downloaded shortly",
   documentSaved: "Document saved",
   documentSavedDescription: "Your document has been saved successfully",
   generatingPreview: "Generating preview...",
   templateLoaded: "Template loaded",
-  templateLoadedDescription: "Document template loaded successfully",
+  templateLoadedDescription: "Template content has been loaded successfully",
   
   // Document history related translations
   documentHistory: "Document History",
-  noDocumentHistory: "No document history",
+  noDocumentHistory: "No document history available",
   viewDocumentHistory: "View Document History",
-  documentHistoryDescription: "View and manage your generated documents history",
+  documentHistoryDescription: "View and manage your previously generated documents",
   dateGenerated: "Date Generated",
   documentName: "Document Name",
-  documentCategory: "Document Category",
+  documentCategory: "Category",
   documentActions: "Actions",
-  
-  // New descriptions
-  createAndManageDescription: "Create, manage and share important documents for your property management",
-  tenantDocumentsDescription: "Create and manage documents related to your tenancy",
   
   // Document categories
   leaseDocuments: "Lease Documents",
@@ -60,7 +55,89 @@ const enDocumentGenerator: DocumentGeneratorTranslations = {
   inspectionReport: "Inspection Report",
   tenantComplaint: "Tenant Complaint",
   propertyRules: "Property Rules",
-  customDocument: "Custom Document"
-};
+  customDocument: "Custom Document",
+  
+  // New translations for advanced editing features
+  advancedEditing: "Advanced Editing",
+  bold: "Bold",
+  italic: "Italic",
+  bulletList: "Bullet List",
+  insertImage: "Insert Image",
+  imageUrlPlaceholder: "Enter image URL",
+  insertTable: "Insert Table",
+  rows: "Rows",
+  columns: "Columns",
+  insert: "Insert",
+  addSignature: "Add Signature",
+  saveSignature: "Save Signature",
+  clear: "Clear",
+  
+  // Template related
+  allTemplates: "All Templates",
+  customTemplates: "Custom Templates",
+  noTemplatesFound: "No templates found",
+  createTemplateHint: "Create a template by saving a document",
+  deleteTemplate: "Delete Template",
+  deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
+  delete: "Delete",
 
-export default enDocumentGenerator;
+  // Dummy content for templates
+  leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
+  leaseRenewalContent: "# LEASE RENEWAL\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\nThe lease initially signed on [date] expires on [date]. The parties agree to renew said lease under the following conditions:",
+  rentReceiptContent: "# RENT RECEIPT\n\nI the undersigned [Landlord Name], owner of the accommodation located at [Address], declare having received from [Tenant Name] the amount of [Amount] representing the rent for [Period].\n\nDone at [Location], on [Date]\n\n[Signature]",
+  
+  // New sharing translations
+  shareDocument: "Share Document",
+  shareDocumentDescription: "Share this document with others",
+  shareByEmail: "Email",
+  shareByLink: "Link",
+  recipients: "Recipients",
+  separateEmails: "Separate multiple email addresses with commas",
+  message: "Message",
+  optionalMessage: "Add an optional message",
+  send: "Send",
+  sending: "Sending...",
+  sent: "Sent!",
+  generateLink: "Generate Link",
+  generatingLink: "Generating...",
+  shareableLink: "Shareable Link",
+  linkValidFor7Days: "This link is valid for 7 days",
+  generateLinkDescription: "Generate a shareable link for this document",
+  successTitle: "Success",
+  errorTitle: "Error",
+  documentShared: "Document shared successfully",
+  shareError: "Failed to share document",
+  enterValidEmail: "Please enter at least one valid email address",
+  linkCopied: "Link copied to clipboard",
+  copyFailed: "Failed to copy link",
+  noteTitle: "Note",
+  usingDirectLink: "Using direct link - no expiration",
+  cancel: "Cancel",
+  noFileToShare: "No file available to share",
+
+  // Dynamic fields translations
+  insertDynamicField: "Insert Dynamic Field",
+  searchFields: "Search fields...",
+  noFieldsFound: "No fields found.",
+  tenant: "Tenant",
+  tenantName: "Tenant Name",
+  tenantEmail: "Tenant Email",
+  tenantPhone: "Tenant Phone",
+  unitNumber: "Unit Number",
+  property: "Property",
+  propertyName: "Property Name",
+  propertyAddress: "Property Address",
+  lease: "Lease",
+  leaseStart: "Lease Start",
+  leaseEnd: "Lease End",
+  rentAmount: "Rent Amount",
+  date: "Date",
+  currentDate: "Current Date",
+  
+  // AI Assistant
+  aiAssistant: "AI Assistant",
+  saveAsTemplate: "Save as Template",
+  selectDocumentTemplate: "Select document template",
+  generateDocument: "Generate Document",
+  templateLoadError: "Unable to load template content"
+};
