@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Bold, Italic, List, Image, Table, Signature, Variable } from "lucide-react";
+import { Bold, Italic, List, Image, Table, Signature } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DynamicFieldsMenu } from "./DynamicFieldsMenu";
 
