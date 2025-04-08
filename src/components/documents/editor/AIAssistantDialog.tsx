@@ -40,7 +40,7 @@ export function AIAssistantDialog({
     if (!content && !templateName) {
       toast({
         title: t('errorTitle') || "Erreur",
-        description: t('selectTemplateFirst') || "Veuillez d'abord sélectionner un modèle",
+        description: t('documentGenerator.selectTemplateFirst') || "Veuillez d'abord sélectionner un modèle",
         variant: "destructive"
       });
       return;
@@ -64,14 +64,14 @@ export function AIAssistantDialog({
         onGenerate(data.content);
         toast({
           title: t('successTitle') || "Succès",
-          description: t('aiGenerated') || "Contenu généré avec succès"
+          description: t('documentGenerator.aiGenerated') || "Contenu généré avec succès"
         });
       }
     } catch (error) {
       console.error('Error generating content with AI:', error);
       toast({
         title: t('errorTitle') || "Erreur",
-        description: t('aiErrorDescription') || "Impossible de générer le contenu avec l'IA",
+        description: t('documentGenerator.aiErrorDescription') || "Impossible de générer le contenu avec l'IA",
         variant: "destructive"
       });
     } finally {
@@ -85,18 +85,18 @@ export function AIAssistantDialog({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="dark:bg-gray-800 dark:text-gray-100">
         <DialogHeader>
-          <DialogTitle className="dark:text-gray-100">{t('aiAssistant') || "Assistant IA"}</DialogTitle>
-          <DialogDescription className="dark:text-gray-300">{t('aiAssistantDescription') || "Utiliser l'IA pour générer ou modifier du contenu"}</DialogDescription>
+          <DialogTitle className="dark:text-gray-100">{t('documentGenerator.aiAssistant') || "Assistant IA"}</DialogTitle>
+          <DialogDescription className="dark:text-gray-300">{t('documentGenerator.aiAssistantDescription') || "Utiliser l'IA pour générer ou modifier du contenu"}</DialogDescription>
         </DialogHeader>
         
         <div className="py-4">
-          <Label htmlFor="instructions" className="dark:text-gray-200">{t('aiInstructions') || "Instructions pour l'IA"}</Label>
+          <Label htmlFor="instructions" className="dark:text-gray-200">{t('documentGenerator.aiInstructions') || "Instructions pour l'IA"}</Label>
           <Input 
             id="instructions"
             className="mt-2 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600"
             value={aiInstructions}
             onChange={(e) => setAIInstructions(e.target.value)}
-            placeholder={t('aiInstructionsPlaceholder') || "Décrivez ce que vous souhaitez générer..."}
+            placeholder={t('documentGenerator.aiInstructionsPlaceholder') || "Décrivez ce que vous souhaitez générer..."}
           />
         </div>
         
@@ -109,12 +109,12 @@ export function AIAssistantDialog({
             {isGeneratingAI ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t('aiGenerating') || "Génération en cours..."}
+                {t('documentGenerator.aiGenerating') || "Génération en cours..."}
               </>
             ) : (
               <>
                 <Sparkles className="mr-2 h-4 w-4" />
-                {t('aiGenerate') || "Générer"}
+                {t('documentGenerator.aiGenerate') || "Générer"}
               </>
             )}
           </Button>
