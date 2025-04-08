@@ -8,8 +8,7 @@ import { LoadingState } from "./preview/LoadingState";
 import { PdfViewer } from "./preview/PdfViewer";
 import { ActionButtons } from "./preview/ActionButtons";
 import { useState } from "react";
-import { ShareDocumentDialog } from "./editor/dialogs/ShareDocumentDialog";
-import type { Tenant } from "@/types/tenant";
+import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
 
 interface DocumentPreviewProps {
   previewUrl: string | null;
@@ -19,7 +18,6 @@ interface DocumentPreviewProps {
   onShare: () => void;
   previewError: string | null;
   onDownload?: () => void;
-  tenant?: Tenant | null;
 }
 
 export function DocumentPreview({ 
@@ -29,8 +27,7 @@ export function DocumentPreview({
   templateName,
   onShare,
   previewError,
-  onDownload,
-  tenant
+  onDownload
 }: DocumentPreviewProps) {
   const { t } = useLocale();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
@@ -78,7 +75,6 @@ export function DocumentPreview({
         onClose={() => setShareDialogOpen(false)}
         content={documentContent}
         templateName={templateName}
-        tenant={tenant}
       />
     </div>
   );

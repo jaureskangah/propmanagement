@@ -37,7 +37,6 @@ export function DialogManager({
   onContentChange,
   onInsertSignature,
   templateName = "",
-  tenant = null,
   onOpenSaveTemplateDialog
 }: DialogManagerProps) {
   // Gérer la fermeture des différents dialogues
@@ -63,7 +62,6 @@ export function DialogManager({
         onClose={handleCloseShareDialog}
         content={content}
         templateName={templateName}
-        tenant={tenant}
       />
       
       {/* Save Template Dialog - Only shown if not using parent's dialog */}
