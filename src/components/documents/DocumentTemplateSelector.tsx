@@ -1,12 +1,16 @@
+
 import React, { useEffect, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { FileText } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { FileText, BookmarkCheck } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { generateTemplateContent } from "@/components/tenant/documents/templates/templateContent";
 import { processDynamicFields } from "@/components/tenant/documents/templates/utils/contentParser";
 import { Tenant } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
+import { UserTemplates } from "@/components/documents/UserTemplates";
+import { DocumentTemplate } from "@/hooks/useTemplates";
 
 interface DocumentTemplateSelectorProps {
   selectedTemplate: string;
@@ -26,6 +30,7 @@ export function DocumentTemplateSelector({
   const { t } = useLocale();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [showTemplatesDialog, setShowTemplatesDialog] = useState(false);
 
   const templates = [
     { id: "lease", name: t('documentGenerator.leaseAgreement') || "Contrat de bail" },
@@ -83,6 +88,15 @@ export function DocumentTemplateSelector({
       setIsGenerating(false);
     }
   };
+
+  const handleSelectUserTemplate = (template: DocumentTemplate) => {
+    setShowTemplatesDialog(false);
+    onGenerateContent(template.content);
+    toast({
+      title: t('documentGenerator.templateLoaded') || "Modèle chargé",
+      description: t('documentGenerator.templateLoadedDescription') || "Le contenu du modèle a été chargé avec succès"
+    });
+  };
   
   return (
     <div className="space-y-4">
@@ -110,6 +124,23 @@ export function DocumentTemplateSelector({
           (t('documentGenerator.generateDocument') || "Générer un document")
         }
       </Button>
+      
+      {/* Bouton pour accéder aux modèles sauvegardés */}
+      <Button
+        onClick={() => setShowTemplatesDialog(true)}
+        variant="outline"
+        className="w-full"
+      >
+        <BookmarkCheck className="mr-2 h-4 w-4" />
+        {t('documentGenerator.mySavedTemplates') || "Mes modèles enregistrés"}
+      </Button>
+
+      {/* Dialogue pour afficher les modèles enregistrés */}
+      <Dialog open={showTemplatesDialog} onOpenChange={setShowTemplatesDialog}>
+        <DialogContent className="sm:max-w-[600px]">
+          <UserTemplates onSelectTemplate={handleSelectUserTemplate} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

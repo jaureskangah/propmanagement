@@ -20,7 +20,7 @@ export default {
   generatingPreview: "Génération de l'aperçu en cours...",
   templateLoaded: "Modèle chargé",
   templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
-  description: "Créez, gérez et partagez des documents importants pour votre gestion immobilière",
+  documentDescription: "Créez, gérez et partagez des documents importants pour votre gestion immobilière",
   document: "Document",
   pdfGenerationError: "Erreur lors de la génération du PDF",
   unknownError: "Erreur inconnue",
@@ -59,6 +59,7 @@ export default {
   tenantComplaint: "Plainte de locataire",
   propertyRules: "Règlement de l'immeuble",
   customDocument: "Document personnalisé",
+  mySavedTemplates: "Mes modèles enregistrés",
   
   // New translations for advanced editing features
   advancedEditing: "Édition avancée",
@@ -159,6 +160,7 @@ export default {
   templateNamePlaceholder: "Entrez un nom pour votre modèle",
   category: "Catégorie",
   selectCategory: "Sélectionner une catégorie",
+  templateDescription: "Description",
   templateDescriptionPlaceholder: "Décrivez brièvement votre modèle",
   saveTemplate: "Enregistrer le modèle",
   saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future"

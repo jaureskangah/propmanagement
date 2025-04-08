@@ -1,3 +1,4 @@
+
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -21,7 +22,7 @@ export default {
   generatingPreview: "Generating preview...",
   templateLoaded: "Template loaded",
   templateLoadedDescription: "Template content has been loaded successfully",
-  description: "Create, manage and share important documents for your property management",
+  documentDescription: "Create, manage and share important documents for your property management",
   
   // Document history related translations
   documentHistory: "Document History",
@@ -80,6 +81,7 @@ export default {
   deleteTemplate: "Delete Template",
   deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
   delete: "Delete",
+  mySavedTemplates: "My Saved Templates",
 
   // Dummy content for templates
   leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
@@ -139,5 +141,15 @@ export default {
   saveAsTemplate: "Save as Template",
   selectDocumentTemplate: "Select document template",
   generateDocument: "Generate Document",
-  templateLoadError: "Unable to load template content"
+  templateLoadError: "Unable to load template content",
+  
+  // Save template dialog
+  templateName: "Template Name",
+  templateNamePlaceholder: "Enter a name for your template",
+  category: "Category",
+  selectCategory: "Select a category",
+  templateDescription: "Description",
+  templateDescriptionPlaceholder: "Briefly describe your template",
+  saveTemplate: "Save Template",
+  saveAsTemplateDescription: "Save this document as a template for future use"
 };
