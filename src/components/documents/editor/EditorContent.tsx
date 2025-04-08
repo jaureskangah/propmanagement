@@ -48,7 +48,7 @@ export function EditorContent({
             onChange={onChange}
           />
         </div>
-        {rightSlot && (
+        {isAdvancedEditingEnabled && rightSlot && (
           <div className="mt-3">
             {rightSlot}
           </div>
