@@ -2,7 +2,7 @@
 import { useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { DocumentGenerator as DocGenerator } from "@/components/tenant/documents/DocumentGenerator";
+import { DocumentGeneratorWithProvider } from "@/components/tenant/documents/DocumentGenerator";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -52,7 +52,7 @@ const DocumentGenerator = () => {
             </div>
 
             <div className="pb-16 bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 rounded-xl shadow-sm">
-              <DocGenerator />
+              <DocumentGeneratorWithProvider />
             </div>
           </motion.div>
         </div>

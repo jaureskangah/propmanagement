@@ -11,6 +11,7 @@ import { DocumentPreview } from "@/components/documents/DocumentPreview";
 import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
 import { Loader2, Send, Download } from "lucide-react";
 import { useTenant } from "@/components/providers/TenantProvider";
+import { TenantProvider } from "@/components/providers/TenantProvider";
 
 export function DocumentGenerator() {
   const { t } = useLocale();
@@ -19,7 +20,16 @@ export function DocumentGenerator() {
   const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
   const [isSignatureDialogOpen, setIsSignatureDialogOpen] = useState(false);
-  const { tenant } = useTenant();
+  const [isGeneratingState, setIsGeneratingState] = useState(false);
+  
+  // Try to use TenantProvider context, but don't fail if it's not available
+  const tenantContext = (() => {
+    try {
+      return useTenant();
+    } catch (e) {
+      return { tenant: null };
+    }
+  })();
   
   const {
     content,
@@ -40,7 +50,7 @@ export function DocumentGenerator() {
     if (activeTab === "preview" && content && !previewUrl && !isGenerating && !previewError) {
       generatePreview();
     }
-  }, [activeTab]);
+  }, [activeTab, content, previewUrl, isGenerating, previewError, generatePreview]);
   
   const handleGenerateDocument = async () => {
     await generatePreview();
@@ -74,8 +84,8 @@ export function DocumentGenerator() {
           onSelectTemplate={handleTemplateChange}
           selectedTemplate={templateName}
           onGenerateContent={setContent}
-          setIsGenerating={setIsGenerating}
-          tenant={tenant}
+          setIsGenerating={setIsGeneratingState}
+          tenant={tenantContext.tenant}
         />
         
         <div className="flex gap-2">
@@ -122,9 +132,8 @@ export function DocumentGenerator() {
             onGeneratePreview={handleGenerateDocument}
             isGenerating={isGenerating}
             templateName={templateName}
-            tenant={tenant}
+            tenant={tenantContext.tenant}
             onOpenSaveTemplateDialog={() => setIsTemplateDialogOpen(true)}
-            placeholderText={t('documentGenerator.startTypingOrSelectTemplate')}
           />
           
           <div className="flex flex-wrap gap-3 mt-4">
@@ -170,7 +179,7 @@ export function DocumentGenerator() {
             onShare={handleShareDocument}
             previewError={previewError}
             onDownload={handleDownload}
-            tenant={tenant}
+            tenant={tenantContext.tenant}
           />
           
           <div className="flex flex-wrap gap-3 mt-4">
@@ -216,8 +225,17 @@ export function DocumentGenerator() {
         onContentChange={setContent}
         onInsertSignature={handleInsertSignature}
         templateName={templateName}
-        tenant={tenant}
+        tenant={tenantContext.tenant}
       />
     </div>
+  );
+}
+
+// Wrapper component to ensure TenantProvider is available
+export function DocumentGeneratorWithProvider() {
+  return (
+    <TenantProvider>
+      <DocumentGenerator />
+    </TenantProvider>
   );
 }

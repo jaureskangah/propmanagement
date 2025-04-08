@@ -11,12 +11,13 @@ import { Tenant } from "@/types/tenant";
 interface DocumentEditorProps {
   content: string;
   onContentChange: (content: string) => void;
-  onGeneratePreview: (content: string) => void;
+  onGeneratePreview: (content?: string) => void;
   isGenerating: boolean;
   templateName?: string;
   tenant?: Tenant | null;
   rightSlot?: ReactNode;
   onOpenSaveTemplateDialog?: () => void;
+  placeholderText?: string;
 }
 
 export function DocumentEditor({
@@ -27,7 +28,8 @@ export function DocumentEditor({
   templateName = "",
   tenant = null,
   rightSlot,
-  onOpenSaveTemplateDialog
+  onOpenSaveTemplateDialog,
+  placeholderText
 }: DocumentEditorProps) {
   // Gestion de l'état de l'éditeur
   const { handleChange } = useEditorState(content, onContentChange);
@@ -78,6 +80,7 @@ export function DocumentEditor({
         onInsertDynamicField={insertDynamicField}
         isAdvancedEditingEnabled={isAdvancedEditingEnabled}
         rightSlot={rightSlot}
+        placeholderText={placeholderText}
       />
       
       <EditorToolbar
@@ -105,6 +108,7 @@ export function DocumentEditor({
         onInsertSignature={insertSignature}
         templateName={templateName}
         onOpenSaveTemplateDialog={onOpenSaveTemplateDialog}
+        tenant={tenant}
       />
     </div>
   );

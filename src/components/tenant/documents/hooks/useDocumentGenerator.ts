@@ -15,7 +15,17 @@ export const useDocumentGenerator = () => {
   const [previewError, setPreviewError] = useState<string | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
-  const { tenant } = useTenant();
+  
+  // Try to use TenantProvider context, but don't fail if it's not available
+  const tenantContext = (() => {
+    try {
+      return useTenant();
+    } catch (e) {
+      return { tenant: null };
+    }
+  })();
+  
+  const { tenant } = tenantContext;
   const { handleDeleteDocument } = useDocumentActions(() => {});
 
   // Update content when template changes

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +11,7 @@ import { TenantCommunications } from "@/components/tenant/TenantCommunications";
 import { TenantMaintenance } from "@/components/tenant/TenantMaintenance";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import { TenantProvider } from "@/components/providers/TenantProvider";
 
 interface TenantTabsProps {
   tenant: Tenant;
@@ -146,7 +146,9 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
         
         <TabsContent value="documentGenerator" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className={cn("p-4 pt-6", isMobile ? "p-2 pt-4" : "")}>
-            <DocumentGenerator />
+            <TenantProvider>
+              <DocumentGenerator />
+            </TenantProvider>
           </CardContent>
         </TabsContent>
       </Tabs>
