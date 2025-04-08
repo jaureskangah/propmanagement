@@ -95,7 +95,11 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
         <TabsContent value="payments" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className="p-0">
-            <TenantPayments tenantId={tenant.id} />
+            <TenantPayments 
+              payments={tenant.paymentHistory || []} 
+              tenantId={tenant.id}
+              onPaymentUpdate={handleDataUpdate}
+            />
           </CardContent>
         </TabsContent>
 
@@ -114,7 +118,11 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
         <TabsContent value="maintenance" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className="p-0">
-            <TenantMaintenance tenantId={tenant.id} />
+            <TenantMaintenance 
+              requests={tenant.maintenanceRequests || []}
+              tenantId={tenant.id}
+              onMaintenanceUpdate={handleDataUpdate}
+            />
           </CardContent>
         </TabsContent>
         
