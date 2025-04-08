@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import { useTenantPage } from "@/hooks/useTenantPage";
 import { useIsMobile } from "@/hooks/use-mobile";
 import AppSidebar from "@/components/AppSidebar";
@@ -8,6 +7,7 @@ import { TenantModals } from "@/components/tenant/TenantModals";
 import { TenantsHeader } from "@/components/tenant/TenantsHeader";
 import { TenantsLoading } from "@/components/tenant/TenantsLoading";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 const Tenants = () => {
   const {
@@ -33,6 +33,7 @@ const Tenants = () => {
   } = useTenantPage();
   
   const isMobile = useIsMobile();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   if (isLoading) {
     return <TenantsLoading />;
@@ -40,8 +41,11 @@ const Tenants = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
+      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}

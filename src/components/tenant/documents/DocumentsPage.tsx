@@ -10,6 +10,7 @@ import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { useDocumentState } from "./hooks/useDocumentState";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const DocumentsPage = () => {
   const { user } = useAuth();
@@ -96,7 +97,13 @@ const DocumentsPage = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div ref={containerRef} className="flex-1 overflow-auto pt-24 md:pt-0">
+      <div 
+        ref={containerRef} 
+        className={cn(
+          "flex-1 overflow-auto pt-24 md:pt-0 transition-all duration-300",
+          sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+        )}
+      >
         <div className="container mx-auto p-4 md:p-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
