@@ -21,7 +21,7 @@ export default {
   generatingPreview: "Generating preview...",
   templateLoaded: "Template loaded",
   templateLoadedDescription: "Template content has been loaded successfully",
-  documentDescription: "Create, manage and share important documents for your property management",
+  description: "Create, manage and share important documents for your property management",
   
   // Document history related translations
   documentHistory: "Document History",
@@ -57,10 +57,6 @@ export default {
   propertyRules: "Property Rules",
   customDocument: "Custom Document",
   
-  // New translations for templates
-  standardTemplates: "Standard Templates",
-  myTemplates: "My Templates",
-  
   // New translations for advanced editing features
   advancedEditing: "Advanced Editing",
   bold: "Bold",
@@ -84,18 +80,6 @@ export default {
   deleteTemplate: "Delete Template",
   deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
   delete: "Delete",
-  cancel: "Cancel",
-  
-  // Template form
-  saveAsTemplate: "Save as Template",
-  saveAsTemplateDescription: "Save this document as a template for future use",
-  templateName: "Template Name",
-  templateNamePlaceholder: "Enter a name for your template",
-  category: "Category",
-  selectCategory: "Select a category",
-  templateDescription: "Description",
-  templateDescriptionPlaceholder: "Briefly describe your template",
-  saveTemplate: "Save Template",
 
   // Dummy content for templates
   leaseAgreementContent: "# LEASE AGREEMENT\n\nBetween the undersigned:\n\n**The Landlord**: [Landlord Name]\n\n**The Tenant**: [Tenant Name]\n\nThe following has been agreed upon:\n\n## ARTICLE 1 - PURPOSE OF THE CONTRACT\n\nThe Landlord leases to the Tenant who accepts, the accommodation designated hereafter.\n\n## ARTICLE 2 - DESCRIPTION OF THE ACCOMMODATION\n\n[Description of accommodation]",
@@ -128,6 +112,7 @@ export default {
   copyFailed: "Failed to copy link",
   noteTitle: "Note",
   usingDirectLink: "Using direct link - no expiration",
+  cancel: "Cancel",
   noFileToShare: "No file available to share",
 
   // Dynamic fields translations
@@ -151,6 +136,7 @@ export default {
   
   // AI Assistant
   aiAssistant: "AI Assistant",
+  saveAsTemplate: "Save as Template",
   selectDocumentTemplate: "Select document template",
   generateDocument: "Generate Document",
   templateLoadError: "Unable to load template content"
