@@ -14,8 +14,7 @@ import {
   CreditCard,
   FileText,
   User,
-  DollarSign,
-  File
+  DollarSign
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -45,11 +44,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/tenant/payments",
       icon: CreditCard,
       label: t('payments'),
-    },
-    {
-      href: "/tenant/documents",
-      icon: FileText,
-      label: t('documents'),
     },
     {
       href: "/tenant/maintenance",
@@ -97,7 +91,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     },
     {
       href: "/documents",
-      icon: File,
+      icon: FileText,
       label: t('documents'),
     },
     {
