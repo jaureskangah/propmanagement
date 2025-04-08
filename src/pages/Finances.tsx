@@ -11,11 +11,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
+import { cn } from "@/lib/utils";
 
 const Finances = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const { t } = useLocale();
   const isMobile = useIsMobile();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   const { data: properties, isLoading: isLoadingProperties } = useQuery({
     queryKey: ["properties"],
@@ -32,8 +34,11 @@ const Finances = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
+      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
