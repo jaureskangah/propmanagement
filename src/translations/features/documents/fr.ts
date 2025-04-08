@@ -159,7 +159,6 @@ export default {
   templateNamePlaceholder: "Entrez un nom pour votre modèle",
   category: "Catégorie",
   selectCategory: "Sélectionner une catégorie",
-  description: "Description",
   templateDescriptionPlaceholder: "Décrivez brièvement votre modèle",
   saveTemplate: "Enregistrer le modèle",
   saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future"
