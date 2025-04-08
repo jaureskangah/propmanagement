@@ -40,7 +40,7 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           name,
           email,
           property_id,
-          properties:property_id(name),
+          properties:property_id (name),
           unit_number,
           phone,
           lease_start,
@@ -62,7 +62,27 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
       
       if (data) {
-        setTenant(data as Tenant);
+        // Transform the data to match our Tenant type
+        const tenantData: Tenant = {
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          property_id: data.property_id,
+          properties: data.properties, // This should be an object with a name property, not an array
+          unit_number: data.unit_number,
+          phone: data.phone,
+          lease_start: data.lease_start,
+          lease_end: data.lease_end,
+          rent_amount: data.rent_amount,
+          security_deposit: data.security_deposit,
+          payment_due_day: data.payment_due_day,
+          emergency_contact: data.emergency_contact,
+          emergency_phone: data.emergency_phone,
+          notes: data.notes,
+          tenant_profile_id: data.tenant_profile_id
+        };
+        
+        setTenant(tenantData);
       } else {
         setTenant(null);
       }
