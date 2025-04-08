@@ -77,7 +77,7 @@ export function DynamicFieldsMenu({ onInsertField, title }: DynamicFieldsMenuPro
         >
           <Variable className="h-4 w-4 text-violet-600" />
           <span className="hidden md:inline text-sm">
-            {t('documentGenerator.dynamicFields') || t('documentGenerator.fields') || "Champs dynamiques"}
+            {"Champs dynamiques"}
           </span>
         </Button>
       </PopoverTrigger>
