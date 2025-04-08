@@ -1,3 +1,4 @@
+
 export const enDocuments = {
   documents: "Documents",
   documentsSubtitle: "Manage all your documents",
@@ -60,7 +61,6 @@ export const enDocuments = {
   property: "Property",
   propertyName: "Property name",
   propertyAddress: "Property address",
-  lease: "Lease",
   leaseStart: "Lease start",
   leaseEnd: "Lease end",
   rentAmount: "Rent amount",

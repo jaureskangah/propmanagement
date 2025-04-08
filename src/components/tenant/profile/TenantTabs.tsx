@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentGenerator } from "@/components/tenant/documents/DocumentGenerator";
-import { DocumentIcon, MessageSquare, Files, Wrench, FileText } from "lucide-react";
+import { MessageSquare, Files, Wrench, FileText } from "lucide-react";
 import { Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantDocuments } from "@/components/tenant/TenantDocuments";
@@ -20,6 +20,20 @@ interface TenantTabsProps {
 export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTabsProps) => {
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState('documents');
+  
+  // Handle communication toggle status
+  const handleToggleStatus = (comm: any) => {
+    console.log("Toggle status for communication:", comm.id);
+    // Implementation would depend on your API
+    handleDataUpdate();
+  };
+  
+  // Handle communication deletion
+  const handleDeleteCommunication = (comm: any) => {
+    console.log("Delete communication:", comm.id);
+    // Implementation would depend on your API
+    handleDataUpdate();
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -38,7 +52,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
               className="inline-flex items-center justify-center rounded-sm px-3 py-1.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-foreground data-[state=active]:shadow-none"
               value="payments"
             >
-              <DocumentIcon className="mr-2 h-4 w-4" />
+              <FileText className="mr-2 h-4 w-4" />
               {t('payments')}
             </TabsTrigger>
 
@@ -70,25 +84,37 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
         <TabsContent value="documents" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className="p-0">
-            <TenantDocuments tenant={tenant} />
+            <TenantDocuments 
+              documents={tenant.documents} 
+              tenantId={tenant.id}
+              onDocumentUpdate={handleDataUpdate}
+              tenant={tenant}
+            />
           </CardContent>
         </TabsContent>
 
         <TabsContent value="payments" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className="p-0">
-            <TenantPayments tenant={tenant} />
+            <TenantPayments tenantId={tenant.id} />
           </CardContent>
         </TabsContent>
 
         <TabsContent value="communications" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className="p-0">
-            <TenantCommunications tenant={tenant} />
+            <TenantCommunications 
+              communications={tenant.communications} 
+              tenantId={tenant.id}
+              onCommunicationUpdate={handleDataUpdate}
+              onToggleStatus={handleToggleStatus}
+              onDeleteCommunication={handleDeleteCommunication}
+              tenant={tenant}
+            />
           </CardContent>
         </TabsContent>
 
         <TabsContent value="maintenance" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className="p-0">
-            <TenantMaintenance tenant={tenant} />
+            <TenantMaintenance tenantId={tenant.id} />
           </CardContent>
         </TabsContent>
         
