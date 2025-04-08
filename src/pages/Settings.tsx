@@ -14,6 +14,7 @@ import { LanguageSection } from "@/components/settings/LanguageSection";
 import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 export default function Settings() {
   const { user } = useAuth();
@@ -65,13 +66,16 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className="flex-1 overflow-y-auto pt-20 md:pt-0 md:ml-[270px] md:w-[calc(100%-270px)]">
-        <div className="container p-4 pb-16 max-w-5xl mx-auto">
+      <div className={cn(
+        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
+        <div className="container max-w-5xl mx-auto">
           <SettingsPageHeader userEmail={user?.email} />
 
-          <div className="space-y-8">
+          <div className="space-y-8 pb-16">
             <ProfileSection
               profile={profile}
               isLoading={isLoading}
