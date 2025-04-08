@@ -25,5 +25,17 @@
       width: 100% !important;
       margin-bottom: 0.5rem !important;
     }
+
+    .mobile-tabs-scroll {
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      flex-wrap: nowrap !important;
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+    
+    .mobile-tabs-scroll::-webkit-scrollbar {
+      display: none !important;
+    }
   }
 }

@@ -75,7 +75,7 @@ export const TenantCard = ({
   return (
     <Card
       className={cn(
-        "cursor-pointer transition-all duration-200 hover:bg-accent/40 group",
+        "cursor-pointer transition-all duration-200 hover:bg-accent/40 group flex-shrink-0 w-[320px]",
         isSelected ? "border-primary/70 shadow-md ring-1 ring-primary/30" : "hover:shadow-sm",
       )}
       onClick={() => onSelect(tenant.id)}

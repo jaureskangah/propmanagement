@@ -26,10 +26,10 @@ export const VirtualizedTenantList = ({
     if (!listRef.current) return;
     
     const element = listRef.current;
-    const scrollBottom = element.scrollTop + element.clientHeight;
-    const scrollThreshold = element.scrollHeight - 300;
+    const scrollRight = element.scrollLeft + element.clientWidth;
+    const scrollThreshold = element.scrollWidth - 300;
     
-    if (scrollBottom >= scrollThreshold && visibleCount < tenants.length) {
+    if (scrollRight >= scrollThreshold && visibleCount < tenants.length) {
       setVisibleCount(prev => Math.min(prev + 3, tenants.length));
     }
   }, [tenants.length, visibleCount]);
@@ -44,13 +44,14 @@ export const VirtualizedTenantList = ({
   
   // Reset visible count when tenants change
   useEffect(() => {
-    setVisibleCount(Math.min(5, tenants.length));
+    setVisibleCount(Math.min(10, tenants.length));
   }, [tenants]);
   
   return (
     <div 
-      className="space-y-3 pb-6 max-h-[calc(100vh-240px)] overflow-y-auto" 
+      className="flex gap-3 pb-6 overflow-x-auto" 
       ref={listRef}
+      style={{ scrollbarWidth: 'thin' }}
     >
       {tenants.slice(0, visibleCount).map((tenant, index) => (
         <TenantListItem
@@ -65,9 +66,9 @@ export const VirtualizedTenantList = ({
       ))}
       
       {visibleCount < tenants.length && (
-        <div className="space-y-3">
+        <div className="flex gap-3">
           {[...Array(Math.min(2, tenants.length - visibleCount))].map((_, index) => (
-            <Skeleton key={index} className="h-36 w-full rounded-md" />
+            <Skeleton key={index} className="h-64 w-[320px] rounded-md flex-shrink-0" />
           ))}
         </div>
       )}

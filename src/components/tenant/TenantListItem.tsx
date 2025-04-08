@@ -20,7 +20,7 @@ export const TenantListItem = ({
   onDelete,
   index
 }: TenantListItemProps) => {
-  const [isVisible, setIsVisible] = useState(index < 3);
+  const [isVisible, setIsVisible] = useState(index < 5);
   
   // Delayed rendering for better initial load performance
   useEffect(() => {
