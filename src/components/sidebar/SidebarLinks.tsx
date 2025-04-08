@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   MessageCircle,
   CreditCard,
-  FileText,
   User,
   DollarSign
 } from "lucide-react";
@@ -88,11 +87,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/finances",
       icon: DollarSign,
       label: t('finances'),
-    },
-    {
-      href: "/documents",
-      icon: FileText,
-      label: t('documents'),
     },
     {
       href: "/settings",

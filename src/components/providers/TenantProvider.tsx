@@ -70,13 +70,13 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         let propertyName = '';
         if (data.properties) {
           // If properties is an object with a name property
-          if (typeof data.properties === 'object' && 'name' in data.properties) {
-            propertyName = data.properties.name as string;
+          if (typeof data.properties === 'object' && data.properties !== null && 'name' in data.properties) {
+            propertyName = (data.properties as { name: string }).name;
           } 
           // If properties is an array and has items
           else if (Array.isArray(data.properties) && data.properties.length > 0) {
-            const firstProperty = data.properties[0] as { name?: string };
-            propertyName = firstProperty.name || '';
+            const firstProperty = data.properties[0] as { name?: string } | undefined;
+            propertyName = firstProperty?.name || '';
           }
         }
 

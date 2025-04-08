@@ -15,7 +15,6 @@ import Finances from './pages/Finances';
 import AddTenant from './pages/AddTenant';
 import TenantDashboardPage from './pages/tenant/TenantDashboard';
 import AuthPage from './pages/AuthPage';
-import Documents from './pages/Documents';
 import DocumentHistory from './pages/DocumentHistory';
 import DocumentGenerator from './pages/DocumentGenerator';
 import Tenants from './pages/Tenants';
@@ -47,7 +46,6 @@ function App() {
       <Route path="/edit-task/:id" element={isAuthenticated ? <EditTask /> : <Navigate to="/login" />} />
       <Route path="/finances" element={isAuthenticated ? <Finances /> : <Navigate to="/login" />} />
       <Route path="/add-tenant" element={isAuthenticated ? <AddTenant /> : <Navigate to="/login" />} />
-      <Route path="/documents" element={isAuthenticated ? <Documents /> : <Navigate to="/login" />} />
       <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
       <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
       <Route path="/tenants" element={isAuthenticated ? <Tenants /> : <Navigate to="/login" />} />
