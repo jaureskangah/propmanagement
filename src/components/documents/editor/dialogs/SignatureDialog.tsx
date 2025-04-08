@@ -120,10 +120,10 @@ export function SignatureDialog({ isOpen, onClose, onSave }: SignatureDialogProp
   const customFooter = (
     <div className="flex justify-between w-full">
       <Button variant="outline" onClick={clearCanvas} type="button">
-        {t('clear') || "Effacer"}
+        {t('clear')}
       </Button>
       <Button onClick={handleSave}>
-        {t('saveSignature') || "Enregistrer la signature"}
+        {t('saveSignature')}
       </Button>
     </div>
   );
@@ -132,7 +132,7 @@ export function SignatureDialog({ isOpen, onClose, onSave }: SignatureDialogProp
     <BaseDialog
       isOpen={isOpen}
       onClose={onClose}
-      title={t('addSignature') || "Ajouter une signature"}
+      title={t('addSignature')}
       footer={customFooter}
       size="md"
       showCancelButton={false}

@@ -92,9 +92,19 @@ export function DocumentEditor({
       />
 
       <DialogManager 
-        editorContent={content}
-        documentName={templateName}
-        handleInsertText={insertTextAtCursor}
+        isAIDialogOpen={isAIDialogOpen}
+        setIsAIDialogOpen={setIsAIDialogOpen}
+        isShareDialogOpen={isShareDialogOpen}
+        setIsShareDialogOpen={setIsShareDialogOpen}
+        isSaveTemplateDialogOpen={isSaveTemplateDialogOpen}
+        setIsSaveTemplateDialogOpen={setIsSaveTemplateDialogOpen}
+        isSignatureDialogOpen={isSignatureDialogOpen}
+        setIsSignatureDialogOpen={setIsSignatureDialogOpen}
+        content={content}
+        onContentChange={onContentChange}
+        onInsertSignature={insertSignature}
+        templateName={templateName}
+        onOpenSaveTemplateDialog={onOpenSaveTemplateDialog}
       />
     </div>
   );

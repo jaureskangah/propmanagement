@@ -1,96 +1,87 @@
-
 export interface Tenant {
   id: string;
   name: string;
-  email: string | null;
-  property_id: string;
-  properties: {
+  email: string;
+  phone: string | null;
+  property_id: string | null;
+  properties?: {
     name: string;
   };
-  unit_number: string | null;
-  phone: string | null;
-  lease_start: string | null; // ISO date string
-  lease_end: string | null; // ISO date string
-  rent_amount: number | null;
-  security_deposit: number | null;
-  payment_due_day: number | null;
-  emergency_contact: string | null;
-  emergency_phone: string | null;
-  notes: string | null;
+  unit_number: string;
+  lease_start: string;
+  lease_end: string;
+  rent_amount: number;
+  user_id: string;
+  created_at: string;
+  updated_at: string;
   tenant_profile_id: string | null;
-  documents?: TenantDocument[];
-  paymentHistory?: TenantPayment[];
-  maintenanceRequests?: MaintenanceRequest[];
-  communications?: Communication[];
+  documents: TenantDocument[];
+  paymentHistory: TenantPayment[];
+  maintenanceRequests: MaintenanceRequest[];
+  communications: Communication[];
+  avatar_url?: string;
+  security_deposit?: number | null;
+  notes?: string | null;
 }
 
 export interface TenantDocument {
   id: string;
-  tenant_id: string;
   name: string;
-  type: string;
-  document_type: string; // Added this field
-  category: string;
-  file_url: string;
+  file_url?: string;
   created_at: string;
-  updated_at: string;
-  size?: number;
-  status?: string;
+  uploaded_at?: string;
+  document_type?: 'lease' | 'receipt' | 'other';
+  tenant_id?: string;
+  category?: string;
 }
 
 export interface TenantPayment {
   id: string;
-  tenant_id: string;
   amount: number;
-  date: string;
-  payment_date: string; // Added this field
   status: string;
-  type: string;
-  description?: string; // Added this field
-  notes?: string;
-  reference_number?: string;
+  payment_date: string;
+  created_at: string;
+  description?: string;
+  date?: string;
 }
-
-// Renamed from Payment to avoid conflicts
-export type Payment = TenantPayment;
 
 export interface MaintenanceRequest {
   id: string;
-  tenant_id: string;
-  title: string;
-  description: string;
-  issue: string; // Added this field
+  issue: string;
   status: string;
-  priority: string;
-  category: string;
   created_at: string;
+  tenant_notified?: boolean;
+  description?: string;
+  priority: string;
   updated_at: string;
-  tenant_notified?: boolean; // Added this field
-  tenant_feedback?: string; // Added this field
-  tenant_rating?: number; // Added this field
-  deadline?: string; // Added this field
+  deadline?: string;
   photos?: string[];
-  scheduled_date?: string;
-  completed_date?: string;
-  assigned_to?: string;
+  tenant_feedback?: string;
+  tenant_rating?: number;
+  tenant_id?: string;
+  status_history?: {
+    status: string;
+    date: string;
+    comments?: string;
+  }[];
 }
 
 export interface Communication {
   id: string;
-  tenant_id: string;
+  type: string; // 'message', 'email', 'notification'
   subject: string;
-  message: string;
-  content?: string; // Added this field
-  sender_id: string;
-  sender_type: 'tenant' | 'owner' | 'system';
-  read_status: boolean;
-  status: string; // Added this field
-  category: string; // Added this field
-  type: string; // Added this field
-  is_from_tenant?: boolean; // Added this field
-  parent_id?: string; // Added this field
+  content?: string;
   created_at: string;
-  updated_at: string;
+  status: string; // 'read', 'unread'
+  category: string; // 'general', 'maintenance', 'urgent', 'payment'
   attachments?: string[];
-  important?: boolean;
+  parent_id?: string;
+  is_from_tenant?: boolean;
+  resolved_at?: string;
+  tenant_notified?: boolean;
+  tenant_id?: string;
 }
+
+// Pour la compatibilité avec les composants existants
+export type Document = TenantDocument;
+export type Payment = TenantPayment;

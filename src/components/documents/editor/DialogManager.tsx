@@ -1,58 +1,84 @@
 
-import { useState } from "react";
-import { ShareDocumentDialog } from "./dialogs/ShareDocumentDialog";
-import { useTenantContext } from "@/components/providers/TenantProvider";
-import { AIAssistantDialog, SaveTemplateDialog, SignatureDialog } from "./dialogs";
+import { Tenant } from "@/types/tenant";
+import {
+  AIAssistantDialog,
+  ShareDocumentDialog,
+  SaveTemplateDialog,
+  SignatureDialog
+} from "./dialogs";
 
 interface DialogManagerProps {
-  editorContent: string;
-  documentName?: string;
-  handleInsertText: (text: string) => void;
+  isAIDialogOpen: boolean;
+  setIsAIDialogOpen: (isOpen: boolean) => void;
+  isShareDialogOpen: boolean;
+  setIsShareDialogOpen: (isOpen: boolean) => void;
+  isSaveTemplateDialogOpen: boolean;
+  setIsSaveTemplateDialogOpen: (isOpen: boolean) => void;
+  isSignatureDialogOpen: boolean;
+  setIsSignatureDialogOpen: (isOpen: boolean) => void;
+  content: string;
+  onContentChange: (content: string) => void;
+  onInsertSignature: (signatureDataUrl: string) => void;
+  templateName?: string;
+  tenant?: Tenant | null;
+  onOpenSaveTemplateDialog?: () => void;
 }
 
-export function DialogManager({ 
-  editorContent, 
-  documentName, 
-  handleInsertText 
+export function DialogManager({
+  isAIDialogOpen,
+  setIsAIDialogOpen,
+  isShareDialogOpen,
+  setIsShareDialogOpen,
+  isSaveTemplateDialogOpen,
+  setIsSaveTemplateDialogOpen,
+  isSignatureDialogOpen,
+  setIsSignatureDialogOpen,
+  content,
+  onContentChange,
+  onInsertSignature,
+  templateName = "",
+  onOpenSaveTemplateDialog
 }: DialogManagerProps) {
-  const [aiDialogOpen, setAiDialogOpen] = useState(false);
-  const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  const [saveDialogOpen, setSaveDialogOpen] = useState(false);
-  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
-  const { tenant } = useTenantContext();
-  
-  // Récupérer l'email du locataire s'il existe
-  const tenantEmail = tenant?.email || "";
+  // Gérer la fermeture des différents dialogues
+  const handleCloseAIDialog = () => setIsAIDialogOpen(false);
+  const handleCloseShareDialog = () => setIsShareDialogOpen(false);
+  const handleCloseSaveTemplateDialog = () => setIsSaveTemplateDialogOpen(false);
+  const handleCloseSignatureDialog = () => setIsSignatureDialogOpen(false);
 
   return (
     <>
+      {/* AI Assistant Dialog */}
       <AIAssistantDialog 
-        isOpen={aiDialogOpen} 
-        onClose={() => setAiDialogOpen(false)} 
-        onGenerate={handleInsertText}
-        content={editorContent}
-        templateName={documentName}
+        isOpen={isAIDialogOpen}
+        onClose={handleCloseAIDialog}
+        onGenerate={onContentChange}
+        content={content}
+        templateName={templateName}
+      />
+
+      {/* Share Document Dialog */}
+      <ShareDocumentDialog
+        isOpen={isShareDialogOpen}
+        onClose={handleCloseShareDialog}
+        content={content}
+        templateName={templateName}
       />
       
-      <ShareDocumentDialog 
-        isOpen={shareDialogOpen} 
-        onClose={() => setShareDialogOpen(false)} 
-        content={editorContent}
-        templateName={documentName}
-        tenantEmail={tenantEmail}
-      />
+      {/* Save Template Dialog - Only shown if not using parent's dialog */}
+      {!onOpenSaveTemplateDialog && (
+        <SaveTemplateDialog
+          isOpen={isSaveTemplateDialogOpen}
+          onClose={handleCloseSaveTemplateDialog}
+          content={content}
+          templateName={templateName}
+        />
+      )}
       
-      <SaveTemplateDialog 
-        isOpen={saveDialogOpen} 
-        onClose={() => setSaveDialogOpen(false)} 
-        content={editorContent}
-        templateName={documentName}
-      />
-      
-      <SignatureDialog 
-        isOpen={signatureDialogOpen} 
-        onClose={() => setSignatureDialogOpen(false)} 
-        onSave={handleInsertText}
+      {/* Signature Dialog */}
+      <SignatureDialog
+        isOpen={isSignatureDialogOpen}
+        onClose={handleCloseSignatureDialog}
+        onSave={onInsertSignature}
       />
     </>
   );
