@@ -7,6 +7,7 @@ import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DateRange } from "@/components/dashboard/DashboardDateFilter";
+import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
   const { isAuthenticated, loading, user } = useAuth();
@@ -15,6 +16,7 @@ const Dashboard = () => {
     startDate: new Date(),
     endDate: new Date()
   });
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleDateRangeChange = (newDateRange: DateRange) => {
     console.log("Dashboard page received date range:", newDateRange);
@@ -52,10 +54,13 @@ const Dashboard = () => {
   console.log("Rendering owner dashboard");
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <div className="p-6 md:p-8 pt-24 md:pt-8 md:ml-[270px]">
+      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
         <DashboardHeader 
-          title={t('dashboard')} // Use translation for title
+          title={t('dashboard')}
           onDateRangeChange={handleDateRangeChange}
         />
         <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
