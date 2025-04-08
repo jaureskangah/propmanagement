@@ -18,7 +18,6 @@ const Maintenance = () => {
         "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
         sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
       )}>
-        <h1 className="text-3xl font-bold mb-8">Maintenance</h1>
         {isTenantUser ? (
           <TenantUserContainer />
         ) : (
