@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Send, Loader2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -8,24 +8,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { BaseDialog } from "./BaseDialog";
+import type { Tenant } from "@/types/tenant";
 
 interface ShareDocumentDialogProps {
   isOpen: boolean;
   onClose: () => void;
   content: string;
   templateName?: string;
+  tenant?: Tenant | null;
 }
 
 export function ShareDocumentDialog({
   isOpen,
   onClose,
   content,
-  templateName = ""
+  templateName = "",
+  tenant = null
 }: ShareDocumentDialogProps) {
   const { t } = useLocale();
   const { toast } = useToast();
   const [recipientEmail, setRecipientEmail] = useState("");
   const [isSending, setIsSending] = useState(false);
+
+  // Pre-fill tenant email when available and dialog opens
+  useEffect(() => {
+    if (isOpen && tenant?.email) {
+      setRecipientEmail(tenant.email);
+    }
+  }, [isOpen, tenant]);
 
   const handleShareDocument = async () => {
     if (!recipientEmail || !content) {
