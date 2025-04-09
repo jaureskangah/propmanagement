@@ -39,12 +39,6 @@ export const NavLinks = ({
         icon={<DollarSign size={18} />}
         label={t('pricing')}
       />
-      <NavLink 
-        scrolled={scrolled} 
-        onClick={() => onSectionClick('contact')}
-        icon={<Mail size={18} />}
-        label={t('contact')}
-      />
 
       <LanguageSelector />
       
