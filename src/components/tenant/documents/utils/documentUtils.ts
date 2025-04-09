@@ -113,7 +113,6 @@ export const deleteDocument = async (documentId: string, onSuccess: () => void, 
  * Récupère l'URL du document directement depuis Supabase Storage
  */
 export const getStorageUrl = (tenantId: string, fileName: string): string => {
-  // Construction directe de l'URL 
   return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${fileName}`;
 };
 
@@ -123,7 +122,7 @@ export const getStorageUrl = (tenantId: string, fileName: string): string => {
 export const ensureDocumentUrl = async (document: any) => {
   if (!document) return null;
   
-  // Si l'URL est déjà définie, la retourner
+  // Si l'URL est déjà définie et valide, la retourner
   if (document.file_url && document.file_url !== "undefined" && document.file_url !== "null") {
     console.log("Document has valid URL:", document.file_url);
     return document;

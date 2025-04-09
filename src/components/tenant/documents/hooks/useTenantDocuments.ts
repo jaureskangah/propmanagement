@@ -44,6 +44,8 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       
       // Process each document to ensure it has a URL
       const processedDocs = await Promise.all(data.map(async (doc) => {
+        console.log("Processing document:", doc.id, doc.name);
+        
         // Set tenant_id if not present, needed for URL generation
         if (!doc.tenant_id) {
           doc.tenant_id = id;
@@ -51,10 +53,11 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         
         // Ensure document has a valid URL
         const docWithUrl = await ensureDocumentUrl(doc);
+        console.log("Document after URL processing:", docWithUrl?.id, docWithUrl?.name, "URL:", docWithUrl?.file_url);
         return docWithUrl;
       }));
       
-      console.log("Processed documents with URLs:", processedDocs);
+      console.log("Processed documents with URLs:", processedDocs.length);
       setDocuments(processedDocs);
     } catch (err: any) {
       console.error('Error fetching documents:', err);

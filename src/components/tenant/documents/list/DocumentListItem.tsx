@@ -22,7 +22,9 @@ export const DocumentListItem = ({
   const { t } = useLocale();
   const { toast } = useToast();
 
-  const handleDownload = async () => {
+  const handleDownload = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
     console.log("Download button clicked in DocumentListItem");
     console.log("Document:", document);
     console.log("Document URL:", document?.file_url);
@@ -41,7 +43,9 @@ export const DocumentListItem = ({
     toast(result);
   };
 
-  const handleOpenInNewTab = () => {
+  const handleOpenInNewTab = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    
     console.log("Open in new tab button clicked in DocumentListItem");
     console.log("Document:", document);
     console.log("Document URL:", document?.file_url);
