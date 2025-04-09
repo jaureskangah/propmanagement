@@ -26,14 +26,47 @@ export const TenantDocuments = ({
   const { toast } = useToast();
   const { t } = useLocale();
 
-  const handleDownload = (url: string, filename: string) => {
+  const handleDownload = async (url: string, filename: string) => {
     console.log("Downloading document:", filename, "from URL:", url);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    
+    try {
+      // Utiliser fetch pour récupérer le contenu du fichier
+      const response = await fetch(url);
+      
+      // Vérifier si la réponse est OK
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      
+      // Convertir la réponse en Blob avec le type MIME approprié
+      const contentType = response.headers.get('content-type') || '';
+      const blob = await response.blob();
+      
+      // Créer une URL d'objet à partir du blob
+      const objectUrl = window.URL.createObjectURL(
+        new Blob([blob], { type: contentType })
+      );
+      
+      // Créer un lien temporaire pour le téléchargement
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = filename;
+      
+      // Ajouter le lien au document, cliquer dessus, puis le retirer
+      document.body.appendChild(link);
+      link.click();
+      
+      // Nettoyer
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(objectUrl);
+    } catch (error) {
+      console.error("Erreur lors du téléchargement du document:", error);
+      toast({
+        title: t("error"),
+        description: t("uploadError"),
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async (documentId: string, filename: string) => {
