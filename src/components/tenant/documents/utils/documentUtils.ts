@@ -67,10 +67,16 @@ export const downloadDocument = async (url: string | undefined, filename: string
   }
 };
 
-export const openDocumentInNewTab = (url: string | undefined) => {
+export const openDocumentInNewTab = (url: string | undefined, t: (key: string) => string) => {
+  console.log("Opening document in new tab. URL:", url);
+  
   if (!url) {
     console.error("URL is undefined, cannot open document");
-    return;
+    return {
+      title: t("error") || "Error",
+      description: t("documentUrlMissing") || "Document URL is missing",
+      variant: "destructive" as const
+    };
   }
   
   try {
@@ -78,8 +84,14 @@ export const openDocumentInNewTab = (url: string | undefined) => {
     const urlWithTimestamp = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
     console.log("Opening URL in new tab:", urlWithTimestamp);
     window.open(urlWithTimestamp, '_blank');
+    return null; // No toast message needed on success
   } catch (error) {
     console.error("Error opening document in new tab:", error);
+    return {
+      title: t("error") || "Error",
+      description: t("browserOpenError") || "An error occurred while opening the document",
+      variant: "destructive" as const
+    };
   }
 };
 

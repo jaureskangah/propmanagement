@@ -4,6 +4,7 @@ import { PdfViewer } from "@/components/documents/PdfViewer";
 import { Button } from "@/components/ui/button";
 import { openDocumentInNewTab } from "../utils/documentUtils";
 import { TenantDocument } from "@/types/tenant";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentViewerContentProps {
   document: TenantDocument;
@@ -15,6 +16,7 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
   const [isImage, setIsImage] = useState(false);
   const [isPdf, setIsPdf] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     console.log("DocumentViewerContent - Document:", document);
@@ -39,7 +41,20 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
   }, [document]);
 
   const handleOpenInNewTab = () => {
-    openDocumentInNewTab(document.file_url);
+    if (!document.file_url) {
+      console.error("Document URL is undefined in DocumentViewerContent handleOpenInNewTab");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const result = openDocumentInNewTab(document.file_url, t);
+    if (result) {
+      toast(result);
+    }
   };
 
   return (

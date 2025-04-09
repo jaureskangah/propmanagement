@@ -5,6 +5,7 @@ import { Download, ExternalLink, Trash2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { QuickPreview } from "./QuickPreview";
 import { useToast } from "@/hooks/use-toast";
+import { downloadDocument, openDocumentInNewTab } from "../utils/documentUtils";
 
 interface DocumentActionsProps {
   document: TenantDocument;
@@ -20,10 +21,11 @@ export const DocumentActions = ({
   const { t } = useLocale();
   const { toast } = useToast();
 
-  const handleDownload = (e: React.MouseEvent) => {
+  const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    
     if (!documentItem.file_url) {
-      console.error("Document URL is undefined");
+      console.error("Document URL is undefined in DocumentActions handleDownload");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",
@@ -32,23 +34,17 @@ export const DocumentActions = ({
       return;
     }
     
-    // Create a temporary link element
-    const link = window.document.createElement('a');
-    link.href = documentItem.file_url;
-    link.download = documentItem.name || 'document';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    
-    // Append to the document, click it, and remove it
-    window.document.body.appendChild(link);
-    link.click();
-    window.document.body.removeChild(link);
+    const result = await downloadDocument(documentItem.file_url, documentItem.name || 'document', t);
+    if (result) {
+      toast(result);
+    }
   };
 
   const handleOpenInTab = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
     if (!documentItem.file_url) {
-      console.error("Document URL is undefined");
+      console.error("Document URL is undefined in DocumentActions handleOpenInTab");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",
@@ -57,9 +53,10 @@ export const DocumentActions = ({
       return;
     }
     
-    // Add timestamp to prevent caching issues
-    const urlWithTimestamp = `${documentItem.file_url}${documentItem.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
-    window.open(urlWithTimestamp, '_blank');
+    const result = openDocumentInNewTab(documentItem.file_url, t);
+    if (result) {
+      toast(result);
+    }
   };
 
   return (

@@ -24,7 +24,7 @@ export const DocumentListItem = ({
 
   const handleDownload = async () => {
     if (!document.file_url) {
-      console.error("Document URL is undefined");
+      console.error("Document URL is undefined in DocumentListItem handleDownload");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",
@@ -41,7 +41,7 @@ export const DocumentListItem = ({
 
   const handleOpenInNewTab = () => {
     if (!document.file_url) {
-      console.error("Document URL is undefined");
+      console.error("Document URL is undefined in DocumentListItem handleOpenInNewTab");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",
@@ -50,7 +50,10 @@ export const DocumentListItem = ({
       return;
     }
     
-    openDocumentInNewTab(document.file_url);
+    const result = openDocumentInNewTab(document.file_url, t);
+    if (result) {
+      toast(result);
+    }
   };
 
   return (
