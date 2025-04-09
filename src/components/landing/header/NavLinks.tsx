@@ -39,21 +39,9 @@ export const NavLinks = ({
       />
       <NavLink 
         scrolled={scrolled} 
-        onClick={() => onSectionClick('how-it-works')}
-        icon={<BookOpen size={18} />}
-        label={t('howItWorks')}
-      />
-      <NavLink 
-        scrolled={scrolled} 
         onClick={() => onSectionClick('pricing')}
         icon={<DollarSign size={18} />}
         label={t('pricing')}
-      />
-      <NavLink 
-        scrolled={scrolled} 
-        onClick={() => onSectionClick('faq')}
-        icon={<HelpCircle size={18} />}
-        label={t('faq')}
       />
       <NavLink 
         scrolled={scrolled} 
