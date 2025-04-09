@@ -1,11 +1,18 @@
 
 import { supabase } from "@/lib/supabase";
-import { Toast } from "@/components/ui/toast";
+import { ToastProps } from "@/components/ui/toast";
+
+// Define the correct return type for our toast functions
+type ToastReturn = {
+  title: string;
+  description: string;
+  variant?: "default" | "destructive";
+};
 
 /**
  * Télécharge un document à partir de son URL
  */
-export const downloadDocument = async (fileUrl: string | undefined | null, fileName: string, t: (key: string) => string): Promise<Toast> => {
+export const downloadDocument = async (fileUrl: string | undefined | null, fileName: string, t: (key: string) => string): Promise<ToastReturn> => {
   console.log("downloadDocument called with URL:", fileUrl);
   
   if (!fileUrl) {
@@ -64,7 +71,7 @@ export const downloadDocument = async (fileUrl: string | undefined | null, fileN
 /**
  * Ouvre un document dans un nouvel onglet
  */
-export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key: string) => string): Toast => {
+export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key: string) => string): ToastReturn => {
   console.log("openDocumentInNewTab called with URL:", fileUrl);
   
   if (!fileUrl) {
@@ -100,7 +107,7 @@ export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key
 /**
  * Supprime un document
  */
-export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string): Promise<Toast> => {
+export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string): Promise<ToastReturn> => {
   try {
     // Supprimer le document de la base de données
     const { error } = await supabase
