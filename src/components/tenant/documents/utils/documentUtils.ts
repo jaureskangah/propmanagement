@@ -25,34 +25,12 @@ export const downloadDocument = async (fileUrl: string | undefined | null, fileN
   }
 
   try {
-    // Vérification que l'URL est valide
-    const url = new URL(fileUrl);
+    // Simplification: utiliser directement l'API window.open pour télécharger
+    const downloadWindow = window.open(fileUrl, '_blank');
     
-    // Fetch le fichier
-    const response = await fetch(fileUrl);
-    
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status}`);
+    if (!downloadWindow) {
+      throw new Error("Popup bloqué");
     }
-    
-    // Créer un blob à partir de la réponse
-    const blob = await response.blob();
-    
-    // Créer un URL pour le blob
-    const downloadUrl = window.URL.createObjectURL(blob);
-    
-    // Créer un lien temporaire pour le téléchargement
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = fileName;
-    
-    // Ajouter le lien au document, cliquer dessus, puis le supprimer
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // Libérer l'URL du blob
-    window.URL.revokeObjectURL(downloadUrl);
     
     return {
       title: t("downloadStarted") || "Téléchargement démarré",
@@ -84,10 +62,7 @@ export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key
   }
 
   try {
-    // Vérification que l'URL est valide
-    const url = new URL(fileUrl);
-    
-    // Ouvrir dans un nouvel onglet
+    // Ouvrir directement dans un nouvel onglet sans validation supplémentaire
     window.open(fileUrl, '_blank');
     
     return {
@@ -135,55 +110,48 @@ export const deleteDocument = async (documentId: string, onSuccess: () => void, 
 };
 
 /**
- * Génère une URL signée pour un document stocké
+ * Récupère l'URL du document directement depuis Supabase Storage
  */
-export const generateSignedUrl = async (documentId: string, filename: string) => {
-  try {
-    // Extraire l'extension du fichier
-    const fileExt = filename.split('.').pop() || '';
-    // Construire le chemin du fichier
-    const filePath = `${documentId}.${fileExt}`;
-    
-    // Créer une URL signée
-    const { data, error } = await supabase
-      .storage
-      .from('tenant_documents')
-      .createSignedUrl(filePath, 60 * 60); // 1 heure d'expiration
-    
-    if (error) {
-      console.error("Erreur lors de la création de l'URL signée:", error);
-      return null;
-    }
-    
-    return data.signedUrl;
-  } catch (error) {
-    console.error("Erreur lors de la génération de l'URL signée:", error);
-    return null;
-  }
+export const getStorageUrl = (tenantId: string, fileName: string): string => {
+  // Construction directe de l'URL 
+  return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${fileName}`;
 };
 
 /**
- * Assure que le document a une URL valide
+ * Assure que le document a une URL valide (version simplifiée)
  */
 export const ensureDocumentUrl = async (document: any) => {
   if (!document) return null;
   
   // Si l'URL est déjà définie, la retourner
-  if (document.file_url) return document;
+  if (document.file_url && document.file_url !== "undefined" && document.file_url !== "null") {
+    console.log("Document has valid URL:", document.file_url);
+    return document;
+  }
   
-  // Sinon, générer une URL signée
-  if (document.id && document.name) {
-    const signedUrl = await generateSignedUrl(document.id, document.name);
-    if (signedUrl) {
-      // Mettre à jour le document en mémoire
-      document.file_url = signedUrl;
-      
-      // Mettre à jour la base de données
-      await supabase
+  // Sinon, générer une URL directe
+  if (document.tenant_id && document.name) {
+    const directUrl = getStorageUrl(document.tenant_id, document.name);
+    console.log("Generated direct URL for document:", directUrl);
+    
+    // Mettre à jour le document en mémoire
+    document.file_url = directUrl;
+    
+    // Mettre à jour la base de données
+    try {
+      const { error } = await supabase
         .from('tenant_documents')
-        .update({ file_url: signedUrl })
+        .update({ file_url: directUrl })
         .eq('id', document.id);
+        
+      if (error) {
+        console.error("Error updating document URL in database:", error);
+      }
+    } catch (err) {
+      console.error("Error in database operation:", err);
     }
+  } else {
+    console.error("Cannot generate URL - missing tenant_id or name", document);
   }
   
   return document;

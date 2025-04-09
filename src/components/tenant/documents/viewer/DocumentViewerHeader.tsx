@@ -21,8 +21,18 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
   
   const handleDownload = async () => {
     console.log("Download button clicked in DocumentViewerHeader");
-    console.log("Document object:", document);
-    console.log("Document URL value:", document?.file_url);
+    console.log("Document:", document);
+    console.log("Document URL:", document?.file_url);
+    
+    if (!document?.file_url) {
+      console.error("Document URL is missing");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
     
     const result = await downloadDocument(document?.file_url, document?.name || 'document', t);
     toast(result);
@@ -30,8 +40,18 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
   
   const handleOpenInNewTab = () => {
     console.log("Open in new tab button clicked in DocumentViewerHeader");
-    console.log("Document object:", document);
-    console.log("Document URL value:", document?.file_url);
+    console.log("Document:", document);
+    console.log("Document URL:", document?.file_url);
+    
+    if (!document?.file_url) {
+      console.error("Document URL is missing");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
     
     const result = openDocumentInNewTab(document?.file_url, t);
     toast(result);

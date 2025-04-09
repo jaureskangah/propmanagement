@@ -23,13 +23,12 @@ export const DocumentListItem = ({
   const { toast } = useToast();
 
   const handleDownload = async () => {
-    // Enhanced logging for debugging
     console.log("Download button clicked in DocumentListItem");
-    console.log("Document object:", document);
-    console.log("Document URL value:", document?.file_url);
+    console.log("Document:", document);
+    console.log("Document URL:", document?.file_url);
     
     if (!document?.file_url) {
-      console.error("Document URL is undefined in DocumentListItem handleDownload");
+      console.error("Document URL is missing");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",
@@ -43,13 +42,12 @@ export const DocumentListItem = ({
   };
 
   const handleOpenInNewTab = () => {
-    // Enhanced logging for debugging
     console.log("Open in new tab button clicked in DocumentListItem");
-    console.log("Document object:", document);
-    console.log("Document URL value:", document?.file_url);
+    console.log("Document:", document);
+    console.log("Document URL:", document?.file_url);
     
     if (!document?.file_url) {
-      console.error("Document URL is undefined in DocumentListItem handleOpenInNewTab");
+      console.error("Document URL is missing");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",

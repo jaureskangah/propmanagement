@@ -42,60 +42,19 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         return;
       }
       
-      // Process the documents and ensure each has a URL, document_type and category
+      // Process each document to ensure it has a URL
       const processedDocs = await Promise.all(data.map(async (doc) => {
+        // Set tenant_id if not present, needed for URL generation
+        if (!doc.tenant_id) {
+          doc.tenant_id = id;
+        }
+        
         // Ensure document has a valid URL
         const docWithUrl = await ensureDocumentUrl(doc);
-        
-        // Process document_type if missing
-        if (!docWithUrl.document_type || docWithUrl.document_type === '') {
-          // Determine document type if not specified
-          const name = (docWithUrl.name || '').toLowerCase();
-          let document_type: 'lease' | 'receipt' | 'other' = 'other';
-          
-          if (name.includes('lease') || name.includes('bail')) {
-            document_type = 'lease';
-          } else if (name.includes('receipt') || name.includes('reçu') || name.includes('payment')) {
-            document_type = 'receipt';
-          }
-          
-          // Update document type in the database
-          console.log("Updating document type for doc:", docWithUrl.id, "to:", document_type);
-          supabase
-            .from('tenant_documents')
-            .update({ document_type })
-            .eq('id', docWithUrl.id)
-            .then(({ error }) => {
-              if (error) console.error('Error updating document type:', error);
-              else console.log("Successfully updated document type");
-            });
-          
-          docWithUrl.document_type = document_type;
-        }
-        
-        // Ensure category exists
-        if (!docWithUrl.category) {
-          // Default to using document_type as category if available
-          const category = docWithUrl.document_type || 'other';
-          
-          // Update category in the database
-          console.log("Setting default category for doc:", docWithUrl.id, "to:", category);
-          supabase
-            .from('tenant_documents')
-            .update({ category })
-            .eq('id', docWithUrl.id)
-            .then(({ error }) => {
-              if (error) console.error('Error updating category:', error);
-              else console.log("Successfully updated category");
-            });
-          
-          docWithUrl.category = category;
-        }
-        
         return docWithUrl;
       }));
       
-      console.log("Processed documents:", processedDocs);
+      console.log("Processed documents with URLs:", processedDocs);
       setDocuments(processedDocs);
     } catch (err: any) {
       console.error('Error fetching documents:', err);
