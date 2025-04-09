@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 interface DashboardMetricProps {
   title: string;
@@ -26,6 +27,7 @@ export function DashboardMetric({
   className,
   trend,
   trendValue,
+  chartData = [],
   chartColor = "#1E40AF",
   isLoading = false,
   tooltip
@@ -49,7 +51,7 @@ export function DashboardMetric({
 
   const card = (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing min-h-[120px]",
+      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing",
       "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
       "after:absolute after:inset-0 after:rounded-lg after:border-2 after:border-transparent after:transition-colors hover:after:border-primary/20",
       className
@@ -67,9 +69,21 @@ export function DashboardMetric({
           <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
             {value}
           </div>
-          {description && (
-            <div className="text-xs text-muted-foreground dark:text-gray-300 animate-fade-in mt-1">
-              {description}
+          
+          {chartData && chartData.length > 0 && (
+            <div className="h-[40px] mt-2 animate-fade-in">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke={chartColor}
+                    strokeWidth={2}
+                    dot={false}
+                    isAnimationActive={true}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
           )}
         </div>
@@ -98,4 +112,3 @@ export function DashboardMetric({
 
   return card;
 }
-
