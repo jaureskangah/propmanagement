@@ -47,13 +47,13 @@ export function DocumentCategories({
         <Button
           key={category.id}
           variant={selectedCategory === category.id ? "default" : "ghost"}
-          className={`justify-start ${isCompact ? 'mr-2 w-auto flex-shrink-0' : 'w-full'}`}
+          className={`justify-start ${selectedCategory === category.id ? 'bg-[#ea384c]/10 text-[#ea384c] font-medium shadow-sm' : ''} ${isCompact ? 'mr-2 w-auto flex-shrink-0' : 'w-full'}`}
           onClick={() => onCategoryChange(category.id)}
         >
-          <category.icon className="h-4 w-4 mr-2" />
+          <category.icon className={`h-4 w-4 mr-2 ${selectedCategory === category.id ? 'text-[#ea384c]' : ''}`} />
           <span className="truncate">{category.label}</span>
           {category.count > 0 && (
-            <span className="ml-auto bg-muted text-muted-foreground text-xs rounded-full px-2 py-0.5">
+            <span className={`ml-auto ${selectedCategory === category.id ? 'bg-[#ea384c]/20 text-[#ea384c]' : 'bg-muted text-muted-foreground'} text-xs rounded-full px-2 py-0.5`}>
               {category.count}
             </span>
           )}

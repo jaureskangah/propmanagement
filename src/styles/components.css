@@ -1,4 +1,6 @@
 
+/* ... keep existing code */
+
 .document-card {
   @apply bg-background/80 backdrop-blur-sm border rounded-lg p-4 transition-all duration-200;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
@@ -31,3 +33,20 @@
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(0,0,0,0.07);
 }
+
+/* Tab navigation styles */
+.tab-button {
+  @apply relative overflow-hidden transition-all duration-200;
+}
+
+.tab-button[data-state="active"]::after {
+  content: "";
+  @apply absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-t-full;
+  animation: tab-indicator 0.2s ease forwards;
+}
+
+@keyframes tab-indicator {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
