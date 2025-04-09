@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "./NavLink";
 import { BookOpen, HelpCircle, Mail, DollarSign, LayoutList, LogIn, LogOut, LayoutDashboard } from "lucide-react";
+import { LanguageSelector } from "../LanguageSelector";
 
 interface NavLinksProps {
   t: (key: string) => string;
@@ -24,11 +25,6 @@ export const NavLinks = ({
 }: NavLinksProps) => {
   const navigate = useNavigate();
 
-  const handleDashboardClick = () => {
-    console.log("Dashboard clicked - navigating to dashboard page");
-    navigate('/dashboard');
-  };
-
   return (
     <>
       <NavLink 
@@ -50,6 +46,8 @@ export const NavLinks = ({
         label={t('contact')}
       />
 
+      <LanguageSelector />
+      
       {isAuthenticated ? (
         <>
           <NavLink 
