@@ -24,8 +24,12 @@ export const downloadDocument = async (fileUrl: string | undefined | null, fileN
   }
 
   try {
-    // Ouvrir l'URL dans un nouvel onglet, ce qui déclenchera le téléchargement
-    window.open(fileUrl, '_blank');
+    // Utiliser une URL correctement encodée
+    const encodedUrl = encodeCorrectly(fileUrl);
+    console.log("Encoded URL for download:", encodedUrl);
+    
+    // Ouvrir l'URL encodée dans un nouvel onglet
+    window.open(encodedUrl, '_blank');
     
     return {
       title: t("downloadStarted") || "Téléchargement démarré",
@@ -57,8 +61,12 @@ export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key
   }
 
   try {
+    // Utiliser une URL correctement encodée
+    const encodedUrl = encodeCorrectly(fileUrl);
+    console.log("Encoded URL for opening in tab:", encodedUrl);
+    
     // Ouvrir directement dans un nouvel onglet
-    window.open(fileUrl, '_blank');
+    window.open(encodedUrl, '_blank');
     
     return {
       title: t("openedInNewTab") || "Ouvert dans un nouvel onglet",
@@ -108,7 +116,9 @@ export const deleteDocument = async (documentId: string, onSuccess: () => void, 
  * Génère une URL directe vers un fichier dans Supabase Storage
  */
 export const getStorageUrl = (tenantId: string, fileName: string): string => {
-  return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${fileName}`;
+  // Encoder correctement le nom du fichier pour l'URL
+  const encodedFileName = encodeURIComponent(fileName);
+  return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${encodedFileName}`;
 };
 
 /**
@@ -120,6 +130,39 @@ export const ensureDocumentUrl = (document: TenantDocument): TenantDocument => {
     console.log(`URL générée pour le document ${document.id}: ${document.file_url}`);
   }
   return document;
+};
+
+/**
+ * Encode correctement une URL pour Supabase Storage
+ * Cette fonction s'assure que l'URL est correctement encodée pour être utilisée avec Supabase Storage
+ */
+export const encodeCorrectly = (url: string): string => {
+  try {
+    // Séparer l'URL pour ne pas encoder les parties déjà encodées
+    const urlObj = new URL(url);
+    
+    // Récupérer le chemin
+    let path = urlObj.pathname;
+    
+    // Trouver le dernier segment (le nom du fichier)
+    const lastSlashIndex = path.lastIndexOf('/');
+    if (lastSlashIndex !== -1) {
+      const basePath = path.substring(0, lastSlashIndex + 1);
+      const fileName = path.substring(lastSlashIndex + 1);
+      
+      // Encoder uniquement le nom de fichier
+      const encodedFileName = encodeURIComponent(fileName);
+      path = basePath + encodedFileName;
+    }
+    
+    // Reconstruire l'URL
+    urlObj.pathname = path;
+    return urlObj.toString();
+  } catch (e) {
+    // Fallback si l'URL n'est pas valide
+    console.error("Erreur d'encodage d'URL:", e);
+    return url;
+  }
 };
 
 // Import the TenantDocument type

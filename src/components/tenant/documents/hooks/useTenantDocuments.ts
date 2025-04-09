@@ -2,10 +2,13 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantDocument } from "@/types/tenant";
+import { encodeCorrectly } from "../utils/documentUtils";
 
 // Fonction pour générer une URL directe vers le fichier
 const generateDirectUrl = (tenantId: string, filename: string): string => {
-  const url = `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${filename}`;
+  // Encoder le nom de fichier pour éviter les problèmes avec les caractères spéciaux
+  const encodedFilename = encodeURIComponent(filename);
+  const url = `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${encodedFilename}`;
   console.log(`Generated direct URL: ${url}`);
   return url;
 };
