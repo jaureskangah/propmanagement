@@ -50,8 +50,12 @@ export const DocumentRow = ({
   const handleDelete = () => onDeleteDocument(document.id, document.name);
   
   const handleOpenInNewTab = () => {
-    console.log("Open in new tab button clicked. Document URL:", document.file_url);
-    if (!document.file_url) {
+    // Enhanced logging for debugging
+    console.log("Open in new tab button clicked in DocumentRow");
+    console.log("Document object:", document);
+    console.log("Document URL value:", document?.file_url);
+    
+    if (!document?.file_url) {
       console.error("Document URL is undefined in DocumentRow handleOpenInNewTab");
       toast({
         title: t("error") || "Error",

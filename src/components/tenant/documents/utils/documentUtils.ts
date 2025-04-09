@@ -68,8 +68,10 @@ export const downloadDocument = async (url: string | undefined | null, filename:
 };
 
 export const openDocumentInNewTab = (url: string | undefined | null, t: (key: string) => string) => {
-  console.log("Opening document in new tab. URL:", url);
+  // Ensure we're logging the exact value
+  console.log("Opening document in new tab. Exact URL value:", JSON.stringify(url));
   
+  // Check if url is null, undefined, or an empty string
   if (!url) {
     console.error("URL is undefined or null, cannot open document");
     return {
