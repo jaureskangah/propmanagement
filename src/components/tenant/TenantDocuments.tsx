@@ -1,3 +1,4 @@
+
 import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -71,7 +72,7 @@ export const TenantDocuments = ({
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-blue-600" />
-            <CardTitle className="text-lg">{t('documents.uploadedDocuments') || "Documents téléchargés"}</CardTitle>
+            <CardTitle className="text-lg">{t('uploadedDocuments')}</CardTitle>
           </div>
           <DocumentUpload tenantId={tenantId} onUploadComplete={onDocumentUpdate} />
         </CardHeader>
