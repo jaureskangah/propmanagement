@@ -50,3 +50,7 @@
   to { transform: scaleX(1); }
 }
 
+/* Compact section titles */
+.compact-section-title {
+  @apply text-base font-medium;
+}

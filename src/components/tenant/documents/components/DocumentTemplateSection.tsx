@@ -9,7 +9,7 @@ interface DocumentTemplateSectionProps {
   selectedTemplate: string;
   onSelectTemplate: (templateId: string, templateName: string) => void;
   onGenerateContent: (content: string) => void;
-  isGenerating: boolean; // Changed from setIsGenerating: boolean to isGenerating: boolean
+  isGenerating: boolean;
   tenant?: Tenant | null;
 }
 
@@ -17,7 +17,7 @@ export function DocumentTemplateSection({
   selectedTemplate,
   onSelectTemplate,
   onGenerateContent,
-  isGenerating, // Updated prop name
+  isGenerating,
   tenant
 }: DocumentTemplateSectionProps) {
   const { t } = useLocale();
@@ -26,8 +26,8 @@ export function DocumentTemplateSection({
     <Card className="h-full">
       <CardHeader className="border-b">
         <div className="flex items-center space-x-2">
-          <FileText className="h-5 w-5 text-primary" />
-          <CardTitle>{t('documentGenerator.documentTemplates') || "Modèles de documents"}</CardTitle>
+          <FileText className="h-4 w-4 text-primary" />
+          <CardTitle className="text-base font-medium">{t('documentGenerator.documentTemplates') || "Modèles de documents"}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="pt-6">
