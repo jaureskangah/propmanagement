@@ -18,34 +18,47 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Assurons-nous que l'URL du document est disponible
+  const ensureFileUrl = (doc: TenantDocument): string => {
+    if (doc.file_url) return doc.file_url;
+    
+    // Génération d'une URL directe si elle n'existe pas
+    return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${doc.tenant_id || ''}/${doc.name}`;
+  };
+
   useEffect(() => {
     console.log("DocumentViewerContent - Document:", document);
     
-    if (document?.file_url) {
+    if (document) {
+      // S'assurer que l'URL est disponible
+      const fileUrl = ensureFileUrl(document);
+      
       // Append a timestamp to prevent caching issues
-      const urlWithTimestamp = `${document.file_url}${document.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+      const urlWithTimestamp = `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
       setViewUrl(urlWithTimestamp);
       
       const name = (document.name || '').toLowerCase();
       setIsImage(!!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
       setIsPdf(name.endsWith('.pdf'));
       setError(null);
-    } else if (document) {
-      console.error("Document missing file_url:", document);
-      setError(t("fileNotFound") || "URL du document non disponible");
-      setViewUrl(null);
+      
+      console.log("Document URL (ensured):", fileUrl);
+      console.log("Is PDF:", name.endsWith('.pdf'));
+      console.log("Is Image:", !!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
     } else {
       setViewUrl(null);
       setError(null);
     }
-  }, [document, t]);
+  }, [document]);
 
   const handleOpenInNewTab = () => {
     console.log("Open in new tab button clicked in DocumentViewerContent");
     console.log("Document object:", document);
-    console.log("Document URL value:", document?.file_url);
     
-    const result = openDocumentInNewTab(document?.file_url, t);
+    const fileUrl = ensureFileUrl(document);
+    console.log("Document URL (ensured):", fileUrl);
+    
+    const result = openDocumentInNewTab(fileUrl, t);
     toast(result);
   };
 

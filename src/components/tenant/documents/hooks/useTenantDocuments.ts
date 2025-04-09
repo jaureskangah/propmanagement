@@ -50,6 +50,11 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       
       // Traiter chaque document pour garantir qu'il a une URL valide
       const processedDocs = data.map(doc => {
+        // Ajouter tenant_id s'il manque pour faciliter la génération d'URL plus tard
+        if (!doc.tenant_id) {
+          doc.tenant_id = id;
+        }
+        
         // Si le document n'a pas d'URL ou a une URL invalide, générer une URL directe
         if (!doc.file_url || doc.file_url === "undefined" || doc.file_url === "null") {
           doc.file_url = generateDirectUrl(id, doc.name);

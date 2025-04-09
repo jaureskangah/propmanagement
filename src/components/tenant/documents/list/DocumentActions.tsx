@@ -21,13 +21,23 @@ export const DocumentActions = ({
   const { t } = useLocale();
   const { toast } = useToast();
 
+  // Assurons-nous que l'URL du document est disponible
+  const ensureFileUrl = (doc: TenantDocument): string => {
+    if (doc.file_url) return doc.file_url;
+    
+    // Génération d'une URL directe si elle n'existe pas
+    return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${doc.tenant_id || ''}/${doc.name}`;
+  };
+
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
     console.log("Download button clicked. Document object:", documentItem);
-    console.log("Document URL value:", documentItem?.file_url);
     
-    const result = await downloadDocument(documentItem?.file_url, documentItem?.name || 'document', t);
+    const fileUrl = ensureFileUrl(documentItem);
+    console.log("Document URL value (ensured):", fileUrl);
+    
+    const result = await downloadDocument(fileUrl, documentItem?.name || 'document', t);
     toast(result);
   };
 
@@ -35,9 +45,11 @@ export const DocumentActions = ({
     e.stopPropagation();
     
     console.log("Open in tab button clicked. Document object:", documentItem);
-    console.log("Document URL value:", documentItem?.file_url);
     
-    const result = openDocumentInNewTab(documentItem?.file_url, t);
+    const fileUrl = ensureFileUrl(documentItem);
+    console.log("Document URL value (ensured):", fileUrl);
+    
+    const result = openDocumentInNewTab(fileUrl, t);
     toast(result);
   };
 

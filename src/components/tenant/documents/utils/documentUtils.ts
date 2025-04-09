@@ -111,7 +111,16 @@ export const getStorageUrl = (tenantId: string, fileName: string): string => {
   return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${fileName}`;
 };
 
-// Cette fonction n'est plus nécessaire avec notre nouvelle approche
-export const ensureDocumentUrl = async (document: any) => {
+/**
+ * S'assure qu'un document a une URL valide
+ */
+export const ensureDocumentUrl = (document: TenantDocument): TenantDocument => {
+  if (!document.file_url) {
+    document.file_url = getStorageUrl(document.tenant_id || '', document.name);
+    console.log(`URL générée pour le document ${document.id}: ${document.file_url}`);
+  }
   return document;
 };
+
+// Import the TenantDocument type
+import { TenantDocument } from "@/types/tenant";

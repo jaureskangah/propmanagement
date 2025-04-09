@@ -19,41 +19,33 @@ interface DocumentViewerHeaderProps {
 export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHeaderProps) => {
   const { toast } = useToast();
   
+  // Assurons-nous que l'URL du document est disponible
+  const ensureFileUrl = (doc: TenantDocument): string => {
+    if (doc.file_url) return doc.file_url;
+    
+    // Génération d'une URL directe si elle n'existe pas
+    return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${doc.tenant_id || ''}/${doc.name}`;
+  };
+  
   const handleDownload = async () => {
     console.log("Download button clicked in DocumentViewerHeader");
     console.log("Document:", document);
-    console.log("Document URL:", document?.file_url);
     
-    if (!document?.file_url) {
-      console.error("Document URL is missing");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
+    const fileUrl = ensureFileUrl(document);
+    console.log("Document URL (ensured):", fileUrl);
     
-    const result = await downloadDocument(document.file_url, document.name || 'document', t);
+    const result = await downloadDocument(fileUrl, document.name || 'document', t);
     toast(result);
   };
   
   const handleOpenInNewTab = () => {
     console.log("Open in new tab button clicked in DocumentViewerHeader");
     console.log("Document:", document);
-    console.log("Document URL:", document?.file_url);
     
-    if (!document?.file_url) {
-      console.error("Document URL is missing");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
+    const fileUrl = ensureFileUrl(document);
+    console.log("Document URL (ensured):", fileUrl);
     
-    const result = openDocumentInNewTab(document.file_url, t);
+    const result = openDocumentInNewTab(fileUrl, t);
     toast(result);
   };
 
