@@ -17,7 +17,7 @@ interface DocumentListItemProps {
 export const DocumentListItem = ({ 
   document, 
   onDocumentUpdate,
-  onDelete
+  onDelete 
 }: DocumentListItemProps) => {
   const { t } = useLocale();
   const { toast } = useToast();
