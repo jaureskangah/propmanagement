@@ -16,10 +16,16 @@ interface DocumentViewerHeaderProps {
 }
 
 export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHeaderProps) => {
-  const handleDownload = () => downloadDocument(document, t);
+  const handleDownload = () => {
+    if (document.file_url) {
+      downloadDocument(document.file_url, document.name || 'document', t);
+    }
+  };
   
   const handleOpenInNewTab = () => {
-    openDocumentInNewTab(document.file_url);
+    if (document.file_url) {
+      openDocumentInNewTab(document.file_url);
+    }
   };
 
   return (
