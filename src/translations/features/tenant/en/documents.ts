@@ -74,5 +74,16 @@ export const enDocuments: TenantDocumentsTranslations = {
   hideFilters: "Hide Filters",
   showFilters: "Show Filters",
   uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
-  manageDocumentsDescription: "Upload and manage important documents for your tenancy"
+  manageDocumentsDescription: "Upload and manage important documents for your tenancy",
+  // Add the missing signature-related translations
+  addSignature: "Add Signature",
+  clear: "Clear",
+  saveSignature: "Save Signature",
+  signDocument: "Sign Document",
+  documentSigned: "Document Signed",
+  signYourDocument: "Sign Your Document",
+  drawSignatureBelow: "Draw your signature below",
+  signatureRequired: "Signature is required",
+  retrySignature: "Try again",
+  signatureAdded: "Signature has been added to your document"
 };

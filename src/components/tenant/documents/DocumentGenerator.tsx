@@ -41,8 +41,11 @@ export const DocumentGenerator = () => {
   return (
     <div className="h-full flex flex-col">
       <DocumentTemplateSelector 
-        onSelect={(id, name) => handleSelectTemplate(id, name)}
         selectedTemplate={selectedTemplate}
+        onSelectTemplate={handleSelectTemplate}
+        onGenerateContent={setDocumentContent}
+        setIsGenerating={() => {}}
+        tenant={tenant}
       />
       
       {selectedTemplate && (
@@ -58,11 +61,12 @@ export const DocumentGenerator = () => {
           
           <TabsContent value="editor">
             <DocumentEditor 
-              documentContent={documentContent}
+              content={documentContent}
               onContentChange={setDocumentContent}
-              onInsertField={handleInsertDynamicField}
+              onInsertDynamicField={handleInsertDynamicField}
               onGeneratePreview={() => handleGeneratePreview(documentContent)}
               isGenerating={isGenerating}
+              tenant={tenant}
             />
           </TabsContent>
           

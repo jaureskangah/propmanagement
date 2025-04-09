@@ -74,5 +74,16 @@ export const frDocuments: TenantDocumentsTranslations = {
   hideFilters: "Masquer les filtres",
   showFilters: "Afficher les filtres",
   uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location",
-  manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location"
+  manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location",
+  // Add the missing signature-related translations in French
+  addSignature: "Ajouter une signature",
+  clear: "Effacer",
+  saveSignature: "Enregistrer la signature",
+  signDocument: "Signer le document",
+  documentSigned: "Document signé",
+  signYourDocument: "Signez votre document",
+  drawSignatureBelow: "Dessinez votre signature ci-dessous",
+  signatureRequired: "La signature est requise",
+  retrySignature: "Réessayer",
+  signatureAdded: "La signature a été ajoutée à votre document"
 };
