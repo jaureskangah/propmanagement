@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Download, X, ExternalLink } from "lucide-react";
 import { TenantDocument } from "@/types/tenant";
-import { downloadDocument, openDocumentInNewTab } from "../utils/documentUtils";
+import { downloadDocument, openDocumentInNewTab, ensureDocumentUrl } from "../utils/documentUtils";
 import { useToast } from "@/hooks/use-toast";
 
 interface DocumentViewerHeaderProps {
@@ -19,19 +19,22 @@ interface DocumentViewerHeaderProps {
 export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHeaderProps) => {
   const { toast } = useToast();
   
-  // Assurons-nous que l'URL du document est disponible
-  const ensureFileUrl = (doc: TenantDocument): string => {
-    if (doc.file_url) return doc.file_url;
-    
-    // Génération d'une URL directe si elle n'existe pas
-    return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${doc.tenant_id || ''}/${doc.name}`;
-  };
-  
   const handleDownload = async () => {
     console.log("Download button clicked in DocumentViewerHeader");
     console.log("Document:", document);
     
-    const fileUrl = ensureFileUrl(document);
+    const processedDoc = ensureDocumentUrl(document);
+    const fileUrl = processedDoc.file_url;
+    
+    if (!fileUrl) {
+      toast({
+        title: t("error") || "Erreur",
+        description: t("fileNotFound") || "Fichier introuvable",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     console.log("Document URL (ensured):", fileUrl);
     
     const result = await downloadDocument(fileUrl, document.name || 'document', t);
@@ -42,7 +45,18 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
     console.log("Open in new tab button clicked in DocumentViewerHeader");
     console.log("Document:", document);
     
-    const fileUrl = ensureFileUrl(document);
+    const processedDoc = ensureDocumentUrl(document);
+    const fileUrl = processedDoc.file_url;
+    
+    if (!fileUrl) {
+      toast({
+        title: t("error") || "Erreur",
+        description: t("fileNotFound") || "Fichier introuvable",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     console.log("Document URL (ensured):", fileUrl);
     
     const result = openDocumentInNewTab(fileUrl, t);

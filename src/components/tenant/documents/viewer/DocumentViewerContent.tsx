@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { PdfViewer } from "@/components/documents/PdfViewer";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,8 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
     console.log("DocumentViewerContent - Document:", document);
     
     if (document) {
-      const fileUrl = ensureDocumentUrl(document);
+      const processedDoc = ensureDocumentUrl(document);
+      const fileUrl = processedDoc.file_url || '';
       
       const urlWithTimestamp = `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
       setViewUrl(urlWithTimestamp);
@@ -44,11 +46,24 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
     console.log("Open in new tab button clicked in DocumentViewerContent");
     console.log("Document object:", document);
     
-    const fileUrl = ensureDocumentUrl(document);
-    console.log("Document URL (ensured):", fileUrl);
-    
-    const result = openDocumentInNewTab(fileUrl, t);
-    toast(result);
+    if (!document.file_url) {
+      const processedDoc = ensureDocumentUrl(document);
+      console.log("Document URL (ensured):", processedDoc.file_url);
+      
+      if (processedDoc.file_url) {
+        const result = openDocumentInNewTab(processedDoc.file_url, t);
+        toast(result);
+      } else {
+        toast({
+          title: t("error") || "Erreur",
+          description: t("fileNotFound") || "Fichier introuvable",
+          variant: "destructive",
+        });
+      }
+    } else {
+      const result = openDocumentInNewTab(document.file_url, t);
+      toast(result);
+    }
   };
 
   return (
