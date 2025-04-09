@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantDocument } from "@/types/tenant";
+import { ensureDocumentUrl } from "../utils/documentUtils";
 
 export const useTenantDocuments = (tenantId: string | null, toast: any) => {
   const [documents, setDocuments] = useState<TenantDocument[]>([]);
@@ -19,9 +20,6 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       setIsLoading(true);
       setError(null);
       console.log("Fetching documents for tenant:", id);
-      
-      // Skip the bucket check as we've already set it up in the database
-      // and focus on fetching the documents
       
       // Retrieve the documents metadata from the database
       const { data, error } = await supabase
@@ -44,43 +42,15 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         return;
       }
       
-      // Process the documents and ensure each has a document_type and file_url
+      // Process the documents and ensure each has a URL, document_type and category
       const processedDocs = await Promise.all(data.map(async (doc) => {
-        // If document doesn't have a file_url, try to generate a signed URL
-        if (!doc.file_url && doc.name) {
-          try {
-            console.log("Generating signed URL for document:", doc.id, doc.name);
-            
-            // Assume the file path is the document id with the extension from the name
-            const fileExt = doc.name.split('.').pop() || '';
-            const filePath = `${doc.id}.${fileExt}`;
-            
-            const { data: urlData, error: urlError } = await supabase
-              .storage
-              .from('tenant_documents')
-              .createSignedUrl(filePath, 60 * 60); // 1 hour expiry
-            
-            if (urlError) {
-              console.error("Error creating signed URL:", urlError);
-            } else if (urlData) {
-              console.log("Generated signed URL for document:", doc.id);
-              doc.file_url = urlData.signedUrl;
-              
-              // Update the document in the database with the new URL
-              await supabase
-                .from('tenant_documents')
-                .update({ file_url: urlData.signedUrl })
-                .eq('id', doc.id);
-            }
-          } catch (urlGenError) {
-            console.error("Failed to generate URL for document:", doc.id, urlGenError);
-          }
-        }
+        // Ensure document has a valid URL
+        const docWithUrl = await ensureDocumentUrl(doc);
         
         // Process document_type if missing
-        if (!doc.document_type || doc.document_type === '') {
+        if (!docWithUrl.document_type || docWithUrl.document_type === '') {
           // Determine document type if not specified
-          const name = (doc.name || '').toLowerCase();
+          const name = (docWithUrl.name || '').toLowerCase();
           let document_type: 'lease' | 'receipt' | 'other' = 'other';
           
           if (name.includes('lease') || name.includes('bail')) {
@@ -90,39 +60,39 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
           }
           
           // Update document type in the database
-          console.log("Updating document type for doc:", doc.id, "to:", document_type);
+          console.log("Updating document type for doc:", docWithUrl.id, "to:", document_type);
           supabase
             .from('tenant_documents')
             .update({ document_type })
-            .eq('id', doc.id)
+            .eq('id', docWithUrl.id)
             .then(({ error }) => {
               if (error) console.error('Error updating document type:', error);
               else console.log("Successfully updated document type");
             });
           
-          return { ...doc, document_type };
+          docWithUrl.document_type = document_type;
         }
         
         // Ensure category exists
-        if (!doc.category) {
+        if (!docWithUrl.category) {
           // Default to using document_type as category if available
-          const category = doc.document_type || 'other';
+          const category = docWithUrl.document_type || 'other';
           
           // Update category in the database
-          console.log("Setting default category for doc:", doc.id, "to:", category);
+          console.log("Setting default category for doc:", docWithUrl.id, "to:", category);
           supabase
             .from('tenant_documents')
             .update({ category })
-            .eq('id', doc.id)
+            .eq('id', docWithUrl.id)
             .then(({ error }) => {
               if (error) console.error('Error updating category:', error);
               else console.log("Successfully updated category");
             });
           
-          return { ...doc, category };
+          docWithUrl.category = category;
         }
         
-        return doc;
+        return docWithUrl;
       }));
       
       console.log("Processed documents:", processedDocs);

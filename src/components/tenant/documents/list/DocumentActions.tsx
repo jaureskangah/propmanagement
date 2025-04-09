@@ -24,21 +24,10 @@ export const DocumentActions = ({
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Detailed logging to troubleshoot the issue
     console.log("Download button clicked. Document object:", documentItem);
     console.log("Document URL value:", documentItem?.file_url);
     
-    if (!documentItem?.file_url) {
-      console.error("Document URL is undefined in DocumentActions handleDownload");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = await downloadDocument(documentItem.file_url, documentItem.name || 'document', t);
+    const result = await downloadDocument(documentItem?.file_url, documentItem?.name || 'document', t);
     if (result) {
       toast(result);
     }
@@ -47,21 +36,10 @@ export const DocumentActions = ({
   const handleOpenInTab = (e: React.MouseEvent) => {
     e.stopPropagation();
     
-    // Detailed logging to troubleshoot the issue
     console.log("Open in tab button clicked. Document object:", documentItem);
     console.log("Document URL value:", documentItem?.file_url);
     
-    if (!documentItem?.file_url) {
-      console.error("Document URL is undefined in DocumentActions handleOpenInTab");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = openDocumentInNewTab(documentItem.file_url, t);
+    const result = openDocumentInNewTab(documentItem?.file_url, t);
     if (result) {
       toast(result);
     }

@@ -45,17 +45,7 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
     console.log("Document object:", document);
     console.log("Document URL value:", document?.file_url);
     
-    if (!document?.file_url) {
-      console.error("Document URL is undefined in DocumentViewerContent handleOpenInNewTab");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = openDocumentInNewTab(document.file_url, t);
+    const result = openDocumentInNewTab(document?.file_url, t);
     if (result) {
       toast(result);
     }

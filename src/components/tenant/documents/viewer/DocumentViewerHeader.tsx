@@ -20,44 +20,22 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
   const { toast } = useToast();
   
   const handleDownload = async () => {
-    // Enhanced logging for debugging
     console.log("Download button clicked in DocumentViewerHeader");
     console.log("Document object:", document);
     console.log("Document URL value:", document?.file_url);
     
-    if (!document?.file_url) {
-      console.error("Document URL is undefined in handleDownload");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = await downloadDocument(document.file_url, document.name || 'document', t);
+    const result = await downloadDocument(document?.file_url, document?.name || 'document', t);
     if (result) {
       toast(result);
     }
   };
   
   const handleOpenInNewTab = () => {
-    // Enhanced logging for debugging
     console.log("Open in new tab button clicked in DocumentViewerHeader");
     console.log("Document object:", document);
     console.log("Document URL value:", document?.file_url);
     
-    if (!document?.file_url) {
-      console.error("Document URL is undefined in handleOpenInNewTab");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = openDocumentInNewTab(document.file_url, t);
+    const result = openDocumentInNewTab(document?.file_url, t);
     if (result) {
       toast(result);
     }
@@ -66,7 +44,7 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
   return (
     <DialogHeader className="p-4 border-b">
       <div className="flex items-center justify-between">
-        <DialogTitle>{document.name}</DialogTitle>
+        <DialogTitle>{document?.name}</DialogTitle>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"

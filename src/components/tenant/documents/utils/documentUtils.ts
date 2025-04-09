@@ -1,128 +1,182 @@
 
 import { supabase } from "@/lib/supabase";
-import { ToastAction } from "@/components/ui/toast";
 
-export const downloadDocument = async (url: string | undefined | null, filename: string, t: (key: string) => string) => {
-  console.log("Downloading document:", filename, "from URL:", url);
+/**
+ * Télécharge un document à partir de son URL
+ */
+export const downloadDocument = async (fileUrl: string | undefined | null, fileName: string, t: (key: string) => string) => {
+  console.log("downloadDocument called with URL:", fileUrl);
   
-  if (!url) {
-    console.error("URL is undefined or null, cannot download document");
+  if (!fileUrl) {
+    console.error("Impossible de télécharger - URL manquante");
     return {
-      title: t("error") || "Error",
-      description: t("fileNotFound") || "File not found",
-      variant: "destructive" as const
+      title: t("error") || "Erreur",
+      description: t("fileNotFound") || "Fichier introuvable",
+      variant: "destructive",
     };
   }
-  
+
   try {
-    // Determine the MIME type based on file extension
-    const getContentType = (fileName: string) => {
-      const extension = fileName.split('.').pop()?.toLowerCase() || '';
-      const mimeTypes: {[key: string]: string} = {
-        'pdf': 'application/pdf',
-        'jpg': 'image/jpeg',
-        'jpeg': 'image/jpeg',
-        'png': 'image/png',
-        'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'doc': 'application/msword',
-      };
-      return mimeTypes[extension] || 'application/octet-stream';
-    };
+    // Vérification que l'URL est valide
+    const url = new URL(fileUrl);
     
-    // Use direct fetch to get the file with correct content type
-    const response = await fetch(url);
+    // Fetch le fichier
+    const response = await fetch(fileUrl);
     
     if (!response.ok) {
-      throw new Error(`HTTP error: ${response.status}`);
+      throw new Error(`Erreur HTTP: ${response.status}`);
     }
     
-    // Get the file as a blob with the correct MIME type
+    // Créer un blob à partir de la réponse
     const blob = await response.blob();
-    const contentType = getContentType(filename);
-    const fileBlob = new Blob([blob], { type: contentType });
     
-    // Create a download link and click it
-    const downloadUrl = URL.createObjectURL(fileBlob);
+    // Créer un URL pour le blob
+    const downloadUrl = window.URL.createObjectURL(blob);
+    
+    // Créer un lien temporaire pour le téléchargement
     const link = document.createElement('a');
     link.href = downloadUrl;
-    link.download = filename;
+    link.download = fileName;
+    
+    // Ajouter le lien au document, cliquer dessus, puis le supprimer
     document.body.appendChild(link);
     link.click();
-    
-    // Clean up
     document.body.removeChild(link);
-    setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    
+    // Libérer l'URL du blob
+    window.URL.revokeObjectURL(downloadUrl);
     
     return {
-      title: t('downloadStarted') || "Download started",
-      description: t('downloadStartedDescription') || "Your document will be downloaded shortly"
+      title: t("downloadStarted") || "Téléchargement démarré",
+      description: t("fileDownloading") || "Le fichier est en cours de téléchargement",
     };
   } catch (error) {
-    console.error("Error downloading document:", error);
+    console.error("Erreur lors du téléchargement:", error);
     return {
-      title: t("error") || "Error",
-      description: t("uploadError") || "An error occurred while downloading the document",
-      variant: "destructive" as const
+      title: t("downloadError") || "Erreur de téléchargement",
+      description: t("couldNotDownload") || "Impossible de télécharger le fichier",
+      variant: "destructive",
     };
   }
 };
 
-export const openDocumentInNewTab = (url: string | undefined | null, t: (key: string) => string) => {
-  // Ensure we're logging the exact value
-  console.log("Opening document in new tab. Exact URL value:", JSON.stringify(url));
+/**
+ * Ouvre un document dans un nouvel onglet
+ */
+export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key: string) => string) => {
+  console.log("openDocumentInNewTab called with URL:", fileUrl);
   
-  // Check if url is null, undefined, or an empty string
-  if (!url) {
-    console.error("URL is undefined or null, cannot open document");
+  if (!fileUrl) {
+    console.error("Impossible d'ouvrir - URL manquante");
     return {
-      title: t("error") || "Error",
-      description: t("fileNotFound") || "File not found",
-      variant: "destructive" as const
+      title: t("error") || "Erreur",
+      description: t("fileNotFound") || "Fichier introuvable",
+      variant: "destructive",
     };
   }
-  
+
   try {
-    // Add timestamp to prevent caching issues
-    const urlWithTimestamp = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
-    console.log("Opening URL in new tab:", urlWithTimestamp);
-    window.open(urlWithTimestamp, '_blank');
-    return null; // No toast message needed on success
-  } catch (error) {
-    console.error("Error opening document in new tab:", error);
+    // Vérification que l'URL est valide
+    const url = new URL(fileUrl);
+    
+    // Ouvrir dans un nouvel onglet
+    window.open(fileUrl, '_blank');
+    
     return {
-      title: t("error") || "Error",
-      description: t("browserOpenError") || "An error occurred while opening the document",
-      variant: "destructive" as const
+      title: t("openedInNewTab") || "Ouvert dans un nouvel onglet",
+      description: t("documentOpened") || "Le document a été ouvert dans un nouvel onglet",
+    };
+  } catch (error) {
+    console.error("Erreur lors de l'ouverture:", error);
+    return {
+      title: t("openError") || "Erreur d'ouverture",
+      description: t("couldNotOpen") || "Impossible d'ouvrir le fichier",
+      variant: "destructive",
     };
   }
 };
 
+/**
+ * Supprime un document
+ */
 export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string) => {
   try {
-    console.log("Deleting document:", documentId);
-
+    // Supprimer le document de la base de données
     const { error } = await supabase
       .from('tenant_documents')
       .delete()
       .eq('id', documentId);
 
-    if (error) {
-      console.error("Error deleting document:", error);
-      throw error;
-    }
-
+    if (error) throw error;
+    
+    // Appeler le callback de succès pour rafraîchir la liste
     onSuccess();
     
     return {
-      title: t("documentDeleted") || "Document deleted",
-      description: t("docDeleteSuccess") || "The document has been successfully deleted",
+      title: t("docDeleteSuccess") || "Document supprimé",
+      description: t("docDeleteSuccessDesc") || "Le document a été supprimé avec succès",
     };
   } catch (error) {
-    console.error('Delete error:', error);
+    console.error('Erreur lors de la suppression du document:', error);
     return {
-      title: t("error") || "Error",
-      description: t("uploadError") || "An error occurred while deleting the document",
-      variant: "destructive" as const
+      title: t("docDeleteError") || "Erreur",
+      description: t("docDeleteErrorDesc") || "Impossible de supprimer le document",
+      variant: "destructive",
     };
   }
+};
+
+/**
+ * Génère une URL signée pour un document stocké
+ */
+export const generateSignedUrl = async (documentId: string, filename: string) => {
+  try {
+    // Extraire l'extension du fichier
+    const fileExt = filename.split('.').pop() || '';
+    // Construire le chemin du fichier
+    const filePath = `${documentId}.${fileExt}`;
+    
+    // Créer une URL signée
+    const { data, error } = await supabase
+      .storage
+      .from('tenant_documents')
+      .createSignedUrl(filePath, 60 * 60); // 1 heure d'expiration
+    
+    if (error) {
+      console.error("Erreur lors de la création de l'URL signée:", error);
+      return null;
+    }
+    
+    return data.signedUrl;
+  } catch (error) {
+    console.error("Erreur lors de la génération de l'URL signée:", error);
+    return null;
+  }
+};
+
+/**
+ * Assure que le document a une URL valide
+ */
+export const ensureDocumentUrl = async (document: any) => {
+  if (!document) return null;
+  
+  // Si l'URL est déjà définie, la retourner
+  if (document.file_url) return document;
+  
+  // Sinon, générer une URL signée
+  if (document.id && document.name) {
+    const signedUrl = await generateSignedUrl(document.id, document.name);
+    if (signedUrl) {
+      // Mettre à jour le document en mémoire
+      document.file_url = signedUrl;
+      
+      // Mettre à jour la base de données
+      await supabase
+        .from('tenant_documents')
+        .update({ file_url: signedUrl })
+        .eq('id', document.id);
+    }
+  }
+  
+  return document;
 };
