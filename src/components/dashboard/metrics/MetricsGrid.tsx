@@ -13,16 +13,17 @@ import {
   SortableContext,
   rectSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MetricRenderers } from "./MetricRenderers";
 import { MetricsData } from "./types";
 
 interface MetricsGridProps {
   metrics: MetricsData;
   unreadMessages: number;
+  dateRange?: any;
 }
 
-export const MetricsGrid = ({ metrics, unreadMessages }: MetricsGridProps) => {
+export const MetricsGrid = ({ metrics, unreadMessages, dateRange }: MetricsGridProps) => {
   const [metricOrder, setMetricOrder] = useState([
     'properties',
     'tenants',
@@ -41,6 +42,17 @@ export const MetricsGrid = ({ metrics, unreadMessages }: MetricsGridProps) => {
     useSensor(KeyboardSensor)
   );
 
+  // Log metrics data for debugging
+  useEffect(() => {
+    console.log("Metrics data in grid:", {
+      properties: metrics.properties?.chartData?.length,
+      tenants: metrics.tenants?.chartData?.length,
+      maintenance: metrics.maintenance?.chartData?.length,
+      communications: metrics.communications?.chartData?.length,
+      dateRange
+    });
+  }, [metrics, dateRange]);
+
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     
@@ -54,7 +66,7 @@ export const MetricsGrid = ({ metrics, unreadMessages }: MetricsGridProps) => {
     }
   };
 
-  const renderers = MetricRenderers({ metrics, unreadMessages });
+  const renderers = MetricRenderers({ metrics, unreadMessages, dateRange });
 
   const renderMetric = (metricId: string) => {
     switch (metricId) {

@@ -41,13 +41,14 @@ export const DashboardMetrics = ({
       staticUnreadMessages, 
       realtimeCount,
       totalNotificationCount,
-      realtimeMessages: unreadMessages 
+      realtimeMessages: unreadMessages,
+      dateRange
     });
     
     setTotalUnreadCount(
       Math.max(staticUnreadMessages, realtimeCount)
     );
-  }, [staticUnreadMessages, totalNotificationCount, unreadMessages]);
+  }, [staticUnreadMessages, totalNotificationCount, unreadMessages, dateRange]);
 
   // Handle dialog close with read status update
   const handleDialogOpenChange = (open: boolean) => {
@@ -68,7 +69,11 @@ export const DashboardMetrics = ({
         maintenanceRequests={maintenanceRequests}
         onShowAllNotifications={() => setShowUnreadDialog(true)}
       />
-      <MetricsGrid metrics={metrics} unreadMessages={totalUnreadCount} />
+      <MetricsGrid 
+        metrics={metrics} 
+        unreadMessages={totalUnreadCount}
+        dateRange={dateRange}
+      />
       
       <UnreadMessagesDialog 
         open={showUnreadDialog} 

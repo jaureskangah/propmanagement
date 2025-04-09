@@ -5,14 +5,27 @@ import { cn } from "@/lib/utils";
 import { SortableMetric } from "./SortableMetric";
 import { MetricsData } from "./types";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useEffect } from "react";
 
 interface MetricRenderersProps {
   metrics: MetricsData;
   unreadMessages: number;
+  dateRange?: any;
 }
 
-export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProps) => {
+export const MetricRenderers = ({ metrics, unreadMessages, dateRange }: MetricRenderersProps) => {
   const { t } = useLocale();
+
+  // Log metrics data for debugging
+  useEffect(() => {
+    console.log("Metrics data in renderers:", {
+      properties: metrics.properties?.chartData?.length,
+      tenants: metrics.tenants?.chartData?.length,
+      maintenance: metrics.maintenance?.chartData?.length,
+      communications: metrics.communications?.chartData?.length,
+      dateRange
+    });
+  }, [metrics, dateRange]);
 
   const renderProperties = () => (
     <SortableMetric key="properties" id="properties">
