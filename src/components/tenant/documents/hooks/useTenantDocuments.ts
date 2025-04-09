@@ -5,7 +5,9 @@ import { TenantDocument } from "@/types/tenant";
 
 // Fonction pour générer une URL directe vers le fichier
 const generateDirectUrl = (tenantId: string, filename: string): string => {
-  return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${filename}`;
+  const url = `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${filename}`;
+  console.log(`Generated direct URL: ${url}`);
+  return url;
 };
 
 export const useTenantDocuments = (tenantId: string | null, toast: any) => {

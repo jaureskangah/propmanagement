@@ -34,7 +34,7 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
       return;
     }
     
-    const result = await downloadDocument(document?.file_url, document?.name || 'document', t);
+    const result = await downloadDocument(document.file_url, document.name || 'document', t);
     toast(result);
   };
   
@@ -53,7 +53,7 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
       return;
     }
     
-    const result = openDocumentInNewTab(document?.file_url, t);
+    const result = openDocumentInNewTab(document.file_url, t);
     toast(result);
   };
 
