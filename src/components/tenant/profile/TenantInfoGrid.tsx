@@ -34,13 +34,11 @@ export const TenantInfoGrid = ({ tenant }: TenantInfoGridProps) => {
         icon={<Mail className="h-4 w-4 text-primary/70" />} 
         label={t('emailProfileLabel')} 
         value={tenant.email} 
-        copyable={true}
       />
       <InfoItem 
         icon={<Phone className="h-4 w-4 text-primary/70" />} 
         label={t('phoneProfileLabel')} 
         value={tenant.phone || t('notAvailable')} 
-        copyable={true}
       />
       <InfoItem
         icon={<DollarSign className="h-4 w-4 text-primary/70" />}
