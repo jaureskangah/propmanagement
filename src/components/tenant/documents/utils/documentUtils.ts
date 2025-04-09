@@ -150,18 +150,54 @@ export const encodeCorrectly = (url: string): string => {
       const basePath = path.substring(0, lastSlashIndex + 1);
       const fileName = path.substring(lastSlashIndex + 1);
       
-      // Encoder uniquement le nom de fichier
-      const encodedFileName = encodeURIComponent(fileName);
+      // Décoder d'abord au cas où le nom est déjà partiellement encodé
+      let decodedFileName;
+      try {
+        decodedFileName = decodeURIComponent(fileName);
+      } catch (e) {
+        // Si le décodage échoue, utiliser le nom tel quel
+        decodedFileName = fileName;
+      }
+      
+      // Encoder correctement tous les caractères spéciaux, y compris les apostrophes
+      // Remplacer manuellement les apostrophes par leur forme encodée
+      let sanitizedFileName = decodedFileName.replace(/'/g, "%27");
+      
+      // Ensuite encoder tout le reste
+      const encodedFileName = encodeURIComponent(sanitizedFileName);
+      
       path = basePath + encodedFileName;
+      
+      console.log("Original filename:", fileName);
+      console.log("Decoded filename:", decodedFileName);
+      console.log("Sanitized filename:", sanitizedFileName);
+      console.log("Final encoded filename:", encodedFileName);
     }
     
     // Reconstruire l'URL
     urlObj.pathname = path;
-    return urlObj.toString();
+    const finalUrl = urlObj.toString();
+    console.log("Final encoded URL:", finalUrl);
+    return finalUrl;
   } catch (e) {
     // Fallback si l'URL n'est pas valide
-    console.error("Erreur d'encodage d'URL:", e);
-    return url;
+    console.error("Erreur d'encodage d'URL:", e, "URL originale:", url);
+    
+    // Tentative de fallback avec méthode simple
+    try {
+      // Essayer de trouver le dernier segment du chemin à l'aide de la chaîne
+      const parts = url.split('/');
+      const fileName = parts[parts.length - 1];
+      
+      // Remplacer directement le nom de fichier par sa version encodée
+      const encodedFileName = encodeURIComponent(fileName).replace(/'/g, "%27");
+      parts[parts.length - 1] = encodedFileName;
+      
+      return parts.join('/');
+    } catch (fallbackError) {
+      console.error("Même le fallback a échoué:", fallbackError);
+      return url; // Retourner l'URL d'origine en dernier recours
+    }
   }
 };
 
