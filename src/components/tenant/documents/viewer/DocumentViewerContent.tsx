@@ -32,15 +32,16 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
       setError(null);
     } else if (document) {
       console.error("Document missing file_url:", document);
-      setError("URL du document non disponible");
+      setError(t("fileNotFound") || "URL du document non disponible");
       setViewUrl(null);
     } else {
       setViewUrl(null);
       setError(null);
     }
-  }, [document]);
+  }, [document, t]);
 
   const handleOpenInNewTab = () => {
+    console.log("Open in new tab button clicked. Document URL:", document.file_url);
     if (!document.file_url) {
       console.error("Document URL is undefined in DocumentViewerContent handleOpenInNewTab");
       toast({

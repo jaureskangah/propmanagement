@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TableCell } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
+import { openDocumentInNewTab } from "../utils/documentUtils";
 
 interface DocumentRowProps {
   document: TenantDocument;
@@ -46,11 +47,12 @@ export const DocumentRow = ({
   
   const handleView = () => onViewDocument(document);
   
-  const handleDelete = () => onDeleteDocument(document.id, document.file_url || '');
+  const handleDelete = () => onDeleteDocument(document.id, document.name);
   
   const handleOpenInNewTab = () => {
+    console.log("Open in new tab button clicked. Document URL:", document.file_url);
     if (!document.file_url) {
-      console.error("Document URL is undefined, cannot open document");
+      console.error("Document URL is undefined in DocumentRow handleOpenInNewTab");
       toast({
         title: t("error") || "Error",
         description: t("fileNotFound") || "File not found",
@@ -59,10 +61,10 @@ export const DocumentRow = ({
       return;
     }
     
-    // Add timestamp to prevent caching issues
-    const urlWithTimestamp = `${document.file_url}${document.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
-    console.log("Opening URL in new tab:", urlWithTimestamp);
-    window.open(urlWithTimestamp, '_blank');
+    const result = openDocumentInNewTab(document.file_url, t);
+    if (result) {
+      toast(result);
+    }
   };
 
   return (

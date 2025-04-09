@@ -23,6 +23,7 @@ export const DocumentListItem = ({
   const { toast } = useToast();
 
   const handleDownload = async () => {
+    console.log("Download button clicked. Document URL:", document.file_url);
     if (!document.file_url) {
       console.error("Document URL is undefined in DocumentListItem handleDownload");
       toast({
@@ -40,6 +41,7 @@ export const DocumentListItem = ({
   };
 
   const handleOpenInNewTab = () => {
+    console.log("Open in new tab button clicked. Document URL:", document.file_url);
     if (!document.file_url) {
       console.error("Document URL is undefined in DocumentListItem handleOpenInNewTab");
       toast({

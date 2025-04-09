@@ -2,14 +2,14 @@
 import { supabase } from "@/lib/supabase";
 import { ToastAction } from "@/components/ui/toast";
 
-export const downloadDocument = async (url: string | undefined, filename: string, t: (key: string) => string) => {
+export const downloadDocument = async (url: string | undefined | null, filename: string, t: (key: string) => string) => {
   console.log("Downloading document:", filename, "from URL:", url);
   
   if (!url) {
-    console.error("URL is undefined, cannot download document");
+    console.error("URL is undefined or null, cannot download document");
     return {
       title: t("error") || "Error",
-      description: t("documentUrlMissing") || "Document URL is missing",
+      description: t("fileNotFound") || "File not found",
       variant: "destructive" as const
     };
   }
@@ -67,14 +67,14 @@ export const downloadDocument = async (url: string | undefined, filename: string
   }
 };
 
-export const openDocumentInNewTab = (url: string | undefined, t: (key: string) => string) => {
+export const openDocumentInNewTab = (url: string | undefined | null, t: (key: string) => string) => {
   console.log("Opening document in new tab. URL:", url);
   
   if (!url) {
-    console.error("URL is undefined, cannot open document");
+    console.error("URL is undefined or null, cannot open document");
     return {
       title: t("error") || "Error",
-      description: t("documentUrlMissing") || "Document URL is missing",
+      description: t("fileNotFound") || "File not found",
       variant: "destructive" as const
     };
   }

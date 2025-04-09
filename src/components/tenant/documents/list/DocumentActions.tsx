@@ -24,6 +24,7 @@ export const DocumentActions = ({
   const handleDownload = async (e: React.MouseEvent) => {
     e.stopPropagation();
     
+    console.log("Download button clicked. Document URL:", documentItem.file_url);
     if (!documentItem.file_url) {
       console.error("Document URL is undefined in DocumentActions handleDownload");
       toast({
@@ -43,6 +44,7 @@ export const DocumentActions = ({
   const handleOpenInTab = (e: React.MouseEvent) => {
     e.stopPropagation();
     
+    console.log("Open in tab button clicked. Document URL:", documentItem.file_url);
     if (!documentItem.file_url) {
       console.error("Document URL is undefined in DocumentActions handleOpenInTab");
       toast({
