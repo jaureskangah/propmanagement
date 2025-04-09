@@ -12,6 +12,7 @@ export const enDocuments: TenantDocumentsTranslations = {
   generateDocument: "Generate Document",
   downloadDocument: "Download document",
   openDocument: "Open Document",
+  openInBrowser: "Open in browser",
   myDocuments: "My Documents",
   importantDocuments: "Important Documents",
   uploadNewDocument: "Add New Document",

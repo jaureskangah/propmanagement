@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { TenantDocument } from "@/types/tenant";
-import { Download, Share2, X } from "lucide-react";
+import { Download, Share2, X, ExternalLink } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { PdfViewer } from "@/components/documents/PdfViewer";
 
@@ -98,6 +98,14 @@ export const DocumentViewerDialog = ({
     }
   };
 
+  const handleOpenInNewTab = () => {
+    if (!document?.file_url) return;
+    
+    // Add timestamp to URL to prevent caching issues
+    const urlWithTimestamp = `${document.file_url}${document.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    window.open(urlWithTimestamp, '_blank');
+  };
+
   if (!document) return null;
 
   return (
@@ -114,6 +122,15 @@ export const DocumentViewerDialog = ({
                 title={t("downloadDocument") || "Télécharger"}
               >
                 <Download className="h-4 w-4" />
+              </Button>
+              
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleOpenInNewTab}
+                title={t("openInBrowser") || "Ouvrir dans le navigateur"}
+              >
+                <ExternalLink className="h-4 w-4" />
               </Button>
               
               <Button
@@ -150,7 +167,7 @@ export const DocumentViewerDialog = ({
                 </p>
                 <Button 
                   variant="secondary" 
-                  onClick={() => window.open(viewUrl, '_blank')}
+                  onClick={handleOpenInNewTab}
                 >
                   {t("openDocument") || "Ouvrir le document"}
                 </Button>

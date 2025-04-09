@@ -2,7 +2,7 @@
 import React from "react";
 import { TenantDocument } from "@/types/tenant";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Eye, Trash, Download } from "lucide-react";
+import { MoreHorizontal, Eye, Trash, Download, ExternalLink } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,10 +44,14 @@ export const DocumentRow = ({
   
   const handleView = () => onViewDocument(document);
   
-  const handleDelete = () => onDeleteDocument(document.id, document.file_url);
+  const handleDelete = () => onDeleteDocument(document.id, document.file_url || '');
   
-  const handleDownload = () => {
-    window.open(document.file_url, '_blank');
+  const handleOpenInNewTab = () => {
+    if (!document.file_url) return;
+    
+    // Add timestamp to prevent caching issues
+    const urlWithTimestamp = `${document.file_url}${document.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    window.open(urlWithTimestamp, '_blank');
   };
 
   return (
@@ -88,12 +92,11 @@ export const DocumentRow = ({
                 <Eye className="h-4 w-4 mr-2" />
                 {t("view")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                {t("download")}
+              <DropdownMenuItem onClick={handleOpenInNewTab}>
+                <ExternalLink className="h-4 w-4 mr-2" />
+                {t("openInBrowser")}
               </DropdownMenuItem>
-              <DropdownMenuItem 
-                onClick={handleDelete}
+              <DropdownMenuItem onClick={handleDelete}
                 className="text-red-600 focus:text-red-600"
               >
                 <Trash className="h-4 w-4 mr-2" />
@@ -106,8 +109,8 @@ export const DocumentRow = ({
             <Button variant="ghost" size="icon" onClick={handleView} title={t("view")}>
               <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleDownload} title={t("download")}>
-              <Download className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={handleOpenInNewTab} title={t("openInBrowser")}>
+              <ExternalLink className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon" onClick={handleDelete} title={t("delete")} className="text-red-600 hover:text-red-700">
               <Trash className="h-4 w-4" />
