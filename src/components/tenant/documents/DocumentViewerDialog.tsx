@@ -99,10 +99,14 @@ export const DocumentViewerDialog = ({
   };
 
   const handleOpenInNewTab = () => {
-    if (!document?.file_url) return;
+    if (!document?.file_url) {
+      console.error("Document URL is undefined, cannot open document");
+      return;
+    }
     
     // Add timestamp to URL to prevent caching issues
     const urlWithTimestamp = `${document.file_url}${document.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    console.log("Opening URL in new tab:", urlWithTimestamp);
     window.open(urlWithTimestamp, '_blank');
   };
 

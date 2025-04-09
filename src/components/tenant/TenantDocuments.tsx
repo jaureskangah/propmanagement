@@ -82,9 +82,15 @@ export const TenantDocuments = ({
     }
   };
 
-  const handleOpenInNewTab = (url: string) => {
+  const handleOpenInNewTab = (url: string | undefined) => {
+    if (!url) {
+      console.error("URL is undefined, cannot open document");
+      return;
+    }
+    
     // Add timestamp to prevent caching issues
     const urlWithTimestamp = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    console.log("Opening URL in new tab:", urlWithTimestamp);
     window.open(urlWithTimestamp, '_blank');
   };
 
@@ -159,7 +165,7 @@ export const TenantDocuments = ({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDownload(doc.file_url!, doc.name)}
-                      title="Download document"
+                      title={t('downloadDocument')}
                       className="hover:text-blue-600 hover:bg-blue-50"
                     >
                       <Download className="h-4 w-4" />
@@ -167,8 +173,8 @@ export const TenantDocuments = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => handleOpenInNewTab(doc.file_url!)}
-                      title="Open in new tab"
+                      onClick={() => handleOpenInNewTab(doc.file_url)}
+                      title={t('openInBrowser')}
                       className="hover:text-blue-600 hover:bg-blue-50"
                     >
                       <ExternalLink className="h-4 w-4" />
@@ -178,7 +184,7 @@ export const TenantDocuments = ({
                       size="icon"
                       onClick={() => handleDelete(doc.id, doc.name)}
                       className="hover:text-red-600 hover:bg-red-50"
-                      title="Delete document"
+                      title={t('delete')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
