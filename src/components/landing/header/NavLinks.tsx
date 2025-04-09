@@ -24,8 +24,8 @@ export const NavLinks = ({
 }: NavLinksProps) => {
   const navigate = useNavigate();
 
-  const handleDashboardClick = (e: React.MouseEvent) => {
-    e.preventDefault();
+  const handleDashboardClick = () => {
+    console.log("Dashboard clicked - navigating to dashboard page");
     navigate('/dashboard');
   };
 
@@ -66,7 +66,7 @@ export const NavLinks = ({
         <>
           <NavLink 
             scrolled={scrolled} 
-            onClick={handleDashboardClick}
+            onClick={onDashboardClick}
             icon={<LayoutDashboard size={18} />}
             label={t('dashboard')}
           />
