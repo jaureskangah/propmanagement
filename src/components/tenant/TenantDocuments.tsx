@@ -1,4 +1,3 @@
-
 import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { formatDate } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantDocumentsProps {
   documents: TenantDocument[];
@@ -23,6 +23,7 @@ export const TenantDocuments = ({
   tenant 
 }: TenantDocumentsProps) => {
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const handleDownload = (url: string, filename: string) => {
     console.log("Downloading document:", filename, "from URL:", url);
@@ -70,7 +71,7 @@ export const TenantDocuments = ({
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-blue-600" />
-            <CardTitle className="text-lg">Uploaded Documents</CardTitle>
+            <CardTitle className="text-lg">{t('documents.uploadedDocuments') || "Documents téléchargés"}</CardTitle>
           </div>
           <DocumentUpload tenantId={tenantId} onUploadComplete={onDocumentUpdate} />
         </CardHeader>
@@ -80,7 +81,7 @@ export const TenantDocuments = ({
               <div className="text-center py-8 border-2 border-dashed rounded-lg">
                 <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  No documents available. Upload your first document.
+                  {t('noDocuments')}
                 </p>
               </div>
             ) : (

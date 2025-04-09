@@ -73,4 +73,5 @@ export interface TenantDocumentsTranslations {
   showFilters: string;
   uploadAndManageDocuments: string;
   manageDocumentsDescription: string;
+  uploadedDocuments: string;
 }
