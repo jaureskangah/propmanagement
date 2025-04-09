@@ -36,5 +36,7 @@ export const enProfile: TenantProfileTranslations = {
   update: "Update",
   depositStatusUpdated: "Security deposit status updated",
   error: "Error",
-  errorUpdatingDeposit: "Error updating security deposit"
+  errorUpdatingDeposit: "Error updating security deposit",
+  copied: "Copied to clipboard",
+  copyFailed: "Failed to copy"
 };

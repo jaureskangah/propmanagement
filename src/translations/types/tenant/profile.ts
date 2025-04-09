@@ -35,4 +35,6 @@ export interface TenantProfileTranslations {
   depositStatusUpdated: string;
   error: string;
   errorUpdatingDeposit: string;
+  copied: string;
+  copyFailed: string;
 }

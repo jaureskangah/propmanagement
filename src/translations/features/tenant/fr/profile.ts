@@ -36,5 +36,7 @@ export const frProfile: TenantProfileTranslations = {
   update: "Mettre à jour",
   depositStatusUpdated: "Statut du dépôt de garantie mis à jour",
   error: "Erreur",
-  errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt"
+  errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt",
+  copied: "Copié dans le presse-papiers",
+  copyFailed: "Échec de la copie"
 };
