@@ -9,15 +9,19 @@ import { PdfViewer } from "./preview/PdfViewer";
 import { ActionButtons } from "./preview/ActionButtons";
 import { useState } from "react";
 import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
+import { SignatureDialog } from "./editor/dialogs/SignatureDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentPreviewProps {
   previewUrl: string | null;
   isGenerating: boolean;
   documentContent: string;
   templateName: string;
+  documentType?: string;
   onShare: () => void;
   previewError: string | null;
   onDownload?: () => void;
+  onUpdatePreview?: (signedContent: string) => void;
 }
 
 export function DocumentPreview({ 
@@ -25,15 +29,40 @@ export function DocumentPreview({
   isGenerating, 
   documentContent, 
   templateName,
+  documentType,
   onShare,
   previewError,
-  onDownload
+  onDownload,
+  onUpdatePreview
 }: DocumentPreviewProps) {
   const { t } = useLocale();
+  const { toast } = useToast();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [signatureDialogOpen, setSignatureDialogOpen] = useState(false);
   
   const handleShare = () => {
     setShareDialogOpen(true);
+  };
+  
+  const handleSign = () => {
+    setSignatureDialogOpen(true);
+  };
+  
+  const handleSaveSignature = (signatureDataUrl: string) => {
+    if (!onUpdatePreview) return;
+    
+    // Ajouter la signature au contenu du document
+    const signedContent = documentContent + `\n\n\n[Signature]\n${signatureDataUrl}`;
+    
+    // Mettre à jour le document avec la signature
+    onUpdatePreview(signedContent);
+    
+    // Afficher une notification
+    toast({
+      title: t('documentSigned') || "Document signé",
+      description: t('signatureAdded') || "Votre signature a été ajoutée au document",
+      variant: "default"
+    });
   };
   
   return (
@@ -43,6 +72,8 @@ export function DocumentPreview({
         <ActionButtons 
           onDownload={onDownload}
           onShare={handleShare}
+          onSign={onUpdatePreview ? handleSign : undefined}
+          documentType={documentType}
         />
       </div>
       
@@ -75,6 +106,12 @@ export function DocumentPreview({
         onClose={() => setShareDialogOpen(false)}
         content={documentContent}
         templateName={templateName}
+      />
+      
+      <SignatureDialog
+        isOpen={signatureDialogOpen}
+        onClose={() => setSignatureDialogOpen(false)}
+        onSave={handleSaveSignature}
       />
     </div>
   );

@@ -1,69 +1,86 @@
 
-import { motion } from "framer-motion";
-import { SaveTemplateDialog } from "@/components/documents/editor/SaveTemplateDialog";
-import { Tenant } from "@/types/tenant";
+import { useEffect, useState } from "react";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { DocumentTemplateSelector } from "@/components/documents/DocumentTemplateSelector";
+import { DocumentEditor } from "@/components/documents/DocumentEditor";
+import { DocumentPreview } from "@/components/documents/DocumentPreview";
 import { useDocumentGenerator } from "./hooks/useDocumentGenerator";
-import { DocumentTemplateSection } from "./components/DocumentTemplateSection";
-import { DocumentEditorSection } from "./components/DocumentEditorSection";
+import { useTenant } from "@/components/tenant/hooks/useTenant";
 
-export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
-  const {
+export const DocumentGenerator = () => {
+  const { t } = useLocale();
+  const { tenant } = useTenant();
+  const { 
     selectedTemplate,
     selectedTemplateName,
     documentContent,
+    setDocumentContent,
     previewUrl,
     isGenerating,
     activeTab,
+    setActiveTab,
     previewError,
-    isSaveTemplateDialogOpen,
     handleSelectTemplate,
     handleGeneratePreview,
     handleDownload,
     handleInsertDynamicField,
-    setDocumentContent,
-    setActiveTab,
-    setIsSaveTemplateDialogOpen
+    handleUpdatePreview
   } = useDocumentGenerator(tenant);
 
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-      <div className="lg:col-span-4">
-        <DocumentTemplateSection 
-          selectedTemplate={selectedTemplate}
-          onSelectTemplate={handleSelectTemplate}
-          onGenerateContent={(content) => {
-            setDocumentContent(content);
-            // Don't directly call setPreviewUrl and setPreviewError as they're not available here
-            // Instead, we should handle this in a proper way
-          }}
-          isGenerating={isGenerating} // Changed from setIsGenerating to isGenerating
-          tenant={tenant}
-        />
-      </div>
+  const [documentType, setDocumentType] = useState<string | undefined>(undefined);
 
-      <div className="lg:col-span-8">
-        <DocumentEditorSection 
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          documentContent={documentContent}
-          setDocumentContent={setDocumentContent}
-          handleGeneratePreview={handleGeneratePreview}
-          isGenerating={isGenerating}
-          selectedTemplateName={selectedTemplateName}
-          previewUrl={previewUrl}
-          previewError={previewError}
-          handleDownload={handleDownload}
-          selectedTemplate={selectedTemplate}
-          setIsSaveTemplateDialogOpen={setIsSaveTemplateDialogOpen}
-        />
-      </div>
-      
-      <SaveTemplateDialog
-        isOpen={isSaveTemplateDialogOpen}
-        onClose={() => setIsSaveTemplateDialogOpen(false)}
-        content={documentContent}
-        templateName={selectedTemplateName}
+  useEffect(() => {
+    setDocumentType(selectedTemplate);
+  }, [selectedTemplate]);
+
+  const handleShare = () => {
+    console.log("Share document");
+  };
+
+  return (
+    <div className="h-full flex flex-col">
+      <DocumentTemplateSelector 
+        onSelect={(id, name) => handleSelectTemplate(id, name)}
+        selectedTemplate={selectedTemplate}
       />
+      
+      {selectedTemplate && (
+        <Tabs 
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="w-full mt-6"
+        >
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="editor">{t('documentGenerator.editContent')}</TabsTrigger>
+            <TabsTrigger value="preview">{t('documentGenerator.preview')}</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="editor">
+            <DocumentEditor 
+              documentContent={documentContent}
+              onContentChange={setDocumentContent}
+              onInsertField={handleInsertDynamicField}
+              onGeneratePreview={() => handleGeneratePreview(documentContent)}
+              isGenerating={isGenerating}
+            />
+          </TabsContent>
+          
+          <TabsContent value="preview" className="h-full">
+            <DocumentPreview 
+              previewUrl={previewUrl}
+              isGenerating={isGenerating}
+              documentContent={documentContent}
+              templateName={selectedTemplateName}
+              documentType={documentType}
+              onShare={handleShare}
+              previewError={previewError}
+              onDownload={handleDownload}
+              onUpdatePreview={handleUpdatePreview}
+            />
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
-}
+};
