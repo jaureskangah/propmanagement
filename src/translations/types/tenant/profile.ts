@@ -35,4 +35,5 @@ export interface TenantProfileTranslations {
   depositStatusUpdated: string;
   error: string;
   errorUpdatingDeposit: string;
+  downloading: string; // Ajout de la traduction pour le téléchargement
 }

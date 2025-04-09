@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Sparkles, Share2, FileCheck, Loader2, Save, PenSquare } from "lucide-react";
+import { Sparkles, Share2, FileCheck, Loader2, Save, PenSquare, Download } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EditorToolbarProps {
@@ -10,8 +10,11 @@ interface EditorToolbarProps {
   onOpenSaveTemplateDialog: () => void;
   onToggleAdvancedEditing: () => void;
   onGeneratePreview: () => void;
+  onDownload?: () => void;
   isGenerating: boolean;
+  isDownloading?: boolean;
   hasContent: boolean;
+  hasPreview?: boolean;
   isAdvancedEditingEnabled: boolean;
 }
 
@@ -21,8 +24,11 @@ export function EditorToolbar({
   onOpenSaveTemplateDialog,
   onToggleAdvancedEditing,
   onGeneratePreview,
+  onDownload,
   isGenerating,
+  isDownloading = false,
   hasContent,
+  hasPreview = false,
   isAdvancedEditingEnabled
 }: EditorToolbarProps) {
   const { t } = useLocale();
@@ -75,6 +81,23 @@ export function EditorToolbar({
           <Save className="h-4 w-4 text-amber-600" />
           {!isMobile && (t('documentGenerator.saveAsTemplate') || "Enregistrer comme modèle")}
         </Button>
+
+        {onDownload && hasPreview && (
+          <Button
+            variant="outline"
+            onClick={onDownload}
+            disabled={isDownloading || !hasPreview}
+            className="gap-1 bg-green-100 border-green-300 hover:bg-green-200 hover:text-green-800 text-green-700"
+            size={isMobile ? "sm" : "default"}
+          >
+            {isDownloading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-green-600" />
+            ) : (
+              <Download className="h-4 w-4 text-green-600" />
+            )}
+            {!isMobile && (t('downloadDocument') || "Télécharger")}
+          </Button>
+        )}
       </div>
       
       <Button

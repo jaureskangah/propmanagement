@@ -57,12 +57,12 @@ export function ActionButtons({ onSave, onDownload, onShare, isSaving = false, i
           {isDownloading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('downloading') || "Téléchargement..."}
+              {t('tenant.documents.downloading') || "Téléchargement..."}
             </>
           ) : (
             <>
               <Download className="mr-2 h-4 w-4" />
-              {t('downloadDocument') || "Télécharger"}
+              {t('tenant.documents.downloadDocument') || "Télécharger"}
             </>
           )}
         </Button>

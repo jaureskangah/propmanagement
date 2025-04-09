@@ -17,6 +17,7 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
   const [activeTab, setActiveTab] = useState("editor");
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const handleSelectTemplate = (templateId: string, templateName: string) => {
     setSelectedTemplate(templateId);
@@ -67,6 +68,10 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
     }
   };
 
+  const handleUpdatePreview = async (content: string) => {
+    return handleGeneratePreview(content);
+  };
+
   const handleSaveToHistory = async () => {
     // Implement history saving logic here
     toast({
@@ -78,19 +83,32 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
   const handleDownload = async () => {
     if (!previewUrl) return;
     
-    const link = document.createElement("a");
-    link.href = previewUrl;
-    link.download = `${selectedTemplateName || t('documentGenerator.document') || "document"}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    setIsDownloading(true);
     
-    await handleSaveToHistory();
-    
-    toast({
-      title: t('documentGenerator.downloadStarted') || "Téléchargement commencé",
-      description: t('documentGenerator.downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
-    });
+    try {
+      const link = document.createElement("a");
+      link.href = previewUrl;
+      link.download = `${selectedTemplateName || t('documentGenerator.document') || "document"}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      await handleSaveToHistory();
+      
+      toast({
+        title: t('documentGenerator.downloadStarted') || "Téléchargement commencé",
+        description: t('documentGenerator.downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
+      });
+    } catch (error) {
+      console.error("Error downloading document:", error);
+      toast({
+        title: t('error') || "Erreur",
+        description: t('documentGenerator.downloadError') || "Erreur lors du téléchargement du document",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   // Fonction pour insérer un champ dynamique dans l'éditeur
@@ -120,11 +138,13 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
     documentContent,
     previewUrl,
     isGenerating,
+    isDownloading,
     activeTab,
     previewError,
     isSaveTemplateDialogOpen,
     handleSelectTemplate,
     handleGeneratePreview,
+    handleUpdatePreview,
     handleDownload,
     handleInsertDynamicField,
     setDocumentContent,

@@ -9,6 +9,7 @@ import { PdfViewer } from "./preview/PdfViewer";
 import { ActionButtons } from "./preview/ActionButtons";
 import { useState } from "react";
 import { ShareDocumentDialog } from "./editor/ShareDocumentDialog";
+import { useDocumentPreview } from "./preview/useDocumentPreview";
 
 interface DocumentPreviewProps {
   previewUrl: string | null;
@@ -31,6 +32,7 @@ export function DocumentPreview({
 }: DocumentPreviewProps) {
   const { t } = useLocale();
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const { isDownloading } = useDocumentPreview({ previewUrl, documentContent, templateName });
   
   const handleShare = () => {
     setShareDialogOpen(true);
@@ -43,6 +45,7 @@ export function DocumentPreview({
         <ActionButtons 
           onDownload={onDownload}
           onShare={handleShare}
+          isDownloading={isDownloading}
         />
       </div>
       
