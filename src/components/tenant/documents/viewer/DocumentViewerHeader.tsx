@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Download, X, ExternalLink } from "lucide-react";
 import { TenantDocument } from "@/types/tenant";
 import { downloadDocument, openDocumentInNewTab } from "../utils/documentUtils";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentViewerHeaderProps {
   document: TenantDocument;
@@ -16,16 +17,37 @@ interface DocumentViewerHeaderProps {
 }
 
 export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHeaderProps) => {
-  const handleDownload = () => {
-    if (document.file_url) {
-      downloadDocument(document.file_url, document.name || 'document', t);
+  const { toast } = useToast();
+  
+  const handleDownload = async () => {
+    if (!document.file_url) {
+      console.error("Document URL is undefined");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    const result = await downloadDocument(document.file_url, document.name || 'document', t);
+    if (result) {
+      toast(result);
     }
   };
   
   const handleOpenInNewTab = () => {
-    if (document.file_url) {
-      openDocumentInNewTab(document.file_url);
+    if (!document.file_url) {
+      console.error("Document URL is undefined");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
     }
+    
+    openDocumentInNewTab(document.file_url);
   };
 
   return (

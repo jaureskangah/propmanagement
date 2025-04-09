@@ -25,16 +25,31 @@ export const DocumentListItem = ({
   const handleDownload = async () => {
     if (!document.file_url) {
       console.error("Document URL is undefined");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
       return;
     }
     
-    const result = await downloadDocument(document.file_url, document.name, t);
+    const result = await downloadDocument(document.file_url, document.name || 'document', t);
     if (result) {
       toast(result);
     }
   };
 
   const handleOpenInNewTab = () => {
+    if (!document.file_url) {
+      console.error("Document URL is undefined");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     openDocumentInNewTab(document.file_url);
   };
 

@@ -14,6 +14,7 @@ import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TableCell } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentRowProps {
   document: TenantDocument;
@@ -29,6 +30,7 @@ export const DocumentRow = ({
   isMobile = false
 }: DocumentRowProps) => {
   const { t } = useLocale();
+  const { toast } = useToast();
   
   // Format the document name to truncate if too long
   const displayName = 
@@ -49,6 +51,11 @@ export const DocumentRow = ({
   const handleOpenInNewTab = () => {
     if (!document.file_url) {
       console.error("Document URL is undefined, cannot open document");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
       return;
     }
     

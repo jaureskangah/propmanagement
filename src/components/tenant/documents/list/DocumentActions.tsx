@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Download, ExternalLink, Trash2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { QuickPreview } from "./QuickPreview";
+import { useToast } from "@/hooks/use-toast";
 
 interface DocumentActionsProps {
   document: TenantDocument;
@@ -17,10 +18,19 @@ export const DocumentActions = ({
   onDeleteDocument 
 }: DocumentActionsProps) => {
   const { t } = useLocale();
+  const { toast } = useToast();
 
   const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!documentItem.file_url) return;
+    if (!documentItem.file_url) {
+      console.error("Document URL is undefined");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
     
     // Create a temporary link element
     const link = window.document.createElement('a');
@@ -33,6 +43,23 @@ export const DocumentActions = ({
     window.document.body.appendChild(link);
     link.click();
     window.document.body.removeChild(link);
+  };
+
+  const handleOpenInTab = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!documentItem.file_url) {
+      console.error("Document URL is undefined");
+      toast({
+        title: t("error") || "Error",
+        description: t("fileNotFound") || "File not found",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Add timestamp to prevent caching issues
+    const urlWithTimestamp = `${documentItem.file_url}${documentItem.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    window.open(urlWithTimestamp, '_blank');
   };
 
   return (
@@ -53,10 +80,7 @@ export const DocumentActions = ({
       <Button
         variant="ghost"
         size="icon"
-        onClick={(e) => {
-          e.stopPropagation();
-          onViewDocument(documentItem);
-        }}
+        onClick={handleOpenInTab}
         title={t("openDocument")}
         className="h-8 w-8"
       >

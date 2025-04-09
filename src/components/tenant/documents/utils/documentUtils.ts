@@ -7,7 +7,11 @@ export const downloadDocument = async (url: string | undefined, filename: string
   
   if (!url) {
     console.error("URL is undefined, cannot download document");
-    return;
+    return {
+      title: t("error") || "Error",
+      description: t("documentUrlMissing") || "Document URL is missing",
+      variant: "destructive" as const
+    };
   }
   
   try {
@@ -50,14 +54,14 @@ export const downloadDocument = async (url: string | undefined, filename: string
     setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     
     return {
-      title: t('downloadStarted'),
-      description: t('downloadStartedDescription')
+      title: t('downloadStarted') || "Download started",
+      description: t('downloadStartedDescription') || "Your document will be downloaded shortly"
     };
   } catch (error) {
     console.error("Error downloading document:", error);
     return {
-      title: t("error"),
-      description: t("uploadError"),
+      title: t("error") || "Error",
+      description: t("uploadError") || "An error occurred while downloading the document",
       variant: "destructive" as const
     };
   }
@@ -69,10 +73,14 @@ export const openDocumentInNewTab = (url: string | undefined) => {
     return;
   }
   
-  // Add timestamp to prevent caching issues
-  const urlWithTimestamp = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
-  console.log("Opening URL in new tab:", urlWithTimestamp);
-  window.open(urlWithTimestamp, '_blank');
+  try {
+    // Add timestamp to prevent caching issues
+    const urlWithTimestamp = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+    console.log("Opening URL in new tab:", urlWithTimestamp);
+    window.open(urlWithTimestamp, '_blank');
+  } catch (error) {
+    console.error("Error opening document in new tab:", error);
+  }
 };
 
 export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string) => {
