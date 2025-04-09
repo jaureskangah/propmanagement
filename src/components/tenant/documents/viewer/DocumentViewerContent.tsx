@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from "react";
 import { PdfViewer } from "@/components/documents/PdfViewer";
 import { Button } from "@/components/ui/button";
-import { openDocumentInNewTab } from "../utils/documentUtils";
+import { openDocumentInNewTab, ensureDocumentUrl } from "../utils/documentUtils";
 import { TenantDocument } from "@/types/tenant";
 import { useToast } from "@/hooks/use-toast";
 
@@ -18,22 +17,12 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Assurons-nous que l'URL du document est disponible
-  const ensureFileUrl = (doc: TenantDocument): string => {
-    if (doc.file_url) return doc.file_url;
-    
-    // Génération d'une URL directe si elle n'existe pas
-    return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${doc.tenant_id || ''}/${doc.name}`;
-  };
-
   useEffect(() => {
     console.log("DocumentViewerContent - Document:", document);
     
     if (document) {
-      // S'assurer que l'URL est disponible
-      const fileUrl = ensureFileUrl(document);
+      const fileUrl = ensureDocumentUrl(document);
       
-      // Append a timestamp to prevent caching issues
       const urlWithTimestamp = `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
       setViewUrl(urlWithTimestamp);
       
@@ -55,7 +44,7 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
     console.log("Open in new tab button clicked in DocumentViewerContent");
     console.log("Document object:", document);
     
-    const fileUrl = ensureFileUrl(document);
+    const fileUrl = ensureDocumentUrl(document);
     console.log("Document URL (ensured):", fileUrl);
     
     const result = openDocumentInNewTab(fileUrl, t);

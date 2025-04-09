@@ -2,7 +2,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantDocument } from "@/types/tenant";
-import { encodeCorrectly } from "../utils/documentUtils";
+import { encodeCorrectly, getStorageUrl } from "../utils/documentUtils";
 
 // Fonction pour générer une URL directe vers le fichier
 const generateDirectUrl = (tenantId: string, filename: string): string => {
