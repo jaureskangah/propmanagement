@@ -13,10 +13,10 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Sidebar logo clicked - navigating to home page");
+    console.log("Sidebar logo clicked - navigating to landing page");
     
     try {
-      // Navigate to home page
+      // Navigate to landing page
       navigate('/', { replace: true });
     } catch (error) {
       console.error("Logo navigation error:", error);

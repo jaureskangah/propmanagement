@@ -13,9 +13,9 @@ export const Logo = ({ onClick, scrolled }: LogoProps) => {
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("Landing logo clicked - navigating to home");
+    console.log("Landing logo clicked - navigating to landing page");
     
-    // Always navigate to home page
+    // Always navigate to landing page
     navigate('/', { replace: true });
   };
 

@@ -1,8 +1,6 @@
 
-import { DollarSign, Gift, List } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { NavLink } from "./NavLink";
-import { LanguageSelector } from "../LanguageSelector";
-import { AuthButtons } from "./AuthButtons";
 
 interface NavLinksProps {
   t: (key: string) => string;
@@ -18,43 +16,77 @@ export const NavLinks = ({
   t, 
   scrolled, 
   isAuthenticated, 
-  onSectionClick, 
+  onSectionClick,
   onShowAuthModal,
   onDashboardClick,
   onSignOutClick
 }: NavLinksProps) => {
+  const navigate = useNavigate();
+
+  const handleDashboardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate('/dashboard');
+  };
+
   return (
     <>
       <NavLink 
-        icon={<List className="h-4 w-4" />} 
-        label={t('features')} 
-        onClick={() => onSectionClick('everything-you-need')} 
-        scrolled={scrolled}
-      />
+        scrolled={scrolled} 
+        onClick={() => onSectionClick('features')}
+      >
+        {t('features')}
+      </NavLink>
       <NavLink 
-        icon={<DollarSign className="h-4 w-4" />} 
-        label={t('pricing')} 
-        onClick={() => onSectionClick('pricing')} 
-        scrolled={scrolled}
-      />
+        scrolled={scrolled} 
+        onClick={() => onSectionClick('how-it-works')}
+      >
+        {t('howItWorks')}
+      </NavLink>
       <NavLink 
-        icon={<Gift className="h-4 w-4" />} 
-        label={t('freeTrial')} 
-        onClick={() => onSectionClick('pricing')} 
-        scrolled={scrolled}
-      />
+        scrolled={scrolled} 
+        onClick={() => onSectionClick('pricing')}
+      >
+        {t('pricing')}
+      </NavLink>
+      <NavLink 
+        scrolled={scrolled} 
+        onClick={() => onSectionClick('faq')}
+      >
+        {t('faq')}
+      </NavLink>
+      <NavLink 
+        scrolled={scrolled} 
+        onClick={() => onSectionClick('contact')}
+      >
+        {t('contact')}
+      </NavLink>
 
-      <div className="flex items-center gap-4">
-        <LanguageSelector />
-      </div>
-
-      <AuthButtons 
-        isAuthenticated={isAuthenticated}
-        t={t}
-        onSignInClick={onShowAuthModal}
-        onDashboardClick={onDashboardClick}
-        onSignOutClick={onSignOutClick}
-      />
+      {isAuthenticated ? (
+        <>
+          <NavLink 
+            scrolled={scrolled} 
+            onClick={handleDashboardClick}
+            className="ml-4"
+          >
+            {t('dashboard')}
+          </NavLink>
+          <NavLink 
+            scrolled={scrolled} 
+            onClick={onSignOutClick}
+            className="text-red-500 hover:text-red-600"
+          >
+            {t('signOut')}
+          </NavLink>
+        </>
+      ) : (
+        <NavLink 
+          scrolled={scrolled} 
+          onClick={onShowAuthModal}
+          className="ml-4 bg-[#ea384c] hover:bg-[#d31c3f] text-white py-2 px-4 rounded-md transition-colors"
+        >
+          {t('login')}
+        </NavLink>
+      )}
     </>
   );
 };

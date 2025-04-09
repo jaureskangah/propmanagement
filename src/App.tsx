@@ -23,6 +23,7 @@ import TenantMaintenance from './pages/tenant/TenantMaintenance';
 import Properties from './pages/Properties';
 import Maintenance from './pages/Maintenance';
 import Settings from './pages/Settings';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -33,9 +34,11 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/auth" element={<AuthPage />} />
+      
+      {/* Landing Page - Accessible à tous */}
+      <Route path="/" element={<LandingPage />} />
 
       {/* Protected Routes - only accessible when logged in */}
-      <Route path="/" element={isAuthenticated ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
       <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
       <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
       <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
