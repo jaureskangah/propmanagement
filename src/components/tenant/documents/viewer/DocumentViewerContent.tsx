@@ -22,25 +22,35 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
     console.log("DocumentViewerContent - Document:", document);
     
     if (document) {
-      const processedDoc = ensureDocumentUrl(document);
-      const fileUrl = processedDoc.file_url || '';
-      
-      const urlWithTimestamp = `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
-      setViewUrl(urlWithTimestamp);
-      
-      const name = (document.name || '').toLowerCase();
-      setIsImage(!!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
-      setIsPdf(name.endsWith('.pdf'));
-      setError(null);
-      
-      console.log("Document URL (ensured):", fileUrl);
-      console.log("Is PDF:", name.endsWith('.pdf'));
-      console.log("Is Image:", !!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
+      try {
+        const processedDoc = ensureDocumentUrl(document);
+        const fileUrl = processedDoc.file_url || '';
+        
+        if (!fileUrl) {
+          setError(t("fileNotFound") || "Fichier introuvable");
+          return;
+        }
+        
+        console.log("Document URL (ensured):", fileUrl);
+        setViewUrl(fileUrl);
+        
+        const name = (document.name || '').toLowerCase();
+        setIsImage(!!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
+        setIsPdf(name.endsWith('.pdf'));
+        setError(null);
+        
+        console.log("Is PDF:", name.endsWith('.pdf'));
+        console.log("Is Image:", !!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
+      } catch (err) {
+        console.error("Erreur lors du traitement du document:", err);
+        setError(t("errorProcessingDocument") || "Erreur lors du traitement du document");
+        setViewUrl(null);
+      }
     } else {
       setViewUrl(null);
       setError(null);
     }
-  }, [document]);
+  }, [document, t]);
 
   const handleOpenInNewTab = () => {
     console.log("Open in new tab button clicked in DocumentViewerContent");
@@ -67,10 +77,16 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
   };
 
   return (
-    <div className="flex-1 overflow-auto bg-slate-100 p-4 flex justify-center">
+    <div className="flex-1 overflow-auto bg-white p-4 flex justify-center">
       {error ? (
-        <div className="flex items-center justify-center h-full w-full">
-          <p className="text-red-500">{error}</p>
+        <div className="flex items-center justify-center h-full w-full flex-col bg-white">
+          <p className="text-red-500 mb-4">{error}</p>
+          <Button 
+            variant="secondary" 
+            onClick={handleOpenInNewTab}
+          >
+            {t("openDocument") || "Ouvrir le document dans le navigateur"}
+          </Button>
         </div>
       ) : viewUrl ? (
         isPdf ? (
@@ -82,7 +98,7 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
             className="max-h-full object-contain" 
           />
         ) : (
-          <div className="flex items-center justify-center h-full w-full flex-col">
+          <div className="flex items-center justify-center h-full w-full flex-col bg-white">
             <p className="text-muted-foreground mb-2">
               {t("previewNotAvailable") || "Aperçu non disponible pour ce type de fichier"}
             </p>
@@ -95,7 +111,7 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
           </div>
         )
       ) : (
-        <div className="flex items-center justify-center h-full w-full">
+        <div className="flex items-center justify-center h-full w-full bg-white">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-700"></div>
         </div>
       )}
