@@ -73,15 +73,4 @@ export interface TenantDocumentsTranslations {
   showFilters: string;
   uploadAndManageDocuments: string;
   manageDocumentsDescription: string;
-  // Nouvelles traductions pour la signature
-  addSignature: string;
-  clear: string;
-  saveSignature: string;
-  signDocument: string;
-  documentSigned: string;
-  signYourDocument: string;
-  drawSignatureBelow: string;
-  signatureRequired: string;
-  retrySignature: string;
-  signatureAdded: string;
 }

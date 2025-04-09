@@ -57,13 +57,6 @@ export interface DocumentGeneratorTranslations {
   propertyRules: string;
   customDocument: string;
   
-  // Signature related
-  addSignature: string;
-  clear: string;
-  saveSignature: string;
-  signDocument: string;
-  documentSigned: string;
-  
   // Dummy content for templates
   leaseAgreementContent?: string;
   leaseRenewalContent?: string;

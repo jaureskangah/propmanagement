@@ -17,7 +17,6 @@ interface DocumentEditorProps {
   tenant?: Tenant | null;
   rightSlot?: ReactNode;
   onOpenSaveTemplateDialog?: () => void;
-  onInsertDynamicField?: (field: string) => void;
 }
 
 export function DocumentEditor({
@@ -28,8 +27,7 @@ export function DocumentEditor({
   templateName = "",
   tenant = null,
   rightSlot,
-  onOpenSaveTemplateDialog,
-  onInsertDynamicField
+  onOpenSaveTemplateDialog
 }: DocumentEditorProps) {
   // Gestion de l'état de l'éditeur
   const { handleChange } = useEditorState(content, onContentChange);
@@ -67,15 +65,6 @@ export function DocumentEditor({
     }
   };
 
-  // Use the provided onInsertDynamicField if available, otherwise use the local function
-  const handleInsertDynamicField = (field: string) => {
-    if (onInsertDynamicField) {
-      onInsertDynamicField(field);
-    } else {
-      insertDynamicField(field);
-    }
-  };
-
   return (
     <div className="space-y-4">
       <EditorContent 
@@ -86,7 +75,7 @@ export function DocumentEditor({
         onInsertImage={insertImageTag}
         onInsertTable={insertTable}
         onInsertSignature={() => setIsSignatureDialogOpen(true)}
-        onInsertDynamicField={handleInsertDynamicField}
+        onInsertDynamicField={insertDynamicField}
         isAdvancedEditingEnabled={isAdvancedEditingEnabled}
         rightSlot={rightSlot}
       />

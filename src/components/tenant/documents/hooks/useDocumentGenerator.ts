@@ -106,12 +106,6 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
     });
   };
 
-  // Fonction pour mettre à jour l'aperçu avec un nouveau contenu (pour la signature)
-  const handleUpdatePreview = async (updatedContent: string) => {
-    setDocumentContent(updatedContent);
-    await handleGeneratePreview(updatedContent);
-  };
-
   useEffect(() => {
     return () => {
       if (previewUrl && previewUrl.startsWith('blob:')) {
@@ -133,7 +127,6 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
     handleGeneratePreview,
     handleDownload,
     handleInsertDynamicField,
-    handleUpdatePreview,
     setDocumentContent,
     setActiveTab,
     setIsSaveTemplateDialogOpen

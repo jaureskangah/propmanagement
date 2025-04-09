@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
@@ -12,7 +13,7 @@ interface TenantContextProps {
 
 const TenantContext = createContext<TenantContextProps | undefined>(undefined);
 
-export const useTenantContext = () => {
+export const useTenant = () => {
   const context = useContext(TenantContext);
   if (context === undefined) {
     throw new Error("useTenant must be used within a TenantProvider");
@@ -36,6 +37,7 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       setIsLoading(true);
       setError(null);
 
+      // Fetch tenant profile based on the user's ID
       const { data, error: fetchError } = await supabase
         .from('tenants')
         .select(`
@@ -64,11 +66,14 @@ export const TenantProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       }
 
       if (data) {
+        // Handle properties data which could be an object or an array
         let propertyName = '';
         if (data.properties) {
+          // If properties is an object with a name property
           if (typeof data.properties === 'object' && data.properties !== null && 'name' in data.properties) {
             propertyName = (data.properties as { name: string }).name;
           } 
+          // If properties is an array and has items
           else if (Array.isArray(data.properties) && data.properties.length > 0) {
             const firstProperty = data.properties[0] as { name?: string } | undefined;
             propertyName = firstProperty?.name || '';
