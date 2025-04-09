@@ -1,17 +1,26 @@
 
 import { Building2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 interface LogoProps {
-  onClick: () => void;
+  onClick?: () => void;
   scrolled: boolean;
 }
 
 export const Logo = ({ onClick, scrolled }: LogoProps) => {
+  const navigate = useNavigate();
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log("Landing logo clicked - redirecting to home");
-    onClick();
+    console.log("Landing logo clicked - navigating to home");
+    
+    if (onClick) {
+      onClick();
+    } else {
+      // Direct navigation if no onClick handler provided
+      navigate('/', { replace: true });
+    }
   };
 
   return (

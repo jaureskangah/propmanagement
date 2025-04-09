@@ -11,11 +11,18 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   const navigate = useNavigate();
   
   const handleLogoClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
     e.preventDefault();
-    console.log("Logo clicked - navigating to home page");
+    e.stopPropagation();
+    console.log("Sidebar logo clicked - navigating to home page");
+    
     try {
-      navigate('/', { replace: true });
+      // For owners, navigate to dashboard, for tenants navigate to tenant dashboard
+      const userRole = localStorage.getItem('userRole');
+      if (userRole === 'tenant') {
+        navigate('/tenant/dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (error) {
       console.error("Logo navigation error:", error);
     }
