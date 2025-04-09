@@ -1,6 +1,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "./NavLink";
+import { BookOpen, HelpCircle, Mail, DollarSign, LayoutList, LogIn, LogOut, LayoutDashboard } from "lucide-react";
 
 interface NavLinksProps {
   t: (key: string) => string;
@@ -33,59 +34,56 @@ export const NavLinks = ({
       <NavLink 
         scrolled={scrolled} 
         onClick={() => onSectionClick('features')}
-      >
-        {t('features')}
-      </NavLink>
+        icon={<LayoutList size={18} />}
+        label={t('features')}
+      />
       <NavLink 
         scrolled={scrolled} 
         onClick={() => onSectionClick('how-it-works')}
-      >
-        {t('howItWorks')}
-      </NavLink>
+        icon={<BookOpen size={18} />}
+        label={t('howItWorks')}
+      />
       <NavLink 
         scrolled={scrolled} 
         onClick={() => onSectionClick('pricing')}
-      >
-        {t('pricing')}
-      </NavLink>
+        icon={<DollarSign size={18} />}
+        label={t('pricing')}
+      />
       <NavLink 
         scrolled={scrolled} 
         onClick={() => onSectionClick('faq')}
-      >
-        {t('faq')}
-      </NavLink>
+        icon={<HelpCircle size={18} />}
+        label={t('faq')}
+      />
       <NavLink 
         scrolled={scrolled} 
         onClick={() => onSectionClick('contact')}
-      >
-        {t('contact')}
-      </NavLink>
+        icon={<Mail size={18} />}
+        label={t('contact')}
+      />
 
       {isAuthenticated ? (
         <>
           <NavLink 
             scrolled={scrolled} 
             onClick={handleDashboardClick}
-            className="ml-4"
-          >
-            {t('dashboard')}
-          </NavLink>
+            icon={<LayoutDashboard size={18} />}
+            label={t('dashboard')}
+          />
           <NavLink 
             scrolled={scrolled} 
             onClick={onSignOutClick}
-            className="text-red-500 hover:text-red-600"
-          >
-            {t('signOut')}
-          </NavLink>
+            icon={<LogOut size={18} />}
+            label={t('signOut')}
+          />
         </>
       ) : (
         <NavLink 
           scrolled={scrolled} 
           onClick={onShowAuthModal}
-          className="ml-4 bg-[#ea384c] hover:bg-[#d31c3f] text-white py-2 px-4 rounded-md transition-colors"
-        >
-          {t('login')}
-        </NavLink>
+          icon={<LogIn size={18} />}
+          label={t('login')}
+        />
       )}
     </>
   );
