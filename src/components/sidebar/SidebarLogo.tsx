@@ -16,13 +16,8 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
     console.log("Sidebar logo clicked - navigating to home page");
     
     try {
-      // For owners, navigate to dashboard, for tenants navigate to tenant dashboard
-      const userRole = localStorage.getItem('userRole');
-      if (userRole === 'tenant') {
-        navigate('/tenant/dashboard', { replace: true });
-      } else {
-        navigate('/dashboard', { replace: true });
-      }
+      // Navigate to home page
+      navigate('/', { replace: true });
     } catch (error) {
       console.error("Logo navigation error:", error);
     }

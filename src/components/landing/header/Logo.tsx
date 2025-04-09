@@ -15,12 +15,8 @@ export const Logo = ({ onClick, scrolled }: LogoProps) => {
     e.preventDefault();
     console.log("Landing logo clicked - navigating to home");
     
-    if (onClick) {
-      onClick();
-    } else {
-      // Direct navigation if no onClick handler provided
-      navigate('/', { replace: true });
-    }
+    // Always navigate to home page
+    navigate('/', { replace: true });
   };
 
   return (
