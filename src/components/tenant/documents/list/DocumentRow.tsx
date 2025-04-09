@@ -2,7 +2,7 @@
 import React from "react";
 import { TenantDocument } from "@/types/tenant";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Eye, Trash, Download, ExternalLink } from "lucide-react";
+import { MoreHorizontal, Eye, Trash, Download } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,8 +14,6 @@ import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TableCell } from "@/components/ui/table";
-import { useToast } from "@/hooks/use-toast";
-import { openDocumentInNewTab } from "../utils/documentUtils";
 
 interface DocumentRowProps {
   document: TenantDocument;
@@ -31,7 +29,6 @@ export const DocumentRow = ({
   isMobile = false
 }: DocumentRowProps) => {
   const { t } = useLocale();
-  const { toast } = useToast();
   
   // Format the document name to truncate if too long
   const displayName = 
@@ -47,26 +44,10 @@ export const DocumentRow = ({
   
   const handleView = () => onViewDocument(document);
   
-  const handleDelete = () => onDeleteDocument(document.id, document.name);
+  const handleDelete = () => onDeleteDocument(document.id, document.file_url);
   
-  const handleOpenInNewTab = () => {
-    // Enhanced logging for debugging
-    console.log("Open in new tab button clicked in DocumentRow");
-    console.log("Document object:", document);
-    console.log("Document URL value:", document?.file_url);
-    
-    if (!document?.file_url) {
-      console.error("Document URL is undefined in DocumentRow handleOpenInNewTab");
-      toast({
-        title: t("error") || "Error",
-        description: t("fileNotFound") || "File not found",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    const result = openDocumentInNewTab(document.file_url, t);
-    toast(result);
+  const handleDownload = () => {
+    window.open(document.file_url, '_blank');
   };
 
   return (
@@ -107,11 +88,12 @@ export const DocumentRow = ({
                 <Eye className="h-4 w-4 mr-2" />
                 {t("view")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleOpenInNewTab}>
-                <ExternalLink className="h-4 w-4 mr-2" />
-                {t("openInBrowser")}
+              <DropdownMenuItem onClick={handleDownload}>
+                <Download className="h-4 w-4 mr-2" />
+                {t("download")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDelete}
+              <DropdownMenuItem 
+                onClick={handleDelete}
                 className="text-red-600 focus:text-red-600"
               >
                 <Trash className="h-4 w-4 mr-2" />
@@ -124,8 +106,8 @@ export const DocumentRow = ({
             <Button variant="ghost" size="icon" onClick={handleView} title={t("view")}>
               <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" onClick={handleOpenInNewTab} title={t("openInBrowser")}>
-              <ExternalLink className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={handleDownload} title={t("download")}>
+              <Download className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon" onClick={handleDelete} title={t("delete")} className="text-red-600 hover:text-red-700">
               <Trash className="h-4 w-4" />

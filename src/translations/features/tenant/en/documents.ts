@@ -12,7 +12,6 @@ export const enDocuments: TenantDocumentsTranslations = {
   generateDocument: "Generate Document",
   downloadDocument: "Download document",
   openDocument: "Open Document",
-  openInBrowser: "Open in browser",
   myDocuments: "My Documents",
   importantDocuments: "Important Documents",
   uploadNewDocument: "Add New Document",
@@ -76,7 +75,6 @@ export const enDocuments: TenantDocumentsTranslations = {
   showFilters: "Show Filters",
   uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
   manageDocumentsDescription: "Upload and manage important documents for your tenancy",
-  uploadedDocuments: "Uploaded Documents",
-  downloadStarted: "Download started",
-  downloadStartedDescription: "Your document will be downloaded shortly",
+  uploadedDocuments: "Uploaded Documents"
 };
+

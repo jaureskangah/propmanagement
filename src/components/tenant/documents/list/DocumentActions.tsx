@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Download, ExternalLink, Trash2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { QuickPreview } from "./QuickPreview";
-import { useToast } from "@/hooks/use-toast";
-import { downloadDocument, openDocumentInNewTab } from "../utils/documentUtils";
 
 interface DocumentActionsProps {
   document: TenantDocument;
@@ -19,38 +17,22 @@ export const DocumentActions = ({
   onDeleteDocument 
 }: DocumentActionsProps) => {
   const { t } = useLocale();
-  const { toast } = useToast();
 
-  // Assurons-nous que l'URL du document est disponible
-  const ensureFileUrl = (doc: TenantDocument): string => {
-    if (doc.file_url) return doc.file_url;
-    
-    // Génération d'une URL directe si elle n'existe pas
-    return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${doc.tenant_id || ''}/${doc.name}`;
-  };
-
-  const handleDownload = async (e: React.MouseEvent) => {
+  const handleDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
+    if (!documentItem.file_url) return;
     
-    console.log("Download button clicked. Document object:", documentItem);
+    // Create a temporary link element
+    const link = window.document.createElement('a');
+    link.href = documentItem.file_url;
+    link.download = documentItem.name || 'document';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     
-    const fileUrl = ensureFileUrl(documentItem);
-    console.log("Document URL value (ensured):", fileUrl);
-    
-    const result = await downloadDocument(fileUrl, documentItem?.name || 'document', t);
-    toast(result);
-  };
-
-  const handleOpenInTab = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    
-    console.log("Open in tab button clicked. Document object:", documentItem);
-    
-    const fileUrl = ensureFileUrl(documentItem);
-    console.log("Document URL value (ensured):", fileUrl);
-    
-    const result = openDocumentInNewTab(fileUrl, t);
-    toast(result);
+    // Append to the document, click it, and remove it
+    window.document.body.appendChild(link);
+    link.click();
+    window.document.body.removeChild(link);
   };
 
   return (
@@ -71,7 +53,10 @@ export const DocumentActions = ({
       <Button
         variant="ghost"
         size="icon"
-        onClick={handleOpenInTab}
+        onClick={(e) => {
+          e.stopPropagation();
+          onViewDocument(documentItem);
+        }}
         title={t("openDocument")}
         className="h-8 w-8"
       >

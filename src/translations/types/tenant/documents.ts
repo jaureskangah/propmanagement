@@ -10,7 +10,6 @@ export interface TenantDocumentsTranslations {
   generateDocument: string;
   downloadDocument: string;
   openDocument: string;
-  openInBrowser: string;
   myDocuments: string;
   importantDocuments: string;
   uploadNewDocument: string;
@@ -75,6 +74,4 @@ export interface TenantDocumentsTranslations {
   uploadAndManageDocuments: string;
   manageDocumentsDescription: string;
   uploadedDocuments: string;
-  downloadStarted: string;
-  downloadStartedDescription: string;
 }

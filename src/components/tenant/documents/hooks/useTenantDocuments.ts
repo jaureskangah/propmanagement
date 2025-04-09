@@ -2,16 +2,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantDocument } from "@/types/tenant";
-import { encodeCorrectly, getStorageUrl } from "../utils/documentUtils";
-
-// Fonction pour générer une URL directe vers le fichier
-const generateDirectUrl = (tenantId: string, filename: string): string => {
-  // Encoder le nom de fichier pour éviter les problèmes avec les caractères spéciaux
-  const encodedFilename = encodeURIComponent(filename);
-  const url = `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${encodedFilename}`;
-  console.log(`Generated direct URL: ${url}`);
-  return url;
-};
 
 export const useTenantDocuments = (tenantId: string | null, toast: any) => {
   const [documents, setDocuments] = useState<TenantDocument[]>([]);
@@ -29,6 +19,9 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
       setIsLoading(true);
       setError(null);
       console.log("Fetching documents for tenant:", id);
+      
+      // Skip the bucket check as we've already set it up in the database
+      // and focus on fetching the documents
       
       // Retrieve the documents metadata from the database
       const { data, error } = await supabase
@@ -51,24 +44,88 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         return;
       }
       
-      // Traiter chaque document pour garantir qu'il a une URL valide
-      const processedDocs = data.map(doc => {
-        // Ajouter tenant_id s'il manque pour faciliter la génération d'URL plus tard
-        if (!doc.tenant_id) {
-          doc.tenant_id = id;
+      // Process the documents and ensure each has a document_type and file_url
+      const processedDocs = await Promise.all(data.map(async (doc) => {
+        // If document doesn't have a file_url, try to generate a signed URL
+        if (!doc.file_url && doc.name) {
+          try {
+            console.log("Generating signed URL for document:", doc.id, doc.name);
+            
+            // Assume the file path is the document id with the extension from the name
+            const fileExt = doc.name.split('.').pop() || '';
+            const filePath = `${doc.id}.${fileExt}`;
+            
+            const { data: urlData, error: urlError } = await supabase
+              .storage
+              .from('tenant_documents')
+              .createSignedUrl(filePath, 60 * 60); // 1 hour expiry
+            
+            if (urlError) {
+              console.error("Error creating signed URL:", urlError);
+            } else if (urlData) {
+              console.log("Generated signed URL for document:", doc.id);
+              doc.file_url = urlData.signedUrl;
+              
+              // Update the document in the database with the new URL
+              await supabase
+                .from('tenant_documents')
+                .update({ file_url: urlData.signedUrl })
+                .eq('id', doc.id);
+            }
+          } catch (urlGenError) {
+            console.error("Failed to generate URL for document:", doc.id, urlGenError);
+          }
         }
         
-        // Si le document n'a pas d'URL ou a une URL invalide, générer une URL directe
-        if (!doc.file_url || doc.file_url === "undefined" || doc.file_url === "null") {
-          doc.file_url = generateDirectUrl(id, doc.name);
-          console.log(`Generated URL for document ${doc.id}: ${doc.file_url}`);
-        } else {
-          console.log(`Document ${doc.id} already has URL: ${doc.file_url}`);
+        // Process document_type if missing
+        if (!doc.document_type || doc.document_type === '') {
+          // Determine document type if not specified
+          const name = (doc.name || '').toLowerCase();
+          let document_type: 'lease' | 'receipt' | 'other' = 'other';
+          
+          if (name.includes('lease') || name.includes('bail')) {
+            document_type = 'lease';
+          } else if (name.includes('receipt') || name.includes('reçu') || name.includes('payment')) {
+            document_type = 'receipt';
+          }
+          
+          // Update document type in the database
+          console.log("Updating document type for doc:", doc.id, "to:", document_type);
+          supabase
+            .from('tenant_documents')
+            .update({ document_type })
+            .eq('id', doc.id)
+            .then(({ error }) => {
+              if (error) console.error('Error updating document type:', error);
+              else console.log("Successfully updated document type");
+            });
+          
+          return { ...doc, document_type };
         }
+        
+        // Ensure category exists
+        if (!doc.category) {
+          // Default to using document_type as category if available
+          const category = doc.document_type || 'other';
+          
+          // Update category in the database
+          console.log("Setting default category for doc:", doc.id, "to:", category);
+          supabase
+            .from('tenant_documents')
+            .update({ category })
+            .eq('id', doc.id)
+            .then(({ error }) => {
+              if (error) console.error('Error updating category:', error);
+              else console.log("Successfully updated category");
+            });
+          
+          return { ...doc, category };
+        }
+        
         return doc;
-      });
+      }));
       
-      console.log("Processed documents with URLs:", processedDocs.length);
+      console.log("Processed documents:", processedDocs);
       setDocuments(processedDocs);
     } catch (err: any) {
       console.error('Error fetching documents:', err);
