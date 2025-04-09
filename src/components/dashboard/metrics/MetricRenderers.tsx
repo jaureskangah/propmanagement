@@ -20,12 +20,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
         title={t('properties')}
         value={metrics.properties.total.toString()}
         icon={<Building2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />}
-        description={
-          <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-            <ArrowUpRight className="h-3 w-3" />
-            <span>{metrics.properties.new} {t('newThisMonth')}</span>
-          </div>
-        }
         chartData={metrics.properties.chartData}
         chartColor="#4F46E5"
         tooltip={t('properties')}
@@ -40,12 +34,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
         title={t('tenants')}
         value={metrics.tenants.total.toString()}
         icon={<Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />}
-        description={
-          <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
-            <ArrowUpRight className="h-3 w-3" />
-            <span>{metrics.tenants.occupancyRate}% {t('occupancyRate')}</span>
-          </div>
-        }
         chartData={metrics.tenants.chartData}
         chartColor="#6366F1"
         tooltip={t('tenants')}
@@ -60,15 +48,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
         title={t('maintenance')}
         value={metrics.maintenance.pending.toString()}
         icon={<Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />}
-        description={
-          <div className="flex items-center gap-1 text-red-600 dark:text-red-400">
-            <ArrowDownRight className="h-3 w-3" />
-            <span>
-              {metrics.maintenance.pending} {' '}
-              {metrics.maintenance.pending === 1 ? t('pendingRequest') : t('pendingRequests')}
-            </span>
-          </div>
-        }
         chartData={metrics.maintenance.chartData}
         chartColor="#F59E0B"
         tooltip={t('maintenance')}
@@ -88,19 +67,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
           title={t('unreadMessages')}
           value={unreadMessages.toString()}
           icon={<MessageSquare className="h-4 w-4 text-rose-600 dark:text-rose-400" />}
-          description={
-            <div className={cn(
-              "flex items-center gap-1",
-              unreadMessages > 0 ? "text-rose-600 dark:text-rose-400" : "text-emerald-600 dark:text-emerald-400"
-            )}>
-              <ArrowUpRight className="h-3 w-3" />
-              <span>
-                {unreadMessages === 1 
-                  ? t('messageRequiringAttention') 
-                  : t('messagesRequiringAttention')}
-              </span>
-            </div>
-          }
           chartData={metrics.communications?.chartData || defaultChartData}
           chartColor="#F43F5E"
           tooltip={t('unreadMessages')}
