@@ -33,7 +33,9 @@ export const DocumentViewerDialog = ({
     console.log("DocumentViewerDialog - Document:", document);
     
     if (document?.file_url) {
-      setViewUrl(document.file_url);
+      // Append a timestamp to prevent caching issues
+      const urlWithTimestamp = `${document.file_url}${document.file_url.includes('?') ? '&' : '?'}t=${Date.now()}`;
+      setViewUrl(urlWithTimestamp);
       
       const name = (document.name || '').toLowerCase();
       setIsImage(!!name.match(/\.(jpg|jpeg|png|gif|webp)$/));
@@ -49,6 +51,52 @@ export const DocumentViewerDialog = ({
     }
   }, [document]);
 
+  const handleDownload = async () => {
+    if (!document || !document.file_url) return;
+    
+    try {
+      // Determine the MIME type based on file extension
+      const getContentType = (fileName: string) => {
+        const extension = fileName.split('.').pop()?.toLowerCase() || '';
+        const mimeTypes: {[key: string]: string} = {
+          'pdf': 'application/pdf',
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'png': 'image/png',
+          'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'doc': 'application/msword',
+        };
+        return mimeTypes[extension] || 'application/octet-stream';
+      };
+      
+      // Use direct fetch to get the file with correct content type
+      const response = await fetch(document.file_url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      
+      // Get the file as a blob with the correct MIME type
+      const blob = await response.blob();
+      const contentType = getContentType(document.name);
+      const fileBlob = new Blob([blob], { type: contentType });
+      
+      // Create a download link and click it
+      const downloadUrl = URL.createObjectURL(fileBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = document.name;
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    } catch (error) {
+      console.error("Erreur lors du téléchargement du document:", error);
+    }
+  };
+
   if (!document) return null;
 
   return (
@@ -61,11 +109,7 @@ export const DocumentViewerDialog = ({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {
-                  if (document.file_url) {
-                    window.open(document.file_url, '_blank');
-                  }
-                }}
+                onClick={handleDownload}
                 title={t("downloadDocument") || "Télécharger"}
               >
                 <Download className="h-4 w-4" />
@@ -92,9 +136,11 @@ export const DocumentViewerDialog = ({
           ) : viewUrl ? (
             isPdf ? (
               <iframe 
-                src={`${viewUrl}#toolbar=0&navpanes=0&scrollbar=0`} 
-                className="w-full h-full border-none"
+                src={viewUrl}
+                className="w-full h-full border-none bg-white"
                 title={document.name}
+                sandbox="allow-scripts allow-same-origin"
+                loading="lazy"
               />
             ) : isImage ? (
               <img 

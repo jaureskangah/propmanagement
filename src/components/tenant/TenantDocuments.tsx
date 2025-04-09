@@ -30,44 +30,47 @@ export const TenantDocuments = ({
     console.log("Downloading document:", filename, "from URL:", url);
     
     try {
-      // Use fetch API to get the file with proper content type
+      // Determine the MIME type based on file extension
+      const getContentType = (fileName: string) => {
+        const extension = fileName.split('.').pop()?.toLowerCase() || '';
+        const mimeTypes: {[key: string]: string} = {
+          'pdf': 'application/pdf',
+          'jpg': 'image/jpeg',
+          'jpeg': 'image/jpeg',
+          'png': 'image/png',
+          'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'doc': 'application/msword',
+        };
+        return mimeTypes[extension] || 'application/octet-stream';
+      };
+      
+      // Use direct fetch to get the file with correct content type
       const response = await fetch(url);
       
       if (!response.ok) {
         throw new Error(`HTTP error: ${response.status}`);
       }
       
-      // Get content type from response or infer from filename
-      let contentType = response.headers.get('content-type');
-      if (!contentType) {
-        if (filename.endsWith('.pdf')) contentType = 'application/pdf';
-        else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) contentType = 'image/jpeg';
-        else if (filename.endsWith('.png')) contentType = 'image/png';
-        else if (filename.endsWith('.docx')) contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-        else if (filename.endsWith('.doc')) contentType = 'application/msword';
-        else contentType = 'application/octet-stream';
-      }
-      
-      // Create a blob with the correct content type
+      // Get the file as a blob with the correct MIME type
       const blob = await response.blob();
-      const blobWithType = new Blob([blob], { type: contentType });
+      const contentType = getContentType(filename);
+      const fileBlob = new Blob([blob], { type: contentType });
       
-      // Create an object URL and trigger download
-      const objectUrl = URL.createObjectURL(blobWithType);
-      
+      // Create a download link and click it
+      const downloadUrl = URL.createObjectURL(fileBlob);
       const link = document.createElement('a');
-      link.href = objectUrl;
+      link.href = downloadUrl;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
       
       // Clean up
       document.body.removeChild(link);
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 100);
+      setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
       
       toast({
-        title: t('downloadStarted') || "Téléchargement commencé",
-        description: t('downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
+        title: t('downloadStarted'),
+        description: t('downloadStartedDescription')
       });
     } catch (error) {
       console.error("Erreur lors du téléchargement du document:", error);

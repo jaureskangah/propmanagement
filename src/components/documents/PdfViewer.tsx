@@ -35,6 +35,11 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     }
   }, [url]);
   
+  // Ensure the URL is properly encoded if it's not already
+  const safeUrl = url.includes('?') 
+    ? `${url}&t=${Date.now()}` // Add timestamp to prevent caching issues
+    : `${url}?t=${Date.now()}`;
+  
   return (
     <div 
       className="w-full h-full pdf-container"
@@ -48,7 +53,7 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
     >
       <iframe
         ref={iframeRef}
-        src={url}
+        src={safeUrl}
         className="w-full h-full pdf-viewer"
         title="PDF Document"
         style={{ 
