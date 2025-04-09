@@ -39,9 +39,7 @@ export const DocumentListItem = ({
     }
     
     const result = await downloadDocument(document.file_url, document.name || 'document', t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   const handleOpenInNewTab = () => {
@@ -61,9 +59,7 @@ export const DocumentListItem = ({
     }
     
     const result = openDocumentInNewTab(document.file_url, t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   return (

@@ -1,10 +1,11 @@
 
 import { supabase } from "@/lib/supabase";
+import { Toast } from "@/components/ui/toast";
 
 /**
  * Télécharge un document à partir de son URL
  */
-export const downloadDocument = async (fileUrl: string | undefined | null, fileName: string, t: (key: string) => string) => {
+export const downloadDocument = async (fileUrl: string | undefined | null, fileName: string, t: (key: string) => string): Promise<Toast> => {
   console.log("downloadDocument called with URL:", fileUrl);
   
   if (!fileUrl) {
@@ -63,7 +64,7 @@ export const downloadDocument = async (fileUrl: string | undefined | null, fileN
 /**
  * Ouvre un document dans un nouvel onglet
  */
-export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key: string) => string) => {
+export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key: string) => string): Toast => {
   console.log("openDocumentInNewTab called with URL:", fileUrl);
   
   if (!fileUrl) {
@@ -99,7 +100,7 @@ export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key
 /**
  * Supprime un document
  */
-export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string) => {
+export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string): Promise<Toast> => {
   try {
     // Supprimer le document de la base de données
     const { error } = await supabase

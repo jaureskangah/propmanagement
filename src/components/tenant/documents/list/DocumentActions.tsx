@@ -28,9 +28,7 @@ export const DocumentActions = ({
     console.log("Document URL value:", documentItem?.file_url);
     
     const result = await downloadDocument(documentItem?.file_url, documentItem?.name || 'document', t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   const handleOpenInTab = (e: React.MouseEvent) => {
@@ -40,9 +38,7 @@ export const DocumentActions = ({
     console.log("Document URL value:", documentItem?.file_url);
     
     const result = openDocumentInNewTab(documentItem?.file_url, t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   return (

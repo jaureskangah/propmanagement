@@ -46,9 +46,7 @@ export const DocumentViewerContent = ({ document, t }: DocumentViewerContentProp
     console.log("Document URL value:", document?.file_url);
     
     const result = openDocumentInNewTab(document?.file_url, t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   return (

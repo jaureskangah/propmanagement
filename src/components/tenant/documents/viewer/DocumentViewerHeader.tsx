@@ -25,9 +25,7 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
     console.log("Document URL value:", document?.file_url);
     
     const result = await downloadDocument(document?.file_url, document?.name || 'document', t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
   
   const handleOpenInNewTab = () => {
@@ -36,9 +34,7 @@ export const DocumentViewerHeader = ({ document, onClose, t }: DocumentViewerHea
     console.log("Document URL value:", document?.file_url);
     
     const result = openDocumentInNewTab(document?.file_url, t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   return (

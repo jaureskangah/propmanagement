@@ -66,9 +66,7 @@ export const DocumentRow = ({
     }
     
     const result = openDocumentInNewTab(document.file_url, t);
-    if (result) {
-      toast(result);
-    }
+    toast(result);
   };
 
   return (
