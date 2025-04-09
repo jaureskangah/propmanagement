@@ -1,4 +1,3 @@
-
 import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,35 +29,18 @@ export const TenantDocuments = ({
     console.log("Downloading document:", filename, "from URL:", url);
     
     try {
-      // Utiliser fetch pour récupérer le contenu du fichier
-      const response = await fetch(url);
-      
-      // Vérifier si la réponse est OK
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
-      }
-      
-      // Convertir la réponse en Blob avec le type MIME approprié
-      const contentType = response.headers.get('content-type') || '';
-      const blob = await response.blob();
-      
-      // Créer une URL d'objet à partir du blob
-      const objectUrl = window.URL.createObjectURL(
-        new Blob([blob], { type: contentType })
-      );
-      
-      // Créer un lien temporaire pour le téléchargement
       const link = document.createElement('a');
-      link.href = objectUrl;
+      link.href = url;
       link.download = filename;
-      
-      // Ajouter le lien au document, cliquer dessus, puis le retirer
       document.body.appendChild(link);
       link.click();
       
-      // Nettoyer
       document.body.removeChild(link);
-      window.URL.revokeObjectURL(objectUrl);
+      
+      toast({
+        title: t('downloadStarted') || "Téléchargement commencé",
+        description: t('downloadStartedDescription') || "Votre document sera téléchargé dans quelques instants"
+      });
     } catch (error) {
       console.error("Erreur lors du téléchargement du document:", error);
       toast({
