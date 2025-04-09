@@ -75,6 +75,7 @@ export const enDocuments: TenantDocumentsTranslations = {
   showFilters: "Show Filters",
   uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
   manageDocumentsDescription: "Upload and manage important documents for your tenancy",
-  uploadedDocuments: "Uploaded Documents"
+  uploadedDocuments: "Uploaded Documents",
+  downloadStarted: "Download started",
+  downloadStartedDescription: "Your document will be downloaded shortly",
 };
-

@@ -1,3 +1,4 @@
+
 import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,13 +30,40 @@ export const TenantDocuments = ({
     console.log("Downloading document:", filename, "from URL:", url);
     
     try {
+      // Use fetch API to get the file with proper content type
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error: ${response.status}`);
+      }
+      
+      // Get content type from response or infer from filename
+      let contentType = response.headers.get('content-type');
+      if (!contentType) {
+        if (filename.endsWith('.pdf')) contentType = 'application/pdf';
+        else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) contentType = 'image/jpeg';
+        else if (filename.endsWith('.png')) contentType = 'image/png';
+        else if (filename.endsWith('.docx')) contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+        else if (filename.endsWith('.doc')) contentType = 'application/msword';
+        else contentType = 'application/octet-stream';
+      }
+      
+      // Create a blob with the correct content type
+      const blob = await response.blob();
+      const blobWithType = new Blob([blob], { type: contentType });
+      
+      // Create an object URL and trigger download
+      const objectUrl = URL.createObjectURL(blobWithType);
+      
       const link = document.createElement('a');
-      link.href = url;
+      link.href = objectUrl;
       link.download = filename;
       document.body.appendChild(link);
       link.click();
       
+      // Clean up
       document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 100);
       
       toast({
         title: t('downloadStarted') || "Téléchargement commencé",
