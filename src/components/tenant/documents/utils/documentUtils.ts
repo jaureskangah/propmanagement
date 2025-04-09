@@ -1,12 +1,14 @@
 
-import { TenantDocument } from "@/types/tenant";
-import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
+import { ToastAction } from "@/components/ui/toast";
 
-/**
- * Downloads a document file with the proper MIME type
- */
-export const downloadDocument = async (document: TenantDocument, t: (key: string) => string) => {
-  if (!document || !document.file_url) return;
+export const downloadDocument = async (url: string | undefined, filename: string, t: (key: string) => string) => {
+  console.log("Downloading document:", filename, "from URL:", url);
+  
+  if (!url) {
+    console.error("URL is undefined, cannot download document");
+    return;
+  }
   
   try {
     // Determine the MIME type based on file extension
@@ -24,7 +26,7 @@ export const downloadDocument = async (document: TenantDocument, t: (key: string
     };
     
     // Use direct fetch to get the file with correct content type
-    const response = await fetch(document.file_url);
+    const response = await fetch(url);
     
     if (!response.ok) {
       throw new Error(`HTTP error: ${response.status}`);
@@ -32,46 +34,73 @@ export const downloadDocument = async (document: TenantDocument, t: (key: string
     
     // Get the file as a blob with the correct MIME type
     const blob = await response.blob();
-    const contentType = getContentType(document.name);
+    const contentType = getContentType(filename);
     const fileBlob = new Blob([blob], { type: contentType });
     
     // Create a download link and click it
     const downloadUrl = URL.createObjectURL(fileBlob);
-    const link = window.document.createElement('a');
+    const link = document.createElement('a');
     link.href = downloadUrl;
-    link.download = document.name;
-    window.document.body.appendChild(link);
+    link.download = filename;
+    document.body.appendChild(link);
     link.click();
     
     // Clean up
-    window.document.body.removeChild(link);
+    document.body.removeChild(link);
     setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     
-    toast({
+    return {
       title: t('downloadStarted'),
       description: t('downloadStartedDescription')
-    });
+    };
   } catch (error) {
     console.error("Error downloading document:", error);
-    toast({
+    return {
       title: t("error"),
       description: t("uploadError"),
-      variant: "destructive",
-    });
+      variant: "destructive" as const
+    };
   }
 };
 
-/**
- * Opens a document in a new browser tab
- */
-export const openDocumentInNewTab = (fileUrl: string | undefined) => {
-  if (!fileUrl) {
-    console.error("Document URL is undefined, cannot open document");
+export const openDocumentInNewTab = (url: string | undefined) => {
+  if (!url) {
+    console.error("URL is undefined, cannot open document");
     return;
   }
   
-  // Add timestamp to URL to prevent caching issues
-  const urlWithTimestamp = `${fileUrl}${fileUrl.includes('?') ? '&' : '?'}t=${Date.now()}`;
+  // Add timestamp to prevent caching issues
+  const urlWithTimestamp = `${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`;
   console.log("Opening URL in new tab:", urlWithTimestamp);
   window.open(urlWithTimestamp, '_blank');
+};
+
+export const deleteDocument = async (documentId: string, onSuccess: () => void, t: (key: string) => string) => {
+  try {
+    console.log("Deleting document:", documentId);
+
+    const { error } = await supabase
+      .from('tenant_documents')
+      .delete()
+      .eq('id', documentId);
+
+    if (error) {
+      console.error("Error deleting document:", error);
+      throw error;
+    }
+
+    onSuccess();
+    
+    return {
+      title: t("documentDeleted") || "Document deleted",
+      description: t("docDeleteSuccess") || "The document has been successfully deleted",
+    };
+  } catch (error) {
+    console.error('Delete error:', error);
+    return {
+      title: t("error") || "Error",
+      description: t("uploadError") || "An error occurred while deleting the document",
+      variant: "destructive" as const
+    };
+  }
 };
