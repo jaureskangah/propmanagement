@@ -26,8 +26,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
             <span>{metrics.properties.new} {t('newThisMonth')}</span>
           </div>
         }
-        chartData={metrics.properties.chartData}
-        chartColor="#4F46E5"
         tooltip={t('properties')}
         className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-100 dark:border-blue-800/30 hover:border-blue-200 dark:hover:border-blue-700/40"
       />
@@ -46,8 +44,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
             <span>{metrics.tenants.occupancyRate}% {t('occupancyRate')}</span>
           </div>
         }
-        chartData={metrics.tenants.chartData}
-        chartColor="#6366F1"
         tooltip={t('tenants')}
         className="bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border-purple-100 dark:border-purple-800/30 hover:border-purple-200 dark:hover:border-purple-700/40"
       />
@@ -69,8 +65,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
             </span>
           </div>
         }
-        chartData={metrics.maintenance.chartData}
-        chartColor="#F59E0B"
         tooltip={t('maintenance')}
         className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-100 dark:border-amber-800/30 hover:border-amber-200 dark:hover:border-amber-700/40"
       />
@@ -78,10 +72,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
   );
 
   const renderMessages = () => {
-    const defaultChartData = Array.from({ length: 7 }, (_, i) => ({
-      value: Math.max(0, unreadMessages + Math.floor(Math.random() * 5) - 2)
-    }));
-
     return (
       <SortableMetric key="messages" id="messages">
         <DashboardMetric
@@ -101,8 +91,6 @@ export const MetricRenderers = ({ metrics, unreadMessages }: MetricRenderersProp
               </span>
             </div>
           }
-          chartData={metrics.communications?.chartData || defaultChartData}
-          chartColor="#F43F5E"
           tooltip={t('unreadMessages')}
           className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 border-rose-100 dark:border-rose-800/30 hover:border-rose-200 dark:hover:border-rose-700/40"
         />

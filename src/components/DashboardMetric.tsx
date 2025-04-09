@@ -1,10 +1,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { GripVertical } from "lucide-react";
 
 interface DashboardMetricProps {
   title: string;
@@ -28,7 +26,6 @@ export function DashboardMetric({
   className,
   trend,
   trendValue,
-  chartData = [],
   chartColor = "#1E40AF",
   isLoading = false,
   tooltip
@@ -44,7 +41,6 @@ export function DashboardMetric({
           <div className="flex flex-col space-y-2">
             <Skeleton className="h-8 w-[120px]" />
             <Skeleton className="h-4 w-[180px]" />
-            <Skeleton className="h-[64px] w-full" />
           </div>
         </CardContent>
       </Card>
@@ -53,7 +49,7 @@ export function DashboardMetric({
 
   const card = (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing min-h-[200px]",
+      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing min-h-[120px]",
       "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
       "after:absolute after:inset-0 after:rounded-lg after:border-2 after:border-transparent after:transition-colors hover:after:border-primary/20",
       className
@@ -67,56 +63,13 @@ export function DashboardMetric({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col space-y-2">
+        <div className="flex flex-col">
           <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
             {value}
           </div>
           {description && (
-            <div className="text-xs text-muted-foreground dark:text-gray-300 animate-fade-in">
+            <div className="text-xs text-muted-foreground dark:text-gray-300 animate-fade-in mt-1">
               {description}
-            </div>
-          )}
-          {chartData.length > 0 && (
-            <div className="h-16 mt-4 transition-transform duration-300 group-hover:scale-[1.02]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
-                  <defs>
-                    <linearGradient id={`gradient-${title}`} x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor={chartColor} stopOpacity={0.3} />
-                      <stop offset="95%" stopColor={chartColor} stopOpacity={0} />
-                    </linearGradient>
-                  </defs>
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="rounded-lg border bg-background p-2 shadow-md animate-fade-in">
-                            <div className="grid grid-cols-2 gap-2">
-                              <span className="font-medium text-muted-foreground">Valeur:</span>
-                              <span className="font-bold text-primary">
-                                {typeof payload[0].value === 'number' 
-                                  ? payload[0].value.toLocaleString()
-                                  : payload[0].value}
-                              </span>
-                            </div>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="value"
-                    stroke={chartColor}
-                    fill={`url(#gradient-${title})`}
-                    strokeWidth={2}
-                    dot={false}
-                    animationDuration={1000}
-                    className="transition-all duration-300 group-hover:opacity-90"
-                  />
-                </AreaChart>
-              </ResponsiveContainer>
             </div>
           )}
         </div>
@@ -145,3 +98,4 @@ export function DashboardMetric({
 
   return card;
 }
+
