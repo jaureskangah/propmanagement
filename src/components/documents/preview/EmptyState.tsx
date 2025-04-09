@@ -10,9 +10,9 @@ export function EmptyState() {
       <div className="bg-muted/30 p-4 rounded-full mb-4">
         <File className="h-12 w-12 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium mb-2">{t('noPreviewAvailable')}</h3>
+      <h3 className="text-lg font-medium mb-2">{t('documentGenerator.noPreviewAvailable')}</h3>
       <p className="text-muted-foreground text-center max-w-md">
-        {t('generatePreviewDescription')}
+        {t('documentGenerator.generatePreviewDescription')}
       </p>
     </div>
   );

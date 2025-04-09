@@ -1,4 +1,3 @@
-
 export default {
   // Existing translations
   documentGenerator: "Document Generator",
@@ -12,8 +11,8 @@ export default {
   generating: "Generating...",
   downloading: "Downloading...",
   saving: "Saving...",
-  noPreviewAvailable: "No preview available",
-  generatePreviewDescription: "Generate a preview to see the final document",
+  noPreviewAvailable: "No preview available yet",
+  generatePreviewDescription: "Click 'Generate Preview' to create a document based on your content",
   startTypingDocument: "Start typing your document here...",
   downloadStarted: "Download started",
   downloadStartedDescription: "Your document will be downloaded shortly",
