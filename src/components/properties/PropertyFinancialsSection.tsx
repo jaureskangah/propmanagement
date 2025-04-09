@@ -17,7 +17,9 @@ const PropertyFinancialsSection = ({
 }: PropertyFinancialsSectionProps) => {
   const { t } = useLocale();
 
-  if (!selectedPropertyId) return null;
+  if (!selectedPropertyId || !selectedProperty) return null;
+
+  console.log("Rendering financials for property:", selectedPropertyId, selectedProperty.name);
 
   return (
     <motion.div 
@@ -32,7 +34,7 @@ const PropertyFinancialsSection = ({
         </div>
         <div>
           <h2 className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans">
-            {t('financialOverview')} - {selectedProperty?.name}
+            {t('financialOverview')} - {selectedProperty.name}
           </h2>
         </div>
       </div>

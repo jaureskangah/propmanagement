@@ -13,6 +13,7 @@ import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useMediaQuery } from "@/hooks/use-mobile";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import PropertyFinancialsSection from "@/components/properties/PropertyFinancialsSection";
 
 const Properties = () => {
   const { t } = useLocale();
@@ -31,6 +32,11 @@ const Properties = () => {
   
   // Définir les types de propriétés disponibles
   const propertyTypes = ["All", "Apartment", "House", "Office", "Commercial", "Studio", "Condo"] as const;
+
+  // Get the selected property object for financial display
+  const selectedProperty = selectedPropertyId 
+    ? properties.find(p => p.id === selectedPropertyId) 
+    : undefined;
 
   // Filtrer les propriétés en fonction des critères de recherche
   const filteredProperties = properties.filter((property) => {
@@ -113,6 +119,13 @@ const Properties = () => {
               onEdit={handleEditProperty}
               onDelete={confirmDelete}
               onViewFinancials={handleViewFinancials}
+            />
+          )}
+
+          {selectedPropertyId && selectedProperty && (
+            <PropertyFinancialsSection 
+              selectedPropertyId={selectedPropertyId}
+              selectedProperty={selectedProperty}
             />
           )}
         </motion.div>

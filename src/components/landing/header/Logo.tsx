@@ -10,6 +10,7 @@ interface LogoProps {
 export const Logo = ({ onClick, scrolled }: LogoProps) => {
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    console.log("Landing logo clicked - redirecting to home");
     onClick();
   };
 

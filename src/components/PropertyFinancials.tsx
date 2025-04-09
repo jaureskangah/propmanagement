@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import FinancialMetrics from "./finances/FinancialMetrics";
 import { DataTables } from "./maintenance/financials/DataTables";
 import { ChartsSection } from "./maintenance/financials/ChartsSection";
@@ -15,10 +15,15 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
   const { t } = useLocale();
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
+  useEffect(() => {
+    console.log("PropertyFinancials mounted/updated for property:", propertyId);
+  }, [propertyId]);
+
   // Fetch expenses data
-  const { data: expenses = [] } = useQuery({
+  const { data: expenses = [], isLoading: expensesLoading, error: expensesError } = useQuery({
     queryKey: ["maintenance_expenses", propertyId],
     queryFn: async () => {
+      console.log("Fetching expenses for property:", propertyId);
       const { data, error } = await supabase
         .from("maintenance_expenses")
         .select("*")
@@ -36,9 +41,10 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
   });
 
   // Fetch maintenance interventions data
-  const { data: maintenance = [] } = useQuery({
+  const { data: maintenance = [], isLoading: maintenanceLoading, error: maintenanceError } = useQuery({
     queryKey: ["vendor_interventions", propertyId],
     queryFn: async () => {
+      console.log("Fetching interventions for property:", propertyId);
       const { data, error } = await supabase
         .from("vendor_interventions")
         .select(`
@@ -60,6 +66,14 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
       return data;
     },
   });
+
+  if (expensesLoading || maintenanceLoading) {
+    return <div className="py-4">Chargement des données financières...</div>;
+  }
+
+  if (expensesError || maintenanceError) {
+    return <div className="py-4 text-red-500">Erreur lors du chargement des données</div>;
+  }
 
   return (
     <div className="space-y-6">
