@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { TenantDocument } from "@/types/tenant";
 import { Download, Share2, X } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { PdfViewer } from "@/components/documents/PdfViewer";
 
 interface DocumentViewerDialogProps {
   document: TenantDocument | null;
@@ -83,14 +84,14 @@ export const DocumentViewerDialog = ({
       
       // Create a download link and click it
       const downloadUrl = URL.createObjectURL(fileBlob);
-      const link = document.createElement('a');
+      const link = window.document.createElement('a');
       link.href = downloadUrl;
       link.download = document.name;
-      document.body.appendChild(link);
+      window.document.body.appendChild(link);
       link.click();
       
       // Clean up
-      document.body.removeChild(link);
+      window.document.body.removeChild(link);
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
     } catch (error) {
       console.error("Erreur lors du téléchargement du document:", error);
@@ -135,13 +136,7 @@ export const DocumentViewerDialog = ({
             </div>
           ) : viewUrl ? (
             isPdf ? (
-              <iframe 
-                src={viewUrl}
-                className="w-full h-full border-none bg-white"
-                title={document.name}
-                sandbox="allow-scripts allow-same-origin"
-                loading="lazy"
-              />
+              <PdfViewer url={viewUrl} />
             ) : isImage ? (
               <img 
                 src={viewUrl} 
