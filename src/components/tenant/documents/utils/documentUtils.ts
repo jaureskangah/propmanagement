@@ -1,8 +1,7 @@
 
 import { supabase } from "@/lib/supabase";
-import { ToastProps } from "@/components/ui/toast";
 
-// Define the correct return type for our toast functions
+// Type de retour pour nos fonctions toast
 type ToastReturn = {
   title: string;
   description: string;
@@ -25,12 +24,8 @@ export const downloadDocument = async (fileUrl: string | undefined | null, fileN
   }
 
   try {
-    // Simplification: utiliser directement l'API window.open pour télécharger
-    const downloadWindow = window.open(fileUrl, '_blank');
-    
-    if (!downloadWindow) {
-      throw new Error("Popup bloqué");
-    }
+    // Ouvrir l'URL dans un nouvel onglet, ce qui déclenchera le téléchargement
+    window.open(fileUrl, '_blank');
     
     return {
       title: t("downloadStarted") || "Téléchargement démarré",
@@ -62,7 +57,7 @@ export const openDocumentInNewTab = (fileUrl: string | undefined | null, t: (key
   }
 
   try {
-    // Ouvrir directement dans un nouvel onglet sans validation supplémentaire
+    // Ouvrir directement dans un nouvel onglet
     window.open(fileUrl, '_blank');
     
     return {
@@ -110,48 +105,13 @@ export const deleteDocument = async (documentId: string, onSuccess: () => void, 
 };
 
 /**
- * Récupère l'URL du document directement depuis Supabase Storage
+ * Génère une URL directe vers un fichier dans Supabase Storage
  */
 export const getStorageUrl = (tenantId: string, fileName: string): string => {
   return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${fileName}`;
 };
 
-/**
- * Assure que le document a une URL valide (version simplifiée)
- */
+// Cette fonction n'est plus nécessaire avec notre nouvelle approche
 export const ensureDocumentUrl = async (document: any) => {
-  if (!document) return null;
-  
-  // Si l'URL est déjà définie et valide, la retourner
-  if (document.file_url && document.file_url !== "undefined" && document.file_url !== "null") {
-    console.log("Document has valid URL:", document.file_url);
-    return document;
-  }
-  
-  // Sinon, générer une URL directe
-  if (document.tenant_id && document.name) {
-    const directUrl = getStorageUrl(document.tenant_id, document.name);
-    console.log("Generated direct URL for document:", directUrl);
-    
-    // Mettre à jour le document en mémoire
-    document.file_url = directUrl;
-    
-    // Mettre à jour la base de données
-    try {
-      const { error } = await supabase
-        .from('tenant_documents')
-        .update({ file_url: directUrl })
-        .eq('id', document.id);
-        
-      if (error) {
-        console.error("Error updating document URL in database:", error);
-      }
-    } catch (err) {
-      console.error("Error in database operation:", err);
-    }
-  } else {
-    console.error("Cannot generate URL - missing tenant_id or name", document);
-  }
-  
   return document;
 };

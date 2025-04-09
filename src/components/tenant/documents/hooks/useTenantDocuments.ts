@@ -2,7 +2,11 @@
 import { useState, useCallback, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantDocument } from "@/types/tenant";
-import { ensureDocumentUrl } from "../utils/documentUtils";
+
+// Fonction pour générer une URL directe vers le fichier
+const generateDirectUrl = (tenantId: string, filename: string): string => {
+  return `https://jhjhzwbvmkurwfohjxlu.supabase.co/storage/v1/object/public/tenant_documents/${tenantId}/${filename}`;
+};
 
 export const useTenantDocuments = (tenantId: string | null, toast: any) => {
   const [documents, setDocuments] = useState<TenantDocument[]>([]);
@@ -42,20 +46,17 @@ export const useTenantDocuments = (tenantId: string | null, toast: any) => {
         return;
       }
       
-      // Process each document to ensure it has a URL
-      const processedDocs = await Promise.all(data.map(async (doc) => {
-        console.log("Processing document:", doc.id, doc.name);
-        
-        // Set tenant_id if not present, needed for URL generation
-        if (!doc.tenant_id) {
-          doc.tenant_id = id;
+      // Traiter chaque document pour garantir qu'il a une URL valide
+      const processedDocs = data.map(doc => {
+        // Si le document n'a pas d'URL ou a une URL invalide, générer une URL directe
+        if (!doc.file_url || doc.file_url === "undefined" || doc.file_url === "null") {
+          doc.file_url = generateDirectUrl(id, doc.name);
+          console.log(`Generated URL for document ${doc.id}: ${doc.file_url}`);
+        } else {
+          console.log(`Document ${doc.id} already has URL: ${doc.file_url}`);
         }
-        
-        // Ensure document has a valid URL
-        const docWithUrl = await ensureDocumentUrl(doc);
-        console.log("Document after URL processing:", docWithUrl?.id, docWithUrl?.name, "URL:", docWithUrl?.file_url);
-        return docWithUrl;
-      }));
+        return doc;
+      });
       
       console.log("Processed documents with URLs:", processedDocs.length);
       setDocuments(processedDocs);
