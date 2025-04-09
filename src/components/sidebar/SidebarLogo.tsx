@@ -10,7 +10,9 @@ interface SidebarLogoProps {
 export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   const navigate = useNavigate();
   
-  const handleLogoClick = () => {
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     console.log("Logo clicked - navigating to home page");
     try {
       navigate('/', { replace: true });

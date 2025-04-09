@@ -35,6 +35,7 @@ const PropertyCardActions = ({
               size="icon"
               onClick={(e) => {
                 e.stopPropagation();
+                e.preventDefault();
                 onViewFinancials(id);
               }}
               className="hover:bg-blue-100 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 transition-colors h-6 w-6 rounded-full"

@@ -8,10 +8,15 @@ interface LogoProps {
 }
 
 export const Logo = ({ onClick, scrolled }: LogoProps) => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onClick();
+  };
+
   return (
     <motion.div 
       className="flex items-center gap-2 cursor-pointer" 
-      onClick={onClick}
+      onClick={handleClick}
       whileHover={{ scale: 1.05 }}
       transition={{ type: "spring", stiffness: 400, damping: 10 }}
     >

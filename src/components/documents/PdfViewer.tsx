@@ -10,11 +10,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
   
   useEffect(() => {
     if (iframeRef.current) {
+      // S'assurer que l'iframe a un fond blanc
       iframeRef.current.style.backgroundColor = "#ffffff";
       
       try {
-        // Try to access iframe content document to apply styles
-        setTimeout(() => {
+        // Essayer d'accéder au document de l'iframe pour appliquer des styles
+        const applyStyles = () => {
           if (iframeRef.current) {
             try {
               const iframeDoc = iframeRef.current.contentDocument || 
@@ -28,7 +29,12 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ url }) => {
               console.log("Cannot access iframe content:", e);
             }
           }
-        }, 300);
+        };
+        
+        // Essayer d'appliquer les styles plusieurs fois pour s'assurer qu'ils sont bien appliqués
+        setTimeout(applyStyles, 300);
+        setTimeout(applyStyles, 1000);
+        setTimeout(applyStyles, 2000);
       } catch (e) {
         console.log("Error accessing iframe:", e);
       }
