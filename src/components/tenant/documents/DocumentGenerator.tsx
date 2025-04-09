@@ -63,10 +63,10 @@ export const DocumentGenerator = () => {
             <DocumentEditor 
               content={documentContent}
               onContentChange={setDocumentContent}
-              onInsertDynamicField={handleInsertDynamicField}
               onGeneratePreview={() => handleGeneratePreview(documentContent)}
               isGenerating={isGenerating}
               tenant={tenant}
+              onInsertDynamicField={handleInsertDynamicField}
             />
           </TabsContent>
           
