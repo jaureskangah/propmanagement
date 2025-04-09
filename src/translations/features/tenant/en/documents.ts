@@ -10,7 +10,7 @@ export const enDocuments: TenantDocumentsTranslations = {
   documentDeleteWarning: "Are you sure you want to delete this document?",
   noDocuments: "No documents available",
   generateDocument: "Generate Document",
-  downloadDocument: "Download",
+  downloadDocument: "Download document",
   openDocument: "Open Document",
   myDocuments: "My Documents",
   importantDocuments: "Important Documents",

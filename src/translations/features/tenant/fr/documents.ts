@@ -10,7 +10,7 @@ export const frDocuments: TenantDocumentsTranslations = {
   documentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce document?",
   noDocuments: "Aucun document disponible",
   generateDocument: "Générer un document",
-  downloadDocument: "Télécharger",
+  downloadDocument: "Télécharger le document",
   openDocument: "Ouvrir le document",
   myDocuments: "Mes documents",
   importantDocuments: "Documents importants",

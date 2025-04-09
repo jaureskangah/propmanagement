@@ -41,7 +41,8 @@ export function DocumentPreview({
   return (
     <div className="flex flex-col h-full min-h-[500px] gap-4">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-medium">{t('preview') || "Aperçu"}</h2>
+        {/* Retrait du titre "Aperçu" */}
+        <div></div>
         <ActionButtons 
           onDownload={onDownload}
           onShare={handleShare}
