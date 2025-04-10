@@ -1,7 +1,6 @@
 
 import { useEffect, useState } from "react";
 import { MaintenanceMetrics } from "../MaintenanceMetrics";
-import { MaintenanceNotifications } from "../MaintenanceNotifications";
 import { supabase } from "@/lib/supabase";
 
 interface MaintenanceMetricsSectionProps {
@@ -74,17 +73,12 @@ export const MaintenanceMetricsSection = ({
   }, []);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-      <div className="lg:col-span-2 order-2 lg:order-1">
-        <MaintenanceMetrics
-          total={metrics.totalRequests}
-          pending={metrics.pendingRequests}
-          resolved={metrics.resolvedRequests}
-        />
-      </div>
-      <div className="lg:col-span-1 order-1 lg:order-2">
-        <MaintenanceNotifications />
-      </div>
+    <div className="w-full mb-6">
+      <MaintenanceMetrics
+        total={metrics.totalRequests}
+        pending={metrics.pendingRequests}
+        resolved={metrics.resolvedRequests}
+      />
     </div>
   );
 };
