@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tooltip as UITooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { LineChart, Line, ResponsiveContainer } from "recharts";
 
 interface DashboardMetricProps {
   title: string;
@@ -69,23 +68,6 @@ export function DashboardMetric({
           <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
             {value}
           </div>
-          
-          {chartData && chartData.length > 0 && (
-            <div className="h-[40px] mt-2 animate-fade-in">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={chartData}>
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke={chartColor}
-                    strokeWidth={2}
-                    dot={false}
-                    isAnimationActive={true}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          )}
         </div>
       </CardContent>
     </Card>
