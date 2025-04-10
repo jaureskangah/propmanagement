@@ -88,12 +88,12 @@ export default function Settings() {
           sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
         )}>
           <div className="container max-w-5xl mx-auto animate-pulse">
-            <div className="h-10 w-64 bg-muted rounded-md mb-8"></div>
+            <div className="h-10 w-64 bg-muted rounded-md mb-8 dark:bg-gray-800"></div>
             <div className="space-y-8">
-              <div className="h-48 bg-muted rounded-lg"></div>
-              <div className="h-48 bg-muted rounded-lg"></div>
-              <div className="h-48 bg-muted rounded-lg"></div>
-              <div className="h-48 bg-muted rounded-lg"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
             </div>
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background dark:bg-gray-950">
       <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
       <div className={cn(
         "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
