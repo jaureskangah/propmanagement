@@ -101,7 +101,6 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
                 {metric.variation !== undefined && (
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span className="font-medium">{metric.title === t('pendingRequests') ? pendingPercent : resolvedPercent}%</span>
                       <Tooltip>
                         <TooltipTrigger>
                           <div className={`flex items-center gap-1 ${metric.trendColor}`}>
