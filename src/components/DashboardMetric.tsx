@@ -48,7 +48,8 @@ export function DashboardMetric({
     );
   }
 
-  const card = (
+  // Afficher directement la carte sans le survol qui montre le titre
+  return (
     <Card className={cn(
       "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg transform hover:-translate-y-1",
       "bg-gradient-to-br from-card to-secondary/80 backdrop-blur-sm",
@@ -56,7 +57,7 @@ export function DashboardMetric({
       className
     )}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
+        <CardTitle className="text-sm font-medium text-muted-foreground transition-colors">
           {title}
         </CardTitle>
         <div className="h-8 w-8 rounded-full flex items-center justify-center bg-white/80 dark:bg-gray-800/50 shadow-sm transition-all duration-300 group-hover:scale-110 text-primary">
@@ -72,25 +73,4 @@ export function DashboardMetric({
       </CardContent>
     </Card>
   );
-
-  if (tooltip) {
-    return (
-      <TooltipProvider>
-        <UITooltip delayDuration={300}>
-          <TooltipTrigger asChild>
-            {card}
-          </TooltipTrigger>
-          <TooltipContent 
-            className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in dark:bg-gray-800/95 dark:border-gray-700/50"
-            side="top"
-            align="center"
-          >
-            <p className="text-sm text-gray-600 dark:text-gray-300">{tooltip}</p>
-          </TooltipContent>
-        </UITooltip>
-      </TooltipProvider>
-    );
-  }
-
-  return card;
 }
