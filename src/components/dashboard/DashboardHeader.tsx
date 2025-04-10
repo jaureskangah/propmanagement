@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { DashboardCustomization } from "./DashboardCustomization";
 import { DashboardDateFilter, DateRange } from "./DashboardDateFilter";
@@ -24,11 +23,9 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   
   useEffect(() => {
     const fetchUserProfile = async () => {
-      // First try to get name from user metadata
       let firstName = user?.user_metadata?.first_name || "";
       console.log("Initial first name from metadata:", firstName);
       
-      // If not found in metadata, try to get from profiles table
       if (!firstName && user?.id) {
         try {
           const { data, error } = await supabase
@@ -55,7 +52,6 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
       console.log("Final first name to display:", firstName);
       setDisplayName(firstName);
       
-      // Show welcome toast only if we have a name
       if (firstName) {
         console.log("Showing welcome toast for:", firstName);
         toast({
@@ -69,28 +65,25 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
     if (user) {
       fetchUserProfile();
     }
-    
   }, [user, t, toast]);
   
-  // Log the current state of displayName for debugging
   console.log("Current displayName in render:", displayName);
   
-  // Personalised welcome message with translation
   const welcomeMessage = displayName
     ? t('welcomeTenant', { name: displayName })
     : t('welcomeGeneric');
     
   console.log("Constructed welcome message:", welcomeMessage);
 
-  // Handle date range change
   const handleDateRangeChange = (newDateRange: DateRange) => {
     console.log("DashboardHeader date range changed:", newDateRange);
     onDateRangeChange(newDateRange);
   };
 
-  // Toggle between light and dark mode
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    const newTheme = theme === "dark" ? "light" : "dark";
+    console.log("Toggling theme to:", newTheme);
+    setTheme(newTheme);
   };
 
   return (

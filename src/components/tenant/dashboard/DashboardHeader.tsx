@@ -80,7 +80,9 @@ export function DashboardHeader({
     : t('welcomeGeneric');
   
   const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    const newTheme = theme === "dark" ? "light" : "dark";
+    console.log("Tenant dashboard toggling theme to:", newTheme);
+    setTheme(newTheme);
   };
   
   return (
