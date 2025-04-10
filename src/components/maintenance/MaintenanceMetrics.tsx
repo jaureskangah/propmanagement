@@ -44,15 +44,20 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
       value: total,
       icon: ClipboardList,
       color: "text-blue-500",
+      bgColor: "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20",
+      borderColor: "border-blue-100 dark:border-blue-800/30 hover:border-blue-200 dark:hover:border-blue-700/40",
       description: t('totalRequestsDesc')
     },
     {
       title: t('pendingRequests'),
       value: pending,
       icon: Clock,
-      color: "text-yellow-500",
+      color: "text-amber-500",
+      bgColor: "from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20",
+      borderColor: "border-amber-100 dark:border-amber-800/30 hover:border-amber-200 dark:hover:border-amber-700/40",
       variation: pendingVariation,
-      trendColor: pendingVariation < 0 ? "bg-green-500" : "bg-red-500",
+      trendColor: pendingVariation < 0 ? "text-green-500" : "text-red-500",
+      trendIcon: pendingVariation < 0 ? TrendingDown : TrendingUp,
       trendWidth: `${Math.abs(pendingVariation)}%`,
       description: t('pendingRequestsDesc')
     },
@@ -61,8 +66,11 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
       value: resolved,
       icon: CheckCircle,
       color: "text-green-500",
+      bgColor: "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
+      borderColor: "border-green-100 dark:border-green-800/30 hover:border-green-200 dark:hover:border-green-700/40",
       variation: resolvedVariation,
-      trendColor: resolvedVariation > 0 ? "bg-green-500" : "bg-red-500",
+      trendColor: resolvedVariation > 0 ? "text-green-500" : "text-red-500",
+      trendIcon: resolvedVariation > 0 ? TrendingUp : TrendingDown,
       trendWidth: `${Math.abs(resolvedVariation)}%`,
       description: t('resolvedRequestsDesc')
     },
@@ -72,48 +80,39 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
     <TooltipProvider>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {metrics.map((metric) => (
-          <Card key={metric.title} className="relative overflow-hidden group hover:shadow-lg transition-all duration-300">
-            <div className={`absolute h-1 w-full top-0 ${metric.color.replace('text-', 'bg-')}`}></div>
+          <Card 
+            key={metric.title} 
+            className={`relative overflow-hidden group hover:shadow-lg transition-all duration-300 border bg-gradient-to-br ${metric.bgColor} ${metric.borderColor} transform hover:-translate-y-1`}
+          >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
                 {metric.title}
               </CardTitle>
-              <metric.icon className={`h-4 w-4 ${metric.color}`} />
+              <div className={`h-8 w-8 rounded-full flex items-center justify-center bg-white/80 dark:bg-gray-800/50 shadow-sm transition-all duration-300 group-hover:scale-110 ${metric.color}`}>
+                <metric.icon className="h-4 w-4" />
+              </div>
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <div className="text-2xl font-bold">{metric.value}</div>
+                <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
+                  {metric.value}
+                </div>
                 
                 {metric.variation !== undefined && (
                   <div className="space-y-1">
                     <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{metric.title === t('pendingRequests') ? pendingPercent : resolvedPercent}%</span>
+                      <span className="font-medium">{metric.title === t('pendingRequests') ? pendingPercent : resolvedPercent}%</span>
                       <Tooltip>
                         <TooltipTrigger>
-                          <div className={`flex items-center gap-1 ${
-                            metric.variation > 0 
-                              ? metric.title === t('resolvedRequests') ? 'text-green-500' : 'text-red-500'
-                              : metric.title === t('resolvedRequests') ? 'text-red-500' : 'text-green-500'
-                          }`}>
-                            {(metric.variation > 0 && metric.title === t('resolvedRequests')) || 
-                             (metric.variation < 0 && metric.title !== t('resolvedRequests')) ? (
-                              <TrendingUp className="h-3 w-3" />
-                            ) : (
-                              <TrendingDown className="h-3 w-3" />
-                            )}
-                            <span>{Math.abs(metric.variation)}%</span>
+                          <div className={`flex items-center gap-1 ${metric.trendColor}`}>
+                            <metric.trendIcon className="h-3 w-3" />
+                            <span className="font-semibold">{Math.abs(metric.variation)}%</span>
                           </div>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{t('comparedToPreviousMonth')}</p>
+                        <TooltipContent className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in dark:bg-gray-800/95 dark:border-gray-700/50">
+                          <p className="text-sm">{t('comparedToPreviousMonth')}</p>
                         </TooltipContent>
                       </Tooltip>
-                    </div>
-                    <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                      <div 
-                        className={`h-full ${metric.trendColor} transition-all duration-500`}
-                        style={{ width: metric.trendWidth }}
-                      ></div>
                     </div>
                   </div>
                 )}

@@ -51,16 +51,16 @@ export function DashboardMetric({
 
   const card = (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg cursor-grab active:cursor-grabbing",
-      "before:absolute before:left-0 before:top-0 before:h-full before:w-2 before:bg-gradient-to-b before:from-primary before:to-blue-600 before:opacity-0 before:transition-opacity hover:before:opacity-100",
-      "after:absolute after:inset-0 after:rounded-lg after:border-2 after:border-transparent after:transition-colors hover:after:border-primary/20",
+      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-lg transform hover:-translate-y-1",
+      "bg-gradient-to-br from-card to-secondary/80 backdrop-blur-sm",
+      "border border-transparent hover:border-primary/20",
       className
     )}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-sm font-medium text-muted-foreground group-hover:text-primary transition-colors">
           {title}
         </CardTitle>
-        <div className="transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 text-primary">
+        <div className="h-8 w-8 rounded-full flex items-center justify-center bg-white/80 dark:bg-gray-800/50 shadow-sm transition-all duration-300 group-hover:scale-110 text-primary">
           {icon}
         </div>
       </CardHeader>
@@ -99,11 +99,11 @@ export function DashboardMetric({
             {card}
           </TooltipTrigger>
           <TooltipContent 
-            className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in"
+            className="bg-white/95 backdrop-blur-sm border-primary/10 p-3 shadow-lg animate-fade-in dark:bg-gray-800/95 dark:border-gray-700/50"
             side="top"
             align="center"
           >
-            <p className="text-sm text-gray-600">{tooltip}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">{tooltip}</p>
           </TooltipContent>
         </UITooltip>
       </TooltipProvider>
