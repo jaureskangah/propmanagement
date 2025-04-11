@@ -19,11 +19,15 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
   const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
 
-  // Fetch total rent payments for the property
+  // Get current year's start and end dates
+  const currentYear = new Date().getFullYear();
+  const startOfYear = new Date(currentYear, 0, 1).toISOString(); // Jan 1st of current year
+  
+  // Fetch total rent payments for the property for current year
   const { data: totalRentPaid = 0 } = useQuery({
-    queryKey: ["total_rent_paid", propertyId],
+    queryKey: ["total_rent_paid", propertyId, currentYear],
     queryFn: async () => {
-      console.log("Fetching total rent paid for property:", propertyId);
+      console.log("Fetching total rent paid for property:", propertyId, "for year:", currentYear);
       
       const { data: tenants, error: tenantsError } = await supabase
         .from("tenants")
@@ -43,7 +47,8 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
         .from("tenant_payments")
         .select("amount")
         .in("tenant_id", tenantIds)
-        .eq("status", "paid");
+        .eq("status", "paid")
+        .gte("payment_date", startOfYear);
 
       if (paymentsError) {
         console.error("Error fetching payments:", paymentsError);
@@ -51,7 +56,7 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
       }
 
       const total = payments?.reduce((sum, payment) => sum + payment.amount, 0) || 0;
-      console.log("Total rent paid:", total);
+      console.log("Total rent paid for current year:", total);
       return total;
     },
   });
@@ -79,7 +84,7 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
       title: t('totalRentPaid'),
       value: `$${totalRentPaid.toLocaleString()}`,
       icon: <Wallet className="h-4 w-4" />,
-      description: t('allTime'),
+      description: t('yearToDate'),  // Changed from 'allTime' to 'yearToDate'
       color: "text-green-500",
       bgColor: "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
       borderColor: "border-green-100 dark:border-green-800/30 hover:border-green-200 dark:hover:border-green-700/40",
