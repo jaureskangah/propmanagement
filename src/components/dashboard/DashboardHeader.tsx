@@ -88,15 +88,15 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
   };
 
   return (
-    <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm dark:border-gray-800/60 dark:from-gray-900 dark:to-gray-950 dark:shadow-lg">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+    <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center dark:bg-blue-600/20">
-            <LayoutDashboard className="h-5 w-5 text-primary dark:text-blue-400" />
+          <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+            <LayoutDashboard className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent dark:from-blue-400 dark:to-indigo-400">{title}</h1>
-            <p className="text-muted-foreground mt-1 dark:text-gray-400">{welcomeMessage}</p>
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{title}</h1>
+            <p className="text-muted-foreground mt-1">{welcomeMessage}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
             size="icon" 
             onClick={toggleTheme} 
             type="button"
-            className="h-9 w-9 dark:bg-gray-900/80 dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:border-gray-700"
+            className="h-9 w-9"
             title={theme === "dark" ? t('lightMode') : t('darkMode')}
           >
             {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
