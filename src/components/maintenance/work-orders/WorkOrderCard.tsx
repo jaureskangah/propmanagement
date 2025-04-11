@@ -31,7 +31,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
   } = useWorkOrderCard({ order, onUpdate, onDelete });
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col overflow-hidden">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg line-clamp-2">{order.title}</CardTitle>
@@ -40,7 +40,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       <CardContent className="pb-2 flex-grow">
         <WorkOrderDetails order={order} />
       </CardContent>
-      <CardFooter className="pt-2 flex-shrink-0">
+      <CardFooter className="pt-2 flex-shrink-0 border-t border-gray-100">
         <WorkOrderActions 
           hasPhotos={Boolean(order.photos && order.photos.length > 0)}
           onViewPhotos={() => setIsPhotoDialogOpen(true)}

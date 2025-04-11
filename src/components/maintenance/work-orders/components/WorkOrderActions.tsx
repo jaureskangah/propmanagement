@@ -53,7 +53,7 @@ export const WorkOrderActions = ({
         </Tooltip>
       </TooltipProvider>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>

@@ -19,14 +19,15 @@ export const WorkOrderGrid = ({ orders, onOrderUpdate, onOrderDelete }: WorkOrde
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
       {orders.map((order) => (
-        <WorkOrderCard 
-          key={order.id} 
-          order={order}
-          onUpdate={onOrderUpdate}
-          onDelete={onOrderDelete}
-        />
+        <div key={order.id} className="min-h-[300px] flex">
+          <WorkOrderCard 
+            order={order}
+            onUpdate={onOrderUpdate}
+            onDelete={onOrderDelete}
+          />
+        </div>
       ))}
     </div>
   );
