@@ -15,7 +15,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   // State for filters and search
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<"date" | "cost">("date");
+  const [sortBy, setSortBy] = useState<"date" | "cost" | "priority">("date");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   // Filter and sort work orders
@@ -31,9 +31,14 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
       .sort((a, b) => {
         if (sortBy === "date") {
           return (b.date || "").localeCompare(a.date || "");
-        } else {
+        } else if (sortBy === "cost") {
           return b.cost - a.cost;
+        } else if (sortBy === "priority") {
+          const priorityWeight = { "Haute": 3, "Moyenne": 2, "Basse": 1 };
+          return (priorityWeight[b.priority as keyof typeof priorityWeight] || 0) - 
+                 (priorityWeight[a.priority as keyof typeof priorityWeight] || 0);
         }
+        return 0;
       });
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
