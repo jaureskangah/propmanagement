@@ -1,6 +1,6 @@
 
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfDay, isSameDay } from "date-fns";
+import { format, startOfDay, isSameDay, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -25,16 +25,39 @@ export const MaintenanceCalendar = ({
     // Normaliser la date pour la comparaison (sans heure/minute/seconde)
     const normalizedDate = startOfDay(date);
     
-    return tasks.filter((task) => {
+    // Filtrer les tâches qui correspondent à la date
+    const filteredTasks = tasks.filter((task) => {
       // Ensure task.date is a Date object
-      const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
+      let taskDate: Date;
       
-      // Use isSameDay to compare dates properly
-      return (
-        isSameDay(taskDate, normalizedDate) &&
-        (selectedType === "all" || task.type === selectedType)
-      );
+      if (task.date instanceof Date) {
+        taskDate = task.date;
+      } else if (typeof task.date === 'string') {
+        // Si la date est une chaîne, essayer de la convertir en Date
+        taskDate = new Date(task.date);
+        // Vérifier si la date est valide
+        if (!isValid(taskDate)) {
+          console.error("Invalid date format for task:", task.id, task.date);
+          return false;
+        }
+      } else {
+        console.error("Unexpected date format for task:", task.id, task.date);
+        return false;
+      }
+      
+      // Normaliser la date de la tâche pour la comparaison
+      const normalizedTaskDate = startOfDay(taskDate);
+      
+      console.log(`Comparing dates - Task: ${task.id} - ${normalizedTaskDate.toISOString()} vs Calendar: ${normalizedDate.toISOString()} - Match: ${isSameDay(normalizedTaskDate, normalizedDate)}`);
+      
+      // Vérifier si le type correspond (si un type est sélectionné)
+      const typeMatches = selectedType === "all" || task.type === selectedType;
+      
+      // Retourner vrai si les dates sont les mêmes et le type correspond
+      return isSameDay(normalizedTaskDate, normalizedDate) && typeMatches;
     });
+    
+    return filteredTasks;
   };
   
   console.log("Tasks in calendar:", tasks);
@@ -47,7 +70,10 @@ export const MaintenanceCalendar = ({
   })));
   
   if (selectedDate) {
-    console.log("Tasks for selected date:", getTasksForDate(selectedDate));
+    const tasksForSelectedDate = getTasksForDate(selectedDate);
+    console.log("Selected date:", selectedDate);
+    console.log("Normalized selected date:", startOfDay(selectedDate).toISOString());
+    console.log("Tasks for selected date:", tasksForSelectedDate);
   }
 
   const getTaskColor = (tasks: Task[]) => {

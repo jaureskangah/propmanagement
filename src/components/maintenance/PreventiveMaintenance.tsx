@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { isSameDay } from "date-fns";
+import { isSameDay, startOfDay, isValid } from "date-fns";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -55,13 +56,29 @@ export const PreventiveMaintenance = () => {
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return false; // Don't show tasks if no date is selected
     
-    // Log each task date comparison for debugging
-    const taskDate = task.date instanceof Date 
-      ? task.date 
-      : new Date(task.date);
+    // Get a properly formatted task date
+    let taskDate: Date;
+    if (task.date instanceof Date) {
+      taskDate = task.date;
+    } else if (typeof task.date === 'string') {
+      taskDate = new Date(task.date);
+      if (!isValid(taskDate)) {
+        console.error("Invalid date string in task:", task.id, task.date);
+        return false;
+      }
+    } else {
+      console.error("Unexpected date format in task:", task.id, task.date);
+      return false;
+    }
     
-    const isSame = isSameDay(taskDate, selectedDate);
+    // Normaliser les dates avant comparaison
+    const normalizedTaskDate = startOfDay(taskDate);
+    const normalizedSelectedDate = startOfDay(selectedDate);
+    
+    // Log each task date comparison for debugging
+    const isSame = isSameDay(normalizedTaskDate, normalizedSelectedDate);
     console.log(`Task ${task.id} "${task.title}" date: ${taskDate} matches selected ${selectedDate}? ${isSame}`);
+    console.log(`Task date normalized: ${normalizedTaskDate.toISOString()} - Selected date normalized: ${normalizedSelectedDate.toISOString()}`);
     
     return isSame;
   });
@@ -80,8 +97,17 @@ export const PreventiveMaintenance = () => {
         title: t('success'),
         description: t('taskAdded'),
       });
-      // Make sure we keep the current selected date
-      console.log("Keeping selected date after adding task:", selectedDate);
+      
+      // Si la date de la nouvelle tâche est différente de la date sélectionnée,
+      // mettre à jour la date sélectionnée pour montrer la tâche
+      if (newTask.date && selectedDate && !isSameDay(newTask.date, selectedDate)) {
+        console.log("Setting calendar to task date:", newTask.date);
+        setSelectedDate(new Date(newTask.date));
+      } else {
+        console.log("Keeping selected date after adding task:", selectedDate);
+        // Forcer un rafraîchissement pour afficher la nouvelle tâche
+        setForceRefresh(prev => prev + 1);
+      }
     }).catch(error => {
       console.error("Error adding task:", error);
       toast({
@@ -94,10 +120,20 @@ export const PreventiveMaintenance = () => {
   };
 
   const onAddMultipleTasks = (newTasks: NewTask[]) => {
-    handleAddMultipleTasks(newTasks);
-    toast({
-      title: t('success'),
-      description: t('multipleTasksAdded'),
+    handleAddMultipleTasks(newTasks).then(() => {
+      toast({
+        title: t('success'),
+        description: t('multipleTasksAdded'),
+      });
+      // Si des tâches ont été ajoutées, forcer un rafraîchissement
+      setForceRefresh(prev => prev + 1);
+    }).catch(error => {
+      console.error("Error adding multiple tasks:", error);
+      toast({
+        title: t('error'),
+        description: t('errorAddingTasks'),
+        variant: "destructive",
+      });
     });
     setIsBatchSchedulingOpen(false);
   };

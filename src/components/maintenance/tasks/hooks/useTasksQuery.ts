@@ -25,14 +25,21 @@ export const useTasksQuery = () => {
         let taskDate;
         try {
           if (task.date) {
-            // Ensure date is in YYYY-MM-DD format for consistent parsing
-            // If date has time component, it needs to be truncated
+            // Parse the date string to ensure it's correctly formatted
             const dateStr = typeof task.date === 'string' 
               ? task.date.split('T')[0] // Split to handle ISO strings
               : task.date;
               
-            taskDate = new Date(dateStr);
-            console.log(`Parsed date for task ${task.id}: ${dateStr} -> ${taskDate}`);
+            // Create a new Date object with the date parts to avoid timezone issues
+            const dateParts = dateStr.split('-').map(part => parseInt(part, 10));
+            if (dateParts.length === 3) {
+              // year, month (0-based in JS Date), day
+              taskDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+              console.log(`Parsed date for task ${task.id}: ${dateStr} -> ${taskDate} -> ${taskDate.toISOString()}`);
+            } else {
+              taskDate = new Date(dateStr);
+              console.log(`Simple parse for task ${task.id}: ${dateStr} -> ${taskDate}`);
+            }
             
             // Verify the date is valid
             if (isNaN(taskDate.getTime())) {
@@ -51,12 +58,19 @@ export const useTasksQuery = () => {
         let reminderDate = undefined;
         if (task.reminder_date) {
           try {
-            // Ensure date is in YYYY-MM-DD format for consistent parsing
+            // Parse reminder date with similar approach
             const reminderDateStr = typeof task.reminder_date === 'string'
               ? task.reminder_date.split('T')[0]
               : task.reminder_date;
               
-            reminderDate = new Date(reminderDateStr);
+            const dateParts = reminderDateStr.split('-').map(part => parseInt(part, 10));
+            if (dateParts.length === 3) {
+              // year, month (0-based in JS Date), day
+              reminderDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+            } else {
+              reminderDate = new Date(reminderDateStr);
+            }
+            
             if (isNaN(reminderDate.getTime())) {
               console.warn("Invalid reminder date found for task:", task.id, task.reminder_date);
               reminderDate = undefined;
@@ -96,18 +110,11 @@ export const useTasksQuery = () => {
         dateType: typeof t.date,
         dateIsDate: t.date instanceof Date
       })));
-      console.log("Recurring tasks count:", formattedTasks.filter(task => task.is_recurring).length);
-      console.log("Reminder tasks count:", formattedTasks.filter(task => task.has_reminder).length);
       
       return formattedTasks;
     },
-    refetchInterval: 10000, // Refetch every 10 seconds to ensure new tasks appear
+    refetchInterval: 3000, // Augmenter la fréquence de rafraîchissement pour voir les changements plus rapidement
   });
-
-  // Plus de logs pour diagnostiquer les problèmes
-  console.log("All tasks:", tasks);
-  console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
-  console.log("Reminder tasks:", tasks.filter(task => task.has_reminder));
 
   return { tasks, isLoading };
 };

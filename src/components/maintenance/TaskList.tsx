@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { format, parseISO, isValid } from "date-fns";
+import { format, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Task } from "./types"; // Import Task from the types file
@@ -41,6 +41,12 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
             taskDate = new Date(task.date);
           } else {
             console.error('Invalid task date format:', task.date);
+            taskDate = new Date(); // Fallback to current date
+          }
+          
+          // Vérifier si la date est valide
+          if (!isValid(taskDate)) {
+            console.error('Invalid date for task:', task.id, task.date);
             taskDate = new Date(); // Fallback to current date
           }
           
