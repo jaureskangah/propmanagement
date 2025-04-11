@@ -10,4 +10,5 @@ export interface WorkOrder {
   cost: number;
   date?: string;
   priority: string;
+  photos?: string[];
 }
