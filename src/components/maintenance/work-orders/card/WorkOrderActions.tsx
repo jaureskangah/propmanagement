@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { WorkOrder } from "@/types/workOrder";
 import { Edit, Trash2, CheckCircle, ArrowRightCircle } from "lucide-react";
@@ -59,7 +60,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-blue-200 text-blue-700 hover:bg-blue-50" 
+          className="border-blue-200 text-blue-700 hover:bg-blue-50 h-8 flex-shrink-0" 
           onClick={() => handleStatusUpdate("In Progress")}
           disabled={isUpdateLoading}
         >
@@ -74,7 +75,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
         <Button 
           variant="outline" 
           size="sm" 
-          className="border-green-200 text-green-700 hover:bg-green-50" 
+          className="border-green-200 text-green-700 hover:bg-green-50 h-8 flex-shrink-0" 
           onClick={() => handleStatusUpdate("Completed")}
           disabled={isUpdateLoading}
         >
@@ -114,7 +115,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
   };
 
   return (
-    <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-100">
+    <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-100 flex-wrap gap-2">
       <div className="flex items-center gap-2">
         <TooltipProvider>
           <Tooltip>
@@ -122,7 +123,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 h-8 flex-shrink-0"
                 onClick={onUpdate}
               >
                 <Edit className="h-3.5 w-3.5 mr-1" />
@@ -141,7 +142,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                className="text-red-600 hover:text-red-800 hover:bg-red-50 h-8 flex-shrink-0"
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1" />

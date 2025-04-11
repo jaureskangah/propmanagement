@@ -40,7 +40,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       <CardContent className="pb-2 flex-grow">
         <WorkOrderDetails order={order} />
       </CardContent>
-      <CardFooter className="pt-2 flex flex-wrap gap-2 justify-between">
+      <CardFooter className="pt-2 flex-shrink-0">
         <WorkOrderActions 
           hasPhotos={Boolean(order.photos && order.photos.length > 0)}
           onViewPhotos={() => setIsPhotoDialogOpen(true)}
