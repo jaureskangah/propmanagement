@@ -1,12 +1,15 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Activity } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface WorkOrderStatusProps {
   status: string;
 }
 
 export const WorkOrderStatus = ({ status }: WorkOrderStatusProps) => {
+  const { t } = useLocale();
+  
   const getStatusColor = () => {
     switch (status) {
       case "Completed":
@@ -26,7 +29,7 @@ export const WorkOrderStatus = ({ status }: WorkOrderStatusProps) => {
   return (
     <div className="flex items-center">
       <Activity className="h-4 w-4 text-gray-500 mr-2" />
-      <span className="text-sm font-medium text-gray-500 mr-2">Status:</span>
+      <span className="text-sm font-medium text-gray-500 mr-2">{t('status')}:</span>
       <Badge className={`${getStatusColor()} font-medium`}>
         {status}
       </Badge>

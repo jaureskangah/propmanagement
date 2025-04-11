@@ -16,18 +16,21 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "En cours":
+      case "In Progress":
         return {
           variant: "default" as const,
           icon: <AlertCircle className="h-4 w-4 mr-1" />,
           className: "bg-blue-500"
         };
       case "Planifié":
+      case "Scheduled":
         return {
           variant: "secondary" as const,
           icon: <Clock className="h-4 w-4 mr-1" />,
           className: "bg-orange-500"
         };
       case "Terminé":
+      case "Completed":
         return {
           variant: "outline" as const,
           icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
