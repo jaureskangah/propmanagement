@@ -6,6 +6,7 @@ import { StepIndicator } from "./form/StepIndicator";
 import { StepContent } from "./form/steps/StepContent";
 import { WorkOrderFormActions } from "./form/WorkOrderFormActions";
 import { useWorkOrderSubmit } from "./form/useWorkOrderSubmit";
+import { useWorkOrderForm } from "./form/WorkOrderFormContext";
 
 interface CreateWorkOrderDialogProps {
   isOpen: boolean;
@@ -51,10 +52,15 @@ const FormWithSubmit = ({ onSuccess, onClose }: { onSuccess: () => void, onClose
     }
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitWorkOrder(e);
+  };
+
   return (
-    <form onSubmit={submitWorkOrder} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <StepContent />
-      <WorkOrderFormActions onSubmit={submitWorkOrder} />
+      <WorkOrderFormActions onSubmit={() => handleSubmit} />
     </form>
   );
 };
