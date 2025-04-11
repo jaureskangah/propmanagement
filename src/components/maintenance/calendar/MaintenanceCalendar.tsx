@@ -38,6 +38,14 @@ export const MaintenanceCalendar = ({
   };
   
   console.log("Tasks in calendar:", tasks);
+  console.log("Tasks date formats:", tasks.map(task => ({
+    id: task.id,
+    title: task.title,
+    date: task.date,
+    dateType: typeof task.date,
+    dateIsDate: task.date instanceof Date
+  })));
+  
   if (selectedDate) {
     console.log("Tasks for selected date:", getTasksForDate(selectedDate));
   }

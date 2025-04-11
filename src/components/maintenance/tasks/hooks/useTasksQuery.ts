@@ -24,10 +24,23 @@ export const useTasksQuery = () => {
         // Properly parse date strings to Date objects
         let taskDate;
         try {
-          taskDate = task.date ? new Date(task.date) : new Date();
-          // Verify the date is valid
-          if (isNaN(taskDate.getTime())) {
-            console.warn("Invalid date found for task:", task.id, task.date);
+          if (task.date) {
+            // Ensure date is in YYYY-MM-DD format for consistent parsing
+            // If date has time component, it needs to be truncated
+            const dateStr = typeof task.date === 'string' 
+              ? task.date.split('T')[0] // Split to handle ISO strings
+              : task.date;
+              
+            taskDate = new Date(dateStr);
+            console.log(`Parsed date for task ${task.id}: ${dateStr} -> ${taskDate}`);
+            
+            // Verify the date is valid
+            if (isNaN(taskDate.getTime())) {
+              console.warn("Invalid date found for task:", task.id, task.date);
+              taskDate = new Date(); // Fallback to current date
+            }
+          } else {
+            console.warn("No date found for task:", task.id);
             taskDate = new Date(); // Fallback to current date
           }
         } catch (e) {
@@ -38,8 +51,12 @@ export const useTasksQuery = () => {
         let reminderDate = undefined;
         if (task.reminder_date) {
           try {
-            // Parse reminder date
-            reminderDate = new Date(task.reminder_date);
+            // Ensure date is in YYYY-MM-DD format for consistent parsing
+            const reminderDateStr = typeof task.reminder_date === 'string'
+              ? task.reminder_date.split('T')[0]
+              : task.reminder_date;
+              
+            reminderDate = new Date(reminderDateStr);
             if (isNaN(reminderDate.getTime())) {
               console.warn("Invalid reminder date found for task:", task.id, task.reminder_date);
               reminderDate = undefined;
@@ -72,11 +89,19 @@ export const useTasksQuery = () => {
       });
       
       console.log("Processed tasks after fetch:", formattedTasks);
+      console.log("Parsed dates in tasks:", formattedTasks.map(t => ({ 
+        id: t.id, 
+        title: t.title,
+        date: t.date,
+        dateType: typeof t.date,
+        dateIsDate: t.date instanceof Date
+      })));
       console.log("Recurring tasks count:", formattedTasks.filter(task => task.is_recurring).length);
       console.log("Reminder tasks count:", formattedTasks.filter(task => task.has_reminder).length);
       
       return formattedTasks;
     },
+    refetchInterval: 10000, // Refetch every 10 seconds to ensure new tasks appear
   });
 
   // Plus de logs pour diagnostiquer les problèmes

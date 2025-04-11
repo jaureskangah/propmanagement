@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MaintenanceCalendar } from "./calendar/MaintenanceCalendar";
@@ -34,8 +33,17 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
+  // Force refresh the component when tasks change
+  const [forceRefresh, setForceRefresh] = useState(0);
+  useEffect(() => {
+    // When tasks change, trigger a re-render
+    if (tasks.length > 0) {
+      setForceRefresh(prev => prev + 1);
+    }
+  }, [tasks.length]);
+
   // Log to check if tasks exist
-  console.log("All tasks:", tasks);
+  console.log("All tasks in PreventiveMaintenance:", tasks);
   console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
   console.log("Reminder tasks:", tasks.filter(task => task.has_reminder));
 
@@ -45,15 +53,17 @@ export const PreventiveMaintenance = () => {
 
   // Filter tasks by selected date - improved date comparison
   const filteredTasksByDate = filteredTasksByType.filter(task => {
-    if (!selectedDate) return true;
+    if (!selectedDate) return false; // Don't show tasks if no date is selected
     
-    // Handle different formats of task.date
+    // Log each task date comparison for debugging
     const taskDate = task.date instanceof Date 
       ? task.date 
       : new Date(task.date);
     
-    // Use isSameDay from date-fns for more reliable date comparison
-    return isSameDay(taskDate, selectedDate);
+    const isSame = isSameDay(taskDate, selectedDate);
+    console.log(`Task ${task.id} "${task.title}" date: ${taskDate} matches selected ${selectedDate}? ${isSame}`);
+    
+    return isSame;
   });
   
   console.log("Selected date:", selectedDate);
@@ -65,10 +75,20 @@ export const PreventiveMaintenance = () => {
 
   const onAddTask = (newTask: NewTask) => {
     console.log("Create task clicked with data:", newTask);
-    handleAddTask(newTask);
-    toast({
-      title: t('success'),
-      description: t('taskAdded'),
+    handleAddTask(newTask).then(() => {
+      toast({
+        title: t('success'),
+        description: t('taskAdded'),
+      });
+      // Make sure we keep the current selected date
+      console.log("Keeping selected date after adding task:", selectedDate);
+    }).catch(error => {
+      console.error("Error adding task:", error);
+      toast({
+        title: t('error'),
+        description: t('errorAddingTask'),
+        variant: "destructive",
+      });
     });
     setIsAddTaskOpen(false);
   };

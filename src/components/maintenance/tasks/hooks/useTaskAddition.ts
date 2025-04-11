@@ -25,6 +25,24 @@ export const useTaskAddition = () => {
       const dateString = taskDate.toISOString().split('T')[0];
       
       console.log("Normalized task date for database:", dateString);
+      console.log("Full task data being sent to database:", {
+        title: newTask.title,
+        description: newTask.description || '',
+        status: 'pending',
+        priority: newTask.priority,
+        due_date: newTask.deadline,
+        date: dateString,
+        type: newTask.type,
+        is_recurring: newTask.is_recurring || false,
+        recurrence_pattern: newTask.recurrence_pattern,
+        user_id: user.id,
+        completed: false,
+        tenant_id: newTask.tenant_id,
+        property_id: newTask.property_id,
+        has_reminder: newTask.has_reminder || false,
+        reminder_date: newTask.reminder_date ? new Date(newTask.reminder_date).toISOString().split('T')[0] : null,
+        reminder_method: newTask.reminder_method
+      });
 
       const { data, error } = await supabase
         .from('maintenance_tasks')

@@ -19,6 +19,13 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
   const { t, language } = useLocale();
   
   console.log("Tasks in TaskList:", tasks);
+  console.log("TaskList Task dates:", tasks.map(task => ({
+    id: task.id,
+    title: task.title,
+    date: task.date,
+    dateType: typeof task.date,
+    dateIsDate: task.date instanceof Date
+  })));
   
   return (
     <ScrollArea className="h-[200px]">
@@ -36,6 +43,8 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
             console.error('Invalid task date format:', task.date);
             taskDate = new Date(); // Fallback to current date
           }
+          
+          console.log("Rendering task:", task.id, task.title, "Date:", taskDate);
           
           return (
             <div
