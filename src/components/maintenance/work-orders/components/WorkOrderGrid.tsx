@@ -23,19 +23,9 @@ export const WorkOrderGrid = ({ orders, onOrderUpdate }: WorkOrderGridProps) => 
     }
   };
 
-  // Isoler tous les événements qui pourraient se propager à travers le grid
-  const handleGridEvent = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-  };
-
   if (orders.length === 0) {
     return (
-      <div 
-        className="bg-muted/30 border-dashed border-2 rounded-lg p-8 text-center" 
-        onClick={handleGridEvent}
-        onMouseDown={handleGridEvent}
-        onMouseUp={handleGridEvent}
-      >
+      <div className="bg-muted/30 border-dashed border-2 rounded-lg p-8 text-center">
         <h3 className="font-medium text-lg mb-2">Aucun ordre de travail trouvé</h3>
         <p className="text-muted-foreground">Ajoutez de nouveaux ordres de travail ou modifiez vos filtres.</p>
       </div>
@@ -43,12 +33,7 @@ export const WorkOrderGrid = ({ orders, onOrderUpdate }: WorkOrderGridProps) => 
   }
 
   return (
-    <div 
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" 
-      onClick={handleGridEvent}
-      onMouseDown={handleGridEvent}
-      onMouseUp={handleGridEvent}
-    >
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {orders.map((order) => (
         <WorkOrderCard
           key={order.id}

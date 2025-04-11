@@ -1,5 +1,5 @@
 
-import React, { MouseEvent } from "react";
+import React from "react";
 import { 
   AlertDialog, 
   AlertDialogAction, 
@@ -25,23 +25,13 @@ export const DeleteConfirmationDialog = ({
   isDeleting
 }: DeleteConfirmationDialogProps) => {
   
-  const handleConfirm = (e: MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleConfirm = () => {
     onConfirm();
   };
   
-  const handleOpenChange = (open: boolean) => {
-    onOpenChange(open);
-  };
-  
   return (
-    <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
-      <AlertDialogContent 
-        onClick={(e) => e.stopPropagation()}
-        onMouseDown={(e) => e.stopPropagation()}
-        onMouseUp={(e) => e.stopPropagation()}
-      >
+    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+      <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
           <AlertDialogDescription>
@@ -49,15 +39,11 @@ export const DeleteConfirmationDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel 
-            onClick={(e) => e.stopPropagation()}
-            onMouseDown={(e) => e.stopPropagation()}
-          >
+          <AlertDialogCancel>
             Annuler
           </AlertDialogCancel>
           <AlertDialogAction 
             onClick={handleConfirm}
-            onMouseDown={(e) => e.stopPropagation()}
             className="bg-red-600 hover:bg-red-700"
             disabled={isDeleting}
           >

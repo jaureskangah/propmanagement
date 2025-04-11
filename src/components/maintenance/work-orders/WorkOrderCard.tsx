@@ -29,18 +29,8 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
     handleEditSuccess
   } = useWorkOrderCard({ order, onUpdate, onDelete });
 
-  // Gestionnaire pour capturer et arrêter tous les événements sur la carte
-  const handleCardEvent = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-  };
-
   return (
-    <Card 
-      className="h-full flex flex-col" 
-      onClick={handleCardEvent}
-      onMouseDown={handleCardEvent}
-      onMouseUp={handleCardEvent}
-    >
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg line-clamp-2">{order.title}</CardTitle>
@@ -52,22 +42,10 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       <CardFooter className="pt-2 flex flex-wrap gap-2 justify-between">
         <WorkOrderActions 
           hasPhotos={Boolean(order.photos && order.photos.length > 0)}
-          onViewPhotos={(e) => {
-            e.stopPropagation();
-            setIsPhotoDialogOpen(true);
-          }}
-          onEdit={(e) => {
-            e.stopPropagation();
-            setIsEditDialogOpen(true);
-          }}
-          onDelete={(e) => {
-            e.stopPropagation();
-            setIsDeleteDialogOpen(true);
-          }}
-          onStatusUpdate={(e) => {
-            e.stopPropagation();
-            handleStatusUpdate(e);
-          }}
+          onViewPhotos={() => setIsPhotoDialogOpen(true)}
+          onEdit={() => setIsEditDialogOpen(true)}
+          onDelete={() => setIsDeleteDialogOpen(true)}
+          onStatusUpdate={handleStatusUpdate}
         />
       </CardFooter>
 
