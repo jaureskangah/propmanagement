@@ -41,11 +41,14 @@ export function formatCurrency(amount: number | string): string {
   // Convertir le montant en nombre si c'est une chaîne
   const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
   
+  // Vérifier si le montant est un nombre entier
+  const isWholeNumber = Math.floor(numericAmount) === numericAmount;
+  
   // Utiliser l'API Intl.NumberFormat pour formater le montant en dollars canadiens
   return new Intl.NumberFormat('en-CA', { 
     style: 'currency', 
     currency: 'CAD',
-    minimumFractionDigits: 2,
+    minimumFractionDigits: isWholeNumber ? 0 : 2,
     maximumFractionDigits: 2
   }).format(numericAmount);
 }
