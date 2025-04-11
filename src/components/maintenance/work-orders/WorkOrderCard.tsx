@@ -54,6 +54,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
     successMessage: "Ordre de travail supprimé avec succès",
     onSuccess: () => {
       if (onDelete) onDelete();
+      setIsDeleteDialogOpen(false);
     }
   });
 
@@ -88,12 +89,26 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
 
   const handleDelete = () => {
     deleteWorkOrder(order.id);
-    setIsDeleteDialogOpen(false);
   };
 
   const handleStatusUpdate = () => {
-    // Logic pour mettre à jour le statut
     setIsEditDialogOpen(true);
+  };
+
+  const handleEditSuccess = () => {
+    // Fermer le dialogue d'édition
+    setIsEditDialogOpen(false);
+    
+    // Notifier le composant parent que des modifications ont été effectuées
+    if (onUpdate) {
+      onUpdate();
+    }
+    
+    // Afficher un toast de confirmation
+    toast({
+      title: "Modifications enregistrées",
+      description: "Les modifications ont été appliquées avec succès",
+    });
   };
 
   const statusConfig = getStatusConfig(order.status);
@@ -185,10 +200,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       <EditWorkOrderDialog
         isOpen={isEditDialogOpen}
         onClose={() => setIsEditDialogOpen(false)}
-        onSuccess={() => {
-          if (onUpdate) onUpdate();
-          setIsEditDialogOpen(false);
-        }}
+        onSuccess={handleEditSuccess}
         workOrder={order}
       />
 
