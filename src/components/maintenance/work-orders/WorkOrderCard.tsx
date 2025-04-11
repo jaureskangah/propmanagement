@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,20 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from "@/components/ui/dropdown-menu";
+import { ViewPhotosDialog } from "./components/ViewPhotosDialog";
+import { EditWorkOrderDialog } from "./EditWorkOrderDialog";
+import { useSupabaseDelete } from "@/hooks/supabase/useSupabaseDelete";
+import { useToast } from "@/hooks/use-toast";
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogFooter, 
+  AlertDialogHeader, 
+  AlertDialogTitle 
+} from "@/components/ui/alert-dialog";
 
 interface WorkOrderCardProps {
   order: WorkOrder;
@@ -30,6 +44,19 @@ interface WorkOrderCardProps {
 }
 
 export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps) => {
+  const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { toast } = useToast();
+  
+  // Utiliser le hook useSupabaseDelete pour supprimer un ordre de travail
+  const { mutate: deleteWorkOrder, isPending: isDeleting } = useSupabaseDelete('vendor_interventions', {
+    successMessage: "Ordre de travail supprimé avec succès",
+    onSuccess: () => {
+      if (onDelete) onDelete();
+    }
+  });
+
   const getStatusConfig = (status: string) => {
     switch (status) {
       case "En cours":
@@ -59,6 +86,16 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
     }
   };
 
+  const handleDelete = () => {
+    deleteWorkOrder(order.id);
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleStatusUpdate = () => {
+    // Logic pour mettre à jour le statut
+    setIsEditDialogOpen(true);
+  };
+
   const statusConfig = getStatusConfig(order.status);
 
   return (
@@ -74,8 +111,8 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={onUpdate}>Modifier</DropdownMenuItem>
-                <DropdownMenuItem onClick={onDelete}>Supprimer</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsEditDialogOpen(true)}>Modifier</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>Supprimer</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -114,15 +151,68 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
         </div>
       </CardContent>
       <CardFooter className="pt-2 flex flex-wrap gap-2 justify-between">
-        <Button variant="outline" size="sm" className="h-8">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8"
+          onClick={() => setIsPhotoDialogOpen(true)}
+          disabled={!order.photos || order.photos.length === 0}
+        >
           <FileImage className="h-4 w-4 mr-2" />
           <span className="hidden sm:inline">Photos</span>
         </Button>
-        <Button variant="outline" size="sm" className="h-8">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="h-8"
+          onClick={handleStatusUpdate}
+        >
           <CheckSquare className="h-4 w-4 mr-2" />
           <span className="hidden sm:inline">Mettre à jour</span>
         </Button>
       </CardFooter>
+
+      {/* Dialog pour visualiser les photos */}
+      {order.photos && order.photos.length > 0 && (
+        <ViewPhotosDialog 
+          photos={order.photos}
+          isOpen={isPhotoDialogOpen}
+          onClose={() => setIsPhotoDialogOpen(false)}
+        />
+      )}
+
+      {/* Dialog pour éditer l'ordre de travail */}
+      <EditWorkOrderDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        onSuccess={() => {
+          if (onUpdate) onUpdate();
+          setIsEditDialogOpen(false);
+        }}
+        workOrder={order}
+      />
+
+      {/* Dialog de confirmation de suppression */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir supprimer cet ordre de travail ? Cette action ne peut pas être annulée.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete} 
+              className="bg-red-600 hover:bg-red-700"
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Suppression..." : "Supprimer"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 };

@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
 import { WorkOrder } from "@/types/workOrder";
+import { useSupabaseUpdate } from "@/hooks/supabase/useSupabaseUpdate";
 
 interface EditWorkOrderDialogProps {
   isOpen: boolean;
@@ -25,46 +25,30 @@ export const EditWorkOrderDialog = ({
   const [title, setTitle] = useState(workOrder.title);
   const [description, setDescription] = useState(workOrder.description || "");
   const [status, setStatus] = useState(workOrder.status);
+  const [priority, setPriority] = useState(workOrder.priority);
   const [cost, setCost] = useState(workOrder.cost.toString());
   const { toast } = useToast();
 
+  const { mutate: updateWorkOrder, isPending } = useSupabaseUpdate('vendor_interventions', {
+    successMessage: "Le bon de travail a été mis à jour avec succès",
+    onSuccess: () => {
+      onSuccess();
+    }
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Mise à jour du bon de travail...");
-
-    try {
-      toast({
-        title: "Mise à jour en cours",
-        description: "Traitement de vos modifications...",
-      });
-
-      const { error } = await supabase
-        .from("vendor_interventions")
-        .update({
-          title,
-          description,
-          status,
-          cost: parseFloat(cost),
-        })
-        .eq("id", workOrder.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Succès",
-        description: "Le bon de travail a été mis à jour avec succès",
-      });
-
-      onSuccess();
-      onClose();
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour du bon de travail:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le bon de travail",
-        variant: "destructive",
-      });
-    }
+    
+    updateWorkOrder({
+      id: workOrder.id,
+      data: {
+        title,
+        description,
+        status,
+        priority,
+        cost: parseFloat(cost)
+      }
+    });
   };
 
   return (
@@ -101,9 +85,23 @@ export const EditWorkOrderDialog = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Scheduled">Planifié</SelectItem>
-                <SelectItem value="In Progress">En cours</SelectItem>
-                <SelectItem value="Completed">Terminé</SelectItem>
+                <SelectItem value="Planifié">Planifié</SelectItem>
+                <SelectItem value="En cours">En cours</SelectItem>
+                <SelectItem value="Terminé">Terminé</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <label htmlFor="priority">Priorité</label>
+            <Select value={priority} onValueChange={setPriority}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Basse">Basse</SelectItem>
+                <SelectItem value="Moyenne">Moyenne</SelectItem>
+                <SelectItem value="Haute">Haute</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -113,6 +111,7 @@ export const EditWorkOrderDialog = ({
             <Input
               id="cost"
               type="number"
+              step="0.01"
               value={cost}
               onChange={(e) => setCost(e.target.value)}
               required
@@ -123,8 +122,8 @@ export const EditWorkOrderDialog = ({
             <Button type="button" variant="outline" onClick={onClose}>
               Annuler
             </Button>
-            <Button type="submit">
-              Enregistrer les modifications
+            <Button type="submit" disabled={isPending}>
+              {isPending ? "Enregistrement..." : "Enregistrer les modifications"}
             </Button>
           </div>
         </form>
