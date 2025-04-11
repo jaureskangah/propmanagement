@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { WorkOrder } from "@/types/workOrder";
 import { Edit, Trash2, CheckCircle, ArrowRightCircle } from "lucide-react";
@@ -12,6 +11,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface WorkOrderActionsProps {
   order: WorkOrder;
@@ -24,6 +24,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleStatusUpdate = async (newStatus: string) => {
     setIsUpdateLoading(true);
@@ -63,7 +64,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
           disabled={isUpdateLoading}
         >
           <ArrowRightCircle className="h-3.5 w-3.5 mr-1" />
-          Commencer
+          {!isMobile && "Commencer"}
         </Button>
       );
     }
@@ -78,7 +79,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
           disabled={isUpdateLoading}
         >
           <CheckCircle className="h-3.5 w-3.5 mr-1" />
-          Terminer
+          {!isMobile && "Terminer"}
         </Button>
       );
     }
@@ -118,9 +119,14 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                onClick={onUpdate}
+              >
                 <Edit className="h-3.5 w-3.5 mr-1" />
-                Modifier
+                {!isMobile && "Modifier"}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -139,7 +145,7 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
                 onClick={() => setIsDeleteDialogOpen(true)}
               >
                 <Trash2 className="h-3.5 w-3.5 mr-1" />
-                Supprimer
+                {!isMobile && "Supprimer"}
               </Button>
             </TooltipTrigger>
             <TooltipContent>

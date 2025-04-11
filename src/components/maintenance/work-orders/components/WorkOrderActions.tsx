@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger
 } from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface WorkOrderActionsProps {
   hasPhotos: boolean;
@@ -28,6 +29,8 @@ export const WorkOrderActions = ({
   onDelete, 
   onStatusUpdate 
 }: WorkOrderActionsProps) => {
+  const isMobile = useIsMobile();
+
   return (
     <div className="flex flex-wrap gap-2 justify-between w-full">
       <TooltipProvider>
@@ -41,7 +44,7 @@ export const WorkOrderActions = ({
               disabled={!hasPhotos}
             >
               <FileImage className="h-4 w-4 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Photos</span>
+              {!isMobile && <span>Photos</span>}
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -61,7 +64,7 @@ export const WorkOrderActions = ({
                 onClick={onStatusUpdate}
               >
                 <CheckSquare className="h-4 w-4 mr-1 sm:mr-2" />
-                <span className="hidden xs:inline">Mettre à jour</span>
+                {!isMobile && <span>Mettre à jour</span>}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -80,7 +83,7 @@ export const WorkOrderActions = ({
                 onClick={onDelete}
               >
                 <Trash2 className="h-4 w-4 mr-1 sm:mr-2" />
-                <span className="hidden xs:inline">Supprimer</span>
+                {!isMobile && <span>Supprimer</span>}
               </Button>
             </TooltipTrigger>
             <TooltipContent>
