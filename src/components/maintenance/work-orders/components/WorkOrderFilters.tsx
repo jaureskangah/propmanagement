@@ -9,8 +9,8 @@ interface WorkOrderFiltersProps {
   setSearchQuery: (value: string) => void;
   statusFilter: string;
   setStatusFilter: (value: string) => void;
-  sortBy: "date" | "cost";
-  setSortBy: (value: "date" | "cost") => void;
+  sortBy: "date" | "cost" | "priority";
+  setSortBy: (value: "date" | "cost" | "priority") => void;
 }
 
 export const WorkOrderFilters = ({ 
@@ -54,13 +54,14 @@ export const WorkOrderFilters = ({
 
         {/* Sort selection */}
         <div className="w-full sm:w-auto">
-          <Select value={sortBy} onValueChange={(value: "date" | "cost") => setSortBy(value)}>
+          <Select value={sortBy} onValueChange={(value: "date" | "cost" | "priority") => setSortBy(value)}>
             <SelectTrigger className="w-full sm:w-[180px]">
               <SelectValue placeholder="Trier par" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="date">Date</SelectItem>
               <SelectItem value="cost">Coût</SelectItem>
+              <SelectItem value="priority">Priorité</SelectItem>
             </SelectContent>
           </Select>
         </div>
