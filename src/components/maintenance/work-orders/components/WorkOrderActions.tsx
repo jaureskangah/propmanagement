@@ -28,9 +28,19 @@ export const WorkOrderActions = ({
   onDelete, 
   onStatusUpdate 
 }: WorkOrderActionsProps) => {
+  
+  const handleEvent = (e: React.SyntheticEvent) => {
+    e.stopPropagation();
+  };
+  
   return (
     <>
-      <div className="flex flex-wrap gap-2 justify-between" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="flex flex-wrap gap-2 justify-between" 
+        onClick={handleEvent}
+        onMouseDown={handleEvent}
+        onMouseUp={handleEvent}
+      >
         <Button 
           variant="outline" 
           size="sm" 
@@ -39,6 +49,7 @@ export const WorkOrderActions = ({
             e.stopPropagation();
             onViewPhotos(e);
           }}
+          onMouseDown={handleEvent}
           disabled={!hasPhotos}
         >
           <FileImage className="h-4 w-4 mr-2" />
@@ -54,6 +65,7 @@ export const WorkOrderActions = ({
               e.stopPropagation();
               onStatusUpdate(e);
             }}
+            onMouseDown={handleEvent}
           >
             <CheckSquare className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Mettre à jour</span>
@@ -65,20 +77,29 @@ export const WorkOrderActions = ({
                 variant="ghost" 
                 size="sm" 
                 className="h-8 w-8 p-0"
-                onClick={(e) => e.stopPropagation()}
+                onClick={handleEvent}
+                onMouseDown={handleEvent}
               >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+            <DropdownMenuContent 
+              align="end" 
+              onClick={handleEvent}
+              onMouseDown={handleEvent}
+            >
               <DropdownMenuItem onClick={(e) => {
                 e.stopPropagation();
                 onEdit(e);
-              }}>Modifier</DropdownMenuItem>
+              }}>
+                Modifier
+              </DropdownMenuItem>
               <DropdownMenuItem onClick={(e) => {
                 e.stopPropagation();
                 onDelete(e);
-              }}>Supprimer</DropdownMenuItem>
+              }}>
+                Supprimer
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

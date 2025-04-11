@@ -31,9 +31,17 @@ export const DeleteConfirmationDialog = ({
     onConfirm();
   };
   
+  const handleOpenChange = (open: boolean) => {
+    onOpenChange(open);
+  };
+  
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+    <AlertDialog open={isOpen} onOpenChange={handleOpenChange}>
+      <AlertDialogContent 
+        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onMouseUp={(e) => e.stopPropagation()}
+      >
         <AlertDialogHeader>
           <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
           <AlertDialogDescription>
@@ -41,9 +49,15 @@ export const DeleteConfirmationDialog = ({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={(e) => e.stopPropagation()}>Annuler</AlertDialogCancel>
+          <AlertDialogCancel 
+            onClick={(e) => e.stopPropagation()}
+            onMouseDown={(e) => e.stopPropagation()}
+          >
+            Annuler
+          </AlertDialogCancel>
           <AlertDialogAction 
-            onClick={handleConfirm} 
+            onClick={handleConfirm}
+            onMouseDown={(e) => e.stopPropagation()}
             className="bg-red-600 hover:bg-red-700"
             disabled={isDeleting}
           >

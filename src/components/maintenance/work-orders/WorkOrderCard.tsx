@@ -29,12 +29,18 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
     handleEditSuccess
   } = useWorkOrderCard({ order, onUpdate, onDelete });
 
-  const handleCardClick = (e: React.MouseEvent) => {
+  // Gestionnaire pour capturer et arrêter tous les événements sur la carte
+  const handleCardEvent = (e: React.SyntheticEvent) => {
     e.stopPropagation();
   };
 
   return (
-    <Card className="h-full flex flex-col" onClick={handleCardClick}>
+    <Card 
+      className="h-full flex flex-col" 
+      onClick={handleCardEvent}
+      onMouseDown={handleCardEvent}
+      onMouseUp={handleCardEvent}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg line-clamp-2">{order.title}</CardTitle>
