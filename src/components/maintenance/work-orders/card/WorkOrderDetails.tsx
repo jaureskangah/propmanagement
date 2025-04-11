@@ -20,35 +20,35 @@ export const WorkOrderDetails = ({ property, unit, vendor, cost, date }: WorkOrd
 
   return (
     <div className="space-y-2 mt-3">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
         {property && (
           <div className="flex items-center text-sm">
-            <Building className="h-4 w-4 text-gray-500 mr-2" />
-            <span className="text-gray-700">{property}</span>
+            <Building className="h-4 w-4 min-w-4 text-gray-500 mr-2" />
+            <span className="text-gray-700 break-words">{property}</span>
           </div>
         )}
         
         {unit && (
           <div className="flex items-center text-sm">
-            <Home className="h-4 w-4 text-gray-500 mr-2" />
-            <span className="text-gray-700">Unité: {unit}</span>
+            <Home className="h-4 w-4 min-w-4 text-gray-500 mr-2" />
+            <span className="text-gray-700 break-words">Unité: {unit}</span>
           </div>
         )}
         
         <div className="flex items-center text-sm">
-          <Users className="h-4 w-4 text-gray-500 mr-2" />
-          <span className="text-gray-700">{vendor}</span>
+          <Users className="h-4 w-4 min-w-4 text-gray-500 mr-2" />
+          <span className="text-gray-700 break-words">{vendor}</span>
         </div>
         
         <div className="flex items-center text-sm">
-          <DollarSign className="h-4 w-4 text-gray-500 mr-2" />
-          <span className="text-gray-700">{formatCurrency(cost)}</span>
+          <DollarSign className="h-4 w-4 min-w-4 text-gray-500 mr-2" />
+          <span className="text-gray-700 break-words">{formatCurrency(cost)}</span>
         </div>
         
         {date && (
           <div className="flex items-center text-sm">
-            <Calendar className="h-4 w-4 text-gray-500 mr-2" />
-            <span className="text-gray-700">{formatDate(date)}</span>
+            <Calendar className="h-4 w-4 min-w-4 text-gray-500 mr-2" />
+            <span className="text-gray-700 break-words">{formatDate(date)}</span>
           </div>
         )}
       </div>

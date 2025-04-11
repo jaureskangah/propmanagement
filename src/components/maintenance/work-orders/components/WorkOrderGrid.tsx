@@ -1,47 +1,33 @@
 
 import React from "react";
 import { WorkOrder } from "@/types/workOrder";
-import { useWorkOrdersData } from "../hooks/useWorkOrdersData";
-import { WorkOrderCard } from "@/components/maintenance/work-orders/WorkOrderCard";
+import { WorkOrderCard } from "../WorkOrderCard";
 
 interface WorkOrderGridProps {
   orders: WorkOrder[];
   onOrderUpdate?: () => void;
+  onOrderDelete?: () => void;
 }
 
-export const WorkOrderGrid = ({ orders, onOrderUpdate }: WorkOrderGridProps) => {
-  const { refetch } = useWorkOrdersData();
-
-  // Fonction pour gérer les mises à jour des ordres de travail
-  const handleOrderUpdate = () => {
-    // Rafraîchir les données
-    refetch();
-    
-    // Propager l'événement au parent si nécessaire
-    if (onOrderUpdate) {
-      onOrderUpdate();
-    }
-  };
-
+export const WorkOrderGrid = ({ orders, onOrderUpdate, onOrderDelete }: WorkOrderGridProps) => {
   if (orders.length === 0) {
     return (
-      <div className="bg-muted/30 border-dashed border-2 rounded-lg p-8 text-center">
-        <h3 className="font-medium text-lg mb-2">Aucun ordre de travail trouvé</h3>
-        <p className="text-muted-foreground">Ajoutez de nouveaux ordres de travail ou modifiez vos filtres.</p>
+      <div className="text-center py-10 border rounded-lg border-dashed">
+        <p className="text-muted-foreground">Aucun ordre de travail ne correspond à vos critères</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-6">
       {orders.map((order) => (
-        <WorkOrderCard
-          key={order.id}
+        <WorkOrderCard 
+          key={order.id} 
           order={order}
-          onUpdate={handleOrderUpdate}
-          onDelete={handleOrderUpdate}
+          onUpdate={onOrderUpdate}
+          onDelete={onOrderDelete}
         />
       ))}
     </div>
   );
-};
+}

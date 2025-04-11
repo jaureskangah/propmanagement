@@ -15,7 +15,7 @@ const Maintenance = () => {
     <div className="min-h-screen bg-background">
       <AppSidebar isTenant={isTenantUser} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
       <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+        "p-3 sm:p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
         sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
       )}>
         {isTenantUser ? (
