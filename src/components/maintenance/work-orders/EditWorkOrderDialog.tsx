@@ -47,13 +47,8 @@ export const EditWorkOrderDialog = ({
     }
   });
 
-  const handleEvent = (e: React.SyntheticEvent) => {
-    e.stopPropagation();
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    e.stopPropagation();
     
     updateWorkOrder({
       id: workOrder.id,
@@ -73,22 +68,11 @@ export const EditWorkOrderDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDialogClose}>
-      <DialogContent 
-        className="sm:max-w-[425px]" 
-        onClick={handleEvent}
-        onMouseDown={handleEvent}
-        onMouseUp={handleEvent}
-      >
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Modifier le bon de travail</DialogTitle>
         </DialogHeader>
-        <form 
-          onSubmit={handleSubmit} 
-          className="space-y-4" 
-          onClick={handleEvent}
-          onMouseDown={handleEvent}
-          onMouseUp={handleEvent}
-        >
+        <form onSubmit={handleSubmit} className="space-y-4">
           <BasicInfoFields 
             title={title} 
             setTitle={setTitle} 

@@ -24,11 +24,6 @@ export const DeleteConfirmationDialog = ({
   onConfirm,
   isDeleting
 }: DeleteConfirmationDialogProps) => {
-  
-  const handleConfirm = () => {
-    onConfirm();
-  };
-  
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -43,7 +38,7 @@ export const DeleteConfirmationDialog = ({
             Annuler
           </AlertDialogCancel>
           <AlertDialogAction 
-            onClick={handleConfirm}
+            onClick={onConfirm}
             className="bg-red-600 hover:bg-red-700"
             disabled={isDeleting}
           >
