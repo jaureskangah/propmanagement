@@ -42,7 +42,7 @@ export const PreventiveMaintenance = () => {
     selectedType === "all" ? true : task.type === selectedType
   );
 
-  // Filtrer les tâches par date sélectionnée
+  // Filter tasks by selected date
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return true;
     
@@ -59,11 +59,13 @@ export const PreventiveMaintenance = () => {
   }
 
   const onAddTask = (newTask: NewTask) => {
+    console.log("Create task clicked");
     handleAddTask(newTask);
     toast({
       title: t('success'),
       description: t('taskAdded'),
     });
+    setIsAddTaskOpen(false);
   };
 
   const onAddMultipleTasks = (newTasks: NewTask[]) => {
@@ -132,7 +134,7 @@ export const PreventiveMaintenance = () => {
       </Card>
 
       <div className="lg:col-span-1 space-y-4">
-        {/* Tâches récurrentes */}
+        {/* Recurring Tasks */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -160,7 +162,7 @@ export const PreventiveMaintenance = () => {
           </CardContent>
         </Card>
 
-        {/* Rappels */}
+        {/* Reminders */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -174,7 +176,6 @@ export const PreventiveMaintenance = () => {
         </Card>
       </div>
 
-      {/* Important: Nous utilisons uniquement la version contrôlée de AddTaskDialog, sans trigger */}
       <AddTaskDialog
         onAddTask={onAddTask}
         isOpen={isAddTaskOpen}

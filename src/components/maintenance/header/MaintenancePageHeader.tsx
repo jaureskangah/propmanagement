@@ -60,7 +60,7 @@ const MaintenancePageHeader = ({
             onClick={onCreateTask}
           >
             <Plus className="h-4 w-4" />
-            + Ajouter une tâche
+            {t('addTask')}
           </Button>
         </div>
       </div>
