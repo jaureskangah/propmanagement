@@ -36,3 +36,16 @@ export function formatRelativeDate(date: string | Date, localeCode: string = 'en
   
   return formatRelative(dateObj, new Date(), { locale });
 }
+
+export function formatCurrency(amount: number | string): string {
+  // Convertir le montant en nombre si c'est une chaîne
+  const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  // Utiliser l'API Intl.NumberFormat pour formater le montant en dollars canadiens
+  return new Intl.NumberFormat('en-CA', { 
+    style: 'currency', 
+    currency: 'CAD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(numericAmount);
+}

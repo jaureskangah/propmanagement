@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { 
   Wrench, 
   FileImage, 
-  CheckSquare, 
+  CheckSquare,
   Building,
   Home,
   DollarSign,
@@ -15,6 +15,7 @@ import {
   Clock
 } from "lucide-react";
 import { WorkOrder } from "@/types/workOrder";
+import { formatCurrency } from "@/lib/utils";
 
 interface WorkOrderCardProps {
   order: WorkOrder;
@@ -88,7 +89,7 @@ export const WorkOrderCard = ({ order }: WorkOrderCardProps) => {
           </div>
           <div className="flex items-center gap-2">
             <DollarSign className="h-4 w-4 text-gray-500" />
-            <p><strong>Coût:</strong> {order.cost}€</p>
+            <p><strong>Coût:</strong> {formatCurrency(order.cost)}</p>
           </div>
           <div className="flex gap-2 mt-4">
             <Button variant="outline" size="sm">
@@ -104,4 +105,4 @@ export const WorkOrderCard = ({ order }: WorkOrderCardProps) => {
       </CardContent>
     </Card>
   );
-};
+}

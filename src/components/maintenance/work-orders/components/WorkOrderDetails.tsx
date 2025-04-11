@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { StatusBadge } from "./StatusBadge";
 import { WorkOrder } from "@/types/workOrder";
+import { formatCurrency } from "@/lib/utils";
 
 interface WorkOrderDetailsProps {
   order: WorkOrder;
@@ -34,7 +35,7 @@ export const WorkOrderDetails = ({ order }: WorkOrderDetailsProps) => {
       </div>
       <div className="flex items-center gap-2">
         <DollarSign className="h-4 w-4 text-gray-500" />
-        <p><span className="font-medium">Coût:</span> {order.cost}€</p>
+        <p><span className="font-medium">Coût:</span> {formatCurrency(order.cost)}</p>
       </div>
       <div className="flex items-center gap-2 mt-2">
         <StatusBadge status={order.status} />

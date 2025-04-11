@@ -2,6 +2,7 @@
 import { Building, DollarSign, Calendar, Home, Users } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { formatCurrency } from "@/lib/utils";
 
 interface WorkOrderDetailsProps {
   property?: string;
@@ -12,10 +13,6 @@ interface WorkOrderDetailsProps {
 }
 
 export const WorkOrderDetails = ({ property, unit, vendor, cost, date }: WorkOrderDetailsProps) => {
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
-  };
-
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "Non défini";
     return format(new Date(dateStr), 'dd MMMM yyyy', { locale: fr });
