@@ -11,6 +11,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
 import MaintenancePageHeader from "./header/MaintenancePageHeader";
+import { AddTaskDialog } from "./task-dialog/AddTaskDialog";
+import { useToast } from "@/hooks/use-toast";
+import { NewTask } from "./types";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
@@ -18,6 +21,8 @@ export const MaintenancePageContainer = () => {
   const isMobile = useIsMobile();
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const { toast } = useToast();
   
   // Mock data for the financial section
   const mockFinancialData = {
@@ -74,8 +79,17 @@ export const MaintenancePageContainer = () => {
   };
 
   const handleCreateTask = () => {
-    console.log("Create task clicked");
-    // Handle task creation (could open a modal, etc.)
+    console.log("Create task clicked in MaintenancePageContainer");
+    setIsAddTaskOpen(true);
+  };
+
+  const handleAddTask = (newTask: NewTask) => {
+    console.log("Task added:", newTask);
+    toast({
+      title: t('success'),
+      description: t('taskAdded'),
+    });
+    setIsAddTaskOpen(false);
   };
 
   // Filter for active requests
@@ -131,6 +145,12 @@ export const MaintenancePageContainer = () => {
           <VendorList />
         </TabsContent>
       </Tabs>
+
+      <AddTaskDialog
+        onAddTask={handleAddTask}
+        isOpen={isAddTaskOpen}
+        onClose={() => setIsAddTaskOpen(false)}
+      />
     </div>
   );
 };
