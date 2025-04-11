@@ -1,3 +1,4 @@
+
 import React from "react";
 import { MetricsCards } from "./financials/MetricsCards";
 import { DataTables } from "./financials/DataTables";
@@ -59,12 +60,48 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
     },
   });
 
+  // Get the current year's start
+  const currentYear = new Date().getFullYear();
+  const startOfYear = new Date(currentYear, 0, 1).toISOString();
+
+  // Fetch total rent paid for the current year
+  const { data: rentData = [] } = useQuery({
+    queryKey: ["property_rent_payments", propertyId, currentYear],
+    queryFn: async () => {
+      // First get tenants for this property
+      const { data: tenants, error: tenantsError } = await supabase
+        .from("tenants")
+        .select("id")
+        .eq("property_id", propertyId);
+
+      if (tenantsError) throw tenantsError;
+      if (!tenants?.length) return [];
+
+      const tenantIds = tenants.map(t => t.id);
+
+      // Then get payments for those tenants
+      const { data: payments, error: paymentsError } = await supabase
+        .from("tenant_payments")
+        .select("*")
+        .in("tenant_id", tenantIds)
+        .gte("payment_date", startOfYear);
+
+      if (paymentsError) throw paymentsError;
+      return payments || [];
+    },
+    enabled: !!propertyId,
+  });
+
   // Calculate ROI
   const calculateROI = () => {
     const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
-    const propertyValue = 500000; // This should ideally come from the property data
-    const netIncome = -totalExpenses - totalMaintenance; // The rent will be added in MetricsCards
+    const totalIncome = rentData.filter(payment => payment.status === "paid")
+      .reduce((acc, curr) => acc + curr.amount, 0);
+    
+    const propertyValue = 500000; // This would ideally come from the property data
+    const netIncome = totalIncome - totalExpenses - totalMaintenance;
+    
     return ((netIncome / propertyValue) * 100).toFixed(2);
   };
 

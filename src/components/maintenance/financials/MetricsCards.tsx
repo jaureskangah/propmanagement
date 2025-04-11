@@ -5,6 +5,7 @@ import { FileText, TrendingUp, Wallet } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useSupabaseQuery } from "@/hooks/supabase";
 
 interface MetricsCardsProps {
   propertyId: string;
@@ -24,19 +25,13 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
   const startOfYear = new Date(currentYear, 0, 1).toISOString(); // Jan 1st of current year
   
   // Fetch total rent payments for the property for current year
-  const { data: totalRentPaid = 0 } = useQuery({
+  const { data: totalRentPaid = 0, isLoading: isLoadingRent } = useQuery({
     queryKey: ["total_rent_paid", propertyId, currentYear],
     queryFn: async () => {
-      console.log("Fetching total rent paid for property:", propertyId, "for year:", currentYear);
-      
-      // Check if we're using a mock property ID like "property-1"
-      if (propertyId.startsWith("property-")) {
-        console.log("Using mock data for rent payments");
-        // Return mock data for demo purposes
-        return 24000; // Example: $2,000/month × 12 months = $24,000
-      }
+      console.log("Fetching total rent payments for property:", propertyId, "for year:", currentYear);
       
       try {
+        // Fetch tenants for this property
         const { data: tenants, error: tenantsError } = await supabase
           .from("tenants")
           .select("id")
@@ -47,23 +42,38 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
           throw tenantsError;
         }
 
-        if (!tenants?.length) return 0;
+        // If no tenants, return 0
+        if (!tenants?.length) {
+          console.log("No tenants found for property:", propertyId);
+          return 0;
+        }
 
         const tenantIds = tenants.map(t => t.id);
+        console.log("Found tenant IDs:", tenantIds);
         
+        // Fetch payments for all tenants for this property
         const { data: payments, error: paymentsError } = await supabase
           .from("tenant_payments")
-          .select("amount")
-          .in("tenant_id", tenantIds)
-          .eq("status", "paid")
-          .gte("payment_date", startOfYear);
+          .select("amount, status, payment_date")
+          .in("tenant_id", tenantIds);
 
         if (paymentsError) {
           console.error("Error fetching payments:", paymentsError);
           throw paymentsError;
         }
 
-        const total = payments?.reduce((sum, payment) => sum + payment.amount, 0) || 0;
+        console.log("All payments retrieved:", payments);
+        
+        // Filter payments by status and date
+        const filteredPayments = payments?.filter(payment => 
+          payment.status === 'paid' && 
+          new Date(payment.payment_date) >= new Date(startOfYear)
+        ) || [];
+        
+        console.log("Filtered payments for current year:", filteredPayments);
+
+        // Sum the payment amounts
+        const total = filteredPayments.reduce((sum, payment) => sum + payment.amount, 0);
         console.log("Total rent paid for current year:", total);
         return total;
       } catch (error) {
@@ -94,7 +104,7 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
     },
     {
       title: t('totalRentPaid'),
-      value: `$${totalRentPaid.toLocaleString()}`,
+      value: isLoadingRent ? "$..." : `$${totalRentPaid.toLocaleString()}`,
       icon: <Wallet className="h-4 w-4" />,
       description: t('yearToDate'),
       color: "text-green-500",
