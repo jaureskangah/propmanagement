@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PreventiveMaintenance } from "../PreventiveMaintenance";
 import { MaintenanceList } from "../MaintenanceList";
-import { WorkOrderList } from "../work-orders/MainWorkOrderList";
+import { WorkOrderList } from "../work-orders/WorkOrderList";
 import { PropertyFinancials } from "../PropertyFinancials";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { WorkOrder } from "@/types/workOrder";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useWorkOrdersData } from "../work-orders/hooks/useWorkOrdersData";
 
 interface MaintenanceTabsProps {
   propertyId: string;
@@ -26,42 +26,8 @@ export const MaintenanceTabs = ({
   const [activeTab, setActiveTab] = useState("preventive");
   const isMobile = useIsMobile();
   
-  // Mock work orders for the WorkOrderList component
-  const mockWorkOrders: WorkOrder[] = [
-    {
-      id: "wo1",
-      title: "Fix broken pipe",
-      property: "Sunset Apartments",
-      unit: "101",
-      status: "En cours",
-      vendor: "Plomberie Express",
-      cost: 250,
-      date: "2023-09-15",
-      priority: "high"
-    },
-    {
-      id: "wo2",
-      title: "Replace light fixtures",
-      property: "Mountain View Condos",
-      unit: "305",
-      status: "Planifié",
-      vendor: "ElectroPro",
-      cost: 180,
-      date: "2023-09-22",
-      priority: "medium"
-    },
-    {
-      id: "wo3",
-      title: "HVAC maintenance",
-      property: "Sunset Apartments",
-      unit: "205",
-      status: "Terminé",
-      vendor: "Cool Air Services",
-      cost: 350,
-      date: "2023-09-10",
-      priority: "high"
-    }
-  ];
+  // Utiliser les données réelles des ordres de travail au lieu des fausses données
+  const { workOrders, isLoading, refetch } = useWorkOrdersData();
   
   // Handle tab change
   const handleTabChange = (value: string) => {
@@ -98,7 +64,7 @@ export const MaintenanceTabs = ({
       
       <TabsContent value="workorders" className="pt-6">
         <WorkOrderList 
-          workOrders={mockWorkOrders}
+          workOrders={workOrders}
           onCreateWorkOrder={() => {}} 
         />
       </TabsContent>
