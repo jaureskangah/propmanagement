@@ -1,8 +1,8 @@
 
 import React from "react";
 import { WorkOrder } from "@/types/workOrder";
-import { WorkOrderCard } from "../../WorkOrderCard";
 import { useWorkOrdersData } from "../hooks/useWorkOrdersData";
+import { WorkOrderCard } from "@/components/maintenance/WorkOrderCard";
 
 interface WorkOrderGridProps {
   orders: WorkOrder[];
