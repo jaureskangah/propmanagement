@@ -41,7 +41,12 @@ export const enCommon = {
   totalRequestsDesc: "All maintenance requests",
   pendingRequestsDesc: "Awaiting action",
   resolvedRequestsDesc: "Completed requests",
-  comparedToPreviousMonth: "Compared to previous month"
+  comparedToPreviousMonth: "Compared to previous month",
+  totalExpenses: "Total Expenses",
+  yearToDate: "Year to Date",
+  annualReturn: "Annual Return",
+  totalRentPaid: "Total Rent Paid",
+  allTime: "All Time"
 };
 
 export const frCommon = {
@@ -86,5 +91,11 @@ export const frCommon = {
   totalRequestsDesc: "Toutes les demandes de maintenance",
   pendingRequestsDesc: "En attente d'action",
   resolvedRequestsDesc: "Demandes terminées",
-  comparedToPreviousMonth: "Par rapport au mois précédent"
+  comparedToPreviousMonth: "Par rapport au mois précédent",
+  totalExpenses: "Dépenses totales",
+  yearToDate: "Depuis le début de l'année",
+  annualReturn: "Rendement annuel",
+  totalRentPaid: "Loyers encaissés",
+  allTime: "Depuis toujours"
 };
+
