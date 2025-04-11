@@ -11,11 +11,12 @@ export const DialogActions = ({
   isPending,
 }: DialogActionsProps) => {
   return (
-    <div className="flex justify-end gap-2">
+    <div className="flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
       <Button 
         type="button" 
         variant="outline" 
         onClick={(e) => {
+          e.preventDefault();
           e.stopPropagation();
           onClose();
         }}

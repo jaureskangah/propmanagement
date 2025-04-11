@@ -27,7 +27,7 @@ export const CreateWorkOrderDialog = ({
         onClose();
       }
     }}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <WorkOrderFormProvider initialPropertyId={initialPropertyId || null}>
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">Créer un nouveau bon de travail</DialogTitle>
@@ -54,13 +54,14 @@ const FormWithSubmit = ({ onSuccess, onClose }: { onSuccess: () => void, onClose
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     submitWorkOrder(e);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" onClick={(e) => e.stopPropagation()}>
       <StepContent />
-      <WorkOrderFormActions onSubmit={() => handleSubmit} />
+      <WorkOrderFormActions onSubmit={(e) => handleSubmit(e)} />
     </form>
   );
 };

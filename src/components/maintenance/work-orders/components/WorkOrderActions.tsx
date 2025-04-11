@@ -30,12 +30,15 @@ export const WorkOrderActions = ({
 }: WorkOrderActionsProps) => {
   return (
     <>
-      <div className="flex flex-wrap gap-2 justify-between">
+      <div className="flex flex-wrap gap-2 justify-between" onClick={(e) => e.stopPropagation()}>
         <Button 
           variant="outline" 
           size="sm" 
           className="h-8"
-          onClick={onViewPhotos}
+          onClick={(e) => {
+            e.stopPropagation();
+            onViewPhotos(e);
+          }}
           disabled={!hasPhotos}
         >
           <FileImage className="h-4 w-4 mr-2" />
@@ -47,7 +50,10 @@ export const WorkOrderActions = ({
             variant="outline" 
             size="sm" 
             className="h-8 mr-2"
-            onClick={onStatusUpdate}
+            onClick={(e) => {
+              e.stopPropagation();
+              onStatusUpdate(e);
+            }}
           >
             <CheckSquare className="h-4 w-4 mr-2" />
             <span className="hidden sm:inline">Mettre à jour</span>
@@ -65,8 +71,14 @@ export const WorkOrderActions = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-              <DropdownMenuItem onClick={onEdit}>Modifier</DropdownMenuItem>
-              <DropdownMenuItem onClick={onDelete}>Supprimer</DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => {
+                e.stopPropagation();
+                onEdit(e);
+              }}>Modifier</DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => {
+                e.stopPropagation();
+                onDelete(e);
+              }}>Supprimer</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
