@@ -21,20 +21,40 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       
       const formattedTasks = data.map(task => {
-        // Assurer que les dates sont correctement converties en objets Date
-        const taskDate = task.date ? new Date(task.date) : new Date();
-        let reminderDate = undefined;
+        // Properly parse date strings to Date objects
+        let taskDate;
+        try {
+          taskDate = task.date ? new Date(task.date) : new Date();
+          // Verify the date is valid
+          if (isNaN(taskDate.getTime())) {
+            console.warn("Invalid date found for task:", task.id, task.date);
+            taskDate = new Date(); // Fallback to current date
+          }
+        } catch (e) {
+          console.error("Error parsing date:", task.date, e);
+          taskDate = new Date();
+        }
         
+        let reminderDate = undefined;
         if (task.reminder_date) {
-          // S'assurer que la date de rappel est un objet Date valide
-          reminderDate = new Date(task.reminder_date);
+          try {
+            // Parse reminder date
+            reminderDate = new Date(task.reminder_date);
+            if (isNaN(reminderDate.getTime())) {
+              console.warn("Invalid reminder date found for task:", task.id, task.reminder_date);
+              reminderDate = undefined;
+            }
+          } catch (e) {
+            console.error("Error parsing reminder date:", task.reminder_date, e);
+            reminderDate = undefined;
+          }
         }
         
         // Normalisation des structures pour garantir la conformité à l'interface Task
         return {
           ...task,
           date: taskDate,
-          type: task.type as "regular" | "inspection" | "seasonal",
+          type: (task.type || "regular") as "regular" | "inspection" | "seasonal",
           priority: (task.priority || "medium") as "low" | "medium" | "high" | "urgent",
           status: (task.status || "pending") as "pending" | "in_progress" | "completed",
           completed: Boolean(task.completed),

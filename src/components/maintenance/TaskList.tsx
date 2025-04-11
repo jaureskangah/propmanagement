@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Task } from "./types"; // Import Task from the types file
@@ -18,14 +18,24 @@ interface TaskListProps {
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   const { t, language } = useLocale();
   
+  console.log("Tasks in TaskList:", tasks);
+  
   return (
     <ScrollArea className="h-[200px]">
       {tasks.length === 0 ? (
         <p className="text-center text-muted-foreground py-4">{t('noTasks')}</p>
       ) : (
         tasks.map((task) => {
-          // Assurer que la date est un objet Date
-          const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
+          // Ensure the task date is properly processed
+          let taskDate: Date;
+          if (task.date instanceof Date) {
+            taskDate = task.date;
+          } else if (typeof task.date === 'string') {
+            taskDate = new Date(task.date);
+          } else {
+            console.error('Invalid task date format:', task.date);
+            taskDate = new Date(); // Fallback to current date
+          }
           
           return (
             <div

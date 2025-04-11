@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { isSameDay } from "date-fns";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -42,24 +43,28 @@ export const PreventiveMaintenance = () => {
     selectedType === "all" ? true : task.type === selectedType
   );
 
-  // Filter tasks by selected date
+  // Filter tasks by selected date - improved date comparison
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return true;
     
-    const taskDate = new Date(task.date);
-    return (
-      taskDate.getFullYear() === selectedDate.getFullYear() &&
-      taskDate.getMonth() === selectedDate.getMonth() &&
-      taskDate.getDate() === selectedDate.getDate()
-    );
+    // Handle different formats of task.date
+    const taskDate = task.date instanceof Date 
+      ? task.date 
+      : new Date(task.date);
+    
+    // Use isSameDay from date-fns for more reliable date comparison
+    return isSameDay(taskDate, selectedDate);
   });
+  
+  console.log("Selected date:", selectedDate);
+  console.log("Filtered tasks for selected date:", filteredTasksByDate);
 
   if (isLoading) {
     return <div>{t('loading')}</div>;
   }
 
   const onAddTask = (newTask: NewTask) => {
-    console.log("Create task clicked");
+    console.log("Create task clicked with data:", newTask);
     handleAddTask(newTask);
     toast({
       title: t('success'),

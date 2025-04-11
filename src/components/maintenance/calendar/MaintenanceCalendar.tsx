@@ -1,6 +1,6 @@
 
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfDay } from "date-fns";
+import { format, startOfDay, isSameDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -22,20 +22,25 @@ export const MaintenanceCalendar = ({
   const { t, language } = useLocale();
 
   const getTasksForDate = (date: Date) => {
-    // Normaliser la date pour la comparaison
+    // Normaliser la date pour la comparaison (sans heure/minute/seconde)
     const normalizedDate = startOfDay(date);
     
     return tasks.filter((task) => {
-      // Normaliser la date de la tâche également
+      // Ensure task.date is a Date object
       const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
-      const normalizedTaskDate = startOfDay(taskDate);
       
+      // Use isSameDay to compare dates properly
       return (
-        normalizedTaskDate.getTime() === normalizedDate.getTime() &&
+        isSameDay(taskDate, normalizedDate) &&
         (selectedType === "all" || task.type === selectedType)
       );
     });
   };
+  
+  console.log("Tasks in calendar:", tasks);
+  if (selectedDate) {
+    console.log("Tasks for selected date:", getTasksForDate(selectedDate));
+  }
 
   const getTaskColor = (tasks: Task[]) => {
     const hasPriority = {
