@@ -42,10 +42,22 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       <CardFooter className="pt-2 flex flex-wrap gap-2 justify-between">
         <WorkOrderActions 
           hasPhotos={Boolean(order.photos && order.photos.length > 0)}
-          onViewPhotos={() => setIsPhotoDialogOpen(true)}
-          onEdit={() => setIsEditDialogOpen(true)}
-          onDelete={() => setIsDeleteDialogOpen(true)}
-          onStatusUpdate={handleStatusUpdate}
+          onViewPhotos={(e) => {
+            e.stopPropagation();
+            setIsPhotoDialogOpen(true);
+          }}
+          onEdit={(e) => {
+            e.stopPropagation();
+            setIsEditDialogOpen(true);
+          }}
+          onDelete={(e) => {
+            e.stopPropagation();
+            setIsDeleteDialogOpen(true);
+          }}
+          onStatusUpdate={(e) => {
+            e.stopPropagation();
+            handleStatusUpdate();
+          }}
         />
       </CardFooter>
 
@@ -59,14 +71,12 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       )}
 
       {/* Dialog pour éditer l'ordre de travail */}
-      {isEditDialogOpen && (
-        <EditWorkOrderDialog
-          isOpen={isEditDialogOpen}
-          onClose={() => setIsEditDialogOpen(false)}
-          onSuccess={handleEditSuccess}
-          workOrder={order}
-        />
-      )}
+      <EditWorkOrderDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        onSuccess={handleEditSuccess}
+        workOrder={order}
+      />
 
       {/* Dialog de confirmation de suppression */}
       <DeleteConfirmationDialog 

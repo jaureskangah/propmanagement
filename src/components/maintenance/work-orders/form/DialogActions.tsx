@@ -12,10 +12,21 @@ export const DialogActions = ({
 }: DialogActionsProps) => {
   return (
     <div className="flex justify-end gap-2">
-      <Button type="button" variant="outline" onClick={onClose}>
+      <Button 
+        type="button" 
+        variant="outline" 
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+      >
         Annuler
       </Button>
-      <Button type="submit" disabled={isPending}>
+      <Button 
+        type="submit" 
+        disabled={isPending}
+        onClick={(e) => e.stopPropagation()}
+      >
         {isPending ? "Enregistrement..." : "Enregistrer les modifications"}
       </Button>
     </div>

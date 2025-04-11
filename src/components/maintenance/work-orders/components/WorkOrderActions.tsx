@@ -15,10 +15,10 @@ import {
 
 interface WorkOrderActionsProps {
   hasPhotos: boolean;
-  onViewPhotos: () => void;
-  onEdit: () => void;
-  onDelete: () => void;
-  onStatusUpdate: () => void;
+  onViewPhotos: (e: React.MouseEvent) => void;
+  onEdit: (e: React.MouseEvent) => void;
+  onDelete: (e: React.MouseEvent) => void;
+  onStatusUpdate: (e: React.MouseEvent) => void;
 }
 
 export const WorkOrderActions = ({ 
@@ -55,11 +55,16 @@ export const WorkOrderActions = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="h-8 w-8 p-0"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <MoreVertical className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
               <DropdownMenuItem onClick={onEdit}>Modifier</DropdownMenuItem>
               <DropdownMenuItem onClick={onDelete}>Supprimer</DropdownMenuItem>
             </DropdownMenuContent>
