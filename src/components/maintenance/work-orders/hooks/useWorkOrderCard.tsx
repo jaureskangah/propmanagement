@@ -26,6 +26,10 @@ export const useWorkOrderCard = ({ order, onUpdate, onDelete }: UseWorkOrderCard
   });
 
   const handleDelete = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
     deleteWorkOrder(order.id);
   };
 
@@ -50,6 +54,7 @@ export const useWorkOrderCard = ({ order, onUpdate, onDelete }: UseWorkOrderCard
     setIsDeleteDialogOpen,
     isDeleting,
     handleDelete,
+    confirmDelete,
     handleStatusUpdate,
     handleEditSuccess,
   };

@@ -25,6 +25,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
     setIsDeleteDialogOpen,
     isDeleting,
     handleDelete,
+    confirmDelete,
     handleStatusUpdate,
     handleEditSuccess
   } = useWorkOrderCard({ order, onUpdate, onDelete });
@@ -44,7 +45,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
           hasPhotos={Boolean(order.photos && order.photos.length > 0)}
           onViewPhotos={() => setIsPhotoDialogOpen(true)}
           onEdit={() => setIsEditDialogOpen(true)}
-          onDelete={() => setIsDeleteDialogOpen(true)}
+          onDelete={handleDelete}
           onStatusUpdate={handleStatusUpdate}
         />
       </CardFooter>
@@ -70,7 +71,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       <DeleteConfirmationDialog 
         isOpen={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
-        onConfirm={handleDelete}
+        onConfirm={confirmDelete}
         isDeleting={isDeleting}
       />
     </Card>
