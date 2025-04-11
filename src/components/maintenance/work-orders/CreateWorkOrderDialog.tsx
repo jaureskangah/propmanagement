@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { WorkOrderFormProvider } from "./form/WorkOrderFormContext";
 import { StepIndicator } from "./form/StepIndicator";
 import { StepContent } from "./form/steps/StepContent";
@@ -31,6 +31,9 @@ export const CreateWorkOrderDialog = ({
         <WorkOrderFormProvider initialPropertyId={initialPropertyId || null}>
           <DialogHeader>
             <DialogTitle className="text-xl font-bold">Créer un nouveau bon de travail</DialogTitle>
+            <DialogDescription>
+              Remplissez les informations nécessaires pour créer un nouveau bon de travail
+            </DialogDescription>
           </DialogHeader>
           
           <StepIndicator />
@@ -61,7 +64,7 @@ const FormWithSubmit = ({ onSuccess, onClose }: { onSuccess: () => void, onClose
   return (
     <form onSubmit={handleSubmit} className="space-y-4" onClick={(e) => e.stopPropagation()}>
       <StepContent />
-      <WorkOrderFormActions onSubmit={(e) => handleSubmit(e)} />
+      <WorkOrderFormActions onSubmit={handleSubmit} />
     </form>
   );
 };

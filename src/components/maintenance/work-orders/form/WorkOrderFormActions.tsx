@@ -27,7 +27,9 @@ export const WorkOrderFormActions = ({ onSubmit }: WorkOrderFormActionsProps) =>
   const handleSave = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    onSubmit(e as unknown as React.FormEvent);
+    // Crée un événement de formulaire factice pour la soumission
+    const formEvent = new Event('submit', { bubbles: true, cancelable: true }) as unknown as React.FormEvent;
+    onSubmit(formEvent);
   };
 
   return (
