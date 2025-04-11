@@ -34,19 +34,11 @@ export const useWorkOrderCard = ({ order, onUpdate, onDelete }: UseWorkOrderCard
   };
 
   const handleEditSuccess = () => {
-    // Fermer le dialogue d'édition
     setIsEditDialogOpen(false);
     
-    // Notifier le composant parent que des modifications ont été effectuées
     if (onUpdate) {
       onUpdate();
     }
-    
-    // Afficher un toast de confirmation
-    toast({
-      title: "Modifications enregistrées",
-      description: "Les modifications ont été appliquées avec succès",
-    });
   };
 
   return {
