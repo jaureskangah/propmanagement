@@ -87,6 +87,8 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
     const totalIncome = rentData.filter(payment => payment.status === "paid")
       .reduce((acc, curr) => acc + curr.amount, 0);
     
+    console.log("ROI calculation:", { totalExpenses, totalMaintenance, totalIncome });
+    
     const propertyValue = 500000; // This would ideally come from the property data
     const netIncome = totalIncome - totalExpenses - totalMaintenance;
     

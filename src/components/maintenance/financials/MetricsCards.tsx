@@ -24,9 +24,9 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1).toISOString(); // Jan 1st of current year
   
-  // Fetch total rent payments regardless of property (we'll filter in the query function)
+  // Fetch total rent payments regardless of property
   const { data: totalRentPaid = 0, isLoading: isLoadingRent } = useQuery({
-    queryKey: ["total_rent_paid", propertyId, currentYear],
+    queryKey: ["total_rent_paid", currentYear],
     queryFn: async () => {
       console.log("Fetching total rent payments for year:", currentYear);
       
@@ -61,6 +61,8 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
       }
     },
   });
+
+  console.log("Rendering MetricsCards with totalRentPaid:", totalRentPaid);
 
   const metrics = [
     {
