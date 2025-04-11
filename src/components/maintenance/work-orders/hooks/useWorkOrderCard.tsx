@@ -29,7 +29,11 @@ export const useWorkOrderCard = ({ order, onUpdate, onDelete }: UseWorkOrderCard
     deleteWorkOrder(order.id);
   };
 
-  const handleStatusUpdate = () => {
+  const handleStatusUpdate = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     setIsEditDialogOpen(true);
   };
 

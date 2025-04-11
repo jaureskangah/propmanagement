@@ -29,8 +29,12 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
     handleEditSuccess
   } = useWorkOrderCard({ order, onUpdate, onDelete });
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <Card className="h-full flex flex-col">
+    <Card className="h-full flex flex-col" onClick={handleCardClick}>
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg line-clamp-2">{order.title}</CardTitle>
@@ -56,7 +60,7 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
           }}
           onStatusUpdate={(e) => {
             e.stopPropagation();
-            handleStatusUpdate();
+            handleStatusUpdate(e);
           }}
         />
       </CardFooter>
