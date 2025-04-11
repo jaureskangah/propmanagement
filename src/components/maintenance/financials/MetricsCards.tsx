@@ -24,38 +24,18 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1).toISOString(); // Jan 1st of current year
   
-  // Fetch total rent payments for the property for current year
+  // Fetch total rent payments regardless of property (we'll filter in the query function)
   const { data: totalRentPaid = 0, isLoading: isLoadingRent } = useQuery({
     queryKey: ["total_rent_paid", propertyId, currentYear],
     queryFn: async () => {
-      console.log("Fetching total rent payments for property:", propertyId, "for year:", currentYear);
+      console.log("Fetching total rent payments for year:", currentYear);
       
       try {
-        // Fetch tenants for this property
-        const { data: tenants, error: tenantsError } = await supabase
-          .from("tenants")
-          .select("id")
-          .eq("property_id", propertyId);
-
-        if (tenantsError) {
-          console.error("Error fetching tenants:", tenantsError);
-          throw tenantsError;
-        }
-
-        // If no tenants, return 0
-        if (!tenants?.length) {
-          console.log("No tenants found for property:", propertyId);
-          return 0;
-        }
-
-        const tenantIds = tenants.map(t => t.id);
-        console.log("Found tenant IDs:", tenantIds);
-        
-        // Fetch payments for all tenants for this property
+        // Fetch all payments for the current year regardless of tenant
         const { data: payments, error: paymentsError } = await supabase
           .from("tenant_payments")
           .select("amount, status, payment_date")
-          .in("tenant_id", tenantIds);
+          .gte("payment_date", startOfYear);
 
         if (paymentsError) {
           console.error("Error fetching payments:", paymentsError);
@@ -64,10 +44,9 @@ export const MetricsCards = ({ propertyId, expenses, maintenance, calculateROI }
 
         console.log("All payments retrieved:", payments);
         
-        // Filter payments by status and date
+        // Filter payments by status
         const filteredPayments = payments?.filter(payment => 
-          payment.status === 'paid' && 
-          new Date(payment.payment_date) >= new Date(startOfYear)
+          payment.status === 'paid'
         ) || [];
         
         console.log("Filtered payments for current year:", filteredPayments);

@@ -64,32 +64,20 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1).toISOString();
 
-  // Fetch total rent paid for the current year
+  // Fetch total rent paid for the current year (all payments)
   const { data: rentData = [] } = useQuery({
-    queryKey: ["property_rent_payments", propertyId, currentYear],
+    queryKey: ["all_rent_payments", currentYear],
     queryFn: async () => {
-      // First get tenants for this property
-      const { data: tenants, error: tenantsError } = await supabase
-        .from("tenants")
-        .select("id")
-        .eq("property_id", propertyId);
-
-      if (tenantsError) throw tenantsError;
-      if (!tenants?.length) return [];
-
-      const tenantIds = tenants.map(t => t.id);
-
-      // Then get payments for those tenants
+      // Get all payments for the current year
       const { data: payments, error: paymentsError } = await supabase
         .from("tenant_payments")
         .select("*")
-        .in("tenant_id", tenantIds)
         .gte("payment_date", startOfYear);
 
       if (paymentsError) throw paymentsError;
+      console.log("Fetched rent payments for ROI calculation:", payments);
       return payments || [];
     },
-    enabled: !!propertyId,
   });
 
   // Calculate ROI
