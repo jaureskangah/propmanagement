@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,17 @@ export const EditWorkOrderDialog = ({
   const [priority, setPriority] = useState(workOrder.priority);
   const [cost, setCost] = useState(workOrder.cost.toString());
   const { toast } = useToast();
+
+  // Réinitialiser les valeurs lorsque le workOrder change
+  useEffect(() => {
+    if (isOpen) {
+      setTitle(workOrder.title);
+      setDescription(workOrder.description || "");
+      setStatus(workOrder.status);
+      setPriority(workOrder.priority);
+      setCost(workOrder.cost.toString());
+    }
+  }, [workOrder, isOpen]);
 
   const { mutate: updateWorkOrder, isPending } = useSupabaseUpdate('vendor_interventions', {
     successMessage: "Le bon de travail a été mis à jour avec succès",

@@ -197,12 +197,14 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
       )}
 
       {/* Dialog pour éditer l'ordre de travail */}
-      <EditWorkOrderDialog
-        isOpen={isEditDialogOpen}
-        onClose={() => setIsEditDialogOpen(false)}
-        onSuccess={handleEditSuccess}
-        workOrder={order}
-      />
+      {isEditDialogOpen && (
+        <EditWorkOrderDialog
+          isOpen={isEditDialogOpen}
+          onClose={() => setIsEditDialogOpen(false)}
+          onSuccess={handleEditSuccess}
+          workOrder={order}
+        />
+      )}
 
       {/* Dialog de confirmation de suppression */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
