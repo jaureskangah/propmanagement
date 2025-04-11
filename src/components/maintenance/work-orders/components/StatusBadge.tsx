@@ -14,6 +14,7 @@ interface StatusBadgeProps {
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const getStatusConfig = (status: string) => {
+    // Gérer tous les cas de statut, en français et en anglais
     switch (status) {
       case "En cours":
       case "In Progress":
