@@ -6,6 +6,12 @@ import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { supabase } from "@/lib/supabase";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from "@/components/ui/tooltip";
 
 interface WorkOrderActionsProps {
   order: WorkOrder;
@@ -109,19 +115,38 @@ export const WorkOrderActions = ({ order, onStatusChange, onDelete, onUpdate }: 
   return (
     <div className="flex items-center justify-between pt-2 mt-2 border-t border-gray-100">
       <div className="flex items-center gap-2">
-        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
-          <Edit className="h-3.5 w-3.5 mr-1" />
-          Modifier
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-red-600 hover:text-red-800 hover:bg-red-50"
-          onClick={() => setIsDeleteDialogOpen(true)}
-        >
-          <Trash2 className="h-3.5 w-3.5 mr-1" />
-          Supprimer
-        </Button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 hover:bg-blue-50">
+                <Edit className="h-3.5 w-3.5 mr-1" />
+                Modifier
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Modifier ce bon de travail
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="text-red-600 hover:text-red-800 hover:bg-red-50"
+                onClick={() => setIsDeleteDialogOpen(true)}
+              >
+                <Trash2 className="h-3.5 w-3.5 mr-1" />
+                Supprimer
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              Supprimer ce bon de travail
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       
       {getNextStatusAction()}
