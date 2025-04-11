@@ -25,6 +25,7 @@ export const MaintenanceTabs = ({
   const { t } = useLocale();
   const [activeTab, setActiveTab] = useState("preventive");
   const isMobile = useIsMobile();
+  const [isCreateWorkOrderOpen, setIsCreateWorkOrderOpen] = useState(false);
   
   // Utiliser les données réelles des ordres de travail au lieu des fausses données
   const { workOrders, isLoading, refetch } = useWorkOrdersData();
@@ -32,6 +33,11 @@ export const MaintenanceTabs = ({
   // Handle tab change
   const handleTabChange = (value: string) => {
     setActiveTab(value);
+  };
+
+  const handleCreateWorkOrder = () => {
+    console.log("Bouton Créer un Ordre cliqué dans MaintenanceTabs");
+    setIsCreateWorkOrderOpen(true);
   };
   
   return (
@@ -65,7 +71,7 @@ export const MaintenanceTabs = ({
       <TabsContent value="workorders" className="pt-6">
         <WorkOrderList 
           workOrders={workOrders}
-          onCreateWorkOrder={() => {}} 
+          onCreateWorkOrder={handleCreateWorkOrder} 
         />
       </TabsContent>
       

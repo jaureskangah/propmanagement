@@ -6,7 +6,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface WorkOrderHeaderProps {
-  onCreateWorkOrder: () => void;
+  onCreateWorkOrder: (e: React.MouseEvent) => void;
 }
 
 export const WorkOrderHeader = ({ onCreateWorkOrder }: WorkOrderHeaderProps) => {

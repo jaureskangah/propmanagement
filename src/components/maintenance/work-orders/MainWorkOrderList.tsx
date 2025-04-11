@@ -42,7 +42,9 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
       });
   }, [workOrders, statusFilter, searchQuery, sortBy]);
 
-  const handleCreateWorkOrder = () => {
+  const handleCreateWorkOrder = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log("Bouton de création d'ordre de travail cliqué");
     setIsCreateDialogOpen(true);
     onCreateWorkOrder(); // Call the parent handler if needed
   };
