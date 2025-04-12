@@ -26,6 +26,18 @@ export const useTaskAddition = () => {
         throw new Error("User not authenticated");
       }
       
+      // Normaliser la date de rappel si elle existe
+      let normalizedReminderDate = undefined;
+      if (newTask.has_reminder && newTask.reminder_date) {
+        normalizedReminderDate = startOfDay(newTask.reminder_date instanceof Date 
+          ? newTask.reminder_date 
+          : typeof newTask.reminder_date === 'string' 
+            ? new Date(newTask.reminder_date) 
+            : new Date());
+            
+        console.log("Normalized reminder date for insertion:", format(normalizedReminderDate, "yyyy-MM-dd"));
+      }
+      
       // Insert the task
       const { data, error } = await supabase
         .from('maintenance_tasks')
@@ -36,7 +48,13 @@ export const useTaskAddition = () => {
           date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
           is_recurring: newTask.is_recurring || false,
           user_id: user.id,
-          // Add other fields as needed
+          // Add reminder fields
+          has_reminder: newTask.has_reminder || false,
+          reminder_date: newTask.has_reminder && normalizedReminderDate 
+            ? normalizedReminderDate.toISOString().split('T')[0] 
+            : null,
+          reminder_method: newTask.has_reminder ? newTask.reminder_method : null,
+          // Add recurrence pattern if needed
           ...(newTask.recurrence_pattern ? { recurrence_pattern: newTask.recurrence_pattern } : {}),
         })
         .select('*')
@@ -56,6 +74,7 @@ export const useTaskAddition = () => {
         ...data,
         date: normalizedDate,
         completed: false,
+        reminder_date: newTask.has_reminder && normalizedReminderDate ? normalizedReminderDate : undefined,
       } as Task;
     } catch (error) {
       console.error("Error in handleAddTask:", error);
@@ -81,6 +100,16 @@ export const useTaskAddition = () => {
             ? new Date(task.date) 
             : new Date());
         
+        // Normaliser la date de rappel si elle existe
+        let normalizedReminderDate = undefined;
+        if (task.has_reminder && task.reminder_date) {
+          normalizedReminderDate = startOfDay(task.reminder_date instanceof Date 
+            ? task.reminder_date 
+            : typeof task.reminder_date === 'string' 
+              ? new Date(task.reminder_date) 
+              : new Date());
+        }
+        
         return {
           title: task.title,
           type: task.type || "regular",
@@ -88,7 +117,13 @@ export const useTaskAddition = () => {
           date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
           is_recurring: task.is_recurring || false,
           user_id: user.id,
-          // Add other fields as needed
+          // Add reminder fields
+          has_reminder: task.has_reminder || false,
+          reminder_date: task.has_reminder && normalizedReminderDate 
+            ? normalizedReminderDate.toISOString().split('T')[0] 
+            : null,
+          reminder_method: task.has_reminder ? task.reminder_method : null,
+          // Add recurrence pattern if needed
           ...(task.recurrence_pattern ? { recurrence_pattern: task.recurrence_pattern } : {}),
         };
       });
@@ -114,6 +149,7 @@ export const useTaskAddition = () => {
         ...task,
         date: startOfDay(new Date(task.date)),
         completed: false,
+        reminder_date: task.has_reminder && task.reminder_date ? startOfDay(new Date(task.reminder_date)) : undefined,
       })) as Task[];
     } catch (error) {
       console.error("Error in handleAddMultipleTasks:", error);

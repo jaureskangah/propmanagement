@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useMaintenanceTasks } from "../../tasks/useMaintenanceTasks";
 import { useToast } from "@/hooks/use-toast";
@@ -81,24 +80,22 @@ export const usePreventiveMaintenance = () => {
   // Debug logging for all tasks with reminders
   console.log("All tasks:", tasks.length);
   
-  // Filter tasks with reminders - improved approach including scheduled calls
+  // Filter tasks with reminders - improved approach
   const reminderTasks = tasks.filter(task => {
-    // Skip tasks without reminder flag
-    if (task.has_reminder !== true) return false;
-    
-    // Skip tasks with no reminder date
-    if (!task.reminder_date) return false;
-    
-    // Include tasks with scheduled calls - check title only, not type
-    const hasScheduledCall = task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
-    
-    // Log successful reminder task for debugging
-    console.log(`Found reminder task: ${task.id} - ${task.title} - Type: ${task.type}`);
-    if (hasScheduledCall) {
-      console.log(`Found scheduled call: ${task.id} - ${task.title}`);
+    // Une tâche doit avoir "has_reminder" à true pour être considérée comme un rappel
+    if (!task.has_reminder) {
+      return false;
     }
     
-    // Include this task in reminders
+    // Une tâche de rappel doit avoir une date de rappel valide
+    if (!task.reminder_date) {
+      return false;
+    }
+    
+    // Débogage: log chaque tâche avec rappel trouvée
+    console.log(`Found reminder task: ${task.id} - ${task.title} - Reminder date: ${task.reminder_date}`);
+    
+    // Cette tâche a tous les éléments requis pour être un rappel
     return true;
   });
   

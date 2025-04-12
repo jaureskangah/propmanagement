@@ -74,12 +74,20 @@ export const useTasksQuery = () => {
           taskDate = startOfDay(new Date());
         }
         
+        // Traiter la date de rappel
         let reminderDate = undefined;
         if (task.reminder_date) {
           try {
             if (typeof task.reminder_date === 'string') {
               try {
                 reminderDate = parseISO(task.reminder_date);
+                
+                // Log pour le débogage
+                console.log(`Task ${task.id} reminder date parsing:
+                  - Original string: ${task.reminder_date}
+                  - Parsed as: ${isValid(reminderDate) ? format(reminderDate, "yyyy-MM-dd") : "INVALID"}
+                  - ISO string: ${isValid(reminderDate) ? reminderDate.toISOString() : "INVALID"}
+                `);
               } catch (e) {
                 console.error("Error parsing reminder date:", task.reminder_date, e);
                 reminderDate = undefined;
@@ -98,6 +106,15 @@ export const useTasksQuery = () => {
             console.error("Error processing reminder date:", task.reminder_date, e);
             reminderDate = undefined;
           }
+        }
+        
+        // Log specific debug information for reminder tasks
+        if (task.has_reminder) {
+          console.log(`Reminder task found: ${task.id} - ${task.title}
+            - Has reminder: ${task.has_reminder}
+            - Reminder date: ${reminderDate ? format(reminderDate, "yyyy-MM-dd") : "undefined"}
+            - Reminder method: ${task.reminder_method || "none"}
+          `);
         }
         
         // Return the task with normalized dates
@@ -121,14 +138,17 @@ export const useTasksQuery = () => {
         } as Task;
       });
       
-      console.log("Tasks processed after retrieval:", formattedTasks.length);
-      if (formattedTasks.length > 0) {
-        console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
+      // Logs spécifiques pour les tâches avec rappels
+      const reminderTasks = formattedTasks.filter(task => task.has_reminder && task.reminder_date);
+      console.log(`Found ${reminderTasks.length} tasks with reminders after formatting`);
+      
+      if (reminderTasks.length > 0) {
+        console.log("Reminder task examples:", reminderTasks.slice(0, 3).map(t => ({ 
           id: t.id, 
           title: t.title,
-          date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
-          type: t.type,
-          priority: t.priority
+          has_reminder: t.has_reminder,
+          reminder_date: t.reminder_date instanceof Date ? format(t.reminder_date, "yyyy-MM-dd") : 'Invalid date',
+          reminder_method: t.reminder_method
         })));
       }
       
