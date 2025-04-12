@@ -40,12 +40,12 @@ export const EmergencyContactCard = ({ vendor, onCall, onEdit, onDelete }: Emerg
       <CardContent className="p-4 pt-6">
         <div className="space-y-4">
           <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-red-500" />
+            <MapPin className="h-4 w-4 text-muted-foreground" />
             <div className="font-medium">{vendor.specialty}</div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Mail className="h-4 w-4 text-red-500" />
+            <Mail className="h-4 w-4 text-muted-foreground" />
             <a 
               href={`mailto:${vendor.email}`}
               className="text-red-600 hover:underline font-medium text-sm"

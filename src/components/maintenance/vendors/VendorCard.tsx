@@ -85,7 +85,7 @@ export const VendorCard = ({
             </p>
             
             <div className="flex items-center gap-2 text-sm">
-              <Phone className="h-3.5 w-3.5 text-primary" />
+              <Phone className="h-3.5 w-3.5 text-muted-foreground" />
               <Button
                 variant="ghost" 
                 size="sm" 
@@ -97,7 +97,7 @@ export const VendorCard = ({
             </div>
             
             <div className="flex items-center gap-2 text-sm">
-              <Mail className="h-3.5 w-3.5 text-primary" />
+              <Mail className="h-3.5 w-3.5 text-muted-foreground" />
               <a 
                 href={`mailto:${vendor.email}`}
                 className="text-primary hover:underline"
