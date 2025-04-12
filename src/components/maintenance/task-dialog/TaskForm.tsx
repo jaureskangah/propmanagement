@@ -4,18 +4,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, RotateCw, CheckCircle, BellRing, Mail, Smartphone } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { format, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 import { NewTask } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { RecurrenceSettings } from "./RecurrenceSettings";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { ReminderSettings } from "./ReminderSettings";
+import { DatePickerField } from "./form-fields/DatePickerField";
+import { TaskTypeSelect } from "./form-fields/TaskTypeSelect";
+import { PrioritySelect } from "./form-fields/PrioritySelect";
 
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -76,27 +75,6 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
     }
   };
 
-  const handleDateSelect = (newDate: Date | undefined) => {
-    if (newDate) {
-      // Normalize the date (without hours/minutes/seconds)
-      const selectedDate = startOfDay(newDate);
-      console.log("Selected task date in form:", format(selectedDate, "yyyy-MM-dd"));
-      setDate(selectedDate);
-    } else {
-      setDate(undefined);
-    }
-  };
-
-  const handleReminderDateSelect = (newDate: Date | undefined) => {
-    if (newDate) {
-      // Normalize the date (without hours/minutes/seconds)
-      const selectedDate = startOfDay(newDate);
-      setReminderDate(selectedDate);
-    } else {
-      setReminderDate(undefined);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -110,62 +88,24 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
         />
       </div>
       
-      <div className="space-y-2">
-        <Label>{t('date')}</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className={cn(
-                "w-full justify-start text-left font-normal",
-                !date && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "PPP", { locale: dateLocale }) : <span>{t('selectDate')}</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={handleDateSelect}
-              initialFocus
-              locale={dateLocale}
-              className="pointer-events-auto"
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
+      <DatePickerField 
+        label={t('date')}
+        date={date}
+        onDateChange={setDate}
+        locale={dateLocale}
+      />
       
-      <div className="space-y-2">
-        <Label>{t('priority')}</Label>
-        <Select value={priority} onValueChange={(value: "low" | "medium" | "high" | "urgent") => setPriority(value)}>
-          <SelectTrigger>
-            <SelectValue placeholder={t('selectPriority')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="low">{t('low')}</SelectItem>
-            <SelectItem value="medium">{t('medium')}</SelectItem>
-            <SelectItem value="high">{t('high')}</SelectItem>
-            <SelectItem value="urgent">{t('urgent')}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <PrioritySelect 
+        value={priority}
+        onChange={setPriority}
+        label={t('priority')}
+      />
       
-      <div className="space-y-2">
-        <Label>{t('taskType')}</Label>
-        <Select value={type} onValueChange={(value: "regular" | "inspection" | "seasonal") => setType(value)}>
-          <SelectTrigger>
-            <SelectValue placeholder={t('selectType')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="regular">{t('regularTask')}</SelectItem>
-            <SelectItem value="inspection">{t('inspection')}</SelectItem>
-            <SelectItem value="seasonal">{t('seasonalTask')}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <TaskTypeSelect 
+        value={type}
+        onChange={setType}
+        label={t('taskType')}
+      />
       
       <RecurrenceSettings 
         isRecurring={isRecurring}
@@ -176,87 +116,15 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
         setRecurrenceInterval={setRecurrenceInterval}
       />
       
-      {/* Nouvelle section pour les rappels */}
-      <div className="pt-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="hasReminder" className="flex items-center gap-2">
-            <BellRing className="h-4 w-4" />
-            {t('addReminder')}
-          </Label>
-          <Switch
-            id="hasReminder"
-            checked={hasReminder}
-            onCheckedChange={setHasReminder}
-          />
-        </div>
-      </div>
-      
-      {hasReminder && (
-        <div className="space-y-4 pt-2 pl-4 border-l-2 border-muted">
-          <div className="space-y-2">
-            <Label>{t('reminderDate')}</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !reminderDate && "text-muted-foreground"
-                  )}
-                >
-                  <BellRing className="mr-2 h-4 w-4" />
-                  {reminderDate ? format(reminderDate, "PPP", { locale: dateLocale }) : <span>{t('selectDate')}</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={reminderDate}
-                  onSelect={handleReminderDateSelect}
-                  initialFocus
-                  locale={dateLocale}
-                  className="pointer-events-auto"
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          
-          {/* Nouvelle section pour la méthode de notification */}
-          <div className="space-y-2">
-            <Label>{t('reminderMethod')}</Label>
-            <RadioGroup 
-              value={reminderMethod} 
-              onValueChange={(value: "app" | "email" | "both") => setReminderMethod(value)}
-              className="flex flex-col space-y-1"
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="app" id="app" />
-                <Label htmlFor="app" className="flex items-center cursor-pointer">
-                  <Smartphone className="h-4 w-4 mr-2" />
-                  {t('reminderViaApp')}
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="email" id="email" />
-                <Label htmlFor="email" className="flex items-center cursor-pointer">
-                  <Mail className="h-4 w-4 mr-2" />
-                  {t('reminderViaEmail')}
-                </Label>
-              </div>
-              
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="both" id="both" />
-                <Label htmlFor="both" className="flex items-center cursor-pointer">
-                  <Smartphone className="h-4 w-4 mr-2" />
-                  <Mail className="h-4 w-4 mr-2" />
-                  {t('reminderViaBoth')}
-                </Label>
-              </div>
-            </RadioGroup>
-          </div>
-        </div>
-      )}
+      <ReminderSettings
+        hasReminder={hasReminder}
+        setHasReminder={setHasReminder}
+        reminderDate={reminderDate}
+        setReminderDate={setReminderDate}
+        reminderMethod={reminderMethod}
+        setReminderMethod={setReminderMethod}
+        dateLocale={dateLocale}
+      />
       
       <Separator className="my-2" />
       

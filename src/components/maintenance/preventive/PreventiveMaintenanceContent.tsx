@@ -5,6 +5,7 @@ import { RecurringReminderSection } from "./RecurringReminderSection";
 import { AddTaskDialog } from "../task-dialog/AddTaskDialog";
 import { BatchSchedulingDialog } from "../scheduling/BatchSchedulingDialog";
 import { usePreventiveMaintenance } from "./hooks/usePreventiveMaintenance";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const PreventiveMaintenanceContent = () => {
   const {
@@ -26,6 +27,8 @@ export const PreventiveMaintenanceContent = () => {
     recurringTasks,
     reminderTasks
   } = usePreventiveMaintenance();
+  
+  const { t } = useLocale();
   
   if (isLoading) {
     return <div>{t('loading')}</div>;
