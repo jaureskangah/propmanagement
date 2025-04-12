@@ -60,7 +60,10 @@ export const useTaskAddition = () => {
         throw error;
       }
       
+      // Log detailed info about the added task
       console.log("Task added successfully:", data);
+      console.log(`Added task date from DB: ${data.date}`);
+      
       return data as Task;
     } catch (error) {
       console.error("Error in handleAddTask:", error);

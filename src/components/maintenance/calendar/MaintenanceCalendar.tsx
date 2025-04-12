@@ -39,6 +39,14 @@ export const MaintenanceCalendar = ({
     return startOfDay(date);
   };
 
+  // Log all tasks with their dates for debugging
+  console.log("Calendar received tasks:", tasks.map(t => ({
+    id: t.id,
+    title: t.title,
+    date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : typeof t.date === 'string' ? t.date : 'Invalid date',
+    type: t.type
+  })));
+
   const getTasksForDate = (date: Date) => {
     // Normaliser la date pour la comparaison
     const normalizedDate = normalizeDate(date);

@@ -18,31 +18,41 @@ interface TaskListProps {
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   const { t, language } = useLocale();
   
-  console.log("Tasks in TaskList:", tasks.length);
-  if (tasks.length > 0) {
-    console.log("Task details:", tasks.map(task => {
-      let dateStr = "Invalid date";
-      try {
-        if (task.date instanceof Date) {
-          dateStr = format(startOfDay(task.date), "yyyy-MM-dd");
-        } else if (typeof task.date === 'string') {
-          const parsedDate = parseISO(task.date);
-          if (isValid(parsedDate)) {
-            dateStr = format(startOfDay(parsedDate), "yyyy-MM-dd");
-          }
+  // Log all tasks details and dates for debugging
+  const displayTasks = tasks.map(task => {
+    let taskDate: Date;
+    let dateStr = "Invalid date";
+    
+    try {
+      if (task.date instanceof Date) {
+        taskDate = startOfDay(task.date);
+        dateStr = format(taskDate, "yyyy-MM-dd");
+      } else if (typeof task.date === 'string') {
+        const parsedDate = parseISO(task.date);
+        if (isValid(parsedDate)) {
+          taskDate = startOfDay(parsedDate);
+          dateStr = format(taskDate, "yyyy-MM-dd");
         }
-      } catch (e) {
-        console.error("Error formatting task date", e);
       }
+    } catch (e) {
+      console.error("Error formatting task date", e);
+    }
+
+    return {
+      ...task,
+      formattedDate: dateStr
+    };
+  });
   
-      return {
-        id: task.id,
-        title: task.title,
-        date: dateStr,
-        type: task.type,
-        priority: task.priority
-      };
-    }));
+  console.log("Tasks in TaskList:", displayTasks.length);
+  if (displayTasks.length > 0) {
+    console.log("Task details:", displayTasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      date: task.formattedDate,
+      type: task.type,
+      priority: task.priority
+    })));
   }
   
   return (
@@ -50,7 +60,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
       {tasks.length === 0 ? (
         <p className="text-center text-muted-foreground py-4">{t('noTasks')}</p>
       ) : (
-        tasks.map((task) => {
+        displayTasks.map((task) => {
           // Ensure task date is properly handled
           let taskDate: Date;
           
@@ -74,8 +84,8 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
             taskDate = startOfDay(new Date()); // Fallback
           }
           
-          // Log the final date being used for display
-          console.log(`Task ${task.id} display date: ${format(taskDate, "yyyy-MM-dd")}`);
+          // Log each task's date information when rendering
+          console.log(`Task ${task.id} (${task.title}) display date: ${format(taskDate, "yyyy-MM-dd")}`);
           
           return (
             <div
