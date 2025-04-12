@@ -21,7 +21,7 @@ export const MaintenanceCalendar = ({
 }: MaintenanceCalendarProps) => {
   const { t, language } = useLocale();
 
-  // Function to normalize a date (remove hour/minute/second)
+  // Fonction pour normaliser une date (supprimer heure/minute/seconde)
   const normalizeDate = (date: Date | string): Date => {
     if (typeof date === 'string') {
       try {
@@ -40,22 +40,22 @@ export const MaintenanceCalendar = ({
   };
 
   const getTasksForDate = (date: Date) => {
-    // Normalize the date for comparison
+    // Normaliser la date pour la comparaison
     const normalizedDate = normalizeDate(date);
     
     // Debug logs for date comparison
     const formattedDate = format(normalizedDate, "yyyy-MM-dd");
     console.log(`Checking tasks for date: ${formattedDate}`);
     
-    // Filter tasks that match the date
+    // Filtrer les tâches qui correspondent à la date
     const filteredTasks = tasks.filter((task) => {
-      // Convert task date to Date object if needed
+      // Convertir la date de la tâche en objet Date si nécessaire
       let taskDate: Date;
       
       if (task.date instanceof Date) {
         taskDate = task.date;
       } else if (typeof task.date === 'string') {
-        // Convert string to Date
+        // Convertir la chaîne en Date
         try {
           taskDate = parseISO(task.date);
         } catch (e) {
@@ -72,28 +72,26 @@ export const MaintenanceCalendar = ({
         return false;
       }
       
-      // Normalize task date for comparison
+      // Normaliser la date de la tâche pour la comparaison
       const normalizedTaskDate = normalizeDate(taskDate);
       
       // Debug logs for task date comparison
       const formattedTaskDate = format(normalizedTaskDate, "yyyy-MM-dd");
       
-      // Check if the date matches (same day)
+      // Vérifier si la date correspond (même jour)
       const dateMatch = isSameDay(normalizedTaskDate, normalizedDate);
       
-      // Check if the type matches (if a type is selected)
+      // Vérifier si le type correspond (si un type est sélectionné)
       const typeMatches = selectedType === "all" || task.type === selectedType;
       
       // Log detailed comparison for task dates
-      if (normalizedDate.getMonth() === normalizedTaskDate.getMonth()) {
-        console.log(`Task ${task.id} date comparison:
-          - Calendar date: ${formattedDate}
-          - Task date: ${formattedTaskDate}
-          - Same day: ${dateMatch}
-          - Type match: ${typeMatches}
-          - Raw task date: ${String(task.date)}
-        `);
-      }
+      console.log(`Task ${task.id} "${task.title}" date comparison:
+        - Calendar date: ${formattedDate}
+        - Task date: ${formattedTaskDate}
+        - Same day: ${dateMatch}
+        - Type match: ${typeMatches}
+        - Raw task date: ${String(task.date)}
+      `);
       
       // Return true if dates are the same and type matches
       return dateMatch && typeMatches;

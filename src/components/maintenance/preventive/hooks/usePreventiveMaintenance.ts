@@ -46,6 +46,14 @@ export const usePreventiveMaintenance = () => {
     return startOfDay(normalizedDate);
   };
 
+  // Log all tasks for debugging
+  console.log("All available tasks:", tasks.map(task => ({
+    id: task.id,
+    title: task.title,
+    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : typeof task.date === 'string' ? task.date : 'Invalid date',
+    type: task.type
+  })));
+
   // Filter tasks by selected type
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -67,11 +75,11 @@ export const usePreventiveMaintenance = () => {
     }
     
     // Log to help debug the date comparison
-    console.log(`Comparing: Task date (${format(taskDate, "yyyy-MM-dd")}) with selected date (${format(currentSelectedDate, "yyyy-MM-dd")})`);
+    console.log(`Comparing task "${task.title}": Task date (${format(taskDate, "yyyy-MM-dd")}) with selected date (${format(currentSelectedDate, "yyyy-MM-dd")})`);
     
     // Use isSameDay for reliable date comparison
     const result = isSameDay(taskDate, currentSelectedDate);
-    console.log(`Match: ${result}`);
+    console.log(`Match for task "${task.title}": ${result}`);
     
     return result;
   });

@@ -104,7 +104,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                 >
                   {format(taskDate, "dd/MM/yyyy", { locale: language === 'fr' ? fr : undefined })}
                 </Badge>
-                <Badge variant="outline">{t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}</Badge>
+                <Badge variant="outline">{t(task.type)}</Badge>
                 {task.priority && (
                   <Badge 
                     variant={
