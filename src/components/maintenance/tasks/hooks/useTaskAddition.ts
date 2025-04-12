@@ -26,7 +26,7 @@ export const useTaskAddition = () => {
       
       // Formater la date pour l'insertion dans la base de données
       const formattedDate = format(taskDate, "yyyy-MM-dd");
-      console.log("Formatted date for database:", formattedDate);
+      console.log("Normalized task date for database insertion:", formattedDate);
       
       // Préparer les données de la tâche
       const taskData = {
@@ -63,6 +63,7 @@ export const useTaskAddition = () => {
       // Log detailed info about the added task
       console.log("Task added successfully:", data);
       console.log(`Added task date from DB: ${data.date}`);
+      console.log(`Task date type: ${typeof data.date}`);
       
       return data as Task;
     } catch (error) {
@@ -97,6 +98,7 @@ export const useTaskAddition = () => {
         
         // Formater la date pour l'insertion dans la base de données
         const formattedDate = format(taskDate, "yyyy-MM-dd");
+        console.log(`Task "${task.title}" normalized date: ${formattedDate}`);
         
         return {
           title: task.title,
