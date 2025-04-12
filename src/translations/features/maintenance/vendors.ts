@@ -32,6 +32,7 @@ export const enVendors = {
   availableToday: "Available today",
   availableThisWeek: "Available this week",
   availableNextWeek: "Available next week",
+  availableOn: "Available on",
   availability: "Availability",
   advancedFilters: "Advanced filters",
   clearAllFilters: "Clear all filters",
@@ -65,7 +66,9 @@ export const enVendors = {
   punctuality: "Punctuality",
   basedOn: "Based on",
   reviewSingular: "review",
-  reviewsPlural: "reviews"
+  reviewsPlural: "reviews",
+  available: "Available",
+  unavailable: "Unavailable"
 };
 
 export const frVendors = {
@@ -101,6 +104,7 @@ export const frVendors = {
   availableToday: "Disponible aujourd'hui",
   availableThisWeek: "Disponible cette semaine",
   availableNextWeek: "Disponible la semaine prochaine",
+  availableOn: "Disponible le",
   availability: "Disponibilité",
   advancedFilters: "Filtres avancés",
   clearAllFilters: "Effacer tous les filtres",
@@ -134,5 +138,7 @@ export const frVendors = {
   punctuality: "Ponctualité",
   basedOn: "Basé sur",
   reviewSingular: "avis",
-  reviewsPlural: "avis"
+  reviewsPlural: "avis",
+  available: "Disponible",
+  unavailable: "Indisponible"
 };
