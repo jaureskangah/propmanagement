@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Vendor } from "@/types/vendor";
 import { fr, enUS } from 'date-fns/locale';
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface VendorAppointmentDialogProps {
   open: boolean;
@@ -88,87 +89,100 @@ export const VendorAppointmentDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>{t('scheduleAppointment')}</DialogTitle>
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh]">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-xl">{t('scheduleAppointment')}</DialogTitle>
           <DialogDescription>
             {t('scheduleAppointmentDescription')}
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="vendor">{t('vendor')}</Label>
-            <Select value={selectedVendor} onValueChange={setSelectedVendor}>
-              <SelectTrigger id="vendor">
-                <SelectValue placeholder={t('selectVendor')} />
-              </SelectTrigger>
-              <SelectContent>
-                {vendors.map(vendor => (
-                  <SelectItem key={vendor.id} value={vendor.id}>
-                    {vendor.name} ({vendor.specialty})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <Label>{t('date')}</Label>
-            <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
-              className="rounded-md border"
-              locale={locale === 'fr' ? fr : enUS}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="time">{t('time')}</Label>
-            <Input
-              id="time"
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="title">{t('appointmentTitle')}</Label>
-            <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder={t('appointmentTitlePlaceholder')}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="notes">{t('notes')}</Label>
-            <Textarea
-              id="notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder={t('notesPlaceholder')}
-              rows={3}
-            />
-          </div>
-          
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={isSubmitting}
-            >
-              {t('cancel')}
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? t('scheduling') : t('schedule')}
-            </Button>
-          </DialogFooter>
-        </form>
+        <ScrollArea className="max-h-[calc(90vh-180px)] pr-4">
+          <form onSubmit={handleSubmit} className="space-y-5 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="vendor" className="text-sm font-medium">{t('vendor')}</Label>
+              <Select value={selectedVendor} onValueChange={setSelectedVendor}>
+                <SelectTrigger id="vendor" className="w-full">
+                  <SelectValue placeholder={t('selectVendor')} />
+                </SelectTrigger>
+                <SelectContent>
+                  {vendors.map(vendor => (
+                    <SelectItem key={vendor.id} value={vendor.id}>
+                      {vendor.name} ({vendor.specialty})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{t('date')}</Label>
+              <div className="border rounded-md p-3 bg-background">
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  locale={locale === 'fr' ? fr : enUS}
+                  className="mx-auto"
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="time" className="text-sm font-medium">{t('time')}</Label>
+              <Input
+                id="time"
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="title" className="text-sm font-medium">{t('appointmentTitle')}</Label>
+              <Input
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder={t('appointmentTitlePlaceholder')}
+                className="w-full"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="notes" className="text-sm font-medium">{t('notes')}</Label>
+              <Textarea
+                id="notes"
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder={t('notesPlaceholder')}
+                rows={3}
+                className="w-full resize-none"
+              />
+            </div>
+          </form>
+        </ScrollArea>
+        
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4 pt-2 border-t">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            disabled={isSubmitting}
+            className="sm:w-auto w-full"
+          >
+            {t('cancel')}
+          </Button>
+          <Button 
+            type="submit" 
+            onClick={handleSubmit} 
+            disabled={isSubmitting}
+            className="sm:w-auto w-full"
+          >
+            {isSubmitting ? t('scheduling') : t('schedule')}
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
