@@ -16,35 +16,70 @@ export const useMaintenanceTasks = () => {
   const { handleUpdateTaskPosition } = useTaskPosition();
   const queryClient = useQueryClient();
 
-  // Function to complete a task
+  // Fonction pour compléter une tâche
   const handleTaskComplete = async (taskId: string) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
     
     await handleTaskCompletion(taskId, task.completed);
+    
+    // Forcer un rafraîchissement immédiat des données
+    queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
   };
 
-  // Version améliorée qui force une actualisation des données immédiatement après l'ajout d'une tâche
+  // Fonction améliorée pour ajouter une tâche et rafraîchir les données
   const addTaskWithRefresh = useCallback(async (newTask: NewTask) => {
-    const result = await handleAddTask(newTask);
-    // Force un rafraîchissement immédiat des données après l'ajout d'une tâche
-    queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-    return result;
+    try {
+      // Ajouter la tâche
+      const result = await handleAddTask(newTask);
+      
+      // Forcer un rafraîchissement immédiat des données
+      await queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      
+      return result;
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la tâche:", error);
+      throw error;
+    }
   }, [handleAddTask, queryClient]);
 
-  // Version améliorée pour ajouter plusieurs tâches avec actualisation immédiate
+  // Fonction améliorée pour ajouter plusieurs tâches et rafraîchir les données
   const addMultipleTasksWithRefresh = useCallback(async (newTasks: NewTask[]) => {
-    const result = await handleAddMultipleTasks(newTasks);
-    // Force un rafraîchissement immédiat des données
-    queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-    return result;
+    try {
+      // Ajouter les tâches
+      const result = await handleAddMultipleTasks(newTasks);
+      
+      // Forcer un rafraîchissement immédiat des données
+      await queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      
+      return result;
+    } catch (error) {
+      console.error("Erreur lors de l'ajout des tâches:", error);
+      throw error;
+    }
   }, [handleAddMultipleTasks, queryClient]);
+
+  // Fonction améliorée pour supprimer une tâche et rafraîchir les données
+  const deleteTaskWithRefresh = useCallback(async (taskId: string) => {
+    try {
+      // Supprimer la tâche
+      const result = await handleDeleteTask(taskId);
+      
+      // Forcer un rafraîchissement immédiat des données
+      await queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      
+      return result;
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la tâche:", error);
+      throw error;
+    }
+  }, [handleDeleteTask, queryClient]);
 
   return {
     tasks,
     isLoading,
     handleTaskCompletion: handleTaskComplete,
-    handleDeleteTask,
+    handleDeleteTask: deleteTaskWithRefresh,
     handleAddTask: addTaskWithRefresh,
     handleAddMultipleTasks: addMultipleTasksWithRefresh,
     handleUpdateTaskPosition,

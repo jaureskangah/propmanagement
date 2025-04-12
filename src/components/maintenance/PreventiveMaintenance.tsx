@@ -14,7 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { isSameDay, startOfDay, isValid } from "date-fns";
+import { isSameDay, startOfDay } from "date-fns";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -33,19 +33,18 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
-  const [forceRefresh, setForceRefresh] = useState(0);
-  useEffect(() => {
-    setForceRefresh(prev => prev + 1);
-  }, [tasks.length]);
-
-  console.log("All tasks in PreventiveMaintenance:", tasks.length);
-  console.log("Task details:", tasks.map(task => ({
-    id: task.id, 
-    title: task.title,
-    date: task.date instanceof Date ? task.date.toISOString() : task.date,
-    type: task.type,
-    priority: task.priority
-  })));
+  const normalizeDate = (date: Date | string | undefined): Date | undefined => {
+    if (!date) return undefined;
+    
+    let normalizedDate: Date;
+    if (typeof date === 'string') {
+      normalizedDate = new Date(date);
+    } else {
+      normalizedDate = new Date(date);
+    }
+    
+    return startOfDay(normalizedDate);
+  };
 
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -54,34 +53,14 @@ export const PreventiveMaintenance = () => {
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return false;
     
-    let taskDate: Date;
-    if (task.date instanceof Date) {
-      taskDate = task.date;
-    } else if (typeof task.date === 'string') {
-      taskDate = new Date(task.date);
-      if (!isValid(taskDate)) {
-        console.error("Invalid date string in task:", task.id, task.date);
-        return false;
-      }
-    } else {
-      console.error("Unexpected date format in task:", task.id, task.date);
-      return false;
-    }
+    const taskDate = normalizeDate(task.date);
+    const currentSelectedDate = normalizeDate(selectedDate);
     
-    const normalizedTaskDate = startOfDay(taskDate);
-    const normalizedSelectedDate = startOfDay(selectedDate);
+    if (!taskDate || !currentSelectedDate) return false;
     
-    const isSame = isSameDay(normalizedTaskDate, normalizedSelectedDate);
-    console.log(`Task ${task.id} "${task.title}" date: ${taskDate.toISOString()} matches selected ${selectedDate.toISOString()}? ${isSame}`);
-    console.log(`Task date normalized: ${normalizedTaskDate.toISOString()} - Selected date normalized: ${normalizedSelectedDate.toISOString()}`);
-    
-    return isSame;
+    return isSameDay(taskDate, currentSelectedDate);
   });
   
-  console.log("Selected date:", selectedDate ? selectedDate.toISOString() : "No date selected");
-  console.log("Filtered tasks for selected date:", filteredTasksByDate.length);
-  console.log("Filtered task details:", filteredTasksByDate.map(t => ({ id: t.id, title: t.title })));
-
   if (isLoading) {
     return <div>{t('loading')}</div>;
   }
@@ -118,7 +97,6 @@ export const PreventiveMaintenance = () => {
         title: t('success'),
         description: t('multipleTasksAdded'),
       });
-      setForceRefresh(prev => prev + 1);
       
       if (newTasks.length > 0 && newTasks[0].date) {
         const taskDate = newTasks[0].date instanceof Date ? newTasks[0].date : new Date(newTasks[0].date);

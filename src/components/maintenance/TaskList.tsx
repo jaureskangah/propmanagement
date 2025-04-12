@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { format, isValid } from "date-fns";
+import { format, isValid, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Task } from "./types";
@@ -18,12 +18,11 @@ interface TaskListProps {
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   const { t, language } = useLocale();
   
-  console.log("Tasks in TaskList:", tasks);
-  console.log("TaskList Task count:", tasks.length);
-  console.log("TaskList Task details:", tasks.map(task => ({
+  console.log("Tâches dans TaskList:", tasks.length);
+  console.log("Détails des tâches:", tasks.map(task => ({
     id: task.id,
     title: task.title,
-    date: task.date instanceof Date ? task.date.toISOString() : task.date,
+    date: task.date instanceof Date ? task.date.toISOString() : 'Date non valide',
     type: task.type,
     priority: task.priority
   })));
@@ -34,24 +33,25 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
         <p className="text-center text-muted-foreground py-4">{t('noTasks')}</p>
       ) : (
         tasks.map((task) => {
-          // Ensure the task date is properly processed
+          // S'assurer que la date de la tâche est correctement traitée
           let taskDate: Date;
+          
           if (task.date instanceof Date) {
             taskDate = task.date;
           } else if (typeof task.date === 'string') {
             taskDate = new Date(task.date);
           } else {
-            console.error('Invalid task date format:', task.date);
-            taskDate = new Date(); // Fallback to current date
+            console.error('Format de date invalide:', task.date);
+            taskDate = new Date(); // Date par défaut
           }
           
           // Vérifier si la date est valide
           if (!isValid(taskDate)) {
-            console.error('Invalid date for task:', task.id, task.date);
-            taskDate = new Date(); // Fallback to current date
+            console.error('Date invalide pour la tâche:', task.id, task.date);
+            taskDate = new Date(); // Date par défaut
           }
           
-          console.log("Rendering task:", task.id, task.title, "Date:", taskDate.toISOString());
+          console.log("Affichage de la tâche:", task.id, task.title, "Date:", taskDate.toISOString());
           
           return (
             <div

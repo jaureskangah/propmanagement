@@ -2,6 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
+import { startOfDay } from "date-fns";
 
 export const useTasksQuery = () => {
   const { data: tasks = [], isLoading } = useQuery({
@@ -22,67 +23,60 @@ export const useTasksQuery = () => {
       console.log("Number of tasks retrieved:", data.length);
       
       const formattedTasks = data.map(task => {
-        // Properly parse date strings to Date objects
+        // Convertir les dates en objets Date et les normaliser (sans heure/minute/seconde)
         let taskDate;
         try {
           if (task.date) {
-            // Parse the date string to ensure it's correctly formatted
-            const dateStr = typeof task.date === 'string' 
-              ? task.date.split('T')[0] // Split to handle ISO strings
-              : task.date;
+            // Si la date est une chaîne, la convertir en objet Date
+            if (typeof task.date === 'string') {
+              // Créer une nouvelle date à partir de la chaîne
+              taskDate = new Date(task.date);
               
-            // Create a new Date object with the date parts to avoid timezone issues
-            const dateParts = dateStr.split('-').map(part => parseInt(part, 10));
-            if (dateParts.length === 3) {
-              // year, month (0-based in JS Date), day
-              taskDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-              console.log(`Parsed date for task ${task.id}: ${dateStr} -> ${taskDate.toISOString()}`);
+              // Vérifier si la date est valide
+              if (isNaN(taskDate.getTime())) {
+                console.warn("Date invalide pour la tâche:", task.id, task.date);
+                taskDate = startOfDay(new Date()); // Date par défaut
+              } else {
+                // Normaliser la date (sans heure/minute/seconde)
+                taskDate = startOfDay(taskDate);
+              }
+            } else if (task.date instanceof Date) {
+              // Si c'est déjà un objet Date, le normaliser
+              taskDate = startOfDay(task.date);
             } else {
-              taskDate = new Date(dateStr);
-              console.log(`Simple parse for task ${task.id}: ${dateStr} -> ${taskDate.toISOString()}`);
-            }
-            
-            // Verify the date is valid
-            if (isNaN(taskDate.getTime())) {
-              console.warn("Invalid date found for task:", task.id, task.date);
-              taskDate = new Date(); // Fallback to current date
+              console.warn("Format de date non reconnu pour la tâche:", task.id);
+              taskDate = startOfDay(new Date()); // Date par défaut
             }
           } else {
-            console.warn("No date found for task:", task.id);
-            taskDate = new Date(); // Fallback to current date
+            console.warn("Pas de date pour la tâche:", task.id);
+            taskDate = startOfDay(new Date()); // Date par défaut
           }
         } catch (e) {
-          console.error("Error parsing date:", task.date, e);
-          taskDate = new Date();
+          console.error("Erreur lors du traitement de la date:", task.date, e);
+          taskDate = startOfDay(new Date());
         }
         
         let reminderDate = undefined;
         if (task.reminder_date) {
           try {
-            // Parse reminder date with similar approach
-            const reminderDateStr = typeof task.reminder_date === 'string'
-              ? task.reminder_date.split('T')[0]
-              : task.reminder_date;
-              
-            const dateParts = reminderDateStr.split('-').map(part => parseInt(part, 10));
-            if (dateParts.length === 3) {
-              // year, month (0-based in JS Date), day
-              reminderDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-            } else {
-              reminderDate = new Date(reminderDateStr);
-            }
-            
-            if (isNaN(reminderDate.getTime())) {
-              console.warn("Invalid reminder date found for task:", task.id, task.reminder_date);
-              reminderDate = undefined;
+            if (typeof task.reminder_date === 'string') {
+              reminderDate = new Date(task.reminder_date);
+              if (isNaN(reminderDate.getTime())) {
+                console.warn("Date de rappel invalide pour la tâche:", task.id, task.reminder_date);
+                reminderDate = undefined;
+              } else {
+                reminderDate = startOfDay(reminderDate);
+              }
+            } else if (task.reminder_date instanceof Date) {
+              reminderDate = startOfDay(task.reminder_date);
             }
           } catch (e) {
-            console.error("Error parsing reminder date:", task.reminder_date, e);
+            console.error("Erreur lors du traitement de la date de rappel:", task.reminder_date, e);
             reminderDate = undefined;
           }
         }
         
-        // Normalisation des structures pour garantir la conformité à l'interface Task
+        // Retourner la tâche avec les dates normalisées
         return {
           ...task,
           date: taskDate,
@@ -98,23 +92,23 @@ export const useTasksQuery = () => {
             frequency: task.recurrence_pattern.frequency || "daily",
             interval: task.recurrence_pattern.interval || 1,
             weekdays: task.recurrence_pattern.weekdays || [],
-            end_date: task.recurrence_pattern.end_date ? new Date(task.recurrence_pattern.end_date) : undefined
+            end_date: task.recurrence_pattern.end_date ? startOfDay(new Date(task.recurrence_pattern.end_date)) : undefined
           } : undefined
         } as Task;
       });
       
-      console.log("Processed tasks after fetch:", formattedTasks.length);
-      console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
+      console.log("Tâches traitées après récupération:", formattedTasks.length);
+      console.log("Exemples de tâches:", formattedTasks.slice(0, 3).map(t => ({ 
         id: t.id, 
         title: t.title,
-        date: t.date.toISOString(),
+        date: t.date instanceof Date ? t.date.toISOString() : 'Date invalide',
         type: t.type,
         priority: t.priority
       })));
       
       return formattedTasks;
     },
-    refetchInterval: 5000, // Augmenter la fréquence de rafraîchissement pour voir les changements plus rapidement
+    refetchInterval: 5000, // Rafraîchissement toutes les 5 secondes
   });
 
   return { tasks, isLoading };

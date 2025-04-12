@@ -21,42 +21,39 @@ export const MaintenanceCalendar = ({
 }: MaintenanceCalendarProps) => {
   const { t, language } = useLocale();
 
+  // Fonction pour normaliser une date (supprimer l'heure/minute/seconde)
+  const normalizeDate = (date: Date): Date => {
+    return startOfDay(date);
+  };
+
   const getTasksForDate = (date: Date) => {
-    // Afficher les détails de la date pour le débogage
-    console.log(`Checking tasks for date: ${date.toISOString()}`);
-    
-    // Normaliser la date pour la comparaison (sans heure/minute/seconde)
-    const normalizedDate = startOfDay(date);
-    console.log(`Normalized date for comparison: ${normalizedDate.toISOString()}`);
+    // Normaliser la date pour la comparaison
+    const normalizedDate = normalizeDate(date);
     
     // Filtrer les tâches qui correspondent à la date
     const filteredTasks = tasks.filter((task) => {
-      // Ensure task.date is a Date object
+      // Convertir la date de la tâche en objet Date si nécessaire
       let taskDate: Date;
       
       if (task.date instanceof Date) {
         taskDate = task.date;
       } else if (typeof task.date === 'string') {
-        // Si la date est une chaîne, essayer de la convertir en Date
+        // Convertir la chaîne en Date
         taskDate = new Date(task.date);
-        // Vérifier si la date est valide
         if (!isValid(taskDate)) {
-          console.error("Invalid date format for task:", task.id, task.date);
+          console.error("Date invalide pour la tâche:", task.id, task.date);
           return false;
         }
       } else {
-        console.error("Unexpected date format for task:", task.id, task.date);
+        console.error("Format de date inattendu pour la tâche:", task.id, task.date);
         return false;
       }
       
       // Normaliser la date de la tâche pour la comparaison
-      const normalizedTaskDate = startOfDay(taskDate);
+      const normalizedTaskDate = normalizeDate(taskDate);
       
-      console.log(`Task ${task.id} (${task.title}) - Date: ${taskDate.toISOString()}, Normalized: ${normalizedTaskDate.toISOString()}`);
-      console.log(`Comparing with calendar date: ${normalizedDate.toISOString()}`);
-      
+      // Vérifier si la date correspond (même jour)
       const dateMatch = isSameDay(normalizedTaskDate, normalizedDate);
-      console.log(`Date match for task ${task.id}: ${dateMatch}`);
       
       // Vérifier si le type correspond (si un type est sélectionné)
       const typeMatches = selectedType === "all" || task.type === selectedType;
@@ -65,21 +62,8 @@ export const MaintenanceCalendar = ({
       return dateMatch && typeMatches;
     });
     
-    console.log(`Found ${filteredTasks.length} tasks for date ${date.toDateString()}:`, 
-      filteredTasks.map(t => ({ id: t.id, title: t.title }))
-    );
-    
     return filteredTasks;
   };
-  
-  console.log("All tasks in calendar:", tasks.length);
-  console.log("Tasks date formats:", tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    date: task.date,
-    dateType: typeof task.date,
-    dateIsDate: task.date instanceof Date
-  })));
 
   const getTaskColor = (tasks: Task[]) => {
     const hasPriority = {
