@@ -9,8 +9,8 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 interface RecurrenceSettingsProps {
   isRecurring: boolean;
   setIsRecurring: (value: boolean) => void;
-  recurrenceFrequency: "daily" | "weekly" | "monthly";
-  setRecurrenceFrequency: (value: "daily" | "weekly" | "monthly") => void;
+  recurrenceFrequency: "daily" | "weekly" | "monthly" | "yearly";
+  setRecurrenceFrequency: (value: "daily" | "weekly" | "monthly" | "yearly") => void;
   recurrenceInterval: number;
   setRecurrenceInterval: (value: number) => void;
 }
@@ -47,7 +47,7 @@ export const RecurrenceSettings = ({
             <Label>{t('recurrenceFrequency')}</Label>
             <Select 
               value={recurrenceFrequency} 
-              onValueChange={(value: "daily" | "weekly" | "monthly") => setRecurrenceFrequency(value)}
+              onValueChange={(value: "daily" | "weekly" | "monthly" | "yearly") => setRecurrenceFrequency(value)}
             >
               <SelectTrigger>
                 <SelectValue />
@@ -56,6 +56,7 @@ export const RecurrenceSettings = ({
                 <SelectItem value="daily">{t('daily')}</SelectItem>
                 <SelectItem value="weekly">{t('weekly')}</SelectItem>
                 <SelectItem value="monthly">{t('monthly')}</SelectItem>
+                <SelectItem value="yearly">{t('yearly')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -69,13 +70,14 @@ export const RecurrenceSettings = ({
                 min="1"
                 max="30"
                 value={recurrenceInterval}
-                onChange={(e) => setRecurrenceInterval(parseInt(e.target.value) || 1)}
+                onChange={(e) => setRecurringInterval(parseInt(e.target.value) || 1)}
                 className="w-20"
               />
               <Label>
                 {recurrenceFrequency === "daily" && (recurrenceInterval > 1 ? t('days') : t('day'))}
                 {recurrenceFrequency === "weekly" && (recurrenceInterval > 1 ? t('weeks') : t('weekSingular'))}
                 {recurrenceFrequency === "monthly" && (recurrenceInterval > 1 ? t('months') : t('monthSingular'))}
+                {recurrenceFrequency === "yearly" && (recurrenceInterval > 1 ? t('years') : t('yearSingular'))}
               </Label>
             </div>
           </div>

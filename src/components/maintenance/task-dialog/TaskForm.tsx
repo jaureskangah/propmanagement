@@ -17,7 +17,7 @@ import { Calendar as CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { NewTask } from "../types";
+import { NewTask, RecurrencePattern } from "../types";
 
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -33,7 +33,9 @@ export const TaskForm = ({ onSubmit, initialDate, initialValue }: TaskFormProps)
   const [priority, setPriority] = useState<string>(initialValue?.priority || "medium");
   const [date, setDate] = useState<Date | undefined>(initialValue?.date instanceof Date ? initialValue.date : initialDate || new Date());
   const [isRecurring, setIsRecurring] = useState(initialValue?.is_recurring || false);
-  const [recurringFrequency, setRecurringFrequency] = useState(initialValue?.recurrence_pattern?.frequency || "weekly");
+  const [recurringFrequency, setRecurringFrequency] = useState<"daily" | "weekly" | "monthly" | "yearly">(
+    initialValue?.recurrence_pattern?.frequency || "weekly"
+  );
   const [recurringInterval, setRecurringInterval] = useState(initialValue?.recurrence_pattern?.interval || 1);
   
   // Si une date initiale est fournie, on l'utilise pour setDate
@@ -55,7 +57,7 @@ export const TaskForm = ({ onSubmit, initialDate, initialValue }: TaskFormProps)
       ...(isRecurring
         ? {
             recurrence_pattern: {
-              frequency: recurringFrequency as "daily" | "weekly" | "monthly" | "yearly",
+              frequency: recurringFrequency,
               interval: Number(recurringInterval),
               weekdays: [],
             },
@@ -168,7 +170,7 @@ export const TaskForm = ({ onSubmit, initialDate, initialValue }: TaskFormProps)
               <Label>{t('frequency')}</Label>
               <Select 
                 value={recurringFrequency} 
-                onValueChange={setRecurringFrequency}
+                onValueChange={(value: "daily" | "weekly" | "monthly" | "yearly") => setRecurringFrequency(value)}
               >
                 <SelectTrigger>
                   <SelectValue />

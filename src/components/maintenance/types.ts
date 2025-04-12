@@ -2,7 +2,7 @@
 import { Locale } from "date-fns";
 
 export interface RecurrencePattern {
-  frequency: "daily" | "weekly" | "monthly";
+  frequency: "daily" | "weekly" | "monthly" | "yearly";
   interval: number;
   weekdays: string[];
   end_date?: Date;
