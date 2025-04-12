@@ -15,10 +15,14 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { isSameDay, startOfDay, isValid, parseISO } from "date-fns";
+import { isSameDay, startOfDay, isValid, parseISO, format } from "date-fns";
 
 export const PreventiveMaintenance = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  // Définir la date du jour (locale, sans fuseau horaire)
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(today);
   const [selectedType, setSelectedType] = useState<string>("all");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isBatchSchedulingOpen, setIsBatchSchedulingOpen] = useState(false);
@@ -28,6 +32,7 @@ export const PreventiveMaintenance = () => {
   const {
     tasks,
     isLoading,
+    lastAddedTask,
     handleTaskCompletion,
     handleDeleteTask,
     handleAddTask,
@@ -35,13 +40,25 @@ export const PreventiveMaintenance = () => {
     refetchTasks
   } = useMaintenanceTasks();
 
+  // Effect pour mettre à jour la date sélectionnée si une nouvelle tâche est ajoutée
+  useEffect(() => {
+    if (lastAddedTask && lastAddedTask.date) {
+      const taskDate = lastAddedTask.date instanceof Date 
+        ? lastAddedTask.date 
+        : new Date(lastAddedTask.date);
+      
+      console.log("New task added, setting calendar to task date:", format(taskDate, "yyyy-MM-dd"));
+      setSelectedDate(new Date(taskDate));
+    }
+  }, [lastAddedTask]);
+
   // Fonction pour normaliser une date pour la comparaison
   const normalizeDate = useCallback((date: Date | string | undefined): Date | null => {
     if (!date) return null;
     
     let normalizedDate: Date;
     if (date instanceof Date) {
-      normalizedDate = date;
+      normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
     } else if (typeof date === 'string') {
       try {
         // Essayer d'abord avec parseISO pour les formats ISO
@@ -50,6 +67,8 @@ export const PreventiveMaintenance = () => {
           // Si ce n'est pas valide, essayer avec le constructeur standard
           normalizedDate = new Date(date);
         }
+        // Réinitialiser les heures, minutes et secondes
+        normalizedDate = new Date(normalizedDate.getFullYear(), normalizedDate.getMonth(), normalizedDate.getDate());
       } catch (e) {
         console.error("Error parsing date string:", date, e);
         return null;
@@ -64,7 +83,7 @@ export const PreventiveMaintenance = () => {
       return null;
     }
     
-    return startOfDay(normalizedDate);
+    return normalizedDate;
   }, []);
 
   // Force refresh the component when tasks change
@@ -155,9 +174,6 @@ export const PreventiveMaintenance = () => {
         const taskDate = newTask.date instanceof Date ? newTask.date : new Date(newTask.date);
         console.log("Setting calendar to task date:", taskDate.toISOString());
         setSelectedDate(taskDate);
-        
-        // Rafraîchir explicitement les tâches
-        refetchTasks();
       }
     }).catch(error => {
       console.error("Error adding task:", error);
@@ -184,9 +200,6 @@ export const PreventiveMaintenance = () => {
       if (newTasks.length > 0 && newTasks[0].date) {
         const taskDate = newTasks[0].date instanceof Date ? newTasks[0].date : new Date(newTasks[0].date);
         setSelectedDate(taskDate);
-        
-        // Rafraîchir explicitement les tâches
-        refetchTasks();
       }
     }).catch(error => {
       console.error("Error adding multiple tasks:", error);
@@ -208,6 +221,12 @@ export const PreventiveMaintenance = () => {
       title: t('refreshed'),
       description: t('dataRefreshed'),
     });
+  };
+
+  // Ouvrir le dialogue d'ajout de tâche pour aujourd'hui
+  const handleAddTodayTask = () => {
+    setSelectedDate(today);
+    setIsAddTaskOpen(true);
   };
 
   return (
@@ -253,15 +272,26 @@ export const PreventiveMaintenance = () => {
           <div className="mt-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-medium">{t('scheduledTasks')}</h3>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setIsAddTaskOpen(true)}
-                className="flex items-center gap-1"
-              >
-                <PlusIcon className="h-4 w-4" />
-                {t('addTask')}
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button 
+                  variant="default" 
+                  size="sm" 
+                  onClick={handleAddTodayTask}
+                  className="flex items-center gap-1 bg-green-600 hover:bg-green-700"
+                >
+                  <PlusIcon className="h-4 w-4" />
+                  {t('addTaskToday')} 
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setIsAddTaskOpen(true)}
+                  className="flex items-center gap-1"
+                >
+                  <PlusIcon className="h-4 w-4" />
+                  {t('addTask')}
+                </Button>
+              </div>
             </div>
             <TaskList 
               tasks={filteredTasksByDate} 
