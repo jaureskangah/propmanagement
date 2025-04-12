@@ -19,6 +19,7 @@ export const useTasksQuery = () => {
       }
       
       console.log("Raw task data from Supabase:", data);
+      console.log("Number of tasks retrieved:", data.length);
       
       const formattedTasks = data.map(task => {
         // Properly parse date strings to Date objects
@@ -35,10 +36,10 @@ export const useTasksQuery = () => {
             if (dateParts.length === 3) {
               // year, month (0-based in JS Date), day
               taskDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-              console.log(`Parsed date for task ${task.id}: ${dateStr} -> ${taskDate} -> ${taskDate.toISOString()}`);
+              console.log(`Parsed date for task ${task.id}: ${dateStr} -> ${taskDate.toISOString()}`);
             } else {
               taskDate = new Date(dateStr);
-              console.log(`Simple parse for task ${task.id}: ${dateStr} -> ${taskDate}`);
+              console.log(`Simple parse for task ${task.id}: ${dateStr} -> ${taskDate.toISOString()}`);
             }
             
             // Verify the date is valid
@@ -102,18 +103,18 @@ export const useTasksQuery = () => {
         } as Task;
       });
       
-      console.log("Processed tasks after fetch:", formattedTasks);
-      console.log("Parsed dates in tasks:", formattedTasks.map(t => ({ 
+      console.log("Processed tasks after fetch:", formattedTasks.length);
+      console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
         id: t.id, 
         title: t.title,
-        date: t.date,
-        dateType: typeof t.date,
-        dateIsDate: t.date instanceof Date
+        date: t.date.toISOString(),
+        type: t.type,
+        priority: t.priority
       })));
       
       return formattedTasks;
     },
-    refetchInterval: 3000, // Augmenter la fréquence de rafraîchissement pour voir les changements plus rapidement
+    refetchInterval: 5000, // Augmenter la fréquence de rafraîchissement pour voir les changements plus rapidement
   });
 
   return { tasks, isLoading };

@@ -38,15 +38,18 @@ export const PreventiveMaintenance = () => {
   const [forceRefresh, setForceRefresh] = useState(0);
   useEffect(() => {
     // When tasks change, trigger a re-render
-    if (tasks.length > 0) {
-      setForceRefresh(prev => prev + 1);
-    }
+    setForceRefresh(prev => prev + 1);
   }, [tasks.length]);
 
   // Log to check if tasks exist
-  console.log("All tasks in PreventiveMaintenance:", tasks);
-  console.log("Recurring tasks:", tasks.filter(task => task.is_recurring));
-  console.log("Reminder tasks:", tasks.filter(task => task.has_reminder));
+  console.log("All tasks in PreventiveMaintenance:", tasks.length);
+  console.log("Task details:", tasks.map(task => ({
+    id: task.id, 
+    title: task.title,
+    date: task.date instanceof Date ? task.date.toISOString() : task.date,
+    type: task.type,
+    priority: task.priority
+  })));
 
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -77,14 +80,15 @@ export const PreventiveMaintenance = () => {
     
     // Log each task date comparison for debugging
     const isSame = isSameDay(normalizedTaskDate, normalizedSelectedDate);
-    console.log(`Task ${task.id} "${task.title}" date: ${taskDate} matches selected ${selectedDate}? ${isSame}`);
+    console.log(`Task ${task.id} "${task.title}" date: ${taskDate.toISOString()} matches selected ${selectedDate.toISOString()}? ${isSame}`);
     console.log(`Task date normalized: ${normalizedTaskDate.toISOString()} - Selected date normalized: ${normalizedSelectedDate.toISOString()}`);
     
     return isSame;
   });
   
-  console.log("Selected date:", selectedDate);
-  console.log("Filtered tasks for selected date:", filteredTasksByDate);
+  console.log("Selected date:", selectedDate ? selectedDate.toISOString() : "No date selected");
+  console.log("Filtered tasks for selected date:", filteredTasksByDate.length);
+  console.log("Filtered task details:", filteredTasksByDate.map(t => ({ id: t.id, title: t.title })));
 
   if (isLoading) {
     return <div>{t('loading')}</div>;
@@ -92,7 +96,8 @@ export const PreventiveMaintenance = () => {
 
   const onAddTask = (newTask: NewTask) => {
     console.log("Create task clicked with data:", newTask);
-    handleAddTask(newTask).then(() => {
+    handleAddTask(newTask).then((result) => {
+      console.log("Task added successfully:", result);
       toast({
         title: t('success'),
         description: t('taskAdded'),
@@ -100,13 +105,10 @@ export const PreventiveMaintenance = () => {
       
       // Si la date de la nouvelle tâche est différente de la date sélectionnée,
       // mettre à jour la date sélectionnée pour montrer la tâche
-      if (newTask.date && selectedDate && !isSameDay(newTask.date, selectedDate)) {
-        console.log("Setting calendar to task date:", newTask.date);
-        setSelectedDate(new Date(newTask.date));
-      } else {
-        console.log("Keeping selected date after adding task:", selectedDate);
-        // Forcer un rafraîchissement pour afficher la nouvelle tâche
-        setForceRefresh(prev => prev + 1);
+      if (newTask.date) {
+        const taskDate = newTask.date instanceof Date ? newTask.date : new Date(newTask.date);
+        console.log("Setting calendar to task date:", taskDate.toISOString());
+        setSelectedDate(taskDate);
       }
     }).catch(error => {
       console.error("Error adding task:", error);
@@ -120,13 +122,20 @@ export const PreventiveMaintenance = () => {
   };
 
   const onAddMultipleTasks = (newTasks: NewTask[]) => {
-    handleAddMultipleTasks(newTasks).then(() => {
+    handleAddMultipleTasks(newTasks).then((result) => {
+      console.log("Multiple tasks added successfully:", result);
       toast({
         title: t('success'),
         description: t('multipleTasksAdded'),
       });
       // Si des tâches ont été ajoutées, forcer un rafraîchissement
       setForceRefresh(prev => prev + 1);
+      
+      // Si des tâches ont été ajoutées, sélectionner la date de la première tâche
+      if (newTasks.length > 0 && newTasks[0].date) {
+        const taskDate = newTasks[0].date instanceof Date ? newTasks[0].date : new Date(newTasks[0].date);
+        setSelectedDate(taskDate);
+      }
     }).catch(error => {
       console.error("Error adding multiple tasks:", error);
       toast({

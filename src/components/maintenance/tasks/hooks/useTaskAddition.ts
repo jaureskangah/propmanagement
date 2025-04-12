@@ -54,7 +54,8 @@ export const useTaskAddition = () => {
         property_id: newTask.property_id,
         has_reminder: newTask.has_reminder || false,
         reminder_date: reminderDateString,
-        reminder_method: newTask.reminder_method
+        reminder_method: newTask.reminder_method,
+        position: 0, // Default position
       };
       
       console.log("Full task data being sent to database:", taskData);
@@ -121,7 +122,8 @@ export const useTaskAddition = () => {
           property_id: task.property_id,
           has_reminder: task.has_reminder || false,
           reminder_date: reminderDateString,
-          reminder_method: task.reminder_method
+          reminder_method: task.reminder_method,
+          position: 0, // Default position
         };
       });
 

@@ -7,7 +7,7 @@ import { Trash2 } from "lucide-react";
 import { format, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Task } from "./types"; // Import Task from the types file
+import { Task } from "./types";
 
 interface TaskListProps {
   tasks: Task[];
@@ -19,12 +19,13 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
   const { t, language } = useLocale();
   
   console.log("Tasks in TaskList:", tasks);
-  console.log("TaskList Task dates:", tasks.map(task => ({
+  console.log("TaskList Task count:", tasks.length);
+  console.log("TaskList Task details:", tasks.map(task => ({
     id: task.id,
     title: task.title,
-    date: task.date,
-    dateType: typeof task.date,
-    dateIsDate: task.date instanceof Date
+    date: task.date instanceof Date ? task.date.toISOString() : task.date,
+    type: task.type,
+    priority: task.priority
   })));
   
   return (
@@ -50,7 +51,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
             taskDate = new Date(); // Fallback to current date
           }
           
-          console.log("Rendering task:", task.id, task.title, "Date:", taskDate);
+          console.log("Rendering task:", task.id, task.title, "Date:", taskDate.toISOString());
           
           return (
             <div
