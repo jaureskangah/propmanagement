@@ -15,13 +15,17 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filtrer uniquement les tâches avec rappel
-  const tasksWithReminder = tasks.filter(task => Boolean(task.has_reminder) === true && task.reminder_date);
+  // Filtrer uniquement les tâches avec rappel actif et date de rappel définie
+  const tasksWithReminder = tasks.filter(task => 
+    task.has_reminder === true && 
+    task.reminder_date !== undefined && 
+    task.reminder_date !== null
+  );
   
   console.log("RemindersView received tasks:", tasks.length);
   console.log("Tasks with reminders:", tasksWithReminder.length);
   
-  if (!tasksWithReminder || tasksWithReminder.length === 0) {
+  if (tasksWithReminder.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center p-4 text-center text-muted-foreground">
         <BellRing className="h-10 w-10 mb-2 opacity-50" />
@@ -196,7 +200,7 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
           
           <div className="flex gap-2 mt-2">
             <Badge variant="outline" className="text-xs">
-              {t(task.type as 'regularTask' | 'inspection' | 'seasonalTask')}
+              {t(task.type)}
             </Badge>
             <Badge variant="outline" className="text-xs flex items-center gap-1">
               <Calendar className="h-3 w-3" />

@@ -46,14 +46,6 @@ export const usePreventiveMaintenance = () => {
     return startOfDay(normalizedDate);
   };
 
-  // Log all tasks for debugging
-  console.log("All available tasks:", tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : typeof task.date === 'string' ? task.date : 'Invalid date',
-    type: task.type
-  })));
-
   // Filter tasks by selected type
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -74,26 +66,27 @@ export const usePreventiveMaintenance = () => {
       return false;
     }
     
-    // Log to help debug the date comparison
-    console.log(`Comparing task "${task.title}": Task date (${format(taskDate, "yyyy-MM-dd")}) with selected date (${format(currentSelectedDate, "yyyy-MM-dd")})`);
-    
     // Use isSameDay for reliable date comparison
     const result = isSameDay(taskDate, currentSelectedDate);
-    console.log(`Match for task "${task.title}": ${result}`);
-    
     return result;
   });
   
   // Log filtered tasks for debugging
   console.log(`Selected date: ${selectedDate ? format(selectedDate, "yyyy-MM-dd") : "none"}`);
   console.log(`Filtered tasks count: ${filteredTasksByDate.length}`);
-  if (filteredTasksByDate.length > 0) {
-    console.log(`Filtered tasks:`, filteredTasksByDate.map(t => ({ 
-      id: t.id, 
-      title: t.title, 
-      date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date'
-    })));
-  }
+  
+  // Filtrer les tâches récurrentes et avec rappels
+  const recurringTasks = tasks.filter(task => task.is_recurring === true);
+  
+  // Amélioration: filtrer correctement les tâches avec rappels
+  const reminderTasks = tasks.filter(task => 
+    task.has_reminder === true && 
+    task.reminder_date !== undefined && 
+    task.reminder_date !== null
+  );
+  
+  console.log(`Recurring tasks: ${recurringTasks.length}`);
+  console.log(`Reminder tasks: ${reminderTasks.length}`);
 
   const onAddTask = (newTask: NewTask) => {
     console.log("Create task clicked with data:", newTask);
@@ -112,10 +105,7 @@ export const usePreventiveMaintenance = () => {
       newTask.date = startOfDay(newTask.date);
     }
     
-    console.log("Normalized task date for creation:", format(newTask.date, "yyyy-MM-dd"));
-    
     // Set selected date to match the new task's date BEFORE adding the task
-    // This ensures the calendar is already showing the correct date
     const taskDate = startOfDay(newTask.date);
     console.log("Setting calendar to task date BEFORE adding task:", format(taskDate, "yyyy-MM-dd"));
     setSelectedDate(taskDate);
@@ -186,7 +176,7 @@ export const usePreventiveMaintenance = () => {
     onAddMultipleTasks,
     handleTaskCompletion,
     handleDeleteTask,
-    recurringTasks: tasks.filter(task => task.is_recurring),
-    reminderTasks: tasks.filter(task => task.has_reminder)
+    recurringTasks,
+    reminderTasks
   };
 };
