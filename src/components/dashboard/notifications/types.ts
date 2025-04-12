@@ -1,5 +1,5 @@
 
-import { NotificationRequest } from "@/components/maintenance/types";
+import { MaintenanceRequest } from "@/components/maintenance/types";
 import { Tenant } from "@/types/tenant";
 
 export interface NotificationMessage {
