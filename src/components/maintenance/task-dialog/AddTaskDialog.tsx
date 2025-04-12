@@ -10,10 +10,9 @@ interface AddTaskDialogProps {
   onAddTask: (task: NewTask) => void;
   isOpen?: boolean;
   onClose?: () => void;
-  initialDate?: Date;
 }
 
-export const AddTaskDialog = ({ onAddTask, isOpen, onClose, initialDate }: AddTaskDialogProps) => {
+export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const { t } = useLocale();
   
@@ -40,10 +39,10 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose, initialDate }: AddTa
           lorsque ce composant est utilisé en mode contrôlé (avec isOpen) */}
       <DialogContent className="max-h-[90vh] p-0">
         <DialogHeader className="px-6 pt-6">
-          <DialogTitle>{initialDate ? t('addTaskForDate', { date: initialDate.toLocaleDateString() }) : t('addNewTask')}</DialogTitle>
+          <DialogTitle>{t('addNewTask')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-120px)] px-6 pb-6">
-          <TaskForm onSubmit={handleAddTask} initialDate={initialDate} />
+          <TaskForm onSubmit={handleAddTask} />
         </ScrollArea>
       </DialogContent>
     </Dialog>

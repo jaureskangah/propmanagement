@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,36 +19,27 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
   onCancel?: () => void;
-  initialDate?: Date;
 }
 
-export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => {
+export const TaskForm = ({ onSubmit, onCancel }: TaskFormProps) => {
   // Créer la date d'aujourd'hui sans composante temporelle pour éviter les problèmes de fuseau horaire
   const today = new Date();
-  const defaultDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const initialDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState<Date | undefined>(initialDate || defaultDate);
+  const [date, setDate] = useState<Date | undefined>(initialDate);
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrenceFrequency, setRecurrenceFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
   const [hasReminder, setHasReminder] = useState(false);
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate || defaultDate);
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate);
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">("app");
   
   const { t, language } = useLocale();
   
   const dateLocale = language === 'fr' ? fr : undefined;
-
-  // Mettre à jour la date si initialDate change
-  useEffect(() => {
-    if (initialDate) {
-      setDate(initialDate);
-      setReminderDate(initialDate);
-    }
-  }, [initialDate]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +105,6 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
           onChange={(e) => setTitle(e.target.value)}
           placeholder={t('taskTitle')}
           required
-          autoFocus
         />
       </div>
       
