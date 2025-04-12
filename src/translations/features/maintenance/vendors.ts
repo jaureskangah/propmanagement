@@ -83,7 +83,12 @@ export const enVendors = {
   add: "Add",
   update: "Update",
   mustBeLoggedIn: "You must be logged in to perform this action",
-  errorSavingVendor: "An error occurred while saving"
+  errorSavingVendor: "An error occurred while saving",
+  // New dialog translations
+  addNewVendor: "Add New Vendor",
+  editVendor: "Edit Vendor",
+  fillVendorDescription: "Fill in the vendor's information below.",
+  updateVendorDescription: "Update the vendor's information below."
 };
 
 export const frVendors = {
@@ -170,5 +175,10 @@ export const frVendors = {
   add: "Ajouter",
   update: "Mettre à jour",
   mustBeLoggedIn: "Vous devez être connecté pour effectuer cette action",
-  errorSavingVendor: "Une erreur est survenue lors de l'enregistrement"
+  errorSavingVendor: "Une erreur est survenue lors de l'enregistrement",
+  // New dialog translations
+  addNewVendor: "Ajouter un nouveau fournisseur",
+  editVendor: "Modifier le fournisseur",
+  fillVendorDescription: "Remplissez les informations du fournisseur ci-dessous.",
+  updateVendorDescription: "Mettez à jour les informations du fournisseur ci-dessous."
 };

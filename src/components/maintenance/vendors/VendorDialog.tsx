@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Dialog,
@@ -9,6 +10,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { VendorForm } from "./VendorForm";
 import { Vendor } from "@/types/vendor";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface VendorDialogProps {
   open: boolean;
@@ -23,6 +25,8 @@ export const VendorDialog = ({
   vendor,
   onSuccess,
 }: VendorDialogProps) => {
+  const { t } = useLocale();
+  
   const formDefaultValues = vendor ? {
     name: vendor.name,
     specialty: vendor.specialty,
@@ -37,12 +41,12 @@ export const VendorDialog = ({
       <DialogContent className="sm:max-w-[425px] max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>
-            {vendor ? "Edit Vendor" : "Add New Vendor"}
+            {vendor ? t('editVendor') : t('addNewVendor')}
           </DialogTitle>
           <DialogDescription>
             {vendor 
-              ? "Update the vendor's information below." 
-              : "Fill in the vendor's information below."}
+              ? t('updateVendorDescription') 
+              : t('fillVendorDescription')}
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="h-full max-h-[calc(90vh-120px)] pr-4">
