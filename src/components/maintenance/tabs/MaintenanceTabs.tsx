@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PreventiveMaintenance } from "../PreventiveMaintenance";
+import { PreventiveMaintenance } from "../preventive/PreventiveMaintenance";
 import { MaintenanceList } from "../MaintenanceList";
 import { WorkOrderList } from "../work-orders/WorkOrderList";
 import { PropertyFinancials } from "../PropertyFinancials";
