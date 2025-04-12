@@ -78,12 +78,36 @@ export const usePreventiveMaintenance = () => {
   // Filtrer les tâches récurrentes et avec rappels
   const recurringTasks = tasks.filter(task => task.is_recurring === true);
   
+  // Improved debugging for reminders
+  console.log("All tasks:", tasks.length);
+  
+  // Debug each task with reminders for troubleshooting
+  tasks.forEach(task => {
+    if (task.has_reminder) {
+      console.log(`Reminder task found: ${task.id} - ${task.title}`);
+      console.log(`  has_reminder: ${task.has_reminder}`);
+      console.log(`  reminder_date: ${task.reminder_date}`);
+      if (task.reminder_date) {
+        const dateString = task.reminder_date instanceof Date 
+          ? format(task.reminder_date, "yyyy-MM-dd") 
+          : String(task.reminder_date);
+        console.log(`  formatted date: ${dateString}`);
+      }
+    }
+  });
+  
   // Amélioration: filtrer correctement les tâches avec rappels
-  const reminderTasks = tasks.filter(task => 
-    task.has_reminder === true && 
-    task.reminder_date !== undefined && 
-    task.reminder_date !== null
-  );
+  const reminderTasks = tasks.filter(task => {
+    // First ensure has_reminder is true
+    if (task.has_reminder !== true) return false;
+    
+    // Then check if reminder_date exists
+    if (task.reminder_date === undefined || task.reminder_date === null) return false;
+    
+    // For debugging only
+    console.log(`Valid reminder task found: ${task.id} - ${task.title}`);
+    return true;
+  });
   
   console.log(`Recurring tasks: ${recurringTasks.length}`);
   console.log(`Reminder tasks: ${reminderTasks.length}`);

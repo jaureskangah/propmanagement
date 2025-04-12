@@ -2,7 +2,7 @@
 import { Task } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { format, isAfter, isBefore, addDays } from "date-fns";
+import { format, isAfter, isBefore, addDays, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { BellRing, Calendar, Mail, Smartphone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -15,15 +15,27 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filtrer uniquement les tâches avec rappel actif et date de rappel définie
-  const tasksWithReminder = tasks.filter(task => 
-    task.has_reminder === true && 
-    task.reminder_date !== undefined && 
-    task.reminder_date !== null
-  );
-  
   console.log("RemindersView received tasks:", tasks.length);
-  console.log("Tasks with reminders:", tasksWithReminder.length);
+  
+  // Debug each task to see what's happening
+  tasks.forEach(task => {
+    console.log(`Task ${task.id}: has_reminder=${task.has_reminder}, reminder_date=${task.reminder_date}`);
+  });
+  
+  // Filter tasks with valid reminders
+  const tasksWithReminder = tasks.filter(task => {
+    // First check if has_reminder flag is true
+    if (task.has_reminder !== true) return false;
+    
+    // Then check if reminder_date exists and is valid
+    if (task.reminder_date === undefined || task.reminder_date === null) return false;
+    
+    // For debugging
+    console.log(`Including reminder task: ${task.id} - ${task.title}`);
+    return true;
+  });
+  
+  console.log("Tasks with reminders after filtering:", tasksWithReminder.length);
   
   if (tasksWithReminder.length === 0) {
     return (
@@ -41,6 +53,9 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
     // Ensure both dates are Date objects
     const dateA = a.reminder_date instanceof Date ? a.reminder_date : new Date(a.reminder_date);
     const dateB = b.reminder_date instanceof Date ? b.reminder_date : new Date(b.reminder_date);
+    
+    // Debug sorting
+    console.log(`Comparing dates: ${dateA.toISOString()} vs ${dateB.toISOString()}`);
     
     return dateA.getTime() - dateB.getTime();
   });
