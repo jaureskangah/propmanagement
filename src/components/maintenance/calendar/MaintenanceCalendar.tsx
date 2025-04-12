@@ -42,7 +42,10 @@ export const MaintenanceCalendar = ({
   const getTasksForDate = (date: Date) => {
     // Normalize the date for comparison
     const normalizedDate = normalizeDate(date);
-    console.log(`Checking tasks for date: ${format(normalizedDate, "yyyy-MM-dd")}`);
+    
+    // Debug logs for date comparison
+    const formattedDate = format(normalizedDate, "yyyy-MM-dd");
+    console.log(`Checking tasks for date: ${formattedDate}`);
     
     // Filter tasks that match the date
     const filteredTasks = tasks.filter((task) => {
@@ -72,15 +75,24 @@ export const MaintenanceCalendar = ({
       // Normalize task date for comparison
       const normalizedTaskDate = normalizeDate(taskDate);
       
+      // Debug logs for task date comparison
+      const formattedTaskDate = format(normalizedTaskDate, "yyyy-MM-dd");
+      
       // Check if the date matches (same day)
       const dateMatch = isSameDay(normalizedTaskDate, normalizedDate);
       
       // Check if the type matches (if a type is selected)
       const typeMatches = selectedType === "all" || task.type === selectedType;
       
-      // Debug log for matched dates
-      if (dateMatch) {
-        console.log(`Task ${task.id} (${task.title}) matches date ${format(normalizedDate, "yyyy-MM-dd")}, type match: ${typeMatches}`);
+      // Log detailed comparison for task dates
+      if (normalizedDate.getMonth() === normalizedTaskDate.getMonth()) {
+        console.log(`Task ${task.id} date comparison:
+          - Calendar date: ${formattedDate}
+          - Task date: ${formattedTaskDate}
+          - Same day: ${dateMatch}
+          - Type match: ${typeMatches}
+          - Raw task date: ${String(task.date)}
+        `);
       }
       
       // Return true if dates are the same and type matches
@@ -88,7 +100,14 @@ export const MaintenanceCalendar = ({
     });
     
     if (filteredTasks.length > 0) {
-      console.log(`Found ${filteredTasks.length} tasks for date ${format(normalizedDate, "yyyy-MM-dd")}`);
+      console.log(`Found ${filteredTasks.length} tasks for date ${formattedDate}:`, 
+        filteredTasks.map(t => ({
+          id: t.id,
+          title: t.title,
+          date: format(normalizeDate(t.date), "yyyy-MM-dd"),
+          type: t.type
+        }))
+      );
     }
     
     return filteredTasks;

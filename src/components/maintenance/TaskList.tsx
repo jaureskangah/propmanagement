@@ -19,13 +19,31 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
   const { t, language } = useLocale();
   
   console.log("Tasks in TaskList:", tasks.length);
-  console.log("Task details:", tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : 'Invalid date',
-    type: task.type,
-    priority: task.priority
-  })));
+  if (tasks.length > 0) {
+    console.log("Task details:", tasks.map(task => {
+      let dateStr = "Invalid date";
+      try {
+        if (task.date instanceof Date) {
+          dateStr = format(startOfDay(task.date), "yyyy-MM-dd");
+        } else if (typeof task.date === 'string') {
+          const parsedDate = parseISO(task.date);
+          if (isValid(parsedDate)) {
+            dateStr = format(startOfDay(parsedDate), "yyyy-MM-dd");
+          }
+        }
+      } catch (e) {
+        console.error("Error formatting task date", e);
+      }
+  
+      return {
+        id: task.id,
+        title: task.title,
+        date: dateStr,
+        type: task.type,
+        priority: task.priority
+      };
+    }));
+  }
   
   return (
     <ScrollArea className="h-[200px]">
@@ -37,24 +55,27 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
           let taskDate: Date;
           
           if (task.date instanceof Date) {
-            taskDate = task.date;
+            taskDate = startOfDay(task.date);
           } else if (typeof task.date === 'string') {
             try {
-              taskDate = parseISO(task.date);
+              taskDate = startOfDay(parseISO(task.date));
             } catch (e) {
               console.error('Error parsing date string:', task.date, e);
-              taskDate = new Date(); // Fallback
+              taskDate = startOfDay(new Date()); // Fallback
+            }
+            
+            // Double-check if the date is valid
+            if (!isValid(taskDate)) {
+              console.error('Invalid date for task:', task.id, task.date);
+              taskDate = startOfDay(new Date()); // Fallback
             }
           } else {
             console.error('Invalid date format:', task.date);
-            taskDate = new Date(); // Fallback
+            taskDate = startOfDay(new Date()); // Fallback
           }
           
-          // Check if the date is valid
-          if (!isValid(taskDate)) {
-            console.error('Invalid date for task:', task.id, task.date);
-            taskDate = new Date(); // Fallback
-          }
+          // Log the final date being used for display
+          console.log(`Task ${task.id} display date: ${format(taskDate, "yyyy-MM-dd")}`);
           
           return (
             <div

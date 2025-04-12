@@ -109,7 +109,12 @@ export const PreventiveMaintenance = () => {
     if (!newTask.date) {
       newTask.date = startOfDay(new Date());
     } else if (typeof newTask.date === 'string') {
-      newTask.date = startOfDay(new Date(newTask.date));
+      try {
+        newTask.date = startOfDay(parseISO(newTask.date));
+      } catch (e) {
+        console.error("Error parsing task date string:", newTask.date, e);
+        newTask.date = startOfDay(new Date());
+      }
     } else {
       newTask.date = startOfDay(newTask.date);
     }

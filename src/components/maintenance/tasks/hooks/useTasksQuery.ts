@@ -32,6 +32,13 @@ export const useTasksQuery = () => {
               // Create a new date from the string
               try {
                 taskDate = parseISO(task.date);
+                
+                // Add detailed logging for date parsing
+                console.log(`Task ${task.id} date parsing:
+                  - Original string: ${task.date}
+                  - Parsed as: ${isValid(taskDate) ? format(taskDate, "yyyy-MM-dd") : "INVALID"}
+                  - ISO string: ${isValid(taskDate) ? taskDate.toISOString() : "INVALID"}
+                `);
               } catch (e) {
                 console.error("Error parsing date string:", task.date, e);
                 taskDate = startOfDay(new Date()); // Default date
@@ -58,7 +65,8 @@ export const useTasksQuery = () => {
           }
           
           // Log the processed date for debugging
-          console.log(`Task ${task.id} date: ${format(taskDate, "yyyy-MM-dd")}`);
+          const formattedDate = format(taskDate, "yyyy-MM-dd");
+          console.log(`Task ${task.id} processed date: ${formattedDate}`);
         } catch (e) {
           console.error("Error processing date:", task.date, e);
           taskDate = startOfDay(new Date());
@@ -112,13 +120,15 @@ export const useTasksQuery = () => {
       });
       
       console.log("Tasks processed after retrieval:", formattedTasks.length);
-      console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
-        id: t.id, 
-        title: t.title,
-        date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
-        type: t.type,
-        priority: t.priority
-      })));
+      if (formattedTasks.length > 0) {
+        console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
+          id: t.id, 
+          title: t.title,
+          date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
+          type: t.type,
+          priority: t.priority
+        })));
+      }
       
       return formattedTasks;
     },
