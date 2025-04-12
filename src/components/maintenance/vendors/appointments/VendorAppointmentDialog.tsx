@@ -89,7 +89,7 @@ export const VendorAppointmentDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[550px] max-h-[90vh]">
+      <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader className="pb-2">
           <DialogTitle className="text-xl">{t('scheduleAppointment')}</DialogTitle>
           <DialogDescription>
@@ -97,7 +97,7 @@ export const VendorAppointmentDialog = ({
           </DialogDescription>
         </DialogHeader>
         
-        <ScrollArea className="max-h-[calc(90vh-180px)] pr-4">
+        <ScrollArea className="flex-1 min-h-0 pr-4 pb-4">
           <form onSubmit={handleSubmit} className="space-y-5 py-2">
             <div className="space-y-2">
               <Label htmlFor="vendor" className="text-sm font-medium">{t('vendor')}</Label>
@@ -164,7 +164,7 @@ export const VendorAppointmentDialog = ({
           </form>
         </ScrollArea>
         
-        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4 pt-2 border-t">
+        <DialogFooter className="flex flex-col sm:flex-row gap-2 pt-4 mt-2 border-t">
           <Button
             type="button"
             variant="outline"
