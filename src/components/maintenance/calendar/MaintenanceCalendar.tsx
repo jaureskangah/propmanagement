@@ -1,6 +1,6 @@
 
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfDay, isSameDay, isValid, startOfMonth, endOfMonth, eachDayOfInterval } from "date-fns";
+import { format, startOfDay, isSameDay, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -21,29 +21,13 @@ export const MaintenanceCalendar = ({
 }: MaintenanceCalendarProps) => {
   const { t, language } = useLocale();
 
-  // Vérifier quels mois ont des tâches pour aider visuellement l'utilisateur
-  const getMonthsWithTasks = () => {
-    const months = new Set<string>();
-    
-    tasks.forEach(task => {
-      if (task.date instanceof Date && isValid(task.date)) {
-        months.add(format(task.date, 'yyyy-MM'));
-      } else if (typeof task.date === 'string') {
-        const date = new Date(task.date);
-        if (isValid(date)) {
-          months.add(format(date, 'yyyy-MM'));
-        }
-      }
-    });
-    
-    return Array.from(months);
-  };
-  
-  console.log("Months with tasks:", getMonthsWithTasks());
-
   const getTasksForDate = (date: Date) => {
+    // Afficher les détails de la date pour le débogage
+    console.log(`Checking tasks for date: ${date.toISOString()}`);
+    
     // Normaliser la date pour la comparaison (sans heure/minute/seconde)
     const normalizedDate = startOfDay(date);
+    console.log(`Normalized date for comparison: ${normalizedDate.toISOString()}`);
     
     // Filtrer les tâches qui correspondent à la date
     const filteredTasks = tasks.filter((task) => {
@@ -68,7 +52,11 @@ export const MaintenanceCalendar = ({
       // Normaliser la date de la tâche pour la comparaison
       const normalizedTaskDate = startOfDay(taskDate);
       
+      console.log(`Task ${task.id} (${task.title}) - Date: ${taskDate.toISOString()}, Normalized: ${normalizedTaskDate.toISOString()}`);
+      console.log(`Comparing with calendar date: ${normalizedDate.toISOString()}`);
+      
       const dateMatch = isSameDay(normalizedTaskDate, normalizedDate);
+      console.log(`Date match for task ${task.id}: ${dateMatch}`);
       
       // Vérifier si le type correspond (si un type est sélectionné)
       const typeMatches = selectedType === "all" || task.type === selectedType;
@@ -77,24 +65,21 @@ export const MaintenanceCalendar = ({
       return dateMatch && typeMatches;
     });
     
+    console.log(`Found ${filteredTasks.length} tasks for date ${date.toDateString()}:`, 
+      filteredTasks.map(t => ({ id: t.id, title: t.title }))
+    );
+    
     return filteredTasks;
   };
   
   console.log("All tasks in calendar:", tasks.length);
-  
-  // Afficher quelles tâches sont disponibles pour aider au débogage
-  if (tasks.length > 0) {
-    console.log("Available tasks:", tasks.map(task => ({
-      id: task.id,
-      title: task.title,
-      date: task.date instanceof Date 
-        ? task.date.toISOString() 
-        : typeof task.date === 'string' 
-          ? new Date(task.date).toISOString() 
-          : 'invalid date',
-      type: task.type
-    })));
-  }
+  console.log("Tasks date formats:", tasks.map(task => ({
+    id: task.id,
+    title: task.title,
+    date: task.date,
+    dateType: typeof task.date,
+    dateIsDate: task.date instanceof Date
+  })));
 
   const getTaskColor = (tasks: Task[]) => {
     const hasPriority = {
@@ -129,50 +114,25 @@ export const MaintenanceCalendar = ({
   // Obtenir la locale appropriée pour date-fns
   const dateFnsLocale = language === 'fr' ? fr : undefined;
   
-  // Mettre en évidence les mois qui ont des tâches
-  const monthsWithTasks = getMonthsWithTasks();
-  
   return (
     <TooltipProvider>
-      <div className="space-y-2">
-        {monthsWithTasks.length > 0 && (
-          <div className="text-xs text-muted-foreground mb-2">
-            {t('monthsWithTasks')}: 
-            <div className="flex flex-wrap gap-1 mt-1">
-              {monthsWithTasks.map(monthKey => {
-                const [year, month] = monthKey.split('-');
-                const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-                return (
-                  <button 
-                    key={monthKey}
-                    className="px-2 py-1 bg-primary/10 rounded-md hover:bg-primary/20 text-xs"
-                    onClick={() => onSelectDate(date)}
-                  >
-                    {format(date, 'MMMM yyyy', { locale: dateFnsLocale })}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-        <Calendar
-          mode="single"
-          selected={selectedDate}
-          onSelect={onSelectDate}
-          className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
-          modifiers={{
-            hasTasks: (date) => getTasksForDate(date).length > 0,
-          }}
-          modifiersStyles={modifiersStyles}
-          locale={dateFnsLocale}
-          // Personnaliser les textes du calendrier (jours de la semaine, mois, etc.)
-          formatters={{
-            formatCaption: (date, options) => {
-              return format(date, 'MMMM yyyy', { locale: dateFnsLocale });
-            }
-          }}
-        />
-      </div>
+      <Calendar
+        mode="single"
+        selected={selectedDate}
+        onSelect={onSelectDate}
+        className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
+        modifiers={{
+          hasTasks: (date) => getTasksForDate(date).length > 0,
+        }}
+        modifiersStyles={modifiersStyles}
+        locale={dateFnsLocale}
+        // Personnaliser les textes du calendrier (jours de la semaine, mois, etc.)
+        formatters={{
+          formatCaption: (date, options) => {
+            return format(date, 'MMMM yyyy', { locale: dateFnsLocale });
+          }
+        }}
+      />
     </TooltipProvider>
   );
 };
