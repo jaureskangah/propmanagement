@@ -69,6 +69,7 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
       newTask.recurrence_pattern = {
         frequency: recurrenceFrequency,
         interval: recurrenceInterval,
+        weekdays: [], // Add the missing weekdays property as an empty array
       };
     }
     
