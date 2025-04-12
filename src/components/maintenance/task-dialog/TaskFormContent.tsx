@@ -2,18 +2,12 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { 
-  Select, 
-  SelectTrigger, 
-  SelectValue, 
-  SelectContent, 
-  SelectItem 
-} from "@/components/ui/select";
 import { DatePickerField } from "./form-fields/DatePickerField";
 import { RecurrenceSettings } from "./RecurrenceSettings";
 import { fr, enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { TaskTypeSelect } from "./form-fields/TaskTypeSelect";
+import { PrioritySelect } from "./form-fields/PrioritySelect";
 
 interface TaskFormContentProps {
   title: string;
@@ -66,45 +60,17 @@ export const TaskFormContent = ({
         />
       </div>
       
-      <div className="space-y-2">
-        <Label>{t('taskType')}</Label>
-        <RadioGroup 
-          value={type} 
-          onValueChange={setType}
-          className="flex flex-col space-y-1"
-        >
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="regular" id="regular" />
-            <Label htmlFor="regular">{t('regular')}</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="inspection" id="inspection" />
-            <Label htmlFor="inspection">{t('inspection')}</Label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <RadioGroupItem value="seasonal" id="seasonal" />
-            <Label htmlFor="seasonal">{t('seasonal')}</Label>
-          </div>
-        </RadioGroup>
-      </div>
+      <TaskTypeSelect 
+        value={type} 
+        onChange={setType} 
+        label={t('taskType')}
+      />
       
-      <div className="space-y-2">
-        <Label>{t('taskPriority')}</Label>
-        <Select 
-          value={priority} 
-          onValueChange={setPriority}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t('selectPriority')} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="low">{t('low')}</SelectItem>
-            <SelectItem value="medium">{t('medium')}</SelectItem>
-            <SelectItem value="high">{t('high')}</SelectItem>
-            <SelectItem value="urgent">{t('urgent')}</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <PrioritySelect 
+        value={priority} 
+        onChange={setPriority} 
+        label={t('taskPriority')}
+      />
       
       <DatePickerField 
         label={t('date')}
