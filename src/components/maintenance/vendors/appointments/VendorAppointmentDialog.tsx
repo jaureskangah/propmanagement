@@ -16,7 +16,13 @@ interface VendorAppointmentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   vendors: Vendor[];
-  onSuccess: () => void;
+  onSuccess: (appointmentData: {
+    vendorId: string;
+    date: Date;
+    time: string;
+    title: string;
+    notes?: string;
+  }) => void;
 }
 
 export const VendorAppointmentDialog = ({
@@ -49,9 +55,8 @@ export const VendorAppointmentDialog = ({
     setIsSubmitting(true);
     
     try {
-      // Ici, nous simulons une création de rendez-vous
-      // Dans une application réelle, vous appelleriez votre API pour enregistrer le rendez-vous
-      console.log("Créer un rendez-vous :", {
+      // Instead of simulating, we now pass the data back to the parent
+      onSuccess({
         vendorId: selectedVendor,
         date: selectedDate,
         time,
@@ -59,16 +64,8 @@ export const VendorAppointmentDialog = ({
         notes
       });
       
-      // Simuler un délai d'API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: t('success'),
-        description: t('appointmentScheduled')
-      });
-      
       resetForm();
-      onSuccess();
+      onOpenChange(false);
     } catch (error) {
       console.error("Erreur lors de la création du rendez-vous:", error);
       toast({

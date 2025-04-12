@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { fr, enUS } from 'date-fns/locale';
 import { VendorAppointmentDialog } from "./VendorAppointmentDialog";
 import { Vendor } from "@/types/vendor";
+import { useToast } from "@/hooks/use-toast";
 
 interface Appointment {
   id: string;
@@ -17,6 +18,7 @@ interface Appointment {
   time: string;
   title: string;
   status: 'scheduled' | 'completed' | 'cancelled';
+  notes?: string;
 }
 
 interface VendorAppointmentCalendarProps {
@@ -25,12 +27,10 @@ interface VendorAppointmentCalendarProps {
 
 export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendarProps) => {
   const { t, locale } = useLocale();
+  const { toast } = useToast();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedVendor, setSelectedVendor] = useState<Vendor | null>(null);
-  
-  // Données fictives d'exemples pour les rendez-vous
-  const mockAppointments: Appointment[] = [
+  const [appointments, setAppointments] = useState<Appointment[]>([
     {
       id: '1',
       vendorId: vendors[0]?.id || '',
@@ -47,11 +47,11 @@ export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendar
       title: 'Inspection chauffage',
       status: 'completed'
     }
-  ];
+  ]);
   
-  // Filtrer les rendez-vous pour la date sélectionnée
+  // Filter appointments for the selected date
   const appointmentsForSelectedDate = selectedDate 
-    ? mockAppointments.filter(appt => 
+    ? appointments.filter(appt => 
         appt.date.getDate() === selectedDate.getDate() &&
         appt.date.getMonth() === selectedDate.getMonth() &&
         appt.date.getFullYear() === selectedDate.getFullYear()
@@ -64,6 +64,32 @@ export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendar
   
   const getVendorById = (id: string) => {
     return vendors.find(vendor => vendor.id === id) || null;
+  };
+
+  const handleNewAppointment = (appointmentData: {
+    vendorId: string;
+    date: Date;
+    time: string;
+    title: string;
+    notes?: string;
+  }) => {
+    const newAppointment: Appointment = {
+      id: Math.random().toString(36).substring(2, 11),
+      vendorId: appointmentData.vendorId,
+      date: appointmentData.date,
+      time: appointmentData.time,
+      title: appointmentData.title,
+      status: 'scheduled',
+      notes: appointmentData.notes
+    };
+    
+    setAppointments(prev => [...prev, newAppointment]);
+    setSelectedDate(appointmentData.date);
+    
+    toast({
+      title: t('success'),
+      description: t('appointmentScheduled')
+    });
   };
 
   return (
@@ -160,7 +186,7 @@ export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendar
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         vendors={vendors}
-        onSuccess={() => setDialogOpen(false)}
+        onSuccess={handleNewAppointment}
       />
     </div>
   );
