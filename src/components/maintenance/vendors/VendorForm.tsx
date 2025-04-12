@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +11,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { BasicInfoFields } from "./form/BasicInfoFields";
 import { FileUploadField } from "./form/FileUploadField";
 import { VendorFormValues } from "@/types/vendor";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const vendorFormSchema = z.object({
   name: z.string().min(2, "The name must be at least 2 characters long"),
@@ -32,6 +34,7 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
   const { toast } = useToast();
   const { user } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLocale();
 
   const form = useForm<VendorFormValues>({
     resolver: zodResolver(vendorFormSchema),
@@ -76,8 +79,8 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
   const onSubmit = async (data: VendorFormValues) => {
     if (!user?.id) {
       toast({
-        title: "Error",
-        description: "You must be logged in to perform this action",
+        title: t('error'),
+        description: t('mustBeLoggedIn'),
         variant: "destructive",
       });
       return;
@@ -140,13 +143,13 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
         }
       }
 
-      toast({ title: defaultValues ? "Vendor updated" : "Vendor added" });
+      toast({ title: defaultValues ? t('vendorUpdated') : t('vendorAdded') });
       onSuccess();
     } catch (error) {
       console.error("Error saving vendor:", error);
       toast({
-        title: "Error",
-        description: "An error occurred while saving",
+        title: t('error'),
+        description: t('errorSavingVendor'),
         variant: "destructive",
       });
     } finally {
@@ -162,7 +165,7 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
         <FileUploadField
           form={form}
           name="documents"
-          label="Documents"
+          label={t('documents')}
           accept=".pdf,.doc,.docx"
           multiple
         />
@@ -170,7 +173,7 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
         <FileUploadField
           form={form}
           name="photos"
-          label="Photos"
+          label={t('photos')}
           accept="image/*"
           multiple
           existingFiles={defaultValues?.existingPhotos}
@@ -183,10 +186,10 @@ export const VendorForm = ({ onSuccess, onCancel, defaultValues }: VendorFormPro
             onClick={onCancel}
             disabled={isSubmitting}
           >
-            Cancel
+            {t('cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : defaultValues ? "Update" : "Add"}
+            {isSubmitting ? t('saving') : defaultValues ? t('update') : t('add')}
           </Button>
         </div>
       </form>

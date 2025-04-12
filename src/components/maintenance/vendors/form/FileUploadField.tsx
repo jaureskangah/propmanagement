@@ -1,8 +1,10 @@
+
 import React from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface FileUploadFieldProps {
   form: UseFormReturn<any>;
@@ -21,6 +23,8 @@ export const FileUploadField = ({
   multiple,
   existingFiles,
 }: FileUploadFieldProps) => {
+  const { t } = useLocale();
+  
   return (
     <FormField
       control={form.control}
@@ -42,13 +46,13 @@ export const FileUploadField = ({
           </FormControl>
           {existingFiles && existingFiles.length > 0 && (
             <div className="mt-2">
-              <p className="text-sm text-gray-500 mb-2">Existing files:</p>
+              <p className="text-sm text-gray-500 mb-2">{t('existingFiles')}:</p>
               <div className="grid grid-cols-2 gap-2">
                 {existingFiles.map((file, index) => (
                   <AspectRatio key={index} ratio={16 / 9}>
                     <img
                       src={file}
-                      alt={`File ${index + 1}`}
+                      alt={`${t('file')} ${index + 1}`}
                       className="rounded-md object-cover w-full h-full"
                     />
                   </AspectRatio>

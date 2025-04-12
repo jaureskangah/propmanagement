@@ -1,14 +1,18 @@
+
 import React from "react";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { Toggle } from "@/components/ui/toggle";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface BasicInfoFieldsProps {
   form: UseFormReturn<any>;
 }
 
 export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
+  const { t } = useLocale();
+  
   return (
     <>
       <FormField
@@ -16,9 +20,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Name</FormLabel>
+            <FormLabel>{t('name')}</FormLabel>
             <FormControl>
-              <Input placeholder="Enter vendor name" {...field} />
+              <Input placeholder={t('enterVendorName')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -30,9 +34,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="specialty"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Specialty</FormLabel>
+            <FormLabel>{t('specialty')}</FormLabel>
             <FormControl>
-              <Input placeholder="Enter vendor specialty" {...field} />
+              <Input placeholder={t('enterVendorSpecialty')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -44,9 +48,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Phone</FormLabel>
+            <FormLabel>{t('phone')}</FormLabel>
             <FormControl>
-              <Input type="tel" placeholder="Enter phone number" {...field} />
+              <Input type="tel" placeholder={t('enterPhoneNumber')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -58,9 +62,9 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Email</FormLabel>
+            <FormLabel>{t('email')}</FormLabel>
             <FormControl>
-              <Input type="email" placeholder="Enter email address" {...field} />
+              <Input type="email" placeholder={t('enterEmailAddress')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -78,7 +82,7 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
                 onPressedChange={field.onChange}
                 className="data-[state=on]:bg-red-500"
               >
-                Emergency Contact
+                {t('emergencyContact')}
               </Toggle>
             </div>
             <FormMessage />

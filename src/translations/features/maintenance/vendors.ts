@@ -68,7 +68,22 @@ export const enVendors = {
   reviewSingular: "review",
   reviewsPlural: "reviews",
   available: "Available",
-  unavailable: "Unavailable"
+  unavailable: "Unavailable",
+  // New translations for form
+  enterVendorName: "Enter vendor name",
+  enterVendorSpecialty: "Enter vendor specialty",
+  enterPhoneNumber: "Enter phone number",
+  enterEmailAddress: "Enter email address",
+  emergencyContact: "Emergency Contact",
+  file: "File",
+  existingFiles: "Existing files",
+  saving: "Saving...",
+  vendorUpdated: "Vendor updated",
+  vendorAdded: "Vendor added",
+  add: "Add",
+  update: "Update",
+  mustBeLoggedIn: "You must be logged in to perform this action",
+  errorSavingVendor: "An error occurred while saving"
 };
 
 export const frVendors = {
@@ -140,5 +155,20 @@ export const frVendors = {
   reviewSingular: "avis",
   reviewsPlural: "avis",
   available: "Disponible",
-  unavailable: "Indisponible"
+  unavailable: "Indisponible",
+  // New translations for form
+  enterVendorName: "Entrez le nom du fournisseur",
+  enterVendorSpecialty: "Entrez la spécialité du fournisseur",
+  enterPhoneNumber: "Entrez le numéro de téléphone",
+  enterEmailAddress: "Entrez l'adresse email",
+  emergencyContact: "Contact d'urgence",
+  file: "Fichier",
+  existingFiles: "Fichiers existants",
+  saving: "Enregistrement...",
+  vendorUpdated: "Fournisseur mis à jour",
+  vendorAdded: "Fournisseur ajouté",
+  add: "Ajouter",
+  update: "Mettre à jour",
+  mustBeLoggedIn: "Vous devez être connecté pour effectuer cette action",
+  errorSavingVendor: "Une erreur est survenue lors de l'enregistrement"
 };
