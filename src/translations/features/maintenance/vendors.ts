@@ -1,4 +1,3 @@
-
 export const enVendors = {
   vendors: "Vendors",
   allVendors: "All Vendors",
@@ -88,7 +87,29 @@ export const enVendors = {
   addNewVendor: "Add New Vendor",
   editVendor: "Edit Vendor",
   fillVendorDescription: "Fill in the vendor's information below.",
-  updateVendorDescription: "Update the vendor's information below."
+  updateVendorDescription: "Update the vendor's information below.",
+  // Notification and reminder translations
+  notifications: "Notifications",
+  sendEmailToVendor: "Send email to vendor",
+  sendEmailToVendorDescription: "Notify the vendor about this appointment by email",
+  setReminder: "Set reminder",
+  setReminderDescription: "Get a notification before the appointment",
+  reminderTime: "Reminder time",
+  oneHourBefore: "1 hour before",
+  threeHoursBefore: "3 hours before",
+  oneDayBefore: "1 day before",
+  twoDaysBefore: "2 days before",
+  emailSentToVendor: "Confirmation email sent to the vendor",
+  errorSendingEmail: "Error sending email to vendor",
+  // Additional reminder and email translations
+  reminderNotification: "Appointment Reminder",
+  upcomingAppointment: "Upcoming appointment",
+  with: "with",
+  on: "on",
+  at: "at",
+  emailNotificationSent: "Email notification sent",
+  reminderSent: "Reminder sent",
+  reminderScheduled: "Reminder scheduled"
 };
 
 export const frVendors = {
@@ -180,5 +201,27 @@ export const frVendors = {
   addNewVendor: "Ajouter un nouveau fournisseur",
   editVendor: "Modifier le fournisseur",
   fillVendorDescription: "Remplissez les informations du fournisseur ci-dessous.",
-  updateVendorDescription: "Mettez à jour les informations du fournisseur ci-dessous."
+  updateVendorDescription: "Mettez à jour les informations du fournisseur ci-dessous.",
+  // Notification and reminder translations
+  notifications: "Notifications",
+  sendEmailToVendor: "Envoyer un email au fournisseur",
+  sendEmailToVendorDescription: "Notifier le fournisseur de ce rendez-vous par email",
+  setReminder: "Définir un rappel",
+  setReminderDescription: "Recevoir une notification avant le rendez-vous",
+  reminderTime: "Délai de rappel",
+  oneHourBefore: "1 heure avant",
+  threeHoursBefore: "3 heures avant",
+  oneDayBefore: "1 jour avant",
+  twoDaysBefore: "2 jours avant",
+  emailSentToVendor: "Email de confirmation envoyé au fournisseur",
+  errorSendingEmail: "Erreur lors de l'envoi de l'email au fournisseur",
+  // Additional reminder and email translations
+  reminderNotification: "Rappel de rendez-vous",
+  upcomingAppointment: "Rendez-vous à venir",
+  with: "avec",
+  on: "le",
+  at: "à",
+  emailNotificationSent: "Notification par email envoyée",
+  reminderSent: "Rappel envoyé",
+  reminderScheduled: "Rappel programmé"
 };
