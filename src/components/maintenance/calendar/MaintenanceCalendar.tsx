@@ -1,6 +1,6 @@
 
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfDay, isSameDay, isValid } from "date-fns";
+import { format, startOfDay, isSameDay, isValid, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Task } from "../types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
@@ -22,13 +22,27 @@ export const MaintenanceCalendar = ({
   const { t, language } = useLocale();
 
   // Function to normalize a date (remove hour/minute/second)
-  const normalizeDate = (date: Date): Date => {
+  const normalizeDate = (date: Date | string): Date => {
+    if (typeof date === 'string') {
+      try {
+        const parsedDate = parseISO(date);
+        if (!isValid(parsedDate)) {
+          console.error("Invalid date string:", date);
+          return startOfDay(new Date());
+        }
+        return startOfDay(parsedDate);
+      } catch (e) {
+        console.error("Error parsing date string:", date, e);
+        return startOfDay(new Date());
+      }
+    }
     return startOfDay(date);
   };
 
   const getTasksForDate = (date: Date) => {
     // Normalize the date for comparison
     const normalizedDate = normalizeDate(date);
+    console.log(`Checking tasks for date: ${format(normalizedDate, "yyyy-MM-dd")}`);
     
     // Filter tasks that match the date
     const filteredTasks = tasks.filter((task) => {
@@ -39,7 +53,13 @@ export const MaintenanceCalendar = ({
         taskDate = task.date;
       } else if (typeof task.date === 'string') {
         // Convert string to Date
-        taskDate = new Date(task.date);
+        try {
+          taskDate = parseISO(task.date);
+        } catch (e) {
+          console.error("Error parsing date for task:", task.id, task.date, e);
+          return false;
+        }
+        
         if (!isValid(taskDate)) {
           console.error("Invalid date for task:", task.id, task.date);
           return false;
@@ -60,12 +80,16 @@ export const MaintenanceCalendar = ({
       
       // Debug log for matched dates
       if (dateMatch) {
-        console.log(`Task ${task.id} matches date ${format(normalizedDate, "yyyy-MM-dd")}, type match: ${typeMatches}`);
+        console.log(`Task ${task.id} (${task.title}) matches date ${format(normalizedDate, "yyyy-MM-dd")}, type match: ${typeMatches}`);
       }
       
       // Return true if dates are the same and type matches
       return dateMatch && typeMatches;
     });
+    
+    if (filteredTasks.length > 0) {
+      console.log(`Found ${filteredTasks.length} tasks for date ${format(normalizedDate, "yyyy-MM-dd")}`);
+    }
     
     return filteredTasks;
   };

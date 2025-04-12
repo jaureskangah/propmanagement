@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
-import { startOfDay, format, isValid } from "date-fns";
+import { startOfDay, format, isValid, parseISO } from "date-fns";
 
 export const useTasksQuery = () => {
   const { data: tasks = [], isLoading } = useQuery({
@@ -24,21 +24,26 @@ export const useTasksQuery = () => {
       
       const formattedTasks = data.map(task => {
         // Convert dates to Date objects and normalize them (without hours/minutes/seconds)
-        let taskDate;
+        let taskDate: Date;
         try {
           if (task.date) {
             // If the date is a string, convert it to a Date object
             if (typeof task.date === 'string') {
               // Create a new date from the string
-              const parsedDate = new Date(task.date);
+              try {
+                taskDate = parseISO(task.date);
+              } catch (e) {
+                console.error("Error parsing date string:", task.date, e);
+                taskDate = startOfDay(new Date()); // Default date
+              }
               
               // Check if the date is valid
-              if (!isValid(parsedDate)) {
+              if (!isValid(taskDate)) {
                 console.warn("Invalid date for task:", task.id, task.date);
                 taskDate = startOfDay(new Date()); // Default date
               } else {
                 // Normalize the date (without hours/minutes/seconds)
-                taskDate = startOfDay(parsedDate);
+                taskDate = startOfDay(taskDate);
               }
             } else if (task.date instanceof Date) {
               // If it's already a Date object, normalize it
@@ -53,7 +58,7 @@ export const useTasksQuery = () => {
           }
           
           // Log the processed date for debugging
-          console.log(`Task ${task.id} date: ${task.date} → ${format(taskDate, "yyyy-MM-dd")}`);
+          console.log(`Task ${task.id} date: ${format(taskDate, "yyyy-MM-dd")}`);
         } catch (e) {
           console.error("Error processing date:", task.date, e);
           taskDate = startOfDay(new Date());
@@ -63,12 +68,18 @@ export const useTasksQuery = () => {
         if (task.reminder_date) {
           try {
             if (typeof task.reminder_date === 'string') {
-              const parsedReminderDate = new Date(task.reminder_date);
-              if (!isValid(parsedReminderDate)) {
+              try {
+                reminderDate = parseISO(task.reminder_date);
+              } catch (e) {
+                console.error("Error parsing reminder date:", task.reminder_date, e);
+                reminderDate = undefined;
+              }
+              
+              if (!isValid(reminderDate)) {
                 console.warn("Invalid reminder date for task:", task.id, task.reminder_date);
                 reminderDate = undefined;
               } else {
-                reminderDate = startOfDay(parsedReminderDate);
+                reminderDate = startOfDay(reminderDate);
               }
             } else if (task.reminder_date instanceof Date) {
               reminderDate = startOfDay(task.reminder_date);
