@@ -7,6 +7,7 @@ import { format, startOfDay } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { Locale } from "date-fns";
 
 interface DatePickerFieldProps {
   label: string;

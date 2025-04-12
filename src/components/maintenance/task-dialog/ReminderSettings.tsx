@@ -5,6 +5,7 @@ import { BellRing, Smartphone, Mail } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { DatePickerField } from "./form-fields/DatePickerField";
+import { Locale } from "date-fns";
 
 interface ReminderSettingsProps {
   hasReminder: boolean;
