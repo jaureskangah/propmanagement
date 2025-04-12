@@ -1,79 +1,72 @@
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CheckCircle } from "lucide-react";
-import { format, startOfDay } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Separator } from "@/components/ui/separator";
-import { NewTask } from "../types";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { 
+  Select, 
+  SelectTrigger, 
+  SelectValue, 
+  SelectContent, 
+  SelectItem 
+} from "@/components/ui/select";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { fr, enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { RecurrenceSettings } from "./RecurrenceSettings";
-import { ReminderSettings } from "./ReminderSettings";
-import { DatePickerField } from "./form-fields/DatePickerField";
-import { TaskTypeSelect } from "./form-fields/TaskTypeSelect";
-import { PrioritySelect } from "./form-fields/PrioritySelect";
+import { NewTask } from "../types";
 
 interface TaskFormProps {
   onSubmit: (task: NewTask) => void;
-  onCancel?: () => void;
   initialDate?: Date;
+  initialValue?: NewTask;
 }
 
-export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => {
-  // Create today's date without time component to avoid timezone issues
-  const today = startOfDay(new Date());
-  
-  // Use initial date if provided, otherwise use today's date
-  const [date, setDate] = useState<Date | undefined>(initialDate ? startOfDay(initialDate) : today);
-  const [title, setTitle] = useState("");
-  const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
-  const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
-  const [isRecurring, setIsRecurring] = useState(false);
-  const [recurrenceFrequency, setRecurrenceFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
-  const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
-  const [hasReminder, setHasReminder] = useState(false);
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate ? startOfDay(initialDate) : today);
-  const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">("app");
-  
+export const TaskForm = ({ onSubmit, initialDate, initialValue }: TaskFormProps) => {
   const { t, language } = useLocale();
   
-  const dateLocale = language === 'fr' ? fr : undefined;
-
+  const [title, setTitle] = useState(initialValue?.title || "");
+  const [type, setType] = useState<string>(initialValue?.type || "regular");
+  const [priority, setPriority] = useState<string>(initialValue?.priority || "medium");
+  const [date, setDate] = useState<Date | undefined>(initialValue?.date instanceof Date ? initialValue.date : initialDate || new Date());
+  const [isRecurring, setIsRecurring] = useState(initialValue?.is_recurring || false);
+  const [recurringFrequency, setRecurringFrequency] = useState(initialValue?.recurrence_pattern?.frequency || "weekly");
+  const [recurringInterval, setRecurringInterval] = useState(initialValue?.recurrence_pattern?.interval || 1);
+  
+  // Si une date initiale est fournie, on l'utilise pour setDate
+  useEffect(() => {
+    if (initialDate) {
+      setDate(initialDate);
+    }
+  }, [initialDate]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title && date && type) {
-      // Make sure we use normalized dates without time components
-      const submissionDate = startOfDay(date);
-      const submissionReminderDate = reminderDate ? startOfDay(reminderDate) : undefined;
-      
-      console.log("Submitting task with date:", format(submissionDate, "yyyy-MM-dd"), "Original selected date:", format(date, "yyyy-MM-dd"));
-      console.log("Reminder date:", submissionReminderDate ? format(submissionReminderDate, "yyyy-MM-dd") : "none", 
-                 "has reminder:", hasReminder, "method:", reminderMethod);
-      
-      const newTask: NewTask = { 
-        title,
-        date: submissionDate,
-        type,
-        priority,
-        is_recurring: isRecurring,
-        recurrence_pattern: isRecurring ? {
-          frequency: recurrenceFrequency,
-          interval: recurrenceInterval,
-          weekdays: [],
-          end_date: undefined
-        } : undefined,
-        has_reminder: hasReminder,
-        reminder_date: hasReminder ? submissionReminderDate : undefined,
-        reminder_method: hasReminder ? reminderMethod : undefined
-      };
-      
-      console.log("Full task data being submitted:", newTask);
-      onSubmit(newTask);
-    }
+    
+    const newTask: NewTask = {
+      title,
+      type: (type as "regular" | "inspection" | "seasonal"),
+      priority: (priority as "low" | "medium" | "high" | "urgent"),
+      date: date || new Date(),
+      is_recurring: isRecurring,
+      ...(isRecurring
+        ? {
+            recurrence_pattern: {
+              frequency: recurringFrequency as "daily" | "weekly" | "monthly" | "yearly",
+              interval: Number(recurringInterval),
+              weekdays: [],
+            },
+          }
+        : {}),
+    };
+    
+    console.log("Submitting task with data:", newTask);
+    onSubmit(newTask);
   };
-
+  
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -82,54 +75,129 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder={t('taskTitle')}
+          placeholder={t('enterTaskTitle')}
           required
         />
       </div>
       
-      <DatePickerField 
-        label={t('date')}
-        date={date}
-        onDateChange={setDate}
-        locale={dateLocale}
-      />
+      <div className="space-y-2">
+        <Label>{t('taskType')}</Label>
+        <RadioGroup 
+          value={type} 
+          onValueChange={setType}
+          className="flex flex-col space-y-1"
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="regular" id="regular" />
+            <Label htmlFor="regular">{t('regular')}</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="inspection" id="inspection" />
+            <Label htmlFor="inspection">{t('inspection')}</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="seasonal" id="seasonal" />
+            <Label htmlFor="seasonal">{t('seasonal')}</Label>
+          </div>
+        </RadioGroup>
+      </div>
       
-      <PrioritySelect 
-        value={priority}
-        onChange={setPriority}
-        label={t('priority')}
-      />
+      <div className="space-y-2">
+        <Label>{t('taskPriority')}</Label>
+        <Select 
+          value={priority} 
+          onValueChange={setPriority}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder={t('selectPriority')} />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="low">{t('low')}</SelectItem>
+            <SelectItem value="medium">{t('medium')}</SelectItem>
+            <SelectItem value="high">{t('high')}</SelectItem>
+            <SelectItem value="urgent">{t('urgent')}</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
       
-      <TaskTypeSelect 
-        value={type}
-        onChange={setType}
-        label={t('taskType')}
-      />
+      <div className="space-y-2">
+        <Label>{t('date')}</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="w-full justify-start text-left font-normal"
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? (
+                format(date, "PPP", {
+                  locale: language === "fr" ? fr : enUS,
+                })
+              ) : (
+                <span>{t('selectDate')}</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              initialFocus
+              locale={language === "fr" ? fr : enUS}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
       
-      <RecurrenceSettings 
-        isRecurring={isRecurring}
-        setIsRecurring={setIsRecurring}
-        recurrenceFrequency={recurrenceFrequency}
-        setRecurrenceFrequency={setRecurrenceFrequency}
-        recurrenceInterval={recurrenceInterval}
-        setRecurrenceInterval={setRecurrenceInterval}
-      />
-      
-      <ReminderSettings
-        hasReminder={hasReminder}
-        setHasReminder={setHasReminder}
-        reminderDate={reminderDate}
-        setReminderDate={setReminderDate}
-        reminderMethod={reminderMethod}
-        setReminderMethod={setReminderMethod}
-        dateLocale={dateLocale}
-      />
-      
-      <Separator className="my-2" />
+      <div className="space-y-2">
+        <div className="flex items-center space-x-2">
+          <Input
+            type="checkbox"
+            id="isRecurring"
+            className="w-4 h-4"
+            checked={isRecurring}
+            onChange={(e) => setIsRecurring(e.target.checked)}
+          />
+          <Label htmlFor="isRecurring">{t('isRecurring')}</Label>
+        </div>
+        
+        {isRecurring && (
+          <div className="ml-6 space-y-4 pt-2">
+            <div className="space-y-2">
+              <Label>{t('frequency')}</Label>
+              <Select 
+                value={recurringFrequency} 
+                onValueChange={setRecurringFrequency}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="daily">{t('daily')}</SelectItem>
+                  <SelectItem value="weekly">{t('weekly')}</SelectItem>
+                  <SelectItem value="monthly">{t('monthly')}</SelectItem>
+                  <SelectItem value="yearly">{t('yearly')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label>{t('interval')}</Label>
+              <Input
+                type="number"
+                min="1"
+                max="365"
+                value={recurringInterval}
+                onChange={(e) => setRecurringInterval(parseInt(e.target.value) || 1)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
       
       <Button type="submit" className="w-full">
-        <CheckCircle className="h-4 w-4 mr-2" />
-        {t('addTask')}
+        {t('saveTask')}
       </Button>
     </form>
   );

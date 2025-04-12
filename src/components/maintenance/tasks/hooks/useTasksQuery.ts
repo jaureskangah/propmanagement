@@ -1,10 +1,12 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
 import { startOfDay, format, isValid, parseISO } from "date-fns";
 
 export const useTasksQuery = () => {
+  const queryClient = useQueryClient();
+
   const { data: tasks = [], isLoading } = useQuery({
     queryKey: ['maintenance_tasks'],
     queryFn: async () => {
@@ -136,5 +138,11 @@ export const useTasksQuery = () => {
     staleTime: 3000, // Consider data stale after 3 seconds to encourage refetching
   });
 
-  return { tasks, isLoading };
+  // Fonction pour forcer le rafraîchissement des tâches
+  const refreshTasks = () => {
+    console.log("Manually refreshing tasks...");
+    queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+  };
+
+  return { tasks, isLoading, refreshTasks };
 };

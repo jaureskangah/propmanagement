@@ -114,19 +114,19 @@ export const usePreventiveMaintenance = () => {
     
     console.log("Normalized task date for creation:", format(newTask.date, "yyyy-MM-dd"));
     
+    // Set selected date to match the new task's date BEFORE adding the task
+    // This ensures the calendar is already showing the correct date
+    const taskDate = startOfDay(newTask.date);
+    console.log("Setting calendar to task date BEFORE adding task:", format(taskDate, "yyyy-MM-dd"));
+    setSelectedDate(taskDate);
+    
+    // Now add the task
     handleAddTask(newTask).then((result) => {
       console.log("Task added successfully:", result);
       toast({
         title: t('success'),
         description: t('taskAdded'),
       });
-      
-      // Set selected date to match the new task's date to show it immediately
-      if (newTask.date) {
-        const taskDate = startOfDay(newTask.date);
-        console.log("Setting calendar to task date:", format(taskDate, "yyyy-MM-dd"));
-        setSelectedDate(taskDate);
-      }
     }).catch(error => {
       console.error("Error adding task:", error);
       toast({
@@ -145,17 +145,20 @@ export const usePreventiveMaintenance = () => {
       date: task.date ? startOfDay(task.date instanceof Date ? task.date : new Date(task.date)) : startOfDay(new Date())
     }));
     
+    // Set selected date to match the first task's date BEFORE adding the tasks
+    if (normalizedTasks.length > 0 && normalizedTasks[0].date) {
+      const taskDate = startOfDay(normalizedTasks[0].date);
+      console.log("Setting calendar to first batch task date BEFORE adding tasks:", format(taskDate, "yyyy-MM-dd"));
+      setSelectedDate(taskDate);
+    }
+    
+    // Now add the tasks
     handleAddMultipleTasks(normalizedTasks).then((result) => {
       console.log("Multiple tasks added successfully:", result);
       toast({
         title: t('success'),
         description: t('multipleTasksAdded'),
       });
-      
-      if (normalizedTasks.length > 0 && normalizedTasks[0].date) {
-        const taskDate = startOfDay(normalizedTasks[0].date);
-        setSelectedDate(taskDate);
-      }
     }).catch(error => {
       console.error("Error adding multiple tasks:", error);
       toast({

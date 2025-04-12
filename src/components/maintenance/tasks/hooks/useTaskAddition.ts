@@ -1,138 +1,120 @@
 
 import { supabase } from "@/lib/supabase";
-import { NewTask, Task } from "../../types";
-import { format, parseISO, startOfDay } from "date-fns";
+import { Task, NewTask } from "../../types";
+import { QueryClient } from "@tanstack/react-query";
+import { startOfDay, format } from "date-fns";
 
 export const useTaskAddition = () => {
-  const handleAddTask = async (newTask: NewTask) => {
+  const queryClient = new QueryClient();
+
+  const handleAddTask = async (newTask: NewTask): Promise<Task> => {
+    console.log("Adding task with data:", newTask);
     try {
-      console.log("Adding new task:", newTask);
+      // Ensure the task has normalized dates
+      const normalizedDate = startOfDay(newTask.date instanceof Date 
+        ? newTask.date 
+        : typeof newTask.date === 'string' 
+          ? new Date(newTask.date) 
+          : new Date());
       
-      // Normaliser la date de la tâche
-      let taskDate: Date;
-      if (newTask.date instanceof Date) {
-        taskDate = startOfDay(newTask.date);
-      } else if (typeof newTask.date === 'string') {
-        try {
-          const parsedDate = parseISO(newTask.date);
-          taskDate = startOfDay(parsedDate);
-        } catch (e) {
-          console.error("Error parsing date:", newTask.date, e);
-          taskDate = startOfDay(new Date());
-        }
-      } else {
-        taskDate = startOfDay(new Date());
+      console.log("Normalized task date for insertion:", format(normalizedDate, "yyyy-MM-dd"));
+      
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error("User not authenticated");
       }
       
-      // Formater la date pour l'insertion dans la base de données
-      const formattedDate = format(taskDate, "yyyy-MM-dd");
-      console.log("Normalized task date for database insertion:", formattedDate);
-      
-      // Préparer les données de la tâche
-      const taskData = {
-        title: newTask.title,
-        date: formattedDate, // Utiliser la date formatée
-        type: newTask.type || "regular",
-        priority: newTask.priority || "medium",
-        status: "pending",
-        user_id: (await supabase.auth.getUser()).data.user?.id,
-        completed: false,
-        is_recurring: newTask.is_recurring || false,
-        recurrence_pattern: newTask.recurrence_pattern,
-        has_reminder: newTask.has_reminder || false,
-        reminder_date: newTask.reminder_date instanceof Date 
-          ? format(startOfDay(newTask.reminder_date), "yyyy-MM-dd") 
-          : newTask.reminder_date,
-        reminder_method: newTask.reminder_method,
-        position: 0, // Position par défaut
-      };
-      
-      console.log("Processed task data for insert:", taskData);
-      
+      // Insert the task
       const { data, error } = await supabase
         .from('maintenance_tasks')
-        .insert(taskData)
-        .select("*")
+        .insert({
+          title: newTask.title,
+          type: newTask.type || "regular",
+          priority: newTask.priority || "medium",
+          date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+          is_recurring: newTask.is_recurring || false,
+          user_id: user.id,
+          // Add other fields as needed
+          ...(newTask.recurrence_pattern ? { recurrence_pattern: newTask.recurrence_pattern } : {}),
+        })
+        .select('*')
         .single();
-      
+        
       if (error) {
-        console.error("Error adding task:", error);
+        console.error("Error inserting task:", error);
         throw error;
       }
       
-      // Log detailed info about the added task
-      console.log("Task added successfully:", data);
-      console.log(`Added task date from DB: ${data.date}`);
-      console.log(`Task date type: ${typeof data.date}`);
+      console.log("Task inserted successfully:", data);
       
-      return data as Task;
+      // Immediately invalidate the tasks query to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      
+      return {
+        ...data,
+        date: normalizedDate,
+        completed: false,
+      } as Task;
     } catch (error) {
       console.error("Error in handleAddTask:", error);
       throw error;
     }
   };
 
-  const handleAddMultipleTasks = async (newTasks: NewTask[]) => {
+  const handleAddMultipleTasks = async (newTasks: NewTask[]): Promise<Task[]> => {
+    console.log("Adding multiple tasks:", newTasks.length);
     try {
-      console.log("Adding multiple tasks:", newTasks);
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
       
-      const userId = (await supabase.auth.getUser()).data.user?.id;
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
       
-      // Préparer les données des tâches
-      const tasksData = newTasks.map((task, index) => {
-        // Normaliser la date de la tâche
-        let taskDate: Date;
-        if (task.date instanceof Date) {
-          taskDate = startOfDay(task.date);
-        } else if (typeof task.date === 'string') {
-          try {
-            const parsedDate = parseISO(task.date);
-            taskDate = startOfDay(parsedDate);
-          } catch (e) {
-            console.error("Error parsing date:", task.date, e);
-            taskDate = startOfDay(new Date());
-          }
-        } else {
-          taskDate = startOfDay(new Date());
-        }
-        
-        // Formater la date pour l'insertion dans la base de données
-        const formattedDate = format(taskDate, "yyyy-MM-dd");
-        console.log(`Task "${task.title}" normalized date: ${formattedDate}`);
+      // Prepare tasks for insertion with proper date formatting
+      const tasksToInsert = newTasks.map(task => {
+        const normalizedDate = startOfDay(task.date instanceof Date 
+          ? task.date 
+          : typeof task.date === 'string' 
+            ? new Date(task.date) 
+            : new Date());
         
         return {
           title: task.title,
-          date: formattedDate, // Utiliser la date formatée
           type: task.type || "regular",
           priority: task.priority || "medium",
-          status: "pending",
-          user_id: userId,
-          completed: false,
+          date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
           is_recurring: task.is_recurring || false,
-          recurrence_pattern: task.recurrence_pattern,
-          has_reminder: task.has_reminder || false,
-          reminder_date: task.reminder_date instanceof Date 
-            ? format(startOfDay(task.reminder_date), "yyyy-MM-dd") 
-            : task.reminder_date,
-          reminder_method: task.reminder_method,
-          position: index, // Position basée sur l'index
+          user_id: user.id,
+          // Add other fields as needed
+          ...(task.recurrence_pattern ? { recurrence_pattern: task.recurrence_pattern } : {}),
         };
       });
       
-      console.log("Processed tasks data for batch insert:", tasksData);
-      
+      // Insert all tasks
       const { data, error } = await supabase
         .from('maintenance_tasks')
-        .insert(tasksData)
-        .select("*");
-      
+        .insert(tasksToInsert)
+        .select('*');
+        
       if (error) {
-        console.error("Error adding multiple tasks:", error);
+        console.error("Error inserting multiple tasks:", error);
         throw error;
       }
       
-      console.log("Multiple tasks added successfully:", data);
-      return data as Task[];
+      console.log("Multiple tasks inserted successfully:", data);
+      
+      // Immediately invalidate the tasks query to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      
+      // Transform the returned data to Task objects
+      return data.map((task: any) => ({
+        ...task,
+        date: startOfDay(new Date(task.date)),
+        completed: false,
+      })) as Task[];
     } catch (error) {
       console.error("Error in handleAddMultipleTasks:", error);
       throw error;
@@ -141,6 +123,6 @@ export const useTaskAddition = () => {
 
   return {
     handleAddTask,
-    handleAddMultipleTasks
+    handleAddMultipleTasks,
   };
 };
