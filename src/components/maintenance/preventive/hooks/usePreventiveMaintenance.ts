@@ -81,7 +81,7 @@ export const usePreventiveMaintenance = () => {
   // Debug logging for all tasks with reminders
   console.log("All tasks:", tasks.length);
   
-  // Filter tasks with reminders - simplified and more reliable approach
+  // Filter tasks with reminders - improved approach including scheduled calls
   const reminderTasks = tasks.filter(task => {
     // Skip tasks without reminder flag
     if (task.has_reminder !== true) return false;
@@ -89,8 +89,14 @@ export const usePreventiveMaintenance = () => {
     // Skip tasks with no reminder date
     if (!task.reminder_date) return false;
     
+    // Include tasks with scheduled calls
+    const hasScheduledCall = task.type === 'call' || task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
+    
     // Log successful reminder task for debugging
-    console.log(`Found reminder task: ${task.id} - ${task.title}`);
+    console.log(`Found reminder task: ${task.id} - ${task.title} - Type: ${task.type}`);
+    if (hasScheduledCall) {
+      console.log(`Found scheduled call: ${task.id} - ${task.title}`);
+    }
     
     // Include this task in reminders
     return true;

@@ -4,7 +4,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { format, isAfter, isBefore, addDays, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
-import { BellRing, Calendar, Mail, Smartphone } from "lucide-react";
+import { BellRing, Calendar, Mail, Smartphone, Phone, PhoneCall, CalendarClock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface RemindersViewProps {
@@ -118,6 +118,15 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
         return <BellRing className="h-3 w-3" />;
     }
   }
+  
+  function getTaskTypeIcon(task: Task) {
+    // Si c'est un appel planifié
+    if (task.type === 'call' || task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call')) {
+      return <PhoneCall className="h-3 w-3 text-purple-500" />;
+    }
+    // Icône par défaut pour les autres types de rappels
+    return <Calendar className="h-3 w-3 text-indigo-500" />;
+  }
 
   function getReminderMethodLabel(method?: string) {
     switch (method) {
@@ -183,17 +192,23 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
       // Ensure task date is a Date object
       const taskDate = task.date instanceof Date ? 
         task.date : new Date(task.date as unknown as string);
+      
+      // Détection des appels planifiés
+      const isCall = task.type === 'call' || task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
         
       return (
         <div 
           key={task.id} 
-          className="p-3 border rounded-md hover:bg-accent/20 transition-colors"
+          className={`p-3 border rounded-md hover:bg-accent/20 transition-colors ${isCall ? 'bg-purple-50 border-purple-200' : ''}`}
         >
           <div className="flex items-start justify-between">
             <div>
-              <h4 className="font-medium">{task.title}</h4>
+              <h4 className="font-medium flex items-center gap-1">
+                {isCall && <PhoneCall className="h-3.5 w-3.5 text-purple-500" />}
+                {task.title}
+              </h4>
               <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                <BellRing className="h-3 w-3 mr-1" />
+                <CalendarClock className="h-3 w-3 mr-1" />
                 {format(reminderDate, 'dd MMM yyyy', { locale: dateLocale })}
                 <span className="mx-1">•</span>
                 {getReminderMethodIcon(task.reminder_method)}
