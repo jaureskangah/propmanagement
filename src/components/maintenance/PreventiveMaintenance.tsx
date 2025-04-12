@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat, RotateCw } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MaintenanceCalendar } from "./calendar/MaintenanceCalendar";
 import { TypeFilter } from "./calendar/TypeFilter";
@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { isSameDay, startOfDay, isValid } from "date-fns";
+import { isSameDay, startOfDay, isValid, parseISO } from "date-fns";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -32,7 +32,40 @@ export const PreventiveMaintenance = () => {
     handleDeleteTask,
     handleAddTask,
     handleAddMultipleTasks,
+    refetchTasks
   } = useMaintenanceTasks();
+
+  // Fonction pour normaliser une date pour la comparaison
+  const normalizeDate = useCallback((date: Date | string | undefined): Date | null => {
+    if (!date) return null;
+    
+    let normalizedDate: Date;
+    if (date instanceof Date) {
+      normalizedDate = date;
+    } else if (typeof date === 'string') {
+      try {
+        // Essayer d'abord avec parseISO pour les formats ISO
+        normalizedDate = parseISO(date);
+        if (!isValid(normalizedDate)) {
+          // Si ce n'est pas valide, essayer avec le constructeur standard
+          normalizedDate = new Date(date);
+        }
+      } catch (e) {
+        console.error("Error parsing date string:", date, e);
+        return null;
+      }
+    } else {
+      console.error("Invalid date format:", date);
+      return null;
+    }
+    
+    if (!isValid(normalizedDate)) {
+      console.error("Date is invalid after parsing:", date);
+      return null;
+    }
+    
+    return startOfDay(normalizedDate);
+  }, []);
 
   // Force refresh the component when tasks change
   const [forceRefresh, setForceRefresh] = useState(0);
@@ -41,15 +74,27 @@ export const PreventiveMaintenance = () => {
     setForceRefresh(prev => prev + 1);
   }, [tasks.length]);
 
+  // Rafraîchir périodiquement la liste des tâches
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      refetchTasks();
+    }, 5000);
+    
+    return () => clearInterval(intervalId);
+  }, [refetchTasks]);
+
   // Log to check if tasks exist
   console.log("All tasks in PreventiveMaintenance:", tasks.length);
-  console.log("Task details:", tasks.map(task => ({
-    id: task.id, 
-    title: task.title,
-    date: task.date instanceof Date ? task.date.toISOString() : task.date,
-    type: task.type,
-    priority: task.priority
-  })));
+  
+  if (tasks.length > 0) {
+    console.log("Task details:", tasks.map(task => ({
+      id: task.id, 
+      title: task.title,
+      date: task.date instanceof Date ? task.date.toISOString() : task.date,
+      type: task.type,
+      priority: task.priority
+    })));
+  }
 
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
@@ -59,39 +104,40 @@ export const PreventiveMaintenance = () => {
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return false; // Don't show tasks if no date is selected
     
-    // Get a properly formatted task date
-    let taskDate: Date;
-    if (task.date instanceof Date) {
-      taskDate = task.date;
-    } else if (typeof task.date === 'string') {
-      taskDate = new Date(task.date);
-      if (!isValid(taskDate)) {
-        console.error("Invalid date string in task:", task.id, task.date);
-        return false;
-      }
-    } else {
-      console.error("Unexpected date format in task:", task.id, task.date);
-      return false;
+    const taskNormalizedDate = normalizeDate(task.date);
+    const selectedNormalizedDate = normalizeDate(selectedDate);
+    
+    if (!taskNormalizedDate || !selectedNormalizedDate) return false;
+    
+    const isSame = isSameDay(taskNormalizedDate, selectedNormalizedDate);
+    
+    if (isSame) {
+      console.log(`Task ${task.id} "${task.title}" MATCHES selected date`);
     }
-    
-    // Normaliser les dates avant comparaison
-    const normalizedTaskDate = startOfDay(taskDate);
-    const normalizedSelectedDate = startOfDay(selectedDate);
-    
-    // Log each task date comparison for debugging
-    const isSame = isSameDay(normalizedTaskDate, normalizedSelectedDate);
-    console.log(`Task ${task.id} "${task.title}" date: ${taskDate.toISOString()} matches selected ${selectedDate.toISOString()}? ${isSame}`);
-    console.log(`Task date normalized: ${normalizedTaskDate.toISOString()} - Selected date normalized: ${normalizedSelectedDate.toISOString()}`);
     
     return isSame;
   });
   
   console.log("Selected date:", selectedDate ? selectedDate.toISOString() : "No date selected");
   console.log("Filtered tasks for selected date:", filteredTasksByDate.length);
-  console.log("Filtered task details:", filteredTasksByDate.map(t => ({ id: t.id, title: t.title })));
+  
+  if (filteredTasksByDate.length > 0) {
+    console.log("Filtered task details:", filteredTasksByDate.map(t => ({ 
+      id: t.id, 
+      title: t.title,
+      date: t.date instanceof Date ? t.date.toISOString() : t.date
+    })));
+  }
 
   if (isLoading) {
-    return <div>{t('loading')}</div>;
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-center space-y-4">
+          <RotateCw className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <div>{t('loading')}</div>
+        </div>
+      </div>
+    );
   }
 
   const onAddTask = (newTask: NewTask) => {
@@ -109,6 +155,9 @@ export const PreventiveMaintenance = () => {
         const taskDate = newTask.date instanceof Date ? newTask.date : new Date(newTask.date);
         console.log("Setting calendar to task date:", taskDate.toISOString());
         setSelectedDate(taskDate);
+        
+        // Rafraîchir explicitement les tâches
+        refetchTasks();
       }
     }).catch(error => {
       console.error("Error adding task:", error);
@@ -135,6 +184,9 @@ export const PreventiveMaintenance = () => {
       if (newTasks.length > 0 && newTasks[0].date) {
         const taskDate = newTasks[0].date instanceof Date ? newTasks[0].date : new Date(newTasks[0].date);
         setSelectedDate(taskDate);
+        
+        // Rafraîchir explicitement les tâches
+        refetchTasks();
       }
     }).catch(error => {
       console.error("Error adding multiple tasks:", error);
@@ -149,6 +201,14 @@ export const PreventiveMaintenance = () => {
 
   const recurringTasks = tasks.filter(task => task.is_recurring);
   const reminderTasks = tasks.filter(task => task.has_reminder);
+
+  const handleRefresh = () => {
+    refetchTasks();
+    toast({
+      title: t('refreshed'),
+      description: t('dataRefreshed'),
+    });
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4">
@@ -171,6 +231,15 @@ export const PreventiveMaintenance = () => {
             >
               <CalendarIcon2 className="h-4 w-4" />
               {t('batchScheduling')}
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRefresh}
+              className="flex items-center gap-1"
+            >
+              <RotateCw className="h-4 w-4" />
+              {t('refresh')}
             </Button>
           </div>
         </CardHeader>

@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, AlertCircle } from "lucide-react";
 import { format, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -20,18 +20,29 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
   
   console.log("Tasks in TaskList:", tasks);
   console.log("TaskList Task count:", tasks.length);
-  console.log("TaskList Task details:", tasks.map(task => ({
-    id: task.id,
-    title: task.title,
-    date: task.date instanceof Date ? task.date.toISOString() : task.date,
-    type: task.type,
-    priority: task.priority
-  })));
+  
+  // Affichage détaillé pour le débogage
+  if (tasks.length > 0) {
+    console.log("TaskList Task details:", tasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      date: task.date instanceof Date ? task.date.toISOString() : task.date,
+      type: task.type,
+      priority: task.priority
+    })));
+  } else {
+    console.log("No tasks to display in TaskList");
+  }
   
   return (
     <ScrollArea className="h-[200px]">
       {tasks.length === 0 ? (
-        <p className="text-center text-muted-foreground py-4">{t('noTasks')}</p>
+        <div className="text-center text-muted-foreground py-4 space-y-2">
+          <p>{t('noTasks')}</p>
+          <p className="text-xs text-muted-foreground">
+            {t('useAddTaskButton')}
+          </p>
+        </div>
       ) : (
         tasks.map((task) => {
           // Ensure the task date is properly processed
@@ -72,6 +83,9 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                 >
                   {task.title}
                 </label>
+                {task.priority === 'urgent' && (
+                  <AlertCircle className="h-4 w-4 text-red-500" />
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <Badge

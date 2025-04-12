@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
 
 export const useTasksQuery = () => {
-  const { data: tasks = [], isLoading } = useQuery({
+  const { data: tasks = [], isLoading, refetch } = useQuery({
     queryKey: ['maintenance_tasks'],
     queryFn: async () => {
       console.log("Fetching maintenance tasks...");
@@ -104,18 +104,22 @@ export const useTasksQuery = () => {
       });
       
       console.log("Processed tasks after fetch:", formattedTasks.length);
-      console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
-        id: t.id, 
-        title: t.title,
-        date: t.date.toISOString(),
-        type: t.type,
-        priority: t.priority
-      })));
+      
+      if (formattedTasks.length > 0) {
+        console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
+          id: t.id, 
+          title: t.title,
+          date: t.date.toISOString(),
+          type: t.type,
+          priority: t.priority
+        })));
+      }
       
       return formattedTasks;
     },
-    refetchInterval: 5000, // Augmenter la fréquence de rafraîchissement pour voir les changements plus rapidement
+    refetchInterval: 5000, // Rafraîchir toutes les 5 secondes pour être sûr de voir les nouveaux ajouts
+    refetchOnWindowFocus: true, // Rafraîchir quand l'utilisateur revient sur la fenêtre
   });
 
-  return { tasks, isLoading };
+  return { tasks, isLoading, refetch };
 };
