@@ -120,8 +120,8 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   }
   
   function getTaskTypeIcon(task: Task) {
-    // Si c'est un appel planifié
-    if (task.type === 'call' || task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call')) {
+    // Si c'est un appel planifié - check title only, not type
+    if (task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call')) {
       return <PhoneCall className="h-3 w-3 text-purple-500" />;
     }
     // Icône par défaut pour les autres types de rappels
@@ -193,8 +193,8 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
       const taskDate = task.date instanceof Date ? 
         task.date : new Date(task.date as unknown as string);
       
-      // Détection des appels planifiés
-      const isCall = task.type === 'call' || task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
+      // Détection des appels planifiés - check title only, not type
+      const isCall = task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
         
       return (
         <div 

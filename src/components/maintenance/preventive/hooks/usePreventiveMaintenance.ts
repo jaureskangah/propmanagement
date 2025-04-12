@@ -89,8 +89,8 @@ export const usePreventiveMaintenance = () => {
     // Skip tasks with no reminder date
     if (!task.reminder_date) return false;
     
-    // Include tasks with scheduled calls
-    const hasScheduledCall = task.type === 'call' || task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
+    // Include tasks with scheduled calls - check title only, not type
+    const hasScheduledCall = task.title?.toLowerCase().includes('appel') || task.title?.toLowerCase().includes('call');
     
     // Log successful reminder task for debugging
     console.log(`Found reminder task: ${task.id} - ${task.title} - Type: ${task.type}`);
