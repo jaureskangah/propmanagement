@@ -70,7 +70,7 @@ export const RecurrenceSettings = ({
                 min="1"
                 max="30"
                 value={recurrenceInterval}
-                onChange={(e) => setRecurringInterval(parseInt(e.target.value) || 1)}
+                onChange={(e) => setRecurrenceInterval(parseInt(e.target.value) || 1)}
                 className="w-20"
               />
               <Label>
