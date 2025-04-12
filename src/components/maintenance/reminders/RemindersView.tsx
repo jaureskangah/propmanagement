@@ -17,21 +17,20 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   
   console.log("RemindersView received tasks:", tasks.length);
   
-  // Debug each task to see what's happening
-  tasks.forEach(task => {
-    console.log(`Task ${task.id}: has_reminder=${task.has_reminder}, reminder_date=${task.reminder_date}`);
-  });
-  
-  // Filter tasks with valid reminders
+  // Simple validation check to ensure we only accept tasks with has_reminder=true
+  // and a valid reminder_date
   const tasksWithReminder = tasks.filter(task => {
-    // First check if has_reminder flag is true
-    if (task.has_reminder !== true) return false;
+    if (!task.has_reminder) {
+      return false;
+    }
     
-    // Then check if reminder_date exists and is valid
-    if (task.reminder_date === undefined || task.reminder_date === null) return false;
+    // Ensure the reminder_date exists and can be parsed to a valid Date
+    if (!task.reminder_date) {
+      return false;
+    }
     
-    // For debugging
-    console.log(`Including reminder task: ${task.id} - ${task.title}`);
+    // For debugging - log each valid reminder task
+    console.log(`Valid reminder task: ${task.id} - ${task.title} - ${task.reminder_date}`);
     return true;
   });
   
