@@ -1,23 +1,38 @@
 
-export interface Tenant {
-  id: string;
-  name: string;
-  unit_number: string;
-  email: string;
-  phone?: string;
-  property_id?: string;
-}
+import { Locale } from "date-fns";
 
 export interface RecurrencePattern {
   frequency: "daily" | "weekly" | "monthly";
   interval: number;
-  weekdays?: string[];
+  weekdays: string[];
   end_date?: Date;
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  date: Date | string;
+  type: "regular" | "inspection" | "seasonal";
+  priority: "low" | "medium" | "high" | "urgent";
+  status: "pending" | "in_progress" | "completed";
+  completed: boolean;
+  user_id: string;
+  created_at?: string;
+  updated_at?: string;
+  photos?: string[];
+  position: number;
+  is_recurring: boolean;
+  recurrence_pattern?: RecurrencePattern;
+  has_reminder: boolean;
+  reminder_date?: Date;
+  reminder_method?: "app" | "email" | "both";
+  tenant_id?: string;
+  property_id?: string;
 }
 
 export interface NewTask {
   title: string;
-  date: Date;
+  date: Date | string;
   type: "regular" | "inspection" | "seasonal";
   priority: "low" | "medium" | "high" | "urgent";
   is_recurring?: boolean;
@@ -25,50 +40,33 @@ export interface NewTask {
   has_reminder?: boolean;
   reminder_date?: Date;
   reminder_method?: "app" | "email" | "both";
-  // Adding missing properties referenced in useTaskAddition.ts
-  description?: string;
-  deadline?: Date;
   tenant_id?: string;
   property_id?: string;
 }
 
-export interface Task extends NewTask {
-  id: string;
-  user_id: string;
-  completed: boolean;
-  status: "pending" | "in_progress" | "completed";
-  created_at: string;
-  updated_at: string;
-  photos: string[];
-  position: number;
-}
-
-// Adding MaintenanceRequest interface that was missing
 export interface MaintenanceRequest {
   id: string;
+  tenant_id: string;
   issue: string;
-  status: string;
   description?: string;
+  status: string;
   priority: string;
   created_at: string;
-  updated_at: string;
-  tenant_id?: string;
-  tenant_notified?: boolean;
+  updated_at?: string;
+  photos?: string[];
   tenant_feedback?: string;
   tenant_rating?: number;
-  deadline?: string;
-  photos?: string[];
-  status_history?: {
-    status: string;
-    date: string;
-    comments?: string;
-  }[];
+  tenant_notified?: boolean;
+  landlord_notes?: string;
+  location?: string;
+  due_date?: string;
+  assigned_to?: string;
   tenants?: {
     id: string;
     name: string;
-    unit_number: string;
+    unit_number?: string;
     properties?: {
       name: string;
-    }
+    };
   };
 }
