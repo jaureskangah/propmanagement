@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
-import { startOfDay } from "date-fns";
+import { startOfDay, format } from "date-fns";
 
 export const useTasksQuery = () => {
   const { data: tasks = [], isLoading } = useQuery({
@@ -23,36 +23,39 @@ export const useTasksQuery = () => {
       console.log("Number of tasks retrieved:", data.length);
       
       const formattedTasks = data.map(task => {
-        // Convertir les dates en objets Date et les normaliser (sans heure/minute/seconde)
+        // Convert dates to Date objects and normalize them (without hours/minutes/seconds)
         let taskDate;
         try {
           if (task.date) {
-            // Si la date est une chaîne, la convertir en objet Date
+            // If the date is a string, convert it to a Date object
             if (typeof task.date === 'string') {
-              // Créer une nouvelle date à partir de la chaîne
+              // Create a new date from the string
               taskDate = new Date(task.date);
               
-              // Vérifier si la date est valide
+              // Check if the date is valid
               if (isNaN(taskDate.getTime())) {
-                console.warn("Date invalide pour la tâche:", task.id, task.date);
-                taskDate = startOfDay(new Date()); // Date par défaut
+                console.warn("Invalid date for task:", task.id, task.date);
+                taskDate = startOfDay(new Date()); // Default date
               } else {
-                // Normaliser la date (sans heure/minute/seconde)
+                // Normalize the date (without hours/minutes/seconds)
                 taskDate = startOfDay(taskDate);
               }
             } else if (task.date instanceof Date) {
-              // Si c'est déjà un objet Date, le normaliser
+              // If it's already a Date object, normalize it
               taskDate = startOfDay(task.date);
             } else {
-              console.warn("Format de date non reconnu pour la tâche:", task.id);
-              taskDate = startOfDay(new Date()); // Date par défaut
+              console.warn("Unrecognized date format for task:", task.id);
+              taskDate = startOfDay(new Date()); // Default date
             }
           } else {
-            console.warn("Pas de date pour la tâche:", task.id);
-            taskDate = startOfDay(new Date()); // Date par défaut
+            console.warn("No date for task:", task.id);
+            taskDate = startOfDay(new Date()); // Default date
           }
+          
+          // Log the processed date for debugging
+          console.log(`Task ${task.id} date: ${task.date} → ${format(taskDate, "yyyy-MM-dd")}`);
         } catch (e) {
-          console.error("Erreur lors du traitement de la date:", task.date, e);
+          console.error("Error processing date:", task.date, e);
           taskDate = startOfDay(new Date());
         }
         
@@ -62,7 +65,7 @@ export const useTasksQuery = () => {
             if (typeof task.reminder_date === 'string') {
               reminderDate = new Date(task.reminder_date);
               if (isNaN(reminderDate.getTime())) {
-                console.warn("Date de rappel invalide pour la tâche:", task.id, task.reminder_date);
+                console.warn("Invalid reminder date for task:", task.id, task.reminder_date);
                 reminderDate = undefined;
               } else {
                 reminderDate = startOfDay(reminderDate);
@@ -71,12 +74,12 @@ export const useTasksQuery = () => {
               reminderDate = startOfDay(task.reminder_date);
             }
           } catch (e) {
-            console.error("Erreur lors du traitement de la date de rappel:", task.reminder_date, e);
+            console.error("Error processing reminder date:", task.reminder_date, e);
             reminderDate = undefined;
           }
         }
         
-        // Retourner la tâche avec les dates normalisées
+        // Return the task with normalized dates
         return {
           ...task,
           date: taskDate,
@@ -97,18 +100,19 @@ export const useTasksQuery = () => {
         } as Task;
       });
       
-      console.log("Tâches traitées après récupération:", formattedTasks.length);
-      console.log("Exemples de tâches:", formattedTasks.slice(0, 3).map(t => ({ 
+      console.log("Tasks processed after retrieval:", formattedTasks.length);
+      console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
         id: t.id, 
         title: t.title,
-        date: t.date instanceof Date ? t.date.toISOString() : 'Date invalide',
+        date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
         type: t.type,
         priority: t.priority
       })));
       
       return formattedTasks;
     },
-    refetchInterval: 5000, // Rafraîchissement toutes les 5 secondes
+    refetchInterval: 5000, // Refresh every 5 seconds
+    staleTime: 3000, // Consider data stale after 3 seconds to encourage refetching
   });
 
   return { tasks, isLoading };

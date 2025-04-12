@@ -1,4 +1,3 @@
-
 import { Calendar } from "@/components/ui/calendar";
 import { format, startOfDay, isSameDay, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -21,44 +20,49 @@ export const MaintenanceCalendar = ({
 }: MaintenanceCalendarProps) => {
   const { t, language } = useLocale();
 
-  // Fonction pour normaliser une date (supprimer l'heure/minute/seconde)
+  // Function to normalize a date (remove hour/minute/second)
   const normalizeDate = (date: Date): Date => {
     return startOfDay(date);
   };
 
   const getTasksForDate = (date: Date) => {
-    // Normaliser la date pour la comparaison
+    // Normalize the date for comparison
     const normalizedDate = normalizeDate(date);
     
-    // Filtrer les tâches qui correspondent à la date
+    // Filter tasks that match the date
     const filteredTasks = tasks.filter((task) => {
-      // Convertir la date de la tâche en objet Date si nécessaire
+      // Convert task date to Date object if needed
       let taskDate: Date;
       
       if (task.date instanceof Date) {
         taskDate = task.date;
       } else if (typeof task.date === 'string') {
-        // Convertir la chaîne en Date
+        // Convert string to Date
         taskDate = new Date(task.date);
         if (!isValid(taskDate)) {
-          console.error("Date invalide pour la tâche:", task.id, task.date);
+          console.error("Invalid date for task:", task.id, task.date);
           return false;
         }
       } else {
-        console.error("Format de date inattendu pour la tâche:", task.id, task.date);
+        console.error("Unexpected date format for task:", task.id, task.date);
         return false;
       }
       
-      // Normaliser la date de la tâche pour la comparaison
+      // Normalize task date for comparison
       const normalizedTaskDate = normalizeDate(taskDate);
       
-      // Vérifier si la date correspond (même jour)
+      // Check if the date matches (same day)
       const dateMatch = isSameDay(normalizedTaskDate, normalizedDate);
       
-      // Vérifier si le type correspond (si un type est sélectionné)
+      // Check if the type matches (if a type is selected)
       const typeMatches = selectedType === "all" || task.type === selectedType;
       
-      // Retourner vrai si les dates sont les mêmes et le type correspond
+      // Debug log
+      if (dateMatch) {
+        console.log(`Task ${task.id} matches date ${format(normalizedDate, "yyyy-MM-dd")}, type match: ${typeMatches}`);
+      }
+      
+      // Return true if dates are the same and type matches
       return dateMatch && typeMatches;
     });
     
@@ -95,7 +99,7 @@ export const MaintenanceCalendar = ({
     }
   };
 
-  // Obtenir la locale appropriée pour date-fns
+  // Get appropriate locale for date-fns
   const dateFnsLocale = language === 'fr' ? fr : undefined;
   
   return (
@@ -110,7 +114,7 @@ export const MaintenanceCalendar = ({
         }}
         modifiersStyles={modifiersStyles}
         locale={dateFnsLocale}
-        // Personnaliser les textes du calendrier (jours de la semaine, mois, etc.)
+        // Customize calendar texts (weekdays, months, etc.)
         formatters={{
           formatCaption: (date, options) => {
             return format(date, 'MMMM yyyy', { locale: dateFnsLocale });

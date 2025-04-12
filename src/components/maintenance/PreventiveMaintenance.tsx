@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { isSameDay, startOfDay } from "date-fns";
+import { isSameDay, startOfDay, format } from "date-fns";
 
 export const PreventiveMaintenance = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -33,6 +34,7 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
+  // Function to normalize dates for comparison by removing time component
   const normalizeDate = (date: Date | string | undefined): Date | undefined => {
     if (!date) return undefined;
     
@@ -46,10 +48,12 @@ export const PreventiveMaintenance = () => {
     return startOfDay(normalizedDate);
   };
 
+  // Filter tasks by selected type
   const filteredTasksByType = tasks.filter((task) =>
     selectedType === "all" ? true : task.type === selectedType
   );
 
+  // Filter tasks by selected date using normalized dates for comparison
   const filteredTasksByDate = filteredTasksByType.filter(task => {
     if (!selectedDate) return false;
     
@@ -58,8 +62,26 @@ export const PreventiveMaintenance = () => {
     
     if (!taskDate || !currentSelectedDate) return false;
     
-    return isSameDay(taskDate, currentSelectedDate);
+    // Log to help debug the date comparison
+    console.log(`Comparing: Task date (${format(taskDate, "yyyy-MM-dd")}) with selected date (${format(currentSelectedDate, "yyyy-MM-dd")})`);
+    
+    // Use isSameDay for reliable date comparison
+    const result = isSameDay(taskDate, currentSelectedDate);
+    console.log(`Match: ${result}`);
+    
+    return result;
   });
+  
+  // Log filtered tasks for debugging
+  console.log(`Selected date: ${selectedDate ? format(selectedDate, "yyyy-MM-dd") : "none"}`);
+  console.log(`Filtered tasks count: ${filteredTasksByDate.length}`);
+  if (filteredTasksByDate.length > 0) {
+    console.log(`Filtered tasks:`, filteredTasksByDate.map(t => ({ 
+      id: t.id, 
+      title: t.title, 
+      date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date'
+    })));
+  }
   
   if (isLoading) {
     return <div>{t('loading')}</div>;
@@ -76,7 +98,7 @@ export const PreventiveMaintenance = () => {
       
       if (newTask.date) {
         const taskDate = newTask.date instanceof Date ? newTask.date : new Date(newTask.date);
-        console.log("Setting calendar to task date:", taskDate.toISOString());
+        console.log("Setting calendar to task date:", format(taskDate, "yyyy-MM-dd"));
         setSelectedDate(taskDate);
       }
     }).catch(error => {

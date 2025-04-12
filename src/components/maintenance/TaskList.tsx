@@ -22,7 +22,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
   console.log("Détails des tâches:", tasks.map(task => ({
     id: task.id,
     title: task.title,
-    date: task.date instanceof Date ? task.date.toISOString() : 'Date non valide',
+    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : 'Date non valide',
     type: task.type,
     priority: task.priority
   })));
@@ -33,7 +33,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
         <p className="text-center text-muted-foreground py-4">{t('noTasks')}</p>
       ) : (
         tasks.map((task) => {
-          // S'assurer que la date de la tâche est correctement traitée
+          // Ensure task date is properly handled
           let taskDate: Date;
           
           if (task.date instanceof Date) {
@@ -42,16 +42,14 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
             taskDate = new Date(task.date);
           } else {
             console.error('Format de date invalide:', task.date);
-            taskDate = new Date(); // Date par défaut
+            taskDate = new Date(); // Default date
           }
           
-          // Vérifier si la date est valide
+          // Check if the date is valid
           if (!isValid(taskDate)) {
             console.error('Date invalide pour la tâche:', task.id, task.date);
-            taskDate = new Date(); // Date par défaut
+            taskDate = new Date(); // Default date
           }
-          
-          console.log("Affichage de la tâche:", task.id, task.title, "Date:", taskDate.toISOString());
           
           return (
             <div
