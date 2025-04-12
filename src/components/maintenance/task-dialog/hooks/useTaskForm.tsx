@@ -19,6 +19,11 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   );
   const [recurrenceInterval, setRecurrenceInterval] = useState(initialValue?.recurrence_pattern?.interval || 1);
   
+  // Nouvelles propriétés pour les rappels
+  const [hasReminder, setHasReminder] = useState(initialValue?.has_reminder || false);
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialValue?.reminder_date || undefined);
+  const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">(initialValue?.reminder_method || "app");
+  
   // Si une date initiale est fournie, on l'utilise pour setDate
   useEffect(() => {
     if (initialDate) {
@@ -44,6 +49,14 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
             },
           }
         : {}),
+      // Ajout des propriétés de rappel
+      has_reminder: hasReminder,
+      ...(hasReminder
+        ? {
+            reminder_date: reminderDate,
+            reminder_method: reminderMethod,
+          }
+        : {}),
     };
     
     console.log("Submitting task with data:", newTask);
@@ -65,6 +78,12 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     setRecurrenceFrequency,
     recurrenceInterval,
     setRecurrenceInterval,
+    hasReminder,
+    setHasReminder,
+    reminderDate,
+    setReminderDate,
+    reminderMethod,
+    setReminderMethod,
     handleSubmit
   };
 };

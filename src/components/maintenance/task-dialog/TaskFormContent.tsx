@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { DatePickerField } from "./form-fields/DatePickerField";
 import { RecurrenceSettings } from "./RecurrenceSettings";
+import { ReminderSettings } from "./ReminderSettings";
 import { fr, enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TaskTypeSelect } from "./form-fields/TaskTypeSelect";
@@ -24,6 +25,12 @@ interface TaskFormContentProps {
   setRecurrenceFrequency: (value: "daily" | "weekly" | "monthly" | "yearly") => void;
   recurrenceInterval: number;
   setRecurrenceInterval: (value: number) => void;
+  hasReminder: boolean;
+  setHasReminder: (value: boolean) => void;
+  reminderDate: Date | undefined;
+  setReminderDate: (date: Date | undefined) => void;
+  reminderMethod: "app" | "email" | "both";
+  setReminderMethod: (value: "app" | "email" | "both") => void;
   handleSubmit: (e: React.FormEvent) => void;
 }
 
@@ -42,6 +49,12 @@ export const TaskFormContent = ({
   setRecurrenceFrequency,
   recurrenceInterval,
   setRecurrenceInterval,
+  hasReminder,
+  setHasReminder,
+  reminderDate,
+  setReminderDate,
+  reminderMethod,
+  setReminderMethod,
   handleSubmit
 }: TaskFormContentProps) => {
   const { t, language } = useLocale();
@@ -86,6 +99,16 @@ export const TaskFormContent = ({
         setRecurrenceFrequency={setRecurrenceFrequency}
         recurrenceInterval={recurrenceInterval}
         setRecurrenceInterval={setRecurrenceInterval}
+      />
+      
+      <ReminderSettings
+        hasReminder={hasReminder}
+        setHasReminder={setHasReminder}
+        reminderDate={reminderDate}
+        setReminderDate={setReminderDate}
+        reminderMethod={reminderMethod}
+        setReminderMethod={setReminderMethod}
+        dateLocale={locale}
       />
       
       <Button type="submit" className="w-full">
