@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Users, Phone, Image, FileText, Star, Calendar, Clock, MapPin, ExternalLink } from "lucide-react";
+import { Users, Phone, Image, FileText, Star, Calendar, Clock, MapPin, ExternalLink, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/types/vendor";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -60,9 +60,9 @@ export const VendorCard = ({
 
   return (
     <Card className="overflow-hidden transition-all duration-200 hover:shadow-md border-l-4 border-l-primary">
-      <CardHeader className="pb-2 bg-gray-50">
+      <CardHeader className="pb-2 bg-primary/5">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">{vendor.name}</CardTitle>
+          <CardTitle className="text-lg text-primary font-bold">{vendor.name}</CardTitle>
           {isEmergencyView ? (
             <Phone className="h-5 w-5 text-red-500" />
           ) : (
@@ -78,21 +78,33 @@ export const VendorCard = ({
       </CardHeader>
       <CardContent className="p-4">
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-2">
             <p className="text-sm flex items-center gap-1">
               <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="font-medium text-primary">{vendor.specialty}</span>
             </p>
             
-            <Button
-              variant="ghost" 
-              size="sm" 
-              className="text-primary hover:text-primary hover:bg-primary/10 -mr-2 p-1.5 h-auto"
-              onClick={handleCallOrCopy}
-            >
-              <Phone className="h-3.5 w-3.5 mr-1" />
-              {vendor.phone}
-            </Button>
+            <div className="flex items-center gap-2 text-sm">
+              <Phone className="h-3.5 w-3.5 text-primary" />
+              <Button
+                variant="ghost" 
+                size="sm" 
+                className="text-primary hover:text-primary hover:bg-primary/10 p-1 h-auto -ml-1"
+                onClick={handleCallOrCopy}
+              >
+                {vendor.phone}
+              </Button>
+            </div>
+            
+            <div className="flex items-center gap-2 text-sm">
+              <Mail className="h-3.5 w-3.5 text-primary" />
+              <a 
+                href={`mailto:${vendor.email}`}
+                className="text-primary hover:underline"
+              >
+                {vendor.email}
+              </a>
+            </div>
           </div>
           
           <div className="flex items-center gap-1 mt-2">
@@ -178,4 +190,3 @@ export const VendorCard = ({
     </Card>
   );
 };
-

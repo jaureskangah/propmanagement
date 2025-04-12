@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Clock, Star, MapPin } from "lucide-react";
+import { Phone, Clock, Star, MapPin, Mail } from "lucide-react";
 import { Vendor } from "@/types/vendor";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -28,9 +28,9 @@ export const EmergencyContactCard = ({ vendor, onCall, onEdit, onDelete }: Emerg
         </Badge>
       </div>
       
-      <CardHeader className="pb-2 bg-red-50/50">
+      <CardHeader className="pb-2 bg-red-50">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg flex items-center gap-2">
+          <CardTitle className="text-lg flex items-center gap-2 text-red-700 font-bold">
             {vendor.name}
           </CardTitle>
           <Star className="h-5 w-5 text-amber-500" />
@@ -42,6 +42,16 @@ export const EmergencyContactCard = ({ vendor, onCall, onEdit, onDelete }: Emerg
           <div className="flex items-center gap-2">
             <MapPin className="h-4 w-4 text-red-500" />
             <div className="font-medium">{vendor.specialty}</div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Mail className="h-4 w-4 text-red-500" />
+            <a 
+              href={`mailto:${vendor.email}`}
+              className="text-red-600 hover:underline font-medium text-sm"
+            >
+              {vendor.email}
+            </a>
           </div>
           
           <div className="flex items-center justify-between">
