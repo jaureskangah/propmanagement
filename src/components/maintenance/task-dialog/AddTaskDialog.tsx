@@ -10,9 +10,10 @@ interface AddTaskDialogProps {
   onAddTask: (task: NewTask) => void;
   isOpen?: boolean;
   onClose?: () => void;
+  initialDate?: Date;
 }
 
-export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps) => {
+export const AddTaskDialog = ({ onAddTask, isOpen, onClose, initialDate }: AddTaskDialogProps) => {
   const [internalOpen, setInternalOpen] = useState(false);
   const { t } = useLocale();
   
@@ -42,7 +43,7 @@ export const AddTaskDialog = ({ onAddTask, isOpen, onClose }: AddTaskDialogProps
           <DialogTitle>{t('addNewTask')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-120px)] px-6 pb-6">
-          <TaskForm onSubmit={handleAddTask} />
+          <TaskForm onSubmit={handleAddTask} initialDate={initialDate} />
         </ScrollArea>
       </DialogContent>
     </Dialog>

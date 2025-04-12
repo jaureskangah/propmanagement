@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { CalendarIcon, PlusIcon, BellRing, Calendar as CalendarIcon2, Repeat } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -34,14 +33,11 @@ export const PreventiveMaintenance = () => {
     handleAddMultipleTasks,
   } = useMaintenanceTasks();
 
-  // Force refresh the component when tasks change
   const [forceRefresh, setForceRefresh] = useState(0);
   useEffect(() => {
-    // When tasks change, trigger a re-render
     setForceRefresh(prev => prev + 1);
   }, [tasks.length]);
 
-  // Log to check if tasks exist
   console.log("All tasks in PreventiveMaintenance:", tasks.length);
   console.log("Task details:", tasks.map(task => ({
     id: task.id, 
@@ -55,11 +51,9 @@ export const PreventiveMaintenance = () => {
     selectedType === "all" ? true : task.type === selectedType
   );
 
-  // Filter tasks by selected date - improved date comparison
   const filteredTasksByDate = filteredTasksByType.filter(task => {
-    if (!selectedDate) return false; // Don't show tasks if no date is selected
+    if (!selectedDate) return false;
     
-    // Get a properly formatted task date
     let taskDate: Date;
     if (task.date instanceof Date) {
       taskDate = task.date;
@@ -74,11 +68,9 @@ export const PreventiveMaintenance = () => {
       return false;
     }
     
-    // Normaliser les dates avant comparaison
     const normalizedTaskDate = startOfDay(taskDate);
     const normalizedSelectedDate = startOfDay(selectedDate);
     
-    // Log each task date comparison for debugging
     const isSame = isSameDay(normalizedTaskDate, normalizedSelectedDate);
     console.log(`Task ${task.id} "${task.title}" date: ${taskDate.toISOString()} matches selected ${selectedDate.toISOString()}? ${isSame}`);
     console.log(`Task date normalized: ${normalizedTaskDate.toISOString()} - Selected date normalized: ${normalizedSelectedDate.toISOString()}`);
@@ -103,8 +95,6 @@ export const PreventiveMaintenance = () => {
         description: t('taskAdded'),
       });
       
-      // Si la date de la nouvelle tâche est différente de la date sélectionnée,
-      // mettre à jour la date sélectionnée pour montrer la tâche
       if (newTask.date) {
         const taskDate = newTask.date instanceof Date ? newTask.date : new Date(newTask.date);
         console.log("Setting calendar to task date:", taskDate.toISOString());
@@ -128,10 +118,8 @@ export const PreventiveMaintenance = () => {
         title: t('success'),
         description: t('multipleTasksAdded'),
       });
-      // Si des tâches ont été ajoutées, forcer un rafraîchissement
       setForceRefresh(prev => prev + 1);
       
-      // Si des tâches ont été ajoutées, sélectionner la date de la première tâche
       if (newTasks.length > 0 && newTasks[0].date) {
         const taskDate = newTasks[0].date instanceof Date ? newTasks[0].date : new Date(newTasks[0].date);
         setSelectedDate(taskDate);
@@ -204,7 +192,6 @@ export const PreventiveMaintenance = () => {
       </Card>
 
       <div className="lg:col-span-1 space-y-4">
-        {/* Recurring Tasks */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -232,7 +219,6 @@ export const PreventiveMaintenance = () => {
           </CardContent>
         </Card>
 
-        {/* Reminders */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-base">
@@ -250,6 +236,7 @@ export const PreventiveMaintenance = () => {
         onAddTask={onAddTask}
         isOpen={isAddTaskOpen}
         onClose={() => setIsAddTaskOpen(false)}
+        initialDate={selectedDate}
       />
 
       <BatchSchedulingDialog
