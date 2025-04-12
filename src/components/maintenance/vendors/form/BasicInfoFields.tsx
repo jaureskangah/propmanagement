@@ -80,7 +80,7 @@ export const BasicInfoFields = ({ form }: BasicInfoFieldsProps) => {
               <Toggle
                 pressed={field.value}
                 onPressedChange={field.onChange}
-                className="data-[state=on]:bg-red-500"
+                className="data-[state=on]:bg-red-100 data-[state=on]:text-red-700 data-[state=on]:font-medium"
               >
                 {t('emergencyContact')}
               </Toggle>
