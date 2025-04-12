@@ -82,7 +82,7 @@ export const TaskFormContent = ({
       <PrioritySelect 
         value={priority} 
         onChange={setPriority} 
-        label={t('taskPriority')}
+        label={t('priority')}
       />
       
       <DatePickerField 

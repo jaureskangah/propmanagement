@@ -80,7 +80,10 @@ export const enTasks = {
   reminderMethod: "Reminder method",
   reminderViaApp: "Via App",
   reminderViaEmail: "Via Email",
-  reminderViaBoth: "Via App & Email"
+  reminderViaBoth: "Via App & Email",
+  // Adding the missing translations
+  enterTaskTitle: "Enter task title",
+  saveTask: "Save Task"
 };
 
 export const frTasks = {
@@ -161,5 +164,8 @@ export const frTasks = {
   reminderMethod: "Méthode de rappel",
   reminderViaApp: "Via l'application",
   reminderViaEmail: "Via email",
-  reminderViaBoth: "Via app & email"
+  reminderViaBoth: "Via app & email",
+  // Adding the missing translations
+  enterTaskTitle: "Entrez le titre de la tâche",
+  saveTask: "Enregistrer la tâche"
 };
