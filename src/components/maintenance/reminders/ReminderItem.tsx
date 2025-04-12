@@ -63,7 +63,7 @@ export const ReminderItem = ({ task }: ReminderItemProps) => {
             {format(reminderDate, 'dd MMM yyyy', { locale: dateLocale })}
             <span className="mx-1">•</span>
             {renderReminderMethodIcon()}
-            <span className="text-xs">{getReminderMethodLabel(task.reminder_method, t)}</span>
+            <span className="text-xs">{getReminderMethodLabel(t, task.reminder_method)}</span>
           </div>
         </div>
         <Badge 

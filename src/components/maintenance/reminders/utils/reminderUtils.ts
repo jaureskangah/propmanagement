@@ -37,7 +37,8 @@ export function getTaskTypeIcon(task: Task) {
 }
 
 // Function to get the label for the reminder method
-export function getReminderMethodLabel(method?: string, t: (key: string) => string) {
+// Fixed parameter order - required parameter 't' now comes before optional parameter 'method'
+export function getReminderMethodLabel(t: (key: string) => string, method?: string) {
   switch (method) {
     case "email":
       return t('reminderViaEmail');
