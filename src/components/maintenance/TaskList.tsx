@@ -18,11 +18,11 @@ interface TaskListProps {
 export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps) => {
   const { t, language } = useLocale();
   
-  console.log("Tâches dans TaskList:", tasks.length);
-  console.log("Détails des tâches:", tasks.map(task => ({
+  console.log("Tasks in TaskList:", tasks.length);
+  console.log("Task details:", tasks.map(task => ({
     id: task.id,
     title: task.title,
-    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : 'Date non valide',
+    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : 'Invalid date',
     type: task.type,
     priority: task.priority
   })));
@@ -41,13 +41,13 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
           } else if (typeof task.date === 'string') {
             taskDate = new Date(task.date);
           } else {
-            console.error('Format de date invalide:', task.date);
+            console.error('Invalid date format:', task.date);
             taskDate = new Date(); // Default date
           }
           
           // Check if the date is valid
           if (!isValid(taskDate)) {
-            console.error('Date invalide pour la tâche:', task.id, task.date);
+            console.error('Invalid date for task:', task.id, task.date);
             taskDate = new Date(); // Default date
           }
           

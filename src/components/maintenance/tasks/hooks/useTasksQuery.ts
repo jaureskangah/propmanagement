@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
-import { startOfDay, format } from "date-fns";
+import { startOfDay, format, isValid } from "date-fns";
 
 export const useTasksQuery = () => {
   const { data: tasks = [], isLoading } = useQuery({
@@ -30,15 +30,15 @@ export const useTasksQuery = () => {
             // If the date is a string, convert it to a Date object
             if (typeof task.date === 'string') {
               // Create a new date from the string
-              taskDate = new Date(task.date);
+              const parsedDate = new Date(task.date);
               
               // Check if the date is valid
-              if (isNaN(taskDate.getTime())) {
+              if (!isValid(parsedDate)) {
                 console.warn("Invalid date for task:", task.id, task.date);
                 taskDate = startOfDay(new Date()); // Default date
               } else {
                 // Normalize the date (without hours/minutes/seconds)
-                taskDate = startOfDay(taskDate);
+                taskDate = startOfDay(parsedDate);
               }
             } else if (task.date instanceof Date) {
               // If it's already a Date object, normalize it
@@ -63,12 +63,12 @@ export const useTasksQuery = () => {
         if (task.reminder_date) {
           try {
             if (typeof task.reminder_date === 'string') {
-              reminderDate = new Date(task.reminder_date);
-              if (isNaN(reminderDate.getTime())) {
+              const parsedReminderDate = new Date(task.reminder_date);
+              if (!isValid(parsedReminderDate)) {
                 console.warn("Invalid reminder date for task:", task.id, task.reminder_date);
                 reminderDate = undefined;
               } else {
-                reminderDate = startOfDay(reminderDate);
+                reminderDate = startOfDay(parsedReminderDate);
               }
             } else if (task.reminder_date instanceof Date) {
               reminderDate = startOfDay(task.reminder_date);

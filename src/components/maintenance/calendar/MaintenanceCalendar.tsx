@@ -1,3 +1,4 @@
+
 import { Calendar } from "@/components/ui/calendar";
 import { format, startOfDay, isSameDay, isValid } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -57,7 +58,7 @@ export const MaintenanceCalendar = ({
       // Check if the type matches (if a type is selected)
       const typeMatches = selectedType === "all" || task.type === selectedType;
       
-      // Debug log
+      // Debug log for matched dates
       if (dateMatch) {
         console.log(`Task ${task.id} matches date ${format(normalizedDate, "yyyy-MM-dd")}, type match: ${typeMatches}`);
       }
@@ -67,6 +68,16 @@ export const MaintenanceCalendar = ({
     });
     
     return filteredTasks;
+  };
+
+  const handleSelectDate = (date: Date | undefined) => {
+    if (date) {
+      const normalizedDate = normalizeDate(date);
+      console.log(`Calendar: Selected date ${format(normalizedDate, "yyyy-MM-dd")}`);
+      onSelectDate(normalizedDate);
+    } else {
+      onSelectDate(undefined);
+    }
   };
 
   const getTaskColor = (tasks: Task[]) => {
@@ -107,7 +118,7 @@ export const MaintenanceCalendar = ({
       <Calendar
         mode="single"
         selected={selectedDate}
-        onSelect={onSelectDate}
+        onSelect={handleSelectDate}
         className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
         modifiers={{
           hasTasks: (date) => getTasksForDate(date).length > 0,

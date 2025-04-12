@@ -15,10 +15,10 @@ import { useToast } from "@/hooks/use-toast";
 import { RecurringTasksView } from "./recurring/RecurringTasksView";
 import { RemindersView } from "./reminders/RemindersView";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { isSameDay, startOfDay, format } from "date-fns";
+import { isSameDay, startOfDay, format, parseISO } from "date-fns";
 
 export const PreventiveMaintenance = () => {
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(startOfDay(new Date()));
   const [selectedType, setSelectedType] = useState<string>("all");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isBatchSchedulingOpen, setIsBatchSchedulingOpen] = useState(false);
@@ -40,7 +40,16 @@ export const PreventiveMaintenance = () => {
     
     let normalizedDate: Date;
     if (typeof date === 'string') {
-      normalizedDate = new Date(date);
+      try {
+        normalizedDate = parseISO(date);
+        if (!normalizedDate || isNaN(normalizedDate.getTime())) {
+          console.error("Invalid date string:", date);
+          return undefined;
+        }
+      } catch (error) {
+        console.error("Error parsing date string:", date, error);
+        return undefined;
+      }
     } else {
       normalizedDate = new Date(date);
     }
@@ -60,7 +69,13 @@ export const PreventiveMaintenance = () => {
     const taskDate = normalizeDate(task.date);
     const currentSelectedDate = normalizeDate(selectedDate);
     
-    if (!taskDate || !currentSelectedDate) return false;
+    if (!taskDate || !currentSelectedDate) {
+      console.error("Invalid date in comparison:", { 
+        taskDate: task.date, 
+        selectedDate: selectedDate 
+      });
+      return false;
+    }
     
     // Log to help debug the date comparison
     console.log(`Comparing: Task date (${format(taskDate, "yyyy-MM-dd")}) with selected date (${format(currentSelectedDate, "yyyy-MM-dd")})`);
@@ -89,6 +104,18 @@ export const PreventiveMaintenance = () => {
 
   const onAddTask = (newTask: NewTask) => {
     console.log("Create task clicked with data:", newTask);
+    
+    // Ensure the task has a valid date
+    if (!newTask.date) {
+      newTask.date = startOfDay(new Date());
+    } else if (typeof newTask.date === 'string') {
+      newTask.date = startOfDay(new Date(newTask.date));
+    } else {
+      newTask.date = startOfDay(newTask.date);
+    }
+    
+    console.log("Normalized task date for creation:", format(newTask.date, "yyyy-MM-dd"));
+    
     handleAddTask(newTask).then((result) => {
       console.log("Task added successfully:", result);
       toast({
@@ -96,8 +123,9 @@ export const PreventiveMaintenance = () => {
         description: t('taskAdded'),
       });
       
+      // Set selected date to match the new task's date to show it immediately
       if (newTask.date) {
-        const taskDate = newTask.date instanceof Date ? newTask.date : new Date(newTask.date);
+        const taskDate = startOfDay(newTask.date);
         console.log("Setting calendar to task date:", format(taskDate, "yyyy-MM-dd"));
         setSelectedDate(taskDate);
       }
@@ -113,15 +141,21 @@ export const PreventiveMaintenance = () => {
   };
 
   const onAddMultipleTasks = (newTasks: NewTask[]) => {
-    handleAddMultipleTasks(newTasks).then((result) => {
+    // Normalize dates in all new tasks
+    const normalizedTasks = newTasks.map(task => ({
+      ...task,
+      date: task.date ? startOfDay(task.date instanceof Date ? task.date : new Date(task.date)) : startOfDay(new Date())
+    }));
+    
+    handleAddMultipleTasks(normalizedTasks).then((result) => {
       console.log("Multiple tasks added successfully:", result);
       toast({
         title: t('success'),
         description: t('multipleTasksAdded'),
       });
       
-      if (newTasks.length > 0 && newTasks[0].date) {
-        const taskDate = newTasks[0].date instanceof Date ? newTasks[0].date : new Date(newTasks[0].date);
+      if (normalizedTasks.length > 0 && normalizedTasks[0].date) {
+        const taskDate = startOfDay(normalizedTasks[0].date);
         setSelectedDate(taskDate);
       }
     }).catch(error => {

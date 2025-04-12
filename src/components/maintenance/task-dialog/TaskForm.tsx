@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, RotateCw, CheckCircle, BellRing, Mail, Smartphone } from "lucide-react";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
@@ -23,12 +24,11 @@ interface TaskFormProps {
 }
 
 export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => {
-  // Créer la date d'aujourd'hui sans composante temporelle pour éviter les problèmes de fuseau horaire
-  const today = new Date();
-  const defaultDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  // Create today's date without time component to avoid timezone issues
+  const today = startOfDay(new Date());
   
-  // Utiliser la date initiale si fournie, sinon la date d'aujourd'hui
-  const [date, setDate] = useState<Date | undefined>(initialDate || defaultDate);
+  // Use initial date if provided, otherwise use today's date
+  const [date, setDate] = useState<Date | undefined>(initialDate ? startOfDay(initialDate) : today);
   const [title, setTitle] = useState("");
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
@@ -36,7 +36,7 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
   const [recurrenceFrequency, setRecurrenceFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [recurrenceInterval, setRecurrenceInterval] = useState<number>(1);
   const [hasReminder, setHasReminder] = useState(false);
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate || defaultDate);
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialDate ? startOfDay(initialDate) : today);
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">("app");
   
   const { t, language } = useLocale();
@@ -46,14 +46,13 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (title && date && type) {
-      // Créer une nouvelle date avec seulement année/mois/jour pour éviter les problèmes de fuseau horaire
-      const submissionDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const submissionReminderDate = reminderDate 
-        ? new Date(reminderDate.getFullYear(), reminderDate.getMonth(), reminderDate.getDate())
-        : undefined;
+      // Make sure we use normalized dates without time components
+      const submissionDate = startOfDay(date);
+      const submissionReminderDate = reminderDate ? startOfDay(reminderDate) : undefined;
       
-      console.log("Submitting task with date:", submissionDate, "Original selected date:", date);
-      console.log("Reminder date:", submissionReminderDate, "has reminder:", hasReminder, "method:", reminderMethod);
+      console.log("Submitting task with date:", format(submissionDate, "yyyy-MM-dd"), "Original selected date:", format(date, "yyyy-MM-dd"));
+      console.log("Reminder date:", submissionReminderDate ? format(submissionReminderDate, "yyyy-MM-dd") : "none", 
+                 "has reminder:", hasReminder, "method:", reminderMethod);
       
       const newTask: NewTask = { 
         title,
@@ -79,8 +78,9 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
 
   const handleDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      // Créer une nouvelle date avec seulement année/mois/jour
-      const selectedDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
+      // Normalize the date (without hours/minutes/seconds)
+      const selectedDate = startOfDay(newDate);
+      console.log("Selected task date in form:", format(selectedDate, "yyyy-MM-dd"));
       setDate(selectedDate);
     } else {
       setDate(undefined);
@@ -89,8 +89,8 @@ export const TaskForm = ({ onSubmit, onCancel, initialDate }: TaskFormProps) => 
 
   const handleReminderDateSelect = (newDate: Date | undefined) => {
     if (newDate) {
-      // Créer une nouvelle date avec seulement année/mois/jour
-      const selectedDate = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate());
+      // Normalize the date (without hours/minutes/seconds)
+      const selectedDate = startOfDay(newDate);
       setReminderDate(selectedDate);
     } else {
       setReminderDate(undefined);
