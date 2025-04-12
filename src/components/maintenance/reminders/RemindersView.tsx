@@ -5,6 +5,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { EmptyReminders } from "./EmptyReminders";
 import { ReminderGroup } from "./ReminderGroup";
 import { groupRemindersByPeriod } from "./utils/reminderUtils";
+import { format } from "date-fns";
 
 interface RemindersViewProps {
   tasks: Task[];
@@ -15,8 +16,7 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   
   console.log("RemindersView received tasks:", tasks.length);
   
-  // Simple validation check to ensure we only accept tasks with has_reminder=true
-  // and a valid reminder_date
+  // Validation améliorée pour s'assurer que nous n'acceptons que les tâches avec des rappels valides
   const tasksWithReminder = tasks.filter(task => {
     if (!task.has_reminder) {
       return false;
@@ -24,11 +24,19 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
     
     // Ensure the reminder_date exists and can be parsed to a valid Date
     if (!task.reminder_date) {
+      console.log(`Filtered out task ${task.id} - has_reminder=true but no reminder_date`);
       return false;
     }
     
-    // For debugging - log each valid reminder task
-    console.log(`Valid reminder task: ${task.id} - ${task.title} - ${task.reminder_date}`);
+    // Pour le débogage - log chaque tâche avec rappel valide
+    console.log(`Valid reminder task: ${task.id} - ${task.title} - Reminder date: ${
+      task.reminder_date instanceof Date 
+        ? format(task.reminder_date, "yyyy-MM-dd") 
+        : typeof task.reminder_date === 'string' 
+          ? task.reminder_date 
+          : 'unknown format'
+    }`);
+    
     return true;
   });
   

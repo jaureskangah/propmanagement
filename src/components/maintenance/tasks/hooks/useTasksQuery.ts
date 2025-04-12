@@ -76,7 +76,7 @@ export const useTasksQuery = () => {
         
         // Traiter la date de rappel
         let reminderDate = undefined;
-        if (task.reminder_date) {
+        if (task.has_reminder && task.reminder_date) {
           try {
             if (typeof task.reminder_date === 'string') {
               try {
@@ -108,12 +108,15 @@ export const useTasksQuery = () => {
           }
         }
         
-        // Log specific debug information for reminder tasks
+        // Amélioration critique: Log détaillé pour les tâches avec rappels
         if (task.has_reminder) {
-          console.log(`Reminder task found: ${task.id} - ${task.title}
-            - Has reminder: ${task.has_reminder}
-            - Reminder date: ${reminderDate ? format(reminderDate, "yyyy-MM-dd") : "undefined"}
-            - Reminder method: ${task.reminder_method || "none"}
+          console.log(`IMPORTANT - Found task with reminder: 
+            ID: ${task.id}
+            Title: ${task.title}
+            has_reminder: ${task.has_reminder}
+            reminder_date: ${task.reminder_date}
+            reminder_date (parsed): ${reminderDate ? format(reminderDate, "yyyy-MM-dd") : "undefined"}
+            reminder_method: ${task.reminder_method || "none"}
           `);
         }
         
@@ -143,7 +146,7 @@ export const useTasksQuery = () => {
       console.log(`Found ${reminderTasks.length} tasks with reminders after formatting`);
       
       if (reminderTasks.length > 0) {
-        console.log("Reminder task examples:", reminderTasks.slice(0, 3).map(t => ({ 
+        console.log("CRITICAL - Reminder task examples:", reminderTasks.slice(0, 3).map(t => ({ 
           id: t.id, 
           title: t.title,
           has_reminder: t.has_reminder,

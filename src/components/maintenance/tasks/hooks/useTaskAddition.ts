@@ -36,6 +36,11 @@ export const useTaskAddition = () => {
             : new Date());
             
         console.log("Normalized reminder date for insertion:", format(normalizedReminderDate, "yyyy-MM-dd"));
+        console.log("CRITICAL: Inserting task with reminder data:", {
+          has_reminder: newTask.has_reminder,
+          reminder_date: normalizedReminderDate.toISOString().split('T')[0],
+          reminder_method: newTask.reminder_method
+        });
       }
       
       // Insert the task
@@ -108,6 +113,13 @@ export const useTaskAddition = () => {
             : typeof task.reminder_date === 'string' 
               ? new Date(task.reminder_date) 
               : new Date());
+              
+          console.log(`CRITICAL: Batch task with reminder:
+            Title: ${task.title}
+            has_reminder: ${task.has_reminder}
+            reminder_date: ${normalizedReminderDate.toISOString().split('T')[0]}
+            reminder_method: ${task.reminder_method}
+          `);
         }
         
         return {

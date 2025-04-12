@@ -74,6 +74,17 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     }
     
     console.log("Submitting task form with data:", newTask);
+    
+    // Ajouter des logs détaillés pour les rappels
+    if (newTask.has_reminder && newTask.reminder_date) {
+      console.log(`CRITICAL from useTaskForm: Sending task with reminder:
+        Title: ${newTask.title}
+        has_reminder: ${newTask.has_reminder}
+        reminder_date: ${newTask.reminder_date.toISOString()}
+        reminder_method: ${newTask.reminder_method}
+      `);
+    }
+    
     onSubmit(newTask);
   };
   

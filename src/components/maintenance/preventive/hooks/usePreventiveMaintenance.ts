@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useMaintenanceTasks } from "../../tasks/useMaintenanceTasks";
 import { useToast } from "@/hooks/use-toast";
@@ -77,23 +78,33 @@ export const usePreventiveMaintenance = () => {
   // Filter recurring tasks
   const recurringTasks = tasks.filter(task => task.is_recurring === true);
   
-  // Debug logging for all tasks with reminders
+  // Debug logging for tasks
   console.log("All tasks:", tasks.length);
   
-  // Filter tasks with reminders - improved approach
+  // Filter tasks with reminders - improved approach with detailed logging
   const reminderTasks = tasks.filter(task => {
-    // Une tâche doit avoir "has_reminder" à true pour être considérée comme un rappel
+    // Vérifier si la tâche a has_reminder à true
     if (!task.has_reminder) {
       return false;
     }
     
-    // Une tâche de rappel doit avoir une date de rappel valide
+    // Vérifier si la tâche a une date de rappel
     if (!task.reminder_date) {
+      console.log(`Task ${task.id} has reminder=true but no reminder_date`);
       return false;
     }
     
-    // Débogage: log chaque tâche avec rappel trouvée
-    console.log(`Found reminder task: ${task.id} - ${task.title} - Reminder date: ${task.reminder_date}`);
+    // Log détaillé pour chaque tâche avec rappel
+    console.log(`REMINDER: Found task with reminder:
+      ID: ${task.id}
+      Title: ${task.title}
+      Reminder date: ${task.reminder_date instanceof Date 
+        ? format(task.reminder_date, "yyyy-MM-dd") 
+        : typeof task.reminder_date === 'string' 
+          ? task.reminder_date 
+          : 'unknown format'}
+      Reminder method: ${task.reminder_method}
+    `);
     
     // Cette tâche a tous les éléments requis pour être un rappel
     return true;
@@ -123,6 +134,20 @@ export const usePreventiveMaintenance = () => {
     const taskDate = startOfDay(newTask.date);
     console.log("Setting calendar to task date BEFORE adding task:", format(taskDate, "yyyy-MM-dd"));
     setSelectedDate(taskDate);
+    
+    // Ajouter des logs pour les rappels avant d'ajouter la tâche
+    if (newTask.has_reminder && newTask.reminder_date) {
+      console.log(`CRITICAL: Adding task with reminder:
+        Title: ${newTask.title}
+        has_reminder: ${newTask.has_reminder}
+        reminder_date: ${newTask.reminder_date instanceof Date 
+          ? format(newTask.reminder_date, "yyyy-MM-dd") 
+          : typeof newTask.reminder_date === 'string' 
+            ? newTask.reminder_date 
+            : 'unknown format'}
+        reminder_method: ${newTask.reminder_method}
+      `);
+    }
     
     // Now add the task
     handleAddTask(newTask).then((result) => {
