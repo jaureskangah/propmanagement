@@ -54,7 +54,8 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
       const startDate = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
       const endDate = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
       
-      const { data, error } = await supabase
+      // First query for maintenance expenses
+      const { data: maintenanceExpenses, error: maintenanceError } = await supabase
         .from('maintenance_expenses')
         .select('id, amount, date, category, description')
         .eq('property_id', propertyId)
@@ -62,9 +63,31 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         .lte('date', endDate)
         .order('date', { ascending: false });
         
-      if (error) throw error;
-      console.log(`Fetched ${data?.length || 0} expenses for year ${selectedYear}`);
-      return data || [];
+      if (maintenanceError) throw maintenanceError;
+      
+      // Second query for vendor interventions which also count as expenses
+      const { data: vendorInterventions, error: vendorError } = await supabase
+        .from('vendor_interventions')
+        .select('id, cost as amount, date, title as category, description')
+        .eq('property_id', propertyId)
+        .gte('date', startDate)
+        .lte('date', endDate)
+        .order('date', { ascending: false });
+        
+      if (vendorError) throw vendorError;
+      
+      // Combine both types of expenses
+      const allExpenses = [
+        ...(maintenanceExpenses || []),
+        ...(vendorInterventions || [])
+      ];
+      
+      console.log(`Fetched ${allExpenses.length} expenses for year ${selectedYear}:`, {
+        maintenanceExpenses: maintenanceExpenses?.length || 0,
+        vendorInterventions: vendorInterventions?.length || 0
+      });
+      
+      return allExpenses;
     },
     enabled: !!propertyId
   });

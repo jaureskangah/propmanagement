@@ -26,9 +26,8 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
     return <NoPropertySelected type="financial-overview" />;
   }
 
-  if (!payments || !expenses) {
-    return <NoPropertySelected type="financial-overview" />;
-  }
+  // Log the expenses to help with debugging
+  console.log("Financial overview expenses:", expenses);
 
   return (
     <Card>

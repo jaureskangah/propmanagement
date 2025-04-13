@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface ExpensesTableProps {
   expenses: any[];
@@ -44,7 +45,7 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
             <TableCell>{format(new Date(expense.date), 'yyyy-MM-dd')}</TableCell>
             <TableCell>{expense.category}</TableCell>
             <TableCell>{expense.description || '-'}</TableCell>
-            <TableCell className="text-right">${expense.amount.toLocaleString()}</TableCell>
+            <TableCell className="text-right">{formatCurrency(expense.amount)}</TableCell>
           </TableRow>
         ))}
       </TableBody>
