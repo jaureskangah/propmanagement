@@ -16,7 +16,7 @@ interface FinancialOverviewProps {
 
 const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps) => {
   const { t } = useLocale();
-  const { data, isLoading } = useFinancialOverviewData(propertyId, selectedYear);
+  const { tenants, payments, expenses, isLoading } = useFinancialOverviewData(propertyId, selectedYear);
 
   if (isLoading) {
     return <LoadingMetrics />;
@@ -26,7 +26,7 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
     return <NoPropertySelected type="financial-overview" />;
   }
 
-  if (!data) {
+  if (!payments || !expenses) {
     return <NoPropertySelected type="financial-overview" />;
   }
 
@@ -44,10 +44,10 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
             <TabsTrigger value="expenses">{t('expenses')}</TabsTrigger>
           </TabsList>
           <TabsContent value="income">
-            <IncomeTable payments={data.payments} />
+            <IncomeTable payments={payments} tenants={tenants} isLoading={isLoading} />
           </TabsContent>
           <TabsContent value="expenses">
-            <ExpensesTable expenses={data.expenses} />
+            <ExpensesTable expenses={expenses} isLoading={isLoading} />
           </TabsContent>
         </Tabs>
       </CardContent>
