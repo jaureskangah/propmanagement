@@ -42,17 +42,34 @@ export const enFinances = {
   selectPropertyToViewMetrics: "Select a property to view financial metrics",
   selectPropertyToCalculateROI: "Select a property to calculate ROI",
   noPropertiesAvailable: "No properties available",
-  // Nouvelles traductions
+  // Translations for financial metrics
   occupancyRate: "Occupancy Rate",
   occupancyRateDescription: "Units currently occupied",
   unpaidRent: "Unpaid Rent",
   unpaidRentDescription: "Outstanding rental payments",
-  // Traductions pour le graphique d'évolution des paiements
+  // Translations for payment evolution chart
   paymentEvolution: "Payment Evolution",
   paid: "Paid",
   pending: "Pending", 
   late: "Late",
-  cumulativeTotal: "Cumulative Total"
+  cumulativeTotal: "Cumulative Total",
+  // New translations for financial tables
+  maintenanceTitle: "Maintenance",
+  maintenanceAndRepairs: "Maintenance and repairs",
+  propertyExpenses: "Property expenses",
+  noDescription: "No description",
+  rentRoll: "Rent Roll",
+  unit: "Unit",
+  monthlyRent: "Monthly Rent",
+  lastPayment: "Last Payment",
+  paymentStatus: "Payment Status",
+  leaseStatus: "Lease Status",
+  columnTitle: "Title",
+  columnCost: "Cost",
+  columnDate: "Date",
+  totalRentPaid: "Total Rent Paid",
+  yearToDate: "Year to date",
+  annualReturn: "Annual return"
 };
 
 export const frFinances = {
@@ -108,5 +125,22 @@ export const frFinances = {
   paid: "Payés",
   pending: "En attente", 
   late: "En retard",
-  cumulativeTotal: "Total cumulé"
+  cumulativeTotal: "Total cumulé",
+  // Nouvelles traductions pour les tableaux financiers
+  maintenanceTitle: "Maintenance",
+  maintenanceAndRepairs: "Maintenance et réparations",
+  propertyExpenses: "Dépenses de propriété",
+  noDescription: "Pas de description",
+  rentRoll: "Loyers",
+  unit: "Unité",
+  monthlyRent: "Loyer mensuel",
+  lastPayment: "Dernier paiement",
+  paymentStatus: "Statut du paiement",
+  leaseStatus: "Statut du bail",
+  columnTitle: "Titre",
+  columnCost: "Coût",
+  columnDate: "Date",
+  totalRentPaid: "Loyers payés",
+  yearToDate: "Depuis le début de l'année",
+  annualReturn: "Rendement annuel"
 };

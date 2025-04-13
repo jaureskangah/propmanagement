@@ -12,7 +12,7 @@ import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
 import { cn } from "@/lib/utils";
-import { FileBarChart } from "lucide-react";
+import { FileBarChart, Loader2 } from "lucide-react";
 
 const Finances = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
@@ -61,7 +61,10 @@ const Finances = () => {
               <Card className="w-full md:w-64">
                 <CardContent className="p-3">
                   {isLoadingProperties ? (
-                    <div className="h-9 rounded-md bg-muted animate-pulse"></div>
+                    <div className="flex items-center justify-center h-9 gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                      <span className="text-sm text-muted-foreground">{t('loading', { fallback: 'Loading...' })}</span>
+                    </div>
                   ) : (
                     <Select 
                       value={selectedPropertyId || ""} 
