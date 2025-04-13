@@ -10,6 +10,30 @@ interface UseTaskFormProps {
 }
 
 export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskFormProps) => {
+  // Normaliser la date initiale pour éviter les problèmes
+  const normalizeDate = (date: Date | string | undefined): Date => {
+    if (!date) return startOfDay(new Date());
+    
+    try {
+      const dateObj = typeof date === "string" ? new Date(date) : date;
+      return startOfDay(dateObj);
+    } catch (error) {
+      console.error("Error normalizing date:", error);
+      return startOfDay(new Date());
+    }
+  };
+  
+  // Initialisation des états avec normalisation des dates
+  const initialTaskDate = normalizeDate(initialValue?.date || initialDate);
+  
+  let initialReminderDate: Date | undefined;
+  if (initialValue?.has_reminder && initialValue?.reminder_date) {
+    initialReminderDate = normalizeDate(initialValue.reminder_date);
+  } else if (initialDate) {
+    // Par défaut, le rappel est un jour avant la date de la tâche
+    initialReminderDate = addDays(initialTaskDate, -1);
+  }
+  
   const [title, setTitle] = useState(initialValue?.title || "");
   const [type, setType] = useState<"regular" | "inspection" | "seasonal">(
     initialValue?.type || "regular"
@@ -17,15 +41,7 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">(
     initialValue?.priority || "medium"
   );
-  const [date, setDate] = useState<Date | undefined>(
-    initialValue?.date 
-      ? typeof initialValue.date === "string" 
-        ? new Date(initialValue.date) 
-        : initialValue.date
-      : initialDate 
-        ? initialDate
-        : startOfDay(new Date())
-  );
+  const [date, setDate] = useState<Date | undefined>(initialTaskDate);
   
   // Recurrence settings
   const [isRecurring, setIsRecurring] = useState(initialValue?.is_recurring || false);
@@ -38,13 +54,7 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   
   // Reminder settings
   const [hasReminder, setHasReminder] = useState(initialValue?.has_reminder || false);
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(
-    initialValue?.reminder_date 
-      ? typeof initialValue.reminder_date === "string" 
-        ? new Date(initialValue.reminder_date) 
-        : initialValue.reminder_date
-      : date ? addDays(date, -1) : undefined
-  );
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialReminderDate);
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">(
     initialValue?.reminder_method as "app" | "email" | "both" || "app"
   );
@@ -54,14 +64,28 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     
     if (!date) return;
     
+    // S'assurer que les dates sont normalisées avant soumission
+    const normalizedDate = startOfDay(date);
+    let normalizedReminderDate: Date | undefined;
+    
+    if (hasReminder && reminderDate) {
+      normalizedReminderDate = startOfDay(reminderDate);
+      
+      // Log détaillé pour le débogage
+      console.log("Submitting task with reminder:", {
+        normalDate: normalizedDate.toISOString(),
+        normalReminderDate: normalizedReminderDate.toISOString()
+      });
+    }
+    
     const newTask: NewTask = {
       title,
       type,
       priority,
-      date,
+      date: normalizedDate,
       is_recurring: isRecurring,
       has_reminder: hasReminder,
-      reminder_date: hasReminder ? reminderDate : undefined,
+      reminder_date: normalizedReminderDate,
       reminder_method: hasReminder ? reminderMethod : undefined,
     };
     
@@ -75,7 +99,7 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     
     console.log("Submitting task form with data:", newTask);
     
-    // Ajouter des logs détaillés pour les rappels
+    // Log détaillé pour les rappels
     if (newTask.has_reminder && newTask.reminder_date) {
       console.log(`CRITICAL from useTaskForm: Sending task with reminder:
         Title: ${newTask.title}

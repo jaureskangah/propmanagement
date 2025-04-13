@@ -16,65 +16,71 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   
   console.log("RemindersView received tasks:", tasks.length);
   
-  // Amélioration du filtrage des tâches avec rappels valides
-  const tasksWithReminder = tasks.filter(task => {
-    // Vérification que la tâche a un rappel activé
-    if (!task.has_reminder) {
-      return false;
+  // Logs plus détaillés pour diagnostiquer le problème
+  tasks.forEach(task => {
+    if (task.has_reminder) {
+      console.log(`Reminder task in component:
+        ID: ${task.id}
+        Title: ${task.title}
+        has_reminder: ${task.has_reminder}
+        reminder_date: ${task.reminder_date instanceof Date 
+          ? format(task.reminder_date, 'yyyy-MM-dd') 
+          : (task.reminder_date || 'undefined')}
+        reminder_method: ${task.reminder_method || 'None'}
+      `);
     }
-    
-    // Vérification que la date de rappel existe
-    if (!task.reminder_date) {
-      console.log(`Filtered out task ${task.id} - has_reminder=true but no reminder_date`);
-      return false;
-    }
-    
-    // Normaliser la date de rappel pour s'assurer qu'elle est une Date valide
-    const reminderDate = task.reminder_date instanceof Date 
-      ? task.reminder_date 
-      : new Date(task.reminder_date as string);
-    
-    // Vérifier si la date de rappel est valide
-    if (isNaN(reminderDate.getTime())) {
-      console.log(`Filtered out task ${task.id} - invalid reminder_date`);
-      return false;
-    }
-    
-    // Pour le débogage - log chaque tâche avec rappel valide
-    console.log(`Valid reminder task: ${task.id} - ${task.title} - Reminder date: ${
-      format(reminderDate, "yyyy-MM-dd")
-    }`);
-    
-    return true;
   });
   
-  console.log("Tasks with reminders after filtering:", tasksWithReminder.length);
+  // Filtrage amélioré des tâches avec rappels valides
+  const validReminderTasks = tasks.filter(task => {
+    // La tâche doit avoir un rappel activé
+    if (!task.has_reminder) return false;
+    
+    // La date de rappel doit exister
+    if (!task.reminder_date) {
+      console.log(`Task ${task.id} has has_reminder=true but no reminder_date`);
+      return false;
+    }
+    
+    // S'assurer que la date est un objet Date valide
+    let reminderDate;
+    try {
+      reminderDate = task.reminder_date instanceof Date 
+        ? task.reminder_date 
+        : new Date(task.reminder_date as string);
+      
+      if (isNaN(reminderDate.getTime())) {
+        console.log(`Task ${task.id} has invalid reminder_date (NaN)`);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error(`Error parsing reminder_date for task ${task.id}:`, error);
+      return false;
+    }
+  });
   
-  if (tasksWithReminder.length === 0) {
+  console.log("Valid reminder tasks count:", validReminderTasks.length);
+  
+  if (validReminderTasks.length === 0) {
     return <EmptyReminders />;
   }
 
-  // Tri des rappels par date (les plus proches d'abord)
-  const sortedReminders = [...tasksWithReminder].sort((a, b) => {
-    if (!a.reminder_date || !b.reminder_date) return 0;
-    
-    // Ensure both dates are Date objects
-    const dateA = a.reminder_date instanceof Date ? a.reminder_date : new Date(a.reminder_date as string);
-    const dateB = b.reminder_date instanceof Date ? b.reminder_date : new Date(b.reminder_date as string);
-    
-    // Debug sorting
-    console.log(`Comparing dates: ${dateA.toISOString()} vs ${dateB.toISOString()}`);
-    
-    return dateA.getTime() - dateB.getTime();
-  });
-
-  // Group reminders by period
+  // Regrouper les rappels par période
   const { 
     todayReminders, 
     tomorrowReminders, 
     thisWeekReminders, 
     laterReminders 
-  } = groupRemindersByPeriod(sortedReminders);
+  } = groupRemindersByPeriod(validReminderTasks);
+  
+  console.log("Grouped reminders:", {
+    today: todayReminders.length,
+    tomorrow: tomorrowReminders.length,
+    thisWeek: thisWeekReminders.length,
+    later: laterReminders.length
+  });
 
   return (
     <ScrollArea className="h-[300px]">
