@@ -23,83 +23,84 @@ export const useTasksQuery = () => {
       
       console.log("Raw task data from Supabase:", data);
       console.log("Number of tasks retrieved:", data.length);
-
-      // Count reminder tasks in raw data
-      const rawReminders = data.filter(task => task.has_reminder === true);
-      console.log(`Found ${rawReminders.length} raw tasks with reminders`);
-      
-      if (rawReminders.length > 0) {
-        console.log("Raw reminder tasks:", rawReminders.map(task => ({
-          id: task.id,
-          title: task.title,
-          has_reminder: task.has_reminder,
-          reminder_date: task.reminder_date,
-          reminder_method: task.reminder_method
-        })));
-      }
       
       const formattedTasks = data.map(task => {
-        // Task date normalization
-        let taskDate = startOfDay(new Date());
+        // Convert dates to Date objects and normalize them (without hours/minutes/seconds)
+        let taskDate: Date;
         try {
           if (task.date) {
+            // If the date is a string, convert it to a Date object
             if (typeof task.date === 'string') {
-              taskDate = parseISO(task.date);
+              // Create a new date from the string
+              try {
+                taskDate = parseISO(task.date);
+                
+                // Add detailed logging for date parsing
+                console.log(`Task ${task.id} date parsing:
+                  - Original string: ${task.date}
+                  - Parsed as: ${isValid(taskDate) ? format(taskDate, "yyyy-MM-dd") : "INVALID"}
+                  - ISO string: ${isValid(taskDate) ? taskDate.toISOString() : "INVALID"}
+                `);
+              } catch (e) {
+                console.error("Error parsing date string:", task.date, e);
+                taskDate = startOfDay(new Date()); // Default date
+              }
+              
+              // Check if the date is valid
               if (!isValid(taskDate)) {
-                console.warn(`Invalid task date string for task ${task.id}: ${task.date}`);
-                taskDate = startOfDay(new Date());
+                console.warn("Invalid date for task:", task.id, task.date);
+                taskDate = startOfDay(new Date()); // Default date
               } else {
+                // Normalize the date (without hours/minutes/seconds)
                 taskDate = startOfDay(taskDate);
               }
             } else if (task.date instanceof Date) {
+              // If it's already a Date object, normalize it
               taskDate = startOfDay(task.date);
+            } else {
+              console.warn("Unrecognized date format for task:", task.id);
+              taskDate = startOfDay(new Date()); // Default date
             }
+          } else {
+            console.warn("No date for task:", task.id);
+            taskDate = startOfDay(new Date()); // Default date
           }
+          
+          // Log the processed date for debugging
+          const formattedDate = format(taskDate, "yyyy-MM-dd");
+          console.log(`Task ${task.id} processed date: ${formattedDate}`);
         } catch (e) {
-          console.error(`Error processing task date for task ${task.id}:`, e);
+          console.error("Error processing date:", task.date, e);
           taskDate = startOfDay(new Date());
         }
         
-        // Reminder date normalization
         let reminderDate = undefined;
-        try {
-          if (task.has_reminder && task.reminder_date) {
+        if (task.reminder_date) {
+          try {
             if (typeof task.reminder_date === 'string') {
-              reminderDate = parseISO(task.reminder_date);
+              try {
+                reminderDate = parseISO(task.reminder_date);
+              } catch (e) {
+                console.error("Error parsing reminder date:", task.reminder_date, e);
+                reminderDate = undefined;
+              }
+              
               if (!isValid(reminderDate)) {
-                console.warn(`Invalid reminder date string for task ${task.id}: ${task.reminder_date}`);
+                console.warn("Invalid reminder date for task:", task.id, task.reminder_date);
                 reminderDate = undefined;
               } else {
                 reminderDate = startOfDay(reminderDate);
-                console.log(`Parsed reminder date for task ${task.id}: ${format(reminderDate, 'yyyy-MM-dd')}`);
               }
             } else if (task.reminder_date instanceof Date) {
               reminderDate = startOfDay(task.reminder_date);
-              console.log(`Date object reminder date for task ${task.id}: ${format(reminderDate, 'yyyy-MM-dd')}`);
-            } else {
-              console.warn(`Unsupported reminder_date format for task ${task.id}:`, typeof task.reminder_date);
             }
+          } catch (e) {
+            console.error("Error processing reminder date:", task.reminder_date, e);
+            reminderDate = undefined;
           }
-        } catch (e) {
-          console.error(`Error processing reminder date for task ${task.id}:`, e);
         }
         
-        // Make sure has_reminder is actually a boolean
-        const hasReminder = Boolean(task.has_reminder);
-        
-        // Log detailed information for tasks with reminders
-        if (hasReminder && reminderDate) {
-          console.log(`Processed task with reminder: 
-            ID: ${task.id}
-            Title: ${task.title}
-            has_reminder: ${hasReminder}
-            reminder_date: ${reminderDate ? format(reminderDate, 'yyyy-MM-dd') : 'undefined'}
-            reminder_method: ${task.reminder_method || 'app'}
-          `);
-        } else if (hasReminder) {
-          console.log(`Task ${task.id} has has_reminder=true but reminder_date is missing or invalid`);
-        }
-        
+        // Return the task with normalized dates
         return {
           ...task,
           date: taskDate,
@@ -108,41 +109,36 @@ export const useTasksQuery = () => {
           status: (task.status || "pending") as "pending" | "in_progress" | "completed",
           completed: Boolean(task.completed),
           is_recurring: Boolean(task.is_recurring),
-          has_reminder: hasReminder,
+          has_reminder: Boolean(task.has_reminder),
           reminder_date: reminderDate,
           reminder_method: task.reminder_method || "app",
           recurrence_pattern: task.recurrence_pattern ? {
             frequency: task.recurrence_pattern.frequency || "daily",
             interval: task.recurrence_pattern.interval || 1,
             weekdays: task.recurrence_pattern.weekdays || [],
-            end_date: task.recurrence_pattern.end_date 
-              ? startOfDay(new Date(task.recurrence_pattern.end_date)) 
-              : undefined
+            end_date: task.recurrence_pattern.end_date ? startOfDay(new Date(task.recurrence_pattern.end_date)) : undefined
           } : undefined
         } as Task;
       });
       
-      // Log final reminders count
-      const finalReminderTasks = formattedTasks.filter(task => task.has_reminder && task.reminder_date);
-      console.log(`Final count of tasks with reminders: ${finalReminderTasks.length}`);
-      
-      if (finalReminderTasks.length > 0) {
-        console.log("Final reminder tasks:", finalReminderTasks.map(task => ({
-          id: task.id,
-          title: task.title,
-          reminder_date: task.reminder_date instanceof Date 
-            ? format(task.reminder_date, 'yyyy-MM-dd') 
-            : 'invalid date'
+      console.log("Tasks processed after retrieval:", formattedTasks.length);
+      if (formattedTasks.length > 0) {
+        console.log("Task examples:", formattedTasks.slice(0, 3).map(t => ({ 
+          id: t.id, 
+          title: t.title,
+          date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
+          type: t.type,
+          priority: t.priority
         })));
       }
       
       return formattedTasks;
     },
-    refetchInterval: 30000, // Refresh every 30 seconds
-    staleTime: 15000,      // Consider data stale after 15 seconds
+    refetchInterval: 5000, // Refresh every 5 seconds
+    staleTime: 3000, // Consider data stale after 3 seconds to encourage refetching
   });
 
-  // Function to force refresh tasks
+  // Fonction pour forcer le rafraîchissement des tâches
   const refreshTasks = () => {
     console.log("Manually refreshing tasks...");
     queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });

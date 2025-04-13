@@ -1,115 +1,175 @@
 
 import { useState } from "react";
-import { Task } from "../../types";
-import { useTasksQuery } from "../../tasks/hooks/useTasksQuery";
-import { useTaskCompletion } from "../../tasks/hooks/useTaskCompletion";
-import { useTaskDeletion } from "../../tasks/hooks/useTaskDeletion";
-import { startOfDay, endOfDay, isSameDay, addDays, format } from "date-fns";
-import { useTaskAddition } from "../../tasks/hooks/useTaskAddition";
+import { useMaintenanceTasks } from "../../tasks/useMaintenanceTasks";
+import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import { NewTask } from "../../types";
+import { startOfDay, format, parseISO, isSameDay } from "date-fns";
 
 export const usePreventiveMaintenance = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(startOfDay(new Date()));
+  const [selectedType, setSelectedType] = useState<string>("all");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [isBatchSchedulingOpen, setIsBatchSchedulingOpen] = useState(false);
+  const { t } = useLocale();
+  const { toast } = useToast();
   
-  const { tasks, isLoading, refreshTasks } = useTasksQuery();
-  const { handleTaskCompletion } = useTaskCompletion();
-  const { handleDeleteTask } = useTaskDeletion();
-  const { handleAddTask, handleAddMultipleTasks } = useTaskAddition();
-  
-  // Filter tasks by the selected date
-  const filteredTasksByDate = tasks.filter(task => {
-    const taskDate = task.date instanceof Date ? task.date : new Date(task.date as string);
-    return isSameDay(taskDate, selectedDate) && 
-      (!selectedType || task.type === selectedType);
-  });
-  
-  // Get recurring tasks
-  const recurringTasks = tasks.filter(task => task.is_recurring);
-  
-  // Get tasks with reminders - simplified and more robust filtering
-  const reminderTasks = tasks.filter(task => {
-    // Task must have reminder flag
-    if (!task.has_reminder) return false;
+  const {
+    tasks,
+    isLoading,
+    handleTaskCompletion,
+    handleDeleteTask,
+    handleAddTask,
+    handleAddMultipleTasks,
+  } = useMaintenanceTasks();
+
+  // Function to normalize dates for comparison by removing time component
+  const normalizeDate = (date: Date | string | undefined): Date | undefined => {
+    if (!date) return undefined;
     
-    // Task must have a reminder date
-    if (!task.reminder_date) return false;
-    
-    // Convert reminder_date to Date object if it's a string
-    let reminderDate;
-    if (task.reminder_date instanceof Date) {
-      reminderDate = task.reminder_date;
-    } else if (typeof task.reminder_date === 'string') {
+    let normalizedDate: Date;
+    if (typeof date === 'string') {
       try {
-        reminderDate = new Date(task.reminder_date);
-        if (isNaN(reminderDate.getTime())) {
-          console.log(`Reminder date is invalid for task: ${task.id}`);
-          return false;
+        normalizedDate = parseISO(date);
+        if (!normalizedDate || isNaN(normalizedDate.getTime())) {
+          console.error("Invalid date string:", date);
+          return undefined;
         }
-      } catch (e) {
-        console.error(`Error parsing reminder date for task ${task.id}:`, e);
-        return false;
+      } catch (error) {
+        console.error("Error parsing date string:", date, error);
+        return undefined;
       }
     } else {
+      normalizedDate = new Date(date);
+    }
+    
+    return startOfDay(normalizedDate);
+  };
+
+  // Log all tasks for debugging
+  console.log("All available tasks:", tasks.map(task => ({
+    id: task.id,
+    title: task.title,
+    date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : typeof task.date === 'string' ? task.date : 'Invalid date',
+    type: task.type
+  })));
+
+  // Filter tasks by selected type
+  const filteredTasksByType = tasks.filter((task) =>
+    selectedType === "all" ? true : task.type === selectedType
+  );
+
+  // Filter tasks by selected date using normalized dates for comparison
+  const filteredTasksByDate = filteredTasksByType.filter(task => {
+    if (!selectedDate) return false;
+    
+    const taskDate = normalizeDate(task.date);
+    const currentSelectedDate = normalizeDate(selectedDate);
+    
+    if (!taskDate || !currentSelectedDate) {
+      console.error("Invalid date in comparison:", { 
+        taskDate: task.date, 
+        selectedDate: selectedDate 
+      });
       return false;
     }
     
-    console.log(`Found valid reminder task: ${task.id} - ${task.title} - ${format(reminderDate, 'yyyy-MM-dd')}`);
-    return true;
+    // Log to help debug the date comparison
+    console.log(`Comparing task "${task.title}": Task date (${format(taskDate, "yyyy-MM-dd")}) with selected date (${format(currentSelectedDate, "yyyy-MM-dd")})`);
+    
+    // Use isSameDay for reliable date comparison
+    const result = isSameDay(taskDate, currentSelectedDate);
+    console.log(`Match for task "${task.title}": ${result}`);
+    
+    return result;
   });
   
-  console.log(`Total tasks: ${tasks.length}, Reminders: ${reminderTasks.length}, Recurring: ${recurringTasks.length}`);
-  
-  // Add task handling
-  const onAddTask = async (newTask: NewTask) => {
-    // Ensure dates are properly formatted before submission
-    const formattedTask = {
-      ...newTask,
-      date: startOfDay(newTask.date),
-      reminder_date: newTask.has_reminder && newTask.reminder_date 
-        ? startOfDay(newTask.reminder_date) 
-        : undefined
-    };
+  // Log filtered tasks for debugging
+  console.log(`Selected date: ${selectedDate ? format(selectedDate, "yyyy-MM-dd") : "none"}`);
+  console.log(`Filtered tasks count: ${filteredTasksByDate.length}`);
+  if (filteredTasksByDate.length > 0) {
+    console.log(`Filtered tasks:`, filteredTasksByDate.map(t => ({ 
+      id: t.id, 
+      title: t.title, 
+      date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date'
+    })));
+  }
+
+  const onAddTask = (newTask: NewTask) => {
+    console.log("Create task clicked with data:", newTask);
     
-    // Log reminder information
-    if (formattedTask.has_reminder && formattedTask.reminder_date) {
-      console.log("Adding task with reminder:", {
-        title: formattedTask.title,
-        has_reminder: formattedTask.has_reminder,
-        reminder_date: formattedTask.reminder_date.toISOString(),
-        reminder_method: formattedTask.reminder_method
-      });
+    // Ensure the task has a valid date
+    if (!newTask.date) {
+      newTask.date = startOfDay(new Date());
+    } else if (typeof newTask.date === 'string') {
+      try {
+        newTask.date = startOfDay(parseISO(newTask.date));
+      } catch (e) {
+        console.error("Error parsing task date string:", newTask.date, e);
+        newTask.date = startOfDay(new Date());
+      }
+    } else {
+      newTask.date = startOfDay(newTask.date);
     }
     
-    await handleAddTask(formattedTask);
-    refreshTasks();
+    console.log("Normalized task date for creation:", format(newTask.date, "yyyy-MM-dd"));
+    
+    // Set selected date to match the new task's date BEFORE adding the task
+    // This ensures the calendar is already showing the correct date
+    const taskDate = startOfDay(newTask.date);
+    console.log("Setting calendar to task date BEFORE adding task:", format(taskDate, "yyyy-MM-dd"));
+    setSelectedDate(taskDate);
+    
+    // Now add the task
+    handleAddTask(newTask).then((result) => {
+      console.log("Task added successfully:", result);
+      toast({
+        title: t('success'),
+        description: t('taskAdded'),
+      });
+    }).catch(error => {
+      console.error("Error adding task:", error);
+      toast({
+        title: t('error'),
+        description: t('errorAddingTask'),
+        variant: "destructive",
+      });
+    });
+    setIsAddTaskOpen(false);
   };
-  
-  const onAddMultipleTasks = async (newTasks: NewTask[]) => {
-    const formattedTasks = newTasks.map(task => ({
+
+  const onAddMultipleTasks = (newTasks: NewTask[]) => {
+    // Normalize dates in all new tasks
+    const normalizedTasks = newTasks.map(task => ({
       ...task,
-      date: startOfDay(task.date),
-      reminder_date: task.has_reminder && task.reminder_date 
-        ? startOfDay(task.reminder_date) 
-        : undefined
+      date: task.date ? startOfDay(task.date instanceof Date ? task.date : new Date(task.date)) : startOfDay(new Date())
     }));
     
-    await handleAddMultipleTasks(formattedTasks);
-    refreshTasks();
-  };
-  
-  // Wrapper function for task completion
-  const onTaskComplete = (taskId: string) => {
-    const task = tasks.find(t => t.id === taskId);
-    if (task) {
-      handleTaskCompletion(taskId, task.completed);
-    } else {
-      console.error(`Task with ID ${taskId} not found`);
+    // Set selected date to match the first task's date BEFORE adding the tasks
+    if (normalizedTasks.length > 0 && normalizedTasks[0].date) {
+      const taskDate = startOfDay(normalizedTasks[0].date);
+      console.log("Setting calendar to first batch task date BEFORE adding tasks:", format(taskDate, "yyyy-MM-dd"));
+      setSelectedDate(taskDate);
     }
+    
+    // Now add the tasks
+    handleAddMultipleTasks(normalizedTasks).then((result) => {
+      console.log("Multiple tasks added successfully:", result);
+      toast({
+        title: t('success'),
+        description: t('multipleTasksAdded'),
+      });
+    }).catch(error => {
+      console.error("Error adding multiple tasks:", error);
+      toast({
+        title: t('error'),
+        description: t('errorAddingTasks'),
+        variant: "destructive",
+      });
+    });
+    setIsBatchSchedulingOpen(false);
   };
-  
+
   return {
     selectedDate,
     setSelectedDate,
@@ -124,9 +184,9 @@ export const usePreventiveMaintenance = () => {
     filteredTasksByDate,
     onAddTask,
     onAddMultipleTasks,
+    handleTaskCompletion,
     handleDeleteTask,
-    recurringTasks,
-    reminderTasks,
-    onTaskComplete
+    recurringTasks: tasks.filter(task => task.is_recurring),
+    reminderTasks: tasks.filter(task => task.has_reminder)
   };
 };
