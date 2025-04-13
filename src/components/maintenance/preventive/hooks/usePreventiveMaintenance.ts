@@ -72,6 +72,16 @@ export const usePreventiveMaintenance = () => {
     refreshTasks();
   };
   
+  // Wrapper function that takes just a taskId and looks up the completion status
+  const onTaskComplete = (taskId: string) => {
+    const task = tasks.find(t => t.id === taskId);
+    if (task) {
+      handleTaskCompletion(taskId, task.completed);
+    } else {
+      console.error(`Task with ID ${taskId} not found`);
+    }
+  };
+  
   return {
     selectedDate,
     setSelectedDate,
@@ -89,6 +99,7 @@ export const usePreventiveMaintenance = () => {
     handleTaskCompletion,
     handleDeleteTask,
     recurringTasks,
-    reminderTasks
+    reminderTasks,
+    onTaskComplete // Added the new wrapper function
   };
 };

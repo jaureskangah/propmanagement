@@ -22,10 +22,10 @@ export const PreventiveMaintenanceContent = () => {
     filteredTasksByDate,
     onAddTask,
     onAddMultipleTasks,
-    handleTaskCompletion,
     handleDeleteTask,
     recurringTasks,
-    reminderTasks
+    reminderTasks,
+    onTaskComplete
   } = usePreventiveMaintenance();
   
   const { t } = useLocale();
@@ -45,7 +45,7 @@ export const PreventiveMaintenanceContent = () => {
         onAddTaskOpen={() => setIsAddTaskOpen(true)}
         tasks={tasks}
         filteredTasks={filteredTasksByDate}
-        onTaskComplete={handleTaskCompletion}
+        onTaskComplete={onTaskComplete}
         onTaskDelete={handleDeleteTask}
       />
       
