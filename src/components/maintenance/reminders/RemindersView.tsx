@@ -16,25 +16,33 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   
   console.log("RemindersView received tasks:", tasks.length);
   
-  // Validation améliorée pour s'assurer que nous n'acceptons que les tâches avec des rappels valides
+  // Amélioration du filtrage des tâches avec rappels valides
   const tasksWithReminder = tasks.filter(task => {
+    // Vérification que la tâche a un rappel activé
     if (!task.has_reminder) {
       return false;
     }
     
-    // Ensure the reminder_date exists and can be parsed to a valid Date
+    // Vérification que la date de rappel existe
     if (!task.reminder_date) {
       console.log(`Filtered out task ${task.id} - has_reminder=true but no reminder_date`);
       return false;
     }
     
+    // Normaliser la date de rappel pour s'assurer qu'elle est une Date valide
+    const reminderDate = task.reminder_date instanceof Date 
+      ? task.reminder_date 
+      : new Date(task.reminder_date as string);
+    
+    // Vérifier si la date de rappel est valide
+    if (isNaN(reminderDate.getTime())) {
+      console.log(`Filtered out task ${task.id} - invalid reminder_date`);
+      return false;
+    }
+    
     // Pour le débogage - log chaque tâche avec rappel valide
     console.log(`Valid reminder task: ${task.id} - ${task.title} - Reminder date: ${
-      task.reminder_date instanceof Date 
-        ? format(task.reminder_date, "yyyy-MM-dd") 
-        : typeof task.reminder_date === 'string' 
-          ? task.reminder_date 
-          : 'unknown format'
+      format(reminderDate, "yyyy-MM-dd")
     }`);
     
     return true;
@@ -46,13 +54,13 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
     return <EmptyReminders />;
   }
 
-  // Sort reminders by date (closest first)
+  // Tri des rappels par date (les plus proches d'abord)
   const sortedReminders = [...tasksWithReminder].sort((a, b) => {
     if (!a.reminder_date || !b.reminder_date) return 0;
     
     // Ensure both dates are Date objects
-    const dateA = a.reminder_date instanceof Date ? a.reminder_date : new Date(a.reminder_date);
-    const dateB = b.reminder_date instanceof Date ? b.reminder_date : new Date(b.reminder_date);
+    const dateA = a.reminder_date instanceof Date ? a.reminder_date : new Date(a.reminder_date as string);
+    const dateB = b.reminder_date instanceof Date ? b.reminder_date : new Date(b.reminder_date as string);
     
     // Debug sorting
     console.log(`Comparing dates: ${dateA.toISOString()} vs ${dateB.toISOString()}`);

@@ -23,6 +23,14 @@ export const useTasksQuery = () => {
       
       console.log("Raw task data from Supabase:", data);
       console.log("Number of tasks retrieved:", data.length);
+
+      // Compter les tâches avec des rappels dans les données brutes
+      const rawReminders = data.filter(task => task.has_reminder && task.reminder_date);
+      console.log(`Found ${rawReminders.length} raw tasks with reminders`);
+      
+      if (rawReminders.length > 0) {
+        console.log("Example raw reminder task:", rawReminders[0]);
+      }
       
       const formattedTasks = data.map(task => {
         // Convert dates to Date objects and normalize them (without hours/minutes/seconds)
@@ -74,7 +82,7 @@ export const useTasksQuery = () => {
           taskDate = startOfDay(new Date());
         }
         
-        // Traiter la date de rappel
+        // Amélioration du traitement des dates de rappel
         let reminderDate = undefined;
         if (task.has_reminder && task.reminder_date) {
           try {
@@ -108,13 +116,13 @@ export const useTasksQuery = () => {
           }
         }
         
-        // Amélioration critique: Log détaillé pour les tâches avec rappels
+        // Log détaillé pour les tâches avec rappels
         if (task.has_reminder) {
           console.log(`IMPORTANT - Found task with reminder: 
             ID: ${task.id}
             Title: ${task.title}
             has_reminder: ${task.has_reminder}
-            reminder_date: ${task.reminder_date}
+            reminder_date: ${task.reminder_date || "undefined"}
             reminder_date (parsed): ${reminderDate ? format(reminderDate, "yyyy-MM-dd") : "undefined"}
             reminder_method: ${task.reminder_method || "none"}
           `);
@@ -157,8 +165,8 @@ export const useTasksQuery = () => {
       
       return formattedTasks;
     },
-    refetchInterval: 5000, // Refresh every 5 seconds
-    staleTime: 3000, // Consider data stale after 3 seconds to encourage refetching
+    refetchInterval: 30000, // Refresh every 30 seconds
+    staleTime: 15000,      // Consider data stale after 15 seconds
   });
 
   // Fonction pour forcer le rafraîchissement des tâches

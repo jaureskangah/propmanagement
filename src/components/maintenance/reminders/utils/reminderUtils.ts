@@ -1,6 +1,6 @@
 
 import { Task } from "../../types";
-import { format, isAfter, isBefore, addDays } from "date-fns";
+import { format, isAfter, isBefore, addDays, startOfDay, isValid } from "date-fns";
 
 // Function to determine if two dates represent the same day
 export function isSameDay(date1: Date, date2: Date) {
@@ -37,7 +37,6 @@ export function getTaskTypeIcon(task: Task) {
 }
 
 // Function to get the label for the reminder method
-// Fixed parameter order - required parameter 't' now comes before optional parameter 'method'
 export function getReminderMethodLabel(t: (key: string) => string, method?: string) {
   switch (method) {
     case "email":
@@ -51,41 +50,63 @@ export function getReminderMethodLabel(t: (key: string) => string, method?: stri
   }
 }
 
+// Function to safely convert any date representation to a Date object
+export function ensureDate(date: Date | string | undefined): Date | null {
+  if (!date) return null;
+  
+  if (date instanceof Date) {
+    return isValid(date) ? startOfDay(date) : null;
+  }
+  
+  try {
+    const parsedDate = new Date(date);
+    return isValid(parsedDate) ? startOfDay(parsedDate) : null;
+  } catch (e) {
+    console.error("Error parsing date:", e);
+    return null;
+  }
+}
+
 // Function to group reminders by time period
 export function groupRemindersByPeriod(tasks: Task[]) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0); // Reset time to start of day
-  
+  const today = startOfDay(new Date());
   const tomorrow = addDays(today, 1);
   const nextWeek = addDays(today, 7);
 
   const todayReminders = tasks.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date as string);
+    const reminderDate = ensureDate(task.reminder_date);
+    if (!reminderDate) return false;
     return isSameDay(reminderDate, today);
   });
   
   const tomorrowReminders = tasks.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date as string);
+    const reminderDate = ensureDate(task.reminder_date);
+    if (!reminderDate) return false;
     return isSameDay(reminderDate, tomorrow);
   });
   
   const thisWeekReminders = tasks.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date as string);
+    const reminderDate = ensureDate(task.reminder_date);
+    if (!reminderDate) return false;
     return isAfter(reminderDate, tomorrow) && 
       isBefore(reminderDate, nextWeek);
   });
   
   const laterReminders = tasks.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date as string);
+    const reminderDate = ensureDate(task.reminder_date);
+    if (!reminderDate) return false;
     return isAfter(reminderDate, nextWeek);
+  });
+
+  console.log("Grouped reminders:", {
+    today: todayReminders.length,
+    tomorrow: tomorrowReminders.length,
+    thisWeek: thisWeekReminders.length,
+    later: laterReminders.length
   });
 
   return {
