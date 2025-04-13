@@ -11,7 +11,12 @@ export function calculateTrend(current: number, previous: number): number {
  * Calculates total income from payments
  */
 export function calculateTotalIncome(payments: any[] = []): number {
-  return payments.reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+  const total = payments.reduce((sum, payment) => {
+    const amount = Number(payment.amount) || 0;
+    return sum + amount;
+  }, 0);
+  console.log("Calculated total income:", total, "from", payments.length, "payments");
+  return total;
 }
 
 /**
@@ -19,19 +24,29 @@ export function calculateTotalIncome(payments: any[] = []): number {
  */
 export function calculateTotalExpenses(maintenanceExpenses: any[] = [], vendorInterventions: any[] = []): number {
   const maintenanceExpensesTotal = maintenanceExpenses.reduce(
-    (sum, expense) => sum + Number(expense.amount), 0) || 0;
+    (sum, expense) => {
+      const amount = Number(expense.amount) || 0;
+      return sum + amount;
+    }, 0);
   
   const vendorInterventionsTotal = vendorInterventions.reduce(
-    (sum, intervention) => sum + Number(intervention.cost || 0), 0) || 0;
+    (sum, intervention) => {
+      const cost = Number(intervention.cost) || 0;
+      return sum + cost;
+    }, 0);
   
-  return maintenanceExpensesTotal + vendorInterventionsTotal;
+  const total = maintenanceExpensesTotal + vendorInterventionsTotal;
+  console.log("Calculated total expenses:", total, "(maintenance:", maintenanceExpensesTotal, "vendor:", vendorInterventionsTotal, ")");
+  return total;
 }
 
 /**
  * Calculates occupancy rate
  */
 export function calculateOccupancyRate(occupiedUnits: number, totalUnits: number): number {
-  return totalUnits > 0 ? (occupiedUnits / totalUnits) * 100 : 0;
+  const rate = totalUnits > 0 ? (occupiedUnits / totalUnits) * 100 : 0;
+  console.log("Calculated occupancy rate:", rate, "% (", occupiedUnits, "/", totalUnits, "units)");
+  return rate;
 }
 
 /**
@@ -45,7 +60,10 @@ export function calculateUnpaidRent(
 ): number {
   // Expected rent for all tenants
   const expectedRent = tenants.reduce(
-    (total, tenant) => total + Number(tenant.rent_amount || 0), 0) || 0;
+    (total, tenant) => {
+      const rentAmount = Number(tenant.rent_amount) || 0;
+      return total + rentAmount;
+    }, 0);
   
   // Filter payments for current month
   const currentMonthPayments = payments.filter(payment => {
@@ -57,15 +75,29 @@ export function calculateUnpaidRent(
   
   // Paid amount for current month
   const currentMonthPaid = currentMonthPayments.reduce(
-    (total, payment) => payment.status === 'paid' ? total + Number(payment.amount) : total, 
+    (total, payment) => payment.status === 'paid' ? total + Number(payment.amount || 0) : total, 
     0
-  ) || 0;
+  );
   
   // Pending/overdue payments
   const pendingPayments = payments
-    .filter(payment => payment.status === 'pending' || payment.status === 'overdue')
-    .reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+    .filter(payment => payment.status === 'pending' || payment.status === 'overdue' || payment.status === 'late')
+    .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
   
   // Unpaid rent calculation
-  return Math.max(0, expectedRent - currentMonthPaid) + pendingPayments;
+  const unpaidRent = Math.max(0, expectedRent - currentMonthPaid) + pendingPayments;
+  
+  console.log("Unpaid rent calculation:", {
+    expectedRent,
+    currentMonthPaid,
+    pendingPayments,
+    unpaidRent,
+    currentMonth,
+    currentYear,
+    tenantsCount: tenants.length,
+    paymentsCount: payments.length,
+    currentMonthPaymentsCount: currentMonthPayments.length
+  });
+  
+  return unpaidRent;
 }

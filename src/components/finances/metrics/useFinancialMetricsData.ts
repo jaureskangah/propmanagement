@@ -28,9 +28,11 @@ export function useFinancialMetricsData(propertyId: string | null) {
       try {
         // Fetch tenants
         const tenants = await fetchPropertyTenants(propertyId);
+        console.log("Fetched tenants:", tenants.length);
         
         // If no tenants, return default data
         if (tenants.length === 0) {
+          console.log("No tenants found, returning default data");
           return createDefaultFinancialData();
         }
         
@@ -45,11 +47,18 @@ export function useFinancialMetricsData(propertyId: string | null) {
           fetchPropertyDetails(propertyId)
         ]);
         
+        console.log("Data fetched:", {
+          payments: payments.length,
+          maintenanceExpenses: maintenanceExpenses.length,
+          vendorInterventions: vendorInterventions.length,
+          property
+        });
+        
         // Fetch previous period data
         const prevData = await fetchPreviousPeriodData(propertyId, tenantIds);
         
         // Map data to the required format
-        return mapToFinancialData({
+        const financialData = mapToFinancialData({
           tenants,
           payments,
           maintenanceExpenses,
@@ -57,6 +66,9 @@ export function useFinancialMetricsData(propertyId: string | null) {
           property,
           prevData
         });
+        
+        console.log("Calculated financial metrics:", financialData);
+        return financialData;
         
       } catch (error) {
         console.error("Error in useFinancialMetricsData:", error);

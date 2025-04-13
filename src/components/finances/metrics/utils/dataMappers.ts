@@ -29,6 +29,15 @@ export function mapToFinancialData(data: {
     prevData: { previousPayments, prevMaintenanceExpenses, prevVendorInterventions, previousTenants } 
   } = data;
 
+  console.log("Starting financial data mapping with:", {
+    tenantCount: tenants?.length || 0,
+    paymentsCount: payments?.length || 0,
+    maintenanceExpensesCount: maintenanceExpenses?.length || 0,
+    vendorInterventionsCount: vendorInterventions?.length || 0,
+    propertyUnits: property?.units || 0,
+    previousPaymentsCount: previousPayments?.length || 0
+  });
+
   // Current period calculations
   const totalIncome = calculateTotalIncome(payments);
   const totalExpenses = calculateTotalExpenses(maintenanceExpenses, vendorInterventions);
@@ -52,8 +61,8 @@ export function mapToFinancialData(data: {
   // Previous month's data isn't enough to calculate unpaid rent properly,
   // so we use a simple comparison of overdue/pending payments
   const prevUnpaidRent = previousPayments
-    ?.filter(payment => payment.status === 'pending' || payment.status === 'overdue')
-    .reduce((sum, payment) => sum + Number(payment.amount), 0) || 0;
+    ?.filter(payment => payment.status === 'pending' || payment.status === 'overdue' || payment.status === 'late')
+    .reduce((sum, payment) => sum + Number(payment.amount || 0), 0) || 0;
   
   // Calculate trends
   const totalIncomeTrend = calculateTrend(totalIncome, prevTotalIncome);
@@ -87,6 +96,7 @@ export function mapToFinancialData(data: {
  * Creates default financial data object
  */
 export function createDefaultFinancialData(): FinancialData {
+  console.log("Creating default financial data (no data available)");
   return {
     totalIncome: 0,
     totalExpenses: 0,
