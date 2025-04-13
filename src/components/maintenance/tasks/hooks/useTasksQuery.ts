@@ -24,12 +24,12 @@ export const useTasksQuery = () => {
       console.log("Raw task data from Supabase:", data);
       console.log("Number of tasks retrieved:", data.length);
 
-      // Compter les tâches avec des rappels dans les données brutes
+      // Count reminder tasks in raw data
       const rawReminders = data.filter(task => task.has_reminder === true);
       console.log(`Found ${rawReminders.length} raw tasks with reminders`);
       
       if (rawReminders.length > 0) {
-        console.log("Example raw reminder tasks:", rawReminders.slice(0, 3).map(task => ({
+        console.log("Raw reminder tasks:", rawReminders.map(task => ({
           id: task.id,
           title: task.title,
           has_reminder: task.has_reminder,
@@ -39,7 +39,7 @@ export const useTasksQuery = () => {
       }
       
       const formattedTasks = data.map(task => {
-        // Normalisation de la date de la tâche
+        // Task date normalization
         let taskDate = startOfDay(new Date());
         try {
           if (task.date) {
@@ -60,7 +60,7 @@ export const useTasksQuery = () => {
           taskDate = startOfDay(new Date());
         }
         
-        // Normalisation de la date de rappel
+        // Reminder date normalization
         let reminderDate = undefined;
         try {
           if (task.has_reminder && task.reminder_date) {
@@ -84,18 +84,20 @@ export const useTasksQuery = () => {
           console.error(`Error processing reminder date for task ${task.id}:`, e);
         }
         
-        // Forcer explicitement le booléen has_reminder
-        const hasReminder = task.has_reminder === true;
+        // Make sure has_reminder is actually a boolean
+        const hasReminder = Boolean(task.has_reminder);
         
-        // Log détaillé pour les tâches avec rappels
-        if (hasReminder) {
-          console.log(`Task with reminder after processing: 
+        // Log detailed information for tasks with reminders
+        if (hasReminder && reminderDate) {
+          console.log(`Processed task with reminder: 
             ID: ${task.id}
             Title: ${task.title}
             has_reminder: ${hasReminder}
             reminder_date: ${reminderDate ? format(reminderDate, 'yyyy-MM-dd') : 'undefined'}
             reminder_method: ${task.reminder_method || 'app'}
           `);
+        } else if (hasReminder) {
+          console.log(`Task ${task.id} has has_reminder=true but reminder_date is missing or invalid`);
         }
         
         return {
@@ -120,9 +122,19 @@ export const useTasksQuery = () => {
         } as Task;
       });
       
-      // Log final des tâches avec rappels
+      // Log final reminders count
       const finalReminderTasks = formattedTasks.filter(task => task.has_reminder && task.reminder_date);
       console.log(`Final count of tasks with reminders: ${finalReminderTasks.length}`);
+      
+      if (finalReminderTasks.length > 0) {
+        console.log("Final reminder tasks:", finalReminderTasks.map(task => ({
+          id: task.id,
+          title: task.title,
+          reminder_date: task.reminder_date instanceof Date 
+            ? format(task.reminder_date, 'yyyy-MM-dd') 
+            : 'invalid date'
+        })));
+      }
       
       return formattedTasks;
     },
@@ -130,7 +142,7 @@ export const useTasksQuery = () => {
     staleTime: 15000,      // Consider data stale after 15 seconds
   });
 
-  // Fonction pour forcer le rafraîchissement des tâches
+  // Function to force refresh tasks
   const refreshTasks = () => {
     console.log("Manually refreshing tasks...");
     queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });

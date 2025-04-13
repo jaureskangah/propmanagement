@@ -16,49 +16,14 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   
   console.log("RemindersView received tasks:", tasks.length);
   
-  // Logs plus détaillés pour diagnostiquer le problème
-  tasks.forEach(task => {
-    if (task.has_reminder) {
-      console.log(`Reminder task in component:
-        ID: ${task.id}
-        Title: ${task.title}
-        has_reminder: ${task.has_reminder}
-        reminder_date: ${task.reminder_date instanceof Date 
-          ? format(task.reminder_date, 'yyyy-MM-dd') 
-          : (task.reminder_date || 'undefined')}
-        reminder_method: ${task.reminder_method || 'None'}
-      `);
-    }
-  });
-  
-  // Filtrage amélioré des tâches avec rappels valides
+  // Simple filter to ensure we have valid tasks with reminders
   const validReminderTasks = tasks.filter(task => {
-    // La tâche doit avoir un rappel activé
+    // Only include tasks that have reminders enabled
     if (!task.has_reminder) return false;
     
-    // La date de rappel doit exister
-    if (!task.reminder_date) {
-      console.log(`Task ${task.id} has has_reminder=true but no reminder_date`);
-      return false;
-    }
-    
-    // S'assurer que la date est un objet Date valide
-    let reminderDate;
-    try {
-      reminderDate = task.reminder_date instanceof Date 
-        ? task.reminder_date 
-        : new Date(task.reminder_date as string);
-      
-      if (isNaN(reminderDate.getTime())) {
-        console.log(`Task ${task.id} has invalid reminder_date (NaN)`);
-        return false;
-      }
-      
-      return true;
-    } catch (error) {
-      console.error(`Error parsing reminder_date for task ${task.id}:`, error);
-      return false;
-    }
+    // And have a valid reminder date
+    return task.reminder_date instanceof Date || 
+           (typeof task.reminder_date === 'string' && task.reminder_date);
   });
   
   console.log("Valid reminder tasks count:", validReminderTasks.length);
@@ -67,7 +32,7 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
     return <EmptyReminders />;
   }
 
-  // Regrouper les rappels par période
+  // Group the reminders by period
   const { 
     todayReminders, 
     tomorrowReminders, 

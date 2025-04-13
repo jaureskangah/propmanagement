@@ -19,88 +19,52 @@ export const usePreventiveMaintenance = () => {
   const { handleDeleteTask } = useTaskDeletion();
   const { handleAddTask, handleAddMultipleTasks } = useTaskAddition();
   
-  // Filtrer les tâches par la date sélectionnée
+  // Filter tasks by the selected date
   const filteredTasksByDate = tasks.filter(task => {
     const taskDate = task.date instanceof Date ? task.date : new Date(task.date as string);
     return isSameDay(taskDate, selectedDate) && 
       (!selectedType || task.type === selectedType);
   });
   
-  // Récupérer les tâches récurrentes
+  // Get recurring tasks
   const recurringTasks = tasks.filter(task => task.is_recurring);
   
-  // Récupérer les tâches avec des rappels (amélioration pour corriger le filtrage)
+  // Get tasks with reminders - simplified and more robust filtering
   const reminderTasks = tasks.filter(task => {
-    // Vérifier que le rappel est activé
+    // Task must have reminder flag
     if (!task.has_reminder) return false;
     
-    // Vérifier que la date de rappel existe
-    if (!task.reminder_date) {
-      console.log(`Task ${task.id} has has_reminder=true but no reminder_date`);
-      return false;
-    }
+    // Task must have a reminder date
+    if (!task.reminder_date) return false;
     
+    // Convert reminder_date to Date object if it's a string
     let reminderDate;
-    
-    // Normalisation de la date de rappel
-    try {
-      if (task.reminder_date instanceof Date) {
-        reminderDate = task.reminder_date;
-      } else if (typeof task.reminder_date === 'string') {
+    if (task.reminder_date instanceof Date) {
+      reminderDate = task.reminder_date;
+    } else if (typeof task.reminder_date === 'string') {
+      try {
         reminderDate = new Date(task.reminder_date);
-      } else {
-        console.log(`Task ${task.id} has invalid reminder_date format:`, typeof task.reminder_date);
+        if (isNaN(reminderDate.getTime())) {
+          console.log(`Reminder date is invalid for task: ${task.id}`);
+          return false;
+        }
+      } catch (e) {
+        console.error(`Error parsing reminder date for task ${task.id}:`, e);
         return false;
       }
-      
-      // Vérifier si la date est valide
-      if (isNaN(reminderDate.getTime())) {
-        console.log(`Task ${task.id} has invalid reminder_date (NaN)`);
-        return false;
-      }
-      
-      console.log(`Task with valid reminder: ${task.id} - ${task.title} - ${format(reminderDate, 'yyyy-MM-dd')}`);
-      return true;
-    } catch (error) {
-      console.error(`Error processing reminder_date for task ${task.id}:`, error);
+    } else {
       return false;
     }
+    
+    console.log(`Found valid reminder task: ${task.id} - ${task.title} - ${format(reminderDate, 'yyyy-MM-dd')}`);
+    return true;
   });
   
   console.log(`Total tasks: ${tasks.length}, Reminders: ${reminderTasks.length}, Recurring: ${recurringTasks.length}`);
   
-  // Log détaillé des tâches avec rappels pour le débogage
-  if (reminderTasks.length > 0) {
-    console.log("Reminder tasks details:", reminderTasks.map(task => ({
-      id: task.id,
-      title: task.title,
-      has_reminder: task.has_reminder,
-      reminder_date: task.reminder_date instanceof Date 
-        ? task.reminder_date.toISOString() 
-        : task.reminder_date,
-      reminder_method: task.reminder_method
-    })));
-  } else {
-    console.log("No tasks with reminders found after filtering");
-    
-    // Log des tâches qui ont potentiellement des rappels mal configurés
-    const potentialReminderTasks = tasks.filter(task => 
-      task.has_reminder || task.reminder_date || task.reminder_method
-    );
-    
-    if (potentialReminderTasks.length > 0) {
-      console.log("Potential reminder tasks with issues:", potentialReminderTasks.map(task => ({
-        id: task.id,
-        title: task.title,
-        has_reminder: task.has_reminder,
-        reminder_date: task.reminder_date,
-        reminder_method: task.reminder_method
-      })));
-    }
-  }
-  
+  // Add task handling
   const onAddTask = async (newTask: NewTask) => {
-    // S'assurer que les dates sont correctement formatées avant soumission
+    // Ensure dates are properly formatted before submission
     const formattedTask = {
       ...newTask,
       date: startOfDay(newTask.date),
@@ -109,7 +73,7 @@ export const usePreventiveMaintenance = () => {
         : undefined
     };
     
-    // Log des informations de la tâche avant soumission
+    // Log reminder information
     if (formattedTask.has_reminder && formattedTask.reminder_date) {
       console.log("Adding task with reminder:", {
         title: formattedTask.title,
@@ -136,7 +100,7 @@ export const usePreventiveMaintenance = () => {
     refreshTasks();
   };
   
-  // Wrapper function that takes just a taskId and looks up the completion status
+  // Wrapper function for task completion
   const onTaskComplete = (taskId: string) => {
     const task = tasks.find(t => t.id === taskId);
     if (task) {

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { NewTask } from "../../types";
-import { startOfDay, addDays } from "date-fns";
+import { startOfDay, addDays, isValid } from "date-fns";
 
 interface UseTaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -10,27 +10,27 @@ interface UseTaskFormProps {
 }
 
 export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskFormProps) => {
-  // Normaliser la date initiale pour éviter les problèmes
+  // Normalize date to avoid issues
   const normalizeDate = (date: Date | string | undefined): Date => {
     if (!date) return startOfDay(new Date());
     
     try {
       const dateObj = typeof date === "string" ? new Date(date) : date;
-      return startOfDay(dateObj);
+      return isValid(dateObj) ? startOfDay(dateObj) : startOfDay(new Date());
     } catch (error) {
       console.error("Error normalizing date:", error);
       return startOfDay(new Date());
     }
   };
   
-  // Initialisation des états avec normalisation des dates
+  // Initialize states with normalized dates
   const initialTaskDate = normalizeDate(initialValue?.date || initialDate);
   
   let initialReminderDate: Date | undefined;
   if (initialValue?.has_reminder && initialValue?.reminder_date) {
     initialReminderDate = normalizeDate(initialValue.reminder_date);
   } else if (initialDate) {
-    // Par défaut, le rappel est un jour avant la date de la tâche
+    // Default reminder is one day before the task date
     initialReminderDate = addDays(initialTaskDate, -1);
   }
   
@@ -64,17 +64,19 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     
     if (!date) return;
     
-    // S'assurer que les dates sont normalisées avant soumission
+    // Ensure dates are normalized before submission
     const normalizedDate = startOfDay(date);
     let normalizedReminderDate: Date | undefined;
     
     if (hasReminder && reminderDate) {
       normalizedReminderDate = startOfDay(reminderDate);
       
-      // Log détaillé pour le débogage
+      // Detailed log for debugging
       console.log("Submitting task with reminder:", {
         normalDate: normalizedDate.toISOString(),
-        normalReminderDate: normalizedReminderDate.toISOString()
+        normalReminderDate: normalizedReminderDate.toISOString(),
+        hasReminder: hasReminder,
+        reminderMethod: reminderMethod
       });
     }
     
@@ -99,7 +101,7 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     
     console.log("Submitting task form with data:", newTask);
     
-    // Log détaillé pour les rappels
+    // Detailed log for reminders
     if (newTask.has_reminder && newTask.reminder_date) {
       console.log(`CRITICAL from useTaskForm: Sending task with reminder:
         Title: ${newTask.title}

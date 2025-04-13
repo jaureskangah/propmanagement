@@ -54,29 +54,23 @@ export function getReminderMethodLabel(t: (key: string) => string, method?: stri
 export function ensureDate(date: Date | string | undefined): Date | null {
   if (!date) return null;
   
-  // Si c'est déjà un objet Date
-  if (date instanceof Date) {
-    return isValid(date) ? startOfDay(date) : null;
-  }
-  
-  // Si c'est une chaîne ISO
   try {
+    // If it's already a Date object
+    if (date instanceof Date) {
+      return isValid(date) ? startOfDay(date) : null;
+    }
+    
+    // If it's a string
     if (typeof date === 'string') {
-      // Tenter le parsing avec parseISO d'abord (pour les dates ISO)
+      // First try with parseISO (for ISO strings)
       let parsedDate = parseISO(date);
       
-      // Si parseISO échoue, essayer avec le constructeur Date standard
+      // If that fails, try with regular Date constructor
       if (!isValid(parsedDate)) {
         parsedDate = new Date(date);
       }
       
-      // Vérifier si la date est valide et la normaliser
-      if (isValid(parsedDate)) {
-        return startOfDay(parsedDate);
-      } else {
-        console.error("Invalid date after parsing:", date);
-        return null;
-      }
+      return isValid(parsedDate) ? startOfDay(parsedDate) : null;
     }
   } catch (e) {
     console.error("Error parsing date:", date, e);
@@ -93,11 +87,24 @@ export function groupRemindersByPeriod(tasks: Task[]) {
 
   console.log(`Grouping ${tasks.length} reminders by period`);
   
-  // Logs pour le débogage des dates
+  // Log reference dates
   console.log("Reference dates:", {
     today: format(today, 'yyyy-MM-dd'),
     tomorrow: format(tomorrow, 'yyyy-MM-dd'),
     nextWeek: format(nextWeek, 'yyyy-MM-dd')
+  });
+
+  // Log all tasks being processed
+  tasks.forEach(task => {
+    if (task.has_reminder && task.reminder_date) {
+      console.log(`Processing task for grouping: ${task.id} - ${task.title} - ${
+        task.reminder_date instanceof Date 
+          ? format(task.reminder_date, 'yyyy-MM-dd') 
+          : typeof task.reminder_date === 'string' 
+            ? task.reminder_date 
+            : 'unknown format'
+      }`);
+    }
   });
 
   const todayReminders = tasks.filter(task => {
