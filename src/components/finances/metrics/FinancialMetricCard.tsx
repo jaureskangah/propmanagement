@@ -13,10 +13,10 @@ export function FinancialMetricCard({
   icon,
   chartColor,
   trend,
-  isNegativeBetter
+  isNegativeBetter,
+  format
 }: FinancialMetricCardProps) {
   // Determine if an increase is positive or negative based on the metric
-  // For expenses and unpaid rent, a decrease is positive
   const isPositiveMetric = !isNegativeBetter;
   const bgColor = chartColor === '#22C55E' 
     ? "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20" 
