@@ -11,11 +11,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
+import { YearFilter } from "@/components/finances/YearFilter";
 import { cn } from "@/lib/utils";
 import { FileBarChart, Loader2 } from "lucide-react";
 
 const Finances = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const { t } = useLocale();
   const isMobile = useIsMobile();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -32,6 +34,11 @@ const Finances = () => {
       return data || [];
     },
   });
+
+  const handleYearChange = (year: number) => {
+    console.log("Year changed to:", year);
+    setSelectedYear(year);
+  };
   
   return (
     <div className="min-h-screen bg-background">
@@ -58,47 +65,55 @@ const Finances = () => {
                 </div>
               </div>
               
-              <Card className="w-full md:w-64">
-                <CardContent className="p-3">
-                  {isLoadingProperties ? (
-                    <div className="flex items-center justify-center h-9 gap-2">
-                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                      <span className="text-sm text-muted-foreground">{t('loading', { fallback: 'Loading...' })}</span>
-                    </div>
-                  ) : (
-                    <Select 
-                      value={selectedPropertyId || ""} 
-                      onValueChange={(value) => setSelectedPropertyId(value || null)}
-                    >
-                      <SelectTrigger className="w-full h-9">
-                        <SelectValue placeholder={t('selectProperty')} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {properties?.length ? (
-                          properties.map((property) => (
-                            <SelectItem key={property.id} value={property.id}>
-                              {property.name}
+              <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                <Card className="w-full md:w-64">
+                  <CardContent className="p-3">
+                    {isLoadingProperties ? (
+                      <div className="flex items-center justify-center h-9 gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                        <span className="text-sm text-muted-foreground">{t('loading', { fallback: 'Loading...' })}</span>
+                      </div>
+                    ) : (
+                      <Select 
+                        value={selectedPropertyId || ""} 
+                        onValueChange={(value) => setSelectedPropertyId(value || null)}
+                      >
+                        <SelectTrigger className="w-full h-9">
+                          <SelectValue placeholder={t('selectProperty')} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {properties?.length ? (
+                            properties.map((property) => (
+                              <SelectItem key={property.id} value={property.id}>
+                                {property.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem value="none" disabled>
+                              {t('noPropertiesAvailable')}
                             </SelectItem>
-                          ))
-                        ) : (
-                          <SelectItem value="none" disabled>
-                            {t('noPropertiesAvailable')}
-                          </SelectItem>
-                        )}
-                      </SelectContent>
-                    </Select>
-                  )}
-                </CardContent>
-              </Card>
+                          )}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  </CardContent>
+                </Card>
+                
+                <Card className="w-full sm:w-auto">
+                  <CardContent className="p-3">
+                    <YearFilter selectedYear={selectedYear} onYearChange={handleYearChange} />
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
           
           <div className="space-y-6">
-            <FinancialMetrics propertyId={selectedPropertyId} />
+            <FinancialMetrics propertyId={selectedPropertyId} selectedYear={selectedYear} />
             
             <div className="grid grid-cols-1 gap-6">
-              <RevenueExpenseChart propertyId={selectedPropertyId} />
-              <FinancialOverview propertyId={selectedPropertyId} />
+              <RevenueExpenseChart propertyId={selectedPropertyId} selectedYear={selectedYear} />
+              <FinancialOverview propertyId={selectedPropertyId} selectedYear={selectedYear} />
             </div>
           </div>
         </motion.div>

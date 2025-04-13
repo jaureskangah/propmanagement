@@ -9,17 +9,18 @@ import { ChartDisplay } from "./charts/ChartDisplay";
 
 interface RevenueExpenseChartProps {
   propertyId: string | null;
+  selectedYear: number;
 }
 
-export default function RevenueExpenseChart({ propertyId }: RevenueExpenseChartProps) {
+export default function RevenueExpenseChart({ propertyId, selectedYear }: RevenueExpenseChartProps) {
   const { t } = useLocale();
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
-  const { data: chartData, isLoading } = useChartData(propertyId, view);
+  const { data: chartData, isLoading } = useChartData(propertyId, view, selectedYear);
 
   // Process data based on view type
   const processedData = view === 'monthly' 
-    ? processMonthlyData(chartData?.payments || [], chartData?.expenses || [])
-    : processYearlyData(chartData?.payments || [], chartData?.expenses || []);
+    ? processMonthlyData(chartData?.payments || [], chartData?.expenses || [], selectedYear)
+    : processYearlyData(chartData?.payments || [], chartData?.expenses || [], selectedYear);
 
   return (
     <Card className="border-border/40 bg-card/50 backdrop-blur-sm shadow-md dark:bg-gray-800/40 transition-all duration-200 hover:shadow-lg hover:bg-card/60 font-sans">

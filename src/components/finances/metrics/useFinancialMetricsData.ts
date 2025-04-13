@@ -17,13 +17,13 @@ import {
 /**
  * Hook that fetches and calculates financial metrics for a property
  */
-export function useFinancialMetricsData(propertyId: string | null) {
+export function useFinancialMetricsData(propertyId: string | null, selectedYear: number) {
   return useQuery({
-    queryKey: ['financial_metrics', propertyId],
+    queryKey: ['financial_metrics', propertyId, selectedYear],
     queryFn: async (): Promise<FinancialData | null> => {
       if (!propertyId) return null;
 
-      console.log("Fetching financial metrics for property:", propertyId);
+      console.log("Fetching financial metrics for property:", propertyId, "year:", selectedYear);
       
       try {
         // Fetch tenants
@@ -39,15 +39,15 @@ export function useFinancialMetricsData(propertyId: string | null) {
         // Get tenant IDs
         const tenantIds = tenants.map(t => t.id);
         
-        // Fetch current period data
+        // Fetch current period data for selected year
         const [payments, maintenanceExpenses, vendorInterventions, property] = await Promise.all([
-          fetchTenantPayments(tenantIds),
-          fetchMaintenanceExpenses(propertyId),
-          fetchVendorInterventions(propertyId),
+          fetchTenantPayments(tenantIds, selectedYear),
+          fetchMaintenanceExpenses(propertyId, selectedYear),
+          fetchVendorInterventions(propertyId, selectedYear),
           fetchPropertyDetails(propertyId)
         ]);
         
-        console.log("Data fetched:", {
+        console.log("Data fetched for year:", selectedYear, {
           payments: payments.length,
           maintenanceExpenses: maintenanceExpenses.length,
           vendorInterventions: vendorInterventions.length,
@@ -55,7 +55,7 @@ export function useFinancialMetricsData(propertyId: string | null) {
         });
         
         // Fetch previous period data
-        const prevData = await fetchPreviousPeriodData(propertyId, tenantIds);
+        const prevData = await fetchPreviousPeriodData(propertyId, tenantIds, selectedYear);
         
         // Map data to the required format
         const financialData = mapToFinancialData({
@@ -64,10 +64,11 @@ export function useFinancialMetricsData(propertyId: string | null) {
           maintenanceExpenses,
           vendorInterventions,
           property,
-          prevData
+          prevData,
+          selectedYear
         });
         
-        console.log("Calculated financial metrics:", financialData);
+        console.log("Calculated financial metrics for year:", selectedYear, financialData);
         return financialData;
         
       } catch (error) {

@@ -1,5 +1,5 @@
 
-export const processMonthlyData = (payments: any[] = [], expenses: any[] = []) => {
+export const processMonthlyData = (payments: any[] = [], expenses: any[] = [], selectedYear: number) => {
   const monthNames = [
     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
@@ -11,11 +11,16 @@ export const processMonthlyData = (payments: any[] = [], expenses: any[] = []) =
     return acc;
   }, {} as Record<number, { name: string, income: number, expense: number, profit: number }>);
   
-  // Process payments
+  // Process payments for the selected year
   payments.forEach(payment => {
     if (!payment.payment_date) return;
     
     const paymentDate = new Date(payment.payment_date);
+    const paymentYear = paymentDate.getFullYear();
+    
+    // Filter for selected year
+    if (paymentYear !== selectedYear) return;
+    
     const monthIndex = paymentDate.getMonth();
     
     // Only count paid payments toward income
@@ -24,11 +29,16 @@ export const processMonthlyData = (payments: any[] = [], expenses: any[] = []) =
     }
   });
   
-  // Process expenses
+  // Process expenses for the selected year
   expenses.forEach(expense => {
     if (!expense.date) return;
     
     const expenseDate = new Date(expense.date);
+    const expenseYear = expenseDate.getFullYear();
+    
+    // Filter for selected year
+    if (expenseYear !== selectedYear) return;
+    
     const monthIndex = expenseDate.getMonth();
     
     monthlyData[monthIndex].expense += Number(expense.amount || expense.cost || 0);
@@ -39,13 +49,13 @@ export const processMonthlyData = (payments: any[] = [], expenses: any[] = []) =
     month.profit = month.income - month.expense;
   });
   
-  console.log("Processed monthly data:", Object.values(monthlyData));
+  console.log(`Processed monthly data for ${selectedYear}:`, Object.values(monthlyData));
   return Object.values(monthlyData);
 };
 
-export const processYearlyData = (payments: any[] = [], expenses: any[] = []) => {
-  const currentYear = new Date().getFullYear();
-  const years = [currentYear - 2, currentYear - 1, currentYear];
+export const processYearlyData = (payments: any[] = [], expenses: any[] = [], selectedYear: number) => {
+  // For yearly view, we'll show 3 years including and before the selected year
+  const years = [selectedYear - 2, selectedYear - 1, selectedYear];
   
   // Create a map to store aggregated data for each year
   const yearlyData = years.reduce((acc, year) => {
@@ -87,6 +97,6 @@ export const processYearlyData = (payments: any[] = [], expenses: any[] = []) =>
     year.profit = year.income - year.expense;
   });
   
-  console.log("Processed yearly data:", Object.values(yearlyData));
+  console.log(`Processed yearly data for ${selectedYear}:`, Object.values(yearlyData));
   return Object.values(yearlyData);
 };

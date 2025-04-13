@@ -1,112 +1,107 @@
 
 import { FinancialData } from "../types";
-import { 
-  calculateTotalIncome,
-  calculateTotalExpenses,
-  calculateOccupancyRate,
-  calculateUnpaidRent,
-  calculateTrend 
-} from "./calculationUtils";
+import { calculateTotalIncome, calculateTotalExpenses, calculateOccupancyRate, calculateUnpaidRent, calculateTrend } from "./calculationUtils";
+
+interface DataParams {
+  tenants: any[];
+  payments: any[];
+  maintenanceExpenses: any[];
+  vendorInterventions: any[];
+  property: any;
+  prevData: any;
+  selectedYear?: number;
+}
 
 /**
- * Maps raw financial data to the required FinancialData format
+ * Creates default financial data
  */
-export function mapToFinancialData(data: {
-  tenants: any[],
-  payments: any[],
-  maintenanceExpenses: any[],
-  vendorInterventions: any[],
-  property: any,
-  prevData: {
-    previousPayments: any[],
-    prevMaintenanceExpenses: any[],
-    prevVendorInterventions: any[],
-    previousTenants: any[]
-  }
-}): FinancialData {
-  const { 
-    tenants, payments, maintenanceExpenses, vendorInterventions, property, 
-    prevData: { previousPayments, prevMaintenanceExpenses, prevVendorInterventions, previousTenants } 
-  } = data;
-
-  console.log("Starting financial data mapping with:", {
-    tenantCount: tenants?.length || 0,
-    paymentsCount: payments?.length || 0,
-    maintenanceExpensesCount: maintenanceExpenses?.length || 0,
-    vendorInterventionsCount: vendorInterventions?.length || 0,
-    propertyUnits: property?.units || 0,
-    previousPaymentsCount: previousPayments?.length || 0
-  });
-
-  // Current period calculations
-  const totalIncome = calculateTotalIncome(payments);
-  const totalExpenses = calculateTotalExpenses(maintenanceExpenses, vendorInterventions);
-  
-  const totalUnits = property?.units || 0;
-  const occupiedUnits = new Set(tenants?.map(t => t.unit_number)).size;
-  const occupancyRate = calculateOccupancyRate(occupiedUnits, totalUnits);
-  
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth();
-  const currentYear = currentDate.getFullYear();
-  const unpaidRent = calculateUnpaidRent(tenants, payments, currentMonth, currentYear);
-  
-  // Previous period calculations
-  const prevTotalIncome = calculateTotalIncome(previousPayments);
-  const prevTotalExpenses = calculateTotalExpenses(prevMaintenanceExpenses, prevVendorInterventions);
-  
-  const prevOccupiedUnits = previousTenants ? new Set(previousTenants.map(t => t.unit_number)).size : 0;
-  const prevOccupancyRate = calculateOccupancyRate(prevOccupiedUnits, totalUnits);
-  
-  // Previous month's data isn't enough to calculate unpaid rent properly,
-  // so we use a simple comparison of overdue/pending payments
-  const prevUnpaidRent = previousPayments
-    ?.filter(payment => payment.status === 'pending' || payment.status === 'overdue' || payment.status === 'late')
-    .reduce((sum, payment) => sum + Number(payment.amount || 0), 0) || 0;
-  
-  // Calculate trends
-  const totalIncomeTrend = calculateTrend(totalIncome, prevTotalIncome);
-  const totalExpensesTrend = calculateTrend(totalExpenses, prevTotalExpenses);
-  const occupancyRateTrend = calculateTrend(occupancyRate, prevOccupancyRate);
-  const unpaidRentTrend = calculateTrend(unpaidRent, prevUnpaidRent);
-  
-  // Debug logging
-  console.log("Financial metrics calculated:", {
-    totalIncome, prevTotalIncome, totalIncomeTrend,
-    totalExpenses, prevTotalExpenses, totalExpensesTrend,
-    occupancyRate, prevOccupancyRate, occupancyRateTrend,
-    unpaidRent, prevUnpaidRent, unpaidRentTrend
-  });
-  
+export function createDefaultFinancialData(): FinancialData {
   return {
-    totalIncome,
-    totalExpenses,
-    occupancyRate,
-    unpaidRent,
-    trends: {
-      totalIncomeTrend,
-      totalExpensesTrend,
-      occupancyRateTrend,
-      unpaidRentTrend
-    }
+    totalIncome: 0,
+    totalExpenses: 0,
+    netIncome: 0,
+    occupancyRate: 0,
+    unpaidRent: 0,
+    incomeTrend: 0,
+    expensesTrend: 0,
+    occupancyRateTrend: 0,
+    unpaidRentTrend: 0
   };
 }
 
 /**
- * Creates default financial data object
+ * Maps fetched data to FinancialData interface
  */
-export function createDefaultFinancialData(): FinancialData {
-  console.log("Creating default financial data (no data available)");
+export function mapToFinancialData(params: DataParams): FinancialData {
+  const {
+    tenants,
+    payments,
+    maintenanceExpenses,
+    vendorInterventions,
+    property,
+    prevData,
+    selectedYear = new Date().getFullYear()
+  } = params;
+
+  // Current period calculations
+  const totalIncome = calculateTotalIncome(payments);
+  const totalExpenses = calculateTotalExpenses(maintenanceExpenses, vendorInterventions);
+  const netIncome = totalIncome - totalExpenses;
+  const occupancyRate = calculateOccupancyRate(tenants.length, property?.units || 0);
+  
+  // Get current month and year for unpaid rent calculation
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth();
+  const unpaidRent = calculateUnpaidRent(tenants, payments, currentMonth, selectedYear);
+
+  // Previous period calculations
+  const prevTotalIncome = calculateTotalIncome(prevData.previousPayments);
+  const prevTotalExpenses = calculateTotalExpenses(
+    prevData.prevMaintenanceExpenses, 
+    prevData.prevVendorInterventions
+  );
+  const prevOccupancyRate = calculateOccupancyRate(
+    prevData.previousTenants.length, 
+    property?.units || 0
+  );
+  
+  // Previous unpaid rent calculation (for same month in previous year)
+  const prevUnpaidRent = calculateUnpaidRent(
+    prevData.previousTenants, 
+    prevData.previousPayments, 
+    currentMonth, 
+    selectedYear - 1
+  );
+
+  // Calculate trends
+  const incomeTrend = calculateTrend(totalIncome, prevTotalIncome);
+  const expensesTrend = calculateTrend(totalExpenses, prevTotalExpenses);
+  const occupancyRateTrend = calculateTrend(occupancyRate, prevOccupancyRate);
+  const unpaidRentTrend = calculateTrend(unpaidRent, prevUnpaidRent);
+
+  // Log
+  console.log("Mapped financial metrics:", {
+    totalIncome,
+    totalExpenses,
+    netIncome,
+    occupancyRate,
+    unpaidRent,
+    incomeTrend,
+    expensesTrend,
+    occupancyRateTrend,
+    unpaidRentTrend,
+    selectedYear
+  });
+
   return {
-    totalIncome: 0,
-    totalExpenses: 0,
-    occupancyRate: 0,
-    unpaidRent: 0,
-    trends: {
-      totalIncomeTrend: 0,
-      totalExpensesTrend: 0,
-      occupancyRateTrend: 0,
-      unpaidRentTrend: 0
-    }
+    totalIncome,
+    totalExpenses,
+    netIncome,
+    occupancyRate,
+    unpaidRent,
+    incomeTrend,
+    expensesTrend,
+    occupancyRateTrend,
+    unpaidRentTrend
   };
 }

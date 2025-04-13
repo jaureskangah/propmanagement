@@ -1,89 +1,69 @@
 
-import React from "react";
-import { DollarSign, TrendingDown, Home, AlertCircle } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { LoadingMetrics } from "./metrics/LoadingMetrics";
-import { NoPropertySelected } from "./metrics/NoPropertySelected";
-import { FinancialMetricCard } from "./metrics/FinancialMetricCard";
 import { useFinancialMetricsData } from "./metrics/useFinancialMetricsData";
+import FinancialMetricCard from "./metrics/FinancialMetricCard";
+import LoadingMetrics from "./metrics/LoadingMetrics";
+import NoPropertySelected from "./metrics/NoPropertySelected";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { DollarSign, Home, BanknoteIcon, TrendingDown } from "lucide-react";
 
 interface FinancialMetricsProps {
   propertyId: string | null;
+  selectedYear: number;
 }
 
-export default function FinancialMetrics({ propertyId }: FinancialMetricsProps) {
+const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) => {
   const { t } = useLocale();
-  const { data: financialData, isLoading } = useFinancialMetricsData(propertyId);
+  const { data, isLoading } = useFinancialMetricsData(propertyId, selectedYear);
 
   if (isLoading) {
     return <LoadingMetrics />;
   }
 
   if (!propertyId) {
-    return <NoPropertySelected />;
+    return <NoPropertySelected type="metrics" />;
   }
 
-  // Get metric data with proper debug logging
-  const totalIncome = financialData?.totalIncome || 0;
-  const totalExpenses = financialData?.totalExpenses || 0;
-  const occupancyRate = financialData?.occupancyRate || 0;
-  const unpaidRent = financialData?.unpaidRent || 0;
-  
-  // Get trends
-  const trends = financialData?.trends || {
-    totalIncomeTrend: 0,
-    totalExpensesTrend: 0,
-    occupancyRateTrend: 0,
-    unpaidRentTrend: 0
-  };
-  
-  console.log("Financial Metrics Rendering:", {
-    totalIncome,
-    totalExpenses,
-    occupancyRate,
-    unpaidRent,
-    trends
-  });
-  
+  if (!data) {
+    return <NoPropertySelected type="metrics" />;
+  }
+
+  console.log("Financial metrics data with year filter:", data);
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <FinancialMetricCard
-        title={t('totalIncome', { fallback: 'Total Income' })}
-        value={`$${totalIncome.toLocaleString()}`}
-        icon={<DollarSign className="h-5 w-5" />}
-        description={t('allTimeIncome', { fallback: 'All-time income' })}
-        chartColor="#22C55E"
-        trend={trends.totalIncomeTrend}
+        title={t('totalIncome')}
+        value={data.totalIncome}
+        trend={data.incomeTrend}
+        icon={<DollarSign className="h-4 w-4" />}
+        description={t('allTimeIncome')}
       />
-      
       <FinancialMetricCard
-        title={t('totalExpenses', { fallback: 'Total Expenses' })}
-        value={`$${totalExpenses.toLocaleString()}`}
-        icon={<TrendingDown className="h-5 w-5" />}
-        description={t('allTimeExpenses', { fallback: 'All-time expenses' })}
-        chartColor="#F43F5E"
-        trend={trends.totalExpensesTrend}
-        isPositiveMetric={false}
+        title={t('totalExpenses')}
+        value={data.totalExpenses}
+        trend={data.expensesTrend}
+        isNegativeBetter
+        icon={<TrendingDown className="h-4 w-4" />}
+        description={t('allTimeExpenses')}
       />
-      
       <FinancialMetricCard
-        title={t('occupancyRate', { fallback: 'Occupancy Rate' })}
-        value={`${occupancyRate.toFixed(0)}%`}
-        icon={<Home className="h-5 w-5" />}
-        description={t('occupancyRateDescription', { fallback: 'Current occupancy' })}
-        chartColor="#3B82F6"
-        trend={trends.occupancyRateTrend}
+        title={t('occupancyRate')}
+        value={data.occupancyRate}
+        trend={data.occupancyRateTrend}
+        format="percent"
+        icon={<Home className="h-4 w-4" />}
+        description={t('occupancyRateDescription')}
       />
-      
       <FinancialMetricCard
-        title={t('unpaidRent', { fallback: 'Unpaid Rent' })}
-        value={`$${unpaidRent.toLocaleString()}`}
-        icon={<AlertCircle className="h-5 w-5" />}
-        description={t('unpaidRentDescription', { fallback: 'Outstanding payments' })}
-        chartColor="#F59E0B"
-        trend={trends.unpaidRentTrend}
-        isPositiveMetric={false}
+        title={t('unpaidRent')}
+        value={data.unpaidRent}
+        trend={data.unpaidRentTrend}
+        isNegativeBetter
+        icon={<BanknoteIcon className="h-4 w-4" />}
+        description={t('unpaidRentDescription')}
       />
     </div>
   );
-}
+};
+
+export default FinancialMetrics;

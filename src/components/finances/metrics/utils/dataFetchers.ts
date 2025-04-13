@@ -1,6 +1,6 @@
 
 import { supabase } from "@/lib/supabase";
-import { subMonths, startOfMonth, endOfMonth } from "date-fns";
+import { subMonths, startOfMonth, endOfMonth, startOfYear, endOfYear } from "date-fns";
 
 /**
  * Fetches tenants for a specific property
@@ -20,15 +20,20 @@ export async function fetchPropertyTenants(propertyId: string) {
 }
 
 /**
- * Fetches payments for a list of tenant IDs
+ * Fetches payments for a list of tenant IDs filtered by year
  */
-export async function fetchTenantPayments(tenantIds: string[]) {
+export async function fetchTenantPayments(tenantIds: string[], year: number) {
   if (tenantIds.length === 0) return [];
+  
+  const startDate = startOfYear(new Date(year, 0, 1)).toISOString().split('T')[0];
+  const endDate = endOfYear(new Date(year, 11, 31)).toISOString().split('T')[0];
   
   const { data: payments, error } = await supabase
     .from('tenant_payments')
     .select('amount, status, tenant_id, payment_date')
-    .in('tenant_id', tenantIds);
+    .in('tenant_id', tenantIds)
+    .gte('payment_date', startDate)
+    .lte('payment_date', endDate);
   
   if (error) {
     console.error("Error fetching payments:", error);
@@ -39,13 +44,18 @@ export async function fetchTenantPayments(tenantIds: string[]) {
 }
 
 /**
- * Fetches maintenance expenses for a property
+ * Fetches maintenance expenses for a property filtered by year
  */
-export async function fetchMaintenanceExpenses(propertyId: string) {
+export async function fetchMaintenanceExpenses(propertyId: string, year: number) {
+  const startDate = startOfYear(new Date(year, 0, 1)).toISOString().split('T')[0];
+  const endDate = endOfYear(new Date(year, 11, 31)).toISOString().split('T')[0];
+  
   const { data: maintenanceExpenses, error } = await supabase
     .from('maintenance_expenses')
     .select('amount, date')
-    .eq('property_id', propertyId);
+    .eq('property_id', propertyId)
+    .gte('date', startDate)
+    .lte('date', endDate);
   
   if (error) {
     console.error("Error fetching maintenance expenses:", error);
@@ -56,13 +66,18 @@ export async function fetchMaintenanceExpenses(propertyId: string) {
 }
 
 /**
- * Fetches vendor interventions for a property
+ * Fetches vendor interventions for a property filtered by year
  */
-export async function fetchVendorInterventions(propertyId: string) {
+export async function fetchVendorInterventions(propertyId: string, year: number) {
+  const startDate = startOfYear(new Date(year, 0, 1)).toISOString().split('T')[0];
+  const endDate = endOfYear(new Date(year, 11, 31)).toISOString().split('T')[0];
+  
   const { data: vendorInterventions, error } = await supabase
     .from('vendor_interventions')
     .select('cost, date')
-    .eq('property_id', propertyId);
+    .eq('property_id', propertyId)
+    .gte('date', startDate)
+    .lte('date', endDate);
     
   if (error) {
     console.error("Error fetching vendor interventions:", error);
@@ -95,45 +110,44 @@ export async function fetchPropertyDetails(propertyId: string) {
  */
 export async function fetchPreviousPeriodData(
   propertyId: string, 
-  tenantIds: string[]
+  tenantIds: string[],
+  selectedYear: number
 ) {
-  // Define previous month date range
-  const currentDate = new Date();
-  const previousMonthStart = startOfMonth(subMonths(currentDate, 1));
-  const previousMonthEnd = endOfMonth(subMonths(currentDate, 1));
-  const prevMonthStartStr = previousMonthStart.toISOString().split('T')[0];
-  const prevMonthEndStr = previousMonthEnd.toISOString().split('T')[0];
+  // For the previous year data
+  const previousYear = selectedYear - 1;
+  const prevYearStart = new Date(previousYear, 0, 1).toISOString().split('T')[0];
+  const prevYearEnd = new Date(previousYear, 11, 31).toISOString().split('T')[0];
   
   // Previous payments
   const { data: previousPayments } = await supabase
     .from('tenant_payments')
     .select('amount, status, tenant_id, payment_date')
     .in('tenant_id', tenantIds)
-    .gte('payment_date', prevMonthStartStr)
-    .lte('payment_date', prevMonthEndStr);
+    .gte('payment_date', prevYearStart)
+    .lte('payment_date', prevYearEnd);
 
   // Previous maintenance expenses
   const { data: prevMaintenanceExpenses } = await supabase
     .from('maintenance_expenses')
     .select('amount, date')
     .eq('property_id', propertyId)
-    .gte('date', prevMonthStartStr)
-    .lte('date', prevMonthEndStr);
+    .gte('date', prevYearStart)
+    .lte('date', prevYearEnd);
 
   // Previous vendor interventions
   const { data: prevVendorInterventions } = await supabase
     .from('vendor_interventions')
     .select('cost, date')
     .eq('property_id', propertyId)
-    .gte('date', prevMonthStartStr)
-    .lte('date', prevMonthEndStr);
+    .gte('date', prevYearStart)
+    .lte('date', prevYearEnd);
     
   // Previous tenants for occupancy calculation
   const { data: previousTenants } = await supabase
     .from('tenants')
     .select('id, unit_number')
     .eq('property_id', propertyId)
-    .lte('created_at', previousMonthEnd.toISOString());
+    .lte('created_at', prevYearEnd);
     
   return {
     previousPayments: previousPayments || [],
