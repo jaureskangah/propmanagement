@@ -26,8 +26,13 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
     return <NoPropertySelected type="financial-overview" />;
   }
 
-  // Log the expenses to help with debugging
-  console.log("Financial overview expenses:", expenses);
+  // Logs pour déboguer
+  console.log("Financial overview data:", {
+    tenants: tenants?.length || 0,
+    payments: payments?.length || 0,
+    expenses: expenses?.length || 0,
+    expensesData: expenses
+  });
 
   return (
     <Card>

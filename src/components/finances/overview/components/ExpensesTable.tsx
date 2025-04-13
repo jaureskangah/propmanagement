@@ -29,6 +29,9 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
     );
   }
 
+  // Log to debug the expenses data
+  console.log("Rendering expenses table with data:", expenses);
+
   return (
     <Table>
       <TableHeader>
@@ -40,14 +43,19 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {expenses.map(expense => (
-          <TableRow key={expense.id} className="text-xs">
-            <TableCell>{format(new Date(expense.date), 'yyyy-MM-dd')}</TableCell>
-            <TableCell>{expense.category}</TableCell>
-            <TableCell>{expense.description || '-'}</TableCell>
-            <TableCell className="text-right">{formatCurrency(expense.amount)}</TableCell>
-          </TableRow>
-        ))}
+        {expenses.map(expense => {
+          // Calculate the amount value, handling both 'amount' and 'cost' fields
+          const amountValue = expense.amount !== undefined ? expense.amount : expense.cost;
+          
+          return (
+            <TableRow key={expense.id} className="text-xs">
+              <TableCell>{format(new Date(expense.date), 'yyyy-MM-dd')}</TableCell>
+              <TableCell>{expense.category || expense.title}</TableCell>
+              <TableCell>{expense.description || '-'}</TableCell>
+              <TableCell className="text-right">{formatCurrency(amountValue)}</TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
