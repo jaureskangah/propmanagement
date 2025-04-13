@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TrendIndicator } from "./TrendIndicator";
+import { TrendIndicator } from "../TrendIndicator";
 import { MetricIcon } from "./MetricIcon";
 import { FinancialMetricCardProps } from "./types";
 
@@ -12,11 +12,12 @@ export function FinancialMetricCard({
   description,
   icon,
   chartColor,
-  trend
+  trend,
+  isNegativeBetter
 }: FinancialMetricCardProps) {
   // Determine if an increase is positive or negative based on the metric
   // For expenses and unpaid rent, a decrease is positive
-  const isPositiveMetric = title !== 'totalExpenses' && title !== 'unpaidRent';
+  const isPositiveMetric = !isNegativeBetter;
   const bgColor = chartColor === '#22C55E' 
     ? "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20" 
     : chartColor === '#F59E0B' 

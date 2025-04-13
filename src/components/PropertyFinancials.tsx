@@ -9,9 +9,10 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PropertyFinancialsProps {
   propertyId: string;
+  selectedYear?: number;
 }
 
-const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
+const PropertyFinancials = ({ propertyId, selectedYear = new Date().getFullYear() }: PropertyFinancialsProps) => {
   const { t } = useLocale();
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
@@ -77,7 +78,7 @@ const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
 
   return (
     <div className="space-y-6">
-      <FinancialMetrics propertyId={propertyId} />
+      <FinancialMetrics propertyId={propertyId} selectedYear={selectedYear} />
       <ChartsSection propertyId={propertyId} />
       <DataTables
         propertyId={propertyId}

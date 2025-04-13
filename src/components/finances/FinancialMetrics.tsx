@@ -1,8 +1,8 @@
 
 import { useFinancialMetricsData } from "./metrics/useFinancialMetricsData";
-import FinancialMetricCard from "./metrics/FinancialMetricCard";
-import LoadingMetrics from "./metrics/LoadingMetrics";
-import NoPropertySelected from "./metrics/NoPropertySelected";
+import { FinancialMetricCard } from "./metrics/FinancialMetricCard";
+import { LoadingMetrics } from "./metrics/LoadingMetrics";
+import { NoPropertySelected } from "./metrics/NoPropertySelected";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DollarSign, Home, BanknoteIcon, TrendingDown } from "lucide-react";
 

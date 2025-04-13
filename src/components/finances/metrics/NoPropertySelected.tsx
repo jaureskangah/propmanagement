@@ -4,7 +4,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Building2 } from "lucide-react";
 
-export function NoPropertySelected() {
+interface NoPropertySelectedProps {
+  type: string;
+}
+
+export function NoPropertySelected({ type }: NoPropertySelectedProps) {
   const { t } = useLocale();
   
   return (
