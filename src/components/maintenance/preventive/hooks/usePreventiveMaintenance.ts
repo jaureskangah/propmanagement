@@ -95,7 +95,7 @@ export const usePreventiveMaintenance = () => {
     })));
   }
 
-  const onAddTask = (newTask: NewTask) => {
+  const onAddTask = (newTask: NewTask): Promise<any> => {
     console.log("Create task clicked with data:", newTask);
     
     // Ensure the task has a valid date
@@ -120,25 +120,29 @@ export const usePreventiveMaintenance = () => {
     console.log("Setting calendar to task date BEFORE adding task:", format(taskDate, "yyyy-MM-dd"));
     setSelectedDate(taskDate);
     
-    // Now add the task
-    handleAddTask(newTask).then((result) => {
-      console.log("Task added successfully:", result);
-      toast({
-        title: t('success'),
-        description: t('taskAdded'),
+    // Now add the task and return the promise
+    return handleAddTask(newTask)
+      .then((result) => {
+        console.log("Task added successfully:", result);
+        toast({
+          title: t('success'),
+          description: t('taskAdded'),
+        });
+        // Close dialog is now handled in the AddTaskDialog component
+        return result;
+      })
+      .catch(error => {
+        console.error("Error adding task:", error);
+        toast({
+          title: t('error'),
+          description: t('errorAddingTask'),
+          variant: "destructive",
+        });
+        throw error; // Rethrow so the dialog stays open
       });
-    }).catch(error => {
-      console.error("Error adding task:", error);
-      toast({
-        title: t('error'),
-        description: t('errorAddingTask'),
-        variant: "destructive",
-      });
-    });
-    setIsAddTaskOpen(false);
   };
 
-  const onAddMultipleTasks = (newTasks: NewTask[]) => {
+  const onAddMultipleTasks = (newTasks: NewTask[]): Promise<any> => {
     // Normalize dates in all new tasks
     const normalizedTasks = newTasks.map(task => ({
       ...task,
@@ -152,22 +156,26 @@ export const usePreventiveMaintenance = () => {
       setSelectedDate(taskDate);
     }
     
-    // Now add the tasks
-    handleAddMultipleTasks(normalizedTasks).then((result) => {
-      console.log("Multiple tasks added successfully:", result);
-      toast({
-        title: t('success'),
-        description: t('multipleTasksAdded'),
+    // Now add the tasks and return the promise
+    return handleAddMultipleTasks(normalizedTasks)
+      .then((result) => {
+        console.log("Multiple tasks added successfully:", result);
+        toast({
+          title: t('success'),
+          description: t('multipleTasksAdded'),
+        });
+        setIsBatchSchedulingOpen(false);
+        return result;
+      })
+      .catch(error => {
+        console.error("Error adding multiple tasks:", error);
+        toast({
+          title: t('error'),
+          description: t('errorAddingTasks'),
+          variant: "destructive",
+        });
+        throw error;
       });
-    }).catch(error => {
-      console.error("Error adding multiple tasks:", error);
-      toast({
-        title: t('error'),
-        description: t('errorAddingTasks'),
-        variant: "destructive",
-      });
-    });
-    setIsBatchSchedulingOpen(false);
   };
 
   return {

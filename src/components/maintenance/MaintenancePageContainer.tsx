@@ -14,6 +14,7 @@ import { NewTask } from "./types";
 import { VendorList } from "./vendors/VendorList";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
+import { useTaskAddition } from "./tasks/hooks/useTaskAddition";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
@@ -23,6 +24,7 @@ export const MaintenancePageContainer = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const { toast } = useToast();
+  const { handleAddTask } = useTaskAddition();
   
   // Get saved property and year from localStorage or use defaults
   const savedPropertyId = localStorage.getItem('selectedPropertyId') || "property-1";
@@ -61,13 +63,25 @@ export const MaintenancePageContainer = () => {
     setIsAddTaskOpen(true);
   };
 
-  const handleAddTask = (newTask: NewTask) => {
-    console.log("Task added:", newTask);
-    toast({
-      title: t('success'),
-      description: t('taskAdded'),
-    });
-    setIsAddTaskOpen(false);
+  const handleAddTaskFromDialog = async (newTask: NewTask): Promise<any> => {
+    console.log("Task to be added:", newTask);
+    try {
+      const result = await handleAddTask(newTask);
+      console.log("Task added successfully:", result);
+      toast({
+        title: t('success'),
+        description: t('taskAdded'),
+      });
+      return result;
+    } catch (error) {
+      console.error("Error adding task:", error);
+      toast({
+        title: t('error'),
+        description: t('errorAddingTask'),
+        variant: "destructive",
+      });
+      throw error;
+    }
   };
 
   const handlePropertySelect = (propertyId: string) => {
@@ -139,9 +153,10 @@ export const MaintenancePageContainer = () => {
       </Tabs>
 
       <AddTaskDialog
-        onAddTask={handleAddTask}
+        onAddTask={handleAddTaskFromDialog}
         isOpen={isAddTaskOpen}
         onClose={() => setIsAddTaskOpen(false)}
+        initialPropertyId={selectedPropertyId}
       />
     </div>
   );

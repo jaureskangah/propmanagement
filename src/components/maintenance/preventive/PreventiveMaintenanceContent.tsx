@@ -58,7 +58,10 @@ export const PreventiveMaintenanceContent = () => {
         <AddTaskDialog
           isOpen={isAddTaskOpen}
           onClose={() => setIsAddTaskOpen(false)}
-          onAddTask={onAddTask}
+          onAddTask={(task) => {
+            console.log("AddTaskDialog initiated task save:", task);
+            return onAddTask(task);
+          }}
           initialDate={selectedDate}
         />
       )}

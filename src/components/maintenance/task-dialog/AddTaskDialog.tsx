@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTaskForm } from "./hooks/useTaskForm";
@@ -28,7 +27,8 @@ export const AddTaskDialog = ({
   const taskForm = useTaskForm({
     onSubmit: async (task) => {
       try {
-        await onAddTask(task);
+        const result = await Promise.resolve(onAddTask(task));
+        console.log("Task saved successfully:", result);
         if (onSuccess) {
           onSuccess();
         }
