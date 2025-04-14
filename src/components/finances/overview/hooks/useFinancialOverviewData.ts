@@ -65,8 +65,10 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
     },
     enabled: !!propertyId && !!tenants?.length,
     retry: 2,
-    onError: (error) => {
-      console.error("Payments fetch error:", error);
+    meta: {
+      onError: (error: any) => {
+        console.error("Payments fetch error:", error);
+      }
     }
   });
 
