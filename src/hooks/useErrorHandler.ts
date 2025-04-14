@@ -2,7 +2,7 @@
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { AlertCircle, XCircle, Info } from "lucide-react";
-import React from "react"; // Add this import for React
+import React from "react";
 
 type ErrorSeverity = "error" | "warning" | "info";
 
@@ -33,9 +33,9 @@ export function useErrorHandler() {
     
     // Default icons based on severity
     const icons = {
-      error: () => <XCircle className="h-4 w-4" />,
-      warning: () => <AlertCircle className="h-4 w-4" />,
-      info: () => <Info className="h-4 w-4" />
+      error: (props?: React.ComponentProps<typeof XCircle>) => <XCircle {...props} />,
+      warning: (props?: React.ComponentProps<typeof AlertCircle>) => <AlertCircle {...props} />,
+      info: (props?: React.ComponentProps<typeof Info>) => <Info {...props} />
     };
     
     // Show toast notification if requested
@@ -44,7 +44,7 @@ export function useErrorHandler() {
         title: options?.title || defaultTitles[severity],
         description: options?.description || errorMessage,
         variant: severity === "error" ? "destructive" : "default",
-        icon: icons[severity]()
+        icon: icons[severity]({ className: "h-4 w-4" })
       });
     }
     
