@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -15,6 +15,10 @@ import { YearFilter } from "@/components/finances/YearFilter";
 import { cn } from "@/lib/utils";
 import { FileBarChart, Loader2 } from "lucide-react";
 
+// Storage key for localStorage
+const SELECTED_PROPERTY_KEY = "finances_selected_property_id";
+const SELECTED_YEAR_KEY = "finances_selected_year";
+
 const Finances = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
@@ -22,6 +26,7 @@ const Finances = () => {
   const isMobile = useIsMobile();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
+  // Fetch properties
   const { data: properties, isLoading: isLoadingProperties } = useQuery({
     queryKey: ["properties"],
     queryFn: async () => {
@@ -35,9 +40,39 @@ const Finances = () => {
     },
   });
 
+  // Load saved property ID and year from localStorage on initial render
+  useEffect(() => {
+    const savedPropertyId = localStorage.getItem(SELECTED_PROPERTY_KEY);
+    const savedYear = localStorage.getItem(SELECTED_YEAR_KEY);
+    
+    if (savedPropertyId) {
+      setSelectedPropertyId(savedPropertyId);
+    }
+    
+    if (savedYear) {
+      setSelectedYear(parseInt(savedYear, 10));
+    }
+  }, []);
+
+  // Save property ID to localStorage when it changes
+  useEffect(() => {
+    if (selectedPropertyId) {
+      localStorage.setItem(SELECTED_PROPERTY_KEY, selectedPropertyId);
+    }
+  }, [selectedPropertyId]);
+  
+  // Save selected year to localStorage when it changes
+  useEffect(() => {
+    localStorage.setItem(SELECTED_YEAR_KEY, selectedYear.toString());
+  }, [selectedYear]);
+
   const handleYearChange = (year: number) => {
     console.log("Year changed to:", year);
     setSelectedYear(year);
+  };
+
+  const handlePropertyChange = (value: string) => {
+    setSelectedPropertyId(value || null);
   };
   
   return (
@@ -76,7 +111,7 @@ const Finances = () => {
                     ) : (
                       <Select 
                         value={selectedPropertyId || ""} 
-                        onValueChange={(value) => setSelectedPropertyId(value || null)}
+                        onValueChange={handlePropertyChange}
                       >
                         <SelectTrigger className="w-full h-9">
                           <SelectValue placeholder={t('selectProperty')} />
