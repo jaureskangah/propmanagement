@@ -16,7 +16,6 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
   const { t } = useLocale();
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
   
-  // Fixed: Use the correct properties from the hook
   const { monthlyData, yearlyData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
 
   const handleRetry = () => {
@@ -28,7 +27,6 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
     return <ErrorState error={error as Error} onRetry={handleRetry} type="chart" />;
   }
 
-  // Use the correct data properties from the hook
   const processedData = view === 'monthly' ? monthlyData : yearlyData;
 
   return (

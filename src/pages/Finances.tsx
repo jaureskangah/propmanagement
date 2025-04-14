@@ -95,7 +95,7 @@ const Finances = () => {
                   <FileBarChart className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t('finances')}</h1>
+                  <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t('Finances')}</h1>
                   <p className="text-muted-foreground mt-1">{t('financialOverview')}</p>
                 </div>
               </div>

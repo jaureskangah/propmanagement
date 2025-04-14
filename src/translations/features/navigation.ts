@@ -1,4 +1,3 @@
-
 import { NavigationTranslations } from '../types';
 
 export const enNavigation: NavigationTranslations = {
@@ -7,7 +6,7 @@ export const enNavigation: NavigationTranslations = {
   freeTrial: "Free Trial",
   signIn: "Sign In",
   signOut: "Sign Out",
-  dashboard: "Dashboard", // Already properly capitalized in English
+  dashboard: "Dashboard",
   language: "Language",
   units: "Units",
   metric: "Metric",
@@ -19,7 +18,8 @@ export const enNavigation: NavigationTranslations = {
   admin: "Admin",
   loading: "Loading...",
   error: "Error",
-  properties: "Properties"
+  properties: "Properties",
+  finances: "Finances"
 };
 
 export const frNavigation: NavigationTranslations = {
@@ -28,7 +28,7 @@ export const frNavigation: NavigationTranslations = {
   freeTrial: "Essai gratuit",
   signIn: "Connexion",
   signOut: "Déconnexion",
-  dashboard: "Dashboard", // Changed from "Tableau de Bord" to "Dashboard" with capital D
+  dashboard: "Dashboard",
   language: "Langue",
   units: "Unités",
   metric: "Métrique",
@@ -40,5 +40,6 @@ export const frNavigation: NavigationTranslations = {
   admin: "Administration",
   loading: "Chargement...",
   error: "Erreur",
-  properties: "Propriétés"
+  properties: "Propriétés",
+  finances: "Finances"
 };
