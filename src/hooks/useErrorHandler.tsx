@@ -37,13 +37,13 @@ export function useErrorHandler() {
       
       switch (severity) {
         case "error":
-          return <XCircle {...iconProps} />;
+          return React.createElement(XCircle, iconProps);
         case "warning":
-          return <AlertCircle {...iconProps} />;
+          return React.createElement(AlertCircle, iconProps);
         case "info":
-          return <Info {...iconProps} />;
+          return React.createElement(Info, iconProps);
         default:
-          return <AlertCircle {...iconProps} />;
+          return React.createElement(AlertCircle, iconProps);
       }
     };
     
