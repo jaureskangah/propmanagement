@@ -20,8 +20,8 @@ export const PropertyFinancials = ({
   const { data: expenses = [] } = useQuery({
     queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
-      const startOfYear = new Date(selectedYear, 0, 1).toISOString();
-      const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+      const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
+      const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
       
       const { data, error } = await supabase
         .from("maintenance_expenses")
@@ -45,8 +45,8 @@ export const PropertyFinancials = ({
   const { data: maintenance = [] } = useQuery({
     queryKey: ["vendor_interventions", propertyId, selectedYear],
     queryFn: async () => {
-      const startOfYear = new Date(selectedYear, 0, 1).toISOString();
-      const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+      const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
+      const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
       
       const { data, error } = await supabase
         .from("vendor_interventions")
@@ -92,9 +92,9 @@ export const PropertyFinancials = ({
         
         const tenantIds = tenants.map(t => t.id);
         
-        // Start and end dates for filtering by year
-        const startOfYear = new Date(selectedYear, 0, 1).toISOString();
-        const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+        // Format dates correctly for filtering
+        const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
+        const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
         
         // Then get payments for these tenants within the selected year
         const { data: payments, error: paymentsError } = await supabase

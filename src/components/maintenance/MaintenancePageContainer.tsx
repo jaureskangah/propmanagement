@@ -23,8 +23,20 @@ export const MaintenancePageContainer = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const { toast } = useToast();
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string>("property-1");
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  
+  // Get saved property and year from localStorage or use defaults
+  const savedPropertyId = localStorage.getItem('selectedPropertyId') || "property-1";
+  const savedYear = localStorage.getItem('selectedYear') ? 
+    parseInt(localStorage.getItem('selectedYear') || '') : new Date().getFullYear();
+  
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string>(savedPropertyId);
+  const [selectedYear, setSelectedYear] = useState<number>(savedYear);
+  
+  // Save selections to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem('selectedPropertyId', selectedPropertyId);
+    localStorage.setItem('selectedYear', selectedYear.toString());
+  }, [selectedPropertyId, selectedYear]);
   
   // Fetch maintenance requests
   const { data: requests = [], isLoading } = useQuery({

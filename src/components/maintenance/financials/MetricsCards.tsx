@@ -47,9 +47,11 @@ export const MetricsCards = ({
         const tenantIds = tenants.map(t => t.id);
         console.log("Found tenants for property:", tenantIds);
         
-        // Start and end dates for filtering by year
-        const startOfYear = new Date(selectedYear, 0, 1).toISOString();
-        const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+        // Format dates correctly to ensure proper filtering
+        const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
+        const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
+        
+        console.log("Date range for payments:", startOfYear, "to", endOfYear);
         
         // Then get payments for these tenants within the selected year
         const { data: payments, error: paymentsError } = await supabase
