@@ -74,7 +74,7 @@ export const DashboardWidgets = ({
       switch (widgetId) {
         case 'property':
           return tenant?.properties && (
-            <div className="h-full bg-white dark:bg-gray-800 dark:border-gray-700 rounded-lg shadow-sm p-6 border border-gray-200 flex flex-col">
+            <div className="h-full bg-white dark:bg-gray-900/80 dark:border-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 flex flex-col">
               <h3 className="text-lg font-semibold mb-2 dark:text-white">{tenant.properties.name}</h3>
               <p className="text-gray-500 dark:text-gray-400">Unit: {tenant.unit_number}</p>
             </div>
@@ -135,7 +135,15 @@ export const DashboardWidgets = ({
       <motion.div 
         key={widgetId}
         variants={item}
-        className="w-full h-full transform transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md rounded-xl overflow-hidden dark-card-gradient"
+        className={`
+          w-full h-full transform transition-all duration-300 
+          hover:-translate-y-1.5 hover:shadow-md rounded-xl 
+          overflow-hidden 
+          dark:bg-gray-900/50 
+          dark:border 
+          dark:border-gray-800/50 
+          backdrop-blur-sm
+        `}
         initial="hidden"
         animate="show"
         transition={{ duration: 0.3, delay: index * 0.05 }}
