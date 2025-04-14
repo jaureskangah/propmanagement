@@ -31,11 +31,18 @@ export function useErrorHandler() {
       info: t('info')
     };
     
-    // Default icons based on severity
-    const icons = {
-      error: (props?: React.ComponentProps<typeof XCircle>) => <XCircle {...props} />,
-      warning: (props?: React.ComponentProps<typeof AlertCircle>) => <AlertCircle {...props} />,
-      info: (props?: React.ComponentProps<typeof Info>) => <Info {...props} />
+    // Create icon components based on severity
+    const getIcon = (severity: ErrorSeverity) => {
+      switch (severity) {
+        case "error":
+          return <XCircle className="h-4 w-4" />;
+        case "warning":
+          return <AlertCircle className="h-4 w-4" />;
+        case "info":
+          return <Info className="h-4 w-4" />;
+        default:
+          return <AlertCircle className="h-4 w-4" />;
+      }
     };
     
     // Show toast notification if requested
@@ -44,7 +51,7 @@ export function useErrorHandler() {
         title: options?.title || defaultTitles[severity],
         description: options?.description || errorMessage,
         variant: severity === "error" ? "destructive" : "default",
-        icon: icons[severity]({ className: "h-4 w-4" })
+        icon: getIcon(severity)
       });
     }
     
