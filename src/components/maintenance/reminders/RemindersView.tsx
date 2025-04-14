@@ -6,6 +6,7 @@ import { format, isAfter, isBefore, addDays } from "date-fns";
 import { fr } from "date-fns/locale";
 import { BellRing, Calendar, Mail, Smartphone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { isValidDate, toDate } from "../utils/dateUtils";
 
 interface RemindersViewProps {
   tasks: Task[];
@@ -15,7 +16,7 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filtrer uniquement les tâches avec rappel
+  // Filter only tasks with reminders
   const tasksWithReminder = tasks.filter(task => Boolean(task.has_reminder) === true && task.reminder_date);
   
   console.log("RemindersView received tasks:", tasks.length);
@@ -30,18 +31,18 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
     );
   }
 
-  // Trier les rappels par date (les plus proches en premier)
+  // Sort reminders by date (closest first)
   const sortedReminders = [...tasksWithReminder].sort((a, b) => {
     if (!a.reminder_date || !b.reminder_date) return 0;
     
     // Ensure both dates are Date objects
-    const dateA = a.reminder_date instanceof Date ? a.reminder_date : new Date(a.reminder_date);
-    const dateB = b.reminder_date instanceof Date ? b.reminder_date : new Date(b.reminder_date);
+    const dateA = toDate(a.reminder_date) || new Date();
+    const dateB = toDate(b.reminder_date) || new Date();
     
     return dateA.getTime() - dateB.getTime();
   });
 
-  // Regrouper les rappels par période
+  // Group reminders by period
   const today = new Date();
   today.setHours(0, 0, 0, 0); // Reset time to start of day
   
@@ -50,30 +51,26 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
 
   const todayReminders = sortedReminders.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date);
+    const reminderDate = toDate(task.reminder_date) || new Date();
     return isSameDay(reminderDate, today);
   });
   
   const tomorrowReminders = sortedReminders.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date);
+    const reminderDate = toDate(task.reminder_date) || new Date();
     return isSameDay(reminderDate, tomorrow);
   });
   
   const thisWeekReminders = sortedReminders.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date);
+    const reminderDate = toDate(task.reminder_date) || new Date();
     return isAfter(reminderDate, tomorrow) && 
       isBefore(reminderDate, nextWeek);
   });
   
   const laterReminders = sortedReminders.filter(task => {
     if (!task.reminder_date) return false;
-    const reminderDate = task.reminder_date instanceof Date ? 
-      task.reminder_date : new Date(task.reminder_date);
+    const reminderDate = toDate(task.reminder_date) || new Date();
     return isAfter(reminderDate, nextWeek);
   });
 
@@ -159,12 +156,10 @@ export const RemindersView = ({ tasks }: RemindersViewProps) => {
   function renderReminderGroup(reminderGroup: Task[]) {
     return reminderGroup.map((task) => {
       // Ensure reminder_date is a Date object
-      const reminderDate = task.reminder_date instanceof Date ? 
-        task.reminder_date : new Date(task.reminder_date as string);
+      const reminderDate = toDate(task.reminder_date) || new Date();
       
       // Ensure task date is a Date object
-      const taskDate = task.date instanceof Date ? 
-        task.date : new Date(task.date as unknown as string);
+      const taskDate = toDate(task.date) || new Date();
         
       return (
         <div 

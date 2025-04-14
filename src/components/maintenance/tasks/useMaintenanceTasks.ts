@@ -9,55 +9,56 @@ import { useCallback } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const useMaintenanceTasks = (propertyId?: string) => {
-  const { tasks, isLoading, refreshTasks } = useTasksQuery(propertyId);
+  const queryResult = useTasksQuery(propertyId);
+  const { tasks, isLoading, refreshTasks, error } = queryResult;
   const { handleTaskCompletion } = useTaskCompletion();
   const { handleDeleteTask } = useTaskDeletion();
   const { handleAddTask, handleAddMultipleTasks } = useTaskAddition();
   const { handleUpdateTaskPosition } = useTaskPosition();
   const queryClient = useQueryClient();
 
-  // Fonction pour compléter une tâche
+  // Function to complete a task
   const handleTaskComplete = async (taskId: string) => {
     const task = tasks.find(t => t.id === taskId);
     if (!task) return;
     
     await handleTaskCompletion(taskId, task.completed);
     
-    // Forcer un rafraîchissement immédiat des données
+    // Force an immediate data refresh
     queryClient.invalidateQueries({ queryKey: ['maintenance_tasks', propertyId] });
   };
 
-  // Fonction améliorée pour ajouter une tâche et rafraîchir les données
+  // Enhanced function to add a task and refresh data
   const addTaskWithRefresh = useCallback(async (newTask: NewTask) => {
     try {
       console.log("Adding task and will refresh afterwards:", newTask);
       
-      // S'assurer que la propriété est définie dans la tâche si fournie
+      // Ensure property is defined in the task if provided
       const taskWithProperty = propertyId && !newTask.property_id 
         ? { ...newTask, property_id: propertyId } 
         : newTask;
       
-      // Ajouter la tâche
+      // Add the task
       const result = await handleAddTask(taskWithProperty);
       
       console.log("Task added, refreshing data now...");
       
-      // Forcer un rafraîchissement immédiat des données
+      // Force an immediate data refresh
       refreshTasks();
       
       return result;
     } catch (error) {
-      console.error("Erreur lors de l'ajout de la tâche:", error);
+      console.error("Error adding task:", error);
       throw error;
     }
   }, [handleAddTask, refreshTasks, propertyId]);
 
-  // Fonction améliorée pour ajouter plusieurs tâches et rafraîchir les données
+  // Enhanced function to add multiple tasks and refresh data
   const addMultipleTasksWithRefresh = useCallback(async (newTasks: NewTask[]) => {
     try {
       console.log("Adding multiple tasks and will refresh afterwards:", newTasks.length);
       
-      // S'assurer que la propriété est définie pour toutes les tâches si fournie
+      // Ensure property is defined for all tasks if provided
       const tasksWithProperty = propertyId 
         ? newTasks.map(task => ({
             ...task,
@@ -65,37 +66,37 @@ export const useMaintenanceTasks = (propertyId?: string) => {
           }))
         : newTasks;
       
-      // Ajouter les tâches
+      // Add the tasks
       const result = await handleAddMultipleTasks(tasksWithProperty);
       
       console.log("Multiple tasks added, refreshing data now...");
       
-      // Forcer un rafraîchissement immédiat des données
+      // Force an immediate data refresh
       refreshTasks();
       
       return result;
     } catch (error) {
-      console.error("Erreur lors de l'ajout des tâches:", error);
+      console.error("Error adding tasks:", error);
       throw error;
     }
   }, [handleAddMultipleTasks, refreshTasks, propertyId]);
 
-  // Fonction améliorée pour supprimer une tâche et rafraîchir les données
+  // Enhanced function to delete a task and refresh data
   const deleteTaskWithRefresh = useCallback(async (taskId: string) => {
     try {
       console.log("Deleting task and will refresh afterwards:", taskId);
       
-      // Supprimer la tâche
+      // Delete the task
       const result = await handleDeleteTask(taskId);
       
       console.log("Task deleted, refreshing data now...");
       
-      // Forcer un rafraîchissement immédiat des données
+      // Force an immediate data refresh
       refreshTasks();
       
       return result;
     } catch (error) {
-      console.error("Erreur lors de la suppression de la tâche:", error);
+      console.error("Error deleting task:", error);
       throw error;
     }
   }, [handleDeleteTask, refreshTasks]);
@@ -103,6 +104,7 @@ export const useMaintenanceTasks = (propertyId?: string) => {
   return {
     tasks,
     isLoading,
+    error,
     handleTaskCompletion: handleTaskComplete,
     handleDeleteTask: deleteTaskWithRefresh,
     handleAddTask: addTaskWithRefresh,

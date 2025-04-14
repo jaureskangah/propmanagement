@@ -4,14 +4,14 @@ import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
 
 export const useTasksQuery = (propertyId: string | undefined = undefined) => {
-  return useQuery({
+  const result = useQuery({
     queryKey: ['tasks', propertyId],
     queryFn: async () => {
       let query = supabase
         .from('maintenance_tasks')
         .select('*');
       
-      // Si on a une propriété spécifique, on filtre par cette propriété
+      // If there's a specific property, filter by that property
       if (propertyId) {
         query = query.eq('property_id', propertyId);
       }
@@ -22,14 +22,14 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
         throw new Error(error.message);
       }
       
-      // On trie les tâches en mettant les non-complétées en premier
+      // Sort tasks with uncompleted ones first
       const sortedTasks = data.sort((a, b) => {
-        // D'abord on trie par statut "complété"
+        // First sort by completed status
         if (a.completed !== b.completed) {
           return a.completed ? 1 : -1;
         }
         
-        // Ensuite on trie par date
+        // Then sort by date
         const dateA = new Date(a.date).getTime();
         const dateB = new Date(b.date).getTime();
         
@@ -44,4 +44,12 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
     },
     refetchInterval: 30000, // Refetch every 30 seconds
   });
+
+  // Return structured data with additional helper methods
+  return {
+    tasks: result.data || [],
+    isLoading: result.isLoading,
+    error: result.error,
+    refreshTasks: () => result.refetch()
+  };
 };

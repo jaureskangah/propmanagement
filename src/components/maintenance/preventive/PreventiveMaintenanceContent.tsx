@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CalendarSection } from "./CalendarSection";
 import { RecurringReminderSection } from "./RecurringReminderSection";
 import { AddTaskDialog } from "../task-dialog/AddTaskDialog";
-import { BatchSchedulingDialog } from "../scheduling/BatchSchedulingDialog";
+import { BatchTaskDialog } from "../task-dialog/BatchTaskDialog";
 import { usePreventiveMaintenance } from "./hooks/usePreventiveMaintenance";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
@@ -54,18 +54,22 @@ export const PreventiveMaintenanceContent = () => {
         reminderTasks={reminderTasks}
       />
 
-      <AddTaskDialog
-        onAddTask={onAddTask}
-        isOpen={isAddTaskOpen}
-        onClose={() => setIsAddTaskOpen(false)}
-        initialDate={selectedDate}
-      />
+      {isAddTaskOpen && (
+        <AddTaskDialog
+          isOpen={isAddTaskOpen}
+          onClose={() => setIsAddTaskOpen(false)}
+          onAddTask={onAddTask}
+          initialDate={selectedDate}
+        />
+      )}
 
-      <BatchSchedulingDialog
-        isOpen={isBatchSchedulingOpen}
-        onClose={() => setIsBatchSchedulingOpen(false)}
-        onSchedule={onAddMultipleTasks}
-      />
+      {isBatchSchedulingOpen && (
+        <BatchTaskDialog
+          isOpen={isBatchSchedulingOpen}
+          onClose={() => setIsBatchSchedulingOpen(false)}
+          onAddTasks={onAddMultipleTasks}
+        />
+      )}
     </div>
   );
 };

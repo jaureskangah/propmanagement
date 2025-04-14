@@ -21,22 +21,18 @@ export const MaintenanceTasks = ({ propertyId }: MaintenanceTasksProps) => {
   const {
     tasks,
     isLoading,
-    error,
     handleTaskCompletion,
-    handleTaskAddition,
-    handleTaskPositionChange,
-    handleTaskDeletion,
+    handleAddTask,
+    handleUpdateTaskPosition,
+    handleDeleteTask,
   } = useMaintenanceTasks(propertyId);
 
-  if (error) {
+  if (isLoading) {
     return (
       <Card>
         <CardContent className="p-6">
           <div className="text-center space-y-2">
-            <p className="text-destructive">Error loading tasks: {error.message}</p>
-            <Button variant="outline" onClick={() => window.location.reload()}>
-              Try Again
-            </Button>
+            <p className="text-muted-foreground">{t('loading')}</p>
           </div>
         </CardContent>
       </Card>
@@ -71,32 +67,32 @@ export const MaintenanceTasks = ({ propertyId }: MaintenanceTasksProps) => {
       </div>
 
       <MaintenanceTasksList
-        tasks={tasks}
+        tasks={tasks || []}
         isLoading={isLoading}
         onTaskCompletion={handleTaskCompletion}
-        onTaskPositionChange={handleTaskPositionChange}
-        onTaskDeletion={handleTaskDeletion}
+        onTaskDelete={handleDeleteTask}
+        onTaskPositionChange={handleUpdateTaskPosition}
       />
 
       {isAddDialogOpen && (
         <AddTaskDialog
-          open={isAddDialogOpen}
-          onOpenChange={setIsAddDialogOpen}
-          onTaskAdded={handleTaskAddition}
-          propertyId={propertyId}
+          isOpen={isAddDialogOpen}
+          onClose={() => setIsAddDialogOpen(false)}
+          onAddTask={handleAddTask}
+          initialPropertyId={propertyId}
         />
       )}
 
       {isBatchDialogOpen && (
         <BatchTaskDialog
-          open={isBatchDialogOpen}
-          onOpenChange={setIsBatchDialogOpen}
-          onTasksAdded={(tasks) => {
+          isOpen={isBatchDialogOpen}
+          onClose={() => setIsBatchDialogOpen(false)}
+          onAddTasks={(tasks) => {
             tasks.forEach(task => {
-              handleTaskAddition(task);
+              handleAddTask(task);
             });
           }}
-          propertyId={propertyId}
+          initialPropertyId={propertyId}
         />
       )}
     </div>

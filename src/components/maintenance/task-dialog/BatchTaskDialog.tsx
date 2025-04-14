@@ -13,11 +13,10 @@ import { CalendarIcon, Loader2, XCircle } from "lucide-react";
 import { format } from "date-fns";
 import { PropertySelect } from "./form-fields/PropertySelect";
 
-interface BatchTaskDialogProps {
+export interface BatchTaskDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddTasks: (tasks: NewTask[]) => Promise<any>;
-  onSuccess: (count: number) => void;
+  onAddTasks: (tasks: NewTask[]) => Promise<any> | void;
   initialPropertyId?: string;
 }
 
@@ -25,7 +24,6 @@ export const BatchTaskDialog = ({
   isOpen,
   onClose,
   onAddTasks,
-  onSuccess,
   initialPropertyId
 }: BatchTaskDialogProps) => {
   const { t } = useLocale();
@@ -67,23 +65,23 @@ export const BatchTaskDialog = ({
     setIsSubmitting(true);
     
     try {
-      // Créer une tâche pour chaque date sélectionnée
+      // Create a task for each selected date
       const tasks: NewTask[] = selectedDates.map((date, index) => ({
         title: selectedDates.length > 1 ? `${batchTitle} (${index + 1})` : batchTitle,
         type: taskType,
         priority,
         date,
-        property_id: propertyId || undefined
+        property_id: propertyId
       }));
       
       await onAddTasks(tasks);
-      onSuccess(tasks.length);
       
       // Reset form
       setBatchTitle("");
       setTaskType("regular");
       setPriority("medium");
       setSelectedDates([]);
+      onClose();
     } catch (error) {
       console.error("Error adding batch tasks:", error);
     } finally {

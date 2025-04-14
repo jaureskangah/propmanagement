@@ -19,15 +19,15 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   );
   const [recurrenceInterval, setRecurrenceInterval] = useState(initialValue?.recurrence_pattern?.interval || 1);
   
-  // Propriétés pour les rappels
+  // Properties for reminders
   const [hasReminder, setHasReminder] = useState(initialValue?.has_reminder || false);
   const [reminderDate, setReminderDate] = useState<Date | undefined>(initialValue?.reminder_date || undefined);
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">(initialValue?.reminder_method || "app");
   
-  // Nouvelle propriété pour la sélection de propriété
+  // Property for property selection
   const [propertyId, setPropertyId] = useState<string>(initialValue?.property_id || localStorage.getItem('selectedPropertyId') || "");
   
-  // Si une date initiale est fournie, on l'utilise pour setDate
+  // If an initial date is provided, use it for setDate
   useEffect(() => {
     if (initialDate) {
       setDate(initialDate);
@@ -42,25 +42,22 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
       type,
       priority,
       date: date || new Date(),
+      property_id: propertyId,
       is_recurring: isRecurring,
-      property_id: propertyId, // Ajout de la propriété dans la tâche
-      ...(isRecurring
-        ? {
-            recurrence_pattern: {
-              frequency: recurrenceFrequency,
-              interval: Number(recurrenceInterval),
-              weekdays: [],
-            },
-          }
-        : {}),
-      // Ajout des propriétés de rappel
+      ...(isRecurring && {
+        recurrence_frequency: recurrenceFrequency,
+        recurrence_interval: Number(recurrenceInterval),
+        recurrence_pattern: {
+          frequency: recurrenceFrequency,
+          interval: Number(recurrenceInterval)
+        }
+      }),
+      // Add reminder properties
       has_reminder: hasReminder,
-      ...(hasReminder
-        ? {
-            reminder_date: reminderDate,
-            reminder_method: reminderMethod,
-          }
-        : {}),
+      ...(hasReminder && {
+        reminder_date: reminderDate,
+        reminder_method: reminderMethod,
+      }),
     };
     
     console.log("Submitting task with data:", newTask);

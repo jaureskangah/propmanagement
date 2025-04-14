@@ -8,6 +8,7 @@ import { format, isValid, startOfDay, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Task } from "./types";
+import { isValidDate, toDate } from "./utils/dateUtils";
 
 interface TaskListProps {
   tasks: Task[];
@@ -24,8 +25,8 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
     let dateStr = "Invalid date";
     
     try {
-      if (task.date instanceof Date) {
-        taskDate = startOfDay(task.date);
+      if (isValidDate(task.date)) {
+        taskDate = toDate(task.date) || new Date();
         dateStr = format(taskDate, "yyyy-MM-dd");
       } else if (typeof task.date === 'string') {
         const parsedDate = parseISO(task.date);
@@ -62,10 +63,10 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
       ) : (
         displayTasks.map((task) => {
           // Ensure task date is properly handled
-          let taskDate: Date;
+          let taskDate: Date = new Date();
           
-          if (task.date instanceof Date) {
-            taskDate = startOfDay(task.date);
+          if (isValidDate(task.date)) {
+            taskDate = toDate(task.date) || new Date();
           } else if (typeof task.date === 'string') {
             try {
               taskDate = startOfDay(parseISO(task.date));

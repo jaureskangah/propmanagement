@@ -13,12 +13,12 @@ interface MaintenanceRequestItemProps {
 export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestItemProps) => {
   const { t } = useLocale();
 
-  // Déterminer le style de la carte en fonction de la priorité
+  // Determine card style based on priority
   const cardStyle = request.priority === "Urgent" 
     ? "border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:hover:bg-red-900/30" 
     : "border hover:bg-gray-50 dark:hover:bg-gray-800";
 
-  // Déterminer le style de badge en fonction du statut
+  // Determine badge style based on status
   const getBadgeStyle = (status: string) => {
     switch(status) {
       case "Resolved":
@@ -50,7 +50,9 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
           </div>
           {request.tenants && (
             <p className="text-sm text-muted-foreground">
-              {t("from")} {request.tenants.name} - {request.tenants.properties?.name}, {t("unit")} {request.tenants.unit_number}
+              {t("from")} {request.tenants.name} - 
+              {request.tenants.properties?.name && ` ${request.tenants.properties.name}, `}
+              {request.tenants.unit_number && `${t("unit")} ${request.tenants.unit_number}`}
             </p>
           )}
           <p className="text-sm text-muted-foreground">

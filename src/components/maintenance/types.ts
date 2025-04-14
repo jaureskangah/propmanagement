@@ -24,25 +24,32 @@ export interface Property {
   notes?: string;
 }
 
+export interface RecurrencePattern {
+  frequency: "daily" | "weekly" | "monthly" | "yearly";
+  interval: number;
+  weekdays?: string[];
+}
+
 export interface Task {
   id: string;
   created_at?: string;
   title: string;
   type: string;
   priority: string;
-  date: string;
+  date: string | Date;
   property_id: string;
   completed: boolean;
   notes?: string;
   is_recurring?: boolean;
   recurrence_frequency?: "daily" | "weekly" | "monthly" | "yearly";
   recurrence_interval?: number;
-  recurrence_pattern?: string;
+  recurrence_pattern?: RecurrencePattern;
   has_reminder?: boolean;
   reminder_date?: string | Date;
   reminder_method?: "app" | "email" | "both";
   photos?: string[];
   tenants?: Array<{id: string, name: string}>;
+  position?: number;
 }
 
 export interface MaintenanceRequest {
@@ -62,7 +69,14 @@ export interface MaintenanceRequest {
   tenant_feedback?: string;
   tenant_rating?: number;
   photos?: string[];
-  tenants?: Array<{id: string, name: string}>;
+  tenants?: {
+    id: string;
+    name: string;
+    properties?: {
+      name: string;
+    };
+    unit_number?: string;
+  };
 }
 
 export interface NewTask {
@@ -74,14 +88,10 @@ export interface NewTask {
   is_recurring?: boolean;
   recurrence_frequency?: "daily" | "weekly" | "monthly" | "yearly";
   recurrence_interval?: number;
-  recurrence_pattern?: string;
+  recurrence_pattern?: RecurrencePattern;
   has_reminder?: boolean;
   reminder_date?: Date;
   reminder_method?: "app" | "email" | "both";
   completed?: boolean;
-}
-
-export interface RecurrencePattern {
-  frequency: "daily" | "weekly" | "monthly" | "yearly";
-  interval: number;
+  position?: number;
 }

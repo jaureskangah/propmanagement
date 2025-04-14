@@ -1,16 +1,16 @@
 
 /**
- * Vérifie si un objet est une instance de Date ou une représentation valide de date
+ * Checks if a value is a valid Date or a valid date representation
  */
 export const isValidDate = (value: any): boolean => {
   if (!value) return false;
   
-  // Si c'est déjà un objet Date
-  if (Object.prototype.toString.call(value) === "[object Date]") {
+  // If it's already a Date object
+  if (value instanceof Date) {
     return !isNaN(value.getTime());
   }
   
-  // Si c'est une chaîne, essayons de la convertir
+  // If it's a string, try to convert it
   if (typeof value === 'string') {
     const date = new Date(value);
     return !isNaN(date.getTime());
@@ -20,17 +20,17 @@ export const isValidDate = (value: any): boolean => {
 };
 
 /**
- * Convertit une valeur en objet Date si possible
+ * Converts a value to a Date object if possible
  */
 export const toDate = (value: any): Date | null => {
   if (!value) return null;
   
-  // Si c'est déjà un objet Date
-  if (Object.prototype.toString.call(value) === "[object Date]") {
+  // If it's already a Date object
+  if (value instanceof Date) {
     return !isNaN(value.getTime()) ? value : null;
   }
   
-  // Si c'est une chaîne, essayons de la convertir
+  // If it's a string, try to convert it
   if (typeof value === 'string') {
     const date = new Date(value);
     return !isNaN(date.getTime()) ? date : null;

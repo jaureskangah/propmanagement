@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { CalendarClock, RotateCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { isValidDate, toDate } from "../utils/dateUtils";
 
 interface RecurringTasksViewProps {
   tasks: Task[];
@@ -15,7 +16,7 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
   const { t, language } = useLocale();
   const dateLocale = language === 'fr' ? fr : undefined;
   
-  // Filtrer uniquement les tâches récurrentes
+  // Filter only recurring tasks
   const recurringTasks = tasks.filter(task => Boolean(task.is_recurring) === true);
   
   console.log("RecurringTasksView received tasks:", tasks);
@@ -34,28 +35,28 @@ export const RecurringTasksView = ({ tasks }: RecurringTasksViewProps) => {
     <ScrollArea className="h-[300px]">
       <div className="space-y-3">
         {recurringTasks.map((task) => {
-          // Format récurrence texte
+          // Format recurrence text
           let recurrenceText = "";
           if (task.recurrence_pattern) {
-            const { frequency, interval } = task.recurrence_pattern;
+            const pattern = task.recurrence_pattern;
             
-            if (frequency === "daily") {
-              recurrenceText = interval > 1 
-                ? `${t('repeatsDaily')}, ${t('every')} ${interval} ${t('days')}`
+            if (pattern.frequency === "daily") {
+              recurrenceText = pattern.interval > 1 
+                ? `${t('repeatsDaily')}, ${t('every')} ${pattern.interval} ${t('days')}`
                 : t('repeatsDaily');
-            } else if (frequency === "weekly") {
-              recurrenceText = interval > 1 
-                ? `${t('repeatsWeekly')}, ${t('every')} ${interval} ${t('weeks')}`
+            } else if (pattern.frequency === "weekly") {
+              recurrenceText = pattern.interval > 1 
+                ? `${t('repeatsWeekly')}, ${t('every')} ${pattern.interval} ${t('weeks')}`
                 : t('repeatsWeekly');
-            } else if (frequency === "monthly") {
-              recurrenceText = interval > 1 
-                ? `${t('repeatsMonthly')}, ${t('every')} ${interval} ${t('months')}`
+            } else if (pattern.frequency === "monthly") {
+              recurrenceText = pattern.interval > 1 
+                ? `${t('repeatsMonthly')}, ${t('every')} ${pattern.interval} ${t('months')}`
                 : t('repeatsMonthly');
             }
           }
           
-          // S'assurer que la date est un objet Date valide
-          const taskDate = task.date instanceof Date ? task.date : new Date(task.date);
+          // Ensure the date is a valid Date object
+          const taskDate = toDate(task.date) || new Date();
           
           return (
             <div 

@@ -6,7 +6,7 @@ import { TaskFormContent } from "./TaskFormContent";
 import { NewTask } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
-interface AddTaskDialogProps {
+export interface AddTaskDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onAddTask: (task: NewTask) => Promise<any> | void;
@@ -32,6 +32,7 @@ export const AddTaskDialog = ({
         if (onSuccess) {
           onSuccess();
         }
+        onClose();
       } catch (error) {
         console.error("Error adding task:", error);
       }
