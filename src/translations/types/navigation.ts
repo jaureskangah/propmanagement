@@ -1,3 +1,4 @@
+
 export interface NavigationTranslations {
   features: string;
   pricing: string;
@@ -18,5 +19,5 @@ export interface NavigationTranslations {
   error: string;
   properties: string;
   finances: string;
-  costs?: string;
+  costs: string;
 }
