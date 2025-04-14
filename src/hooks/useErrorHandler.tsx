@@ -49,7 +49,6 @@ export function useErrorHandler() {
     
     // Show toast notification if requested
     if (options?.showToast !== false) {
-      // Remove the icon property from toast as it's not supported
       toast({
         title: options?.title || defaultTitles[severity],
         description: options?.description || errorMessage,

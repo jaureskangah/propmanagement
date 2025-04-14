@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { processMonthlyData, processYearlyData } from "../utils/chartProcessing";
 import { useState, useEffect } from "react";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 interface ChartDataResult {
   payments: Array<{
@@ -25,6 +26,7 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const { t } = useLocale();
+  const { handleError } = useErrorHandler();
   const [monthlyData, setMonthlyData] = useState<any[]>([]);
   const [yearlyData, setYearlyData] = useState<any[]>([]);
 
@@ -132,11 +134,12 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
       } catch (error: any) {
         console.error("Error in chart data fetch:", error);
         
-        // Show user-friendly error message
-        toast({
+        // Use our error handler for consistent error management
+        handleError(error, {
           title: t('error'),
           description: t('errorLoadingData'),
-          variant: "destructive",
+          severity: 'error',
+          showToast: true
         });
         
         throw error;
@@ -148,10 +151,11 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
     meta: {
       onError: (error: Error) => {
         console.error('Query error in useChartData:', error);
-        toast({
+        handleError(error, {
           title: t('error'),
           description: t('unexpectedError'),
-          variant: "destructive",
+          severity: 'error',
+          showToast: true
         });
       }
     }

@@ -14,6 +14,7 @@ import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
 import { YearFilter } from "@/components/finances/YearFilter";
 import { cn } from "@/lib/utils";
 import { FileBarChart, Loader2 } from "lucide-react";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 // Storage key for localStorage
 const SELECTED_PROPERTY_KEY = "finances_selected_property_id";
@@ -25,18 +26,28 @@ const Finances = () => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { handleError } = useErrorHandler();
   
   // Fetch properties
   const { data: properties, isLoading: isLoadingProperties } = useQuery({
     queryKey: ["properties"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("properties")
-        .select("*")
-        .order("name");
-      
-      if (error) throw error;
-      return data || [];
+      try {
+        const { data, error } = await supabase
+          .from("properties")
+          .select("*")
+          .order("name");
+        
+        if (error) throw error;
+        return data || [];
+      } catch (error) {
+        handleError(error, {
+          title: t('errorLoadingProperties'),
+          description: t('errorLoadingPropertiesDescription'),
+          showToast: true
+        });
+        return [];
+      }
     },
   });
 

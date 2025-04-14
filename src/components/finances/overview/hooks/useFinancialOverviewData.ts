@@ -1,11 +1,14 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 export const useFinancialOverviewData = (propertyId: string | null, selectedYear: number) => {
   const { t } = useLocale();
+  const { toast } = useToast();
+  const { handleError } = useErrorHandler();
   
   const { data: tenants, isLoading: tenantsLoading, error: tenantsError } = useQuery({
     queryKey: ['financial_tenants', propertyId],
@@ -22,10 +25,11 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         return data || [];
       } catch (error) {
         console.error("Error fetching tenants:", error);
-        toast({
+        handleError(error, {
           title: t('error'),
           description: t('errorLoadingData'),
-          variant: "destructive",
+          severity: 'error',
+          showToast: true
         });
         throw error;
       }
@@ -66,6 +70,12 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         return data || [];
       } catch (error) {
         console.error("Error fetching payments:", error);
+        handleError(error, {
+          title: t('error'),
+          description: t('errorLoadingData'),
+          severity: 'error',
+          showToast: true
+        });
         throw error;
       }
     },
@@ -75,10 +85,11 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
     meta: {
       onError: (error: any) => {
         console.error("Payments fetch error:", error);
-        toast({
+        handleError(error, {
           title: t('error'),
           description: t('errorLoadingData'),
-          variant: "destructive",
+          severity: 'error',
+          showToast: true
         });
       }
     }
@@ -140,10 +151,11 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         return allExpenses;
       } catch (error) {
         console.error("Error fetching expenses:", error);
-        toast({
+        handleError(error, {
           title: t('error'),
           description: t('errorLoadingData'),
-          variant: "destructive",
+          severity: 'error',
+          showToast: true
         });
         throw error;
       }
