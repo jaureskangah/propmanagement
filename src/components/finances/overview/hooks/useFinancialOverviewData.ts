@@ -55,39 +55,46 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
       const endDate = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
       
       try {
+        console.log(`Fetching expenses for property ${propertyId} between ${startDate} and ${endDate}`);
+        
         // First query for maintenance expenses
         const { data: maintenanceExpenses, error: maintenanceError } = await supabase
           .from('maintenance_expenses')
           .select('id, amount, date, category, description')
           .eq('property_id', propertyId)
           .gte('date', startDate)
-          .lte('date', endDate)
-          .order('date', { ascending: false });
+          .lte('date', endDate);
           
-        if (maintenanceError) throw maintenanceError;
+        if (maintenanceError) {
+          console.error("Error fetching maintenance expenses:", maintenanceError);
+          throw maintenanceError;
+        }
+        
+        console.log("Maintenance expenses fetched:", maintenanceExpenses);
         
         // Second query for vendor interventions which also count as expenses
         const { data: vendorInterventions, error: vendorError } = await supabase
           .from('vendor_interventions')
-          .select('id, cost as amount, date, title as category, description')
+          .select('id, cost, date, title, description')
           .eq('property_id', propertyId)
           .gte('date', startDate)
-          .lte('date', endDate)
-          .order('date', { ascending: false });
+          .lte('date', endDate);
           
-        if (vendorError) throw vendorError;
+        if (vendorError) {
+          console.error("Error fetching vendor interventions:", vendorError);
+          throw vendorError;
+        }
         
-        // Combine both types of expenses
+        console.log("Vendor interventions fetched:", vendorInterventions);
+        
+        // Combine both types of expenses 
         const allExpenses = [
           ...(maintenanceExpenses || []),
           ...(vendorInterventions || [])
         ];
         
-        console.log(`Fetched ${allExpenses.length} expenses for year ${selectedYear}:`, {
-          maintenanceExpenses: maintenanceExpenses?.length || 0,
-          vendorInterventions: vendorInterventions?.length || 0,
-          expensesData: allExpenses
-        });
+        console.log(`Total expenses combined: ${allExpenses.length}`);
+        console.log("Combined expenses data:", allExpenses);
         
         return allExpenses;
       } catch (error) {

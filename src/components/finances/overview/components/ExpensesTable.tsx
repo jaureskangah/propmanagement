@@ -13,6 +13,9 @@ interface ExpensesTableProps {
 export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
   const { t } = useLocale();
 
+  // Log to debug the expenses data
+  console.log("ExpensesTable received data:", expenses);
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-48">
@@ -29,9 +32,6 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
     );
   }
 
-  // Log to debug the expenses data
-  console.log("Rendering expenses table with data:", expenses);
-
   return (
     <Table>
       <TableHeader>
@@ -43,12 +43,12 @@ export function ExpensesTable({ expenses, isLoading }: ExpensesTableProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {expenses.map(expense => {
+        {expenses.map((expense, index) => {
           // Calculate the amount value, handling both 'amount' and 'cost' fields
           const amountValue = expense.amount !== undefined ? expense.amount : expense.cost;
           
           return (
-            <TableRow key={expense.id} className="text-xs">
+            <TableRow key={expense.id || index} className="text-xs">
               <TableCell>{format(new Date(expense.date), 'yyyy-MM-dd')}</TableCell>
               <TableCell>{expense.category || expense.title}</TableCell>
               <TableCell>{expense.description || '-'}</TableCell>

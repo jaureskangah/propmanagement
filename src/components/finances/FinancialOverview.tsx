@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -18,6 +18,17 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
   const { t } = useLocale();
   const { tenants, payments, expenses, isLoading } = useFinancialOverviewData(propertyId, selectedYear);
 
+  // Log for debugging
+  useEffect(() => {
+    console.log("FinancialOverview rendering with:", {
+      propertyId,
+      selectedYear,
+      isLoading,
+      expenses: expenses?.length || 0,
+      expensesData: expenses
+    });
+  }, [propertyId, selectedYear, isLoading, expenses]);
+
   if (isLoading) {
     return <LoadingMetrics />;
   }
@@ -25,14 +36,6 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
   if (!propertyId) {
     return <NoPropertySelected type="financial-overview" />;
   }
-
-  // Logs pour déboguer
-  console.log("Financial overview data:", {
-    tenants: tenants?.length || 0,
-    payments: payments?.length || 0,
-    expenses: expenses?.length || 0,
-    expensesData: expenses
-  });
 
   return (
     <Card>
