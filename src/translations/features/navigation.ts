@@ -19,7 +19,7 @@ export const enNavigation: NavigationTranslations = {
   loading: "Loading...",
   error: "Error",
   properties: "Properties",
-  finances: "Financial Overview"
+  finances: "Finances"
 };
 
 export const frNavigation: NavigationTranslations = {
@@ -41,5 +41,5 @@ export const frNavigation: NavigationTranslations = {
   loading: "Chargement...",
   error: "Erreur",
   properties: "Propriétés",
-  finances: "Vue d'ensemble financière"
+  finances: "Finances"
 };
