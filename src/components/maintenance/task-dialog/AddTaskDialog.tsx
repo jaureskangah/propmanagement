@@ -1,50 +1,61 @@
 
-import { useState } from "react";
+import React from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTaskForm } from "./hooks/useTaskForm";
+import { TaskFormContent } from "./TaskFormContent";
 import { NewTask } from "../types";
-import { TaskForm } from "./TaskForm";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface AddTaskDialogProps {
-  onAddTask: (task: NewTask) => void;
-  isOpen?: boolean;
-  onClose?: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+  onAddTask: (task: NewTask) => Promise<any> | void;
+  onSuccess?: () => void;
   initialDate?: Date;
+  initialPropertyId?: string;
 }
 
-export const AddTaskDialog = ({ onAddTask, isOpen, onClose, initialDate }: AddTaskDialogProps) => {
-  const [internalOpen, setInternalOpen] = useState(false);
+export const AddTaskDialog = ({ 
+  isOpen, 
+  onClose, 
+  onAddTask, 
+  onSuccess,
+  initialDate,
+  initialPropertyId
+}: AddTaskDialogProps) => {
   const { t } = useLocale();
   
-  const handleAddTask = (task: NewTask) => {
-    onAddTask(task);
-    if (onClose) {
-      onClose();
-    } else {
-      setInternalOpen(false);
-    }
-  };
-
-  // Determine if we're using controlled or uncontrolled open state
-  const open = isOpen !== undefined ? isOpen : internalOpen;
-  const setOpen = onClose ? (value: boolean) => {
-    if (!value) {
-      onClose();
-    }
-  } : setInternalOpen;
-
+  const taskForm = useTaskForm({
+    onSubmit: async (task) => {
+      try {
+        await onAddTask(task);
+        if (onSuccess) {
+          onSuccess();
+        }
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
+    },
+    initialDate,
+    initialValue: initialPropertyId ? { 
+      title: "",
+      type: "regular",
+      priority: "medium",
+      date: initialDate || new Date(),
+      property_id: initialPropertyId
+    } : undefined
+  });
+  
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      {/* IMPORTANT: On supprime complètement le DialogTrigger qui ajoute le bouton + Ajouter 
-          lorsque ce composant est utilisé en mode contrôlé (avec isOpen) */}
-      <DialogContent className="max-h-[90vh] p-0">
-        <DialogHeader className="px-6 pt-6">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
           <DialogTitle>{t('addNewTask')}</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[calc(90vh-120px)] px-6 pb-6">
-          <TaskForm onSubmit={handleAddTask} initialDate={initialDate} />
-        </ScrollArea>
+        <TaskFormContent 
+          {...taskForm} 
+          initialPropertyId={initialPropertyId}
+        />
       </DialogContent>
     </Dialog>
   );

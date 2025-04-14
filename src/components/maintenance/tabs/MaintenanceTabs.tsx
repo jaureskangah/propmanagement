@@ -1,85 +1,66 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PreventiveMaintenance } from "../preventive/PreventiveMaintenance";
-import { MaintenanceList } from "../MaintenanceList";
-import { WorkOrderList } from "../work-orders/WorkOrderList";
+import { MaintenanceRequests } from "./MaintenanceRequests";
+import { MaintenanceTasks } from "../tasks/MaintenanceTasks";
+import { MaintenanceCharts } from "../charts/MaintenanceCharts";
 import { PropertyFinancials } from "../PropertyFinancials";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { MaintenanceRequest } from "../types";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useWorkOrdersData } from "../work-orders/hooks/useWorkOrdersData";
 
 interface MaintenanceTabsProps {
   propertyId: string;
   selectedYear: number;
-  filteredRequests: any[];
-  onRequestClick: (request: any) => void;
+  filteredRequests: MaintenanceRequest[];
+  onRequestClick: (request: MaintenanceRequest) => void;
 }
 
 export const MaintenanceTabs = ({ 
   propertyId, 
   selectedYear,
-  filteredRequests,
-  onRequestClick
+  filteredRequests, 
+  onRequestClick 
 }: MaintenanceTabsProps) => {
   const { t } = useLocale();
-  const [activeTab, setActiveTab] = useState("preventive");
   const isMobile = useIsMobile();
-  const [isCreateWorkOrderOpen, setIsCreateWorkOrderOpen] = useState(false);
   
-  // Use real work order data
-  const { workOrders, isLoading, refetch } = useWorkOrdersData();
-  
-  // Handle tab change
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-  };
-
-  const handleCreateWorkOrder = () => {
-    console.log("Create Work Order button clicked in MaintenanceTabs");
-    setIsCreateWorkOrderOpen(true);
-  };
+  console.log(`Rendering MaintenanceTabs with propertyId: ${propertyId}`);
   
   return (
-    <Tabs defaultValue="preventive" className="w-full" onValueChange={handleTabChange}>
-      <TabsList className={`w-full ${isMobile ? "flex flex-wrap gap-1" : "grid grid-cols-4"}`}>
-        <TabsTrigger value="preventive" className={isMobile ? "flex-1 text-xs p-1" : ""}>
-          {t('preventiveMaintenance')}
+    <Tabs defaultValue="dashboard" className="w-full">
+      <TabsList className={`${isMobile ? "flex flex-wrap" : "w-full md:grid md:grid-cols-4"} bg-card`}>
+        <TabsTrigger value="dashboard" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+          {t('dashboard')}
         </TabsTrigger>
-        <TabsTrigger value="requests" className={isMobile ? "flex-1 text-xs p-1" : ""}>
-          {t('maintenanceRequestTitle')}
+        <TabsTrigger value="requests" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+          {t('requests')}
         </TabsTrigger>
-        <TabsTrigger value="workorders" className={isMobile ? "flex-1 text-xs p-1" : ""}>
-          {t('workOrders')}
+        <TabsTrigger value="tasks" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+          {t('tasks')}
         </TabsTrigger>
-        <TabsTrigger value="costs" className={isMobile ? "flex-1 text-xs p-1" : ""}>
-          {t('costs')}
+        <TabsTrigger value="financials" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+          {t('financials')}
         </TabsTrigger>
       </TabsList>
       
-      <TabsContent value="preventive" className="pt-6">
-        <PreventiveMaintenance />
+      <TabsContent value="dashboard" className="pt-6">
+        <MaintenanceCharts propertyId={propertyId} />
       </TabsContent>
       
       <TabsContent value="requests" className="pt-6">
-        <MaintenanceList 
+        <MaintenanceRequests 
           requests={filteredRequests} 
-          onMaintenanceUpdate={() => {}} 
+          onRequestClick={onRequestClick} 
         />
       </TabsContent>
       
-      <TabsContent value="workorders" className="pt-6">
-        <WorkOrderList 
-          workOrders={workOrders}
-          onCreateWorkOrder={handleCreateWorkOrder} 
-        />
+      <TabsContent value="tasks" className="pt-6">
+        <MaintenanceTasks propertyId={propertyId} />
       </TabsContent>
       
-      <TabsContent value="costs" className="pt-6">
-        <PropertyFinancials 
-          propertyId={propertyId} 
-          selectedYear={selectedYear}
-        />
+      <TabsContent value="financials" className="pt-6">
+        <PropertyFinancials propertyId={propertyId} selectedYear={selectedYear} />
       </TabsContent>
     </Tabs>
   );

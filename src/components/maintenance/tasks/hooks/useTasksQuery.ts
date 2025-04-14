@@ -1,41 +1,49 @@
-
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
 import { startOfDay, format, isValid, parseISO } from "date-fns";
 
-export const useTasksQuery = () => {
+export const useTasksQuery = (propertyId?: string) => {
   const queryClient = useQueryClient();
 
   const { data: tasks = [], isLoading } = useQuery({
-    queryKey: ['maintenance_tasks'],
+    queryKey: ['maintenance_tasks', propertyId],
     queryFn: async () => {
-      console.log("Fetching maintenance tasks...");
-      const { data, error } = await supabase
+      console.log(`Fetching maintenance tasks for property: ${propertyId || 'all'}`);
+      
+      // Construire la requête de base
+      let query = supabase
         .from('maintenance_tasks')
         .select('*')
         .order('position', { ascending: true });
+      
+      // Ajouter le filtre par propriété si fourni
+      if (propertyId) {
+        query = query.eq('property_id', propertyId);
+      }
+      
+      // Exécuter la requête
+      const { data, error } = await query;
       
       if (error) {
         console.error("Error fetching tasks:", error);
         throw error;
       }
       
-      console.log("Raw task data from Supabase:", data);
-      console.log("Number of tasks retrieved:", data.length);
+      console.log(`Retrieved ${data?.length || 0} tasks for property ${propertyId || 'all'}`);
       
+      // Le reste du code reste le même pour le formatage des tâches
       const formattedTasks = data.map(task => {
         // Convert dates to Date objects and normalize them (without hours/minutes/seconds)
         let taskDate: Date;
         try {
           if (task.date) {
-            // If the date is a string, convert it to a Date object
+            // Si la date est une chaîne, la convertir en objet Date
             if (typeof task.date === 'string') {
-              // Create a new date from the string
               try {
                 taskDate = parseISO(task.date);
                 
-                // Add detailed logging for date parsing
+                // Ajouter des logs détaillés pour le parsing de la date
                 console.log(`Task ${task.id} date parsing:
                   - Original string: ${task.date}
                   - Parsed as: ${isValid(taskDate) ? format(taskDate, "yyyy-MM-dd") : "INVALID"}
@@ -43,30 +51,30 @@ export const useTasksQuery = () => {
                 `);
               } catch (e) {
                 console.error("Error parsing date string:", task.date, e);
-                taskDate = startOfDay(new Date()); // Default date
+                taskDate = startOfDay(new Date()); // Date par défaut
               }
               
-              // Check if the date is valid
+              // Vérifier si la date est valide
               if (!isValid(taskDate)) {
                 console.warn("Invalid date for task:", task.id, task.date);
-                taskDate = startOfDay(new Date()); // Default date
+                taskDate = startOfDay(new Date()); // Date par défaut
               } else {
-                // Normalize the date (without hours/minutes/seconds)
+                // Normaliser la date (sans heures/minutes/secondes)
                 taskDate = startOfDay(taskDate);
               }
             } else if (task.date instanceof Date) {
-              // If it's already a Date object, normalize it
+              // Si c'est déjà un objet Date, le normaliser
               taskDate = startOfDay(task.date);
             } else {
               console.warn("Unrecognized date format for task:", task.id);
-              taskDate = startOfDay(new Date()); // Default date
+              taskDate = startOfDay(new Date()); // Date par défaut
             }
           } else {
             console.warn("No date for task:", task.id);
-            taskDate = startOfDay(new Date()); // Default date
+            taskDate = startOfDay(new Date()); // Date par défaut
           }
           
-          // Log the processed date for debugging
+          // Logger la date traitée pour le débogage
           const formattedDate = format(taskDate, "yyyy-MM-dd");
           console.log(`Task ${task.id} processed date: ${formattedDate}`);
         } catch (e) {
@@ -100,7 +108,7 @@ export const useTasksQuery = () => {
           }
         }
         
-        // Return the task with normalized dates
+        // Retourner la tâche avec les dates normalisées
         return {
           ...task,
           date: taskDate,
@@ -128,7 +136,8 @@ export const useTasksQuery = () => {
           title: t.title,
           date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
           type: t.type,
-          priority: t.priority
+          priority: t.priority,
+          property_id: t.property_id
         })));
       }
       
@@ -141,7 +150,7 @@ export const useTasksQuery = () => {
   // Fonction pour forcer le rafraîchissement des tâches
   const refreshTasks = () => {
     console.log("Manually refreshing tasks...");
-    queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+    queryClient.invalidateQueries({ queryKey: ['maintenance_tasks', propertyId] });
   };
 
   return { tasks, isLoading, refreshTasks };
