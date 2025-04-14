@@ -1,212 +1,145 @@
-import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+
+import React, { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { NewTask } from "../types";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { format } from "date-fns";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Card, CardContent } from "@/components/ui/card";
-import { CalendarCheck2, Check, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { NewTask } from "../types";
 
 interface BatchSchedulingDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSchedule: (tasks: NewTask[]) => void;
+  onSave: (tasks: NewTask[]) => void;
+  propertyId: string;
 }
 
-export const BatchSchedulingDialog = ({ isOpen, onClose, onSchedule }: BatchSchedulingDialogProps) => {
-  const { t, language } = useLocale();
-  const { toast } = useToast();
-  const [selectedDates, setSelectedDates] = useState<Date[]>([]);
-  const [batchTitle, setBatchTitle] = useState("");
-  const [batchType, setBatchType] = useState<"regular" | "inspection" | "seasonal">("regular");
-  const [batchPriority, setBatchPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const dateLocale = language === 'fr' ? fr : undefined;
-  
-  const handleScheduleBatch = () => {
-    if (!batchTitle || selectedDates.length === 0) return;
-    
-    setIsSubmitting(true);
-    
-    try {
-      const tasks: NewTask[] = selectedDates.map((date, index) => {
-        const taskDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        
-        console.log(`Creating task ${index + 1} with date:`, taskDate, "Original selected date:", date);
-        
-        return {
-          title: `${batchTitle} ${index + 1}`,
-          date: taskDate,
-          type: batchType,
-          priority: batchPriority,
-          is_recurring: false
-        };
+export const BatchSchedulingDialog = ({ isOpen, onClose, onSave, propertyId }: BatchSchedulingDialogProps) => {
+  const { t } = useLocale();
+  const [date, setDate] = useState<Date>(new Date());
+  const [taskPrefix, setTaskPrefix] = useState("");
+  const [taskCount, setTaskCount] = useState(1);
+  const [type, setType] = useState<"regular" | "inspection" | "seasonal">("regular");
+  const [priority, setPriority] = useState<"low" | "medium" | "high" | "urgent">("medium");
+
+  const handleSave = () => {
+    const tasks: NewTask[] = [];
+    for (let i = 0; i < taskCount; i++) {
+      tasks.push({
+        title: `${taskPrefix} ${i + 1}`,
+        date: new Date(date),
+        type,
+        priority,
+        is_recurring: false,
+        property_id: propertyId
       });
-      
-      onSchedule(tasks);
-      resetForm();
-      
-      toast({
-        title: t('success'),
-        description: t('multipleTasksAdded'),
-      });
-    } catch (error) {
-      console.error("Error scheduling tasks:", error);
-      toast({
-        title: t('error'),
-        description: t('errorAddingTasks'),
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
     }
-  };
-  
-  const resetForm = () => {
-    setBatchTitle("");
-    setSelectedDates([]);
-    setBatchType("regular");
-    setBatchPriority("medium");
-  };
-  
-  const handleClose = () => {
-    resetForm();
+    onSave(tasks);
     onClose();
-  };
-  
-  const handleDateSelect = (dates: Date[] | undefined) => {
-    if (dates) {
-      setSelectedDates(dates.map(date => {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      }));
-    } else {
-      setSelectedDates([]);
-    }
-  };
-  
-  const removeDate = (dateToRemove: Date) => {
-    setSelectedDates(selectedDates.filter(
-      date => date.getTime() !== dateToRemove.getTime()
-    ));
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0">
-        <DialogHeader className="px-6 pt-6">
-          <DialogTitle>{t('batchScheduling')}</DialogTitle>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>{t('batchCreateTasks')}</DialogTitle>
         </DialogHeader>
-        
-        <ScrollArea className="max-h-[calc(90vh-130px)] px-6">
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="batchTitle">{t('batchTitle')}</Label>
-              <Input
-                id="batchTitle"
-                value={batchTitle}
-                onChange={(e) => setBatchTitle(e.target.value)}
-                placeholder={t('batchTitlePlaceholder')}
-              />
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="batchType">{t('taskType')}</Label>
-                <Select value={batchType} onValueChange={(value: any) => setBatchType(value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('selectType')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="regular">{t('regularTask')}</SelectItem>
-                    <SelectItem value="inspection">{t('inspection')}</SelectItem>
-                    <SelectItem value="seasonal">{t('seasonalTask')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>{t('priority')}</Label>
-                <Select value={batchPriority} onValueChange={(value: any) => setBatchPriority(value)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('selectPriority')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="low">{t('low')}</SelectItem>
-                    <SelectItem value="medium">{t('medium')}</SelectItem>
-                    <SelectItem value="high">{t('high')}</SelectItem>
-                    <SelectItem value="urgent">{t('urgent')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>{t('selectDates')}</Label>
-              <div className="border rounded-md p-4">
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="taskPrefix" className="text-right">
+              {t('taskPrefix')}
+            </Label>
+            <Input
+              id="taskPrefix"
+              value={taskPrefix}
+              onChange={(e) => setTaskPrefix(e.target.value)}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="taskCount" className="text-right">
+              {t('numberOfTasks')}
+            </Label>
+            <Input
+              id="taskCount"
+              type="number"
+              min="1"
+              max="20"
+              value={taskCount}
+              onChange={(e) => setTaskCount(parseInt(e.target.value))}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="date" className="text-right">
+              {t('date')}
+            </Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  id="date"
+                  variant={"outline"}
+                  className={cn(
+                    "col-span-3 justify-start text-left font-normal",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>{t('selectDate')}</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
                 <Calendar
-                  mode="multiple"
-                  selected={selectedDates}
-                  onSelect={handleDateSelect}
-                  className="pointer-events-auto w-full"
-                  locale={dateLocale}
+                  mode="single"
+                  selected={date}
+                  onSelect={(date) => date && setDate(date)}
                   initialFocus
                 />
-              </div>
-            </div>
-            
-            {selectedDates.length > 0 && (
-              <div className="space-y-2">
-                <Label>{t('selectedDates')}</Label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {selectedDates.map((date, i) => (
-                    <Card key={i} className="w-full">
-                      <CardContent className="p-2 flex justify-between items-center">
-                        <span className="text-sm">{format(date, 'PP', { locale: dateLocale })}</span>
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-6 w-6"
-                          onClick={() => removeDate(date)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </div>
-            )}
+              </PopoverContent>
+            </Popover>
           </div>
-        </ScrollArea>
-        
-        <DialogFooter className="p-6 pt-2">
-          <Button variant="outline" onClick={handleClose} disabled={isSubmitting}>
-            <X className="h-4 w-4 mr-2" />
-            {t('cancel')}
-          </Button>
-          <Button 
-            onClick={handleScheduleBatch}
-            disabled={!batchTitle || selectedDates.length === 0 || isSubmitting}
-            className="gap-2"
-          >
-            {isSubmitting ? (
-              t('schedulingTasks')
-            ) : (
-              <>
-                <CalendarCheck2 className="h-4 w-4" />
-                {t('scheduleTasks')}
-              </>
-            )}
-          </Button>
-        </DialogFooter>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="type" className="text-right">
+              {t('type')}
+            </Label>
+            <Select value={type} onValueChange={(value: any) => setType(value)}>
+              <SelectTrigger id="type" className="col-span-3">
+                <SelectValue placeholder={t('selectType')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="regular">{t('regularTask')}</SelectItem>
+                <SelectItem value="inspection">{t('inspection')}</SelectItem>
+                <SelectItem value="seasonal">{t('seasonalTask')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="priority" className="text-right">
+              {t('priority')}
+            </Label>
+            <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
+              <SelectTrigger id="priority" className="col-span-3">
+                <SelectValue placeholder={t('selectPriority')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">{t('priorityLow')}</SelectItem>
+                <SelectItem value="medium">{t('priorityMedium')}</SelectItem>
+                <SelectItem value="high">{t('priorityHigh')}</SelectItem>
+                <SelectItem value="urgent">{t('priorityUrgent')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="flex justify-end gap-2">
+          <Button variant="outline" onClick={onClose}>{t('cancel')}</Button>
+          <Button onClick={handleSave}>{t('create')}</Button>
+        </div>
       </DialogContent>
     </Dialog>
   );
