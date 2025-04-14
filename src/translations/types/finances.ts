@@ -43,4 +43,10 @@ export interface FinancesTranslations {
   late: string;
   tenant: string;
   unitNumber: string;
+  allTimeIncome: string;
+  allTimeExpenses: string;
+  occupancyRate: string;
+  occupancyRateDescription: string;
+  unpaidRent: string;
+  unpaidRentDescription: string;
 }

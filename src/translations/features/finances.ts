@@ -44,7 +44,13 @@ export const enFinances: FinancesTranslations = {
   overdue: "Overdue",
   late: "Late",
   tenant: "Tenant",
-  unitNumber: "Unit #"
+  unitNumber: "Unit #",
+  allTimeIncome: "Total income for the selected period",
+  allTimeExpenses: "Total expenses for the selected period",
+  occupancyRate: "Occupancy Rate",
+  occupancyRateDescription: "Current occupancy rate of your properties",
+  unpaidRent: "Unpaid Rent",
+  unpaidRentDescription: "Total overdue rent payments"
 };
 
 export const frFinances: FinancesTranslations = {
@@ -90,5 +96,11 @@ export const frFinances: FinancesTranslations = {
   overdue: "En Retard",
   late: "En Retard",
   tenant: "Locataire",
-  unitNumber: "Unité #"
+  unitNumber: "Unité #",
+  allTimeIncome: "Revenu total pour la période sélectionnée",
+  allTimeExpenses: "Dépenses totales pour la période sélectionnée",
+  occupancyRate: "Taux d'Occupation",
+  occupancyRateDescription: "Taux d'occupation actuel de vos propriétés",
+  unpaidRent: "Loyers Impayés",
+  unpaidRentDescription: "Total des loyers en retard de paiement"
 };
