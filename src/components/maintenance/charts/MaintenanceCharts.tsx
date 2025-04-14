@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   ResponsiveContainer, 
@@ -15,43 +15,25 @@ import {
 } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { 
+  getMaintenanceChartData, 
+  useMaintenanceChartConfig, 
+  useExpensesChartConfig 
+} from "./utils/chartUtils";
 
 interface MaintenanceChartsProps {
   propertyId: string;
 }
 
-const chartData = [
-  { month: "Jan", requests: 4, completed: 3, urgent: 1, expenses: 400 },
-  { month: "Feb", requests: 3, completed: 2, urgent: 0, expenses: 300 },
-  { month: "Mar", requests: 5, completed: 4, urgent: 2, expenses: 550 },
-  { month: "Apr", requests: 2, completed: 2, urgent: 0, expenses: 200 },
-  { month: "May", requests: 7, completed: 5, urgent: 3, expenses: 650 },
-  { month: "Jun", requests: 4, completed: 3, urgent: 1, expenses: 450 },
-];
-
 export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
   const { t } = useLocale();
   
-  console.log("Rendering MaintenanceCharts with propertyId:", propertyId);
+  // Fetch chart data using the utility function
+  const chartData = useMemo(() => getMaintenanceChartData(propertyId), [propertyId]);
   
-  const chartConfig = {
-    totalRequests: {
-      label: t('totalMaintenanceRequests'),
-      theme: { light: "#8884d8", dark: "#a393f0" }
-    },
-    completedRequests: {
-      label: t('completedMaintenanceRequests'),
-      theme: { light: "#4ade80", dark: "#22c55e" }
-    },
-    urgentRequests: {
-      label: t('urgentMaintenanceRequests'),
-      theme: { light: "#ef4444", dark: "#f87171" }
-    },
-    expenses: {
-      label: t('maintenanceExpenses'),
-      theme: { light: "#82ca9d", dark: "#86efac" }
-    },
-  };
+  // Get chart configurations using the utility hooks
+  const chartConfig = useMaintenanceChartConfig();
+  const expensesChartConfig = useExpensesChartConfig();
   
   return (
     <div className="space-y-6">
@@ -138,12 +120,7 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
         <CardContent>
           <div className="h-80">
             <ChartContainer
-              config={{
-                expenses: {
-                  label: t('maintenanceExpenses'),
-                  theme: { light: "#82ca9d", dark: "#86efac" }
-                }
-              }}
+              config={expensesChartConfig}
               className="h-full w-full"
             >
               <BarChart
