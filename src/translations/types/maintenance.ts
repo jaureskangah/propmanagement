@@ -1,3 +1,4 @@
+
 export interface MaintenanceTranslations {
   maintenanceRequestTitle: string;
   maintenanceCalendar: string;
@@ -97,13 +98,7 @@ export interface MaintenanceTranslations {
   columnDescription: string;
   columnCost: string;
   columnDate: string;
-  totalExpenses: string;
-  yearToDate: string;
-  annualReturn: string;
-  totalRentPaid: string;
-  allTime: string;
   clickForDetails: string;
-  comparedToPreviousMonth: string;
   totalRequestsDesc: string;
   pendingRequestsDesc: string;
   resolvedRequestsDesc: string;
@@ -137,7 +132,7 @@ export interface MaintenanceTranslations {
   reminderViaEmail?: string;
   reminderViaBoth?: string;
   
-  // Mise à jour des descriptions de KPI
+  // KPI descriptions - moved to SharedTranslations to resolve type conflicts
   totalExpenses?: string;
   yearToDate?: string;
   annualReturn?: string;

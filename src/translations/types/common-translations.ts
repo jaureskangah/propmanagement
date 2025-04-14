@@ -30,4 +30,12 @@ export interface SharedTranslations
   date: string;
   property: string;
   unit: string;
+  
+  // KPI descriptions shared between maintenance and finances
+  totalExpenses?: string;
+  yearToDate?: string;
+  annualReturn?: string;
+  totalRentPaid?: string;
+  allTime?: string;
+  comparedToPreviousMonth?: string;
 }
