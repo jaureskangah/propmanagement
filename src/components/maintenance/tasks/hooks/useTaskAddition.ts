@@ -26,20 +26,25 @@ export const useTaskAddition = () => {
         throw new Error("User not authenticated");
       }
       
+      // Prepare the task data to insert
+      const taskData = {
+        title: newTask.title,
+        type: newTask.type || "regular",
+        priority: newTask.priority || "medium",
+        date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
+        is_recurring: newTask.is_recurring || false,
+        user_id: user.id,
+        property_id: newTask.property_id, // Ensure property_id is included
+        // Add other fields as needed
+        ...(newTask.recurrence_pattern ? { recurrence_pattern: newTask.recurrence_pattern } : {}),
+      };
+      
+      console.log("Task data being inserted:", taskData);
+      
       // Insert the task
       const { data, error } = await supabase
         .from('maintenance_tasks')
-        .insert({
-          title: newTask.title,
-          type: newTask.type || "regular",
-          priority: newTask.priority || "medium",
-          date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
-          is_recurring: newTask.is_recurring || false,
-          user_id: user.id,
-          property_id: newTask.property_id, // Ajout du property_id
-          // Add other fields as needed
-          ...(newTask.recurrence_pattern ? { recurrence_pattern: newTask.recurrence_pattern } : {}),
-        })
+        .insert(taskData)
         .select('*')
         .single();
         
@@ -52,6 +57,7 @@ export const useTaskAddition = () => {
       
       // Immediately invalidate the tasks query to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       
       return {
         ...data,
@@ -89,11 +95,13 @@ export const useTaskAddition = () => {
           date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
           is_recurring: task.is_recurring || false,
           user_id: user.id,
-          property_id: task.property_id, // Ajout du property_id
+          property_id: task.property_id, // Ensure property_id is included
           // Add other fields as needed
           ...(task.recurrence_pattern ? { recurrence_pattern: task.recurrence_pattern } : {}),
         };
       });
+      
+      console.log("Tasks data being inserted:", tasksToInsert);
       
       // Insert all tasks
       const { data, error } = await supabase
@@ -110,6 +118,7 @@ export const useTaskAddition = () => {
       
       // Immediately invalidate the tasks query to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
       
       // Transform the returned data to Task objects
       return data.map((task: any) => ({

@@ -59,8 +59,8 @@ export const PreventiveMaintenanceContent = () => {
           isOpen={isAddTaskOpen}
           onClose={() => setIsAddTaskOpen(false)}
           onAddTask={(task) => {
-            console.log("AddTaskDialog initiated task save:", task);
-            return onAddTask(task);
+            console.log("PreventiveMaintenanceContent - Initiating task save:", task);
+            return onAddTask(task); // Return the promise to AddTaskDialog
           }}
           initialDate={selectedDate}
         />

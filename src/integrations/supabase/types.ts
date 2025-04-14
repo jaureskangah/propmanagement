@@ -399,6 +399,7 @@ export type Database = {
           photos: string[] | null
           position: number | null
           priority: string | null
+          property_id: string | null
           recurrence_pattern: Json | null
           status: string | null
           title: string
@@ -415,6 +416,7 @@ export type Database = {
           photos?: string[] | null
           position?: number | null
           priority?: string | null
+          property_id?: string | null
           recurrence_pattern?: Json | null
           status?: string | null
           title: string
@@ -431,6 +433,7 @@ export type Database = {
           photos?: string[] | null
           position?: number | null
           priority?: string | null
+          property_id?: string | null
           recurrence_pattern?: Json | null
           status?: string | null
           title?: string
@@ -438,7 +441,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "maintenance_tasks_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
