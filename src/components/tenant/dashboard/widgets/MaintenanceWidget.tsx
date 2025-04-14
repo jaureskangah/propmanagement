@@ -27,7 +27,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <Wrench className="h-5 w-5 mr-2 text-blue-600" />
-          <h3 className="font-semibold text-blue-700">{t('maintenance.maintenanceRequests')}</h3>
+          <h3 className="font-semibold text-blue-700">{t('maintenanceRequests')}</h3>
         </div>
         {requests.length > 0 && (
           <Badge variant="secondary" className="bg-blue-100 text-blue-700">
@@ -40,7 +40,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
         {requests.length === 0 ? (
           <div className="text-center py-6 bg-white/60 rounded-lg">
             <Wrench className="h-10 w-10 text-blue-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">{t('maintenance.noMaintenanceRequests')}</p>
+            <p className="text-sm text-gray-500">{t('noMaintenanceRequests')}</p>
           </div>
         ) : (
           <div className="space-y-3">
@@ -84,7 +84,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                   className="text-blue-600 hover:text-blue-800"
                   onClick={() => navigate('/tenant/maintenance')}
                 >
-                  {t('maintenance.viewAll')} <ChevronRight className="h-4 w-4 ml-1" />
+                  {t('viewAll')} <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             )}
@@ -98,7 +98,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
           className="w-full bg-blue-600 hover:bg-blue-700 text-white"
           onClick={() => navigate('/tenant/maintenance/new')}
         >
-          {t('maintenance.newRequest', { fallback: 'New Request' })} <PlusCircle className="h-4 w-4 ml-1" />
+          {t('newRequest')} <PlusCircle className="h-4 w-4 ml-1" />
         </Button>
       </div>
     </motion.div>
