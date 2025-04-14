@@ -39,9 +39,9 @@ export const TenantMaintenanceView = () => {
 
   if (!tenantId) {
     return (
-      <Card>
+      <Card className="dark:bg-gray-900/80 dark:border-gray-800">
         <CardContent className="pt-6">
-          <p className="text-center text-muted-foreground">
+          <p className="text-center text-muted-foreground dark:text-gray-400">
             {t('notLinkedToTenant')}
           </p>
         </CardContent>
@@ -59,7 +59,7 @@ export const TenantMaintenanceView = () => {
         onSortChange={setSortBy}
       />
       
-      <Card>
+      <Card className="dark:bg-gray-900/80 dark:border-gray-800 dark:shadow-md">
         <CardContent className="space-y-6 pt-6">
           {/* Stats Summary */}
           <MaintenanceStats 
