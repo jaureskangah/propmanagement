@@ -1,4 +1,3 @@
-
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const frMaintenance: TenantMaintenanceTranslations = {
@@ -70,5 +69,7 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   feedbackSaved: "Votre avis a été enregistré avec succès",
   errorSavingFeedback: "Erreur lors de l'enregistrement de votre avis",
   ratingRequired: "Veuillez fournir une note avant de soumettre",
-  close: "Fermer"
+  close: "Fermer",
+  viewAll: "Voir tout",
+  maintenance: "Maintenance"
 };

@@ -1,4 +1,3 @@
-
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const enMaintenance: TenantMaintenanceTranslations = {
@@ -70,5 +69,7 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   feedbackSaved: "Your feedback has been saved successfully",
   errorSavingFeedback: "Error saving your feedback",
   ratingRequired: "Please provide a rating before submitting",
-  close: "Close"
+  close: "Close",
+  viewAll: "View All",
+  maintenance: "Maintenance"
 };
