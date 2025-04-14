@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -20,7 +19,6 @@ interface MaintenanceChartsProps {
   propertyId: string;
 }
 
-// Données fictives pour les graphiques - dans une application réelle, ces données viendraient d'une API
 const chartData = [
   { month: "Jan", requests: 4, completed: 3, urgent: 1, expenses: 400 },
   { month: "Feb", requests: 3, completed: 2, urgent: 0, expenses: 300 },
@@ -35,7 +33,6 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
   
   console.log("Rendering MaintenanceCharts with propertyId:", propertyId);
   
-  // Configuration des couleurs pour les graphiques
   const chartConfig = {
     totalRequests: {
       label: t('totalRequests'),

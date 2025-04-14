@@ -18,7 +18,7 @@ export const enRequests = {
   photosSelected: "Photos Selected",
   noMaintenanceRequests: "No maintenance requests found",
   maintenanceManagement: "Maintenance Management",
-  totalRequests: "Total Requests",
+  totalRequests: "Total Maintenance Requests",
   resolvedRequests: "Resolved Requests",
   pendingRequests: "Pending Requests",
   maintenanceCompleted: "Maintenance Completed",
@@ -78,7 +78,13 @@ export const enRequests = {
   edit: "Edit",
   tenantFeedbackReceived: "Tenant Feedback Received",
   feedbackReceivedFor: "Feedback received for request",
-  ratingRequired: "Please select a rating before submitting"
+  ratingRequired: "Please select a rating before submitting",
+  maintenanceRequestsTrends: "Maintenance Request Trends",
+  totalRequests: "Total Maintenance Requests",
+  completedRequests: "Completed Requests",
+  urgentRequests: "Urgent Requests",
+  maintenanceExpensesTrends: "Maintenance Expenses Trends",
+  expenses: "Maintenance Expenses"
 };
 
 export const frRequests = {
@@ -161,5 +167,11 @@ export const frRequests = {
   edit: "Modifier",
   tenantFeedbackReceived: "Avis du locataire reçu",
   feedbackReceivedFor: "Avis reçu pour la demande",
-  ratingRequired: "Veuillez sélectionner une évaluation avant de soumettre"
+  ratingRequired: "Veuillez sélectionner une évaluation avant de soumettre",
+  maintenanceRequestsTrends: "Tendances des Demandes de Maintenance",
+  totalRequests: "Nombre Total de Demandes",
+  completedRequests: "Demandes Terminées",
+  urgentRequests: "Demandes Urgentes",
+  maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
+  expenses: "Dépenses de Maintenance"
 };
