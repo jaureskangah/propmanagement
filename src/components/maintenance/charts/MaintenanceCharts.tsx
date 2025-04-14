@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -35,19 +36,19 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
   
   const chartConfig = {
     totalRequests: {
-      label: t('totalRequests'),
+      label: t('totalMaintenanceRequests'),
       theme: { light: "#8884d8", dark: "#a393f0" }
     },
     completedRequests: {
-      label: t('completedRequests'),
+      label: t('completedMaintenanceRequests'),
       theme: { light: "#4ade80", dark: "#22c55e" }
     },
     urgentRequests: {
-      label: t('urgentRequests'),
+      label: t('urgentMaintenanceRequests'),
       theme: { light: "#ef4444", dark: "#f87171" }
     },
     expenses: {
-      label: t('expenses'),
+      label: t('maintenanceExpenses'),
       theme: { light: "#82ca9d", dark: "#86efac" }
     },
   };
@@ -139,7 +140,7 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
             <ChartContainer
               config={{
                 expenses: {
-                  label: t('expenses'),
+                  label: t('maintenanceExpenses'),
                   theme: { light: "#82ca9d", dark: "#86efac" }
                 }
               }}

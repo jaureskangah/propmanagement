@@ -1,3 +1,4 @@
+
 export const enRequests = {
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
@@ -80,11 +81,11 @@ export const enRequests = {
   feedbackReceivedFor: "Feedback received for request",
   ratingRequired: "Please select a rating before submitting",
   maintenanceRequestsTrends: "Maintenance Request Trends",
-  totalRequests: "Total Maintenance Requests",
-  completedRequests: "Completed Requests",
-  urgentRequests: "Urgent Requests",
+  totalMaintenanceRequests: "Total Maintenance Requests",
+  completedMaintenanceRequests: "Completed Requests",
+  urgentMaintenanceRequests: "Urgent Requests",
   maintenanceExpensesTrends: "Maintenance Expenses Trends",
-  expenses: "Maintenance Expenses"
+  maintenanceExpenses: "Maintenance Expenses"
 };
 
 export const frRequests = {
@@ -169,9 +170,9 @@ export const frRequests = {
   feedbackReceivedFor: "Avis reçu pour la demande",
   ratingRequired: "Veuillez sélectionner une évaluation avant de soumettre",
   maintenanceRequestsTrends: "Tendances des Demandes de Maintenance",
-  totalRequests: "Nombre Total de Demandes",
-  completedRequests: "Demandes Terminées",
-  urgentRequests: "Demandes Urgentes",
+  totalMaintenanceRequests: "Nombre Total de Demandes",
+  completedMaintenanceRequests: "Demandes Terminées",
+  urgentMaintenanceRequests: "Demandes Urgentes", 
   maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
-  expenses: "Dépenses de Maintenance"
+  maintenanceExpenses: "Dépenses de Maintenance"
 };
