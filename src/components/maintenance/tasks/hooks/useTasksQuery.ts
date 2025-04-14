@@ -7,42 +7,55 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
   const result = useQuery({
     queryKey: ['tasks', propertyId],
     queryFn: async () => {
-      let query = supabase
-        .from('maintenance_tasks')
-        .select('*');
-      
-      // If there's a specific property, filter by that property
-      if (propertyId) {
-        query = query.eq('property_id', propertyId);
-      }
-      
-      const { data, error } = await query.order('date');
-      
-      if (error) {
-        throw new Error(error.message);
-      }
-      
-      // Sort tasks with uncompleted ones first
-      const sortedTasks = data.sort((a, b) => {
-        // First sort by completed status
-        if (a.completed !== b.completed) {
-          return a.completed ? 1 : -1;
+      try {
+        console.log("Fetching tasks for property:", propertyId);
+        
+        let query = supabase
+          .from('maintenance_tasks')
+          .select('*');
+        
+        // If there's a specific property, filter by that property
+        if (propertyId) {
+          query = query.eq('property_id', propertyId);
         }
         
-        // Then sort by date
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
+        const { data, error } = await query.order('date');
         
-        if (isNaN(dateA) || isNaN(dateB)) {
-          return 0;
+        if (error) {
+          throw new Error(error.message);
         }
         
-        return dateA - dateB;
-      });
-      
-      return sortedTasks as Task[];
+        console.log(`Fetched ${data?.length || 0} tasks`);
+        
+        // Sort tasks with uncompleted ones first
+        const sortedTasks = data.sort((a, b) => {
+          // First sort by completed status
+          if (a.completed !== b.completed) {
+            return a.completed ? 1 : -1;
+          }
+          
+          // Then sort by date
+          const dateA = new Date(a.date).getTime();
+          const dateB = new Date(b.date).getTime();
+          
+          if (isNaN(dateA) || isNaN(dateB)) {
+            return 0;
+          }
+          
+          return dateA - dateB;
+        });
+        
+        return sortedTasks as Task[];
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+        throw error;
+      }
     },
-    refetchInterval: 30000, // Refetch every 30 seconds
+    // Optimisations de performance
+    staleTime: 30000, // Considérer les données à jour pendant 30 secondes
+    cacheTime: 5 * 60 * 1000, // Garder en cache pendant 5 minutes
+    refetchOnWindowFocus: false, // Ne pas recharger quand la fenêtre est focus
+    refetchInterval: false, // Désactiver le rechargement automatique périodique
   });
 
   // Return structured data with additional helper methods

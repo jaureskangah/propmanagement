@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequests } from "./MaintenanceRequests";
 import { MaintenanceTasks } from "../tasks/MaintenanceTasks";
@@ -8,6 +8,21 @@ import { PropertyFinancials } from "../PropertyFinancials";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MaintenanceRequest } from "../types";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Skeleton } from "@/components/ui/skeleton";
+
+// Création d'un composant de chargement réutilisable
+const TabContentSkeleton = () => (
+  <div className="pt-6">
+    <div className="space-y-4">
+      <Skeleton className="h-8 w-48" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array(4).fill(0).map((_, i) => (
+          <Skeleton key={i} className="h-32 rounded-md" />
+        ))}
+      </div>
+    </div>
+  </div>
+);
 
 export const MaintenanceTabs = ({ 
   propertyId, 

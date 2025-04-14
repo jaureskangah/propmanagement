@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BatchTaskDialog } from "../task-dialog/BatchTaskDialog";
 import { AddTaskDialog } from "../task-dialog/AddTaskDialog";
 import { MaintenanceTasksList } from "./MaintenanceTasksList";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface MaintenanceTasksProps {
   propertyId: string;
@@ -27,15 +28,37 @@ export const MaintenanceTasks = ({ propertyId }: MaintenanceTasksProps) => {
     handleDeleteTask,
   } = useMaintenanceTasks(propertyId);
 
+  // Affichage du squelette de chargement plus détaillé
   if (isLoading) {
     return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="text-center space-y-2">
-            <p className="text-muted-foreground">{t('loading')}</p>
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <Skeleton className="h-8 w-48" />
+          <div className="flex space-x-2">
+            <Skeleton className="h-9 w-32" />
+            <Skeleton className="h-9 w-32" />
           </div>
-        </CardContent>
-      </Card>
+        </div>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              {Array(3).fill(0).map((_, index) => (
+                <div key={index} className="flex items-center justify-between p-2 border rounded-md">
+                  <div className="space-y-2">
+                    <Skeleton className="h-5 w-[250px]" />
+                    <Skeleton className="h-4 w-[180px]" />
+                  </div>
+                  <div className="flex space-x-2">
+                    <Skeleton className="h-8 w-8 rounded-md" />
+                    <Skeleton className="h-8 w-8 rounded-md" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
