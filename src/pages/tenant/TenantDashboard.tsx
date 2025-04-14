@@ -41,7 +41,7 @@ const TenantDashboardPage = () => {
 
   console.log("Rendering tenant dashboard page");
   return (
-    <div className="min-h-screen bg-background dark:bg-gray-900">
+    <div className="min-h-screen bg-background dark:bg-gray-950">
       <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
       <div className={cn(
         "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
