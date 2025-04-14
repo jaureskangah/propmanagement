@@ -51,11 +51,11 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
         throw error;
       }
     },
-    // Optimisations de performance
-    staleTime: 30000, // Considérer les données à jour pendant 30 secondes
-    cacheTime: 5 * 60 * 1000, // Garder en cache pendant 5 minutes
-    refetchOnWindowFocus: false, // Ne pas recharger quand la fenêtre est focus
-    refetchInterval: false, // Désactiver le rechargement automatique périodique
+    // Performance optimizations
+    staleTime: 30000, // Consider data fresh for 30 seconds
+    gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes (replaced cacheTime)
+    refetchOnWindowFocus: false, // Don't refetch when window is focused
+    refetchInterval: false, // Disable automatic periodic refetching
   });
 
   // Return structured data with additional helper methods
