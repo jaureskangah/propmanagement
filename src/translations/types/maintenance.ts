@@ -1,4 +1,3 @@
-
 export interface MaintenanceTranslations {
   maintenanceRequestTitle: string;
   maintenanceCalendar: string;
@@ -137,4 +136,12 @@ export interface MaintenanceTranslations {
   reminderViaApp?: string;
   reminderViaEmail?: string;
   reminderViaBoth?: string;
+  
+  // Mise à jour des descriptions de KPI
+  totalExpenses?: string;
+  yearToDate?: string;
+  annualReturn?: string;
+  totalRentPaid?: string;
+  allTime?: string;
+  comparedToPreviousMonth?: string;
 }
