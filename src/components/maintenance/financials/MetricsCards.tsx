@@ -1,8 +1,10 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { FileText, TrendingUp, Wallet } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface MetricsCardsProps {
   propertyId: string;
@@ -23,15 +25,62 @@ export const MetricsCards = ({
 }: MetricsCardsProps) => {
   const { t } = useLocale();
   
+  // Refetch rent data specifically for this property and year
+  const { data: propertyRentData = [] } = useQuery({
+    queryKey: ["property_rent_payments_exact", propertyId, selectedYear],
+    queryFn: async () => {
+      console.log(`Fetching exact rent data for property ${propertyId} in year ${selectedYear}`);
+      try {
+        // First get tenants for this property
+        const { data: tenants, error: tenantsError } = await supabase
+          .from("tenants")
+          .select("id")
+          .eq("property_id", propertyId);
+          
+        if (tenantsError) throw tenantsError;
+        
+        if (!tenants?.length) {
+          console.log("No tenants found for property", propertyId);
+          return [];
+        }
+        
+        const tenantIds = tenants.map(t => t.id);
+        console.log("Found tenants for property:", tenantIds);
+        
+        // Start and end dates for filtering by year
+        const startOfYear = new Date(selectedYear, 0, 1).toISOString();
+        const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+        
+        // Then get payments for these tenants within the selected year
+        const { data: payments, error: paymentsError } = await supabase
+          .from("tenant_payments")
+          .select("*")
+          .in("tenant_id", tenantIds)
+          .gte("payment_date", startOfYear)
+          .lte("payment_date", endOfYear);
+
+        if (paymentsError) throw paymentsError;
+        
+        console.log(`Fetched ${payments?.length || 0} payments for property ${propertyId} in year ${selectedYear}:`, payments);
+        return payments || [];
+      } catch (error) {
+        console.error("Error fetching property rent data:", error);
+        return [];
+      }
+    },
+    enabled: !!propertyId && selectedYear > 0
+  });
+  
   const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
   
-  // Calculate total rent paid from the passed rentData
-  const totalRentPaid = rentData
+  // Calculate total rent paid from the property's payments
+  const totalRentPaid = propertyRentData
     .filter(payment => payment.status === "paid")
     .reduce((acc, curr) => acc + curr.amount, 0);
   
-  console.log("MetricsCards with totalRentPaid:", totalRentPaid, "for year:", selectedYear);
+  console.log("MetricsCards with totalRentPaid:", totalRentPaid, "for property:", propertyId, "year:", selectedYear);
+  console.log("Payment statuses:", propertyRentData.map(p => p.status));
 
   const metrics = [
     {

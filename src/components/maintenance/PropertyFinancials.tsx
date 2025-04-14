@@ -75,45 +75,55 @@ export const PropertyFinancials = ({
     },
   });
 
-  // Get the year's start
-  const startOfYear = new Date(selectedYear, 0, 1).toISOString();
-  const endOfYear = new Date(selectedYear, 11, 31).toISOString();
-
   // Fetch total rent paid for this property in the selected year
   const { data: rentData = [] } = useQuery({
     queryKey: ["property_rent_payments", propertyId, selectedYear],
     queryFn: async () => {
-      // First get tenants for this property
-      const { data: tenants, error: tenantsError } = await supabase
-        .from("tenants")
-        .select("id")
-        .eq("property_id", propertyId);
+      try {
+        // First get tenants for this property
+        const { data: tenants, error: tenantsError } = await supabase
+          .from("tenants")
+          .select("id")
+          .eq("property_id", propertyId);
+          
+        if (tenantsError) throw tenantsError;
         
-      if (tenantsError) throw tenantsError;
-      
-      if (!tenants?.length) return [];
-      
-      const tenantIds = tenants.map(t => t.id);
-      
-      // Then get payments for these tenants within the selected year
-      const { data: payments, error: paymentsError } = await supabase
-        .from("tenant_payments")
-        .select("*")
-        .in("tenant_id", tenantIds)
-        .gte("payment_date", startOfYear)
-        .lte("payment_date", endOfYear);
+        if (!tenants?.length) return [];
+        
+        const tenantIds = tenants.map(t => t.id);
+        
+        // Start and end dates for filtering by year
+        const startOfYear = new Date(selectedYear, 0, 1).toISOString();
+        const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+        
+        // Then get payments for these tenants within the selected year
+        const { data: payments, error: paymentsError } = await supabase
+          .from("tenant_payments")
+          .select("*")
+          .in("tenant_id", tenantIds)
+          .gte("payment_date", startOfYear)
+          .lte("payment_date", endOfYear);
 
-      if (paymentsError) throw paymentsError;
-      console.log(`Fetched ${payments?.length || 0} rent payments for ROI calculation for property ${propertyId} in year ${selectedYear}`);
-      return payments || [];
+        if (paymentsError) throw paymentsError;
+        
+        console.log(`Fetched ${payments?.length || 0} rent payments for property ${propertyId} in year ${selectedYear}`);
+        return payments || [];
+      } catch (error) {
+        console.error("Error fetching rent payments:", error);
+        return [];
+      }
     },
+    enabled: !!propertyId
   });
 
   // Calculate ROI
   const calculateROI = () => {
     const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
     const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
-    const totalIncome = rentData.filter(payment => payment.status === "paid")
+    
+    // Filter only paid payments
+    const totalIncome = rentData
+      .filter(payment => payment.status === "paid")
       .reduce((acc, curr) => acc + curr.amount, 0);
     
     console.log("ROI calculation for property:", propertyId, {
