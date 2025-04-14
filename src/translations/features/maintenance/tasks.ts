@@ -82,7 +82,8 @@ export const enTasks = {
   reminderViaBoth: "Via App & Email",
   // Adding the missing translations
   enterTaskTitle: "Enter task title",
-  saveTask: "Save Task"
+  saveTask: "Save Task",
+  batchAdd: "Batch Scheduling"
 };
 
 export const frTasks = {
@@ -166,5 +167,6 @@ export const frTasks = {
   reminderViaBoth: "Via app & email",
   // Adding the missing translations
   enterTaskTitle: "Entrez le titre de la tâche",
-  saveTask: "Enregistrer la tâche"
+  saveTask: "Enregistrer la tâche",
+  batchAdd: "Planification par lot"
 };

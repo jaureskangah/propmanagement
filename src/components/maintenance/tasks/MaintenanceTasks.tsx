@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useMaintenanceTasks } from "./useMaintenanceTasks";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,6 @@ export const MaintenanceTasks = ({ propertyId }: MaintenanceTasksProps) => {
     handleDeleteTask,
   } = useMaintenanceTasks(propertyId);
 
-  // Affichage du squelette de chargement plus détaillé
   if (isLoading) {
     return (
       <div className="space-y-4">
