@@ -1,3 +1,4 @@
+
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const frMaintenance: TenantMaintenanceTranslations = {
@@ -71,5 +72,7 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   ratingRequired: "Veuillez fournir une note avant de soumettre",
   close: "Fermer",
   viewAll: "Voir tout",
-  maintenance: "Maintenance"
+  maintenance: "Maintenance",
+  newRequest: "Nouvelle demande",
+  andMoreRequests: "et {count} de plus"
 };

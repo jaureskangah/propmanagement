@@ -69,4 +69,8 @@ export interface TenantMaintenanceTranslations {
   errorSavingFeedback: string;
   ratingRequired: string;
   close: string;
+  viewAll: string;
+  maintenance: string;
+  newRequest?: string;
+  andMoreRequests?: string;
 }
