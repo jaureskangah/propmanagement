@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Wrench, Info, Search, Filter } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -41,6 +42,7 @@ const MaintenancePageHeader = ({
   selectedYear
 }: MaintenancePageHeaderProps) => {
   const { t } = useLocale();
+  const { properties, isLoading } = useProperties();
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
