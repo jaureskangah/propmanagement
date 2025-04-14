@@ -43,15 +43,6 @@ export const addFinanceTranslations = (
     translations["finance.selectProperty"] = "Select property";
     translations["finance.noPropertiesAvailable"] = "No properties available";
     
-    // Error and notification related translations
-    translations["finance.errorLoadingData"] = "Error loading data";
-    translations["finance.errorLoadingMetrics"] = "Error loading financial metrics";
-    translations["finance.errorLoadingOverview"] = "Error loading financial overview";
-    translations["finance.unexpectedError"] = "An unexpected error occurred";
-    translations["finance.refreshing"] = "Refreshing data...";
-    translations["finance.attemptingToRefreshData"] = "Attempting to refresh data";
-    translations["finance.tryAgain"] = "Try again";
-    
     // Populate the exported object for en
     Object.keys(translations)
       .filter(key => key.startsWith('finance.'))
@@ -90,15 +81,6 @@ export const addFinanceTranslations = (
     translations["finance.authRequired"] = "Authentification requise";
     translations["finance.selectProperty"] = "Sélectionner une propriété";
     translations["finance.noPropertiesAvailable"] = "Aucune propriété disponible";
-    
-    // Error and notification related translations
-    translations["finance.errorLoadingData"] = "Erreur lors du chargement des données";
-    translations["finance.errorLoadingMetrics"] = "Erreur lors du chargement des métriques financières";
-    translations["finance.errorLoadingOverview"] = "Erreur lors du chargement de l'aperçu financier";
-    translations["finance.unexpectedError"] = "Une erreur inattendue s'est produite";
-    translations["finance.refreshing"] = "Actualisation des données...";
-    translations["finance.attemptingToRefreshData"] = "Tentative d'actualisation des données";
-    translations["finance.tryAgain"] = "Réessayer";
     
     // Populate the exported object for fr
     Object.keys(translations)
