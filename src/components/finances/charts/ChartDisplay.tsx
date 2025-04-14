@@ -3,17 +3,48 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Loader2 } from "lucide-react";
 import { RevenueChartTooltip } from "@/components/dashboard/revenue/RevenueChartTooltip";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useEffect } from "react";
+import { useAuth } from "@/components/AuthProvider";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface ChartDisplayProps {
   data: any[];
   view: 'monthly' | 'yearly';
   isLoading: boolean;
+  error?: Error | null;
 }
 
+// Security: Sanitize chart data to prevent XSS
+const sanitizeChartData = (data: any[]): any[] => {
+  if (!Array.isArray(data)) return [];
+  
+  return data.map(item => {
+    // Only include the expected properties
+    const safeItem: any = {
+      name: String(item.name || '').slice(0, 50), // Limit length
+      income: typeof item.income === 'number' ? item.income : 0,
+      expense: typeof item.expense === 'number' ? item.expense : 0,
+      profit: typeof item.profit === 'number' ? item.profit : 0
+    };
+    return safeItem;
+  });
+};
+
 // Using memo to prevent unnecessary re-renders
-export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
+export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, error }: ChartDisplayProps) {
   const { t } = useLocale();
+  const { isAuthenticated } = useAuth();
+  
+  // Secure the data against XSS
+  const safeData = useMemo(() => sanitizeChartData(data), [data]);
+
+  // Log access attempts for security monitoring
+  useEffect(() => {
+    if (!isAuthenticated) {
+      console.warn("Unauthorized access attempt to financial charts");
+    }
+  }, [isAuthenticated]);
 
   // Memoize the chart configuration
   const chartConfig = useMemo(() => {
@@ -41,6 +72,17 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading }
     };
   }, []);
   
+  if (error) {
+    return (
+      <Alert variant="destructive" className="mb-4">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          {t('errorLoadingData')}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+  
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -49,10 +91,19 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading }
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!safeData || safeData.length === 0) {
     return (
       <div className="flex justify-center items-center h-64 text-xs text-muted-foreground">
         {t('noDataAvailable')}
+      </div>
+    );
+  }
+
+  // Security check - ensure authenticated before rendering financial data
+  if (!isAuthenticated) {
+    return (
+      <div className="flex justify-center items-center h-64 text-xs text-muted-foreground">
+        {t('authRequired')}
       </div>
     );
   }
@@ -61,7 +112,7 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading }
     <div className="h-64">
       <ResponsiveContainer width="100%" height="100%">
         {view === 'monthly' ? (
-          <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
+          <AreaChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
             <defs>
               <linearGradient id={chartConfig.areaGradients.income.id} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.startOpacity}/>
@@ -104,7 +155,7 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading }
             />
           </AreaChart>
         ) : (
-          <BarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
+          <BarChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
             <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
             <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />

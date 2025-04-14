@@ -5,9 +5,39 @@ import { format, parseISO } from 'date-fns';
 // Cache for processed data to avoid redundant calculations
 const dataCache = new Map();
 
+// Maximum age for cached data in milliseconds (5 minutes)
+const CACHE_MAX_AGE = 5 * 60 * 1000;
+
+// Cache timestamp tracker
+const cacheTimestamps = new Map();
+
 // Helper to get month name
 const getMonthName = (monthIndex: number): string => {
   return new Date(2023, monthIndex).toLocaleString('default', { month: 'short' });
+};
+
+/**
+ * Validate a numerical value and provide a safe default
+ */
+const safeNumber = (value: any, defaultValue = 0): number => {
+  const num = Number(value);
+  return isNaN(num) ? defaultValue : num;
+};
+
+/**
+ * Safely parse a date string, returning null if invalid
+ */
+const safeParseDate = (dateString: string): Date | null => {
+  try {
+    if (!dateString) return null;
+    const date = parseISO(dateString);
+    // Check if the date is valid
+    if (isNaN(date.getTime())) return null;
+    return date;
+  } catch (e) {
+    console.error("Date parsing error:", e);
+    return null;
+  }
 };
 
 /**
@@ -15,11 +45,22 @@ const getMonthName = (monthIndex: number): string => {
  * With memoization to improve performance
  */
 export const processMonthlyData = (payments = [], expenses = [], year: number) => {
+  // Validate inputs to prevent potential security issues
+  if (!Array.isArray(payments)) payments = [];
+  if (!Array.isArray(expenses)) expenses = [];
+  if (typeof year !== 'number' || year < 2000 || year > 2100) {
+    year = new Date().getFullYear();
+  }
+
   // Create cache key based on input data
   const cacheKey = `monthly-${year}-${payments.length}-${expenses.length}`;
   
-  // Return cached result if available
-  if (dataCache.has(cacheKey)) {
+  // Check cache age
+  const cacheTime = cacheTimestamps.get(cacheKey);
+  const isValidCache = cacheTime && (Date.now() - cacheTime < CACHE_MAX_AGE);
+  
+  // Return cached result if available and not expired
+  if (isValidCache && dataCache.has(cacheKey)) {
     return dataCache.get(cacheKey);
   }
   
@@ -31,23 +72,28 @@ export const processMonthlyData = (payments = [], expenses = [], year: number) =
     profit: 0,
   }));
 
-  // Process payments
+  // Process payments with validation
   payments.forEach((payment) => {
-    if (payment.payment_date) {
-      const date = parseISO(payment.payment_date);
+    const date = safeParseDate(payment.payment_date);
+    if (date) {
       const month = date.getMonth();
-      monthlyData[month].income += Number(payment.amount) || 0;
+      const amount = safeNumber(payment.amount);
+      if (month >= 0 && month < 12) {
+        monthlyData[month].income += amount;
+      }
     }
   });
 
-  // Process expenses
+  // Process expenses with validation
   expenses.forEach((expense) => {
-    if (expense.date) {
-      const date = parseISO(expense.date);
+    const date = safeParseDate(expense.date);
+    if (date) {
       const month = date.getMonth();
       // Handle both expense.amount (maintenance_expenses) and expense.cost (vendor_interventions)
-      const expenseAmount = Number(expense.amount || expense.cost || 0);
-      monthlyData[month].expense += expenseAmount;
+      const expenseAmount = safeNumber(expense.amount || expense.cost);
+      if (month >= 0 && month < 12) {
+        monthlyData[month].expense += expenseAmount;
+      }
     }
   });
 
@@ -56,8 +102,9 @@ export const processMonthlyData = (payments = [], expenses = [], year: number) =
     month.profit = month.income - month.expense;
   });
 
-  // Cache the result
+  // Cache the result with timestamp
   dataCache.set(cacheKey, monthlyData);
+  cacheTimestamps.set(cacheKey, Date.now());
   
   return monthlyData;
 };
@@ -67,11 +114,22 @@ export const processMonthlyData = (payments = [], expenses = [], year: number) =
  * With memoization to improve performance
  */
 export const processYearlyData = (payments = [], expenses = [], currentYear: number) => {
+  // Validate inputs to prevent potential security issues
+  if (!Array.isArray(payments)) payments = [];
+  if (!Array.isArray(expenses)) expenses = [];
+  if (typeof currentYear !== 'number' || currentYear < 2000 || currentYear > 2100) {
+    currentYear = new Date().getFullYear();
+  }
+  
   // Create cache key based on input data
   const cacheKey = `yearly-${currentYear}-${payments.length}-${expenses.length}`;
   
-  // Return cached result if available
-  if (dataCache.has(cacheKey)) {
+  // Check cache age
+  const cacheTime = cacheTimestamps.get(cacheKey);
+  const isValidCache = cacheTime && (Date.now() - cacheTime < CACHE_MAX_AGE);
+  
+  // Return cached result if available and not expired
+  if (isValidCache && dataCache.has(cacheKey)) {
     return dataCache.get(cacheKey);
   }
   
@@ -89,29 +147,30 @@ export const processYearlyData = (payments = [], expenses = [], currentYear: num
   // Create a map for faster lookup
   const yearDataMap = new Map(yearlyData.map(item => [item.name, item]));
 
-  // Process payments
+  // Process payments with validation
   payments.forEach((payment) => {
-    if (payment.payment_date) {
-      const date = parseISO(payment.payment_date);
+    const date = safeParseDate(payment.payment_date);
+    if (date) {
       const year = date.getFullYear().toString();
+      const amount = safeNumber(payment.amount);
       
       if (yearDataMap.has(year)) {
         const yearData = yearDataMap.get(year);
-        yearData.income += Number(payment.amount) || 0;
+        yearData.income += amount;
       }
     }
   });
 
-  // Process expenses
+  // Process expenses with validation
   expenses.forEach((expense) => {
-    if (expense.date) {
-      const date = parseISO(expense.date);
+    const date = safeParseDate(expense.date);
+    if (date) {
       const year = date.getFullYear().toString();
       
       if (yearDataMap.has(year)) {
         const yearData = yearDataMap.get(year);
         // Handle both expense.amount (maintenance_expenses) and expense.cost (vendor_interventions)
-        const expenseAmount = Number(expense.amount || expense.cost || 0);
+        const expenseAmount = safeNumber(expense.amount || expense.cost);
         yearData.expense += expenseAmount;
       }
     }
@@ -125,15 +184,24 @@ export const processYearlyData = (payments = [], expenses = [], currentYear: num
     return data;
   });
 
-  // Cache the result
+  // Cache the result with timestamp
   dataCache.set(cacheKey, result);
+  cacheTimestamps.set(cacheKey, Date.now());
   
   return result;
 };
 
-// Clear cache when window loses focus to ensure fresh data on return
+// Clear cache periodically to ensure fresh data (every 5 minutes)
 if (typeof window !== 'undefined') {
+  // Clear on window blur (user switches tabs/apps)
   window.addEventListener('blur', () => {
     dataCache.clear();
+    cacheTimestamps.clear();
   });
+  
+  // Also clear cache periodically (every 5 minutes)
+  setInterval(() => {
+    dataCache.clear();
+    cacheTimestamps.clear();
+  }, CACHE_MAX_AGE);
 }
