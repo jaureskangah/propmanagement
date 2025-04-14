@@ -1,11 +1,11 @@
 
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { LeaseWidget } from "./widgets/LeaseWidget";
-import { NotificationWidget } from "./widgets/NotificationWidget";
-import { PaymentWidget } from "./widgets/PaymentWidget";
-import { MaintenanceWidget } from "./widgets/MaintenanceWidget";
-import { CommunicationsWidget } from "./widgets/CommunicationsWidget";
-import { DocumentsWidget } from "./widgets/DocumentsWidget";
+import { LeaseStatusCard } from "./LeaseStatusCard";
+import { NotificationSummary } from "./NotificationSummary";
+import { PaymentWidget } from "./PaymentWidget";
+import { MaintenanceWidget } from "./MaintenanceWidget";
+import { CommunicationsWidget } from "./CommunicationsWidget";
+import { DocumentsWidget } from "./DocumentsWidget";
 import { PaymentHistoryChart } from "./widgets/PaymentHistoryChart";
 import { motion } from "framer-motion";
 import type { Communication, MaintenanceRequest, Payment, TenantDocument } from "@/types/tenant";
@@ -81,7 +81,7 @@ export const DashboardWidgets = ({
           );
         case 'lease':
           return tenant && (
-            <LeaseWidget 
+            <LeaseStatusCard 
               leaseStart={tenant.lease_start}
               leaseEnd={tenant.lease_end}
               daysLeft={leaseStatus.daysLeft}
@@ -90,7 +90,7 @@ export const DashboardWidgets = ({
           );
         case 'notifications':
           return (
-            <NotificationWidget
+            <NotificationSummary
               communications={communications}
               maintenanceRequests={maintenanceRequests}
             />
@@ -135,7 +135,7 @@ export const DashboardWidgets = ({
       <motion.div 
         key={widgetId}
         variants={item}
-        className="w-full h-full transform transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md rounded-xl overflow-hidden dark:bg-gray-900/50 dark:backdrop-blur-sm dark:border dark:border-gray-800/50"
+        className="w-full h-full transform transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md rounded-xl overflow-hidden dark:bg-gray-800/90 dark:backdrop-blur-sm dark:border dark:border-gray-700/80"
         initial="hidden"
         animate="show"
         transition={{ duration: 0.3, delay: index * 0.05 }}

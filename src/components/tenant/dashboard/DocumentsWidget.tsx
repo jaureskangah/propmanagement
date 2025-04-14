@@ -18,7 +18,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
     <motion.div 
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100 dark:from-purple-900/30 dark:to-violet-900/30 dark:border-purple-800/40 p-5 dark-card-gradient"
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-100 dark:from-purple-950/70 dark:to-violet-950/70 dark:border-purple-800/50 p-5"
     >
       <div className="flex items-center mb-4">
         <FileText className="h-5 w-5 mr-2 text-purple-600 dark:text-purple-400" />
@@ -27,7 +27,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
       
       <div className="space-y-4">
         {documents.length === 0 ? (
-          <div className="text-center py-6 bg-white/60 dark:bg-gray-800/60 rounded-lg">
+          <div className="text-center py-6 bg-white/60 dark:bg-gray-800/40 rounded-lg">
             <File className="h-10 w-10 text-purple-300 dark:text-purple-500/50 mx-auto mb-2 opacity-50" />
             <p className="text-sm text-gray-500 dark:text-gray-400">{t('noDocuments')}</p>
           </div>
@@ -39,7 +39,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/80 shadow-sm hover:shadow hover:bg-white/90 dark:hover:bg-gray-700/80 transition-all cursor-pointer dark:text-gray-200"
+                className="flex items-center p-3 rounded-lg bg-white/70 dark:bg-gray-800/40 shadow-sm hover:shadow hover:bg-white/90 dark:hover:bg-gray-800/60 transition-all cursor-pointer dark:text-gray-200"
                 onClick={() => window.open(doc.file_url, '_blank')}
               >
                 <FileText className="h-4 w-4 mr-3 text-purple-500 dark:text-purple-400" />
@@ -59,7 +59,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
         )}
         
         <Button 
-          className="w-full mt-2 text-xs bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 dark:bg-purple-700 dark:hover:bg-purple-800"
+          className="w-full mt-2 text-xs bg-purple-600 hover:bg-purple-700 text-white py-1 px-2 dark:bg-purple-800 dark:hover:bg-purple-700"
           onClick={() => navigate('/tenant/documents')}
           size="sm"
         >

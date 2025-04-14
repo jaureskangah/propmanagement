@@ -15,19 +15,19 @@ export const LeaseStatusCard = ({ leaseStart, leaseEnd, daysLeft, status }: Leas
   
   const getStatusColor = () => {
     switch (status) {
-      case 'active': return 'from-emerald-50 to-green-50 border-emerald-100 dark:from-emerald-900/20 dark:to-green-900/20 dark:border-emerald-800/30';
-      case 'expiring': return 'from-amber-50 to-yellow-50 border-amber-100 dark:from-amber-900/20 dark:to-yellow-900/20 dark:border-amber-800/30';
-      case 'expired': return 'from-rose-50 to-red-50 border-rose-100 dark:from-rose-900/20 dark:to-red-900/20 dark:border-rose-800/30';
-      default: return 'from-blue-50 to-indigo-50 border-blue-100 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-800/30';
+      case 'active': return 'from-emerald-50 to-green-50 border-emerald-100 dark:from-emerald-950/70 dark:to-green-950/70 dark:border-emerald-800/50';
+      case 'expiring': return 'from-amber-50 to-yellow-50 border-amber-100 dark:from-amber-950/70 dark:to-yellow-950/70 dark:border-amber-800/50';
+      case 'expired': return 'from-rose-50 to-red-50 border-rose-100 dark:from-rose-950/70 dark:to-red-950/70 dark:border-rose-800/50';
+      default: return 'from-blue-50 to-indigo-50 border-blue-100 dark:from-blue-950/70 dark:to-indigo-950/70 dark:border-blue-800/50';
     }
   };
   
   const getStatusTextColor = () => {
     switch (status) {
-      case 'active': return 'text-emerald-700 dark:text-emerald-300';
-      case 'expiring': return 'text-amber-700 dark:text-amber-300';
-      case 'expired': return 'text-rose-700 dark:text-rose-300';
-      default: return 'text-blue-700 dark:text-blue-300';
+      case 'active': return 'text-emerald-700 dark:text-emerald-400';
+      case 'expiring': return 'text-amber-700 dark:text-amber-400';
+      case 'expired': return 'text-rose-700 dark:text-rose-400';
+      default: return 'text-blue-700 dark:text-blue-400';
     }
   };
   
@@ -81,7 +81,7 @@ export const LeaseStatusCard = ({ leaseStart, leaseEnd, daysLeft, status }: Leas
           </div>
         </div>
         
-        <div className="w-full bg-gray-200/50 dark:bg-gray-700/50 rounded-full h-2.5 mt-4">
+        <div className="w-full bg-gray-200/50 dark:bg-gray-700/70 rounded-full h-2.5 mt-4">
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: `${progressPercentage}%` }}
