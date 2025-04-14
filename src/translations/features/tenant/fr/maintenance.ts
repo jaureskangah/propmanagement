@@ -59,5 +59,16 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   error: "Erreur",
   deadline: "Date limite",
   showMore: "Voir plus",
-  showLess: "Voir moins"
+  showLess: "Voir moins",
+  createdOn: "Créée le",
+  yourFeedbackHelpsImprove: "Votre avis nous aide à améliorer notre service de maintenance.",
+  confirmFeedback: "Confirmer l'avis",
+  feedbackSubmitConfirmation: "Êtes-vous sûr de vouloir soumettre cet avis ? Vous pourrez le modifier ultérieurement si nécessaire.",
+  confirmSubmission: "Confirmer la soumission",
+  noDescriptionProvided: "Aucune description fournie",
+  feedbackPlaceholder: "Partagez votre opinion sur le service...",
+  feedbackSaved: "Votre avis a été enregistré avec succès",
+  errorSavingFeedback: "Erreur lors de l'enregistrement de votre avis",
+  ratingRequired: "Veuillez fournir une note avant de soumettre",
+  close: "Fermer"
 };

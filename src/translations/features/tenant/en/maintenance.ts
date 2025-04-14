@@ -59,5 +59,16 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   error: "Error",
   deadline: "Deadline",
   showMore: "Show more",
-  showLess: "Show less"
+  showLess: "Show less",
+  createdOn: "Created on",
+  yourFeedbackHelpsImprove: "Your feedback helps us improve our maintenance service.",
+  confirmFeedback: "Confirm Feedback",
+  feedbackSubmitConfirmation: "Are you sure you want to submit this feedback? You can edit it later if needed.",
+  confirmSubmission: "Confirm Submission",
+  noDescriptionProvided: "No description provided",
+  feedbackPlaceholder: "Share your thoughts about the service...",
+  feedbackSaved: "Your feedback has been saved successfully",
+  errorSavingFeedback: "Error saving your feedback",
+  ratingRequired: "Please provide a rating before submitting",
+  close: "Close"
 };

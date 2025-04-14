@@ -1,7 +1,11 @@
 
-import { Card, CardContent } from "@/components/ui/card";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { ClipboardList, Clock, CheckCircle } from "lucide-react";
+import {
+  ClipboardList,
+  Clock,
+  CheckCircle,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface MaintenanceStatsProps {
   totalRequests: number;
@@ -12,56 +16,55 @@ interface MaintenanceStatsProps {
 export const MaintenanceStats = ({
   totalRequests,
   pendingRequests,
-  resolvedRequests
+  resolvedRequests,
 }: MaintenanceStatsProps) => {
   const { t } = useLocale();
 
-  const metrics = [
+  const stats = [
     {
-      title: t('totalRequests'),
+      label: t('totalRequests'),
       value: totalRequests,
       icon: ClipboardList,
       color: "text-blue-500",
-      bgColor: "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20",
-      borderColor: "border-blue-100 dark:border-blue-800/30 hover:border-blue-200 dark:hover:border-blue-700/40",
+      bgColor: "bg-blue-50 dark:bg-blue-900/20",
+      borderColor: "border-blue-100 dark:border-blue-800/40",
     },
     {
-      title: t('pendingRequests'),
+      label: t('pendingRequests'),
       value: pendingRequests,
       icon: Clock,
       color: "text-amber-500",
-      bgColor: "from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20",
-      borderColor: "border-amber-100 dark:border-amber-800/30 hover:border-amber-200 dark:hover:border-amber-700/40",
+      bgColor: "bg-amber-50 dark:bg-amber-900/20",
+      borderColor: "border-amber-100 dark:border-amber-800/40",
     },
     {
-      title: t('resolvedRequests'),
+      label: t('resolvedRequests'),
       value: resolvedRequests,
       icon: CheckCircle,
       color: "text-green-500",
-      bgColor: "from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
-      borderColor: "border-green-100 dark:border-green-800/30 hover:border-green-200 dark:hover:border-green-700/40",
-    }
+      bgColor: "bg-green-50 dark:bg-green-900/20",
+      borderColor: "border-green-100 dark:border-green-800/40",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-      {metrics.map((metric) => (
-        <Card 
-          key={metric.title}
-          className={`group relative overflow-hidden transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 bg-gradient-to-br ${metric.bgColor} ${metric.borderColor}`}
+    <div className="grid grid-cols-3 gap-3">
+      {stats.map((stat) => (
+        <div
+          key={stat.label}
+          className={cn(
+            "flex flex-col items-center justify-center p-3 rounded-lg border transition-all",
+            "transform hover:-translate-y-1 hover:shadow-md",
+            stat.bgColor,
+            stat.borderColor
+          )}
         >
-          <CardContent className="p-4 flex justify-between items-center">
-            <div>
-              <span className="text-sm text-muted-foreground group-hover:text-primary transition-colors">{metric.title}</span>
-              <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
-                {metric.value}
-              </div>
-            </div>
-            <div className={`h-8 w-8 rounded-full flex items-center justify-center bg-white/80 dark:bg-gray-800/50 shadow-sm ${metric.color}`}>
-              <metric.icon className="h-4 w-4" />
-            </div>
-          </CardContent>
-        </Card>
+          <div className={cn("p-2 rounded-full mb-2", stat.bgColor)}>
+            <stat.icon className={cn("h-5 w-5", stat.color)} />
+          </div>
+          <div className="text-xl font-bold">{stat.value}</div>
+          <div className="text-xs text-muted-foreground">{stat.label}</div>
+        </div>
       ))}
     </div>
   );

@@ -58,4 +58,15 @@ export interface TenantMaintenanceTranslations {
   deadline: string;
   showMore: string;
   showLess: string;
+  createdOn: string;
+  yourFeedbackHelpsImprove: string;
+  confirmFeedback: string;
+  feedbackSubmitConfirmation: string;
+  confirmSubmission: string;
+  noDescriptionProvided: string;
+  feedbackPlaceholder: string;
+  feedbackSaved: string;
+  errorSavingFeedback: string;
+  ratingRequired: string;
+  close: string;
 }
