@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { processMonthlyData, processYearlyData } from "../utils/chartProcessing";
+import { useState, useEffect } from "react";
 
 interface ChartDataResult {
   payments: Array<{
@@ -23,8 +25,10 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
   const { t } = useLocale();
+  const [monthlyData, setMonthlyData] = useState<any[]>([]);
+  const [yearlyData, setYearlyData] = useState<any[]>([]);
 
-  return useQuery<ChartDataResult>({
+  const result = useQuery<ChartDataResult>({
     queryKey: ['financial_chart_data', propertyId, view, selectedYear],
     queryFn: async () => {
       // Security check: Verify authentication before fetching financial data
@@ -152,4 +156,34 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
       }
     }
   });
+
+  // Process data whenever raw data or view changes
+  useEffect(() => {
+    if (result.data) {
+      // Process monthly data
+      const monthlyProcessed = processMonthlyData(
+        result.data.payments,
+        result.data.expenses,
+        selectedYear
+      );
+      setMonthlyData(monthlyProcessed);
+      
+      // Process yearly data
+      const yearlyProcessed = processYearlyData(
+        result.data.payments,
+        result.data.expenses,
+        selectedYear
+      );
+      setYearlyData(yearlyProcessed);
+    }
+  }, [result.data, selectedYear]);
+
+  return {
+    monthlyData,
+    yearlyData,
+    isLoading: result.isLoading,
+    isError: result.isError,
+    error: result.error,
+    refetch: result.refetch
+  };
 };

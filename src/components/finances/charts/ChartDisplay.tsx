@@ -3,10 +3,12 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Loader2 } from "lucide-react";
 import { RevenueChartTooltip } from "@/components/dashboard/revenue/RevenueChartTooltip";
-import { memo, useMemo, useEffect } from "react";
+import { memo, useMemo, useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 interface ChartDisplayProps {
   data: any[];
@@ -35,6 +37,7 @@ const sanitizeChartData = (data: any[]): any[] => {
 export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, error }: ChartDisplayProps) {
   const { t } = useLocale();
   const { isAuthenticated } = useAuth();
+  const [displayMode, setDisplayMode] = useState<'all' | 'income' | 'expense' | 'profit'>('all');
   
   // Secure the data against XSS
   const safeData = useMemo(() => sanitizeChartData(data), [data]);
@@ -62,6 +65,12 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
           startColor: "#F43F5E",
           startOpacity: 0.8,
           endOpacity: 0
+        },
+        profit: {
+          id: "colorProfit",
+          startColor: "#10B981",
+          startOpacity: 0.8,
+          endOpacity: 0
         }
       },
       barColors: {
@@ -74,12 +83,18 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
   
   if (error) {
     return (
-      <Alert variant="destructive" className="mb-4">
-        <AlertCircle className="h-4 w-4" />
-        <AlertDescription>
-          {t('errorLoadingData')}
-        </AlertDescription>
-      </Alert>
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {t('errorLoadingData')}
+          </AlertDescription>
+        </Alert>
+      </motion.div>
     );
   }
   
@@ -93,9 +108,14 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
 
   if (!safeData || safeData.length === 0) {
     return (
-      <div className="flex justify-center items-center h-64 text-xs text-muted-foreground">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+        className="flex justify-center items-center h-64 text-xs text-muted-foreground"
+      >
         {t('noDataAvailable')}
-      </div>
+      </motion.div>
     );
   }
 
@@ -107,90 +127,170 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
       </div>
     );
   }
+  
+  // Helper to determine which data series to show based on displayMode
+  const shouldShowSeries = (seriesName: 'income' | 'expense' | 'profit') => {
+    return displayMode === 'all' || displayMode === seriesName;
+  };
 
   return (
-    <div className="h-64">
-      <ResponsiveContainer width="100%" height="100%">
-        {view === 'monthly' ? (
-          <AreaChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
-            <defs>
-              <linearGradient id={chartConfig.areaGradients.income.id} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.startOpacity}/>
-                <stop offset="95%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.endOpacity}/>
-              </linearGradient>
-              <linearGradient id={chartConfig.areaGradients.expense.id} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartConfig.areaGradients.expense.startColor} stopOpacity={chartConfig.areaGradients.expense.startOpacity}/>
-                <stop offset="95%" stopColor={chartConfig.areaGradients.expense.startColor} stopOpacity={chartConfig.areaGradients.expense.endOpacity}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
-            <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
-            <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
-            <Tooltip 
-              content={<RevenueChartTooltip />} 
-              cursor={{ stroke: '#888', strokeDasharray: '3 3', strokeWidth: 1, opacity: 0.5 }}
-            />
-            <Legend wrapperStyle={{ fontSize: '10px' }} />
-            <Area
-              type="monotone"
-              dataKey="income"
-              name={t('income')}
-              stroke="#3B82F6"
-              strokeWidth={1.5}
-              fillOpacity={1}
-              fill={`url(#${chartConfig.areaGradients.income.id})`}
-              activeDot={{ r: 6, stroke: '#3B82F6', strokeWidth: 1, fill: '#fff' }}
-              isAnimationActive={false} // Disable animation for better performance
-            />
-            <Area
-              type="monotone"
-              dataKey="expense"
-              name={t('expense')}
-              stroke="#F43F5E"
-              strokeWidth={1.5}
-              fillOpacity={1}
-              fill={`url(#${chartConfig.areaGradients.expense.id})`}
-              activeDot={{ r: 6, stroke: '#F43F5E', strokeWidth: 1, fill: '#fff' }}
-              isAnimationActive={false} // Disable animation for better performance
-            />
-          </AreaChart>
-        ) : (
-          <BarChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
-            <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
-            <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
-            <Tooltip 
-              content={<RevenueChartTooltip />}
-              cursor={{ fill: '#f5f5f5', opacity: 0.2 }}
-            />
-            <Legend wrapperStyle={{ fontSize: '10px' }} />
-            <Bar 
-              dataKey="income" 
-              name={t('income')} 
-              fill={chartConfig.barColors.income} 
-              radius={[4, 4, 0, 0]} 
-              barSize={12} 
-              isAnimationActive={false} // Disable animation for better performance
-            />
-            <Bar 
-              dataKey="expense" 
-              name={t('expense')} 
-              fill={chartConfig.barColors.expense} 
-              radius={[4, 4, 0, 0]} 
-              barSize={12} 
-              isAnimationActive={false} // Disable animation for better performance
-            />
-            <Bar 
-              dataKey="profit" 
-              name={t('profit')} 
-              fill={chartConfig.barColors.profit} 
-              radius={[4, 4, 0, 0]} 
-              barSize={12} 
-              isAnimationActive={false} // Disable animation for better performance
-            />
-          </BarChart>
-        )}
-      </ResponsiveContainer>
+    <div className="space-y-3">
+      <div className="flex justify-center mb-2">
+        <ToggleGroup type="single" value={displayMode} onValueChange={(value) => value && setDisplayMode(value as any)} size="sm">
+          <ToggleGroupItem value="all" aria-label={t('showAll')}>
+            {t('all')}
+          </ToggleGroupItem>
+          <ToggleGroupItem value="income" aria-label={t('showIncome')}>
+            {t('income')}
+          </ToggleGroupItem>
+          <ToggleGroupItem value="expense" aria-label={t('showExpense')}>
+            {t('expense')}
+          </ToggleGroupItem>
+          <ToggleGroupItem value="profit" aria-label={t('showProfit')}>
+            {t('profit')}
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+      
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.4 }}
+        className="h-64"
+      >
+        <ResponsiveContainer width="100%" height="100%">
+          {view === 'monthly' ? (
+            <AreaChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
+              <defs>
+                <linearGradient id={chartConfig.areaGradients.income.id} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.startOpacity}/>
+                  <stop offset="95%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.endOpacity}/>
+                </linearGradient>
+                <linearGradient id={chartConfig.areaGradients.expense.id} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={chartConfig.areaGradients.expense.startColor} stopOpacity={chartConfig.areaGradients.expense.startOpacity}/>
+                  <stop offset="95%" stopColor={chartConfig.areaGradients.expense.startColor} stopOpacity={chartConfig.areaGradients.expense.endOpacity}/>
+                </linearGradient>
+                <linearGradient id={chartConfig.areaGradients.profit.id} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={chartConfig.areaGradients.profit.startColor} stopOpacity={chartConfig.areaGradients.profit.startOpacity}/>
+                  <stop offset="95%" stopColor={chartConfig.areaGradients.profit.startColor} stopOpacity={chartConfig.areaGradients.profit.endOpacity}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+              <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+              <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+              <Tooltip 
+                content={<RevenueChartTooltip />} 
+                cursor={{ stroke: '#888', strokeDasharray: '3 3', strokeWidth: 1, opacity: 0.5 }}
+                animationDuration={300}
+              />
+              <Legend wrapperStyle={{ fontSize: '10px' }} />
+              
+              {shouldShowSeries('income') && (
+                <Area
+                  type="monotone"
+                  dataKey="income"
+                  name={t('income')}
+                  stroke="#3B82F6"
+                  strokeWidth={1.5}
+                  fillOpacity={1}
+                  fill={`url(#${chartConfig.areaGradients.income.id})`}
+                  activeDot={{ r: 6, stroke: '#3B82F6', strokeWidth: 1, fill: '#fff' }}
+                  isAnimationActive={true}
+                  animationDuration={1000}
+                  animationEasing="ease-out"
+                />
+              )}
+              
+              {shouldShowSeries('expense') && (
+                <Area
+                  type="monotone"
+                  dataKey="expense"
+                  name={t('expense')}
+                  stroke="#F43F5E"
+                  strokeWidth={1.5}
+                  fillOpacity={1}
+                  fill={`url(#${chartConfig.areaGradients.expense.id})`}
+                  activeDot={{ r: 6, stroke: '#F43F5E', strokeWidth: 1, fill: '#fff' }}
+                  isAnimationActive={true}
+                  animationDuration={1000}
+                  animationEasing="ease-out"
+                />
+              )}
+              
+              {shouldShowSeries('profit') && (
+                <Area
+                  type="monotone"
+                  dataKey="profit"
+                  name={t('profit')}
+                  stroke="#10B981"
+                  strokeWidth={1.5}
+                  fillOpacity={1}
+                  fill={`url(#${chartConfig.areaGradients.profit.id})`}
+                  activeDot={{ r: 6, stroke: '#10B981', strokeWidth: 1, fill: '#fff' }}
+                  isAnimationActive={true}
+                  animationDuration={1000}
+                  animationEasing="ease-out"
+                />
+              )}
+            </AreaChart>
+          ) : (
+            <BarChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+              <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+              <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+              <Tooltip 
+                content={<RevenueChartTooltip />}
+                cursor={{ fill: '#f5f5f5', opacity: 0.2 }}
+                animationDuration={300}
+              />
+              <Legend wrapperStyle={{ fontSize: '10px' }} />
+              
+              {shouldShowSeries('income') && (
+                <Bar 
+                  dataKey="income" 
+                  name={t('income')} 
+                  fill={chartConfig.barColors.income} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={12} 
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
+                />
+              )}
+              
+              {shouldShowSeries('expense') && (
+                <Bar 
+                  dataKey="expense" 
+                  name={t('expense')} 
+                  fill={chartConfig.barColors.expense} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={12} 
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
+                />
+              )}
+              
+              {shouldShowSeries('profit') && (
+                <Bar 
+                  dataKey="profit" 
+                  name={t('profit')} 
+                  fill={chartConfig.barColors.profit} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={12} 
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
+                />
+              )}
+            </BarChart>
+          )}
+        </ResponsiveContainer>
+      </motion.div>
+      
+      <div className="text-xs text-muted-foreground text-center pt-1">
+        {view === 'monthly' ? t('monthlyData') : t('yearlyData')}
+      </div>
     </div>
   );
 });
