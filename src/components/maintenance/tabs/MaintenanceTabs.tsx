@@ -1,4 +1,3 @@
-
 import React, { lazy, Suspense } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequests } from "./MaintenanceRequests";
@@ -58,7 +57,7 @@ export const MaintenanceTabs = ({
           value="financials" 
           className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
         >
-          {t('financials')}
+          {t('finances')}
         </TabsTrigger>
       </TabsList>
       
