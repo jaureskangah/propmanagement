@@ -25,11 +25,11 @@ export const MaintenanceHeader = ({
   return (
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4 p-6 rounded-xl border border-border/40 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm shadow-sm dark:bg-gradient-to-r dark:from-gray-950 dark:to-gray-900/80 dark:border-gray-800/60 dark:shadow-[0_2px_8px_rgba(0,0,0,0.3)]">
       <div className="flex items-center gap-3">
-        <div className="h-9 w-9 rounded-xl bg-red-500/10 dark:bg-red-500/20 flex items-center justify-center">
-          <Filter className="h-4 w-4 text-red-600 dark:text-red-400" />
+        <div className="h-9 w-9 rounded-xl bg-blue-500/10 dark:bg-blue-500/20 flex items-center justify-center">
+          <Filter className="h-4 w-4 text-blue-600 dark:text-blue-400" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-red-500 to-red-600/70 bg-clip-text text-transparent dark:from-red-400 dark:to-rose-400">
+          <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-500 to-blue-600/70 bg-clip-text text-transparent dark:from-blue-400 dark:to-blue-400">
             {t('maintenanceRequests')}
           </h1>
           <p className="text-muted-foreground dark:text-gray-400">
