@@ -1,4 +1,3 @@
-
 export interface MaintenanceTranslations {
   maintenanceRequestTitle: string;
   maintenanceCalendar: string;
@@ -105,6 +104,8 @@ export interface MaintenanceTranslations {
   allTime: string;
   clickForDetails: string;
   comparedToPreviousMonth: string;
+
+  // Amélioration des descriptions des KPI
   totalRequestsDesc: string;
   pendingRequestsDesc: string;
   resolvedRequestsDesc: string;
