@@ -1,3 +1,4 @@
+
 export interface Task {
   id: string;
   title: string;
@@ -11,6 +12,7 @@ export interface Task {
   has_reminder?: boolean;
   reminder_date?: Date;
   reminder_method?: "app" | "email" | "both";
+  property_id?: string;
 }
 
 export interface NewTask {
@@ -23,11 +25,36 @@ export interface NewTask {
   has_reminder?: boolean;
   reminder_date?: Date;
   reminder_method?: "app" | "email" | "both";
-  property_id?: string; // Ajout du property_id
+  property_id?: string;
 }
 
 export interface RecurrencePattern {
   frequency: "daily" | "weekly" | "monthly" | "yearly";
   interval: number;
   weekdays?: string[];
+}
+
+// Add the MaintenanceRequest interface
+export interface MaintenanceRequest {
+  id: string;
+  issue: string;
+  description?: string;
+  status: string;
+  priority: string;
+  created_at: string;
+  updated_at: string;
+  tenant_id?: string;
+  property_id?: string;
+  tenant_feedback?: string;
+  tenant_rating?: number;
+  tenant_notified?: boolean;
+  photos?: string[];
+  tenants?: {
+    id: string;
+    name: string;
+    unit_number: string;
+    properties?: {
+      name: string;
+    };
+  };
 }
