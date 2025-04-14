@@ -1,4 +1,3 @@
-
 export interface ToastTranslations {
   authRequired: string;
   pleaseSignInToSubscribe: string;
@@ -23,6 +22,8 @@ export interface ToastTranslations {
   missingInformation: string;
   close: string;
   dashboardPreferencesUpdated: string;
+  errorLoadingData: string;
+  unexpectedError: string;
   refreshing: string;
   filterReset: string;
   welcomeTenant: string;

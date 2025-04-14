@@ -6,6 +6,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useChartData } from "./charts/hooks/useChartData";
 import { processMonthlyData, processYearlyData } from "./charts/utils/chartProcessing";
 import { ChartDisplay } from "./charts/ChartDisplay";
+import { ErrorState } from "./metrics/ErrorState";
 
 interface RevenueExpenseChartProps {
   propertyId: string | null;
@@ -15,7 +16,16 @@ interface RevenueExpenseChartProps {
 export default function RevenueExpenseChart({ propertyId, selectedYear }: RevenueExpenseChartProps) {
   const { t } = useLocale();
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
-  const { data: chartData, isLoading } = useChartData(propertyId, view, selectedYear);
+  const { data: chartData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
+
+  const handleRetry = () => {
+    refetch();
+  };
+
+  if (error) {
+    console.error("Error loading chart data:", error);
+    return <ErrorState error={error as Error} onRetry={handleRetry} type="chart" />;
+  }
 
   // Process data based on view type
   const processedData = view === 'monthly' 

@@ -3,9 +3,11 @@ import { useFinancialMetricsData } from "./metrics/useFinancialMetricsData";
 import { FinancialMetricCard } from "./metrics/FinancialMetricCard";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
 import { NoPropertySelected } from "./metrics/NoPropertySelected";
+import { ErrorState } from "./metrics/ErrorState";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DollarSign, Home, BanknoteIcon, TrendingDown } from "lucide-react";
 import { formatCurrency } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FinancialMetricsProps {
   propertyId: string | null;
@@ -14,10 +16,20 @@ interface FinancialMetricsProps {
 
 const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) => {
   const { t } = useLocale();
-  const { data, isLoading } = useFinancialMetricsData(propertyId, selectedYear);
+  const queryClient = useQueryClient();
+  const { data, isLoading, error, refetch } = useFinancialMetricsData(propertyId, selectedYear);
+
+  const handleRetry = () => {
+    refetch();
+  };
 
   if (isLoading) {
     return <LoadingMetrics />;
+  }
+
+  if (error) {
+    console.error("Error loading financial metrics:", error);
+    return <ErrorState error={error as Error} onRetry={handleRetry} />;
   }
 
   if (!propertyId) {
@@ -27,8 +39,6 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
   if (!data) {
     return <NoPropertySelected type="metrics" />;
   }
-
-  console.log("Financial metrics data with year filter:", data);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

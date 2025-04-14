@@ -6,6 +6,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useFinancialOverviewData } from "./overview/hooks/useFinancialOverviewData";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
 import { NoPropertySelected } from "./metrics/NoPropertySelected";
+import { ErrorState } from "./metrics/ErrorState";
 import { IncomeTable } from "./overview/components/IncomeTable";
 import { ExpensesTable } from "./overview/components/ExpensesTable";
 
@@ -16,7 +17,7 @@ interface FinancialOverviewProps {
 
 const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps) => {
   const { t } = useLocale();
-  const { tenants, payments, expenses, isLoading } = useFinancialOverviewData(propertyId, selectedYear);
+  const { tenants, payments, expenses, isLoading, error, refetch } = useFinancialOverviewData(propertyId, selectedYear);
 
   // Log for debugging
   useEffect(() => {
@@ -25,12 +26,20 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
       selectedYear,
       isLoading,
       expenses: expenses?.length || 0,
-      expensesData: expenses
     });
   }, [propertyId, selectedYear, isLoading, expenses]);
 
+  const handleRetry = () => {
+    refetch();
+  };
+
   if (isLoading) {
     return <LoadingMetrics />;
+  }
+
+  if (error) {
+    console.error("Error loading financial overview:", error);
+    return <ErrorState error={error as Error} onRetry={handleRetry} type="financial-overview" />;
   }
 
   if (!propertyId) {
