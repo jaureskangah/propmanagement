@@ -29,17 +29,17 @@ export function IncomeTable({ payments, tenants, isLoading }: IncomeTableProps) 
     );
   }
 
-  // Fonction pour traduire les statuts de paiement
+  // Function to translate payment statuses
   const getTranslatedStatus = (status: string) => {
     switch(status.toLowerCase()) {
       case "paid":
-        return t('tenant.payments.paid');
+        return t('paid');
       case "overdue":
-        return t('tenant.payments.overdue');
+        return t('overdue');
       case "pending":
-        return t('tenant.payments.pending');
+        return t('pending');
       case "late":
-        return t('tenant.payments.overdue');
+        return t('overdue');
       default:
         return status;
     }
