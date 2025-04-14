@@ -36,7 +36,7 @@ export const frNavigation: NavigationTranslations = {
   imperial: "Impérial",
   home: "Accueil",
   tenants: "Locataires",
-  maintenance: "Maintenance",
+  maintenance: "Maintenances",
   settings: "Paramètres",
   admin: "Administration",
   loading: "Chargement...",
