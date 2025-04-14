@@ -1,11 +1,12 @@
 
 import React from "react";
 import { Wrench, Info, Search, Filter } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { YearFilter } from "@/components/finances/YearFilter";
+import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
+import { useProperties } from "@/hooks/useProperties";
+import { Button } from "@/components/ui/button";
 
 interface MaintenancePageHeaderProps {
   totalRequests: number;
@@ -18,6 +19,10 @@ interface MaintenancePageHeaderProps {
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   onCreateTask: () => void;
+  onPropertySelect: (propertyId: string) => void;
+  onYearChange: (year: number) => void;
+  selectedPropertyId: string;
+  selectedYear: number;
 }
 
 const MaintenancePageHeader = ({
@@ -30,9 +35,14 @@ const MaintenancePageHeader = ({
   isMobile,
   searchQuery,
   setSearchQuery,
-  onCreateTask
+  onCreateTask,
+  onPropertySelect,
+  onYearChange,
+  selectedPropertyId,
+  selectedYear
 }: MaintenancePageHeaderProps) => {
   const { t } = useLocale();
+  const { properties, isLoading } = useProperties();
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
@@ -48,20 +58,17 @@ const MaintenancePageHeader = ({
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Badge variant="secondary" className="text-sm px-3 py-1.5">
-            <Info className="h-4 w-4 mr-1.5" />
-            {totalRequests} {t('maintenanceTasks')}
-          </Badge>
-          
-          <Button 
-            size="sm" 
-            className="flex items-center gap-1.5" 
-            onClick={onCreateTask}
-          >
-            <Plus className="h-4 w-4" />
-            {t('addTask')}
-          </Button>
+        <div className="flex items-center gap-3">
+          <PropertyFinancialSelector
+            properties={properties}
+            isLoading={isLoading}
+            selectedPropertyId={selectedPropertyId}
+            onPropertySelect={onPropertySelect}
+          />
+          <YearFilter
+            selectedYear={selectedYear}
+            onYearChange={onYearChange}
+          />
         </div>
       </div>
       

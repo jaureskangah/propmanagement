@@ -11,14 +11,14 @@ import { useWorkOrdersData } from "../work-orders/hooks/useWorkOrdersData";
 
 interface MaintenanceTabsProps {
   propertyId: string;
-  mockFinancialData: any;
+  selectedYear: number;
   filteredRequests: any[];
   onRequestClick: (request: any) => void;
 }
 
 export const MaintenanceTabs = ({ 
   propertyId, 
-  mockFinancialData,
+  selectedYear,
   filteredRequests,
   onRequestClick
 }: MaintenanceTabsProps) => {
@@ -27,7 +27,7 @@ export const MaintenanceTabs = ({
   const isMobile = useIsMobile();
   const [isCreateWorkOrderOpen, setIsCreateWorkOrderOpen] = useState(false);
   
-  // Utiliser les données réelles des ordres de travail au lieu des fausses données
+  // Use real work order data
   const { workOrders, isLoading, refetch } = useWorkOrdersData();
   
   // Handle tab change
@@ -36,7 +36,7 @@ export const MaintenanceTabs = ({
   };
 
   const handleCreateWorkOrder = () => {
-    console.log("Bouton Créer un Ordre cliqué dans MaintenanceTabs");
+    console.log("Create Work Order button clicked in MaintenanceTabs");
     setIsCreateWorkOrderOpen(true);
   };
   
@@ -76,7 +76,10 @@ export const MaintenanceTabs = ({
       </TabsContent>
       
       <TabsContent value="costs" className="pt-6">
-        <PropertyFinancials propertyId={propertyId} />
+        <PropertyFinancials 
+          propertyId={propertyId} 
+          selectedYear={selectedYear}
+        />
       </TabsContent>
     </Tabs>
   );

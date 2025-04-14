@@ -1,12 +1,9 @@
 
-import React, { useState } from "react";
-import { MaintenanceHeader } from "./header/MaintenanceHeader";
+import React, { useState, useEffect } from "react";
 import { MaintenanceMetricsSection } from "./metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "./tabs/MaintenanceTabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { Separator } from "@/components/ui/separator";
-import { VendorList } from "./vendors/VendorList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -14,6 +11,9 @@ import MaintenancePageHeader from "./header/MaintenancePageHeader";
 import { AddTaskDialog } from "./task-dialog/AddTaskDialog";
 import { useToast } from "@/hooks/use-toast";
 import { NewTask } from "./types";
+import { VendorList } from "./vendors/VendorList";
+import { Button } from "@/components/ui/button";
+import { Filter } from "lucide-react";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
@@ -23,43 +23,10 @@ export const MaintenancePageContainer = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const { toast } = useToast();
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string>("property-1");
+  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   
-  // Mock data for the financial section
-  const mockFinancialData = {
-    propertyId: "property-1",
-    expenses: [
-      { category: "Plumbing", amount: 350, date: "2023-02-15" },
-      { category: "Electrical", amount: 275, date: "2023-03-10" },
-      { category: "HVAC", amount: 520, date: "2023-04-05" },
-    ],
-    maintenance: [
-      {
-        title: "Fix broken pipe",
-        description: "Repair bathroom pipe leak",
-        cost: 250,
-        date: "2023-02-15",
-        status: "Completed",
-        unit_number: "2B",
-        vendors: {
-          name: "ABC Plumbing",
-          specialty: "Plumbing"
-        }
-      },
-      {
-        title: "Replace light fixtures",
-        description: "Install new LED fixtures in hallway",
-        cost: 175,
-        date: "2023-03-08",
-        status: "Scheduled",
-        unit_number: "5A",
-        vendors: {
-          name: "ElectriCity",
-          specialty: "Electrical"
-        }
-      },
-    ]
-  };
-
+  // Fetch maintenance requests
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: async () => {
@@ -75,7 +42,6 @@ export const MaintenancePageContainer = () => {
 
   const handleRequestClick = (request) => {
     console.log("Request clicked:", request);
-    // Handle request click (could open a modal, etc.)
   };
 
   const handleCreateTask = () => {
@@ -90,6 +56,16 @@ export const MaintenancePageContainer = () => {
       description: t('taskAdded'),
     });
     setIsAddTaskOpen(false);
+  };
+
+  const handlePropertySelect = (propertyId: string) => {
+    console.log("Selected property:", propertyId);
+    setSelectedPropertyId(propertyId);
+  };
+
+  const handleYearChange = (year: number) => {
+    console.log("Selected year:", year);
+    setSelectedYear(year);
   };
 
   // Filter for active requests
@@ -113,6 +89,10 @@ export const MaintenancePageContainer = () => {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         onCreateTask={handleCreateTask}
+        onPropertySelect={handlePropertySelect}
+        onYearChange={handleYearChange}
+        selectedPropertyId={selectedPropertyId}
+        selectedYear={selectedYear}
       />
 
       <MaintenanceMetricsSection 
@@ -134,8 +114,8 @@ export const MaintenancePageContainer = () => {
         
         <TabsContent value="maintenance" className="pt-4">
           <MaintenanceTabs 
-            propertyId="property-1" 
-            mockFinancialData={mockFinancialData}
+            propertyId={selectedPropertyId} 
+            selectedYear={selectedYear}
             filteredRequests={filteredRequests}
             onRequestClick={handleRequestClick}
           />

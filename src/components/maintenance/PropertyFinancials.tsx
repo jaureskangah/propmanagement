@@ -7,19 +7,28 @@ import { supabase } from "@/lib/supabase";
 
 interface PropertyFinancialsProps {
   propertyId: string;
+  selectedYear?: number;
 }
 
-export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
-  console.log("Rendering PropertyFinancials for property:", propertyId);
+export const PropertyFinancials = ({ 
+  propertyId,
+  selectedYear = new Date().getFullYear()
+}: PropertyFinancialsProps) => {
+  console.log("Rendering PropertyFinancials for property:", propertyId, "and year:", selectedYear);
 
   // Fetch expenses data
   const { data: expenses = [] } = useQuery({
-    queryKey: ["maintenance_expenses", propertyId],
+    queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
+      const startOfYear = new Date(selectedYear, 0, 1).toISOString();
+      const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+      
       const { data, error } = await supabase
         .from("maintenance_expenses")
         .select("*")
         .eq("property_id", propertyId)
+        .gte("date", startOfYear)
+        .lte("date", endOfYear)
         .order("date", { ascending: false });
 
       if (error) {
@@ -34,8 +43,11 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
 
   // Fetch maintenance interventions data with property information
   const { data: maintenance = [] } = useQuery({
-    queryKey: ["vendor_interventions", propertyId],
+    queryKey: ["vendor_interventions", propertyId, selectedYear],
     queryFn: async () => {
+      const startOfYear = new Date(selectedYear, 0, 1).toISOString();
+      const endOfYear = new Date(selectedYear, 11, 31).toISOString();
+      
       const { data, error } = await supabase
         .from("vendor_interventions")
         .select(`
@@ -49,6 +61,8 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
           )
         `)
         .eq("property_id", propertyId)
+        .gte("date", startOfYear)
+        .lte("date", endOfYear)
         .order("date", { ascending: false });
 
       if (error) {
@@ -61,13 +75,13 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
     },
   });
 
-  // Get the current year's start
-  const currentYear = new Date().getFullYear();
-  const startOfYear = new Date(currentYear, 0, 1).toISOString();
+  // Get the year's start
+  const startOfYear = new Date(selectedYear, 0, 1).toISOString();
+  const endOfYear = new Date(selectedYear, 11, 31).toISOString();
 
-  // Fetch total rent paid for this property in the current year
+  // Fetch total rent paid for this property in the selected year
   const { data: rentData = [] } = useQuery({
-    queryKey: ["property_rent_payments", propertyId, currentYear],
+    queryKey: ["property_rent_payments", propertyId, selectedYear],
     queryFn: async () => {
       // First get tenants for this property
       const { data: tenants, error: tenantsError } = await supabase
@@ -81,15 +95,16 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
       
       const tenantIds = tenants.map(t => t.id);
       
-      // Then get payments for these tenants
+      // Then get payments for these tenants within the selected year
       const { data: payments, error: paymentsError } = await supabase
         .from("tenant_payments")
         .select("*")
         .in("tenant_id", tenantIds)
-        .gte("payment_date", startOfYear);
+        .gte("payment_date", startOfYear)
+        .lte("payment_date", endOfYear);
 
       if (paymentsError) throw paymentsError;
-      console.log(`Fetched ${payments?.length || 0} rent payments for ROI calculation for property ${propertyId}`);
+      console.log(`Fetched ${payments?.length || 0} rent payments for ROI calculation for property ${propertyId} in year ${selectedYear}`);
       return payments || [];
     },
   });
@@ -105,7 +120,8 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
       totalExpenses,
       totalMaintenance,
       totalIncome,
-      rentPaymentsCount: rentData.length
+      rentPaymentsCount: rentData.length,
+      year: selectedYear
     });
     
     const propertyValue = 500000; // This would ideally come from the property data
@@ -121,6 +137,8 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
         expenses={expenses}
         maintenance={maintenance}
         calculateROI={calculateROI}
+        selectedYear={selectedYear}
+        rentData={rentData}
       />
       <DataTables
         propertyId={propertyId}
