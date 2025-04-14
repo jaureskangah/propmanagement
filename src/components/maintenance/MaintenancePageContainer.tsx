@@ -126,6 +126,8 @@ export const MaintenancePageContainer = () => {
         pendingRequests={requests.filter(r => r.status === "Pending").length}
         resolvedRequests={requests.filter(r => r.status === "Resolved").length}
         urgentRequests={urgentRequests}
+        propertyId={selectedPropertyId}
+        selectedYear={selectedYear}
       />
 
       <Tabs defaultValue="maintenance" className="w-full">

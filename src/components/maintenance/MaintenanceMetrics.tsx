@@ -7,14 +7,26 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface MaintenanceMetricsProps {
   total: number;
   pending: number;
   resolved: number;
+  propertyId?: string;
+  selectedYear?: number;
+  isLoading?: boolean;
 }
 
-export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetricsProps) => {
+export const MaintenanceMetrics = ({ 
+  total, 
+  pending, 
+  resolved, 
+  propertyId, 
+  selectedYear,
+  isLoading = false 
+}: MaintenanceMetricsProps) => {
   const { t } = useLocale();
   
   const metrics = [
@@ -66,8 +78,17 @@ export const MaintenanceMetrics = ({ total, pending, resolved }: MaintenanceMetr
             <CardContent>
               <div className="space-y-2">
                 <div className="text-2xl font-bold transition-all duration-300 group-hover:translate-x-1 animate-fade-in">
-                  {metric.value}
+                  {isLoading ? (
+                    <span className="animate-pulse">...</span>
+                  ) : (
+                    metric.value
+                  )}
                 </div>
+                {propertyId && selectedYear && (
+                  <div className="text-xs text-muted-foreground">
+                    {t('filteredForYear')}: {selectedYear}
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>
