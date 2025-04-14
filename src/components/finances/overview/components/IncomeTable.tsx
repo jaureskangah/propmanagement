@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
 
 interface IncomeTableProps {
   payments: any[];
@@ -49,16 +48,14 @@ export function IncomeTable({ payments, tenants, isLoading }: IncomeTableProps) 
               <TableCell>{format(new Date(payment.payment_date), 'yyyy-MM-dd')}</TableCell>
               <TableCell>{tenant?.name || '-'}</TableCell>
               <TableCell>{tenant?.unit_number || '-'}</TableCell>
-              <TableCell className="text-right">{formatCurrency(payment.amount)}</TableCell>
+              <TableCell className="text-right">${payment.amount.toLocaleString()}</TableCell>
               <TableCell>
                 <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${
                   payment.status === 'paid' ? 'bg-green-100 text-green-800' :
-                  payment.status === 'overdue' ? 'bg-red-100 text-red-800' :
+                  payment.status === 'late' ? 'bg-red-100 text-red-800' :
                   'bg-yellow-100 text-yellow-800'
                 }`}>
-                  {payment.status === 'paid' ? t('tenant.payments.paid') :
-                   payment.status === 'overdue' ? t('tenant.payments.overdue') :
-                   t('tenant.payments.pending')}
+                  {payment.status}
                 </span>
               </TableCell>
             </TableRow>
