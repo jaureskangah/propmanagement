@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequests } from "./MaintenanceRequests";
@@ -9,23 +8,14 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { MaintenanceRequest } from "../types";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-interface MaintenanceTabsProps {
-  propertyId: string;
-  selectedYear: number;
-  filteredRequests: MaintenanceRequest[];
-  onRequestClick: (request: MaintenanceRequest) => void;
-}
-
 export const MaintenanceTabs = ({ 
   propertyId, 
   selectedYear,
   filteredRequests, 
   onRequestClick 
-}: MaintenanceTabsProps) => {
+}) => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
-  
-  console.log(`Rendering MaintenanceTabs with propertyId: ${propertyId}`);
   
   return (
     <Tabs defaultValue="dashboard" className="w-full">
@@ -34,10 +24,10 @@ export const MaintenanceTabs = ({
           {t('dashboard')}
         </TabsTrigger>
         <TabsTrigger value="requests" className={`${isMobile ? "flex-1" : ""} text-sm`}>
-          {t('requests')}
+          {t('maintenanceRequests')}
         </TabsTrigger>
         <TabsTrigger value="tasks" className={`${isMobile ? "flex-1" : ""} text-sm`}>
-          {t('tasks')}
+          {t('scheduledTasks')}
         </TabsTrigger>
         <TabsTrigger value="financials" className={`${isMobile ? "flex-1" : ""} text-sm`}>
           {t('financials')}

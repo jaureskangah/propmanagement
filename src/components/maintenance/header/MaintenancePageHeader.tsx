@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Wrench, Info, Search, Filter } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -42,7 +41,6 @@ const MaintenancePageHeader = ({
   selectedYear
 }: MaintenancePageHeaderProps) => {
   const { t } = useLocale();
-  const { properties, isLoading } = useProperties();
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
@@ -52,7 +50,9 @@ const MaintenancePageHeader = ({
             <Wrench className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t('maintenanceManagement')}</h1>
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              {t('maintenanceManagement')}
+            </h1>
             <p className="text-muted-foreground mt-1">
               {t('maintenanceDescription')}
             </p>
@@ -77,7 +77,7 @@ const MaintenancePageHeader = ({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder={t('searchTasks')}
+            placeholder={t('searchMaintenanceRequests')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9"

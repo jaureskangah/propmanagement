@@ -1,9 +1,8 @@
-
 export const enInterventions = {
   scheduledIntervention: "Scheduled intervention",
   interventionCalendar: "Intervention Calendar",
   interventionHistory: "Intervention History",
-  maintenanceAndRepairs: "Maintenance and repairs tracking",
+  maintenanceAndRepairs: "Maintenance and Repairs Tracking",
   columnTitle: "Title",
   columnDescription: "Description",
   columnCost: "Cost",
@@ -18,7 +17,7 @@ export const frInterventions = {
   scheduledIntervention: "Intervention planifiée",
   interventionCalendar: "Calendrier des interventions",
   interventionHistory: "Historique des interventions",
-  maintenanceAndRepairs: "Suivi des maintenances et réparations",
+  maintenanceAndRepairs: "Suivi des Maintenances et Réparations",
   columnTitle: "Titre",
   columnDescription: "Description",
   columnCost: "Coût",

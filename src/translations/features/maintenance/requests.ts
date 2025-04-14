@@ -1,4 +1,3 @@
-
 export const enRequests = {
   maintenanceRequestTitle: "Maintenance Request",
   maintenanceCalendar: "Maintenance Calendar",
@@ -13,7 +12,7 @@ export const enRequests = {
   statusPending: "Pending",
   statusInProgress: "In Progress",
   maintenanceTitle: "Maintenance",
-  maintenanceDescription: "Maintenance Description",
+  maintenanceDescription: "Track, manage, and resolve maintenance requests efficiently",
   maintenancePrioritySelect: "Select Priority",
   maintenancePhotos: "Photos",
   photosSelected: "Photos Selected",
@@ -24,7 +23,6 @@ export const enRequests = {
   pendingRequests: "Pending Requests",
   maintenanceCompleted: "Maintenance Completed",
   maintenanceNotification: "Maintenance Notification",
-  // Ajout des propriétés manquantes
   submit: "Submit",
   submitting: "Submitting",
   createdOn: "Created on",
@@ -57,7 +55,6 @@ export const enRequests = {
   update: "Update",
   createOrder: "Create Order",
   add: "Add",
-  // Nouvelles traductions
   viewDetails: "View Details",
   priority: "Priority",
   description: "Description",
@@ -79,10 +76,8 @@ export const enRequests = {
   sortByPriority: "By Priority",
   deadline: "Deadline",
   edit: "Edit",
-  // Nouvelles traductions pour les notifications
   tenantFeedbackReceived: "Tenant Feedback Received",
   feedbackReceivedFor: "Feedback received for request",
-  // Validation messages
   ratingRequired: "Please select a rating before submitting"
 };
 
@@ -100,18 +95,17 @@ export const frRequests = {
   statusPending: "En attente",
   statusInProgress: "En cours",
   maintenanceTitle: "Maintenance",
-  maintenanceDescription: "Description de la maintenance",
+  maintenanceDescription: "Suivez, gérez et résolvez les demandes de maintenance efficacement",
   maintenancePrioritySelect: "Sélectionner la priorité",
   maintenancePhotos: "Photos",
   photosSelected: "Photos sélectionnées",
   noMaintenanceRequests: "Aucune demande de maintenance trouvée",
-  maintenanceManagement: "Gestion de la maintenance",
+  maintenanceManagement: "Gestion des Maintenances",
   totalRequests: "Demandes Totales",
   resolvedRequests: "Demandes Résolues",
   pendingRequests: "Demandes En Attente",
   maintenanceCompleted: "Maintenance terminée",
   maintenanceNotification: "Notification de maintenance",
-  // Ajout des propriétés manquantes
   submit: "Soumettre",
   submitting: "Soumission en cours",
   createdOn: "Créé le",
@@ -144,7 +138,6 @@ export const frRequests = {
   update: "Mettre à jour",
   createOrder: "Créer un ordre",
   add: "Ajouter",
-  // Nouvelles traductions
   viewDetails: "Voir détails",
   priority: "Priorité",
   description: "Description",
@@ -166,9 +159,7 @@ export const frRequests = {
   sortByPriority: "Par priorité",
   deadline: "Date limite",
   edit: "Modifier",
-  // Nouvelles traductions pour les notifications
   tenantFeedbackReceived: "Avis du locataire reçu",
   feedbackReceivedFor: "Avis reçu pour la demande",
-  // Validation messages
   ratingRequired: "Veuillez sélectionner une évaluation avant de soumettre"
 };
