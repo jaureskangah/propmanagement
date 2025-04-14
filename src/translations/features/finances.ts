@@ -1,74 +1,14 @@
 
-import type { LocaleStructure, NestedKeysOf } from "../types";
+import type { FinancesTranslations } from "../types/finances";
 
-export interface FinanceTranslations {
-  financialOverview: string;
-  income: string;
-  expense: string;
-  profit: string;
-  propertySummary: string;
-  selectProperty: string;
-  allProperties: string;
-  monthly: string;
-  yearly: string;
-  total: string;
-  quarter: string;
-  quarter1: string;
-  quarter2: string;
-  quarter3: string;
-  quarter4: string;
-  jan: string;
-  feb: string;
-  mar: string;
-  apr: string;
-  may: string;
-  jun: string;
-  jul: string;
-  aug: string;
-  sep: string;
-  oct: string;
-  nov: string;
-  dec: string;
-  rentIncome: string;
-  maintenanceExpenses: string;
-  netProfit: string;
-  occupancyRate: string;
-  propertyValue: string;
-  roi: string;
-  annualReturn: string;
-  loading: string;
-  noDataAvailable: string;
-  leaseEndIn: string;
-  lastPayment: string;
-  duePayments: string;
-  paymentsOnTime: string;
-  compareToLastYear: string;
-  more: string;
-  financialDataHeader: string;
-  financialStats: string;
-  financialData: string;
-  financialDataForProperty: string;
-  monthlyData: string;
-  yearlyData: string;
-  monthlyBreakdownDesc: string;
-  yearlyBreakdownDesc: string;
-  refresh: string;
-  export: string;
-  exportPreparing: string;
-  exportReady: string;
-  dataBeingRefreshed: string;
-  all: string;
-  showAll: string;
-  showIncome: string;
-  showExpense: string;
-  showProfit: string;
-  previousYear: string;
-  nextYear: string;
-}
+// Export the translation functions so they can be imported in en.ts and fr.ts
+export const enFinances: Record<string, string> = {};
+export const frFinances: Record<string, string> = {};
 
+// Add finance translations to the main translation object
 export const addFinanceTranslations = (
-  locale: keyof LocaleStructure,
-  translations: Record<NestedKeysOf<LocaleStructure>, string>
+  locale: 'en' | 'fr',
+  translations: Record<string, string>
 ) => {
   if (locale === "en") {
     translations["finance.financialOverview"] = "Financial Overview";
@@ -133,6 +73,13 @@ export const addFinanceTranslations = (
     translations["finance.showProfit"] = "Show profit only";
     translations["finance.previousYear"] = "Previous Year";
     translations["finance.nextYear"] = "Next Year";
+    
+    // Populate the exported object for en
+    Object.keys(translations)
+      .filter(key => key.startsWith('finance.'))
+      .forEach(key => {
+        enFinances[key.replace('finance.', '')] = translations[key];
+      });
   } else if (locale === "fr") {
     translations["finance.financialOverview"] = "Vue d'ensemble financière";
     translations["finance.income"] = "Revenus";
@@ -196,5 +143,16 @@ export const addFinanceTranslations = (
     translations["finance.showProfit"] = "Afficher seulement les bénéfices";
     translations["finance.previousYear"] = "Année Précédente";
     translations["finance.nextYear"] = "Année Suivante";
+    
+    // Populate the exported object for fr
+    Object.keys(translations)
+      .filter(key => key.startsWith('finance.'))
+      .forEach(key => {
+        frFinances[key.replace('finance.', '')] = translations[key];
+      });
   }
 };
+
+// Call the function to populate the exported objects
+addFinanceTranslations('en', enFinances);
+addFinanceTranslations('fr', frFinances);

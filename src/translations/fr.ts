@@ -22,7 +22,7 @@ import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 import { frTasks } from './features/maintenance/tasks';
 import { frList } from './features/tenant/fr/list';
-import { frFinances } from './features/finances';
+import { frFinances } from './features/finances'; // Import the exported object
 import frDocumentGenerator from './features/documents/fr';
 
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
@@ -60,7 +60,7 @@ const translations = {
   ...frDocuments,
   ...frTenantMaintenance,
   ...frCommunications,
-  ...frFinances,
+  ...frFinances, // Use the exported object
   documentGenerator: frDocumentGenerator
 };
 

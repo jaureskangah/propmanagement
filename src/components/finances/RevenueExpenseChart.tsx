@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useChartData } from "./charts/hooks/useChartData";
-import { processMonthlyData, processYearlyData } from "./charts/utils/chartProcessing";
 import { ChartDisplay } from "./charts/ChartDisplay";
 import { ErrorState } from "./metrics/ErrorState";
 
@@ -16,7 +15,9 @@ interface RevenueExpenseChartProps {
 export default function RevenueExpenseChart({ propertyId, selectedYear }: RevenueExpenseChartProps) {
   const { t } = useLocale();
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
-  const { data: chartData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
+  
+  // Fixed: Use the correct properties from the hook
+  const { monthlyData, yearlyData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
 
   const handleRetry = () => {
     refetch();
@@ -27,10 +28,8 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
     return <ErrorState error={error as Error} onRetry={handleRetry} type="chart" />;
   }
 
-  // Process data based on view type
-  const processedData = view === 'monthly' 
-    ? processMonthlyData(chartData?.payments || [], chartData?.expenses || [], selectedYear)
-    : processYearlyData(chartData?.payments || [], chartData?.expenses || [], selectedYear);
+  // Use the correct data properties from the hook
+  const processedData = view === 'monthly' ? monthlyData : yearlyData;
 
   return (
     <Card className="border-border/40 bg-card/50 backdrop-blur-sm shadow-md dark:bg-gray-800/40 transition-all duration-200 hover:shadow-lg hover:bg-card/60 font-sans">
@@ -50,6 +49,7 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
           data={processedData} 
           view={view} 
           isLoading={isLoading}
+          error={error}
         />
       </CardContent>
     </Card>

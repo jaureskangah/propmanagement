@@ -20,7 +20,7 @@ import { enSettings } from './features/settings';
 import { enStatus } from './features/status';
 import { enTenant } from './features/tenant';
 import { enToasts } from './features/toasts';
-import { enFinances } from './features/finances';
+import { enFinances } from './features/finances'; // Import the exported object
 import { enVendors } from './features/maintenance/vendors';
 import enDocumentGenerator from './features/documents/en';
 
@@ -45,7 +45,7 @@ const translations = {
   ...enStatus,
   ...enTenant,
   ...enToasts,
-  ...enFinances,
+  ...enFinances, // Use the exported object
   ...enVendors,
   documentGenerator: enDocumentGenerator,
 };

@@ -36,8 +36,10 @@ export const FinancialChartContainer = ({
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   
   const handleRefresh = () => {
-    // Invalider les requêtes pour forcer un rechargement
-    queryClient.invalidateQueries(['financial_chart_data']);
+    // Fix: Use proper invalidation pattern for @tanstack/react-query
+    queryClient.invalidateQueries({
+      queryKey: ['financial_chart_data']
+    });
     
     toast({
       title: t('refreshing'),
