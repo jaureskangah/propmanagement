@@ -61,7 +61,7 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
       />
       <FinancialMetricCard
         title={t('occupancyRate')}
-        value={`${data.occupancyRate.toFixed(1)}%`}
+        value={`${Math.floor(data.occupancyRate)}%`} // Utilisation de Math.floor pour enlever les décimales
         trend={data.occupancyRateTrend}
         format="percent"
         icon={<Home className="h-4 w-4" />}
