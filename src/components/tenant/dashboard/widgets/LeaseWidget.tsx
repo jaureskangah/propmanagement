@@ -74,11 +74,11 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
       <div className="space-y-4 flex-1">
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Lease Start</span>
+            <span className="text-sm text-gray-500">{t('lease.start')}</span>
             <span className="font-medium text-gray-700">{new Date(leaseStart).toLocaleDateString()}</span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-500">Lease End</span>
+            <span className="text-sm text-gray-500">{t('lease.end')}</span>
             <span className="font-medium text-gray-700">{new Date(leaseEnd).toLocaleDateString()}</span>
           </div>
         </div>
