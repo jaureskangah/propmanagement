@@ -62,7 +62,7 @@ export const MaintenanceTabs = ({
       </TabsList>
       
       <TabsContent value="dashboard" className="pt-6">
-        <MaintenanceCharts propertyId={propertyId} />
+        <MaintenanceCharts propertyId={propertyId} selectedYear={selectedYear} />
       </TabsContent>
       
       <TabsContent value="requests" className="pt-6">

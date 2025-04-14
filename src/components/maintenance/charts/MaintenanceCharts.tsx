@@ -16,27 +16,156 @@ import {
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { 
-  getMaintenanceChartData, 
   useMaintenanceChartConfig, 
   useExpensesChartConfig,
   formatMonthsForLocale
 } from "./utils/chartUtils";
-import { useMaintenanceChartData } from "./hooks/useMaintenanceChartData";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface MaintenanceChartsProps {
   propertyId: string;
+  selectedYear?: number;
 }
 
-export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
+export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFullYear() }: MaintenanceChartsProps) => {
   const { t, locale } = useLocale();
   
-  // Fetch chart data using the utility function
-  const chartData = useMemo(() => {
-    const data = getMaintenanceChartData(propertyId);
-    return formatMonthsForLocale(data, locale);
-  }, [propertyId, locale]);
+  // Fetch maintenance requests data for the charts
+  const { data: maintenanceRequests = [] } = useQuery({
+    queryKey: ['maintenance_requests_chart', propertyId, selectedYear],
+    queryFn: async () => {
+      console.log("Fetching maintenance requests chart data for property:", propertyId, "and year:", selectedYear);
+      
+      const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
+      const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
+      
+      // Get property's tenants to filter maintenance requests
+      const { data: tenants, error: tenantsError } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('property_id', propertyId);
+        
+      if (tenantsError) {
+        console.error("Error fetching tenants:", tenantsError);
+        throw tenantsError;
+      }
+      
+      if (!tenants?.length) return [];
+      
+      const tenantIds = tenants.map(t => t.id);
+      
+      // Fetch maintenance requests for these tenants within selected year
+      const { data, error } = await supabase
+        .from('maintenance_requests')
+        .select('*')
+        .in('tenant_id', tenantIds)
+        .gte('created_at', startOfYear)
+        .lte('created_at', endOfYear);
+      
+      if (error) {
+        console.error("Error fetching maintenance requests:", error);
+        throw error;
+      }
+      
+      console.log(`Fetched ${data?.length || 0} maintenance requests for property ${propertyId} in year ${selectedYear}`);
+      return data || [];
+    },
+  });
   
-  // Get chart configurations using the utility hooks
+  // Fetch expenses data for the charts
+  const { data: expensesData = [] } = useQuery({
+    queryKey: ['maintenance_expenses_chart', propertyId, selectedYear],
+    queryFn: async () => {
+      console.log("Fetching expenses chart data for property:", propertyId, "and year:", selectedYear);
+      
+      const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
+      const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
+      
+      // Fetch maintenance expenses for the property
+      const { data: expenses, error: expensesError } = await supabase
+        .from('maintenance_expenses')
+        .select('*')
+        .eq('property_id', propertyId)
+        .gte('date', startOfYear)
+        .lte('date', endOfYear);
+        
+      if (expensesError) {
+        console.error("Error fetching maintenance expenses:", expensesError);
+        throw expensesError;
+      }
+      
+      // Fetch vendor interventions for the property
+      const { data: interventions, error: interventionsError } = await supabase
+        .from('vendor_interventions')
+        .select('*')
+        .eq('property_id', propertyId)
+        .gte('date', startOfYear)
+        .lte('date', endOfYear);
+        
+      if (interventionsError) {
+        console.error("Error fetching vendor interventions:", interventionsError);
+        throw interventionsError;
+      }
+      
+      const allExpenses = [
+        ...(expenses || []),
+        ...(interventions || []).map(i => ({
+          date: i.date,
+          amount: i.cost || 0
+        }))
+      ];
+      
+      console.log(`Fetched ${allExpenses.length} expense items for property ${propertyId} in year ${selectedYear}`);
+      return allExpenses;
+    },
+  });
+  
+  // Process chart data
+  const chartData = useMemo(() => {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    
+    // Initialize base data structure with all months
+    const monthlyData = months.map(month => ({
+      month,
+      requests: 0,
+      completed: 0,
+      urgent: 0,
+      expenses: 0
+    }));
+    
+    // Process maintenance requests
+    maintenanceRequests.forEach(request => {
+      const date = new Date(request.created_at);
+      const monthIndex = date.getMonth();
+      
+      // Increment request count
+      monthlyData[monthIndex].requests += 1;
+      
+      // Increment completed count if resolved
+      if (request.status === 'Resolved') {
+        monthlyData[monthIndex].completed += 1;
+      }
+      
+      // Increment urgent count if priority is urgent
+      if (request.priority === 'Urgent') {
+        monthlyData[monthIndex].urgent += 1;
+      }
+    });
+    
+    // Process expenses
+    expensesData.forEach(expense => {
+      const date = new Date(expense.date);
+      const monthIndex = date.getMonth();
+      
+      // Add expense amount
+      monthlyData[monthIndex].expenses += parseFloat(expense.amount || 0);
+    });
+    
+    return formatMonthsForLocale(monthlyData, locale);
+  }, [maintenanceRequests, expensesData, locale]);
+  
+  // Get chart configurations
   const chartConfig = useMaintenanceChartConfig();
   const expensesChartConfig = useExpensesChartConfig();
   
