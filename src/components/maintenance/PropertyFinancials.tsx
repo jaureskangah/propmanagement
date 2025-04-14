@@ -48,6 +48,7 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
             name
           )
         `)
+        .eq("property_id", propertyId)
         .order("date", { ascending: false });
 
       if (error) {
@@ -64,18 +65,31 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
   const currentYear = new Date().getFullYear();
   const startOfYear = new Date(currentYear, 0, 1).toISOString();
 
-  // Fetch total rent paid for the current year (all payments)
+  // Fetch total rent paid for this property in the current year
   const { data: rentData = [] } = useQuery({
-    queryKey: ["all_rent_payments", currentYear],
+    queryKey: ["property_rent_payments", propertyId, currentYear],
     queryFn: async () => {
-      // Get all payments for the current year
+      // First get tenants for this property
+      const { data: tenants, error: tenantsError } = await supabase
+        .from("tenants")
+        .select("id")
+        .eq("property_id", propertyId);
+        
+      if (tenantsError) throw tenantsError;
+      
+      if (!tenants?.length) return [];
+      
+      const tenantIds = tenants.map(t => t.id);
+      
+      // Then get payments for these tenants
       const { data: payments, error: paymentsError } = await supabase
         .from("tenant_payments")
         .select("*")
+        .in("tenant_id", tenantIds)
         .gte("payment_date", startOfYear);
 
       if (paymentsError) throw paymentsError;
-      console.log("Fetched rent payments for ROI calculation:", payments);
+      console.log(`Fetched ${payments?.length || 0} rent payments for ROI calculation for property ${propertyId}`);
       return payments || [];
     },
   });
@@ -87,7 +101,12 @@ export const PropertyFinancials = ({ propertyId }: PropertyFinancialsProps) => {
     const totalIncome = rentData.filter(payment => payment.status === "paid")
       .reduce((acc, curr) => acc + curr.amount, 0);
     
-    console.log("ROI calculation:", { totalExpenses, totalMaintenance, totalIncome });
+    console.log("ROI calculation for property:", propertyId, {
+      totalExpenses,
+      totalMaintenance,
+      totalIncome,
+      rentPaymentsCount: rentData.length
+    });
     
     const propertyValue = 500000; // This would ideally come from the property data
     const netIncome = totalIncome - totalExpenses - totalMaintenance;
