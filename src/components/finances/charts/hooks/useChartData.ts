@@ -28,66 +28,89 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0]; // Jan 1
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0]; // Dec 31
 
-      // Fetch tenants for the property
-      const { data: tenants } = await supabase
-        .from('tenants')
-        .select('id')
-        .eq('property_id', propertyId);
-
-      const tenantIds = tenants?.map(t => t.id) || [];
-      
-      // Fetch payments for these tenants in the selected year
-      const { data: payments } = await supabase
-        .from('tenant_payments')
-        .select('amount, payment_date, status')
-        .in('tenant_id', tenantIds)
-        .gte('payment_date', startOfYear)
-        .lte('payment_date', endOfYear)
-        .order('payment_date', { ascending: true });
-
-      // Fetch maintenance expenses for the selected year
-      const { data: maintenanceExpenses } = await supabase
-        .from('maintenance_expenses')
-        .select('amount, date, category')
-        .eq('property_id', propertyId)
-        .gte('date', startOfYear)
-        .lte('date', endOfYear)
-        .order('date', { ascending: true });
+      // Run all queries in parallel for better performance
+      try {
+        // Run queries concurrently using Promise.all
+        const [tenantsResult, paymentsResult, maintenanceExpensesResult, vendorInterventionsResult] = await Promise.all([
+          // Fetch tenants for the property
+          supabase
+            .from('tenants')
+            .select('id')
+            .eq('property_id', propertyId),
+            
+          // Prepare payments query (will execute after tenants are fetched)
+          supabase
+            .from('tenant_payments')
+            .select('amount, payment_date, status'),
+            
+          // Fetch maintenance expenses for the selected year
+          supabase
+            .from('maintenance_expenses')
+            .select('amount, date, category')
+            .eq('property_id', propertyId)
+            .gte('date', startOfYear)
+            .lte('date', endOfYear)
+            .order('date', { ascending: true }),
+            
+          // Fetch vendor interventions for the selected year
+          supabase
+            .from('vendor_interventions')
+            .select('cost, date')
+            .eq('property_id', propertyId)
+            .gte('date', startOfYear)
+            .lte('date', endOfYear)
+            .order('date', { ascending: true })
+        ]);
         
-      // Fetch vendor interventions for the selected year
-      const { data: vendorInterventions } = await supabase
-        .from('vendor_interventions')
-        .select('cost, date')
-        .eq('property_id', propertyId)
-        .gte('date', startOfYear)
-        .lte('date', endOfYear)
-        .order('date', { ascending: true });
+        const tenantIds = tenantsResult.data?.map(t => t.id) || [];
         
-      // Combine both types of expenses
-      const allExpenses = [
-        ...(maintenanceExpenses || []).map(expense => ({ 
-          amount: expense.amount,
-          date: expense.date,
-          category: expense.category
-        })),
-        ...(vendorInterventions || []).map(intervention => ({ 
-          cost: intervention.cost,
-          date: intervention.date
-        }))
-      ];
-      
-      console.log(`Chart data fetched for year ${selectedYear}:`, {
-        paymentsCount: payments?.length || 0,
-        maintenanceExpensesCount: maintenanceExpenses?.length || 0,
-        vendorInterventionsCount: vendorInterventions?.length || 0,
-        totalExpensesCount: allExpenses.length
-      });
+        // If we have tenants, get their payments with a separate query
+        let payments = [];
+        if (tenantIds.length > 0) {
+          const { data: paymentsData, error: paymentsError } = await supabase
+            .from('tenant_payments')
+            .select('amount, payment_date, status')
+            .in('tenant_id', tenantIds)
+            .gte('payment_date', startOfYear)
+            .lte('payment_date', endOfYear)
+            .order('payment_date', { ascending: true });
+            
+          if (paymentsError) throw paymentsError;
+          payments = paymentsData || [];
+        }
+        
+        // Combine both types of expenses
+        const allExpenses = [
+          ...(maintenanceExpensesResult.data || []).map(expense => ({ 
+            amount: expense.amount,
+            date: expense.date,
+            category: expense.category
+          })),
+          ...(vendorInterventionsResult.data || []).map(intervention => ({ 
+            cost: intervention.cost,
+            date: intervention.date
+          }))
+        ];
+        
+        console.log(`Chart data fetched for year ${selectedYear}:`, {
+          paymentsCount: payments?.length || 0,
+          maintenanceExpensesCount: maintenanceExpensesResult.data?.length || 0,
+          vendorInterventionsCount: vendorInterventionsResult.data?.length || 0,
+          totalExpensesCount: allExpenses.length
+        });
 
-      return { 
-        payments: payments || [], 
-        expenses: allExpenses
-      };
+        return { 
+          payments: payments || [], 
+          expenses: allExpenses
+        };
+        
+      } catch (error) {
+        console.error("Error in chart data fetch:", error);
+        throw error;
+      }
     },
-    enabled: !!propertyId
+    enabled: !!propertyId,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    gcTime: 10 * 60 * 1000  // 10 minutes garbage collection
   });
 };

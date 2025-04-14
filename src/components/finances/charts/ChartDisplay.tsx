@@ -3,6 +3,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Loader2 } from "lucide-react";
 import { RevenueChartTooltip } from "@/components/dashboard/revenue/RevenueChartTooltip";
+import { memo, useMemo } from "react";
 
 interface ChartDisplayProps {
   data: any[];
@@ -10,9 +11,36 @@ interface ChartDisplayProps {
   isLoading: boolean;
 }
 
-export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
+// Using memo to prevent unnecessary re-renders
+export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
   const { t } = useLocale();
 
+  // Memoize the chart configuration
+  const chartConfig = useMemo(() => {
+    // This prevents recalculating these values on every render
+    return {
+      areaGradients: {
+        income: {
+          id: "colorIncome",
+          startColor: "#3B82F6",
+          startOpacity: 0.8,
+          endOpacity: 0
+        },
+        expense: {
+          id: "colorExpense",
+          startColor: "#F43F5E",
+          startOpacity: 0.8,
+          endOpacity: 0
+        }
+      },
+      barColors: {
+        income: "#3B82F6",
+        expense: "#F43F5E",
+        profit: "#10B981"
+      }
+    };
+  }, []);
+  
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -35,13 +63,13 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
         {view === 'monthly' ? (
           <AreaChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
             <defs>
-              <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+              <linearGradient id={chartConfig.areaGradients.income.id} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.startOpacity}/>
+                <stop offset="95%" stopColor={chartConfig.areaGradients.income.startColor} stopOpacity={chartConfig.areaGradients.income.endOpacity}/>
               </linearGradient>
-              <linearGradient id="colorExpense" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#F43F5E" stopOpacity={0.8}/>
-                <stop offset="95%" stopColor="#F43F5E" stopOpacity={0}/>
+              <linearGradient id={chartConfig.areaGradients.expense.id} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={chartConfig.areaGradients.expense.startColor} stopOpacity={chartConfig.areaGradients.expense.startOpacity}/>
+                <stop offset="95%" stopColor={chartConfig.areaGradients.expense.startColor} stopOpacity={chartConfig.areaGradients.expense.endOpacity}/>
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
@@ -59,8 +87,9 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
               stroke="#3B82F6"
               strokeWidth={1.5}
               fillOpacity={1}
-              fill="url(#colorIncome)"
+              fill={`url(#${chartConfig.areaGradients.income.id})`}
               activeDot={{ r: 6, stroke: '#3B82F6', strokeWidth: 1, fill: '#fff' }}
+              isAnimationActive={false} // Disable animation for better performance
             />
             <Area
               type="monotone"
@@ -69,8 +98,9 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
               stroke="#F43F5E"
               strokeWidth={1.5}
               fillOpacity={1}
-              fill="url(#colorExpense)"
+              fill={`url(#${chartConfig.areaGradients.expense.id})`}
               activeDot={{ r: 6, stroke: '#F43F5E', strokeWidth: 1, fill: '#fff' }}
+              isAnimationActive={false} // Disable animation for better performance
             />
           </AreaChart>
         ) : (
@@ -83,12 +113,33 @@ export function ChartDisplay({ data, view, isLoading }: ChartDisplayProps) {
               cursor={{ fill: '#f5f5f5', opacity: 0.2 }}
             />
             <Legend wrapperStyle={{ fontSize: '10px' }} />
-            <Bar dataKey="income" name={t('income')} fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={12} />
-            <Bar dataKey="expense" name={t('expense')} fill="#F43F5E" radius={[4, 4, 0, 0]} barSize={12} />
-            <Bar dataKey="profit" name={t('profit')} fill="#10B981" radius={[4, 4, 0, 0]} barSize={12} />
+            <Bar 
+              dataKey="income" 
+              name={t('income')} 
+              fill={chartConfig.barColors.income} 
+              radius={[4, 4, 0, 0]} 
+              barSize={12} 
+              isAnimationActive={false} // Disable animation for better performance
+            />
+            <Bar 
+              dataKey="expense" 
+              name={t('expense')} 
+              fill={chartConfig.barColors.expense} 
+              radius={[4, 4, 0, 0]} 
+              barSize={12} 
+              isAnimationActive={false} // Disable animation for better performance
+            />
+            <Bar 
+              dataKey="profit" 
+              name={t('profit')} 
+              fill={chartConfig.barColors.profit} 
+              radius={[4, 4, 0, 0]} 
+              barSize={12} 
+              isAnimationActive={false} // Disable animation for better performance
+            />
           </BarChart>
         )}
       </ResponsiveContainer>
     </div>
   );
-}
+});

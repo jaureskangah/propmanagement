@@ -1,102 +1,139 @@
 
-export const processMonthlyData = (payments: any[] = [], expenses: any[] = [], selectedYear: number) => {
-  const monthNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-  
-  // Create a map to store aggregated data for each month
-  const monthlyData = monthNames.reduce((acc, month, index) => {
-    acc[index] = { name: month, income: 0, expense: 0, profit: 0 };
-    return acc;
-  }, {} as Record<number, { name: string, income: number, expense: number, profit: number }>);
-  
-  // Process payments for the selected year
-  payments.forEach(payment => {
-    if (!payment.payment_date) return;
-    
-    const paymentDate = new Date(payment.payment_date);
-    const paymentYear = paymentDate.getFullYear();
-    
-    // Filter for selected year
-    if (paymentYear !== selectedYear) return;
-    
-    const monthIndex = paymentDate.getMonth();
-    
-    // Only count paid payments toward income
-    if (payment.status === 'paid') {
-      monthlyData[monthIndex].income += Number(payment.amount) || 0;
-    }
-  });
-  
-  // Process expenses for the selected year
-  expenses.forEach(expense => {
-    if (!expense.date) return;
-    
-    const expenseDate = new Date(expense.date);
-    const expenseYear = expenseDate.getFullYear();
-    
-    // Filter for selected year
-    if (expenseYear !== selectedYear) return;
-    
-    const monthIndex = expenseDate.getMonth();
-    
-    monthlyData[monthIndex].expense += Number(expense.amount || expense.cost || 0);
-  });
-  
-  // Calculate profit for each month
-  Object.values(monthlyData).forEach(month => {
-    month.profit = month.income - month.expense;
-  });
-  
-  console.log(`Processed monthly data for ${selectedYear}:`, Object.values(monthlyData));
-  return Object.values(monthlyData);
+// This file contains utility functions to process financial data for charts
+import { format, parseISO } from 'date-fns';
+
+// Cache for processed data to avoid redundant calculations
+const dataCache = new Map();
+
+// Helper to get month name
+const getMonthName = (monthIndex: number): string => {
+  return new Date(2023, monthIndex).toLocaleString('default', { month: 'short' });
 };
 
-export const processYearlyData = (payments: any[] = [], expenses: any[] = [], selectedYear: number) => {
-  // For yearly view, we'll show 3 years including and before the selected year
-  const years = [selectedYear - 2, selectedYear - 1, selectedYear];
+/**
+ * Process payment and expense data into monthly format for charts
+ * With memoization to improve performance
+ */
+export const processMonthlyData = (payments = [], expenses = [], year: number) => {
+  // Create cache key based on input data
+  const cacheKey = `monthly-${year}-${payments.length}-${expenses.length}`;
   
-  // Create a map to store aggregated data for each year
-  const yearlyData = years.reduce((acc, year) => {
-    acc[year] = { name: year.toString(), income: 0, expense: 0, profit: 0 };
-    return acc;
-  }, {} as Record<number, { name: string, income: number, expense: number, profit: number }>);
+  // Return cached result if available
+  if (dataCache.has(cacheKey)) {
+    return dataCache.get(cacheKey);
+  }
   
+  // Initialize month data structure
+  const monthlyData = Array.from({ length: 12 }, (_, i) => ({
+    name: getMonthName(i),
+    income: 0,
+    expense: 0,
+    profit: 0,
+  }));
+
   // Process payments
-  payments.forEach(payment => {
-    if (!payment.payment_date) return;
-    
-    const paymentDate = new Date(payment.payment_date);
-    const year = paymentDate.getFullYear();
-    
-    // Only include years we're interested in
-    if (!yearlyData[year]) return;
-    
-    // Only count paid payments toward income
-    if (payment.status === 'paid') {
-      yearlyData[year].income += Number(payment.amount) || 0;
+  payments.forEach((payment) => {
+    if (payment.payment_date) {
+      const date = parseISO(payment.payment_date);
+      const month = date.getMonth();
+      monthlyData[month].income += Number(payment.amount) || 0;
     }
   });
-  
+
   // Process expenses
-  expenses.forEach(expense => {
-    if (!expense.date) return;
-    
-    const expenseDate = new Date(expense.date);
-    const year = expenseDate.getFullYear();
-    
-    // Only include years we're interested in
-    if (!yearlyData[year]) return;
-    
-    yearlyData[year].expense += Number(expense.amount || expense.cost || 0);
+  expenses.forEach((expense) => {
+    if (expense.date) {
+      const date = parseISO(expense.date);
+      const month = date.getMonth();
+      // Handle both expense.amount (maintenance_expenses) and expense.cost (vendor_interventions)
+      const expenseAmount = Number(expense.amount || expense.cost || 0);
+      monthlyData[month].expense += expenseAmount;
+    }
   });
-  
-  // Calculate profit for each year
-  Object.values(yearlyData).forEach(year => {
-    year.profit = year.income - year.expense;
+
+  // Calculate profit for each month
+  monthlyData.forEach((month) => {
+    month.profit = month.income - month.expense;
   });
+
+  // Cache the result
+  dataCache.set(cacheKey, monthlyData);
   
-  console.log(`Processed yearly data for ${selectedYear}:`, Object.values(yearlyData));
-  return Object.values(yearlyData);
+  return monthlyData;
 };
+
+/**
+ * Process payment and expense data into yearly format for charts
+ * With memoization to improve performance
+ */
+export const processYearlyData = (payments = [], expenses = [], currentYear: number) => {
+  // Create cache key based on input data
+  const cacheKey = `yearly-${currentYear}-${payments.length}-${expenses.length}`;
+  
+  // Return cached result if available
+  if (dataCache.has(cacheKey)) {
+    return dataCache.get(cacheKey);
+  }
+  
+  // Get the previous 5 years including current year
+  const years = Array.from({ length: 5 }, (_, i) => currentYear - 4 + i);
+  
+  // Initialize yearly data structure
+  const yearlyData = years.map(year => ({
+    name: year.toString(),
+    income: 0,
+    expense: 0,
+    profit: 0,
+  }));
+
+  // Create a map for faster lookup
+  const yearDataMap = new Map(yearlyData.map(item => [item.name, item]));
+
+  // Process payments
+  payments.forEach((payment) => {
+    if (payment.payment_date) {
+      const date = parseISO(payment.payment_date);
+      const year = date.getFullYear().toString();
+      
+      if (yearDataMap.has(year)) {
+        const yearData = yearDataMap.get(year);
+        yearData.income += Number(payment.amount) || 0;
+      }
+    }
+  });
+
+  // Process expenses
+  expenses.forEach((expense) => {
+    if (expense.date) {
+      const date = parseISO(expense.date);
+      const year = date.getFullYear().toString();
+      
+      if (yearDataMap.has(year)) {
+        const yearData = yearDataMap.get(year);
+        // Handle both expense.amount (maintenance_expenses) and expense.cost (vendor_interventions)
+        const expenseAmount = Number(expense.amount || expense.cost || 0);
+        yearData.expense += expenseAmount;
+      }
+    }
+  });
+
+  // Calculate profit and finalize data
+  const result = years.map(year => {
+    const yearStr = year.toString();
+    const data = yearDataMap.get(yearStr);
+    data.profit = data.income - data.expense;
+    return data;
+  });
+
+  // Cache the result
+  dataCache.set(cacheKey, result);
+  
+  return result;
+};
+
+// Clear cache when window loses focus to ensure fresh data on return
+if (typeof window !== 'undefined') {
+  window.addEventListener('blur', () => {
+    dataCache.clear();
+  });
+}

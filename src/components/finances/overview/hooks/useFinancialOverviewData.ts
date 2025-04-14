@@ -22,12 +22,18 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         return data || [];
       } catch (error) {
         console.error("Error fetching tenants:", error);
+        toast({
+          title: t('error'),
+          description: t('errorLoadingData'),
+          variant: "destructive",
+        });
         throw error;
       }
     },
     enabled: !!propertyId,
     retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    gcTime: 10 * 60 * 1000, // 10 minutes garbage collection time
   });
 
   const { 
@@ -65,9 +71,15 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
     },
     enabled: !!propertyId && !!tenants?.length,
     retry: 2,
+    staleTime: 3 * 60 * 1000, // 3 minutes cache
     meta: {
       onError: (error: any) => {
         console.error("Payments fetch error:", error);
+        toast({
+          title: t('error'),
+          description: t('errorLoadingData'),
+          variant: "destructive",
+        });
       }
     }
   });
@@ -89,58 +101,71 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         
         console.log(`Fetching expenses for property ${propertyId} between ${startDate} and ${endDate}`);
         
-        // First query for maintenance expenses
-        const { data: maintenanceExpenses, error: maintenanceError } = await supabase
-          .from('maintenance_expenses')
-          .select('id, amount, date, category, description')
-          .eq('property_id', propertyId)
-          .gte('date', startDate)
-          .lte('date', endDate);
-          
-        if (maintenanceError) {
-          console.error("Error fetching maintenance expenses:", maintenanceError);
-          throw maintenanceError;
+        // Run both queries in parallel using Promise.all for better performance
+        const [maintenanceResponse, vendorResponse] = await Promise.all([
+          // First query for maintenance expenses
+          supabase
+            .from('maintenance_expenses')
+            .select('id, amount, date, category, description')
+            .eq('property_id', propertyId)
+            .gte('date', startDate)
+            .lte('date', endDate),
+            
+          // Second query for vendor interventions which also count as expenses
+          supabase
+            .from('vendor_interventions')
+            .select('id, cost, date, title, description')
+            .eq('property_id', propertyId)
+            .gte('date', startDate)
+            .lte('date', endDate)
+        ]);
+        
+        if (maintenanceResponse.error) {
+          console.error("Error fetching maintenance expenses:", maintenanceResponse.error);
+          throw maintenanceResponse.error;
         }
         
-        // Second query for vendor interventions which also count as expenses
-        const { data: vendorInterventions, error: vendorError } = await supabase
-          .from('vendor_interventions')
-          .select('id, cost, date, title, description')
-          .eq('property_id', propertyId)
-          .gte('date', startDate)
-          .lte('date', endDate);
-          
-        if (vendorError) {
-          console.error("Error fetching vendor interventions:", vendorError);
-          throw vendorError;
+        if (vendorResponse.error) {
+          console.error("Error fetching vendor interventions:", vendorResponse.error);
+          throw vendorResponse.error;
         }
         
         // Combine both types of expenses 
         const allExpenses = [
-          ...(maintenanceExpenses || []),
-          ...(vendorInterventions || [])
+          ...(maintenanceResponse.data || []),
+          ...(vendorResponse.data || [])
         ];
         
         console.log(`Total expenses combined: ${allExpenses.length}`);
         return allExpenses;
       } catch (error) {
         console.error("Error fetching expenses:", error);
+        toast({
+          title: t('error'),
+          description: t('errorLoadingData'),
+          variant: "destructive",
+        });
         throw error;
       }
     },
     enabled: !!propertyId,
-    retry: 2
+    retry: 2,
+    staleTime: 3 * 60 * 1000, // 3 minutes cache
   });
 
   // Determining the overall loading and error state
   const isLoading = tenantsLoading || paymentsLoading || expensesLoading;
   const error = tenantsError || paymentsError || expensesError;
 
-  // Combined refetch function
+  // Combined refetch function with debounce to prevent multiple refreshes
   const refetch = () => {
     if (tenantsError) return;
-    refetchPayments();
-    refetchExpenses();
+    
+    // Use setTimeout to ensure we don't trigger multiple refetches in the same cycle
+    setTimeout(() => {
+      refetchPayments();
+      refetchExpenses();
+    }, 0);
   };
 
   return {
