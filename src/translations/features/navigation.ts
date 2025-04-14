@@ -13,7 +13,7 @@ export const enNavigation: NavigationTranslations = {
   imperial: "Imperial",
   home: "Home",
   tenants: "Tenants",
-  maintenance: "Maintenance",
+  maintenance: "Maintenances",
   settings: "Settings",
   admin: "Admin",
   loading: "Loading...",

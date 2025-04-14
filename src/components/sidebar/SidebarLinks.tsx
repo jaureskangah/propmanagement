@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
@@ -47,7 +46,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     {
       href: "/tenant/maintenance",
       icon: Wrench,
-      label: t('maintenance'),
+      label: t('maintenances'),
     },
     {
       href: "/tenant/communications",
@@ -81,7 +80,7 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
     {
       href: "/maintenance",
       icon: Wrench,
-      label: t('maintenance'),
+      label: t('maintenances'),
     },
     {
       href: "/finances",
