@@ -19,10 +19,13 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   );
   const [recurrenceInterval, setRecurrenceInterval] = useState(initialValue?.recurrence_pattern?.interval || 1);
   
-  // Nouvelles propriétés pour les rappels
+  // Propriétés pour les rappels
   const [hasReminder, setHasReminder] = useState(initialValue?.has_reminder || false);
   const [reminderDate, setReminderDate] = useState<Date | undefined>(initialValue?.reminder_date || undefined);
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">(initialValue?.reminder_method || "app");
+  
+  // Nouvelle propriété pour la sélection de propriété
+  const [propertyId, setPropertyId] = useState<string>(initialValue?.property_id || localStorage.getItem('selectedPropertyId') || "");
   
   // Si une date initiale est fournie, on l'utilise pour setDate
   useEffect(() => {
@@ -40,6 +43,7 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
       priority,
       date: date || new Date(),
       is_recurring: isRecurring,
+      property_id: propertyId, // Ajout de la propriété dans la tâche
       ...(isRecurring
         ? {
             recurrence_pattern: {
@@ -84,6 +88,8 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
     setReminderDate,
     reminderMethod,
     setReminderMethod,
+    propertyId,
+    setPropertyId,
     handleSubmit
   };
 };

@@ -9,6 +9,7 @@ import { fr, enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TaskTypeSelect } from "./form-fields/TaskTypeSelect";
 import { PrioritySelect } from "./form-fields/PrioritySelect";
+import { PropertySelect } from "./form-fields/PropertySelect";
 
 interface TaskFormContentProps {
   title: string;
@@ -31,6 +32,8 @@ interface TaskFormContentProps {
   setReminderDate: (date: Date | undefined) => void;
   reminderMethod: "app" | "email" | "both";
   setReminderMethod: (value: "app" | "email" | "both") => void;
+  propertyId: string;
+  setPropertyId: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => void;
 }
 
@@ -55,6 +58,8 @@ export const TaskFormContent = ({
   setReminderDate,
   reminderMethod,
   setReminderMethod,
+  propertyId,
+  setPropertyId,
   handleSubmit
 }: TaskFormContentProps) => {
   const { t, language } = useLocale();
@@ -72,6 +77,12 @@ export const TaskFormContent = ({
           required
         />
       </div>
+      
+      <PropertySelect 
+        value={propertyId} 
+        onChange={setPropertyId} 
+        label={t('property')}
+      />
       
       <TaskTypeSelect 
         value={type} 

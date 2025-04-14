@@ -36,6 +36,7 @@ export const useTaskAddition = () => {
           date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
           is_recurring: newTask.is_recurring || false,
           user_id: user.id,
+          property_id: newTask.property_id, // Ajout du property_id
           // Add other fields as needed
           ...(newTask.recurrence_pattern ? { recurrence_pattern: newTask.recurrence_pattern } : {}),
         })
@@ -88,6 +89,7 @@ export const useTaskAddition = () => {
           date: normalizedDate.toISOString().split('T')[0], // Format as YYYY-MM-DD
           is_recurring: task.is_recurring || false,
           user_id: user.id,
+          property_id: task.property_id, // Ajout du property_id
           // Add other fields as needed
           ...(task.recurrence_pattern ? { recurrence_pattern: task.recurrence_pattern } : {}),
         };
