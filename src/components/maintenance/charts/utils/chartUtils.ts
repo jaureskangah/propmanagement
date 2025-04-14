@@ -25,26 +25,26 @@ export const getMaintenanceChartData = (propertyId: string): MaintenanceChartDat
   ];
 };
 
-// Hook to get chart configuration with proper translations
+// Hook to get chart configuration with proper translations and colors like in Finance page
 export const useMaintenanceChartConfig = () => {
   const { t } = useLocale();
   
   return {
     totalRequests: {
       label: t('totalMaintenanceRequests'),
-      theme: { light: "#8884d8", dark: "#a393f0" }
+      theme: { light: "#3B82F6", dark: "#60A5FA" } // Blue like in Finance charts
     },
     completedRequests: {
       label: t('completedMaintenanceRequests'),
-      theme: { light: "#4ade80", dark: "#22c55e" }
+      theme: { light: "#22C55E", dark: "#4ADE80" } // Green like in Finance charts
     },
     urgentRequests: {
       label: t('urgentMaintenanceRequests'),
-      theme: { light: "#ef4444", dark: "#f87171" }
+      theme: { light: "#EF4444", dark: "#F87171" } // Red like in Finance charts
     },
     expenses: {
       label: t('maintenanceExpenses'),
-      theme: { light: "#82ca9d", dark: "#86efac" }
+      theme: { light: "#F59E0B", dark: "#FBBF24" } // Amber like in Finance charts
     }
   };
 };
@@ -56,7 +56,7 @@ export const useExpensesChartConfig = () => {
   return {
     expenses: {
       label: t('maintenanceExpenses'),
-      theme: { light: "#82ca9d", dark: "#86efac" }
+      theme: { light: "#F59E0B", dark: "#FBBF24" } // Amber like in Finance charts
     }
   };
 };

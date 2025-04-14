@@ -78,7 +78,8 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
                 <Line 
                   type="monotone" 
                   dataKey="requests" 
-                  name="totalRequests"
+                  name={chartConfig.totalRequests.label}
+                  stroke={chartConfig.totalRequests.theme.light}
                   strokeWidth={2}
                   activeDot={{ r: 4, strokeWidth: 1 }}
                   dot={{ r: 0 }}
@@ -88,7 +89,8 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
                 <Line 
                   type="monotone" 
                   dataKey="completed" 
-                  name="completedRequests"
+                  name={chartConfig.completedRequests.label}
+                  stroke={chartConfig.completedRequests.theme.light}
                   strokeWidth={2}
                   activeDot={{ r: 4, strokeWidth: 1 }} 
                   dot={{ r: 0 }}
@@ -98,7 +100,8 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
                 <Line 
                   type="monotone" 
                   dataKey="urgent" 
-                  name="urgentRequests"
+                  name={chartConfig.urgentRequests.label}
+                  stroke={chartConfig.urgentRequests.theme.light}
                   strokeWidth={2}
                   activeDot={{ r: 4, strokeWidth: 1 }}
                   dot={{ r: 0 }}
@@ -154,7 +157,8 @@ export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
                 />
                 <Bar 
                   dataKey="expenses" 
-                  name="expenses"
+                  name={expensesChartConfig.expenses.label}
+                  fill={expensesChartConfig.expenses.theme.light}
                   animationDuration={1000}
                   animationBegin={0}
                   radius={[4, 4, 0, 0]}
