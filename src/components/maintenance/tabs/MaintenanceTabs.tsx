@@ -1,13 +1,11 @@
-import React, { lazy, Suspense } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequests } from "./MaintenanceRequests";
 import { MaintenanceTasks } from "../tasks/MaintenanceTasks";
 import { MaintenanceCharts } from "../charts/MaintenanceCharts";
 import { PropertyFinancials } from "../PropertyFinancials";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { MaintenanceRequest } from "../types";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Skeleton } from "@/components/ui/skeleton";
 
 // Création d'un composant de chargement réutilisable
 const TabContentSkeleton = () => (
@@ -57,7 +55,7 @@ export const MaintenanceTabs = ({
           value="financials" 
           className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
         >
-          {t('finances')}
+          {t('costs')}
         </TabsTrigger>
       </TabsList>
       

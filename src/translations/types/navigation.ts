@@ -1,4 +1,3 @@
-
 export interface NavigationTranslations {
   features: string;
   pricing: string;
@@ -10,13 +9,14 @@ export interface NavigationTranslations {
   units: string;
   metric: string;
   imperial: string;
-  home: string;  // Added this property
-  tenants: string;  // Added missing properties
+  home: string;
+  tenants: string;
   maintenance: string;
   settings: string;
   admin: string;
   loading: string;
   error: string;
   properties: string;
-  finances: string;  // Added finances property
+  finances: string;
+  costs?: string;
 }
