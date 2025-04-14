@@ -18,4 +18,5 @@ export interface NavigationTranslations {
   loading: string;
   error: string;
   properties: string;
+  finances: string;  // Added finances property
 }
