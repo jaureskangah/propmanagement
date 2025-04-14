@@ -1,9 +1,9 @@
 
 import React from "react";
 import { MetricsCards } from "./financials/MetricsCards";
-import { DataTables } from "./financials/DataTables";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { MaintenanceTable } from "./financials/tables/MaintenanceTable";
 
 interface PropertyFinancialsProps {
   propertyId: string;
@@ -150,11 +150,9 @@ export const PropertyFinancials = ({
         selectedYear={selectedYear}
         rentData={rentData}
       />
-      <DataTables
-        propertyId={propertyId}
-        expenses={expenses}
-        maintenance={maintenance}
-      />
+      <div className="space-y-6">
+        <MaintenanceTable maintenance={maintenance} />
+      </div>
     </div>
   );
 };
