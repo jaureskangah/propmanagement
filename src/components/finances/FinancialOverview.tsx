@@ -6,9 +6,11 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useFinancialOverviewData } from "./overview/hooks/useFinancialOverviewData";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
 import { NoPropertySelected } from "./metrics/NoPropertySelected";
-import { ErrorState } from "./metrics/ErrorState";
+import { ErrorState } from "@/components/ui/error-state";
 import { IncomeTable } from "./overview/components/IncomeTable";
 import { ExpensesTable } from "./overview/components/ExpensesTable";
+import { useToast } from "@/hooks/use-toast";
+import { useErrorHandler } from "@/hooks/useErrorHandler";
 
 interface FinancialOverviewProps {
   propertyId: string | null;
@@ -17,6 +19,8 @@ interface FinancialOverviewProps {
 
 const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps) => {
   const { t } = useLocale();
+  const { toast } = useToast();
+  const { handleError } = useErrorHandler();
   const { tenants, payments, expenses, isLoading, error, refetch } = useFinancialOverviewData(propertyId, selectedYear);
 
   // Log for debugging
@@ -30,6 +34,10 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
   }, [propertyId, selectedYear, isLoading, expenses]);
 
   const handleRetry = () => {
+    toast({
+      title: t('refreshing'),
+      description: t('attemptingToRefreshData')
+    });
     refetch();
   };
 
@@ -39,7 +47,13 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
 
   if (error) {
     console.error("Error loading financial overview:", error);
-    return <ErrorState error={error as Error} onRetry={handleRetry} type="financial-overview" />;
+    return (
+      <ErrorState 
+        title={t('errorLoadingOverview')}
+        error={error as Error}
+        onRetry={handleRetry}
+      />
+    );
   }
 
   if (!propertyId) {
