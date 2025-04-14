@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequests } from "./MaintenanceRequests";
@@ -20,16 +21,28 @@ export const MaintenanceTabs = ({
   return (
     <Tabs defaultValue="dashboard" className="w-full">
       <TabsList className={`${isMobile ? "flex flex-wrap" : "w-full md:grid md:grid-cols-4"} bg-card`}>
-        <TabsTrigger value="dashboard" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+        <TabsTrigger 
+          value="dashboard" 
+          className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
+        >
           {t('dashboard')}
         </TabsTrigger>
-        <TabsTrigger value="requests" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+        <TabsTrigger 
+          value="requests" 
+          className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
+        >
           {t('maintenanceRequests')}
         </TabsTrigger>
-        <TabsTrigger value="tasks" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+        <TabsTrigger 
+          value="tasks" 
+          className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
+        >
           {t('scheduledTasks')}
         </TabsTrigger>
-        <TabsTrigger value="financials" className={`${isMobile ? "flex-1" : ""} text-sm`}>
+        <TabsTrigger 
+          value="financials" 
+          className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
+        >
           {t('financials')}
         </TabsTrigger>
       </TabsList>
