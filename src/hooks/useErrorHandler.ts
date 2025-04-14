@@ -33,15 +33,17 @@ export function useErrorHandler() {
     
     // Create icon components based on severity
     const getIcon = (severity: ErrorSeverity) => {
+      const iconProps = { className: "h-4 w-4" };
+      
       switch (severity) {
         case "error":
-          return <XCircle className="h-4 w-4" />;
+          return <XCircle {...iconProps} />;
         case "warning":
-          return <AlertCircle className="h-4 w-4" />;
+          return <AlertCircle {...iconProps} />;
         case "info":
-          return <Info className="h-4 w-4" />;
+          return <Info {...iconProps} />;
         default:
-          return <AlertCircle className="h-4 w-4" />;
+          return <AlertCircle {...iconProps} />;
       }
     };
     
