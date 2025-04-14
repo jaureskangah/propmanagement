@@ -18,18 +18,23 @@ import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { 
   getMaintenanceChartData, 
   useMaintenanceChartConfig, 
-  useExpensesChartConfig 
+  useExpensesChartConfig,
+  formatMonthsForLocale
 } from "./utils/chartUtils";
+import { useMaintenanceChartData } from "./hooks/useMaintenanceChartData";
 
 interface MaintenanceChartsProps {
   propertyId: string;
 }
 
 export const MaintenanceCharts = ({ propertyId }: MaintenanceChartsProps) => {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   
   // Fetch chart data using the utility function
-  const chartData = useMemo(() => getMaintenanceChartData(propertyId), [propertyId]);
+  const chartData = useMemo(() => {
+    const data = getMaintenanceChartData(propertyId);
+    return formatMonthsForLocale(data, locale);
+  }, [propertyId, locale]);
   
   // Get chart configurations using the utility hooks
   const chartConfig = useMaintenanceChartConfig();

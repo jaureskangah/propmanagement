@@ -10,6 +10,33 @@ export interface MaintenanceChartData {
   expenses: number;
 }
 
+// Function to translate month names based on the selected locale
+export const formatMonthsForLocale = (data: MaintenanceChartData[], locale: string): MaintenanceChartData[] => {
+  const frenchMonths: Record<string, string> = {
+    'Jan': 'Jan',
+    'Feb': 'Fév',
+    'Mar': 'Mar',
+    'Apr': 'Avr',
+    'May': 'Mai',
+    'Jun': 'Juin',
+    'Jul': 'Juil',
+    'Aug': 'Août',
+    'Sep': 'Sep',
+    'Oct': 'Oct',
+    'Nov': 'Nov',
+    'Dec': 'Déc'
+  };
+
+  if (locale === 'fr') {
+    return data.map(item => ({
+      ...item,
+      month: frenchMonths[item.month] || item.month
+    }));
+  }
+  
+  return data;
+};
+
 // Mock data - this would be replaced with actual API data
 export const getMaintenanceChartData = (propertyId: string): MaintenanceChartData[] => {
   console.log("Fetching chart data for property:", propertyId);
