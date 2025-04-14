@@ -11,8 +11,6 @@ import {
   LayoutDashboard,
   ShieldCheck,
   MessageCircle,
-  CreditCard,
-  User,
   DollarSign
 } from "lucide-react";
 
@@ -33,16 +31,6 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/tenant/dashboard",
       icon: LayoutDashboard,
       label: t('dashboard'),
-    },
-    {
-      href: "/profile",
-      icon: User,
-      label: t('profile'),
-    },
-    {
-      href: "/tenant/payments",
-      icon: CreditCard,
-      label: t('payments'),
     },
     {
       href: "/tenant/maintenance",

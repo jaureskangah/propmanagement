@@ -5,7 +5,6 @@ import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
 import Vendors from './pages/Vendors';
 import AddVendor from './pages/AddVendor';
 import TaskList from './pages/TaskList';
@@ -41,7 +40,6 @@ function App() {
       {/* Protected Routes - only accessible when logged in */}
       <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
       <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
-      <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
       <Route path="/vendors" element={isAuthenticated ? <Vendors /> : <Navigate to="/login" />} />
       <Route path="/add-vendor" element={isAuthenticated ? <AddVendor /> : <Navigate to="/login" />} />
       <Route path="/tasks" element={isAuthenticated ? <TaskList /> : <Navigate to="/login" />} />
