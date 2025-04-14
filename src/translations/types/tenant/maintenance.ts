@@ -73,4 +73,5 @@ export interface TenantMaintenanceTranslations {
   maintenance: string;
   newRequest?: string;
   andMoreRequests?: string;
+  manageMaintenanceRequests: string;
 }

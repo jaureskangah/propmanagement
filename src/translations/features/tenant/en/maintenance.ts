@@ -74,5 +74,6 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   viewAll: "View All",
   maintenance: "Maintenance",
   newRequest: "New Request",
-  andMoreRequests: "and {count} more"
+  andMoreRequests: "and {count} more",
+  manageMaintenanceRequests: "Manage and track your maintenance requests"
 };

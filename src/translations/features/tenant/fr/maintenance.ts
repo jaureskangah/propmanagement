@@ -74,5 +74,6 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   viewAll: "Voir tout",
   maintenance: "Maintenance",
   newRequest: "Nouvelle demande",
-  andMoreRequests: "et {count} de plus"
+  andMoreRequests: "et {count} de plus",
+  manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance"
 };
