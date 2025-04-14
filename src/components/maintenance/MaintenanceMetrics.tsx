@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   ClipboardList, 
@@ -7,8 +8,6 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
 
 interface MaintenanceMetricsProps {
   total: number;
@@ -81,11 +80,6 @@ export const MaintenanceMetrics = ({
                     metric.value
                   )}
                 </div>
-                {propertyId && selectedYear && (
-                  <div className="text-xs text-muted-foreground">
-                    {t('filteredForYear')}: {selectedYear}
-                  </div>
-                )}
               </div>
             </CardContent>
           </Card>
