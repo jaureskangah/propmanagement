@@ -67,6 +67,11 @@ export const MaintenanceRequestDialog = ({
     }
   };
 
+  const handleMaintenanceUpdate = () => {
+    console.log("MaintenanceRequestDialog: handleMaintenanceUpdate called");
+    onUpdate();
+  };
+
   if (!request) return null;
 
   return (
@@ -91,7 +96,7 @@ export const MaintenanceRequestDialog = ({
           <TabsContent value="details">
             <MaintenanceDetailsTab 
               request={request} 
-              onUpdate={onUpdate} 
+              onUpdate={handleMaintenanceUpdate} 
             />
           </TabsContent>
 

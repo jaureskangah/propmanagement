@@ -48,8 +48,9 @@ export const MaintenanceList = ({
   };
 
   const handleMaintenanceUpdateAndClose = () => {
+    console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
     onMaintenanceUpdate();
-    // Nous gardons le dialogue ouvert pour permettre à l'utilisateur de continuer à voir les messages
+    // On garde le dialogue ouvert pour permettre à l'utilisateur de continuer à modifier
   };
 
   if (requests.length === 0) {

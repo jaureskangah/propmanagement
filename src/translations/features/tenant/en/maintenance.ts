@@ -75,5 +75,18 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   maintenance: "Maintenance",
   newRequest: "New Request",
   andMoreRequests: "and {count} more",
-  manageMaintenanceRequests: "Manage and track your maintenance requests"
+  manageMaintenanceRequests: "Manage and track your maintenance requests",
+  issue: "Issue",
+  notUpdatedYet: "Not updated yet",
+  notifyTenantAboutUpdate: "Notify tenant about this status update",
+  requestUpdated: "The maintenance request has been updated successfully",
+  notificationSent: "Notification sent",
+  tenantNotified: "The tenant has been notified of the status change",
+  notificationFailed: "Notification failed",
+  failedToSendNotification: "Failed to send notification to tenant",
+  failedToUpdateRequest: "Failed to update maintenance request",
+  maintenanceRequestDetails: "Maintenance request details",
+  messages: "Messages",
+  noTenantAssociated: "No tenant associated with this request",
+  errorLoadingMessages: "Error loading messages"
 };

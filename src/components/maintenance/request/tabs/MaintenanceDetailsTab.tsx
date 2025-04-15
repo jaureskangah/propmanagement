@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenanceDetailsTabProps {
   request: MaintenanceRequest;
@@ -20,6 +21,7 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
   const [isUpdating, setIsUpdating] = useState(false);
   const [notifyTenant, setNotifyTenant] = useState(false);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const sendStatusUpdate = async () => {
     if (!request.tenant_id || !notifyTenant) return;
@@ -37,16 +39,16 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
       if (error) throw error;
       
       toast({
-        title: "Notification sent",
-        description: "The tenant has been notified of the status change."
+        title: t('notificationSent'),
+        description: t('tenantNotified')
       });
       
       return true;
     } catch (error) {
       console.error("Error sending notification:", error);
       toast({
-        title: "Notification failed",
-        description: "Failed to send notification to tenant.",
+        title: t('notificationFailed'),
+        description: t('failedToSendNotification'),
         variant: "destructive"
       });
       
@@ -56,6 +58,7 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
 
   const handleUpdateRequest = async () => {
     setIsUpdating(true);
+    console.log("Updating maintenance request:", { id: request.id, status, priority });
     
     try {
       // First update the maintenance request
@@ -69,7 +72,12 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
         })
         .eq('id', request.id);
         
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase update error:", error);
+        throw error;
+      }
+      
+      console.log("Maintenance request updated successfully");
       
       // Then send notification if required
       if (notifyTenant) {
@@ -77,16 +85,16 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
       }
       
       toast({
-        title: "Request updated",
-        description: "The maintenance request has been updated successfully."
+        title: t('success'),
+        description: t('requestUpdated')
       });
       
       onUpdate();
     } catch (error) {
       console.error("Error updating maintenance request:", error);
       toast({
-        title: "Error",
-        description: "Failed to update maintenance request.",
+        title: t('error'),
+        description: t('failedToUpdateRequest'),
         variant: "destructive"
       });
     } finally {
@@ -98,55 +106,55 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
     <div className="space-y-6">
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label>Status</Label>
+          <Label>{t('status')}</Label>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Pending">Pending</SelectItem>
-              <SelectItem value="In Progress">In Progress</SelectItem>
-              <SelectItem value="Resolved">Resolved</SelectItem>
+              <SelectItem value="Pending">{t('pending')}</SelectItem>
+              <SelectItem value="In Progress">{t('inProgress')}</SelectItem>
+              <SelectItem value="Resolved">{t('resolved')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
         
         <div className="space-y-2">
-          <Label>Priority</Label>
+          <Label>{t('priority')}</Label>
           <Select value={priority} onValueChange={setPriority}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Low">Low</SelectItem>
-              <SelectItem value="Medium">Medium</SelectItem>
-              <SelectItem value="High">High</SelectItem>
-              <SelectItem value="Urgent">Urgent</SelectItem>
+              <SelectItem value="Low">{t('low')}</SelectItem>
+              <SelectItem value="Medium">{t('medium')}</SelectItem>
+              <SelectItem value="High">{t('high')}</SelectItem>
+              <SelectItem value="Urgent">{t('urgent')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
       
-      <div className="space-y-4 bg-gray-50 p-4 rounded-md">
+      <div className="space-y-4 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-md">
         <div>
-          <span className="font-medium text-sm text-gray-500">Issue:</span>
+          <span className="font-medium text-sm text-gray-500 dark:text-gray-400">{t('issue')}:</span>
           <p className="mt-1">{request.issue}</p>
         </div>
         
         <div>
-          <span className="font-medium text-sm text-gray-500">Description:</span>
-          <p className="mt-1">{request.description || "No description provided."}</p>
+          <span className="font-medium text-sm text-gray-500 dark:text-gray-400">{t('description')}:</span>
+          <p className="mt-1">{request.description || t('noDescriptionProvided')}</p>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <span className="font-medium text-sm text-gray-500">Created:</span>
+            <span className="font-medium text-sm text-gray-500 dark:text-gray-400">{t('created')}:</span>
             <p className="mt-1">{formatDate(request.created_at)}</p>
           </div>
           
           <div>
-            <span className="font-medium text-sm text-gray-500">Last Updated:</span>
-            <p className="mt-1">{request.updated_at ? formatDate(request.updated_at) : "Not updated yet"}</p>
+            <span className="font-medium text-sm text-gray-500 dark:text-gray-400">{t('updated')}:</span>
+            <p className="mt-1">{request.updated_at ? formatDate(request.updated_at) : t('notUpdatedYet')}</p>
           </div>
         </div>
       </div>
@@ -158,13 +166,17 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
           onCheckedChange={(checked) => setNotifyTenant(checked as boolean)}
         />
         <Label htmlFor="notify-tenant" className="cursor-pointer">
-          Notify tenant about this status update
+          {t('notifyTenantAboutUpdate')}
         </Label>
       </div>
       
       <div className="flex justify-end">
-        <Button onClick={handleUpdateRequest} disabled={isUpdating}>
-          {isUpdating ? "Updating..." : "Update Request"}
+        <Button 
+          onClick={handleUpdateRequest} 
+          disabled={isUpdating}
+          className="bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+        >
+          {isUpdating ? t('updating') : t('updateRequest')}
         </Button>
       </div>
     </div>

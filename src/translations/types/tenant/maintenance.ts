@@ -74,4 +74,17 @@ export interface TenantMaintenanceTranslations {
   newRequest?: string;
   andMoreRequests?: string;
   manageMaintenanceRequests: string;
+  issue: string;
+  notUpdatedYet: string;
+  notifyTenantAboutUpdate: string;
+  requestUpdated: string;
+  notificationSent: string;
+  tenantNotified: string;
+  notificationFailed: string;
+  failedToSendNotification: string;
+  failedToUpdateRequest: string;
+  maintenanceRequestDetails: string;
+  messages: string;
+  noTenantAssociated: string;
+  errorLoadingMessages: string;
 }
