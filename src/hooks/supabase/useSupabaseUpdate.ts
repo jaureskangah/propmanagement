@@ -30,8 +30,8 @@ export function useSupabaseUpdate<T extends TableName>(
         const { data: returnedData, error } = await supabase
           .from(table)
           .update(data as any)
-          .match({ id } as any)
-          .select()
+          .eq('id', id)
+          .select('*')
           .single();
 
         if (error) {

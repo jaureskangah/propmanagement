@@ -31,13 +31,19 @@ export const MaintenanceList = ({
     console.log("Sorted maintenance requests:", sortedRequests);
   }, [unsortedRequests]);
 
+  // Vérifier s'il y a un ID de demande dans les paramètres d'URL
   useEffect(() => {
     const requestId = searchParams.get('request');
     if (requestId) {
+      console.log("Found request ID in URL params:", requestId);
       const request = requestsState.find(r => r.id === requestId);
       if (request) {
+        console.log("Found matching request:", request);
         setSelectedRequest(request);
+      } else {
+        console.log("No matching request found for ID:", requestId);
       }
+      
       // Nettoyer les paramètres après utilisation
       setSearchParams(prev => {
         prev.delete('request');
@@ -50,10 +56,12 @@ export const MaintenanceList = ({
     console.log("Maintenance request clicked:", request.id);
     // Trouver la version la plus à jour de la demande
     const updatedRequest = requestsState.find(r => r.id === request.id) || request;
+    console.log("Selected request for dialog:", updatedRequest);
     setSelectedRequest(updatedRequest);
   };
 
   const handleCloseDialog = () => {
+    console.log("Closing maintenance request dialog");
     setSelectedRequest(null);
   };
 
@@ -61,7 +69,17 @@ export const MaintenanceList = ({
     console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
     // Mettre à jour les données via le callback parent
     onMaintenanceUpdate();
-    // On garde la boîte de dialogue ouverte pour voir les changements
+    
+    // Mettre à jour la demande sélectionnée si elle existe encore
+    if (selectedRequest) {
+      const updatedRequest = [...unsortedRequests]
+        .find(r => r.id === selectedRequest.id);
+      
+      if (updatedRequest) {
+        console.log("Updating selected request with latest data:", updatedRequest);
+        setSelectedRequest(updatedRequest);
+      }
+    }
   };
 
   if (requestsState.length === 0) {
