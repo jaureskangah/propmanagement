@@ -25,6 +25,8 @@ export function useSupabaseUpdate<T extends TableName>(
       data: Update<T>;
     }) => {
       try {
+        console.log(`Updating ${table} with ID ${id}:`, data);
+        
         const { data: returnedData, error } = await supabase
           .from(table)
           .update(data as any)
@@ -32,9 +34,15 @@ export function useSupabaseUpdate<T extends TableName>(
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error(`Error updating ${table}:`, error);
+          throw error;
+        }
+        
+        console.log(`Successfully updated ${table}:`, returnedData);
         return returnedData as unknown as Row<T>;
       } catch (error) {
+        console.error(`Error in useSupabaseUpdate for ${table}:`, error);
         handleError(error);
         throw error;
       }
@@ -51,7 +59,16 @@ export function useSupabaseUpdate<T extends TableName>(
         options.onSuccess(data);
       }
 
+      // Invalider les requêtes pour forcer un rafraîchissement des données
       queryClient.invalidateQueries({ queryKey: [table] });
     },
+    onError: (error) => {
+      console.error(`Mutation error in useSupabaseUpdate for ${table}:`, error);
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la mise à jour",
+        variant: "destructive",
+      });
+    }
   });
 }

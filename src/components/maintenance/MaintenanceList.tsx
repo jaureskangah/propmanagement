@@ -19,16 +19,22 @@ export const MaintenanceList = ({
   const { t } = useLocale();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
+  const [requestsState, setRequestsState] = useState<MaintenanceRequest[]>([]);
 
   // Trier les demandes par date de création (les plus récentes en premier)
-  const requests = [...unsortedRequests].sort((a, b) => 
-    new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-  );
+  useEffect(() => {
+    // Copie profonde des demandes pour éviter des références partagées
+    const sortedRequests = [...unsortedRequests].sort((a, b) => 
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    setRequestsState(sortedRequests);
+    console.log("Sorted maintenance requests:", sortedRequests);
+  }, [unsortedRequests]);
 
   useEffect(() => {
     const requestId = searchParams.get('request');
     if (requestId) {
-      const request = requests.find(r => r.id === requestId);
+      const request = requestsState.find(r => r.id === requestId);
       if (request) {
         setSelectedRequest(request);
       }
@@ -38,11 +44,13 @@ export const MaintenanceList = ({
         return prev;
       });
     }
-  }, [searchParams, requests, setSearchParams]);
+  }, [searchParams, requestsState, setSearchParams]);
 
   const handleRequestClick = (request: MaintenanceRequest) => {
     console.log("Maintenance request clicked:", request.id);
-    setSelectedRequest(request);
+    // Trouver la version la plus à jour de la demande
+    const updatedRequest = requestsState.find(r => r.id === request.id) || request;
+    setSelectedRequest(updatedRequest);
   };
 
   const handleCloseDialog = () => {
@@ -53,17 +61,17 @@ export const MaintenanceList = ({
     console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
     // Mettre à jour les données via le callback parent
     onMaintenanceUpdate();
-    // Optionnel : garder la boîte de dialogue ouverte pour permettre d'autres modifications
+    // On garde la boîte de dialogue ouverte pour voir les changements
   };
 
-  if (requests.length === 0) {
+  if (requestsState.length === 0) {
     return <EmptyMaintenanceState />;
   }
 
   return (
     <>
       <div className="space-y-4">
-        {requests.map((request) => (
+        {requestsState.map((request) => (
           <MaintenanceRequestItem 
             key={request.id}
             request={request}
