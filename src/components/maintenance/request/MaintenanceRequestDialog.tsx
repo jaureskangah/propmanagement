@@ -38,11 +38,11 @@ export const MaintenanceRequestDialog = ({
   const { t } = useLocale();
   const { toast } = useToast();
 
-  console.log("MaintenanceRequestDialog rendering with open state:", open);
-  console.log("Request data:", request?.id);
+  console.log(`Dialog render - open: ${open}, request: ${request?.id || 'none'}`);
 
   useEffect(() => {
     if (request?.tenant_id && open) {
+      console.log(`Fetching messages for tenant: ${request.tenant_id}`);
       fetchTenantMessages();
     }
   }, [request?.tenant_id, open]);
@@ -62,6 +62,7 @@ export const MaintenanceRequestDialog = ({
       if (error) throw error;
       
       setTenantMessages(data || []);
+      console.log(`Fetched ${data?.length || 0} tenant messages`);
     } catch (error) {
       console.error("Error fetching tenant messages:", error);
       toast({
@@ -73,25 +74,16 @@ export const MaintenanceRequestDialog = ({
   };
 
   const handleMaintenanceUpdate = () => {
-    console.log("MaintenanceRequestDialog: handleMaintenanceUpdate called");
-    // Propagate the update to the parent component
+    console.log("Updating maintenance data from dialog");
     onUpdate();
   };
 
-  const handleOpenChange = (newState: boolean) => {
-    console.log("Dialog open state changing to:", newState);
-    if (!newState) {
-      onClose();
-    }
-  };
-
   if (!request) {
-    console.log("MaintenanceRequestDialog: No request provided");
     return null;
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{request.issue}</DialogTitle>

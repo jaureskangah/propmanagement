@@ -4,10 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Wrench, AlertTriangle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MaintenanceRequest } from "../types";
+import { Card } from "@/components/ui/card";
 
 interface MaintenanceRequestItemProps {
   request: MaintenanceRequest;
-  onClick: (request: MaintenanceRequest) => void;
+  onClick: () => void;
 }
 
 export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestItemProps) => {
@@ -31,19 +32,11 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     }
   };
 
-  const handleClick = () => {
-    // Simpler and more direct click handler without event prevention
-    console.log("MaintenanceRequestItem clicked, calling onClick with request:", request.id);
-    onClick(request);
-  };
-
   return (
-    <div
-      key={request.id}
+    <Card
       className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${cardStyle} font-sans`}
-      onClick={handleClick}
+      onClick={onClick}
       data-request-id={request.id}
-      role="button"
       tabIndex={0}
     >
       <div className="flex items-center gap-3">
@@ -75,6 +68,6 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       >
         {request.status}
       </Badge>
-    </div>
+    </Card>
   );
 };

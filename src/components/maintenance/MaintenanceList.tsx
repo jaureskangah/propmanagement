@@ -20,33 +20,31 @@ export const MaintenanceList = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [requestsState, setRequestsState] = useState<MaintenanceRequest[]>([]);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Sort requests by creation date (most recent first)
   useEffect(() => {
-    // Deep copy of requests to avoid shared references
     const sortedRequests = [...unsortedRequests].sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
     setRequestsState(sortedRequests);
-    console.log("Sorted maintenance requests:", sortedRequests.length);
+    console.log(`Sorted ${sortedRequests.length} maintenance requests`);
   }, [unsortedRequests]);
 
   // Check if there's a request ID in the URL parameters
   useEffect(() => {
     const requestId = searchParams.get('request');
     if (requestId) {
-      console.log("Found request ID in URL params:", requestId);
+      console.log(`Looking for request with ID: ${requestId}`);
       const request = requestsState.find(r => r.id === requestId);
+      
       if (request) {
-        console.log("Found matching request:", request);
+        console.log(`Found request, opening dialog for: ${request.issue}`);
         setSelectedRequest(request);
-        setIsDialogOpen(true);
-      } else {
-        console.log("No matching request found for ID:", requestId);
+        setDialogOpen(true);
       }
       
-      // Clean up the parameters after use
+      // Clean up URL parameters
       setSearchParams(prev => {
         prev.delete('request');
         return prev;
@@ -54,34 +52,22 @@ export const MaintenanceList = ({
     }
   }, [searchParams, requestsState, setSearchParams]);
 
-  const handleRequestClick = (request: MaintenanceRequest) => {
-    console.log("Maintenance request clicked:", request.id);
-    
-    // First set the selected request
+  const openRequestDialog = (request: MaintenanceRequest) => {
+    console.log(`Opening dialog for request: ${request.id} - ${request.issue}`);
     setSelectedRequest(request);
-    
-    // Then explicitly open the dialog with a short delay
-    // This ensures React has time to process the state update
-    setTimeout(() => {
-      setIsDialogOpen(true);
-      console.log("Dialog opened, state set to:", true);
-    }, 50);
+    setDialogOpen(true);
   };
 
-  const handleCloseDialog = () => {
+  const closeRequestDialog = () => {
     console.log("Closing maintenance request dialog");
-    // First close the dialog
-    setIsDialogOpen(false);
-    // Then clear the selected request after a short delay
-    setTimeout(() => {
-      setSelectedRequest(null);
-    }, 100);
+    setDialogOpen(false);
+    setSelectedRequest(null);
   };
 
   const handleMaintenanceUpdateAndClose = () => {
-    console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
-    // Update the data via the parent callback
+    console.log("Updating maintenance requests and closing dialog");
     onMaintenanceUpdate();
+    closeRequestDialog();
   };
 
   return (
@@ -92,7 +78,7 @@ export const MaintenanceList = ({
             <MaintenanceRequestItem 
               key={request.id}
               request={request}
-              onClick={handleRequestClick}
+              onClick={() => openRequestDialog(request)}
             />
           ))
         ) : (
@@ -100,14 +86,12 @@ export const MaintenanceList = ({
         )}
       </div>
 
-      {selectedRequest && (
-        <MaintenanceRequestDialog
-          request={selectedRequest}
-          onClose={handleCloseDialog}
-          onUpdate={handleMaintenanceUpdateAndClose}
-          open={isDialogOpen}
-        />
-      )}
+      <MaintenanceRequestDialog
+        request={selectedRequest}
+        onClose={closeRequestDialog}
+        onUpdate={handleMaintenanceUpdateAndClose}
+        open={dialogOpen}
+      />
     </>
   );
 };
