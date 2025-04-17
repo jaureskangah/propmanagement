@@ -29,7 +29,7 @@ export const MaintenanceList = ({
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
     setRequestsState(sortedRequests);
-    console.log("Sorted maintenance requests:", sortedRequests);
+    console.log("Sorted maintenance requests:", sortedRequests.length);
   }, [unsortedRequests]);
 
   // Check if there's a request ID in the URL parameters
@@ -56,45 +56,35 @@ export const MaintenanceList = ({
 
   const handleRequestClick = (request: MaintenanceRequest) => {
     console.log("Maintenance request clicked:", request.id);
-    // Find the most up-to-date version of the request
+    // Find the most up-to-date version of the request in our local state
     const updatedRequest = requestsState.find(r => r.id === request.id) || request;
     console.log("Selected request for dialog:", updatedRequest);
     
     // First set the selected request
     setSelectedRequest(updatedRequest);
-    // Then open the dialog
+    
+    // Then explicitly open the dialog with a slight delay to ensure state is updated
     setTimeout(() => {
       setIsDialogOpen(true);
-      console.log("Dialog opened:", isDialogOpen);
-    }, 0);
+      console.log("Dialog opened, state set to:", true);
+    }, 10);
   };
 
   const handleCloseDialog = () => {
     console.log("Closing maintenance request dialog");
+    // First close the dialog
     setIsDialogOpen(false);
-    setSelectedRequest(null);
+    // Then clear the selected request after a short delay
+    setTimeout(() => {
+      setSelectedRequest(null);
+    }, 100);
   };
 
   const handleMaintenanceUpdateAndClose = () => {
     console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
     // Update the data via the parent callback
     onMaintenanceUpdate();
-    
-    // Update the selected request if it still exists
-    if (selectedRequest) {
-      const updatedRequest = [...unsortedRequests]
-        .find(r => r.id === selectedRequest.id);
-      
-      if (updatedRequest) {
-        console.log("Updating selected request with latest data:", updatedRequest);
-        setSelectedRequest(updatedRequest);
-      }
-    }
   };
-
-  if (requestsState.length === 0) {
-    return <EmptyMaintenanceState />;
-  }
 
   return (
     <>

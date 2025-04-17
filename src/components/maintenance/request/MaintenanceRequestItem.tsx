@@ -31,22 +31,10 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     }
   };
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleClick = () => {
+    // Simpler and more direct click handler without event prevention
     console.log("MaintenanceRequestItem clicked, calling onClick with request:", request.id);
-    
-    // Add more detailed debugging
-    try {
-      if (typeof onClick === 'function') {
-        onClick(request);
-        console.log("onClick handler called successfully");
-      } else {
-        console.error("onClick is not a function:", onClick);
-      }
-    } catch (error) {
-      console.error("Error in handleClick:", error);
-    }
+    onClick(request);
   };
 
   return (
@@ -55,6 +43,8 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${cardStyle} font-sans`}
       onClick={handleClick}
       data-request-id={request.id}
+      role="button"
+      tabIndex={0}
     >
       <div className="flex items-center gap-3">
         <Wrench className="h-5 w-5 text-[#ea384c]" />

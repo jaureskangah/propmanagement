@@ -42,10 +42,10 @@ export const MaintenanceRequestDialog = ({
   console.log("Request data:", request?.id);
 
   useEffect(() => {
-    if (request?.tenant_id) {
+    if (request?.tenant_id && open) {
       fetchTenantMessages();
     }
-  }, [request?.tenant_id]);
+  }, [request?.tenant_id, open]);
 
   const fetchTenantMessages = async () => {
     if (!request?.tenant_id) return;
