@@ -31,11 +31,19 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     }
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log("MaintenanceRequestItem clicked, calling onClick with request:", request.id);
+    onClick(request);
+  };
+
   return (
     <div
       key={request.id}
       className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${cardStyle} font-sans`}
-      onClick={() => onClick(request)}
+      onClick={handleClick}
+      data-request-id={request.id}
     >
       <div className="flex items-center gap-3">
         <Wrench className="h-5 w-5 text-[#ea384c]" />

@@ -20,6 +20,7 @@ export const MaintenanceList = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [requestsState, setRequestsState] = useState<MaintenanceRequest[]>([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Trier les demandes par date de création (les plus récentes en premier)
   useEffect(() => {
@@ -40,6 +41,7 @@ export const MaintenanceList = ({
       if (request) {
         console.log("Found matching request:", request);
         setSelectedRequest(request);
+        setIsDialogOpen(true);
       } else {
         console.log("No matching request found for ID:", requestId);
       }
@@ -58,10 +60,12 @@ export const MaintenanceList = ({
     const updatedRequest = requestsState.find(r => r.id === request.id) || request;
     console.log("Selected request for dialog:", updatedRequest);
     setSelectedRequest(updatedRequest);
+    setIsDialogOpen(true);
   };
 
   const handleCloseDialog = () => {
     console.log("Closing maintenance request dialog");
+    setIsDialogOpen(false);
     setSelectedRequest(null);
   };
 
@@ -98,7 +102,7 @@ export const MaintenanceList = ({
         ))}
       </div>
 
-      {selectedRequest && (
+      {selectedRequest && isDialogOpen && (
         <MaintenanceRequestDialog
           request={selectedRequest}
           onClose={handleCloseDialog}
