@@ -1,4 +1,3 @@
-
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthProvider';
 import NotFound from './pages/NotFound';
@@ -24,6 +23,7 @@ import Maintenance from './pages/Maintenance';
 import MaintenanceRequestList from './pages/MaintenanceRequestList';
 import Settings from './pages/Settings';
 import LandingPage from './pages/LandingPage';
+import AddMaintenanceRequest from './pages/AddMaintenanceRequest';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -40,7 +40,7 @@ function App() {
 
       {/* Protected Routes - only accessible when logged in */}
       <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-      <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
+      
       <Route path="/vendors" element={isAuthenticated ? <Vendors /> : <Navigate to="/login" />} />
       <Route path="/add-vendor" element={isAuthenticated ? <AddVendor /> : <Navigate to="/login" />} />
       <Route path="/tasks" element={isAuthenticated ? <TaskList /> : <Navigate to="/login" />} />
@@ -51,8 +51,12 @@ function App() {
       <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
       <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
       <Route path="/tenants" element={isAuthenticated ? <Tenants /> : <Navigate to="/login" />} />
-      <Route path="/tenant/communications" element={isAuthenticated ? <TenantCommunications /> : <Navigate to="/login" />} />
+      
+      
+      <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
       <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
+      <Route path="/tenant/maintenance/new" element={isAuthenticated ? <AddMaintenanceRequest /> : <Navigate to="/login" />} />
+      
       <Route path="/properties" element={isAuthenticated ? <Properties /> : <Navigate to="/login" />} />
       <Route path="/maintenance" element={isAuthenticated ? <Maintenance /> : <Navigate to="/login" />} />
       <Route path="/maintenance-requests" element={isAuthenticated ? <MaintenanceRequestList /> : <Navigate to="/login" />} />

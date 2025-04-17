@@ -19,20 +19,24 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
     return t(status) || status;
   };
   
-  // Tri des demandes pour afficher en premier celles qui ont été mises à jour
+  // Sort requests to show updates first
   const sortedRequests = [...requests].sort((a, b) => {
-    // Prioriser les demandes non notifiées
+    // Prioritize unnotified requests
     if (a.tenant_notified === false && b.tenant_notified !== false) return -1;
     if (a.tenant_notified !== false && b.tenant_notified === false) return 1;
     
-    // Ensuite, trier par date de mise à jour si disponible, sinon date de création
+    // Then sort by update date or creation date
     const aDate = a.updated_at || a.created_at;
     const bDate = b.updated_at || b.created_at;
     return new Date(bDate).getTime() - new Date(aDate).getTime();
   });
 
-  // Nombre de notifications non lues
+  // Count unread updates
   const unreadUpdates = sortedRequests.filter(req => req.tenant_notified === false).length;
+
+  const handleNewRequest = () => {
+    navigate('/tenant/maintenance/new');
+  };
   
   return (
     <motion.div 
@@ -123,7 +127,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
           </Button>
           <Button 
             className="flex-1 text-xs md:text-sm bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-700 dark:hover:bg-amber-600"
-            onClick={() => navigate('/tenant/maintenance/new')}
+            onClick={handleNewRequest}
             size="sm"
           >
             {t('newRequest')}
