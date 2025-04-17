@@ -24,6 +24,7 @@ import MaintenanceRequestList from './pages/MaintenanceRequestList';
 import Settings from './pages/Settings';
 import LandingPage from './pages/LandingPage';
 import AddMaintenanceRequest from './pages/AddMaintenanceRequest';
+import DocumentsPage from './pages/tenant/TenantDocuments';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -56,6 +57,7 @@ function App() {
       <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
       <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
       <Route path="/tenant/maintenance/new" element={isAuthenticated ? <AddMaintenanceRequest /> : <Navigate to="/login" />} />
+      <Route path="/tenant/documents" element={isAuthenticated ? <DocumentsPage /> : <Navigate to="/login" />} />
       
       <Route path="/properties" element={isAuthenticated ? <Properties /> : <Navigate to="/login" />} />
       <Route path="/maintenance" element={isAuthenticated ? <Maintenance /> : <Navigate to="/login" />} />
