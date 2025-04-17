@@ -56,18 +56,16 @@ export const MaintenanceList = ({
 
   const handleRequestClick = (request: MaintenanceRequest) => {
     console.log("Maintenance request clicked:", request.id);
-    // Find the most up-to-date version of the request in our local state
-    const updatedRequest = requestsState.find(r => r.id === request.id) || request;
-    console.log("Selected request for dialog:", updatedRequest);
     
     // First set the selected request
-    setSelectedRequest(updatedRequest);
+    setSelectedRequest(request);
     
-    // Then explicitly open the dialog with a slight delay to ensure state is updated
+    // Then explicitly open the dialog with a short delay
+    // This ensures React has time to process the state update
     setTimeout(() => {
       setIsDialogOpen(true);
       console.log("Dialog opened, state set to:", true);
-    }, 10);
+    }, 50);
   };
 
   const handleCloseDialog = () => {
@@ -89,13 +87,17 @@ export const MaintenanceList = ({
   return (
     <>
       <div className="space-y-4">
-        {requestsState.map((request) => (
-          <MaintenanceRequestItem 
-            key={request.id}
-            request={request}
-            onClick={handleRequestClick}
-          />
-        ))}
+        {requestsState.length > 0 ? (
+          requestsState.map((request) => (
+            <MaintenanceRequestItem 
+              key={request.id}
+              request={request}
+              onClick={handleRequestClick}
+            />
+          ))
+        ) : (
+          <EmptyMaintenanceState />
+        )}
       </div>
 
       {selectedRequest && (

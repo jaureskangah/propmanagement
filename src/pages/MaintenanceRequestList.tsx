@@ -15,7 +15,7 @@ const MaintenanceRequestList = () => {
   }, []);
 
   return (
-    <div>
+    <div id="maintenance-section">
       <MaintenancePageContainer />
     </div>
   );
