@@ -87,10 +87,27 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
 
       if (error) throw error;
       
+      // Envoyer un email au locataire
+      const emailResult = await supabase.functions.invoke('send-tenant-email', {
+        body: {
+          tenantId: request.tenant_id,
+          subject: `Maintenance Request Update: ${request.issue}`,
+          content: `Your maintenance request "${request.issue}" has been updated to status: ${status}. Priority level: ${priority}.`,
+          category: 'maintenance'
+        }
+      });
+      
+      if (emailResult.error) {
+        console.error("Error sending email to tenant:", emailResult.error);
+        throw new Error("Failed to send email notification");
+      }
+      
+      console.log("Email sent to tenant successfully:", emailResult.data);
+      
       // Mettre à jour le flag de notification
       const { error: updateError } = await supabase
         .from('maintenance_requests')
-        .update({ tenant_notified: false })
+        .update({ tenant_notified: true })
         .eq('id', request.id);
         
       if (updateError) throw updateError;
