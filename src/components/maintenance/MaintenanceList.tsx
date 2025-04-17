@@ -22,9 +22,9 @@ export const MaintenanceList = ({
   const [requestsState, setRequestsState] = useState<MaintenanceRequest[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Trier les demandes par date de création (les plus récentes en premier)
+  // Sort requests by creation date (most recent first)
   useEffect(() => {
-    // Copie profonde des demandes pour éviter des références partagées
+    // Deep copy of requests to avoid shared references
     const sortedRequests = [...unsortedRequests].sort((a, b) => 
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
     );
@@ -32,7 +32,7 @@ export const MaintenanceList = ({
     console.log("Sorted maintenance requests:", sortedRequests);
   }, [unsortedRequests]);
 
-  // Vérifier s'il y a un ID de demande dans les paramètres d'URL
+  // Check if there's a request ID in the URL parameters
   useEffect(() => {
     const requestId = searchParams.get('request');
     if (requestId) {
@@ -46,7 +46,7 @@ export const MaintenanceList = ({
         console.log("No matching request found for ID:", requestId);
       }
       
-      // Nettoyer les paramètres après utilisation
+      // Clean up the parameters after use
       setSearchParams(prev => {
         prev.delete('request');
         return prev;
@@ -56,11 +56,17 @@ export const MaintenanceList = ({
 
   const handleRequestClick = (request: MaintenanceRequest) => {
     console.log("Maintenance request clicked:", request.id);
-    // Trouver la version la plus à jour de la demande
+    // Find the most up-to-date version of the request
     const updatedRequest = requestsState.find(r => r.id === request.id) || request;
     console.log("Selected request for dialog:", updatedRequest);
+    
+    // First set the selected request
     setSelectedRequest(updatedRequest);
-    setIsDialogOpen(true);
+    // Then open the dialog
+    setTimeout(() => {
+      setIsDialogOpen(true);
+      console.log("Dialog opened:", isDialogOpen);
+    }, 0);
   };
 
   const handleCloseDialog = () => {
@@ -71,10 +77,10 @@ export const MaintenanceList = ({
 
   const handleMaintenanceUpdateAndClose = () => {
     console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
-    // Mettre à jour les données via le callback parent
+    // Update the data via the parent callback
     onMaintenanceUpdate();
     
-    // Mettre à jour la demande sélectionnée si elle existe encore
+    // Update the selected request if it still exists
     if (selectedRequest) {
       const updatedRequest = [...unsortedRequests]
         .find(r => r.id === selectedRequest.id);
@@ -102,11 +108,12 @@ export const MaintenanceList = ({
         ))}
       </div>
 
-      {selectedRequest && isDialogOpen && (
+      {selectedRequest && (
         <MaintenanceRequestDialog
           request={selectedRequest}
           onClose={handleCloseDialog}
           onUpdate={handleMaintenanceUpdateAndClose}
+          open={isDialogOpen}
         />
       )}
     </>

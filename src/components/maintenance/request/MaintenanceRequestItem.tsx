@@ -35,7 +35,18 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     e.preventDefault();
     e.stopPropagation();
     console.log("MaintenanceRequestItem clicked, calling onClick with request:", request.id);
-    onClick(request);
+    
+    // Add more detailed debugging
+    try {
+      if (typeof onClick === 'function') {
+        onClick(request);
+        console.log("onClick handler called successfully");
+      } else {
+        console.error("onClick is not a function:", onClick);
+      }
+    } catch (error) {
+      console.error("Error in handleClick:", error);
+    }
   };
 
   return (

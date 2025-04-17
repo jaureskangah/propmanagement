@@ -24,17 +24,22 @@ interface MaintenanceRequestDialogProps {
   request: MaintenanceRequest | null;
   onClose: () => void;
   onUpdate: () => void;
+  open: boolean;
 }
 
 export const MaintenanceRequestDialog = ({
   request,
   onClose,
   onUpdate,
+  open,
 }: MaintenanceRequestDialogProps) => {
   const [activeTab, setActiveTab] = useState("details");
   const [tenantMessages, setTenantMessages] = useState<Communication[]>([]);
   const { t } = useLocale();
   const { toast } = useToast();
+
+  console.log("MaintenanceRequestDialog rendering with open state:", open);
+  console.log("Request data:", request?.id);
 
   useEffect(() => {
     if (request?.tenant_id) {
@@ -73,10 +78,20 @@ export const MaintenanceRequestDialog = ({
     onUpdate();
   };
 
-  if (!request) return null;
+  const handleOpenChange = (newState: boolean) => {
+    console.log("Dialog open state changing to:", newState);
+    if (!newState) {
+      onClose();
+    }
+  };
+
+  if (!request) {
+    console.log("MaintenanceRequestDialog: No request provided");
+    return null;
+  }
 
   return (
-    <Dialog open onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{request.issue}</DialogTitle>
