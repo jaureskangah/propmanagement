@@ -34,6 +34,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     onClick();
   };
 

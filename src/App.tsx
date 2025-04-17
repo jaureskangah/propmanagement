@@ -21,6 +21,7 @@ import TenantCommunications from './pages/tenant/TenantCommunications';
 import TenantMaintenance from './pages/tenant/TenantMaintenance';
 import Properties from './pages/Properties';
 import Maintenance from './pages/Maintenance';
+import MaintenanceRequestList from './pages/MaintenanceRequestList';
 import Settings from './pages/Settings';
 import LandingPage from './pages/LandingPage';
 
@@ -54,6 +55,7 @@ function App() {
       <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
       <Route path="/properties" element={isAuthenticated ? <Properties /> : <Navigate to="/login" />} />
       <Route path="/maintenance" element={isAuthenticated ? <Maintenance /> : <Navigate to="/login" />} />
+      <Route path="/maintenance-requests" element={isAuthenticated ? <MaintenanceRequestList /> : <Navigate to="/login" />} />
       <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
