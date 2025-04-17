@@ -30,8 +30,47 @@ export const useMaintenanceData = () => {
     }
   };
 
+  // Configure Realtime subscription pour les mises à jour de maintenance
   useEffect(() => {
+    if (!user) return;
+    
+    // Fetch initial data
     fetchMaintenanceRequests();
+    
+    // Set up realtime subscription for maintenance_requests
+    const channel = supabase
+      .channel('tenant-maintenance-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'maintenance_requests',
+          filter: `tenant_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('Maintenance request updated:', payload);
+          fetchMaintenanceRequests();
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tenant_communications',
+          filter: `tenant_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('New tenant communication:', payload);
+          fetchMaintenanceRequests();
+        }
+      )
+      .subscribe();
+    
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user]);
 
   return {
