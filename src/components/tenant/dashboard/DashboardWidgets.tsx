@@ -1,4 +1,3 @@
-
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { LeaseStatusCard } from "./LeaseStatusCard";
 import { NotificationSummary } from "./NotificationSummary";
@@ -150,9 +149,20 @@ export const DashboardWidgets = ({
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr" 
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 auto-rows-fr" 
     >
-      {gridWidgets.map((widgetId, index) => renderWidget(widgetId, index))}
+      {gridWidgets.map((widgetId, index) => (
+        <motion.div
+          key={widgetId}
+          variants={item}
+          className={`w-full h-full min-h-[280px] ${
+            // Si c'est le graphique de paiement, on le fait prendre toute la largeur en dessous de xl
+            widgetId === 'chart' ? 'md:col-span-2 xl:col-span-1' : ''
+          }`}
+        >
+          {renderWidget(widgetId, index)}
+        </motion.div>
+      ))}
     </motion.div>
   );
 }
