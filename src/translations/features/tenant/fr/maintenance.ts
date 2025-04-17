@@ -88,5 +88,6 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   maintenanceRequestDetails: "Détails de la demande de maintenance",
   messages: "Messages",
   noTenantAssociated: "Aucun locataire associé à cette demande",
-  errorLoadingMessages: "Erreur lors du chargement des messages"
+  errorLoadingMessages: "Erreur lors du chargement des messages",
+  createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici."
 };

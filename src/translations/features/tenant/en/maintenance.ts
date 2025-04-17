@@ -88,5 +88,6 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   maintenanceRequestDetails: "Maintenance request details",
   messages: "Messages",
   noTenantAssociated: "No tenant associated with this request",
-  errorLoadingMessages: "Error loading messages"
+  errorLoadingMessages: "Error loading messages",
+  createNewRequestToSee: "Create a new maintenance request to see it here."
 };

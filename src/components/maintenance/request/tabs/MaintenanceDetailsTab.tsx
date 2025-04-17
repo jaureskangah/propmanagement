@@ -4,11 +4,12 @@ import { MaintenanceRequest } from "@/components/maintenance/types";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "@/lib/utils";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useSupabaseUpdate } from "@/hooks/supabase/useSupabaseUpdate";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/lib/supabase";
 
 interface MaintenanceDetailsTabProps {
   request: MaintenanceRequest;
@@ -18,10 +19,25 @@ interface MaintenanceDetailsTabProps {
 export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsTabProps) => {
   const [status, setStatus] = useState(request.status);
   const [priority, setPriority] = useState(request.priority);
-  const [isUpdating, setIsUpdating] = useState(false);
   const [notifyTenant, setNotifyTenant] = useState(false);
   const { toast } = useToast();
   const { t } = useLocale();
+
+  // Utiliser le hook useSupabaseUpdate pour mettre à jour la demande de maintenance
+  const { mutate: updateRequest, isPending: isUpdating } = useSupabaseUpdate('maintenance_requests', {
+    successMessage: t('requestUpdated'),
+    onSuccess: async (data) => {
+      console.log("Maintenance request updated successfully:", data);
+      
+      // Si notification demandée, envoyer un email au locataire
+      if (notifyTenant && request.tenant_id) {
+        await sendStatusUpdate();
+      }
+      
+      // Informer le parent de la mise à jour
+      onUpdate();
+    }
+  });
 
   const sendStatusUpdate = async () => {
     if (!request.tenant_id || !notifyTenant) return;
@@ -56,50 +72,19 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
     }
   };
 
-  const handleUpdateRequest = async () => {
-    setIsUpdating(true);
-    console.log("Updating maintenance request:", { id: request.id, status, priority });
+  const handleUpdateRequest = () => {
+    console.log("Attempting to update maintenance request with status:", status, "and priority:", priority);
     
-    try {
-      // First update the maintenance request
-      const { error } = await supabase
-        .from('maintenance_requests')
-        .update({
-          status,
-          priority,
-          tenant_notified: notifyTenant,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', request.id);
-        
-      if (error) {
-        console.error("Supabase update error:", error);
-        throw error;
+    // Appeler la mutation pour mettre à jour la demande
+    updateRequest({
+      id: request.id,
+      data: {
+        status,
+        priority,
+        tenant_notified: notifyTenant,
+        updated_at: new Date().toISOString()
       }
-      
-      console.log("Maintenance request updated successfully");
-      
-      // Then send notification if required
-      if (notifyTenant) {
-        await sendStatusUpdate();
-      }
-      
-      toast({
-        title: t('success'),
-        description: t('requestUpdated')
-      });
-      
-      onUpdate();
-    } catch (error) {
-      console.error("Error updating maintenance request:", error);
-      toast({
-        title: t('error'),
-        description: t('failedToUpdateRequest'),
-        variant: "destructive"
-      });
-    } finally {
-      setIsUpdating(false);
-    }
+    });
   };
 
   return (

@@ -69,6 +69,7 @@ export const MaintenanceRequestDialog = ({
 
   const handleMaintenanceUpdate = () => {
     console.log("MaintenanceRequestDialog: handleMaintenanceUpdate called");
+    // Propagate the update to the parent component
     onUpdate();
   };
 

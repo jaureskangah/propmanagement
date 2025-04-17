@@ -20,6 +20,7 @@ export const MaintenanceList = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
 
+  // Trier les demandes par date de création (les plus récentes en premier)
   const requests = [...unsortedRequests].sort((a, b) => 
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
@@ -31,6 +32,7 @@ export const MaintenanceList = ({
       if (request) {
         setSelectedRequest(request);
       }
+      // Nettoyer les paramètres après utilisation
       setSearchParams(prev => {
         prev.delete('request');
         return prev;
@@ -49,8 +51,9 @@ export const MaintenanceList = ({
 
   const handleMaintenanceUpdateAndClose = () => {
     console.log("MaintenanceList: handleMaintenanceUpdateAndClose called");
+    // Mettre à jour les données via le callback parent
     onMaintenanceUpdate();
-    // On garde le dialogue ouvert pour permettre à l'utilisateur de continuer à modifier
+    // Optionnel : garder la boîte de dialogue ouverte pour permettre d'autres modifications
   };
 
   if (requests.length === 0) {
@@ -69,11 +72,13 @@ export const MaintenanceList = ({
         ))}
       </div>
 
-      <MaintenanceRequestDialog
-        request={selectedRequest}
-        onClose={handleCloseDialog}
-        onUpdate={handleMaintenanceUpdateAndClose}
-      />
+      {selectedRequest && (
+        <MaintenanceRequestDialog
+          request={selectedRequest}
+          onClose={handleCloseDialog}
+          onUpdate={handleMaintenanceUpdateAndClose}
+        />
+      )}
     </>
   );
 };
