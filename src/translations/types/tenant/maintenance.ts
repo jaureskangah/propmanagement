@@ -1,3 +1,5 @@
+import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
+
 export interface TenantMaintenanceTranslations {
   maintenanceRequests: string;
   newMaintenanceRequest: string;
@@ -87,4 +89,9 @@ export interface TenantMaintenanceTranslations {
   noTenantAssociated: string;
   errorLoadingMessages: string;
   createNewRequestToSee?: string;
+  maintenanceUpdates?: string;
+  newUpdates?: string;
+  'Pending'?: string;
+  'In Progress'?: string;
+  'Resolved'?: string;
 }
