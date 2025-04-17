@@ -32,12 +32,19 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     }
   };
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onClick();
+  };
+
   return (
     <Card
       className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-colors ${cardStyle} font-sans`}
-      onClick={onClick}
+      onClick={handleClick}
       data-request-id={request.id}
       tabIndex={0}
+      role="button"
+      aria-label={`Open maintenance request: ${request.issue}`}
     >
       <div className="flex items-center gap-3">
         <Wrench className="h-5 w-5 text-[#ea384c]" />

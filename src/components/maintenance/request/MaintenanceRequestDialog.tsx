@@ -38,23 +38,24 @@ export const MaintenanceRequestDialog = ({
   const { t } = useLocale();
   const { toast } = useToast();
 
-  console.log(`Dialog render - open: ${open}, request: ${request?.id || 'none'}`);
-
+  // Reset active tab when a new request is selected
   useEffect(() => {
-    if (request?.tenant_id && open) {
-      console.log(`Fetching messages for tenant: ${request.tenant_id}`);
-      fetchTenantMessages();
+    if (request && open) {
+      setActiveTab("details");
+      console.log(`Dialog opened for request: ${request.id}`, { open });
+      if (request.tenant_id) {
+        fetchTenantMessages(request.tenant_id);
+      }
     }
-  }, [request?.tenant_id, open]);
+  }, [request, open]);
 
-  const fetchTenantMessages = async () => {
-    if (!request?.tenant_id) return;
-    
+  const fetchTenantMessages = async (tenantId: string) => {
     try {
+      console.log(`Fetching messages for tenant: ${tenantId}`);
       const { data, error } = await supabase
         .from('tenant_communications')
         .select('*')
-        .eq('tenant_id', request.tenant_id)
+        .eq('tenant_id', tenantId)
         .eq('category', 'maintenance')
         .order('created_at', { ascending: false })
         .limit(10);
@@ -128,7 +129,7 @@ export const MaintenanceRequestDialog = ({
               <DirectMessaging 
                 tenantId={request.tenant_id}
                 onMessageSent={() => {
-                  fetchTenantMessages();
+                  fetchTenantMessages(request.tenant_id!);
                   onUpdate();
                 }}
                 latestMessages={tenantMessages}

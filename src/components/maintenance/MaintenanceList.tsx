@@ -61,7 +61,8 @@ export const MaintenanceList = ({
   const closeRequestDialog = () => {
     console.log("Closing maintenance request dialog");
     setDialogOpen(false);
-    setSelectedRequest(null);
+    // Clear the selected request after the dialog animation finishes
+    setTimeout(() => setSelectedRequest(null), 300);
   };
 
   const handleMaintenanceUpdateAndClose = () => {
@@ -86,12 +87,14 @@ export const MaintenanceList = ({
         )}
       </div>
 
-      <MaintenanceRequestDialog
-        request={selectedRequest}
-        onClose={closeRequestDialog}
-        onUpdate={handleMaintenanceUpdateAndClose}
-        open={dialogOpen}
-      />
+      {selectedRequest && (
+        <MaintenanceRequestDialog
+          request={selectedRequest}
+          onClose={closeRequestDialog}
+          onUpdate={handleMaintenanceUpdateAndClose}
+          open={dialogOpen}
+        />
+      )}
     </>
   );
 };

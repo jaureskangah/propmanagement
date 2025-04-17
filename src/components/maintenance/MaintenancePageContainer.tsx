@@ -15,6 +15,7 @@ import { VendorList } from "./vendors/VendorList";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { useTaskAddition } from "./tasks/hooks/useTaskAddition";
+import { useNavigate } from "react-router-dom";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
@@ -25,6 +26,7 @@ export const MaintenancePageContainer = () => {
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const { toast } = useToast();
   const { handleAddTask } = useTaskAddition();
+  const navigate = useNavigate();
   
   // Get saved property and year from localStorage or use defaults
   const savedPropertyId = localStorage.getItem('selectedPropertyId') || "property-1";
@@ -54,8 +56,8 @@ export const MaintenancePageContainer = () => {
     },
   });
 
-  const handleRequestClick = (request) => {
-    console.log("Request clicked:", request);
+  const handleViewAllRequests = () => {
+    navigate('/maintenance-requests');
   };
 
   const handleCreateTask = () => {
@@ -141,11 +143,20 @@ export const MaintenancePageContainer = () => {
         </TabsList>
         
         <TabsContent value="maintenance" className="pt-4">
+          <div className="mb-4 flex justify-between items-center">
+            <h3 className="text-lg font-medium">{t('recentMaintenanceRequests')}</h3>
+            <Button onClick={handleViewAllRequests} variant="outline">
+              {t('viewAllRequests')}
+            </Button>
+          </div>
           <MaintenanceTabs 
             propertyId={selectedPropertyId} 
             selectedYear={selectedYear}
             filteredRequests={filteredRequests}
-            onRequestClick={handleRequestClick}
+            onRequestClick={() => {
+              // Navigate to the requests list instead of opening the dialog here
+              navigate('/maintenance-requests');
+            }}
           />
         </TabsContent>
         
