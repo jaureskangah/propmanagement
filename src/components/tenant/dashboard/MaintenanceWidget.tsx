@@ -1,4 +1,3 @@
-
 import { Wrench, ArrowUpRight, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,8 +12,12 @@ interface MaintenanceWidgetProps {
 }
 
 export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const navigate = useNavigate();
+  
+  const getTranslatedStatus = (status: string) => {
+    return t(status) || status;
+  };
   
   // Tri des demandes pour afficher en premier celles qui ont été mises à jour
   const sortedRequests = [...requests].sort((a, b) => {
@@ -50,7 +53,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
       </div>
       
       <div className="space-y-4">
-        {sortedRequests.length === 0 ? (
+        {requests.length === 0 ? (
           <div className="text-center py-6 bg-white/60 dark:bg-gray-800/40 rounded-lg">
             <Wrench className="h-10 w-10 text-amber-300 dark:text-amber-500/50 mx-auto mb-2 opacity-50" />
             <p className="text-sm text-gray-500 dark:text-gray-400">{t('noMaintenanceRequests')}</p>
@@ -95,7 +98,7 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                         : "bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-700 dark:hover:bg-amber-600"
                   }
                 >
-                  {request.status}
+                  {getTranslatedStatus(request.status)}
                 </Badge>
               </motion.div>
             ))}

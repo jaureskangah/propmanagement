@@ -1,10 +1,9 @@
 
 import React from 'react';
+import { TenantDashboard as TenantDashboardComponent } from '@/components/tenant/TenantDashboard';
 
 const TenantDashboard = () => {
-  return (
-    <div>Tenant Dashboard Page</div>
-  );
+  return <TenantDashboardComponent />;
 };
 
 export default TenantDashboard;
