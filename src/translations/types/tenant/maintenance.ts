@@ -1,4 +1,3 @@
-
 export interface TenantMaintenanceTranslations {
   maintenanceRequests: string;
   newMaintenanceRequest: string;
@@ -87,4 +86,5 @@ export interface TenantMaintenanceTranslations {
   messages: string;
   noTenantAssociated: string;
   errorLoadingMessages: string;
+  createNewRequestToSee?: string;
 }
