@@ -36,7 +36,7 @@ const handler = async (req: Request): Promise<Response> => {
     // Fetch tenant email
     const { data: tenant, error: tenantError } = await supabase
       .from("tenants")
-      .select("email, name")
+      .select("email, name, tenant_profile_id")
       .eq("id", tenantId)
       .single();
 
@@ -87,6 +87,35 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.log("Communication record created:", commData);
+
+    // Update tenant_notified flag in the maintenance_request related to this notification
+    if (category === 'maintenance') {
+      // Rechercher toutes les demandes de maintenance du locataire qui ont changé récemment
+      const { data: requests, error: requestError } = await supabase
+        .from('maintenance_requests')
+        .select('id')
+        .eq('tenant_id', tenantId)
+        .eq('tenant_notified', false);
+        
+      if (requestError) {
+        console.error("Error fetching maintenance requests:", requestError);
+      } else if (requests && requests.length > 0) {
+        console.log(`Found ${requests.length} maintenance requests to update`);
+        
+        // Mettre à jour le statut de notification pour toutes les demandes trouvées
+        const requestIds = requests.map(req => req.id);
+        const { error: updateError } = await supabase
+          .from('maintenance_requests')
+          .update({ tenant_notified: true })
+          .in('id', requestIds);
+          
+        if (updateError) {
+          console.error("Error updating maintenance requests:", updateError);
+        } else {
+          console.log("Successfully updated tenant_notified flag for requests:", requestIds);
+        }
+      }
+    }
 
     return new Response(JSON.stringify({ emailResponse, commData }), {
       status: 200,

@@ -19,8 +19,10 @@ export const NotificationSummary = ({ communications, maintenanceRequests }: Not
   
   const unreadMessages = communications.filter(comm => comm.status === 'unread').length;
   const pendingMaintenance = maintenanceRequests.filter(req => req.status === 'Pending').length;
+  const unreadMaintenance = maintenanceRequests.filter(req => req.tenant_notified === false).length;
   
-  const hasNotifications = unreadMessages > 0 || pendingMaintenance > 0;
+  const hasNotifications = unreadMessages > 0 || pendingMaintenance > 0 || unreadMaintenance > 0;
+  const totalNotifications = unreadMessages + unreadMaintenance;
   
   return (
     <motion.div 
@@ -32,9 +34,9 @@ export const NotificationSummary = ({ communications, maintenanceRequests }: Not
         <div className="flex items-center">
           <Bell className="h-5 w-5 mr-2 text-rose-600 dark:text-rose-400" />
           <h3 className="font-semibold text-rose-700 dark:text-rose-300">{t('notifications')}</h3>
-          {hasNotifications && (
+          {totalNotifications > 0 && (
             <Badge variant="default" className="ml-2 bg-rose-500 hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700">
-              {unreadMessages + pendingMaintenance}
+              {totalNotifications}
             </Badge>
           )}
         </div>
@@ -65,7 +67,24 @@ export const NotificationSummary = ({ communications, maintenanceRequests }: Not
               </motion.div>
             )}
             
-            {pendingMaintenance > 0 && (
+            {unreadMaintenance > 0 && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
+                className="flex items-center justify-between p-3 bg-yellow-50/80 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800/30 rounded-lg"
+              >
+                <div className="flex items-center">
+                  <Wrench className="h-4 w-4 mr-2 text-amber-600 dark:text-amber-400" />
+                  <span className="text-gray-700 dark:text-gray-300">{t('maintenanceUpdates')}</span>
+                </div>
+                <Badge variant="outline" className="ml-auto bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-700/50">
+                  {unreadMaintenance}
+                </Badge>
+              </motion.div>
+            )}
+            
+            {pendingMaintenance > 0 && unreadMaintenance === 0 && (
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}

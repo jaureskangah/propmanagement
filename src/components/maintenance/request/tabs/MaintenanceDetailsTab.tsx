@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -65,6 +64,7 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
         status,
         priority,
         updated_at: new Date().toISOString(),
+        tenant_notified: notifyTenant ? true : false,
       },
     });
   };
@@ -82,7 +82,9 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
           category: 'maintenance',
           status: 'unread',
           sender: 'system',
-          related_id: request.id,
+          content: `Your maintenance request "${request.issue}" has been updated to status: ${status}. Priority level: ${priority}.`,
+          type: 'notification',
+          subject: `Maintenance Request Update: ${request.issue}`,
         });
 
       if (error) throw error;
@@ -104,15 +106,6 @@ export const MaintenanceDetailsTab = ({ request, onUpdate }: MaintenanceDetailsT
       
       console.log("Email sent to tenant successfully:", emailResult.data);
       
-      // Mettre à jour le flag de notification
-      const { error: updateError } = await supabase
-        .from('maintenance_requests')
-        .update({ tenant_notified: true })
-        .eq('id', request.id);
-        
-      if (updateError) throw updateError;
-      
-      console.log("Tenant notification sent successfully");
       toast({
         title: t('notificationSent'),
         description: t('tenantNotified'),

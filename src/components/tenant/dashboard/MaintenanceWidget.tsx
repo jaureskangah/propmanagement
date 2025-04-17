@@ -27,6 +27,9 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
     const bDate = b.updated_at || b.created_at;
     return new Date(bDate).getTime() - new Date(aDate).getTime();
   });
+
+  // Nombre de notifications non lues
+  const unreadUpdates = sortedRequests.filter(req => req.tenant_notified === false).length;
   
   return (
     <motion.div 
@@ -34,9 +37,16 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
       transition={{ duration: 0.2 }}
       className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 dark:from-amber-950/70 dark:to-yellow-950/70 dark:border-amber-800/50 p-5"
     >
-      <div className="flex items-center mb-4">
-        <Wrench className="h-5 w-5 mr-2 text-amber-600 dark:text-amber-400" />
-        <h3 className="font-semibold text-amber-700 dark:text-amber-300">{t('maintenanceRequests')}</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center">
+          <Wrench className="h-5 w-5 mr-2 text-amber-600 dark:text-amber-400" />
+          <h3 className="font-semibold text-amber-700 dark:text-amber-300">{t('maintenanceRequests')}</h3>
+        </div>
+        {unreadUpdates > 0 && (
+          <Badge className="bg-yellow-500 hover:bg-yellow-600 text-white dark:bg-yellow-600 dark:hover:bg-yellow-500">
+            {unreadUpdates} {unreadUpdates === 1 ? t('newUpdate') : t('newUpdates')}
+          </Badge>
+        )}
       </div>
       
       <div className="space-y-4">
