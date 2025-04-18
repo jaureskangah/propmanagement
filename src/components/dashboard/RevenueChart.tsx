@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Area,
@@ -13,8 +12,8 @@ import { Loader2 } from "lucide-react";
 import { useRevenueData } from "./hooks/useRevenueData";
 import { RevenueChartTooltip } from "./revenue/RevenueChartTooltip";
 import { processMonthlyData } from "./revenue/revenueUtils";
-import { useEffect } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useEffect } from "react";
 
 export const RevenueChart = () => {
   const { t } = useLocale();
