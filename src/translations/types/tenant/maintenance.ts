@@ -1,6 +1,5 @@
-import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
-export interface TenantMaintenanceTranslations {
+export type TenantMaintenanceTranslations = {
   maintenanceRequests: string;
   newMaintenanceRequest: string;
   maintenanceRequestTitlePlaceholder: string;
@@ -91,7 +90,4 @@ export interface TenantMaintenanceTranslations {
   createNewRequestToSee?: string;
   maintenanceUpdates?: string;
   newUpdates?: string;
-  'Pending'?: string;
-  'In Progress'?: string;
-  'Resolved'?: string;
 }

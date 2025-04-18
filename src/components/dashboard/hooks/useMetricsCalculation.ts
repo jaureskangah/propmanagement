@@ -30,9 +30,9 @@ export const useMetricsCalculation = (
     endDate: new Date()
   }).length;
 
-  // Pending maintenance requests
-  const pendingMaintenance = filteredMaintenanceData.filter(req => 
-    req.status === "Pending" || req.status === "pending"
+  // Pending maintenance requests - Assurez-vous que cela correspond à la page Maintenance
+  const pendingMaintenance = validMaintenanceData.filter(req => 
+    (req.status === "Pending" || req.status === "pending") && req.status !== "Resolved"
   ).length;
 
   // Generate chart data

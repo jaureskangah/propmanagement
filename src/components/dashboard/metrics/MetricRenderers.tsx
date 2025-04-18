@@ -57,11 +57,11 @@ export const MetricRenderers = ({ metrics, unreadMessages, dateRange }: MetricRe
   const renderMaintenance = () => (
     <SortableMetric key="maintenance" id="maintenance">
       <DashboardMetric
-        title={t('maintenance')}
+        title={t('pendingMaintenance')}
         value={metrics.maintenance.pending.toString()}
         icon={<Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />}
         chartData={metrics.maintenance.chartData}
-        tooltip={t('maintenance')}
+        tooltip={t('pendingMaintenance')}
         className="bg-gradient-to-br from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 border-amber-100 dark:border-amber-800/30 hover:border-amber-200 dark:hover:border-amber-700/40"
         chartColor="#F59E0B"
       />

@@ -25,7 +25,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
   const urgentMaintenance = useMemo(() => 
     maintenanceData?.filter(
       req => req.priority === "Urgent" && req.status !== "Resolved"
-    ) || [], 
+    ).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) || [], 
     [maintenanceData]
   );
 
@@ -35,12 +35,12 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
     return tenantsData.find(tenant => tenant.id === tenantId);
   };
 
-  // Trier les tâches par date
+  // Trier les tâches par date de la plus récente à la moins récente
   const upcomingTasks = useMemo(() => {
     if (!tasks) return [];
     return tasks
       .filter(task => !task.completed)
-      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, 5); // Limiter à 5 tâches
   }, [tasks]);
 

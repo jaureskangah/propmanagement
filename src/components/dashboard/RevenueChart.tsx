@@ -18,7 +18,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const RevenueChart = () => {
   const { t } = useLocale();
-  const { expenses, payments, isLoading } = useRevenueData();
+  const { expenses, payments, properties, isLoading } = useRevenueData();
 
   useEffect(() => {
     console.log("RevenueChart data state:", {
@@ -26,13 +26,14 @@ export const RevenueChart = () => {
       expensesCount: expenses?.length,
       hasPayments: !!payments?.length,
       paymentsCount: payments?.length,
+      propertiesCount: properties?.length,
       isLoading
     });
 
     return () => {
       console.log("RevenueChart unmounting");
     };
-  }, [expenses, payments, isLoading]);
+  }, [expenses, payments, properties, isLoading]);
 
   if (isLoading) {
     console.log("RevenueChart is loading");
@@ -45,7 +46,71 @@ export const RevenueChart = () => {
     );
   }
 
-  const monthlyData = processMonthlyData(expenses, payments);
+  // Si nous avons plusieurs propriétés, agréger toutes les données
+  const aggregateRevenue = (payments = [], properties = []) => {
+    // Traiter uniquement les paiements dont le statut est "paid"
+    const paidPayments = payments.filter(payment => payment.status === "paid");
+    console.log("Paid payments count:", paidPayments.length);
+    
+    // Si nous avons une seule propriété ou aucune, pas besoin d'agréger
+    if (properties.length <= 1) {
+      return paidPayments;
+    }
+    
+    // Sinon, agréger les paiements par mois
+    const aggregatedByMonth = paidPayments.reduce((acc, payment) => {
+      const date = new Date(payment.payment_date);
+      const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      
+      if (!acc[monthKey]) {
+        acc[monthKey] = {
+          payment_date: new Date(date.getFullYear(), date.getMonth(), 15).toISOString(),
+          amount: 0,
+          status: "paid"
+        };
+      }
+      
+      acc[monthKey].amount += Number(payment.amount);
+      return acc;
+    }, {});
+    
+    return Object.values(aggregatedByMonth);
+  };
+
+  // Si nous avons plusieurs propriétés, agréger toutes les dépenses
+  const aggregateExpenses = (expenses = [], properties = []) => {
+    console.log("Expenses count:", expenses.length);
+    
+    // Si nous avons une seule propriété ou aucune, pas besoin d'agréger
+    if (properties.length <= 1) {
+      return expenses;
+    }
+    
+    // Sinon, agréger les dépenses par mois
+    const aggregatedByMonth = expenses.reduce((acc, expense) => {
+      const date = new Date(expense.date);
+      const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      
+      if (!acc[monthKey]) {
+        acc[monthKey] = {
+          date: new Date(date.getFullYear(), date.getMonth(), 15).toISOString(),
+          amount: 0,
+        };
+      }
+      
+      // Prendre en compte soit le montant dépense, soit le coût d'intervention
+      const expenseAmount = expense.amount || expense.cost || 0;
+      acc[monthKey].amount += Number(expenseAmount);
+      return acc;
+    }, {});
+    
+    return Object.values(aggregatedByMonth);
+  };
+
+  const aggregatedPayments = aggregateRevenue(payments, properties);
+  const aggregatedExpenses = aggregateExpenses(expenses, properties);
+  
+  const monthlyData = processMonthlyData(aggregatedExpenses, aggregatedPayments);
   console.log("RevenueChart processed monthly data:", {
     dataPoints: monthlyData.length,
     firstMonth: monthlyData[0]?.month,
