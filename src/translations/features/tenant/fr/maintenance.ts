@@ -1,3 +1,4 @@
+
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const frMaintenance: TenantMaintenanceTranslations = {
@@ -90,8 +91,5 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   errorLoadingMessages: "Erreur lors du chargement des messages",
   createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici.",
   maintenanceUpdates: "Mises à jour de maintenance",
-  newUpdates: "nouvelle(s) mise(s) à jour",
-  'Pending': 'En attente',
-  'In Progress': 'En cours',
-  'Resolved': 'Résolu'
+  newUpdates: "nouvelle(s) mise(s) à jour"
 };
