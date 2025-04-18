@@ -8,6 +8,7 @@ import { FileText } from "lucide-react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
+import DocumentsPage from "@/components/tenant/documents/DocumentsPage";
 
 const TenantDocuments = () => {
   const { user } = useAuth();
@@ -45,7 +46,7 @@ const TenantDocuments = () => {
             </div>
 
             <div className="pb-16 bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 rounded-xl shadow-sm">
-              <TenantDocuments />
+              <DocumentsPage />
             </div>
           </motion.div>
         </div>
