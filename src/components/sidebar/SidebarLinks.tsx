@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
@@ -11,7 +10,8 @@ import {
   LayoutDashboard,
   ShieldCheck,
   MessageCircle,
-  DollarSign
+  DollarSign,
+  FileText
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -41,6 +41,11 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
       href: "/tenant/communications",
       icon: MessageCircle,
       label: t('communications'),
+    },
+    {
+      href: "/tenant/documents",
+      icon: FileText,
+      label: t('documents'),
     },
     {
       href: "/settings",
