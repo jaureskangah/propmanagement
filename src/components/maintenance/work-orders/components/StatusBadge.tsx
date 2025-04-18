@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -7,42 +6,59 @@ import {
   Clock,
   Wrench
 } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface StatusBadgeProps {
   status: string;
 }
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const getStatusConfig = (status: string) => {
-    // Gérer tous les cas de statut, en français et en anglais
-    switch (status) {
-      case "En cours":
-      case "In Progress":
-        return {
-          variant: "default" as const,
-          icon: <AlertCircle className="h-4 w-4 mr-1" />,
-          className: "bg-blue-500"
-        };
-      case "Planifié":
-      case "Scheduled":
-        return {
-          variant: "secondary" as const,
-          icon: <Clock className="h-4 w-4 mr-1" />,
-          className: "bg-orange-500"
-        };
-      case "Terminé":
-      case "Completed":
-        return {
-          variant: "outline" as const,
-          icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
-          className: "bg-green-500 text-white"
-        };
-      default:
-        return {
-          variant: "default" as const,
-          icon: <Wrench className="h-4 w-4 mr-1" />,
-          className: ""
-        };
+  const { t, language } = useLocale();
+  
+  const getTranslatedStatus = (originalStatus: string) => {
+    if (["Planifié", "En cours", "Terminé"].includes(originalStatus)) {
+      return originalStatus;
+    }
+    
+    switch (originalStatus) {
+      case "Scheduled": return language === 'fr' ? "Planifié" : "Scheduled";
+      case "In Progress": return language === 'fr' ? "En cours" : "In Progress";
+      case "Completed": return language === 'fr' ? "Terminé" : "Completed";
+      default: return originalStatus;
+    }
+  };
+
+  const getStatusConfig = (originalStatus: string) => {
+    const translatedStatus = getTranslatedStatus(originalStatus);
+    
+    if (translatedStatus === "En cours" || originalStatus === "In Progress") {
+      return {
+        variant: "default" as const,
+        icon: <AlertCircle className="h-4 w-4 mr-1" />,
+        className: "bg-blue-500",
+        displayText: translatedStatus
+      };
+    } else if (translatedStatus === "Planifié" || originalStatus === "Scheduled") {
+      return {
+        variant: "secondary" as const,
+        icon: <Clock className="h-4 w-4 mr-1" />,
+        className: "bg-orange-500",
+        displayText: translatedStatus
+      };
+    } else if (translatedStatus === "Terminé" || originalStatus === "Completed") {
+      return {
+        variant: "outline" as const,
+        icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
+        className: "bg-green-500 text-white",
+        displayText: translatedStatus
+      };
+    } else {
+      return {
+        variant: "default" as const,
+        icon: <Wrench className="h-4 w-4 mr-1" />,
+        className: "",
+        displayText: translatedStatus
+      };
     }
   };
 
@@ -52,7 +68,7 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
     <Badge className={statusConfig.className}>
       <div className="flex items-center">
         {statusConfig.icon}
-        {status}
+        {statusConfig.displayText}
       </div>
     </Badge>
   );

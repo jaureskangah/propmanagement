@@ -54,6 +54,16 @@ export const MaintenanceList = ({
     }
   };
 
+  // Translate status for display
+  const translateStatus = (status: string) => {
+    switch(status) {
+      case "Resolved": return t('resolved');
+      case "In Progress": return t('inProgress');
+      case "Pending": return t('pending');
+      default: return status;
+    }
+  };
+
   return (
     <div className="space-y-4">
       {requests.map((request, index) => (
@@ -106,7 +116,7 @@ export const MaintenanceList = ({
               )}
             >
               {getStatusIcon(request.status)}
-              {request.status}
+              {translateStatus(request.status)}
             </Badge>
           </div>
         </motion.div>

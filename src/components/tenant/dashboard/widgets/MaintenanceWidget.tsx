@@ -1,5 +1,5 @@
 
-import { Wrench, AlertTriangle, ChevronRight, PlusCircle } from "lucide-react";
+import { Wrench, ArrowUpRight, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { MaintenanceRequest } from "@/types/tenant";
@@ -13,93 +13,134 @@ interface MaintenanceWidgetProps {
 }
 
 export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const navigate = useNavigate();
+  
+  // Translate status for display
+  const getTranslatedStatus = (status: string) => {
+    switch(status) {
+      case "Resolved": return t('resolved');
+      case "In Progress": return t('inProgress');
+      case "Pending": return t('pending');
+      default: return status;
+    }
+  };
+  
+  // Sort requests to show updates first
+  const sortedRequests = [...requests].sort((a, b) => {
+    // Prioritize unnotified requests
+    if (a.tenant_notified === false && b.tenant_notified !== false) return -1;
+    if (a.tenant_notified !== false && b.tenant_notified === false) return 1;
+    
+    // Then sort by update date or creation date
+    const aDate = a.updated_at || a.created_at;
+    const bDate = b.updated_at || b.created_at;
+    return new Date(bDate).getTime() - new Date(aDate).getTime();
+  });
+
+  // Count unread updates
+  const unreadUpdates = sortedRequests.filter(req => req.tenant_notified === false).length;
+
+  const handleNewRequest = () => {
+    navigate('/tenant/maintenance/new');
+  };
   
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.4 }}
       whileHover={{ y: -5 }}
-      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-100 p-5"
+      transition={{ duration: 0.2 }}
+      className="rounded-xl shadow-sm hover:shadow-md transition-all overflow-hidden bg-gradient-to-br from-amber-50 to-yellow-50 border border-amber-100 dark:from-amber-950/70 dark:to-yellow-950/70 dark:border-amber-800/50 p-5"
     >
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
-          <Wrench className="h-5 w-5 mr-2 text-blue-600" />
-          <h3 className="font-semibold text-blue-700">{t('maintenanceRequests')}</h3>
+          <Wrench className="h-5 w-5 mr-2 text-amber-600 dark:text-amber-400" />
+          <h3 className="font-semibold text-amber-700 dark:text-amber-300">{t('maintenanceRequests')}</h3>
         </div>
-        {requests.length > 0 && (
-          <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-            {requests.length}
+        {unreadUpdates > 0 && (
+          <Badge className="bg-yellow-500 hover:bg-yellow-600 text-white dark:bg-yellow-600 dark:hover:bg-yellow-500">
+            {unreadUpdates} {unreadUpdates === 1 ? t('newUpdate') : t('newUpdates')}
           </Badge>
         )}
       </div>
       
       <div className="space-y-4">
         {requests.length === 0 ? (
-          <div className="text-center py-6 bg-white/60 rounded-lg">
-            <Wrench className="h-10 w-10 text-blue-300 mx-auto mb-2 opacity-50" />
-            <p className="text-sm text-gray-500">{t('noMaintenanceRequests')}</p>
+          <div className="text-center py-6 bg-white/60 dark:bg-gray-800/40 rounded-lg">
+            <Wrench className="h-10 w-10 text-amber-300 dark:text-amber-500/50 mx-auto mb-2 opacity-50" />
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('noMaintenanceRequests')}</p>
           </div>
         ) : (
           <div className="space-y-3">
-            {requests.slice(0, 3).map((request, index) => (
+            {sortedRequests.slice(0, 3).map((request, index) => (
               <motion.div 
                 key={request.id} 
-                initial={{ opacity: 0, x: 10 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
-                className="flex items-center justify-between p-3 bg-white/70 rounded-lg shadow-sm hover:shadow transition-shadow"
+                className={`flex items-center justify-between p-3 rounded-lg shadow-sm hover:shadow transition-shadow dark:text-gray-200 ${
+                  request.tenant_notified === false 
+                    ? 'bg-yellow-50/90 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800/30' 
+                    : 'bg-white/70 dark:bg-gray-800/40'
+                }`}
               >
-                <div className="flex flex-col pr-2">
-                  <span className="text-sm font-medium truncate text-gray-800">
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium truncate text-gray-800 dark:text-gray-200">
                     {request.issue}
-                    {request.priority === 'Urgent' && (
-                      <AlertTriangle className="inline-block h-3.5 w-3.5 ml-1 text-red-500" />
+                    {request.tenant_notified === false && (
+                      <span className="ml-2 text-xs bg-yellow-200 dark:bg-yellow-700 px-1.5 py-0.5 rounded-full text-yellow-800 dark:text-yellow-100">
+                        {t('updated')}
+                      </span>
                     )}
                   </span>
-                  <span className="text-xs text-gray-500">
-                    {formatDate(request.created_at)}
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {request.updated_at && request.updated_at !== request.created_at 
+                      ? `${t('updated')}: ${formatDate(request.updated_at)}`
+                      : `${t('createdOn')}: ${formatDate(request.created_at)}`
+                    }
                   </span>
                 </div>
                 <Badge
                   variant={request.status === "Resolved" ? "default" : "secondary"}
                   className={
                     request.status === "Resolved"
-                      ? "bg-green-500 hover:bg-green-600 text-white"
-                      : "bg-yellow-500 hover:bg-yellow-600 text-white"
+                      ? "bg-green-500 hover:bg-green-600 text-white dark:bg-green-700 dark:hover:bg-green-600"
+                      : request.status === "In Progress"
+                        ? "bg-blue-500 hover:bg-blue-600 text-white dark:bg-blue-700 dark:hover:bg-blue-600"
+                        : "bg-amber-500 hover:bg-amber-600 text-white dark:bg-amber-700 dark:hover:bg-amber-600"
                   }
                 >
-                  {request.status}
+                  {getTranslatedStatus(request.status)}
                 </Badge>
               </motion.div>
             ))}
             
-            {requests.length > 3 && (
-              <div className="text-center mt-2">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-blue-600 hover:text-blue-800"
-                  onClick={() => navigate('/tenant/maintenance')}
-                >
-                  {t('viewAll')} <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
+            {sortedRequests.length > 3 && (
+              <div className="text-sm text-center text-gray-500 dark:text-gray-400 mt-2">
+                {t('andMoreRequests', { count: (sortedRequests.length - 3).toString() })}
               </div>
             )}
           </div>
         )}
-      </div>
-      
-      <div className="mt-4">
-        <Button 
-          size="sm" 
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white"
-          onClick={() => navigate('/tenant/maintenance/new')}
-        >
-          {t('newRequest')} <PlusCircle className="h-4 w-4 ml-1" />
-        </Button>
+        
+        <div className="flex gap-2 mt-4">
+          <Button 
+            className="flex-1 text-xs md:text-sm border-amber-200 bg-white/80 text-amber-700 hover:bg-amber-50 hover:text-amber-800 dark:bg-gray-800/30 dark:hover:bg-amber-900/30 dark:text-amber-300 dark:hover:text-amber-200 dark:border-amber-900/40"
+            variant="outline"
+            onClick={() => navigate('/tenant/maintenance')}
+            size="sm"
+          >
+            {t('viewAll')}
+            <ArrowUpRight className="h-3.5 w-3.5 ml-1" />
+          </Button>
+          <Button 
+            className="flex-1 text-xs md:text-sm bg-amber-600 hover:bg-amber-700 text-white dark:bg-amber-700 dark:hover:bg-amber-600"
+            onClick={handleNewRequest}
+            size="sm"
+          >
+            {t('newRequest')}
+            <PlusCircle className="h-3.5 w-3.5 ml-1" />
+          </Button>
+        </div>
       </div>
     </motion.div>
   );

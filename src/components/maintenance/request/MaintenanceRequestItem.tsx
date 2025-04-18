@@ -32,6 +32,16 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     }
   };
 
+  // Translate status for display
+  const translateStatus = (status: string) => {
+    switch(status) {
+      case "Resolved": return t('resolved');
+      case "In Progress": return t('inProgress');
+      case "Pending": return t('pending');
+      default: return status;
+    }
+  };
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -74,7 +84,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
         variant={request.status === "Resolved" ? "default" : "secondary"}
         className={`${getBadgeStyle(request.status)} font-sans text-xs`}
       >
-        {request.status}
+        {translateStatus(request.status)}
       </Badge>
     </Card>
   );
