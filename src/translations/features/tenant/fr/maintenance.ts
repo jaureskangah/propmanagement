@@ -1,4 +1,3 @@
-
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const frMaintenance: TenantMaintenanceTranslations = {
@@ -92,5 +91,7 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici.",
   maintenanceUpdates: "Mises à jour de maintenance",
   newUpdates: "nouvelle(s) mise(s) à jour",
-  pendingMaintenance: "Maintenance en attente"
+  pendingMaintenance: "Maintenance en attente",
+  recentMaintenanceRequests: "Demandes de maintenance récentes",
+  viewAllRequests: "Voir toutes les demandes"
 };

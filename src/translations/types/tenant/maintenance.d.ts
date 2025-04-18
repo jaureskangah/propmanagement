@@ -1,4 +1,3 @@
-
 export interface TenantMaintenanceTranslations {
   maintenanceRequests: string;
   newMaintenanceRequest: string;
@@ -91,4 +90,6 @@ export interface TenantMaintenanceTranslations {
   maintenanceUpdates?: string;
   newUpdates?: string;
   pendingMaintenance: string;
+  recentMaintenanceRequests: string;
+  viewAllRequests: string;
 }

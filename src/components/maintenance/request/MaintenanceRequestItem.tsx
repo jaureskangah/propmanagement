@@ -12,32 +12,32 @@ interface MaintenanceRequestItemProps {
 }
 
 export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestItemProps) => {
-  const { t } = useLocale();
-
-  // Determine card style based on priority
+  const { t, language } = useLocale();
+  
   const cardStyle = request.priority === "Urgent" 
     ? "border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:hover:bg-red-900/30" 
     : "border hover:bg-gray-50 dark:hover:bg-gray-800";
 
-  // Determine badge style based on status
   const getBadgeStyle = (status: string) => {
     switch(status) {
       case "Resolved":
+      case "Résolue":
         return "bg-green-500 hover:bg-green-600";
       case "In Progress":
+      case "En cours":
         return "bg-blue-500 hover:bg-blue-600";
       case "Pending":
+      case "En attente":
       default:
         return "bg-yellow-500 hover:bg-yellow-600";
     }
   };
 
-  // Translate status for display
   const translateStatus = (status: string) => {
     switch(status) {
-      case "Resolved": return t('resolved');
-      case "In Progress": return t('inProgress');
-      case "Pending": return t('pending');
+      case "Resolved": return language === 'fr' ? "Résolue" : "Resolved";
+      case "In Progress": return language === 'fr' ? "En cours" : "In Progress";
+      case "Pending": return language === 'fr' ? "En attente" : "Pending";
       default: return status;
     }
   };
@@ -47,6 +47,13 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     e.stopPropagation();
     onClick();
   };
+
+  // Get a truncated version of the description
+  const truncatedDescription = request.description 
+    ? request.description.length > 100 
+      ? `${request.description.substring(0, 100)}...` 
+      : request.description
+    : "";
 
   return (
     <Card
@@ -68,6 +75,11 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
               <AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />
             )}
           </div>
+          {truncatedDescription && (
+            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+              {truncatedDescription}
+            </p>
+          )}
           {request.tenants && (
             <p className="text-sm text-muted-foreground">
               {t("from")} {request.tenants.name} - 
