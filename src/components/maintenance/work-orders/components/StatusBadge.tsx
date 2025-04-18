@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -16,16 +17,18 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const { t, language } = useLocale();
   
   const getTranslatedStatus = (originalStatus: string) => {
-    if (["Planifié", "En cours", "Terminé"].includes(originalStatus)) {
-      return originalStatus;
+    if (language === 'fr') {
+      switch (originalStatus) {
+        case "Scheduled": return "Planifié";
+        case "In Progress": return "En cours";
+        case "Completed": return "Terminé";
+        case "Resolved": return "Résolue";
+        case "Pending": return "En attente";
+        default: return originalStatus;
+      }
     }
     
-    switch (originalStatus) {
-      case "Scheduled": return language === 'fr' ? "Planifié" : "Scheduled";
-      case "In Progress": return language === 'fr' ? "En cours" : "In Progress";
-      case "Completed": return language === 'fr' ? "Terminé" : "Completed";
-      default: return originalStatus;
-    }
+    return originalStatus;
   };
 
   const getStatusConfig = (originalStatus: string) => {
@@ -45,11 +48,19 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
         className: "bg-orange-500",
         displayText: translatedStatus
       };
-    } else if (translatedStatus === "Terminé" || originalStatus === "Completed") {
+    } else if (translatedStatus === "Terminé" || originalStatus === "Completed" || 
+               translatedStatus === "Résolue" || originalStatus === "Resolved") {
       return {
         variant: "outline" as const,
         icon: <CheckCircle2 className="h-4 w-4 mr-1" />,
         className: "bg-green-500 text-white",
+        displayText: translatedStatus
+      };
+    } else if (translatedStatus === "En attente" || originalStatus === "Pending") {
+      return {
+        variant: "secondary" as const,
+        icon: <Clock className="h-4 w-4 mr-1" />,
+        className: "bg-yellow-500",
         displayText: translatedStatus
       };
     } else {

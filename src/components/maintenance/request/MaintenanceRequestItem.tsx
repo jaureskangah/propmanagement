@@ -34,12 +34,15 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
   };
 
   const translateStatus = (status: string) => {
-    switch(status) {
-      case "Resolved": return language === 'fr' ? "Résolue" : "Resolved";
-      case "In Progress": return language === 'fr' ? "En cours" : "In Progress";
-      case "Pending": return language === 'fr' ? "En attente" : "Pending";
-      default: return status;
+    if (language === 'fr') {
+      switch(status) {
+        case "Resolved": return "Résolue";
+        case "In Progress": return "En cours";
+        case "Pending": return "En attente";
+        default: return status;
+      }
     }
+    return status;
   };
 
   const handleClick = (e: React.MouseEvent) => {

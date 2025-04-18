@@ -19,7 +19,7 @@ export const MaintenanceList = ({
   onMaintenanceUpdate,
   onViewDetails
 }: MaintenanceListProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
 
   // Ajoutons des logs pour vérifier que les demandes sont bien triées
   console.log("MaintenanceList rendered with requests:", 
@@ -40,28 +40,41 @@ export const MaintenanceList = ({
 
   const getStatusIcon = (status: string) => {
     switch(status) {
-      case "Resolved": return <CheckCircle className="h-4 w-4" />;
-      case "In Progress": return <Clock className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+      case "Resolved": 
+      case "Résolue": 
+        return <CheckCircle className="h-4 w-4" />;
+      case "In Progress": 
+      case "En cours": 
+        return <Clock className="h-4 w-4" />;
+      default: 
+        return <Clock className="h-4 w-4" />;
     }
   };
 
   const getStatusColor = (status: string) => {
     switch(status) {
-      case "Resolved": return "bg-green-500 hover:bg-green-600";
-      case "In Progress": return "bg-blue-500 hover:bg-blue-600";
-      default: return "bg-yellow-500 hover:bg-yellow-600";
+      case "Resolved": 
+      case "Résolue": 
+        return "bg-green-500 hover:bg-green-600";
+      case "In Progress": 
+      case "En cours": 
+        return "bg-blue-500 hover:bg-blue-600";
+      default: 
+        return "bg-yellow-500 hover:bg-yellow-600";
     }
   };
 
   // Translate status for display
   const translateStatus = (status: string) => {
-    switch(status) {
-      case "Resolved": return t('resolved');
-      case "In Progress": return t('inProgress');
-      case "Pending": return t('pending');
-      default: return status;
+    if (language === 'fr') {
+      switch(status) {
+        case "Resolved": return "Résolue";
+        case "In Progress": return "En cours";
+        case "Pending": return "En attente";
+        default: return status;
+      }
     }
+    return status;
   };
 
   return (

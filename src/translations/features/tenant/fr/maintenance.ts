@@ -1,3 +1,4 @@
+
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const frMaintenance: TenantMaintenanceTranslations = {
