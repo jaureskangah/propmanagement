@@ -84,7 +84,6 @@ const DocumentsPage = () => {
   // Fetch tenant data only once when user is available
   useEffect(() => {
     if (user?.id) {
-      console.log("DocumentsPage - Initial data fetch for user:", user.id);
       fetchTenantData();
     }
   }, [user?.id, fetchTenantData]);
