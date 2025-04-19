@@ -21,7 +21,7 @@ export const NotificationBellButton = ({ unreadCount }: NotificationBellButtonPr
             variant="ghost"
             size="icon"
             className={cn(
-              "relative h-10 w-10 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 dark:bg-gray-800",
+              "absolute -top-12 right-0 h-10 w-10 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-300 dark:bg-gray-800",
               "border border-purple-100 hover:border-purple-200 dark:border-purple-900",
               "cursor-pointer"
             )}

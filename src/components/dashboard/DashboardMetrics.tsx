@@ -63,14 +63,12 @@ export const DashboardMetrics = ({
 
   return (
     <div className="relative">
-      <div className="absolute top-0 right-0 z-40">
-        <NotificationBell 
-          unreadCount={totalUnreadCount} 
-          unreadMessages={unreadMessages} 
-          maintenanceRequests={maintenanceRequests}
-          onShowAllNotifications={() => setShowUnreadDialog(true)}
-        />
-      </div>
+      <NotificationBell 
+        unreadCount={totalUnreadCount} 
+        unreadMessages={unreadMessages} 
+        maintenanceRequests={maintenanceRequests}
+        onShowAllNotifications={() => setShowUnreadDialog(true)}
+      />
       <MetricsGrid 
         metrics={metrics} 
         unreadMessages={totalUnreadCount}

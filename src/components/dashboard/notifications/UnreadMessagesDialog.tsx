@@ -66,7 +66,7 @@ export const UnreadMessagesDialog = ({
       setLocalOpen(value);
       onOpenChange(value);
     }}>
-      <DialogContent className="sm:max-w-md" onClick={(e) => e.stopPropagation()}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {t("notificationCenter")}
@@ -76,9 +76,11 @@ export const UnreadMessagesDialog = ({
         <Tabs defaultValue="messages" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid grid-cols-2 mb-4">
             <TabsTrigger value="messages" className="flex items-center gap-1">
+              {/* MessagesTabTrigger component content */}
               <MessagesTab.Trigger count={tenantMessages.length} t={t} />
             </TabsTrigger>
             <TabsTrigger value="maintenance" className="flex items-center gap-1">
+              {/* MaintenanceTabTrigger component content */}
               <MaintenanceTab.Trigger t={t} />
             </TabsTrigger>
           </TabsList>

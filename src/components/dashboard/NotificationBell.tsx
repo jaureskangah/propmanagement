@@ -12,13 +12,11 @@ export const NotificationBell = ({
   if (unreadCount === 0) return null;
 
   return (
-    <div className="relative z-50">
-      <NotificationDropdown
-        unreadCount={unreadCount}
-        unreadMessages={unreadMessages}
-        maintenanceRequests={maintenanceRequests}
-        onShowAllNotifications={onShowAllNotifications}
-      />
-    </div>
+    <NotificationDropdown
+      unreadCount={unreadCount}
+      unreadMessages={unreadMessages}
+      maintenanceRequests={maintenanceRequests}
+      onShowAllNotifications={onShowAllNotifications}
+    />
   );
 };
