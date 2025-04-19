@@ -90,4 +90,7 @@ export interface TenantMaintenanceTranslations {
   createNewRequestToSee?: string;
   maintenanceUpdates?: string;
   newUpdates?: string;
+  pendingMaintenance: string;
+  recentMaintenanceRequests: string;
+  viewAllRequests: string;
 }

@@ -89,5 +89,9 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   messages: "Messages",
   noTenantAssociated: "No tenant associated with this request",
   errorLoadingMessages: "Error loading messages",
-  createNewRequestToSee: "Create a new maintenance request to see it here."
+  createNewRequestToSee: "Create a new maintenance request to see it here.",
+  // Adding the missing translations
+  pendingMaintenance: "Pending Maintenance",
+  recentMaintenanceRequests: "Recent Maintenance Requests",
+  viewAllRequests: "View All Requests"
 };
