@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion } from "framer-motion";
-import { NotificationMessage, NotificationRequest } from "./types";
+import { NotificationRequest } from "./types";
 import { NotificationBellButton } from "./NotificationBellButton";
 import { NotificationHeader } from "./NotificationHeader";
 import { NotificationsSection } from "./NotificationsSection";
@@ -15,14 +15,12 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface NotificationDropdownProps {
   unreadCount: number;
-  unreadMessages: NotificationMessage[];
   maintenanceRequests: NotificationRequest[];
   onShowAllNotifications: () => void;
 }
 
 export const NotificationDropdown = ({
   unreadCount,
-  unreadMessages = [],
   maintenanceRequests = [],
   onShowAllNotifications
 }: NotificationDropdownProps) => {
@@ -47,7 +45,6 @@ export const NotificationDropdown = ({
           <DropdownMenuGroup>
             <ScrollArea className="h-64">
               <NotificationsSection 
-                unreadMessages={unreadMessages}
                 maintenanceRequests={maintenanceRequests}
                 t={t}
               />

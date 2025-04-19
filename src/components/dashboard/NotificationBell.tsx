@@ -4,7 +4,6 @@ import { NotificationDropdown } from "./notifications/NotificationDropdown";
 
 export const NotificationBell = ({ 
   unreadCount, 
-  unreadMessages = [], 
   maintenanceRequests = [],
   onShowAllNotifications
 }: NotificationBellProps) => {
@@ -14,7 +13,6 @@ export const NotificationBell = ({
   return (
     <NotificationDropdown
       unreadCount={unreadCount}
-      unreadMessages={unreadMessages}
       maintenanceRequests={maintenanceRequests}
       onShowAllNotifications={onShowAllNotifications}
     />

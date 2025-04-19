@@ -1,5 +1,5 @@
 
-import { ArrowUpRight, ArrowDownRight, Building2, Users, Wrench, MessageSquare } from "lucide-react";
+import { Building2, Users, Wrench } from "lucide-react";
 import { DashboardMetric } from "@/components/DashboardMetric";
 import { cn } from "@/lib/utils";
 import { SortableMetric } from "./SortableMetric";
@@ -9,20 +9,17 @@ import { useEffect } from "react";
 
 interface MetricRenderersProps {
   metrics: MetricsData;
-  unreadMessages: number;
   dateRange?: any;
 }
 
-export const MetricRenderers = ({ metrics, unreadMessages, dateRange }: MetricRenderersProps) => {
+export const MetricRenderers = ({ metrics, dateRange }: MetricRenderersProps) => {
   const { t } = useLocale();
 
-  // Log metrics data for debugging
   useEffect(() => {
     console.log("Metrics data in renderers:", {
       properties: metrics.properties?.chartData?.length,
       tenants: metrics.tenants?.chartData?.length,
       maintenance: metrics.maintenance?.chartData?.length,
-      communications: metrics.communications?.chartData?.length,
       dateRange
     });
   }, [metrics, dateRange]);
@@ -68,26 +65,9 @@ export const MetricRenderers = ({ metrics, unreadMessages, dateRange }: MetricRe
     </SortableMetric>
   );
 
-  const renderMessages = () => {
-    return (
-      <SortableMetric key="messages" id="messages">
-        <DashboardMetric
-          title={t('unreadMessages')}
-          value={unreadMessages.toString()}
-          icon={<MessageSquare className="h-4 w-4 text-rose-600 dark:text-rose-400" />}
-          chartData={metrics.communications.chartData}
-          tooltip={t('unreadMessages')}
-          className="bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 border-rose-100 dark:border-rose-800/30 hover:border-rose-200 dark:hover:border-rose-700/40"
-          chartColor="#F43F5E"
-        />
-      </SortableMetric>
-    );
-  };
-
   return {
     renderProperties,
     renderTenants,
     renderMaintenance,
-    renderMessages,
   };
 };

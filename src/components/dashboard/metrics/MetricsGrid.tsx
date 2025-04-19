@@ -1,4 +1,3 @@
-
 import {
   DndContext,
   closestCenter,
@@ -19,16 +18,14 @@ import { MetricsData } from "./types";
 
 interface MetricsGridProps {
   metrics: MetricsData;
-  unreadMessages: number;
   dateRange?: any;
 }
 
-export const MetricsGrid = ({ metrics, unreadMessages, dateRange }: MetricsGridProps) => {
+export const MetricsGrid = ({ metrics, dateRange }: MetricsGridProps) => {
   const [metricOrder, setMetricOrder] = useState([
     'properties',
     'tenants',
-    'maintenance',
-    'messages'
+    'maintenance'
   ]);
 
   const sensors = useSensors(
@@ -42,7 +39,6 @@ export const MetricsGrid = ({ metrics, unreadMessages, dateRange }: MetricsGridP
     useSensor(KeyboardSensor)
   );
 
-  // Log metrics data for debugging
   useEffect(() => {
     console.log("Metrics data in grid:", {
       properties: metrics.properties?.chartData?.length,
@@ -66,14 +62,13 @@ export const MetricsGrid = ({ metrics, unreadMessages, dateRange }: MetricsGridP
     }
   };
 
-  const renderers = MetricRenderers({ metrics, unreadMessages, dateRange });
+  const renderers = MetricRenderers({ metrics, dateRange });
 
   const renderMetric = (metricId: string) => {
     switch (metricId) {
       case 'properties': return renderers.renderProperties();
       case 'tenants': return renderers.renderTenants();
       case 'maintenance': return renderers.renderMaintenance();
-      case 'messages': return renderers.renderMessages();
       default: return null;
     }
   };
