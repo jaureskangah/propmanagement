@@ -17,6 +17,5 @@ export interface NotificationRequest {
 
 export interface NotificationBellProps {
   unreadCount: number;
-  maintenanceRequests?: NotificationRequest[];
-  onShowAllNotifications: () => void;
+  maintenanceRequests: NotificationRequest[];
 }

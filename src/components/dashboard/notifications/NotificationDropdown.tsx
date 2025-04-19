@@ -1,4 +1,3 @@
-
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,13 +15,11 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 interface NotificationDropdownProps {
   unreadCount: number;
   maintenanceRequests: NotificationRequest[];
-  onShowAllNotifications: () => void;
 }
 
 export const NotificationDropdown = ({
   unreadCount,
-  maintenanceRequests = [],
-  onShowAllNotifications
+  maintenanceRequests = []
 }: NotificationDropdownProps) => {
   const { t } = useLocale();
   
@@ -40,7 +37,7 @@ export const NotificationDropdown = ({
         </DropdownMenuTrigger>
         
         <DropdownMenuContent className="w-72" align="end">
-          <NotificationHeader onViewAll={onShowAllNotifications} />
+          <NotificationHeader />
           
           <DropdownMenuGroup>
             <ScrollArea className="h-64">

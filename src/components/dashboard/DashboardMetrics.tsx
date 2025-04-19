@@ -21,41 +21,18 @@ export const DashboardMetrics = ({
 }: DashboardMetricsProps) => {
   const { 
     metrics,
-    unreadMessages,
     maintenanceRequests,
     totalNotificationCount,
     showUnreadDialog,
     setShowUnreadDialog,
     markAllMessagesAsRead,
-    refreshUnreadMessages,
-    refreshMaintenanceRequests,
-    staticUnreadMessages
+    refreshMaintenanceRequests
   } = useMetricsData(propertiesData, maintenanceData, tenantsData, dateRange);
-
-  const [totalUnreadCount, setTotalUnreadCount] = useState(0);
-
-  useEffect(() => {
-    // Combine static and realtime notifications
-    const realtimeCount = totalNotificationCount || 0;
-    console.log("Unread count calculation:", { 
-      staticUnreadMessages, 
-      realtimeCount,
-      totalNotificationCount,
-      realtimeMessages: unreadMessages,
-      dateRange
-    });
-    
-    setTotalUnreadCount(
-      Math.max(staticUnreadMessages, realtimeCount)
-    );
-  }, [staticUnreadMessages, totalNotificationCount, unreadMessages, dateRange]);
 
   // Handle dialog close with read status update
   const handleDialogOpenChange = (open: boolean) => {
     if (!open && showUnreadDialog) {
       markAllMessagesAsRead();
-      // Force refresh notifications to immediately update the count
-      refreshUnreadMessages();
       refreshMaintenanceRequests();
     }
     setShowUnreadDialog(open);
@@ -64,21 +41,18 @@ export const DashboardMetrics = ({
   return (
     <div className="relative">
       <NotificationBell 
-        unreadCount={totalUnreadCount} 
-        unreadMessages={unreadMessages} 
+        unreadCount={totalNotificationCount} 
         maintenanceRequests={maintenanceRequests}
         onShowAllNotifications={() => setShowUnreadDialog(true)}
       />
       <MetricsGrid 
         metrics={metrics} 
-        unreadMessages={totalUnreadCount}
         dateRange={dateRange}
       />
       
       <UnreadMessagesDialog 
         open={showUnreadDialog} 
-        onOpenChange={handleDialogOpenChange} 
-        unreadMessages={unreadMessages || []} 
+        onOpenChange={handleDialogOpenChange}
       />
     </div>
   );

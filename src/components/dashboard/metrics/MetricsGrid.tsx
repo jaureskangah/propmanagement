@@ -83,7 +83,7 @@ export const MetricsGrid = ({ metrics, dateRange }: MetricsGridProps) => {
         items={metricOrder}
         strategy={rectSortingStrategy}
       >
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 md:grid-cols-3">
           {metricOrder.map((metricId) => (
             <div key={metricId} className="transform transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
               {renderMetric(metricId)}
