@@ -1,3 +1,4 @@
+
 /* Card styles */
 .document-card {
   @apply bg-background/80 backdrop-blur-sm border rounded-lg p-4 transition-all duration-200 hover-lift;
@@ -43,23 +44,4 @@
 @keyframes tab-indicator {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
-}
-
-/* Modern KPI Cards */
-.kpi-card {
-  @apply relative overflow-hidden rounded-xl border p-6 transition-all duration-300;
-  @apply hover:shadow-lg transform hover:-translate-y-1;
-  @apply backdrop-blur-sm bg-opacity-80;
-}
-
-.kpi-card-blue {
-  @apply bg-blue-50/80 border-blue-100 dark:bg-blue-900/20 dark:border-blue-800/30;
-}
-
-.kpi-card-amber {
-  @apply bg-amber-50/80 border-amber-100 dark:bg-amber-900/20 dark:border-amber-800/30;
-}
-
-.kpi-card-green {
-  @apply bg-green-50/80 border-green-100 dark:bg-green-900/20 dark:border-green-800/30;
 }
