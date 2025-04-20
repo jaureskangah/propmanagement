@@ -19,8 +19,6 @@ export const RecentActivity = () => {
   const { 
     groupedActivities, 
     isLoading, 
-    activityTypeFilter, 
-    setActivityTypeFilter,
     hasMoreActivities,
     showMoreActivities,
     refreshActivities
@@ -38,50 +36,27 @@ export const RecentActivity = () => {
     setForceUpdateKey(Date.now());
   };
 
-  // Function to handle filter changes
-  const handleFilterChange = (newFilter: string) => {
-    console.log("[RecentActivity] Changement du filtre d'activité vers:", newFilter, "depuis:", activityTypeFilter);
-    
-    // Si on est déjà en train de réinitialiser, ne pas déclencher une autre réinitialisation
-    if (resetInProgress.current) {
-      console.log("[RecentActivity] Réinitialisation déjà en cours, ignoré");
-      return;
-    }
-    
-    // Appliquer le nouveau filtre
-    setActivityTypeFilter(newFilter);
-    
-    // Si c'est le même filtre, forcer un rafraîchissement
-    if (newFilter === activityTypeFilter) {
-      console.log("[RecentActivity] Même filtre sélectionné, rafraîchissement forcé");
-      forceCompleteRefresh();
-    }
-  };
-
   // Pour assurer la réactivité
   useEffect(() => {
-    console.log("[RecentActivity] Mise à jour des activités après changement de filtre à:", activityTypeFilter);
+    console.log("[RecentActivity] Mise à jour des activités");
     console.log("[RecentActivity] Nombre de groupes d'activités:", Object.keys(groupedActivities).length);
-  }, [activityTypeFilter, groupedActivities]);
+  }, [groupedActivities]);
 
   // Check if there are any activities to display
   const isEmpty = Object.keys(groupedActivities).length === 0 && !isLoading;
 
-  // Handler pour le bouton de réinitialisation du filtre
-  const handleResetFilter = () => {
-    console.log("[RecentActivity] Réinitialisation du filtre demandée de:", activityTypeFilter, "vers: all");
+  // Simple reset handler for NoActivity component
+  const handleResetView = () => {
+    console.log("[RecentActivity] Réinitialisation de la vue demandée");
     
     // Marquer qu'une réinitialisation est en cours pour éviter les boucles
     resetInProgress.current = true;
-    
-    // Réinitialiser le filtre à "all"
-    setActivityTypeFilter("all");
     
     // Forcer un rafraîchissement complet
     forceCompleteRefresh();
     
     // Notification
-    toast.success(t('filterReset'));
+    toast.success(t('viewReset'));
     
     // Après un délai, terminer la réinitialisation
     setTimeout(() => {
@@ -91,14 +66,10 @@ export const RecentActivity = () => {
 
   return (
     <ActivityCard title={t('recentActivity')} isLoading={isLoading}>
-      <ActivityFilter 
-        value={activityTypeFilter} 
-        onChange={handleFilterChange} 
-      />
+      <ActivityFilter />
       {isEmpty ? (
         <NoActivity 
-          filterType={activityTypeFilter} 
-          onResetFilter={handleResetFilter} 
+          onReset={handleResetView} 
         />
       ) : (
         <ActivityList 

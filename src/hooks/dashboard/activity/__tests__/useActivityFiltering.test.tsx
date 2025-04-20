@@ -4,49 +4,11 @@ import { useActivityFiltering } from '../useActivityFiltering';
 import { mockActivities } from './testSetup';
 
 describe('useActivityFiltering', () => {
-  it('should return all activities when filter is set to "all"', () => {
+  it('should initially limit activities to default count', () => {
     const { result } = renderHook(() => useActivityFiltering(mockActivities));
     
-    // Default filter should be "all"
-    expect(result.current.activityTypeFilter).toBe("all");
-    expect(result.current.filteredActivities).toHaveLength(mockActivities.length);
     expect(result.current.limitedActivities).toHaveLength(
       Math.min(5, mockActivities.length)
-    );
-  });
-  
-  it('should filter activities by type', () => {
-    const { result } = renderHook(() => useActivityFiltering(mockActivities));
-    
-    // Change filter to "payment"
-    act(() => {
-      result.current.setActivityFilter("payment");
-    });
-    
-    // Should only show payment activities
-    expect(result.current.activityTypeFilter).toBe("payment");
-    expect(result.current.filteredActivities).toHaveLength(2);
-    expect(result.current.filteredActivities.every(a => a.type === "payment")).toBe(true);
-  });
-  
-  it('should reset visible count when filter changes', () => {
-    const { result } = renderHook(() => useActivityFiltering(mockActivities));
-    
-    // First show more activities
-    act(() => {
-      result.current.showMoreActivities();
-    });
-    
-    const initialVisibleCount = result.current.limitedActivities.length;
-    
-    // Then change filter
-    act(() => {
-      result.current.setActivityFilter("tenant");
-    });
-    
-    // Visible count should be reset
-    expect(result.current.limitedActivities.length).toBe(
-      Math.min(5, result.current.filteredActivities.length)
     );
   });
   
