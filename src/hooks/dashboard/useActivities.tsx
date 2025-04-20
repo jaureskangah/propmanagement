@@ -13,9 +13,9 @@ export type { Activity } from "./activityTypes";
 export type { GroupedActivities } from "./activityTypes";
 
 export function useActivities() {
-  // Référence pour suivre les changements d'activités
+  // Reference to track activity changes
   const activitiesRef = useRef<any[]>([]);
-  // Forcer le rafraîchissement des activités
+  // Force refresh activities
   const [refreshTrigger, setRefreshTrigger] = useState<number>(Date.now());
   
   const { data: tenants = [], isLoading: isLoadingTenants } = useTenantActivities();
@@ -24,7 +24,7 @@ export function useActivities() {
 
   // Debug the retrieved data
   useEffect(() => {
-    console.log("[useActivities] Données récupérées:", {
+    console.log("[useActivities] Retrieved data:", {
       tenants: tenants.length,
       payments: payments.length,
       maintenance: maintenance.length
@@ -33,20 +33,20 @@ export function useActivities() {
 
   const allActivities = useTransformedActivities(tenants, payments, maintenance);
   
-  // Vérifier si les activités ont changé
+  // Check if activities have changed
   useEffect(() => {
     const allActivitiesCount = allActivities.length;
     const prevActivitiesCount = activitiesRef.current.length;
     
     if (allActivitiesCount !== prevActivitiesCount) {
-      console.log(`[useActivities] Changement détecté dans les activités: avant=${prevActivitiesCount}, après=${allActivitiesCount}`);
-      activitiesRef.current = allActivities;
+      console.log(`[useActivities] Change detected in activities: before=${prevActivitiesCount}, after=${allActivitiesCount}`);
+      activitiesRef.current = [...allActivities]; // Use a new array to ensure reference change
     }
   }, [allActivities]);
   
   // Log the transformed activities to help debugging
   useEffect(() => {
-    console.log("[useActivities] Activités transformées:", {
+    console.log("[useActivities] Transformed activities:", {
       count: allActivities.length,
       types: [...new Set(allActivities.map(a => a.type))],
       firstFew: allActivities.slice(0, 3)
@@ -68,17 +68,17 @@ export function useActivities() {
   
   // Debug the final grouped activities
   useEffect(() => {
-    console.log("[useActivities] Activités groupées après filtrage:", {
-      filtre: activityTypeFilter,
-      groupes: Object.keys(groupedActivities),
-      nombreTotal: Object.values(groupedActivities).flat().length,
+    console.log("[useActivities] Grouped activities after filtering:", {
+      filter: activityTypeFilter,
+      groups: Object.keys(groupedActivities),
+      totalCount: Object.values(groupedActivities).flat().length,
       forceUpdate: forceUpdate
     });
   }, [groupedActivities, activityTypeFilter, forceUpdate]);
 
-  // Fonction pour forcer le rafraîchissement complet des activités
+  // Function to force a complete refresh of activities
   const refreshActivities = () => {
-    console.log("[useActivities] Forçage du rafraîchissement complet des activités");
+    console.log("[useActivities] Forcing complete refresh of activities");
     setRefreshTrigger(Date.now());
   };
 

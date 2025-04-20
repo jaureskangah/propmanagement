@@ -36,9 +36,11 @@ export const UnreadMessagesDialog = ({
   }, [open]);
 
   // Filter to show only tenant messages
-  const tenantMessages = unreadMessages.filter(message => {
-    return message.is_from_tenant === true && message.status === "unread";
-  });
+  const tenantMessages = unreadMessages && unreadMessages.length > 0 
+    ? unreadMessages.filter(message => {
+        return message.is_from_tenant === true && message.status === "unread";
+      })
+    : [];
   
   // Handle navigation to tenant communications
   const handleViewMessages = () => {
@@ -117,4 +119,4 @@ export const UnreadMessagesDialog = ({
       </DialogContent>
     </Dialog>
   );
-};
+}
