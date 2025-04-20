@@ -13,9 +13,7 @@ export type { Activity } from "./activityTypes";
 export type { GroupedActivities } from "./activityTypes";
 
 export function useActivities() {
-  // Reference to track activity changes
   const activitiesRef = useRef<any[]>([]);
-  // Force refresh activities
   const [refreshTrigger, setRefreshTrigger] = useState<number>(Date.now());
   
   const { data: tenants = [], isLoading: isLoadingTenants } = useTenantActivities();
@@ -40,41 +38,18 @@ export function useActivities() {
     
     if (allActivitiesCount !== prevActivitiesCount) {
       console.log(`[useActivities] Change detected in activities: before=${prevActivitiesCount}, after=${allActivitiesCount}`);
-      activitiesRef.current = [...allActivities]; // Use a new array to ensure reference change
+      activitiesRef.current = [...allActivities];
     }
   }, [allActivities]);
-  
-  // Log the transformed activities to help debugging
-  useEffect(() => {
-    console.log("[useActivities] Transformed activities:", {
-      count: allActivities.length,
-      types: [...new Set(allActivities.map(a => a.type))],
-      firstFew: allActivities.slice(0, 3)
-    });
-  }, [allActivities]);
-  
+
   const {
     limitedActivities,
-    activityTypeFilter,
-    setActivityFilter,
-    resetFilter,
     hasMoreActivities,
-    showMoreActivities,
-    forceUpdate
+    showMoreActivities
   } = useActivityFiltering(allActivities);
 
-  // Force update groupedActivities when filter changes
+  // Group the limited activities
   const groupedActivities = useActivityGrouping(limitedActivities);
-  
-  // Debug the final grouped activities
-  useEffect(() => {
-    console.log("[useActivities] Grouped activities after filtering:", {
-      filter: activityTypeFilter,
-      groups: Object.keys(groupedActivities),
-      totalCount: Object.values(groupedActivities).flat().length,
-      forceUpdate: forceUpdate
-    });
-  }, [groupedActivities, activityTypeFilter, forceUpdate]);
 
   // Function to force a complete refresh of activities
   const refreshActivities = () => {
@@ -87,9 +62,6 @@ export function useActivities() {
   return {
     groupedActivities,
     isLoading,
-    activityTypeFilter,
-    setActivityTypeFilter: setActivityFilter,
-    resetFilter,
     hasMoreActivities,
     showMoreActivities,
     refreshActivities
