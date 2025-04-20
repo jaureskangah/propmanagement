@@ -67,24 +67,30 @@ export default function Contact() {
             <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <Phone className="h-6 w-6 text-[#ea384c]" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">{t('phone')}</h3>
-            <p className="text-gray-600 text-center">+1 (506) 781-1872</p>
+            <h3 className="text-lg font-semibold mb-2 text-gray-800">{t('phone')}</h3>
+            <p className="text-gray-700 text-center font-medium">{/* Changed text color from text-gray-600 */}
+              +1 (506) 781-1872
+            </p>
           </div>
 
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
             <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <Mail className="h-6 w-6 text-[#ea384c]" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">{t('email')}</h3>
-            <p className="text-gray-600 text-center">contact@propmanagement.app</p>
+            <h3 className="text-lg font-semibold mb-2 text-gray-800">{t('email')}</h3>
+            <p className="text-gray-700 text-center font-medium">{/* Changed text color from text-gray-600 */}
+              contact@propmanagement.app
+            </p>
           </div>
 
           <div className="flex flex-col items-center p-6 bg-white rounded-lg shadow-sm">
             <div className="h-12 w-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
               <MapPin className="h-6 w-6 text-[#ea384c]" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">{t('office')}</h3>
-            <p className="text-gray-600 text-center">Moncton, New Brunswick</p>
+            <h3 className="text-lg font-semibold mb-2 text-gray-800">{t('office')}</h3>
+            <p className="text-gray-700 text-center font-medium">{/* Changed text color from text-gray-600 */}
+              Moncton, New Brunswick
+            </p>
           </div>
         </div>
 
