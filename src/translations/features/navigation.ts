@@ -20,7 +20,8 @@ export const enNavigation: NavigationTranslations = {
   error: "Error",
   properties: "Properties",
   finances: "Finances",
-  costs: "Costs"
+  costs: "Costs",
+  getSupport: "Get Support",
 };
 
 export const frNavigation: NavigationTranslations = {
@@ -43,5 +44,6 @@ export const frNavigation: NavigationTranslations = {
   error: "Erreur",
   properties: "Propriétés",
   finances: "Finances",
-  costs: "Coûts"
+  costs: "Coûts",
+  getSupport: "Obtenir de l'aide",
 };
