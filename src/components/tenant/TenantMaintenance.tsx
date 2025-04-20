@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Wrench, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,7 @@ import { EditMaintenanceDialog } from "./maintenance/EditMaintenanceDialog";
 import { DeleteMaintenanceDialog } from "./maintenance/DeleteMaintenanceDialog";
 import { formatDate } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantMaintenanceProps {
   requests: MaintenanceRequest[];
@@ -25,9 +27,9 @@ export const TenantMaintenance = ({
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
+  const { t } = useLocale();
 
   const handleEditClick = async (request: MaintenanceRequest) => {
-    // Marquer la notification comme vue
     if (!request.tenant_notified) {
       await supabase
         .from('maintenance_requests')
@@ -46,20 +48,20 @@ export const TenantMaintenance = ({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Maintenance Requests</CardTitle>
+        <CardTitle className="text-lg">{t('maintenanceRequests')}</CardTitle>
         <Button 
           onClick={() => setIsAddDialogOpen(true)}
           className="bg-[#ea384c] hover:bg-[#ea384c]/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          New Request
+          {t('newMaintenanceRequest')}
         </Button>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {requests.length === 0 ? (
             <p className="text-muted-foreground text-center py-4">
-              No maintenance requests found
+              {t('noMaintenanceRequests')}
             </p>
           ) : (
             requests.map((request) => (
@@ -74,7 +76,7 @@ export const TenantMaintenance = ({
                   <div>
                     <p className="font-medium">{request.issue}</p>
                     <p className="text-sm text-muted-foreground">
-                      Created on {formatDate(request.created_at)}
+                      {t('createdOn')} {formatDate(request.created_at)}
                     </p>
                   </div>
                 </div>
@@ -87,7 +89,7 @@ export const TenantMaintenance = ({
                         : "bg-yellow-500 hover:bg-yellow-600"
                     }
                   >
-                    {request.status}
+                    {t(request.status.toLowerCase())}
                   </Badge>
                   <div className="flex gap-2">
                     <Button
@@ -95,7 +97,7 @@ export const TenantMaintenance = ({
                       size="sm"
                       onClick={() => handleEditClick(request)}
                     >
-                      Edit
+                      {t('edit')}
                     </Button>
                     <Button
                       variant="outline"
@@ -103,7 +105,7 @@ export const TenantMaintenance = ({
                       onClick={() => handleDeleteClick(request)}
                       className="text-red-500 hover:text-red-600"
                     >
-                      Delete
+                      {t('deleteMaintenanceRequest')}
                     </Button>
                   </div>
                 </div>

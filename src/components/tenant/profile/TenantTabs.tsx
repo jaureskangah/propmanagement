@@ -1,14 +1,12 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentGenerator } from "@/components/tenant/documents/DocumentGenerator";
-import { MessageSquare, Files, Wrench, FileText } from "lucide-react";
+import { Files, Wrench, FileText } from "lucide-react";
 import { Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantDocuments } from "@/components/tenant/TenantDocuments";
 import { TenantPayments } from "@/components/tenant/TenantPayments";
-import { TenantCommunications } from "@/components/tenant/TenantCommunications";
 import { TenantMaintenance } from "@/components/tenant/TenantMaintenance";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
@@ -24,22 +22,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
   const [activeTab, setActiveTab] = useState('documents');
   const tabsListRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
-  
-  // Handle communication toggle status
-  const handleToggleStatus = (comm: any) => {
-    console.log("Toggle status for communication:", comm.id);
-    // Implementation would depend on your API
-    handleDataUpdate();
-  };
-  
-  // Handle communication deletion
-  const handleDeleteCommunication = (comm: any) => {
-    console.log("Delete communication:", comm.id);
-    // Implementation would depend on your API
-    handleDataUpdate();
-  };
 
-  // Scroll tabs into view on mobile
   useEffect(() => {
     if (tabsListRef.current && isMobile) {
       const activeElement = tabsListRef.current.querySelector('[data-state="active"]');
@@ -76,14 +59,6 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
             <TabsTrigger
               className="inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:bg-[#ea384c]/10 dark:data-[state=active]:bg-[#ea384c]/20 data-[state=active]:text-[#ea384c] dark:data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
-              value="communications"
-            >
-              <MessageSquare className="mr-2 h-4 w-4" />
-              {t('communications')}
-            </TabsTrigger>
-
-            <TabsTrigger
-              className="inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 data-[state=active]:bg-[#ea384c]/10 dark:data-[state=active]:bg-[#ea384c]/20 data-[state=active]:text-[#ea384c] dark:data-[state=active]:text-white data-[state=active]:font-semibold data-[state=active]:shadow-sm whitespace-nowrap"
               value="maintenance"
             >
               <Wrench className="mr-2 h-4 w-4" />
@@ -95,7 +70,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
               value="documentGenerator"
             >
               <FileText className="mr-2 h-4 w-4" />
-              {t('documentGenerator.documentGenerator') || 'Générateur de documents'}
+              {t('documentGenerator.documentGenerator')}
             </TabsTrigger>
           </TabsList>
         </div>
@@ -121,23 +96,12 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
           </CardContent>
         </TabsContent>
 
-        <TabsContent value="communications" className="focus-visible:outline-none focus-visible:ring-0">
-          <CardContent className={cn("p-0", isMobile ? "p-2" : "p-4")}>
-            <TenantCommunications 
-              communications={tenant.communications} 
-              tenantId={tenant.id}
-              onCommunicationUpdate={handleDataUpdate}
-              onToggleStatus={handleToggleStatus}
-              onDeleteCommunication={handleDeleteCommunication}
-              tenant={tenant}
-            />
-          </CardContent>
-        </TabsContent>
-
         <TabsContent value="maintenance" className="focus-visible:outline-none focus-visible:ring-0">
           <CardContent className={cn("p-0", isMobile ? "p-2" : "p-4")}>
             <TenantMaintenance 
-              requests={tenant.maintenanceRequests || []}
+              requests={tenant.maintenanceRequests ? [...tenant.maintenanceRequests].sort((a, b) => 
+                new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+              ) : []}
               tenantId={tenant.id}
               onMaintenanceUpdate={handleDataUpdate}
             />
@@ -153,4 +117,3 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
     </Card>
   );
 };
-
