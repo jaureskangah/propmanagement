@@ -17,13 +17,13 @@ import { MaintenanceTab } from "./tabs/MaintenanceTab";
 interface UnreadMessagesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  unreadMessages: any[];
+  unreadMessages?: any[];
 }
 
 export const UnreadMessagesDialog = ({
   open,
   onOpenChange,
-  unreadMessages,
+  unreadMessages = [],
 }: UnreadMessagesDialogProps) => {
   const navigate = useNavigate();
   const { t } = useLocale();

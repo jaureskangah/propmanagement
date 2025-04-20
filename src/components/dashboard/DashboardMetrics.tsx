@@ -4,7 +4,6 @@ import { NotificationBell } from "./NotificationBell";
 import { MetricsGrid } from "./metrics/MetricsGrid";
 import { UnreadMessagesDialog } from "./notifications/UnreadMessagesDialog";
 import { DateRange } from "./DashboardDateFilter";
-import { useEffect, useState } from "react";
 
 interface DashboardMetricsProps {
   propertiesData: any[];
@@ -43,7 +42,6 @@ export const DashboardMetrics = ({
       <NotificationBell 
         unreadCount={totalNotificationCount} 
         maintenanceRequests={maintenanceRequests}
-        onShowAllNotifications={() => setShowUnreadDialog(true)}
       />
       <MetricsGrid 
         metrics={metrics} 

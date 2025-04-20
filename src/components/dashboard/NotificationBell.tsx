@@ -4,8 +4,7 @@ import { NotificationDropdown } from "./notifications/NotificationDropdown";
 
 export const NotificationBell = ({ 
   unreadCount, 
-  maintenanceRequests = [],
-  onShowAllNotifications
+  maintenanceRequests = []
 }: NotificationBellProps) => {
   // Don't show anything if there are no notifications
   if (unreadCount === 0) return null;
@@ -14,7 +13,6 @@ export const NotificationBell = ({
     <NotificationDropdown
       unreadCount={unreadCount}
       maintenanceRequests={maintenanceRequests}
-      onShowAllNotifications={onShowAllNotifications}
     />
   );
 };
