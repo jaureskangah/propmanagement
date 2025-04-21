@@ -1,3 +1,4 @@
+
 import { NavigationTranslations } from '../types';
 
 export const enNavigation: NavigationTranslations = {
