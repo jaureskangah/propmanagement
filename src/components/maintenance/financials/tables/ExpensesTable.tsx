@@ -31,6 +31,9 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
   const locale = language === 'fr' ? fr : enUS;
   const [addDialogOpen, setAddDialogOpen] = useState(false);
 
+  console.log("ExpensesTable propertyId:", propertyId);
+  console.log("ExpensesTable render, expenses length:", expenses.length);
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -39,15 +42,20 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
         </div>
         {/* Show button unconditionally if propertyId is present */}
-        {propertyId && (
-          <button
-            type="button"
-            onClick={() => setAddDialogOpen(true)}
-            className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
-          >
-            <Plus className="mr-1 h-4 w-4" />
-            {t('addExpense', { fallback: 'Ajouter un coût' })}
-          </button>
+        {propertyId ? (
+          <>
+            {console.log("Rendering Add Expense button because propertyId exists")}
+            <button
+              type="button"
+              onClick={() => setAddDialogOpen(true)}
+              className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
+            >
+              <Plus className="mr-1 h-4 w-4" />
+              {t('addExpense', { fallback: 'Ajouter un coût' })}
+            </button>
+          </>
+        ) : (
+          console.log("Not rendering Add Expense button because propertyId is falsy")
         )}
       </CardHeader>
       

@@ -13,6 +13,10 @@ interface DataTablesProps {
 
 export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProps) => {
   const { t } = useLocale();
+
+  console.log("DataTables propertyId:", propertyId);
+  console.log("DataTables expenses length:", expenses.length);
+  console.log("DataTables maintenance length:", maintenance.length);
   
   return (
     <div className="space-y-6">
