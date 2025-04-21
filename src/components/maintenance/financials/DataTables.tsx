@@ -52,4 +52,3 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
     </div>
   );
 };
-

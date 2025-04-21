@@ -34,14 +34,7 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
   console.log("ExpensesTable propertyId:", propertyId);
   console.log("ExpensesTable render, expenses length:", expenses.length);
   
-  // Ajoutons un effet pour vérifier si le bouton devrait être visible
-  useEffect(() => {
-    console.log("ExpensesTable - Le bouton devrait-il être visible?", {
-      propertyId: propertyId,
-      shouldShowButton: Boolean(propertyId)
-    });
-  }, [propertyId]);
-
+  // Forçons l'affichage du bouton en tout temps, puisque propertyId est obligatoire
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -49,20 +42,15 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
           <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
         </div>
-        {/* Forçons l'affichage du bouton si propertyId existe */}
-        {propertyId && (
-          <>
-            {console.log("Rendering Add Expense button because propertyId exists:", propertyId)}
-            <button
-              type="button"
-              onClick={() => setAddDialogOpen(true)}
-              className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
-            >
-              <Plus className="mr-1 h-4 w-4" />
-              {t('addExpense', { fallback: 'Ajouter un coût' })}
-            </button>
-          </>
-        )}
+        {/* Affichage inconditionnel du bouton */}
+        <button
+          type="button"
+          onClick={() => setAddDialogOpen(true)}
+          className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
+        >
+          <Plus className="mr-1 h-4 w-4" />
+          {t('addExpense', { fallback: 'Ajouter un coût' })}
+        </button>
       </CardHeader>
       
       {expenses.length === 0 ? (
@@ -115,14 +103,12 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
         </CardContent>
       )}
 
-      {/* Assurons-nous que la boîte de dialogue est également rendue si propertyId existe */}
-      {propertyId && (
-        <AddExpenseDialog
-          isOpen={addDialogOpen}
-          onClose={() => setAddDialogOpen(false)}
-          propertyId={propertyId}
-        />
-      )}
+      {/* Rendre la boîte de dialogue inconditionnellement aussi */}
+      <AddExpenseDialog
+        isOpen={addDialogOpen}
+        onClose={() => setAddDialogOpen(false)}
+        propertyId={propertyId}
+      />
     </Card>
   );
 };
