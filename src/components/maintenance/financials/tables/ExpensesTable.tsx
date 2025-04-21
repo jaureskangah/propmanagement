@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -33,6 +33,14 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
 
   console.log("ExpensesTable propertyId:", propertyId);
   console.log("ExpensesTable render, expenses length:", expenses.length);
+  
+  // Ajoutons un effet pour vérifier si le bouton devrait être visible
+  useEffect(() => {
+    console.log("ExpensesTable - Le bouton devrait-il être visible?", {
+      propertyId: propertyId,
+      shouldShowButton: Boolean(propertyId)
+    });
+  }, [propertyId]);
 
   return (
     <Card>
@@ -41,10 +49,10 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
           <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
         </div>
-        {/* Show button unconditionally if propertyId is present */}
-        {propertyId ? (
+        {/* Forçons l'affichage du bouton si propertyId existe */}
+        {propertyId && (
           <>
-            {console.log("Rendering Add Expense button because propertyId exists")}
+            {console.log("Rendering Add Expense button because propertyId exists:", propertyId)}
             <button
               type="button"
               onClick={() => setAddDialogOpen(true)}
@@ -53,12 +61,6 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
               <Plus className="mr-1 h-4 w-4" />
               {t('addExpense', { fallback: 'Ajouter un coût' })}
             </button>
-          </>
-        ) : (
-          // Using a React fragment here to avoid the TypeScript error 
-          // when having console.log as the else branch
-          <>
-            {console.log("Not rendering Add Expense button because propertyId is falsy")}
           </>
         )}
       </CardHeader>
@@ -113,7 +115,7 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
         </CardContent>
       )}
 
-      {/* Add Expense Dialog */}
+      {/* Assurons-nous que la boîte de dialogue est également rendue si propertyId existe */}
       {propertyId && (
         <AddExpenseDialog
           isOpen={addDialogOpen}

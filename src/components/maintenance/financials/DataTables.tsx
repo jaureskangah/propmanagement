@@ -18,6 +18,13 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
   console.log("DataTables expenses length:", expenses.length);
   console.log("DataTables maintenance length:", maintenance.length);
   
+  // Débogage supplémentaire
+  if (!propertyId) {
+    console.error("ATTENTION: propertyId est manquant dans DataTables");
+  } else {
+    console.log("DataTables a un propertyId valide:", propertyId);
+  }
+  
   return (
     <div className="space-y-6">
       <Tabs defaultValue="maintenance" className="w-full">
@@ -32,7 +39,8 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
         </TabsContent>
         
         <TabsContent value="expenses">
-          {/* Pass propertyId explicitly to ExpensesTable */}
+          {/* Afficher un message dans la console pour vérifier la propriété */}
+          {console.log("Avant de rendre ExpensesTable, propertyId:", propertyId)}
           <ExpensesTable expenses={expenses} propertyId={propertyId} />
         </TabsContent>
         
