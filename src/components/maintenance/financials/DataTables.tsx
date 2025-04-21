@@ -25,6 +25,9 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
     console.log("DataTables a un propertyId valide:", propertyId);
   }
   
+  // Move logs out of JSX for ReactNode type compliance
+  console.log("Avant de rendre ExpensesTable, propertyId:", propertyId);
+
   return (
     <div className="space-y-6">
       <Tabs defaultValue="maintenance" className="w-full">
@@ -38,9 +41,7 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
           <MaintenanceTable maintenance={maintenance} />
         </TabsContent>
         
-        <TabsContent value="expenses">
-          {/* Afficher un message dans la console pour vérifier la propriété */}
-          {console.log("Avant de rendre ExpensesTable, propertyId:", propertyId)}
+        <TabsContent value="expenses">          
           <ExpensesTable expenses={expenses} propertyId={propertyId} />
         </TabsContent>
         
@@ -51,3 +52,4 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
     </div>
   );
 };
+
