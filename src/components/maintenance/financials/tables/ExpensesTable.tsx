@@ -1,5 +1,5 @@
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { CalendarIcon, DollarSign, Hash, Wallet } from "lucide-react";
+import { CalendarIcon, DollarSign, Wallet, Plus } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
+import { AddExpenseDialog } from "../dialogs/AddExpenseDialog";
 
 interface ExpensesTableProps {
   expenses: {
@@ -19,32 +20,66 @@ interface ExpensesTableProps {
     amount: number;
     date: string;
     description?: string;
+    property_id?: string;
   }[];
 }
 
 export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
   const { t, language } = useLocale();
   const locale = language === 'fr' ? fr : enUS;
-  
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+
+  // Try to infer property_id from the first expense; fallback to undefined if not present.
+  const propertyId = expenses[0]?.property_id;
+
   if (expenses.length === 0) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
-          <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
+            <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
+          </div>
+          <button
+            type="button"
+            onClick={() => setAddDialogOpen(true)}
+            className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            {t('addExpense', { fallback: 'Ajouter un coût' })}
+          </button>
         </CardHeader>
         <CardContent className="text-center py-8 text-muted-foreground">
           {t('noExpenseData', { fallback: 'No expense data available for this property' })}
         </CardContent>
+        {propertyId && (
+          <AddExpenseDialog
+            isOpen={addDialogOpen}
+            onClose={() => setAddDialogOpen(false)}
+            propertyId={propertyId}
+          />
+        )}
       </Card>
     );
   }
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
-        <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div>
+          <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
+          <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
+        </div>
+        {propertyId && (
+          <button
+            type="button"
+            onClick={() => setAddDialogOpen(true)}
+            className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
+          >
+            <Plus className="mr-1 h-4 w-4" />
+            {t('addExpense', { fallback: 'Ajouter un coût' })}
+          </button>
+        )}
       </CardHeader>
       <CardContent>
         <Table>
@@ -88,6 +123,13 @@ export const ExpensesTable = ({ expenses }: ExpensesTableProps) => {
             ))}
           </TableBody>
         </Table>
+        {propertyId && (
+          <AddExpenseDialog
+            isOpen={addDialogOpen}
+            onClose={() => setAddDialogOpen(false)}
+            propertyId={propertyId}
+          />
+        )}
       </CardContent>
     </Card>
   );
