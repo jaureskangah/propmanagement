@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -70,41 +71,57 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
             {t('fillExpenseDetails', { fallback: "Renseignez les informations du coût." })}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <Input
-            required
-            label={t('category', { fallback: "Catégorie" })}
-            name="category"
-            value={form.category}
-            onChange={handleChange}
-            placeholder={t('category', { fallback: "Catégorie" })}
-          />
-          <Input
-            required
-            label={t('amount', { fallback: "Montant" })}
-            name="amount"
-            type="number"
-            min={0}
-            step="0.01"
-            value={form.amount}
-            onChange={handleChange}
-            placeholder={t('amount', { fallback: "Montant" })}
-          />
-          <Input
-            required
-            label={t('date', { fallback: "Date" })}
-            name="date"
-            type="date"
-            value={form.date}
-            onChange={handleChange}
-          />
-          <Input
-            label={t('description', { fallback: "Description" })}
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            placeholder={t('description', { fallback: "Description (optionnelle)" })}
-          />
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="category">{t('category', { fallback: "Catégorie" })}</Label>
+            <Input
+              id="category"
+              required
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              placeholder={t('category', { fallback: "Catégorie" })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amount">{t('amount', { fallback: "Montant" })}</Label>
+            <Input
+              id="amount"
+              required
+              name="amount"
+              type="number"
+              min={0}
+              step="0.01"
+              value={form.amount}
+              onChange={handleChange}
+              placeholder={t('amount', { fallback: "Montant" })}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="date">{t('date', { fallback: "Date" })}</Label>
+            <Input
+              id="date"
+              required
+              name="date"
+              type="date"
+              value={form.date}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">{t('description', { fallback: "Description" })}</Label>
+            <Input
+              id="description"
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder={t('description', { fallback: "Description (optionnelle)" })}
+            />
+          </div>
+
           {error && <div className="text-red-500 text-sm">{error}</div>}
         </form>
         <DialogFooter>
