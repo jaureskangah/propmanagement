@@ -28,7 +28,8 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
         </TabsContent>
         
         <TabsContent value="expenses">
-          <ExpensesTable expenses={expenses} />
+          {/* Pass propertyId explicitly to ExpensesTable */}
+          <ExpensesTable expenses={expenses} propertyId={propertyId} />
         </TabsContent>
         
         <TabsContent value="rent-roll">
