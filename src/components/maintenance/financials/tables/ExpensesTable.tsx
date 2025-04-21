@@ -55,7 +55,11 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
             </button>
           </>
         ) : (
-          console.log("Not rendering Add Expense button because propertyId is falsy")
+          // Using a React fragment here to avoid the TypeScript error 
+          // when having console.log as the else branch
+          <>
+            {console.log("Not rendering Add Expense button because propertyId is falsy")}
+          </>
         )}
       </CardHeader>
       
