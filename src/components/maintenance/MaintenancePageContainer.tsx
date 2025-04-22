@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { MaintenanceMetricsSection } from "./metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "./tabs/MaintenanceTabs";
@@ -13,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { NewTask } from "./types";
 import { VendorList } from "./vendors/VendorList";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";  // Ajout de l'icône Plus
 import { Filter } from "lucide-react";
 import { useTaskAddition } from "./tasks/hooks/useTaskAddition";
 import { useNavigate } from "react-router-dom";
@@ -132,6 +132,17 @@ export const MaintenancePageContainer = () => {
         selectedPropertyId={selectedPropertyId}
         selectedYear={selectedYear}
       />
+
+      {/* Ajout du bouton "Ajouter" */}
+      <div className="flex justify-end mb-4">
+        <Button 
+          onClick={handleCreateTask}
+          className="bg-[#ea384c] hover:bg-[#ea384c]/90 transition-colors"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          {t('addTask')}
+        </Button>
+      </div>
 
       <MaintenanceMetricsSection 
         totalRequests={requests.length} 
