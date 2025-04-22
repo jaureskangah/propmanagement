@@ -23,7 +23,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
     amount: "",
     date: "",
     description: "",
-    vendor_id: ""
+    vendor_id: "none"  // Changé de "" à "none" pour éviter l'erreur
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,7 +51,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        throw new Error("Vous devez être connecté pour ajouter une dépense");
+        throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une dépense" : "You must be logged in to add an expense");
       }
       
       const { error } = await supabase
@@ -62,7 +62,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
           amount: parseFloat(form.amount),
           date: form.date,
           description: form.description,
-          vendor_id: form.vendor_id || null,
+          vendor_id: form.vendor_id === "none" ? null : form.vendor_id,  // Utiliser null si "none"
           user_id: user.id
         });
       setLoading(false);
@@ -74,11 +74,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
       queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] });
       queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
       onClose();
-      setForm({ category: "", amount: "", date: "", description: "", vendor_id: "" });
+      setForm({ category: "", amount: "", date: "", description: "", vendor_id: "none" });
     },
     onError: (err: any) => {
       console.error("Erreur lors de l'ajout de la dépense:", err);
-      setError(err.message || "Erreur lors de l'ajout de la dépense.");
+      setError(err.message || (language === 'fr' ? "Erreur lors de l'ajout de la dépense." : "Error adding expense."));
       setLoading(false);
     }
   });
@@ -95,7 +95,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
     e.preventDefault();
     
     if (!form.category || !form.amount || !form.date) {
-      setError("Veuillez remplir tous les champs obligatoires");
+      setError(language === 'fr' ? "Veuillez remplir tous les champs obligatoires" : "Please fill in all required fields");
       return;
     }
     
@@ -161,7 +161,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
                 <SelectValue placeholder={language === 'fr' ? "Sélectionner un fournisseur" : "Select a vendor"} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">
+                <SelectItem value="none">
                   {language === 'fr' ? "Aucun fournisseur" : "No vendor"}
                 </SelectItem>
                 {vendors.map((vendor) => (
