@@ -58,7 +58,9 @@ export const EmergencyContactCard = ({ vendor, onCall, onEdit, onDelete }: Emerg
             <div className="text-sm text-muted-foreground">{t('rating')}</div>
             <div className="flex items-center">
               <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500 mr-1" />
-              <span className="font-medium">{vendor.rating.toFixed(1)}/5</span>
+              <span className="font-medium">
+                {(vendor.rating !== undefined && vendor.rating !== null) ? vendor.rating.toFixed(1) : '0.0'}/5
+              </span>
             </div>
           </div>
 

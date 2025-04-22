@@ -70,9 +70,9 @@ export const VendorCard = ({
           )}
         </div>
         <div className="flex items-center mt-1">
-          <Rating value={vendor.rating} onChange={() => {}} max={5} readonly={true} />
+          <Rating value={vendor.rating || 0} onChange={() => {}} max={5} readonly={true} />
           <span className="ml-1 text-sm text-muted-foreground">
-            {vendor.rating.toFixed(1)}
+            {(vendor.rating !== undefined && vendor.rating !== null) ? vendor.rating.toFixed(1) : '0.0'}
           </span>
         </div>
       </CardHeader>
