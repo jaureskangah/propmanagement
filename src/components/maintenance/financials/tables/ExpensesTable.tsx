@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { CalendarIcon, DollarSign, Wallet, Plus } from "lucide-react";
+import { CalendarIcon, DollarSign, Wallet, Plus, UserCircle } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { AddExpenseDialog } from "../dialogs/AddExpenseDialog";
@@ -22,6 +22,10 @@ interface ExpensesTableProps {
     date: string;
     description?: string;
     property_id?: string;
+    vendor_id?: string;
+    vendors?: {
+      name: string;
+    };
   }[];
   propertyId: string;
 }
@@ -50,10 +54,9 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
-          <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
+          <CardTitle>{language === 'fr' ? "Dépenses" : t('expenses')}</CardTitle>
+          <CardDescription>{language === 'fr' ? "Dépenses de la propriété" : t('propertyExpenses')}</CardDescription>
         </div>
-        {/* Bouton d'ajout rendu plus visible */}
         <Button
           type="button"
           onClick={() => {
@@ -63,23 +66,24 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
         >
           <Plus className="mr-2 h-5 w-5" />
-          {t('addExpense', { fallback: 'Ajouter un coût' })}
+          {language === 'fr' ? "Ajouter une dépense" : t('addExpense')}
         </Button>
       </CardHeader>
       
       {expenses.length === 0 ? (
         <CardContent className="text-center py-8 text-muted-foreground">
-          {t('noExpenseData', { fallback: 'No expense data available for this property' })}
+          {language === 'fr' ? "Aucune dépense disponible pour cette propriété" : t('noExpenseData')}
         </CardContent>
       ) : (
         <CardContent>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('category', { fallback: 'Category' })}</TableHead>
-                <TableHead>{t('amount', { fallback: 'Amount' })}</TableHead>
-                <TableHead>{t('date', { fallback: 'Date' })}</TableHead>
-                <TableHead className="hidden md:table-cell">{t('description', { fallback: 'Description' })}</TableHead>
+                <TableHead>{language === 'fr' ? "Catégorie" : t('category')}</TableHead>
+                <TableHead>{language === 'fr' ? "Montant" : t('amount')}</TableHead>
+                <TableHead>{language === 'fr' ? "Date" : t('date')}</TableHead>
+                <TableHead className="hidden md:table-cell">{language === 'fr' ? "Fournisseur" : "Vendor"}</TableHead>
+                <TableHead className="hidden md:table-cell">{language === 'fr' ? "Description" : t('description')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -104,9 +108,19 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
                     </div>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
+                    <div className="flex items-center gap-2">
+                      <UserCircle className="h-4 w-4 text-purple-500" />
+                      {expense.vendors?.name || 
+                        <span className="text-muted-foreground italic">
+                          {language === 'fr' ? "Non spécifié" : "Not specified"}
+                        </span>
+                      }
+                    </div>
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
                     {expense.description ||
                       <span className="text-muted-foreground italic">
-                        {t('noDescription', { fallback: 'No description' })}
+                        {language === 'fr' ? "Aucune description" : t('noDescription')}
                       </span>
                     }
                   </TableCell>

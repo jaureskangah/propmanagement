@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import { MetricsCards } from "./financials/MetricsCards";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { MaintenanceTable } from "./financials/tables/MaintenanceTable";
 import { DataTables } from "./financials/DataTables";
 
 interface PropertyFinancialsProps {
@@ -26,7 +25,7 @@ export const PropertyFinancials = ({
     }
   }, [propertyId]);
 
-  // Fetch expenses data
+  // Fetch expenses data with vendor information
   const { data: expenses = [] } = useQuery({
     queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
@@ -37,7 +36,12 @@ export const PropertyFinancials = ({
       
       const { data, error } = await supabase
         .from("maintenance_expenses")
-        .select("*")
+        .select(`
+          *,
+          vendors (
+            name
+          )
+        `)
         .eq("property_id", propertyId)
         .gte("date", startOfYear)
         .lte("date", endOfYear)
@@ -171,7 +175,6 @@ export const PropertyFinancials = ({
         rentData={rentData}
       />
       <div className="space-y-6">
-        {/* Remplacez MaintenanceTable par DataTables pour inclure toutes les tables */}
         <DataTables 
           propertyId={propertyId} 
           expenses={expenses} 

@@ -1,4 +1,3 @@
-
 import type { FinancesTranslations } from "../types/finances";
 
 // Export the translation functions so they can be imported in en.ts and fr.ts
@@ -43,6 +42,17 @@ export const addFinanceTranslations = (
     translations["finance.selectProperty"] = "Select property";
     translations["finance.noPropertiesAvailable"] = "No properties available";
     
+    // Adding expense related translations
+    translations["finance.addExpense"] = "Add Expense";
+    translations["finance.editExpense"] = "Edit Expense";
+    translations["finance.fillExpenseDetails"] = "Fill in the expense details.";
+    translations["finance.noExpenseData"] = "No expense data available for this property";
+    translations["finance.propertyExpenses"] = "Property expenses";
+    translations["finance.vendor"] = "Vendor";
+    translations["finance.selectVendor"] = "Select a vendor";
+    translations["finance.noVendor"] = "No vendor";
+    translations["finance.notSpecified"] = "Not specified";
+    
     // Populate the exported object for en
     Object.keys(translations)
       .filter(key => key.startsWith('finance.'))
@@ -81,6 +91,17 @@ export const addFinanceTranslations = (
     translations["finance.authRequired"] = "Authentification requise";
     translations["finance.selectProperty"] = "Sélectionner une propriété";
     translations["finance.noPropertiesAvailable"] = "Aucune propriété disponible";
+    
+    // Adding expense related translations
+    translations["finance.addExpense"] = "Ajouter une dépense";
+    translations["finance.editExpense"] = "Modifier la dépense";
+    translations["finance.fillExpenseDetails"] = "Renseignez les informations de la dépense.";
+    translations["finance.noExpenseData"] = "Aucune dépense disponible pour cette propriété";
+    translations["finance.propertyExpenses"] = "Dépenses de la propriété";
+    translations["finance.vendor"] = "Fournisseur";
+    translations["finance.selectVendor"] = "Sélectionner un fournisseur";
+    translations["finance.noVendor"] = "Aucun fournisseur";
+    translations["finance.notSpecified"] = "Non spécifié";
     
     // Populate the exported object for fr
     Object.keys(translations)

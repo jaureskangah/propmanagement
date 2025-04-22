@@ -16,7 +16,7 @@ interface FinancialOverviewProps {
 }
 
 const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const { tenants, payments, expenses, isLoading, error, refetch } = useFinancialOverviewData(propertyId, selectedYear);
 
   // Log for debugging
@@ -50,14 +50,14 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-medium">
-          {t('financialOverview')}
+          {language === 'fr' ? "Vue d'ensemble financière" : t('financialOverview')}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="income">
           <TabsList className="mb-4">
-            <TabsTrigger value="income">{t('income')}</TabsTrigger>
-            <TabsTrigger value="expenses">{t('expenses')}</TabsTrigger>
+            <TabsTrigger value="income">{language === 'fr' ? "Revenus" : t('income')}</TabsTrigger>
+            <TabsTrigger value="expenses">{language === 'fr' ? "Dépenses" : t('expenses')}</TabsTrigger>
           </TabsList>
           <TabsContent value="income">
             <IncomeTable payments={payments} tenants={tenants} isLoading={isLoading} />
