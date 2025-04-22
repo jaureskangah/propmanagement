@@ -23,17 +23,38 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
     amount: "",
     date: "",
     description: "",
-    vendor_id: "none"  // Changé de "" à "none" pour éviter l'erreur
+    unit_number: "",
+    status: "Scheduled"
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  // Récupérer la liste des unités pour la propriété sélectionnée
+  const { data: units = [] } = useQuery({
+    queryKey: ["units", propertyId],
+    queryFn: async () => {
+      if (!propertyId) return [];
+      
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("unit_number")
+        .eq("property_id", propertyId)
+        .order("unit_number");
+      
+      if (error) throw error;
+      // Créer un tableau unique d'unités
+      const uniqueUnits = Array.from(new Set((data || []).map(d => d.unit_number)));
+      return uniqueUnits;
+    },
+    enabled: !!propertyId
+  });
 
-  // Récupérer la liste des fournisseurs
-  const { data: vendors = [] } = useQuery({
-    queryKey: ["vendors"],
+  // Récupérer la liste des propriétés
+  const { data: properties = [] } = useQuery({
+    queryKey: ["properties"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("vendors")
+        .from("properties")
         .select("id, name")
         .order("name");
       
@@ -41,6 +62,13 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
       return data || [];
     }
   });
+
+  // Mettre à jour propertyId dans le formulaire si il est fourni en prop
+  useEffect(() => {
+    if (propertyId) {
+      setForm(prev => ({ ...prev, property_id: propertyId }));
+    }
+  }, [propertyId, isOpen]);
 
   const mutation = useMutation({
     mutationFn: async () => {
@@ -62,8 +90,9 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
           amount: parseFloat(form.amount),
           date: form.date,
           description: form.description,
-          vendor_id: form.vendor_id === "none" ? null : form.vendor_id,  // Utiliser null si "none"
-          user_id: user.id
+          user_id: user.id,
+          unit_number: form.unit_number,
+          status: form.status
         });
       setLoading(false);
       if (error) throw error;
@@ -74,7 +103,14 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
       queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] });
       queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
       onClose();
-      setForm({ category: "", amount: "", date: "", description: "", vendor_id: "none" });
+      setForm({ 
+        category: "", 
+        amount: "", 
+        date: "", 
+        description: "", 
+        unit_number: "",
+        status: "Scheduled"
+      });
     },
     onError: (err: any) => {
       console.error("Erreur lors de l'ajout de la dépense:", err);
@@ -150,25 +186,52 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
               onChange={handleChange}
             />
           </div>
-
+          
           <div className="space-y-2">
-            <Label htmlFor="vendor_id">{language === 'fr' ? "Fournisseur (optionnel)" : "Vendor (optional)"}</Label>
+            <Label htmlFor="unit_number">{language === 'fr' ? "Unité (optionnel)" : "Unit (optional)"}</Label>
             <Select 
-              value={form.vendor_id} 
-              onValueChange={(value) => handleSelectChange("vendor_id", value)}
+              value={form.unit_number} 
+              onValueChange={(value) => handleSelectChange("unit_number", value)}
             >
               <SelectTrigger>
-                <SelectValue placeholder={language === 'fr' ? "Sélectionner un fournisseur" : "Select a vendor"} />
+                <SelectValue placeholder={language === 'fr' ? "Sélectionner une unité" : "Select a unit"} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">
-                  {language === 'fr' ? "Aucun fournisseur" : "No vendor"}
+                <SelectItem value="">
+                  {language === 'fr' ? "Aucune unité" : "No unit"}
                 </SelectItem>
-                {vendors.map((vendor) => (
-                  <SelectItem key={vendor.id} value={vendor.id}>
-                    {vendor.name}
+                {units.map((unit) => (
+                  <SelectItem key={unit} value={unit}>
+                    {unit}
                   </SelectItem>
                 ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="status">{language === 'fr' ? "Statut" : "Status"}</Label>
+            <Select 
+              value={form.status} 
+              onValueChange={(value) => handleSelectChange("status", value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={language === 'fr' ? "Sélectionner un statut" : "Select a status"} />
+              </SelectTrigger>
+              <SelectContent>
+                {language === 'fr' ? (
+                  <>
+                    <SelectItem value="Scheduled">Planifié</SelectItem>
+                    <SelectItem value="In Progress">En cours</SelectItem>
+                    <SelectItem value="Completed">Terminé</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="Scheduled">Scheduled</SelectItem>
+                    <SelectItem value="In Progress">In Progress</SelectItem>
+                    <SelectItem value="Completed">Completed</SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
           </div>
