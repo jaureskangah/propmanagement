@@ -13,6 +13,7 @@ import { CalendarIcon, DollarSign, Wallet, Plus } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { AddExpenseDialog } from "../dialogs/AddExpenseDialog";
+import { Button } from "@/components/ui/button";
 
 interface ExpensesTableProps {
   expenses: {
@@ -22,7 +23,6 @@ interface ExpensesTableProps {
     description?: string;
     property_id?: string;
   }[];
-  // Force propertyId as separate prop to guarantee button visibility
   propertyId: string;
 }
 
@@ -34,17 +34,14 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
   console.log("ExpensesTable propertyId:", propertyId);
   console.log("ExpensesTable render, expenses length:", expenses.length);
   
-  // Nouveau logging pour aider au débogage
   useEffect(() => {
     console.log("ExpensesTable monté/mis à jour avec propertyId:", propertyId);
     
-    // Force le rendu du bouton même si propertyId est vide
     if (!propertyId) {
       console.warn("Warning: propertyId est vide dans ExpensesTable, mais le bouton sera affiché quand même");
     }
   }, [propertyId]);
 
-  // Logging explicite pour l'état du dialogue
   useEffect(() => {
     console.log("État du dialogue AddExpense:", addDialogOpen ? "ouvert" : "fermé");
   }, [addDialogOpen]);
@@ -56,18 +53,18 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           <CardTitle>{t('expenses', { fallback: 'Expenses' })}</CardTitle>
           <CardDescription>{t('propertyExpenses', { fallback: 'Property expenses' })}</CardDescription>
         </div>
-        {/* Affichage inconditionnel du bouton */}
-        <button
+        {/* Bouton d'ajout rendu plus visible */}
+        <Button
           type="button"
           onClick={() => {
             console.log("Bouton Ajouter un coût cliqué, ouverture du dialogue avec propertyId:", propertyId);
             setAddDialogOpen(true);
           }}
-          className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
+          className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
         >
-          <Plus className="mr-1 h-4 w-4" />
+          <Plus className="mr-2 h-5 w-5" />
           {t('addExpense', { fallback: 'Ajouter un coût' })}
-        </button>
+        </Button>
       </CardHeader>
       
       {expenses.length === 0 ? (
@@ -120,14 +117,13 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
         </CardContent>
       )}
 
-      {/* Rendre la boîte de dialogue inconditionnellement et vérifier si propertyId est défini */}
       <AddExpenseDialog
         isOpen={addDialogOpen}
         onClose={() => {
           console.log("Fermeture du dialogue AddExpense");
           setAddDialogOpen(false);
         }}
-        propertyId={propertyId || 'default-property-id'} // Utiliser une valeur par défaut si propertyId est vide
+        propertyId={propertyId || 'default-property-id'} 
       />
     </Card>
   );

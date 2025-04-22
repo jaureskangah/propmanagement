@@ -19,7 +19,6 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
   console.log("DataTables expenses length:", expenses.length);
   console.log("DataTables maintenance length:", maintenance.length);
   
-  // Débogage supplémentaire
   useEffect(() => {
     console.log("DataTables - propertyId a changé:", propertyId);
     
@@ -30,14 +29,13 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
     }
   }, [propertyId]);
 
-  // Débogage supplémentaire pour vérifier quand le composant est monté ou mis à jour
   useEffect(() => {
     console.log("DataTables monté/mis à jour avec propertyId:", propertyId);
   }, []);
   
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="maintenance" className="w-full">
+      <Tabs defaultValue="expenses" className="w-full">
         <TabsList className="grid grid-cols-3 mb-4">
           <TabsTrigger value="maintenance">{t('maintenanceTitle', { fallback: 'Maintenance' })}</TabsTrigger>
           <TabsTrigger value="expenses">{t('expenses', { fallback: 'Expenses' })}</TabsTrigger>

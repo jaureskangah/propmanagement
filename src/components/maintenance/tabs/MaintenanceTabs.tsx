@@ -32,14 +32,13 @@ export const MaintenanceTabs = ({
   const { t } = useLocale();
   const isMobile = useIsMobile();
   
-  // Ajoutons un useEffect pour vérifier la valeur de propertyId
   useEffect(() => {
     console.log("MaintenanceTabs - propertyId:", propertyId);
     console.log("MaintenanceTabs - selectedYear:", selectedYear);
   }, [propertyId, selectedYear]);
   
   return (
-    <Tabs defaultValue="dashboard" className="w-full">
+    <Tabs defaultValue="financials" className="w-full">
       <TabsList className={`${isMobile ? "flex flex-wrap" : "w-full md:grid md:grid-cols-4"} bg-card`}>
         <TabsTrigger 
           value="dashboard" 
@@ -63,7 +62,7 @@ export const MaintenanceTabs = ({
           value="financials" 
           className={`${isMobile ? "flex-1" : ""} text-sm data-[state=active]:bg-[#ea384c]/10 data-[state=active]:text-[#ea384c] data-[state=active]:font-medium`}
         >
-          {t('costs')}
+          {t('costs', { fallback: 'Coûts et dépenses' })}
         </TabsTrigger>
       </TabsList>
       
