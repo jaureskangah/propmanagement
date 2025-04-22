@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MaintenanceRequests } from "./MaintenanceRequests";
 import { MaintenanceTasks } from "../tasks/MaintenanceTasks";
@@ -31,6 +31,12 @@ export const MaintenanceTabs = ({
 }) => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
+  
+  // Ajoutons un useEffect pour vérifier la valeur de propertyId
+  useEffect(() => {
+    console.log("MaintenanceTabs - propertyId:", propertyId);
+    console.log("MaintenanceTabs - selectedYear:", selectedYear);
+  }, [propertyId, selectedYear]);
   
   return (
     <Tabs defaultValue="dashboard" className="w-full">

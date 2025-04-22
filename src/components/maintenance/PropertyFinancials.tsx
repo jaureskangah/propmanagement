@@ -1,9 +1,10 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { MetricsCards } from "./financials/MetricsCards";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { MaintenanceTable } from "./financials/tables/MaintenanceTable";
+import { DataTables } from "./financials/DataTables";
 
 interface PropertyFinancialsProps {
   propertyId: string;
@@ -16,12 +17,23 @@ export const PropertyFinancials = ({
 }: PropertyFinancialsProps) => {
   console.log("Rendering PropertyFinancials for property:", propertyId, "and year:", selectedYear);
 
+  // Ajout d'un useEffect pour vérifier quand le composant est monté ou mis à jour
+  useEffect(() => {
+    console.log("PropertyFinancials monté/mis à jour avec propertyId:", propertyId);
+    
+    if (!propertyId) {
+      console.error("PropertyFinancials - ATTENTION: propertyId est manquant!");
+    }
+  }, [propertyId]);
+
   // Fetch expenses data
   const { data: expenses = [] } = useQuery({
     queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
+      
+      console.log("Fetching expenses for property:", propertyId, "in date range:", startOfYear, "to", endOfYear);
       
       const { data, error } = await supabase
         .from("maintenance_expenses")
@@ -39,6 +51,7 @@ export const PropertyFinancials = ({
       console.log("Fetched expenses:", data);
       return data;
     },
+    enabled: !!propertyId
   });
 
   // Fetch maintenance interventions data with property information
@@ -47,6 +60,8 @@ export const PropertyFinancials = ({
     queryFn: async () => {
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
+      
+      console.log("Fetching maintenance for property:", propertyId, "in date range:", startOfYear, "to", endOfYear);
       
       const { data, error } = await supabase
         .from("vendor_interventions")
@@ -73,6 +88,7 @@ export const PropertyFinancials = ({
       console.log("Fetched maintenance interventions:", data);
       return data;
     },
+    enabled: !!propertyId
   });
 
   // Fetch total rent paid for this property in the selected year
@@ -96,6 +112,9 @@ export const PropertyFinancials = ({
         const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
         const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
         
+        console.log("Found tenants for property:", tenantIds);
+        console.log("Date range for payments:", startOfYear, "to", endOfYear);
+        
         // Then get payments for these tenants within the selected year
         const { data: payments, error: paymentsError } = await supabase
           .from("tenant_payments")
@@ -107,6 +126,7 @@ export const PropertyFinancials = ({
         if (paymentsError) throw paymentsError;
         
         console.log(`Fetched ${payments?.length || 0} rent payments for property ${propertyId} in year ${selectedYear}`);
+        console.log("Fetched payments for property", propertyId, "in year", selectedYear, ":", payments);
         return payments || [];
       } catch (error) {
         console.error("Error fetching rent payments:", error);
@@ -151,7 +171,12 @@ export const PropertyFinancials = ({
         rentData={rentData}
       />
       <div className="space-y-6">
-        <MaintenanceTable maintenance={maintenance} />
+        {/* Remplacez MaintenanceTable par DataTables pour inclure toutes les tables */}
+        <DataTables 
+          propertyId={propertyId} 
+          expenses={expenses} 
+          maintenance={maintenance} 
+        />
       </div>
     </div>
   );

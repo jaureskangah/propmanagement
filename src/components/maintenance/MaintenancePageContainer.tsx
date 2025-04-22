@@ -36,6 +36,16 @@ export const MaintenancePageContainer = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>(savedPropertyId);
   const [selectedYear, setSelectedYear] = useState<number>(savedYear);
   
+  // Ajoutons un useEffect pour vérifier la valeur de selectedPropertyId
+  useEffect(() => {
+    console.log("MaintenancePageContainer - selectedPropertyId:", selectedPropertyId);
+    console.log("MaintenancePageContainer - selectedYear:", selectedYear);
+    
+    if (!selectedPropertyId) {
+      console.warn("Warning: selectedPropertyId est vide dans MaintenancePageContainer");
+    }
+  }, [selectedPropertyId, selectedYear]);
+  
   // Save selections to localStorage when they change
   useEffect(() => {
     localStorage.setItem('selectedPropertyId', selectedPropertyId);

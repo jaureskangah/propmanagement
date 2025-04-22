@@ -34,7 +34,21 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
   console.log("ExpensesTable propertyId:", propertyId);
   console.log("ExpensesTable render, expenses length:", expenses.length);
   
-  // Forçons l'affichage du bouton en tout temps, puisque propertyId est obligatoire
+  // Nouveau logging pour aider au débogage
+  useEffect(() => {
+    console.log("ExpensesTable monté/mis à jour avec propertyId:", propertyId);
+    
+    // Force le rendu du bouton même si propertyId est vide
+    if (!propertyId) {
+      console.warn("Warning: propertyId est vide dans ExpensesTable, mais le bouton sera affiché quand même");
+    }
+  }, [propertyId]);
+
+  // Logging explicite pour l'état du dialogue
+  useEffect(() => {
+    console.log("État du dialogue AddExpense:", addDialogOpen ? "ouvert" : "fermé");
+  }, [addDialogOpen]);
+  
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -45,7 +59,10 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
         {/* Affichage inconditionnel du bouton */}
         <button
           type="button"
-          onClick={() => setAddDialogOpen(true)}
+          onClick={() => {
+            console.log("Bouton Ajouter un coût cliqué, ouverture du dialogue avec propertyId:", propertyId);
+            setAddDialogOpen(true);
+          }}
           className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-3 py-2 rounded-md text-xs font-medium transition-colors"
         >
           <Plus className="mr-1 h-4 w-4" />
@@ -103,11 +120,14 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
         </CardContent>
       )}
 
-      {/* Rendre la boîte de dialogue inconditionnellement aussi */}
+      {/* Rendre la boîte de dialogue inconditionnellement et vérifier si propertyId est défini */}
       <AddExpenseDialog
         isOpen={addDialogOpen}
-        onClose={() => setAddDialogOpen(false)}
-        propertyId={propertyId}
+        onClose={() => {
+          console.log("Fermeture du dialogue AddExpense");
+          setAddDialogOpen(false);
+        }}
+        propertyId={propertyId || 'default-property-id'} // Utiliser une valeur par défaut si propertyId est vide
       />
     </Card>
   );

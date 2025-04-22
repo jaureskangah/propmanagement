@@ -4,6 +4,7 @@ import { ExpensesTable } from "./tables/ExpensesTable";
 import { RentRollTable } from "./tables/rent-roll/RentRollTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useEffect } from "react";
 
 interface DataTablesProps {
   propertyId: string;
@@ -19,15 +20,21 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
   console.log("DataTables maintenance length:", maintenance.length);
   
   // Débogage supplémentaire
-  if (!propertyId) {
-    console.error("ATTENTION: propertyId est manquant dans DataTables");
-  } else {
-    console.log("DataTables a un propertyId valide:", propertyId);
-  }
-  
-  // Move logs out of JSX for ReactNode type compliance
-  console.log("Avant de rendre ExpensesTable, propertyId:", propertyId);
+  useEffect(() => {
+    console.log("DataTables - propertyId a changé:", propertyId);
+    
+    if (!propertyId) {
+      console.error("ATTENTION: propertyId est manquant dans DataTables");
+    } else {
+      console.log("DataTables a un propertyId valide:", propertyId);
+    }
+  }, [propertyId]);
 
+  // Débogage supplémentaire pour vérifier quand le composant est monté ou mis à jour
+  useEffect(() => {
+    console.log("DataTables monté/mis à jour avec propertyId:", propertyId);
+  }, []);
+  
   return (
     <div className="space-y-6">
       <Tabs defaultValue="maintenance" className="w-full">
@@ -41,7 +48,7 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
           <MaintenanceTable maintenance={maintenance} />
         </TabsContent>
         
-        <TabsContent value="expenses">          
+        <TabsContent value="expenses">
           <ExpensesTable expenses={expenses} propertyId={propertyId} />
         </TabsContent>
         
