@@ -14,6 +14,7 @@ import { format, parseISO } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { AddExpenseDialog } from "../dialogs/AddExpenseDialog";
 import { Button } from "@/components/ui/button";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ExpensesTableProps {
   expenses: {
@@ -34,6 +35,7 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
   const { t, language } = useLocale();
   const locale = language === 'fr' ? fr : enUS;
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const queryClient = useQueryClient();
 
   console.log("ExpensesTable propertyId:", propertyId);
   console.log("ExpensesTable render, expenses length:", expenses.length);
@@ -46,9 +48,12 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
     }
   }, [propertyId]);
 
-  useEffect(() => {
-    console.log("État du dialogue AddExpense:", addDialogOpen ? "ouvert" : "fermé");
-  }, [addDialogOpen]);
+  const handleExpenseAdded = () => {
+    console.log("Expense added successfully, refreshing data...");
+    // Invalidate the relevant queries to refresh the expenses data
+    queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] });
+    setAddDialogOpen(false);
+  };
   
   return (
     <Card>
@@ -138,6 +143,7 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           setAddDialogOpen(false);
         }}
         propertyId={propertyId || 'default-property-id'} 
+        onSuccess={handleExpenseAdded}
       />
     </Card>
   );

@@ -8,16 +8,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
   onClose: () => void;
   propertyId: string;
+  onSuccess?: () => void;
 }
 
-export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDialogProps) => {
+export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: AddExpenseDialogProps) => {
   const { t, language } = useLocale();
   const queryClient = useQueryClient();
+  const { toast } = useToast();
   const [form, setForm] = useState({
     category: "",
     amount: "",
@@ -70,6 +73,21 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
     }
   }, [propertyId, isOpen]);
 
+  // Reset form when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setForm({
+        category: "",
+        amount: "",
+        date: "",
+        description: "",
+        unit_number: "",
+        status: "Scheduled"
+      });
+      setError(null);
+    }
+  }, [isOpen]);
+
   const mutation = useMutation({
     mutationFn: async () => {
       setLoading(true);
@@ -101,11 +119,24 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
       if (error) throw error;
     },
     onSuccess: () => {
+      // Show success message
+      toast({
+        title: language === 'fr' ? "Dépense ajoutée" : "Expense added",
+        description: language === 'fr' ? "La dépense a été ajoutée avec succès" : "The expense has been successfully added",
+      });
+
       // Invalider plusieurs requêtes pour mettre à jour les données partout
       queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] });
       queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] });
       queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
-      onClose();
+      
+      // Call onSuccess callback if provided
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
+      
       setForm({ 
         category: "", 
         amount: "", 
@@ -265,4 +296,23 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
       </DialogContent>
     </Dialog>
   );
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  function handleSelectChange(name: string, value: string) {
+    setForm({ ...form, [name]: value });
+  };
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    
+    if (!form.category || !form.amount || !form.date) {
+      setError(language === 'fr' ? "Veuillez remplir tous les champs obligatoires" : "Please fill in all required fields");
+      return;
+    }
+    
+    mutation.mutate();
+  };
 };
