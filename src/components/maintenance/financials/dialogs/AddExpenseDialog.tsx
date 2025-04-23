@@ -9,6 +9,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
@@ -28,11 +29,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     date: "",
     status: "pending",
     unit_number: "",
-    vendor: {
-      name: "",
-      specialty: ""
-    },
-    property_id: propertyId
+    property_id: propertyId,
+    vendor_id: ""
   });
   
   const [loading, setLoading] = useState(false);
@@ -57,6 +55,32 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     enabled: !!propertyId
   });
 
+  // Fetch properties
+  const { data: properties = [] } = useQuery({
+    queryKey: ["properties"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("properties")
+        .select("id, name");
+      
+      if (error) throw error;
+      return data || [];
+    }
+  });
+
+  // Fetch vendors
+  const { data: vendors = [] } = useQuery({
+    queryKey: ["vendors"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("vendors")
+        .select("id, name, specialty");
+      
+      if (error) throw error;
+      return data || [];
+    }
+  });
+
   // Reset form when dialog opens
   useEffect(() => {
     if (isOpen) {
@@ -67,11 +91,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         date: "",
         status: "pending",
         unit_number: "",
-        vendor: {
-          name: "",
-          specialty: ""
-        },
-        property_id: propertyId
+        property_id: propertyId,
+        vendor_id: ""
       });
       setError(null);
     }
@@ -95,9 +116,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         date: form.date,
         status: form.status,
         unit_number: form.unit_number === "none" ? null : form.unit_number,
-        property_id: propertyId,
-        vendor_name: form.vendor.name,
-        vendor_specialty: form.vendor.specialty,
+        property_id: form.property_id,
+        vendor_id: form.vendor_id || null,
         user_id: user.id
       };
       
@@ -131,15 +151,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name.startsWith("vendor.")) {
-      const vendorField = name.split(".")[1];
-      setForm(prev => ({
-        ...prev,
-        vendor: { ...prev.vendor, [vendorField]: value }
-      }));
-    } else {
-      setForm(prev => ({ ...prev, [name]: value }));
-    }
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSelectChange = (name: string, value: string) => {
@@ -159,127 +171,148 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>{language === 'fr' ? "Ajouter une intervention" : "Add Maintenance"}</DialogTitle>
           <DialogDescription>
             {language === 'fr' ? "Renseignez les informations de l'intervention." : "Fill maintenance details."}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">{language === 'fr' ? "Titre" : "Title"}</Label>
-            <Input
-              id="title"
-              required
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder={language === 'fr' ? "Titre de l'intervention" : "Maintenance title"}
-            />
-          </div>
+        <ScrollArea className="h-[60vh] pr-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="title">{language === 'fr' ? "Titre" : "Title"}</Label>
+              <Input
+                id="title"
+                required
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                placeholder={language === 'fr' ? "Titre de l'intervention" : "Maintenance title"}
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="cost">{language === 'fr' ? "Coût" : "Cost"}</Label>
-            <Input
-              id="cost"
-              required
-              name="cost"
-              type="number"
-              min={0}
-              step="0.01"
-              value={form.cost}
-              onChange={handleChange}
-              placeholder={language === 'fr' ? "Coût" : "Cost"}
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="property_id">{language === 'fr' ? "Propriété" : "Property"}</Label>
+              <Select 
+                value={form.property_id} 
+                onValueChange={(value) => handleSelectChange("property_id", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={language === 'fr' ? "Sélectionner une propriété" : "Select a property"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {properties.map((property) => (
+                    <SelectItem key={property.id} value={property.id}>
+                      {property.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="date">{language === 'fr' ? "Date" : "Date"}</Label>
-            <Input
-              id="date"
-              required
-              name="date"
-              type="date"
-              value={form.date}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="vendor.name">{language === 'fr' ? "Nom du prestataire" : "Vendor name"}</Label>
-            <Input
-              id="vendor.name"
-              name="vendor.name"
-              value={form.vendor.name}
-              onChange={handleChange}
-              placeholder={language === 'fr' ? "Nom du prestataire" : "Vendor name"}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="vendor.specialty">{language === 'fr' ? "Spécialité" : "Specialty"}</Label>
-            <Input
-              id="vendor.specialty"
-              name="vendor.specialty"
-              value={form.vendor.specialty}
-              onChange={handleChange}
-              placeholder={language === 'fr' ? "Spécialité du prestataire" : "Vendor specialty"}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="unit_number">{language === 'fr' ? "Unité (optionnel)" : "Unit (optional)"}</Label>
-            <Select 
-              value={form.unit_number} 
-              onValueChange={(value) => handleSelectChange("unit_number", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={language === 'fr' ? "Sélectionner une unité" : "Select a unit"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="none">
-                  {language === 'fr' ? "Aucune unité" : "No unit"}
-                </SelectItem>
-                {units.map((unit) => (
-                  <SelectItem key={unit} value={unit}>
-                    {unit}
+            <div className="space-y-2">
+              <Label htmlFor="vendor_id">{language === 'fr' ? "Prestataire" : "Vendor"}</Label>
+              <Select 
+                value={form.vendor_id} 
+                onValueChange={(value) => handleSelectChange("vendor_id", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={language === 'fr' ? "Sélectionner un prestataire" : "Select a vendor"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="">
+                    {language === 'fr' ? "Aucun prestataire" : "No vendor"}
                   </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+                  {vendors.map((vendor) => (
+                    <SelectItem key={vendor.id} value={vendor.id}>
+                      {vendor.name} - {vendor.specialty}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="status">{language === 'fr' ? "Statut" : "Status"}</Label>
-            <Select 
-              value={form.status} 
-              onValueChange={(value) => handleSelectChange("status", value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={language === 'fr' ? "Sélectionner un statut" : "Select a status"} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pending">{language === 'fr' ? "En attente" : "Pending"}</SelectItem>
-                <SelectItem value="in_progress">{language === 'fr' ? "En cours" : "In Progress"}</SelectItem>
-                <SelectItem value="completed">{language === 'fr' ? "Terminé" : "Completed"}</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="cost">{language === 'fr' ? "Coût" : "Cost"}</Label>
+              <Input
+                id="cost"
+                required
+                name="cost"
+                type="number"
+                min={0}
+                step="0.01"
+                value={form.cost}
+                onChange={handleChange}
+                placeholder={language === 'fr' ? "Coût" : "Cost"}
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">{language === 'fr' ? "Description" : "Description"}</Label>
-            <Input
-              id="description"
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder={language === 'fr' ? "Description de l'intervention" : "Maintenance description"}
-            />
-          </div>
+            <div className="space-y-2">
+              <Label htmlFor="date">{language === 'fr' ? "Date" : "Date"}</Label>
+              <Input
+                id="date"
+                required
+                name="date"
+                type="date"
+                value={form.date}
+                onChange={handleChange}
+              />
+            </div>
 
-          {error && <div className="text-red-500 text-sm">{error}</div>}
-        </form>
+            <div className="space-y-2">
+              <Label htmlFor="unit_number">{language === 'fr' ? "Unité (optionnel)" : "Unit (optional)"}</Label>
+              <Select 
+                value={form.unit_number} 
+                onValueChange={(value) => handleSelectChange("unit_number", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={language === 'fr' ? "Sélectionner une unité" : "Select a unit"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">
+                    {language === 'fr' ? "Aucune unité" : "No unit"}
+                  </SelectItem>
+                  {units.map((unit) => (
+                    <SelectItem key={unit} value={unit}>
+                      {unit}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="status">{language === 'fr' ? "Statut" : "Status"}</Label>
+              <Select 
+                value={form.status} 
+                onValueChange={(value) => handleSelectChange("status", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={language === 'fr' ? "Sélectionner un statut" : "Select a status"} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pending">{language === 'fr' ? "En attente" : "Pending"}</SelectItem>
+                  <SelectItem value="in_progress">{language === 'fr' ? "En cours" : "In Progress"}</SelectItem>
+                  <SelectItem value="completed">{language === 'fr' ? "Terminé" : "Completed"}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">{language === 'fr' ? "Description" : "Description"}</Label>
+              <Input
+                id="description"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder={language === 'fr' ? "Description de l'intervention" : "Maintenance description"}
+              />
+            </div>
+
+            {error && <div className="text-red-500 text-sm">{error}</div>}
+          </form>
+        </ScrollArea>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
             {language === 'fr' ? "Annuler" : "Cancel"}
