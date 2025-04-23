@@ -22,17 +22,23 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [form, setForm] = useState({
-    category: "",
-    amount: "",
-    date: "",
+    title: "",
     description: "",
+    cost: "",
+    date: "",
+    status: "pending",
     unit_number: "",
-    status: "Scheduled" // Keep in form state for UI but won't be sent to DB
+    vendor: {
+      name: "",
+      specialty: ""
+    },
+    property_id: propertyId
   });
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  // Récupérer la liste des unités pour la propriété sélectionnée
+
+  // Get units for the selected property
   const { data: units = [] } = useQuery({
     queryKey: ["units", propertyId],
     queryFn: async () => {
@@ -45,126 +51,105 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         .order("unit_number");
       
       if (error) throw error;
-      // Créer un tableau unique d'unités
       const uniqueUnits = Array.from(new Set((data || []).map(d => d.unit_number)));
       return uniqueUnits;
     },
     enabled: !!propertyId
   });
 
-  // Récupérer la liste des propriétés
-  const { data: properties = [] } = useQuery({
-    queryKey: ["properties"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("properties")
-        .select("id, name")
-        .order("name");
-      
-      if (error) throw error;
-      return data || [];
-    }
-  });
-
-  // Mettre à jour propertyId dans le formulaire si il est fourni en prop
-  useEffect(() => {
-    if (propertyId) {
-      setForm(prev => ({ ...prev, property_id: propertyId }));
-    }
-  }, [propertyId, isOpen]);
-
   // Reset form when dialog opens
   useEffect(() => {
     if (isOpen) {
       setForm({
-        category: "",
-        amount: "",
-        date: "",
+        title: "",
         description: "",
+        cost: "",
+        date: "",
+        status: "pending",
         unit_number: "",
-        status: "Scheduled"
+        vendor: {
+          name: "",
+          specialty: ""
+        },
+        property_id: propertyId
       });
       setError(null);
     }
-  }, [isOpen]);
+  }, [isOpen, propertyId]);
 
   const mutation = useMutation({
     mutationFn: async () => {
       setLoading(true);
       setError(null);
       
-      // Récupérer l'ID de l'utilisateur authentifié
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une dépense" : "You must be logged in to add an expense");
+        throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Créer un objet pour l'insertion qui ne contient pas le champ status
-      const expenseData = {
-        property_id: propertyId,
-        category: form.category,
-        amount: parseFloat(form.amount),
-        date: form.date,
+      const maintenanceData = {
+        title: form.title,
         description: form.description,
-        user_id: user.id,
-        unit_number: form.unit_number === "none" ? null : form.unit_number
+        cost: parseFloat(form.cost),
+        date: form.date,
+        status: form.status,
+        unit_number: form.unit_number === "none" ? null : form.unit_number,
+        property_id: propertyId,
+        vendor_name: form.vendor.name,
+        vendor_specialty: form.vendor.specialty,
+        user_id: user.id
       };
       
       const { error } = await supabase
-        .from("maintenance_expenses")
-        .insert(expenseData);
+        .from("vendor_interventions")
+        .insert(maintenanceData);
         
       setLoading(false);
       if (error) throw error;
     },
     onSuccess: () => {
-      // Show success message
       toast({
-        title: language === 'fr' ? "Dépense ajoutée" : "Expense added",
-        description: language === 'fr' ? "La dépense a été ajoutée avec succès" : "The expense has been successfully added",
+        title: language === 'fr' ? "Intervention ajoutée" : "Maintenance added",
+        description: language === 'fr' ? "L'intervention a été ajoutée avec succès" : "The maintenance has been successfully added",
       });
 
-      // Invalider plusieurs requêtes pour mettre à jour les données partout
-      queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] });
-      queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] });
-      queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
+      queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] });
       
-      // Call onSuccess callback if provided
       if (onSuccess) {
         onSuccess();
       } else {
         onClose();
       }
-      
-      setForm({ 
-        category: "", 
-        amount: "", 
-        date: "", 
-        description: "", 
-        unit_number: "",
-        status: "Scheduled"
-      });
     },
     onError: (err: any) => {
-      console.error("Erreur lors de l'ajout de la dépense:", err);
-      setError(err.message || (language === 'fr' ? "Erreur lors de l'ajout de la dépense." : "Error adding expense."));
+      console.error("Erreur lors de l'ajout de l'intervention:", err);
+      setError(err.message || (language === 'fr' ? "Erreur lors de l'ajout de l'intervention." : "Error adding maintenance."));
       setLoading(false);
     }
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name.startsWith("vendor.")) {
+      const vendorField = name.split(".")[1];
+      setForm(prev => ({
+        ...prev,
+        vendor: { ...prev.vendor, [vendorField]: value }
+      }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSelectChange = (name: string, value: string) => {
-    setForm({ ...form, [name]: value });
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!form.category || !form.amount || !form.date) {
+    if (!form.title || !form.cost || !form.date) {
       setError(language === 'fr' ? "Veuillez remplir tous les champs obligatoires" : "Please fill in all required fields");
       return;
     }
@@ -176,36 +161,36 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{language === 'fr' ? "Ajouter une dépense" : "Add Expense"}</DialogTitle>
+          <DialogTitle>{language === 'fr' ? "Ajouter une intervention" : "Add Maintenance"}</DialogTitle>
           <DialogDescription>
-            {language === 'fr' ? "Renseignez les informations de la dépense." : "Fill expense details."}
+            {language === 'fr' ? "Renseignez les informations de l'intervention." : "Fill maintenance details."}
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="category">{language === 'fr' ? "Catégorie" : "Category"}</Label>
+            <Label htmlFor="title">{language === 'fr' ? "Titre" : "Title"}</Label>
             <Input
-              id="category"
+              id="title"
               required
-              name="category"
-              value={form.category}
+              name="title"
+              value={form.title}
               onChange={handleChange}
-              placeholder={language === 'fr' ? "Catégorie" : "Category"}
+              placeholder={language === 'fr' ? "Titre de l'intervention" : "Maintenance title"}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="amount">{language === 'fr' ? "Montant" : "Amount"}</Label>
+            <Label htmlFor="cost">{language === 'fr' ? "Coût" : "Cost"}</Label>
             <Input
-              id="amount"
+              id="cost"
               required
-              name="amount"
+              name="cost"
               type="number"
               min={0}
               step="0.01"
-              value={form.amount}
+              value={form.cost}
               onChange={handleChange}
-              placeholder={language === 'fr' ? "Montant" : "Amount"}
+              placeholder={language === 'fr' ? "Coût" : "Cost"}
             />
           </div>
 
@@ -218,6 +203,28 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
               type="date"
               value={form.date}
               onChange={handleChange}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="vendor.name">{language === 'fr' ? "Nom du prestataire" : "Vendor name"}</Label>
+            <Input
+              id="vendor.name"
+              name="vendor.name"
+              value={form.vendor.name}
+              onChange={handleChange}
+              placeholder={language === 'fr' ? "Nom du prestataire" : "Vendor name"}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="vendor.specialty">{language === 'fr' ? "Spécialité" : "Specialty"}</Label>
+            <Input
+              id="vendor.specialty"
+              name="vendor.specialty"
+              value={form.vendor.specialty}
+              onChange={handleChange}
+              placeholder={language === 'fr' ? "Spécialité du prestataire" : "Vendor specialty"}
             />
           </div>
           
@@ -253,19 +260,9 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                 <SelectValue placeholder={language === 'fr' ? "Sélectionner un statut" : "Select a status"} />
               </SelectTrigger>
               <SelectContent>
-                {language === 'fr' ? (
-                  <>
-                    <SelectItem value="Scheduled">Planifié</SelectItem>
-                    <SelectItem value="In Progress">En cours</SelectItem>
-                    <SelectItem value="Completed">Terminé</SelectItem>
-                  </>
-                ) : (
-                  <>
-                    <SelectItem value="Scheduled">Scheduled</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Completed">Completed</SelectItem>
-                  </>
-                )}
+                <SelectItem value="pending">{language === 'fr' ? "En attente" : "Pending"}</SelectItem>
+                <SelectItem value="in_progress">{language === 'fr' ? "En cours" : "In Progress"}</SelectItem>
+                <SelectItem value="completed">{language === 'fr' ? "Terminé" : "Completed"}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -277,7 +274,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
               name="description"
               value={form.description}
               onChange={handleChange}
-              placeholder={language === 'fr' ? "Description (optionnelle)" : "Description (optional)"}
+              placeholder={language === 'fr' ? "Description de l'intervention" : "Maintenance description"}
             />
           </div>
 
