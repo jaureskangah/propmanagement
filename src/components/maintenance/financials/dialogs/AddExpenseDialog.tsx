@@ -24,7 +24,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
     date: "",
     description: "",
     unit_number: "",
-    status: "Scheduled"
+    status: "Scheduled" // Keep in form state for UI but won't be sent to DB
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -82,18 +82,21 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une dépense" : "You must be logged in to add an expense");
       }
       
+      // Créer un objet pour l'insertion qui ne contient pas le champ status
+      const expenseData = {
+        property_id: propertyId,
+        category: form.category,
+        amount: parseFloat(form.amount),
+        date: form.date,
+        description: form.description,
+        user_id: user.id,
+        unit_number: form.unit_number === "none" ? null : form.unit_number
+      };
+      
       const { error } = await supabase
         .from("maintenance_expenses")
-        .insert({
-          property_id: propertyId,
-          category: form.category,
-          amount: parseFloat(form.amount),
-          date: form.date,
-          description: form.description,
-          user_id: user.id,
-          unit_number: form.unit_number,
-          status: form.status
-        });
+        .insert(expenseData);
+        
       setLoading(false);
       if (error) throw error;
     },
