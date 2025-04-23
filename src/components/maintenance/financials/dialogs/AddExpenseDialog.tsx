@@ -296,23 +296,4 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       </DialogContent>
     </Dialog>
   );
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  function handleSelectChange(name: string, value: string) {
-    setForm({ ...form, [name]: value });
-  };
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    
-    if (!form.category || !form.amount || !form.date) {
-      setError(language === 'fr' ? "Veuillez remplir tous les champs obligatoires" : "Please fill in all required fields");
-      return;
-    }
-    
-    mutation.mutate();
-  };
 };
