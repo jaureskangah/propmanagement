@@ -197,7 +197,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId }: AddExpenseDial
                 <SelectValue placeholder={language === 'fr' ? "Sélectionner une unité" : "Select a unit"} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">
+                <SelectItem value="none">
                   {language === 'fr' ? "Aucune unité" : "No unit"}
                 </SelectItem>
                 {units.map((unit) => (
