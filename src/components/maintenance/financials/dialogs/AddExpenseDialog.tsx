@@ -140,6 +140,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] });
       queryClient.invalidateQueries({ queryKey: ["financial_expenses"] });
       queryClient.invalidateQueries({ queryKey: ["financial_chart_data"] });
+      queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
+      
+      if (window.__chartDataCache) {
+        window.__chartDataCache.clear();
+      }
       
       if (onSuccess) {
         onSuccess();

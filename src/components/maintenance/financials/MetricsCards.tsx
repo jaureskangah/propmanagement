@@ -5,6 +5,7 @@ import { FileText, TrendingUp, Wallet } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { processMonthlyData } from "@/components/finances/charts/utils/chartProcessing";
 
 interface MetricsCardsProps {
   propertyId: string;
@@ -72,22 +73,33 @@ export const MetricsCards = ({
     },
     enabled: !!propertyId && selectedYear > 0
   });
+
+  // Calculer les dépenses avec la même logique que dans le composant Finances
+  // Utilisation de processMonthlyData pour traitement uniforme des données
+  const allExpenses = [...expenses, ...maintenance];
+  const currentYearData = processMonthlyData(allExpenses, [], selectedYear);
   
-  const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-  const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
+  // Calculer la somme des dépenses pour l'année sélectionnée
+  const totalExpenses = currentYearData.reduce((acc, month) => acc + month.expenses, 0);
   
-  // Calculate total rent paid from the property's payments
+  // Calculer le total des revenus de loyers
   const totalRentPaid = propertyRentData
     .filter(payment => payment.status === "paid")
     .reduce((acc, curr) => acc + curr.amount, 0);
   
-  console.log("MetricsCards with totalRentPaid:", totalRentPaid, "for property:", propertyId, "year:", selectedYear);
-  console.log("Payment statuses:", propertyRentData.map(p => p.status));
+  console.log("MetricsCards - Totaux calculés:", {
+    totalExpenses,
+    totalRentPaid,
+    propertyId, 
+    year: selectedYear, 
+    expensesCount: expenses.length,
+    maintenanceCount: maintenance.length
+  });
 
   const metrics = [
     {
       title: t('totalExpenses'),
-      value: `$${(totalExpenses + totalMaintenance).toLocaleString()}`,
+      value: `$${totalExpenses.toLocaleString()}`,
       icon: <FileText className="h-4 w-4" />,
       description: t('yearToDate'),
       color: "text-rose-500",

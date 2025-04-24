@@ -25,7 +25,7 @@ export const PropertyFinancials = ({
     }
   }, [propertyId]);
 
-  // Fetch expenses data with vendor information
+  // Fetch expenses data with vendor information for the selected year
   const { data: expenses = [] } = useQuery({
     queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
@@ -58,7 +58,7 @@ export const PropertyFinancials = ({
     enabled: !!propertyId
   });
 
-  // Fetch maintenance interventions data with property information
+  // Fetch maintenance interventions data with property information for the selected year
   const { data: maintenance = [] } = useQuery({
     queryKey: ["vendor_interventions", propertyId, selectedYear],
     queryFn: async () => {
