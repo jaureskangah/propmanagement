@@ -105,11 +105,9 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      let formattedDate = form.date;
-      if (isValidDate(form.date)) {
-        formattedDate = formatSafeDate(form.date);
-        console.log("Formatted date for submission:", formattedDate);
-      }
+      let formattedDate = formatSafeDate(form.date);
+      console.log("Input date:", form.date);
+      console.log("Formatted date for submission:", formattedDate);
       
       const maintenanceData = {
         title: form.title,
@@ -138,8 +136,10 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         description: language === 'fr' ? "L'intervention a été ajoutée avec succès" : "The maintenance has been successfully added",
       });
 
-      queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] });
-      queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] });
+      queryClient.invalidateQueries({ queryKey: ["vendor_interventions"] });
+      queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["financial_expenses"] });
+      queryClient.invalidateQueries({ queryKey: ["financial_chart_data"] });
       
       if (onSuccess) {
         onSuccess();

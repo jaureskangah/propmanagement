@@ -1,6 +1,6 @@
-
 // This file contains utility functions to process financial data for charts
 import { format, parseISO } from 'date-fns';
+import { formatSafeDate } from '@/components/maintenance/utils/dateUtils';
 
 // Cache for processed data to avoid redundant calculations
 const dataCache = new Map();
@@ -84,7 +84,7 @@ export const processMonthlyData = (payments = [], expenses = [], year: number) =
     }
   });
 
-  // Process expenses with validation
+  // Process expenses with validation - ensuring we capture both cost and amount fields
   expenses.forEach((expense) => {
     const date = safeParseDate(expense.date);
     if (date) {

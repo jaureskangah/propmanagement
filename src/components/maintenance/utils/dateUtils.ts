@@ -48,5 +48,11 @@ export const formatSafeDate = (dateValue: string | Date): string => {
   if (!isValidDate(dateValue)) return typeof dateValue === 'string' ? dateValue : '';
   
   const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
-  return date.toISOString().split('T')[0];
+  
+  // Create a date in current timezone without time components
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
 };
