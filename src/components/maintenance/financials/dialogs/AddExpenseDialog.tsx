@@ -221,7 +221,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                   <SelectValue placeholder={language === 'fr' ? "Sélectionner un prestataire" : "Select a vendor"} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">
+                  <SelectItem value="no_vendor">
                     {language === 'fr' ? "Aucun prestataire" : "No vendor"}
                   </SelectItem>
                   {vendors.map((vendor) => (
