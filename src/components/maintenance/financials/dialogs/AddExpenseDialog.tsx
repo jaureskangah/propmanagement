@@ -10,6 +10,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { isValidDate, toDate } from "@/components/maintenance/utils/dateUtils";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
@@ -109,17 +110,27 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
+      // Ensure the date is properly formatted to prevent the timezone issue
+      let formattedDate = form.date;
+      if (isValidDate(form.date)) {
+        const dateObj = new Date(form.date);
+        // Format the date as YYYY-MM-DD to prevent timezone issues
+        formattedDate = dateObj.toISOString().split('T')[0];
+      }
+      
       const maintenanceData = {
         title: form.title,
         description: form.description,
         cost: parseFloat(form.cost),
-        date: form.date,
+        date: formattedDate,
         status: form.status,
         unit_number: form.unit_number === "none" ? null : form.unit_number,
         property_id: form.property_id,
-        vendor_id: form.vendor_id || null,
+        vendor_id: form.vendor_id === "no_vendor" ? null : form.vendor_id,
         user_id: user.id
       };
+      
+      console.log("Submitting maintenance data:", maintenanceData);
       
       const { error } = await supabase
         .from("vendor_interventions")
@@ -134,7 +145,9 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         description: language === 'fr' ? "L'intervention a été ajoutée avec succès" : "The maintenance has been successfully added",
       });
 
+      // Invalidate both maintenance interventions and expenses queries to ensure both views are updated
       queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] });
+      queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] });
       
       if (onSuccess) {
         onSuccess();
