@@ -4,36 +4,49 @@
  */
 
 /**
- * Checks if a string is a valid date
- * @param dateString The string to check
- * @returns boolean indicating if the string is a valid date
+ * Checks if a value is a valid date
+ * @param dateValue The value to check (string or Date)
+ * @returns boolean indicating if the value is a valid date
  */
-export const isValidDate = (dateString: string): boolean => {
-  if (!dateString) return false;
+export const isValidDate = (dateValue: string | Date): boolean => {
+  if (!dateValue) return false;
   
-  const date = new Date(dateString);
+  // If it's already a Date object
+  if (dateValue instanceof Date) {
+    return !isNaN(dateValue.getTime());
+  }
+  
+  // If it's a string, try to convert it
+  const date = new Date(dateValue);
   return !isNaN(date.getTime());
 };
 
 /**
- * Converts a string to a Date object
- * @param dateString The string to convert
+ * Converts a value to a Date object
+ * @param dateValue The value to convert (string or Date)
  * @returns Date object or null if invalid
  */
-export const toDate = (dateString: string): Date | null => {
-  if (!isValidDate(dateString)) return null;
+export const toDate = (dateValue: string | Date): Date | null => {
+  if (!dateValue) return null;
   
-  return new Date(dateString);
+  // If it's already a Date object
+  if (dateValue instanceof Date) {
+    return !isNaN(dateValue.getTime()) ? dateValue : null;
+  }
+  
+  // If it's a string, try to convert it
+  const date = new Date(dateValue);
+  return !isNaN(date.getTime()) ? date : null;
 };
 
 /**
  * Formats a date as YYYY-MM-DD to prevent timezone issues
- * @param dateString The date string to format
+ * @param dateValue The date value to format (string or Date)
  * @returns Formatted date string
  */
-export const formatSafeDate = (dateString: string): string => {
-  if (!isValidDate(dateString)) return dateString;
+export const formatSafeDate = (dateValue: string | Date): string => {
+  if (!isValidDate(dateValue)) return typeof dateValue === 'string' ? dateValue : '';
   
-  const date = new Date(dateString);
+  const date = dateValue instanceof Date ? dateValue : new Date(dateValue);
   return date.toISOString().split('T')[0];
 };

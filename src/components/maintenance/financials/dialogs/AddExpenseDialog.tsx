@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -10,7 +9,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { isValidDate } from "@/components/maintenance/utils/dateUtils";
+import { isValidDate, formatSafeDate, toDate } from "@/components/maintenance/utils/dateUtils";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
@@ -37,7 +36,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Get units for the selected property
   const { data: units = [] } = useQuery({
     queryKey: ["units", propertyId],
     queryFn: async () => {
@@ -56,7 +54,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     enabled: !!propertyId
   });
 
-  // Fetch properties
   const { data: properties = [] } = useQuery({
     queryKey: ["properties"],
     queryFn: async () => {
@@ -69,7 +66,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     }
   });
 
-  // Fetch vendors
   const { data: vendors = [] } = useQuery({
     queryKey: ["vendors"],
     queryFn: async () => {
@@ -82,7 +78,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     }
   });
 
-  // Reset form when dialog opens
   useEffect(() => {
     if (isOpen) {
       setForm({
@@ -110,12 +105,10 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Ensure the date is properly formatted to prevent the timezone issue
       let formattedDate = form.date;
       if (isValidDate(form.date)) {
-        const dateObj = new Date(form.date);
-        // Format the date as YYYY-MM-DD to prevent timezone issues
-        formattedDate = dateObj.toISOString().split('T')[0];
+        formattedDate = formatSafeDate(form.date);
+        console.log("Formatted date for submission:", formattedDate);
       }
       
       const maintenanceData = {
@@ -145,7 +138,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         description: language === 'fr' ? "L'intervention a été ajoutée avec succès" : "The maintenance has been successfully added",
       });
 
-      // Invalidate both maintenance interventions and expenses queries to ensure both views are updated
       queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] });
       queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] });
       
