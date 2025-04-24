@@ -10,7 +10,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { isValidDate, toDate } from "@/components/maintenance/utils/dateUtils";
+import { isValidDate } from "@/components/maintenance/utils/dateUtils";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;

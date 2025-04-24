@@ -1,40 +1,39 @@
 
 /**
- * Checks if a value is a valid Date or a valid date representation
+ * Date utility functions for maintenance components
  */
-export const isValidDate = (value: any): boolean => {
-  if (!value) return false;
+
+/**
+ * Checks if a string is a valid date
+ * @param dateString The string to check
+ * @returns boolean indicating if the string is a valid date
+ */
+export const isValidDate = (dateString: string): boolean => {
+  if (!dateString) return false;
   
-  // If it's already a Date object
-  if (value instanceof Date) {
-    return !isNaN(value.getTime());
-  }
-  
-  // If it's a string, try to convert it
-  if (typeof value === 'string') {
-    const date = new Date(value);
-    return !isNaN(date.getTime());
-  }
-  
-  return false;
+  const date = new Date(dateString);
+  return !isNaN(date.getTime());
 };
 
 /**
- * Converts a value to a Date object if possible
+ * Converts a string to a Date object
+ * @param dateString The string to convert
+ * @returns Date object or null if invalid
  */
-export const toDate = (value: any): Date | null => {
-  if (!value) return null;
+export const toDate = (dateString: string): Date | null => {
+  if (!isValidDate(dateString)) return null;
   
-  // If it's already a Date object
-  if (value instanceof Date) {
-    return !isNaN(value.getTime()) ? value : null;
-  }
+  return new Date(dateString);
+};
+
+/**
+ * Formats a date as YYYY-MM-DD to prevent timezone issues
+ * @param dateString The date string to format
+ * @returns Formatted date string
+ */
+export const formatSafeDate = (dateString: string): string => {
+  if (!isValidDate(dateString)) return dateString;
   
-  // If it's a string, try to convert it
-  if (typeof value === 'string') {
-    const date = new Date(value);
-    return !isNaN(date.getTime()) ? date : null;
-  }
-  
-  return null;
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0];
 };
