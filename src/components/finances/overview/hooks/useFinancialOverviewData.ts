@@ -4,6 +4,15 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
+// Type pour normaliser les dépenses
+type Expense = {
+  id: string;
+  amount: number;
+  date: string;
+  category: string;
+  description: string;
+};
+
 export const useFinancialOverviewData = (propertyId: string | null, selectedYear: number) => {
   const { t } = useLocale();
   
@@ -97,15 +106,12 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
       if (!propertyId) return [];
       
       try {
-        // Create date range for selected year
         const startDate = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
         const endDate = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
         
         console.log(`Finances: Fetching expenses for property ${propertyId} between ${startDate} and ${endDate}`);
         
-        // Run both queries in parallel using Promise.all for better performance
         const [maintenanceResponse, vendorResponse] = await Promise.all([
-          // First query for maintenance expenses
           supabase
             .from('maintenance_expenses')
             .select('id, amount, date, category, description')
@@ -113,10 +119,9 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
             .gte('date', startDate)
             .lte('date', endDate),
             
-          // Second query for vendor interventions which also count as expenses
           supabase
             .from('vendor_interventions')
-            .select('id, cost, date, title')  // Utilize proper field names
+            .select('id, cost, date, title')
             .eq('property_id', propertyId)
             .gte('date', startDate)
             .lte('date', endDate)
@@ -132,28 +137,30 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
           throw vendorResponse.error;
         }
         
-        // Normaliser les données pour assurer la cohérence
-        const maintenanceExpenses = maintenanceResponse.data || [];
-        
-        // Normaliser les interventions de vendeurs pour qu'elles utilisent le même format que les dépenses de maintenance
-        const vendorExpenses = (vendorResponse.data || []).map(item => ({
-          id: item.id,
-          amount: item.cost || 0,
-          date: item.date,
-          category: 'vendor_intervention',
-          description: item.title || ''
+        // Normaliser les données avec un type commun
+        const maintenanceExpenses: Expense[] = (maintenanceResponse.data || []).map(expense => ({
+          id: expense.id,
+          amount: expense.amount,
+          date: expense.date,
+          category: expense.category || 'maintenance',
+          description: expense.description || ''
         }));
         
-        // Combine both types of expenses 
-        const allExpenses = [
-          ...maintenanceExpenses,
-          ...vendorExpenses
-        ];
+        const vendorExpenses: Expense[] = (vendorResponse.data || []).map(intervention => ({
+          id: intervention.id,
+          amount: intervention.cost || 0,
+          date: intervention.date,
+          category: 'vendor_intervention',
+          description: intervention.title || ''
+        }));
+        
+        const allExpenses = [...maintenanceExpenses, ...vendorExpenses];
         
         console.log(`Finances: Total expenses combined: ${allExpenses.length}`, {
           maintenanceExpenses: maintenanceExpenses.length,
           vendorExpenses: vendorExpenses.length
         });
+        
         return allExpenses;
       } catch (error) {
         console.error("Error fetching expenses:", error);
