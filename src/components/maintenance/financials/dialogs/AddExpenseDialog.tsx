@@ -10,7 +10,12 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { isValidDate, formatSafeDate, toDate } from "@/components/maintenance/utils/dateUtils";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { format, startOfDay } from "date-fns";
+import { fr, enUS } from "date-fns/locale";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
@@ -23,11 +28,13 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
   const { t, language } = useLocale();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const locale = language === 'fr' ? fr : enUS;
+  
   const [form, setForm] = useState({
     title: "",
     description: "",
     cost: "",
-    date: "",
+    date: new Date(), // Initialiser avec la date actuelle
     status: "pending",
     unit_number: "",
     property_id: propertyId,
@@ -85,7 +92,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         title: "",
         description: "",
         cost: "",
-        date: "",
+        date: new Date(), // Toujours réinitialiser avec la date actuelle
         status: "pending",
         unit_number: "",
         property_id: propertyId,
@@ -106,9 +113,13 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      let formattedDate = formatSafeDate(form.date);
-      console.log("Input date:", form.date);
-      console.log("Formatted date for submission:", formattedDate);
+      // Formater la date en utilisant startOfDay pour normaliser
+      const normalizedDate = startOfDay(form.date);
+      const formattedDate = format(normalizedDate, 'yyyy-MM-dd');
+      
+      console.log("Date sélectionnée:", form.date);
+      console.log("Date normalisée:", normalizedDate);
+      console.log("Date formatée pour soumission:", formattedDate);
       
       const maintenanceData = {
         title: form.title,
@@ -163,6 +174,12 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleSelectChange = (name: string, value: string) => {
     setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleDateChange = (date: Date | undefined) => {
+    if (date) {
+      setForm(prev => ({ ...prev, date }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -257,14 +274,33 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
             <div className="space-y-2">
               <Label htmlFor="date">{language === 'fr' ? "Date" : "Date"}</Label>
-              <Input
-                id="date"
-                required
-                name="date"
-                type="date"
-                value={form.date}
-                onChange={handleChange}
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    id="date"
+                    variant={"outline"}
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !form.date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {form.date ? format(form.date, "PPP", { locale }) : (
+                      <span>{language === 'fr' ? "Sélectionner une date" : "Select a date"}</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={form.date}
+                    onSelect={handleDateChange}
+                    initialFocus
+                    locale={locale}
+                    className="pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="space-y-2">
