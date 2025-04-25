@@ -116,7 +116,7 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
           // Second query for vendor interventions which also count as expenses
           supabase
             .from('vendor_interventions')
-            .select('id, cost as amount, date, title as description')  // Normalize field names
+            .select('id, cost, date, title')  // Utilize proper field names
             .eq('property_id', propertyId)
             .gte('date', startDate)
             .lte('date', endDate)
@@ -137,10 +137,11 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         
         // Normaliser les interventions de vendeurs pour qu'elles utilisent le même format que les dépenses de maintenance
         const vendorExpenses = (vendorResponse.data || []).map(item => ({
-          ...item,
+          id: item.id,
+          amount: item.cost || 0,
+          date: item.date,
           category: 'vendor_intervention',
-          // Assurez-vous que le coût est bien normalisé à 'amount' pour la cohérence
-          amount: item.amount || 0
+          description: item.title || ''
         }));
         
         // Combine both types of expenses 

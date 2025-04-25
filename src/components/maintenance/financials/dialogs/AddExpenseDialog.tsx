@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -142,9 +143,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       queryClient.invalidateQueries({ queryKey: ["financial_chart_data"] });
       queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
       
-      if (window.__chartDataCache) {
-        window.__chartDataCache.clear();
-      }
+      // Supprimer les références à __chartDataCache qui causent l'erreur
+      // Nous n'avons pas besoin de cette fonctionnalité ici
       
       if (onSuccess) {
         onSuccess();
