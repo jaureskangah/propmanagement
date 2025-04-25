@@ -34,26 +34,26 @@ export const PropertyFinancials = ({
       
       console.log("Fetching expenses for property:", propertyId, "in date range:", startOfYear, "to", endOfYear);
       
-      const { data, error } = await supabase
-        .from("maintenance_expenses")
-        .select(`
-          *,
-          vendors (
-            name
-          )
-        `)
-        .eq("property_id", propertyId)
-        .gte("date", startOfYear)
-        .lte("date", endOfYear)
-        .order("date", { ascending: false });
-
-      if (error) {
-        console.error("Error fetching expenses:", error);
-        throw error;
+      try {
+        const { data, error } = await supabase
+          .from("maintenance_expenses")
+          .select("*")
+          .eq("property_id", propertyId)
+          .gte("date", startOfYear)
+          .lte("date", endOfYear)
+          .order("date", { ascending: false });
+  
+        if (error) {
+          console.error("Error fetching expenses:", error);
+          throw error;
+        }
+  
+        console.log("Fetched expenses:", data);
+        return data || [];
+      } catch (error) {
+        console.error("Error in expenses query:", error);
+        return [];
       }
-
-      console.log("Fetched expenses:", data);
-      return data;
     },
     enabled: !!propertyId
   });
@@ -90,7 +90,7 @@ export const PropertyFinancials = ({
       }
 
       console.log("Fetched maintenance interventions:", data);
-      return data;
+      return data || [];
     },
     enabled: !!propertyId
   });
@@ -142,7 +142,8 @@ export const PropertyFinancials = ({
 
   // Calculate ROI
   const calculateROI = () => {
-    const totalExpenses = expenses.reduce((acc, curr) => acc + curr.amount, 0);
+    // Calculer le total des dépenses en utilisant la même méthode que Finances
+    const totalExpenses = expenses.reduce((acc, curr) => acc + (curr.amount || 0), 0);
     const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
     
     // Filter only paid payments
@@ -154,6 +155,7 @@ export const PropertyFinancials = ({
       totalExpenses,
       totalMaintenance,
       totalIncome,
+      totalCombined: totalExpenses + totalMaintenance,
       rentPaymentsCount: rentData.length,
       year: selectedYear
     });

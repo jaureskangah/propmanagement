@@ -111,42 +111,42 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
         
         console.log(`Finances: Fetching expenses for property ${propertyId} between ${startDate} and ${endDate}`);
         
-        const [maintenanceResponse, vendorResponse] = await Promise.all([
-          supabase
-            .from('maintenance_expenses')
-            .select('id, amount, date, category, description')
-            .eq('property_id', propertyId)
-            .gte('date', startDate)
-            .lte('date', endDate),
-            
-          supabase
-            .from('vendor_interventions')
-            .select('id, cost, date, title')
-            .eq('property_id', propertyId)
-            .gte('date', startDate)
-            .lte('date', endDate)
-        ]);
-        
-        if (maintenanceResponse.error) {
-          console.error("Error fetching maintenance expenses:", maintenanceResponse.error);
-          throw maintenanceResponse.error;
+        // Récupérer les dépenses de maintenance
+        const { data: maintenanceExpenses, error: maintenanceError } = await supabase
+          .from('maintenance_expenses')
+          .select('id, amount, date, category, description')
+          .eq('property_id', propertyId)
+          .gte('date', startDate)
+          .lte('date', endDate);
+          
+        if (maintenanceError) {
+          console.error("Error fetching maintenance expenses:", maintenanceError);
+          throw maintenanceError;
         }
         
-        if (vendorResponse.error) {
-          console.error("Error fetching vendor interventions:", vendorResponse.error);
-          throw vendorResponse.error;
+        // Récupérer les interventions de vendeurs
+        const { data: vendorInterventions, error: vendorError } = await supabase
+          .from('vendor_interventions')
+          .select('id, cost, date, title')
+          .eq('property_id', propertyId)
+          .gte('date', startDate)
+          .lte('date', endDate);
+          
+        if (vendorError) {
+          console.error("Error fetching vendor interventions:", vendorError);
+          throw vendorError;
         }
         
         // Normaliser les données avec un type commun
-        const maintenanceExpenses: Expense[] = (maintenanceResponse.data || []).map(expense => ({
+        const normalizedExpenses: Expense[] = (maintenanceExpenses || []).map(expense => ({
           id: expense.id,
-          amount: expense.amount,
+          amount: expense.amount || 0,
           date: expense.date,
           category: expense.category || 'maintenance',
           description: expense.description || ''
         }));
         
-        const vendorExpenses: Expense[] = (vendorResponse.data || []).map(intervention => ({
+        const normalizedInterventions: Expense[] = (vendorInterventions || []).map(intervention => ({
           id: intervention.id,
           amount: intervention.cost || 0,
           date: intervention.date,
@@ -154,11 +154,13 @@ export const useFinancialOverviewData = (propertyId: string | null, selectedYear
           description: intervention.title || ''
         }));
         
-        const allExpenses = [...maintenanceExpenses, ...vendorExpenses];
+        // Combiner les deux types de dépenses
+        const allExpenses = [...normalizedExpenses, ...normalizedInterventions];
         
         console.log(`Finances: Total expenses combined: ${allExpenses.length}`, {
-          maintenanceExpenses: maintenanceExpenses.length,
-          vendorExpenses: vendorExpenses.length
+          maintenanceExpenses: normalizedExpenses.length,
+          vendorInterventions: normalizedInterventions.length,
+          totalAmount: allExpenses.reduce((sum, expense) => sum + expense.amount, 0)
         });
         
         return allExpenses;

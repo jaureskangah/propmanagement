@@ -74,9 +74,29 @@ export const MetricsCards = ({
     enabled: !!propertyId && selectedYear > 0
   });
 
-  // Calculer les dépenses avec la même logique que dans le composant Finances
-  // Utilisation de processMonthlyData pour traitement uniforme des données
-  const allExpenses = [...expenses, ...maintenance];
+  // Combinons toutes les dépenses (maintenance_expenses et vendor_interventions)
+  // Normalisons les données pour assurer la cohérence 
+  const normalizeExpenses = () => {
+    // Normaliser les objets de maintenance_expenses
+    const normalizedExpenses = expenses.map(expense => ({
+      amount: expense.amount || 0,
+      date: expense.date
+    }));
+
+    // Normaliser les objets de vendor_interventions (qui utilisent 'cost' au lieu de 'amount')
+    const normalizedMaintenance = maintenance.map(item => ({
+      amount: item.cost || 0,
+      date: item.date
+    }));
+
+    // Fusionner les deux ensembles de données normalisés
+    return [...normalizedExpenses, ...normalizedMaintenance];
+  };
+
+  // Utilisation de la même logique que dans le composant Finances
+  const allExpenses = normalizeExpenses();
+  
+  // Utiliser processMonthlyData pour avoir la même logique de calcul que dans l'onglet Finances
   const currentYearData = processMonthlyData(allExpenses, [], selectedYear);
   
   // Calculer la somme des dépenses pour l'année sélectionnée
@@ -93,7 +113,8 @@ export const MetricsCards = ({
     propertyId, 
     year: selectedYear, 
     expensesCount: expenses.length,
-    maintenanceCount: maintenance.length
+    maintenanceCount: maintenance.length,
+    combinedExpensesCount: allExpenses.length
   });
 
   const metrics = [
