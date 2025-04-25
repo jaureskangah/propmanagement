@@ -143,9 +143,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       queryClient.invalidateQueries({ queryKey: ["financial_chart_data"] });
       queryClient.invalidateQueries({ queryKey: ["financial_metrics"] });
       
-      // Supprimer les références à __chartDataCache qui causent l'erreur
-      // Nous n'avons pas besoin de cette fonctionnalité ici
-      
       if (onSuccess) {
         onSuccess();
       } else {
