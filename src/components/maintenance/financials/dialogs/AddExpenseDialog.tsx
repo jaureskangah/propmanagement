@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format, startOfDay } from "date-fns";
+import { format, parseISO, addDays } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -113,12 +113,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Formater la date en utilisant startOfDay pour normaliser
-      const normalizedDate = startOfDay(form.date);
-      const formattedDate = format(normalizedDate, 'yyyy-MM-dd');
+      // Conserver la date exactement telle qu'elle a été sélectionnée sans normalisation
+      // et la formater directement au format YYYY-MM-DD
+      const formattedDate = format(form.date, 'yyyy-MM-dd');
       
       console.log("Date sélectionnée:", form.date);
-      console.log("Date normalisée:", normalizedDate);
       console.log("Date formatée pour soumission:", formattedDate);
       
       const maintenanceData = {
@@ -178,6 +177,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
+      // Nous utilisons directement la date sélectionnée sans aucune modification
       setForm(prev => ({ ...prev, date }));
     }
   };
