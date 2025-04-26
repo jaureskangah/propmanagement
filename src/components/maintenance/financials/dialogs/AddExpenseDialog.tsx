@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, parse } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -33,7 +34,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     title: "",
     description: "",
     cost: "",
-    date: new Date(), // Initialiser avec la date actuelle
+    date: new Date(),
     status: "pending",
     unit_number: "",
     property_id: propertyId,
@@ -91,7 +92,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         title: "",
         description: "",
         cost: "",
-        date: new Date(), // Toujours réinitialiser avec la date actuelle
+        date: new Date(),
         status: "pending",
         unit_number: "",
         property_id: propertyId,
@@ -112,17 +113,25 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      const formattedDate = format(form.date, 'yyyy-MM-dd');
+      // Formatage direct YYYY-MM-DD sans conversion de timezone
+      const day = String(form.date.getDate()).padStart(2, '0');
+      const month = String(form.date.getMonth() + 1).padStart(2, '0');
+      const year = form.date.getFullYear();
+      const formattedDate = `${year}-${month}-${day}`;
       
-      console.log("Date sélectionnée (objet):", form.date);
-      console.log("Date à l'affichage:", format(form.date, 'PPP', { locale }));
-      console.log("Date formatée pour soumission:", formattedDate);
+      console.log("--- DIAGNOSTIC DE LA DATE ---");
+      console.log("Date actuelle:", new Date().toISOString());
+      console.log("Objet date sélectionné:", form.date);
+      console.log("Date YYYY-MM-DD formatée:", formattedDate);
+      console.log("Date locale affichée:", format(form.date, 'PPP', { locale }));
+      console.log("Jour:", form.date.getDate(), "Mois:", form.date.getMonth() + 1, "Année:", form.date.getFullYear());
+      console.log("--------------------------");
       
       const maintenanceData = {
         title: form.title,
         description: form.description,
         cost: parseFloat(form.cost),
-        date: formattedDate,
+        date: formattedDate, // Date formatée directement
         status: form.status,
         unit_number: form.unit_number === "none" ? null : form.unit_number,
         property_id: form.property_id,
@@ -130,7 +139,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         user_id: user.id
       };
       
-      console.log("Submitting maintenance data:", maintenanceData);
+      console.log("Données d'intervention soumises:", maintenanceData);
       
       const { error } = await supabase
         .from("vendor_interventions")
@@ -175,8 +184,12 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
+      // Garder la date exactement telle qu'elle est sélectionnée
       console.log("Date sélectionnée dans le calendrier:", date);
-      console.log("Date affichage:", format(date, 'PPP', { locale }));
+      console.log("Date au format local:", format(date, 'PPP', { locale }));
+      console.log("Date au format ISO:", date.toISOString());
+      console.log("Jour:", date.getDate(), "Mois:", date.getMonth() + 1, "Année:", date.getFullYear());
+      
       setForm(prev => ({ ...prev, date }));
     }
   };
@@ -297,6 +310,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                     initialFocus
                     locale={locale}
                     className="pointer-events-auto"
+                    disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                   />
                 </PopoverContent>
               </Popover>
