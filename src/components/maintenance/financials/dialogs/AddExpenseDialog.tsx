@@ -113,14 +113,17 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Formatage corrigé pour éviter le décalage horaire
-      // Nous créons une date au format ISO sans l'heure, ce qui évite tout décalage de fuseau horaire
-      const year = form.date.getFullYear();
-      const month = String(form.date.getMonth() + 1).padStart(2, '0');
-      const day = String(form.date.getDate()).padStart(2, '0');
-      const formattedDate = `${year}-${month}-${day}`;
+      // Méthode de formatage robuste pour éviter tout décalage horaire
+      const selectedDate = form.date;
       
-      console.log("Date sélectionnée:", form.date);
+      // Utiliser directement UTC pour éviter tout décalage de fuseau horaire
+      const utcYear = selectedDate.getUTCFullYear();
+      const utcMonth = String(selectedDate.getUTCMonth() + 1).padStart(2, '0');
+      const utcDay = String(selectedDate.getUTCDate()).padStart(2, '0');
+      const formattedDate = `${utcYear}-${utcMonth}-${utcDay}`;
+      
+      console.log("Date sélectionnée (objet):", form.date);
+      console.log("Date sélectionnée (UTC):", selectedDate.toUTCString());
       console.log("Date formatée pour soumission:", formattedDate);
       
       const maintenanceData = {
@@ -180,7 +183,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Utilisez directement la date sélectionnée sans modification
+      // Stocker la date sélectionnée sans modification
+      console.log("Date sélectionnée dans le calendrier:", date);
       setForm(prev => ({ ...prev, date }));
     }
   };
