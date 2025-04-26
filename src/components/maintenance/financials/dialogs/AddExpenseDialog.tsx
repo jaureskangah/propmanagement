@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format, parseISO, addDays } from "date-fns";
+import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -113,9 +113,12 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Conserver la date exactement telle qu'elle a été sélectionnée sans normalisation
-      // et la formater directement au format YYYY-MM-DD
-      const formattedDate = format(form.date, 'yyyy-MM-dd');
+      // Formatage corrigé pour éviter le décalage horaire
+      // Nous créons une date au format ISO sans l'heure, ce qui évite tout décalage de fuseau horaire
+      const year = form.date.getFullYear();
+      const month = String(form.date.getMonth() + 1).padStart(2, '0');
+      const day = String(form.date.getDate()).padStart(2, '0');
+      const formattedDate = `${year}-${month}-${day}`;
       
       console.log("Date sélectionnée:", form.date);
       console.log("Date formatée pour soumission:", formattedDate);
@@ -177,7 +180,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Nous utilisons directement la date sélectionnée sans aucune modification
+      // Utilisez directement la date sélectionnée sans modification
       setForm(prev => ({ ...prev, date }));
     }
   };
