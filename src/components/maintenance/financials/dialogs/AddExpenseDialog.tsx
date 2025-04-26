@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -113,17 +112,10 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Méthode de formatage robuste pour éviter tout décalage horaire
-      const selectedDate = form.date;
-      
-      // Utiliser directement UTC pour éviter tout décalage de fuseau horaire
-      const utcYear = selectedDate.getUTCFullYear();
-      const utcMonth = String(selectedDate.getUTCMonth() + 1).padStart(2, '0');
-      const utcDay = String(selectedDate.getUTCDate()).padStart(2, '0');
-      const formattedDate = `${utcYear}-${utcMonth}-${utcDay}`;
+      const formattedDate = format(form.date, 'yyyy-MM-dd');
       
       console.log("Date sélectionnée (objet):", form.date);
-      console.log("Date sélectionnée (UTC):", selectedDate.toUTCString());
+      console.log("Date à l'affichage:", format(form.date, 'PPP', { locale }));
       console.log("Date formatée pour soumission:", formattedDate);
       
       const maintenanceData = {
@@ -183,8 +175,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Stocker la date sélectionnée sans modification
       console.log("Date sélectionnée dans le calendrier:", date);
+      console.log("Date affichage:", format(date, 'PPP', { locale }));
       setForm(prev => ({ ...prev, date }));
     }
   };
