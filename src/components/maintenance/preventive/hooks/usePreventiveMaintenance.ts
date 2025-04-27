@@ -100,39 +100,56 @@ export const usePreventiveMaintenance = () => {
     console.log("Create task clicked with data:", newTask);
     
     // Ensure the task has a valid date
+    let dateToStore: string;
+    
     if (!newTask.date) {
-      newTask.date = startOfDay(new Date());
-    } else if (typeof newTask.date === 'string') {
-      try {
-        newTask.date = startOfDay(parseISO(newTask.date));
-      } catch (e) {
-        console.error("Error parsing task date string:", newTask.date, e);
-        newTask.date = startOfDay(new Date());
-      }
+      // Default to today if no date
+      dateToStore = formatLocalDateForStorage(startOfDay(new Date()));
+    } else if (newTask.date instanceof Date) {
+      // If it's already a Date object, format it properly
+      dateToStore = formatLocalDateForStorage(startOfDay(newTask.date));
+    } else if (typeof newTask.date === 'string' && newTask.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      // If it's already in YYYY-MM-DD format, use it directly
+      dateToStore = newTask.date;
     } else {
-      newTask.date = startOfDay(newTask.date);
+      // Try to parse string to Date then format
+      try {
+        const parsedDate = typeof newTask.date === 'string' ? parseISO(newTask.date) : new Date();
+        dateToStore = formatLocalDateForStorage(startOfDay(parsedDate));
+      } catch (e) {
+        console.error("Error parsing task date:", newTask.date, e);
+        dateToStore = formatLocalDateForStorage(startOfDay(new Date()));
+      }
     }
     
-    console.log("Normalized task date for creation:", format(newTask.date, "yyyy-MM-dd"));
-    
-    // CRITICAL FIX: Format the date for storage BEFORE sending to handleAddTask
-    const dateToStore = formatLocalDateForStorage(newTask.date);
-    console.log(`Formatted date string for storage: ${dateToStore} from date ${newTask.date.toString()}`);
+    console.log("Formatted date string for storage:", dateToStore);
     
     // Set selected date to match the new task's date BEFORE adding the task
-    // This ensures the calendar is already showing the correct date
-    const taskDate = startOfDay(newTask.date);
+    let taskDate: Date;
+    
+    if (newTask.date instanceof Date) {
+      taskDate = startOfDay(newTask.date);
+    } else if (typeof newTask.date === 'string') {
+      try {
+        taskDate = parseISO(newTask.date);
+      } catch {
+        taskDate = startOfDay(new Date());
+      }
+    } else {
+      taskDate = startOfDay(new Date());
+    }
+    
     console.log("Setting calendar to task date BEFORE adding task:", format(taskDate, "yyyy-MM-dd"));
     setSelectedDate(taskDate);
     
-    // Create a copy of the task with the formatted date
+    // Create a task object with the formatted date string
     const taskWithFormattedDate = {
       ...newTask,
-      date: dateToStore // Use the formatted date string instead of Date object
+      date: dateToStore
     };
     
     // Now add the task with formatted date and return the promise
-    return handleAddTask(taskWithFormattedDate)
+    return handleAddTask(taskWithFormattedDate as NewTask)
       .then((result) => {
         console.log("Task added successfully:", result);
         toast({
@@ -155,29 +172,47 @@ export const usePreventiveMaintenance = () => {
   const onAddMultipleTasks = (newTasks: NewTask[]): Promise<any> => {
     // Normalize dates in all new tasks and format them for storage
     const normalizedTasks = newTasks.map(task => {
-      const normalizedDate = task.date 
-        ? startOfDay(task.date instanceof Date ? task.date : new Date(task.date))
-        : startOfDay(new Date());
+      let dateToStore: string;
       
-      // Format the date for storage
-      const dateToStore = formatLocalDateForStorage(normalizedDate);
+      if (!task.date) {
+        // Default to today if no date
+        dateToStore = formatLocalDateForStorage(startOfDay(new Date()));
+      } else if (task.date instanceof Date) {
+        // If it's already a Date object, format it properly
+        dateToStore = formatLocalDateForStorage(startOfDay(task.date));
+      } else if (typeof task.date === 'string' && task.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        // If it's already in YYYY-MM-DD format, use it directly
+        dateToStore = task.date;
+      } else {
+        // Try to parse string to Date then format
+        try {
+          const parsedDate = typeof task.date === 'string' ? parseISO(task.date) : new Date();
+          dateToStore = formatLocalDateForStorage(startOfDay(parsedDate));
+        } catch (e) {
+          console.error("Error parsing task date:", task.date, e);
+          dateToStore = formatLocalDateForStorage(startOfDay(new Date()));
+        }
+      }
       
       return {
         ...task,
-        date: dateToStore // Use the formatted date string for storage
+        date: dateToStore
       };
     });
     
     // Set selected date to match the first task's date BEFORE adding the tasks
-    if (normalizedTasks.length > 0 && normalizedTasks[0].date) {
-      // Parse the formatted date back to a Date for the calendar
-      const firstTaskDate = parseISO(normalizedTasks[0].date);
-      console.log("Setting calendar to first batch task date BEFORE adding tasks:", format(firstTaskDate, "yyyy-MM-dd"));
+    if (normalizedTasks.length > 0) {
+      const firstTaskDate = typeof normalizedTasks[0].date === 'string' 
+        ? parseISO(normalizedTasks[0].date) 
+        : normalizedTasks[0].date as Date;
+        
+      console.log("Setting calendar to first batch task date BEFORE adding tasks:", 
+        format(firstTaskDate, "yyyy-MM-dd"));
       setSelectedDate(firstTaskDate);
     }
     
     // Now add the tasks and return the promise
-    return handleAddMultipleTasks(normalizedTasks)
+    return handleAddMultipleTasks(normalizedTasks as NewTask[])
       .then((result) => {
         console.log("Multiple tasks added successfully:", result);
         toast({

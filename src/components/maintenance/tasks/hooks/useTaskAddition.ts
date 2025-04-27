@@ -13,7 +13,7 @@ export const useTaskAddition = () => {
       // Check if we received a formatted date string from AddTaskDialog
       let formattedDate: string;
       
-      if (typeof newTask.date === 'string' && newTask.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      if (typeof newTask.date === 'string' && typeof newTask.date === 'string' && newTask.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
         // Already formatted as YYYY-MM-DD, use as is
         formattedDate = newTask.date;
         console.log("Using pre-formatted date string:", formattedDate);
@@ -104,7 +104,7 @@ export const useTaskAddition = () => {
         // Format date to YYYY-MM-DD regardless of input type
         let formattedDate: string;
         
-        if (typeof task.date === 'string' && task.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        if (typeof task.date === 'string' && typeof task.date === 'string' && task.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
           // Already formatted as YYYY-MM-DD, use as is
           formattedDate = task.date;
           console.log(`Task "${task.title}" using pre-formatted date string:`, formattedDate);

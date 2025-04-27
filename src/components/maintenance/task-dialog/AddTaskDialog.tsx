@@ -55,7 +55,7 @@ export const AddTaskDialog = ({
           console.log("Formatted date for submission:", formattedDate);
           
           // Use the safe task with formatted date string for submission
-          const result = await Promise.resolve(onAddTask(safeTask));
+          const result = await Promise.resolve(onAddTask(safeTask as NewTask));
           console.log("AddTaskDialog - Task saved successfully:", result);
         } else {
           // If for some reason we don't have a Date object, just submit as is
