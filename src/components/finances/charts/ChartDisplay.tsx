@@ -246,38 +246,51 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
               <Legend wrapperStyle={{ fontSize: '10px' }} />
               
               {shouldShowSeries('income') && (
-                <Bar
-                  dataKey="income"
-                  name={t('income')}
-                  fill={chartConfig.barColors.income}
-                  radius={[4, 4, 0, 0]}
-                  animationDuration={1000}
+                <Bar 
+                  dataKey="income" 
+                  name={t('income')} 
+                  fill={chartConfig.barColors.income} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={12} 
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
                 />
               )}
               
               {shouldShowSeries('expense') && (
-                <Bar
-                  dataKey="expense"
-                  name={t('expense')}
-                  fill={chartConfig.barColors.expense}
-                  radius={[4, 4, 0, 0]}
-                  animationDuration={1000}
+                <Bar 
+                  dataKey="expense" 
+                  name={t('expense')} 
+                  fill={chartConfig.barColors.expense} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={12} 
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
                 />
               )}
               
               {shouldShowSeries('profit') && (
-                <Bar
-                  dataKey="profit"
-                  name={t('profit')}
-                  fill={chartConfig.barColors.profit}
-                  radius={[4, 4, 0, 0]}
-                  animationDuration={1000}
+                <Bar 
+                  dataKey="profit" 
+                  name={t('profit')} 
+                  fill={chartConfig.barColors.profit} 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={12} 
+                  isAnimationActive={true}
+                  animationDuration={800}
+                  animationEasing="ease-out"
                 />
               )}
             </BarChart>
           )}
         </ResponsiveContainer>
       </motion.div>
+      
+      <div className="text-xs text-muted-foreground text-center pt-1">
+        {view === 'monthly' ? t('monthlyData') : t('yearlyData')}
+      </div>
     </div>
   );
 });

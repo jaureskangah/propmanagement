@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,11 +12,10 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, parseISO, addDays } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatLocalDateForStorage } from "../../utils/dateUtils";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
@@ -34,7 +34,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     title: "",
     description: "",
     cost: "",
-    date: new Date(),
+    date: new Date(), // Initialiser avec la date actuelle
     status: "pending",
     unit_number: "",
     property_id: propertyId,
@@ -92,7 +92,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         title: "",
         description: "",
         cost: "",
-        date: new Date(),
+        date: new Date(), // Toujours réinitialiser avec la date actuelle
         status: "pending",
         unit_number: "",
         property_id: propertyId,
@@ -113,15 +113,12 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      const selectedDate = form.date;
-      const formattedDate = formatLocalDateForStorage(selectedDate);
+      // Conserver la date exactement telle qu'elle a été sélectionnée sans normalisation
+      // et la formater directement au format YYYY-MM-DD
+      const formattedDate = format(form.date, 'yyyy-MM-dd');
       
-      console.log("=== DATE DIAGNOSIS ===");
-      console.log("Selected date object:", selectedDate);
-      console.log(`Selected date (local): ${selectedDate.toLocaleDateString()}`);
-      console.log(`Selected date components: Year=${selectedDate.getFullYear()}, Month=${selectedDate.getMonth() + 1}, Day=${selectedDate.getDate()}`);
-      console.log(`FORMATTED DATE FOR DB: ${formattedDate}`);
-      console.log("======================");
+      console.log("Date sélectionnée:", form.date);
+      console.log("Date formatée pour soumission:", formattedDate);
       
       const maintenanceData = {
         title: form.title,
@@ -135,7 +132,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         user_id: user.id
       };
       
-      console.log("Full maintenance data being submitted:", maintenanceData);
+      console.log("Submitting maintenance data:", maintenanceData);
       
       const { error } = await supabase
         .from("vendor_interventions")
@@ -180,10 +177,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      console.log("Calendar date selected:", date);
-      console.log(`Selected date components: Year=${date.getFullYear()}, Month=${date.getMonth() + 1}, Day=${date.getDate()}`);
-      console.log(`This date will be shown as: ${format(date, 'PPP', { locale })}`);
-      
+      // Nous utilisons directement la date sélectionnée sans aucune modification
       setForm(prev => ({ ...prev, date }));
     }
   };
@@ -198,10 +192,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     
     mutation.mutate();
   };
-
-  const today = new Date();
-  const tenYearsAgo = new Date();
-  tenYearsAgo.setFullYear(tenYearsAgo.getFullYear() - 10);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -308,10 +298,6 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                     initialFocus
                     locale={locale}
                     className="pointer-events-auto"
-                    disabled={(date) => 
-                      date > today || 
-                      date < tenYearsAgo
-                    }
                   />
                 </PopoverContent>
               </Popover>

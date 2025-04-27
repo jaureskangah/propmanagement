@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { format, isValid, parseISO } from "date-fns";
+import { format, isValid, startOfDay, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Task } from "./types";
@@ -27,24 +27,12 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
     try {
       if (isValidDate(task.date)) {
         taskDate = toDate(task.date) || new Date();
-        
-        // Log directly from the Date object's components to diagnose any issues
-        const year = taskDate.getFullYear();
-        const month = taskDate.getMonth() + 1;
-        const day = taskDate.getDate();
-        
-        dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        console.log(`Task ${task.id} date components: ${year}-${month}-${day}, formatted: ${dateStr}`);
+        dateStr = format(taskDate, "yyyy-MM-dd");
       } else if (typeof task.date === 'string') {
-        // If it's a string, try to parse it
-        try {
-          const parsedDate = parseISO(task.date);
-          if (isValid(parsedDate)) {
-            taskDate = parsedDate;
-            dateStr = task.date;
-          }
-        } catch (e) {
-          console.error("Error parsing date string:", task.date, e);
+        const parsedDate = parseISO(task.date);
+        if (isValid(parsedDate)) {
+          taskDate = startOfDay(parsedDate);
+          dateStr = format(taskDate, "yyyy-MM-dd");
         }
       }
     } catch (e) {
@@ -75,47 +63,30 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
       ) : (
         displayTasks.map((task) => {
           // Ensure task date is properly handled
-          let taskDate: Date;
-          let displayDate: string;
+          let taskDate: Date = new Date();
           
           if (isValidDate(task.date)) {
             taskDate = toDate(task.date) || new Date();
-            
-            // CRITICAL FIX: Use a more direct approach to format the date to prevent timezone issues
-            const day = String(taskDate.getDate()).padStart(2, '0');
-            const month = String(taskDate.getMonth() + 1).padStart(2, '0');
-            const year = taskDate.getFullYear();
-            
-            // Format directly using components for display
-            displayDate = language === 'fr' ? 
-              `${day}/${month}/${year}` : 
-              `${month}/${day}/${year}`;
-              
-            console.log(`Task ${task.id} (${task.title}) display date: ${displayDate}`);
           } else if (typeof task.date === 'string') {
             try {
-              // Try to parse the string date
-              const parts = task.date.split('-');
-              if (parts.length === 3) {
-                const year = parseInt(parts[0]);
-                const month = parseInt(parts[1]);
-                const day = parseInt(parts[2]);
-                
-                // Format for display based on language
-                displayDate = language === 'fr' ? 
-                  `${day}/${month}/${year}` : 
-                  `${month}/${day}/${year}`;
-              } else {
-                displayDate = "Invalid date";
-              }
+              taskDate = startOfDay(parseISO(task.date));
             } catch (e) {
               console.error('Error parsing date string:', task.date, e);
-              displayDate = "Invalid date";
+              taskDate = startOfDay(new Date()); // Fallback
+            }
+            
+            // Double-check if the date is valid
+            if (!isValid(taskDate)) {
+              console.error('Invalid date for task:', task.id, task.date);
+              taskDate = startOfDay(new Date()); // Fallback
             }
           } else {
             console.error('Invalid date format:', task.date);
-            displayDate = "Invalid date";
+            taskDate = startOfDay(new Date()); // Fallback
           }
+          
+          // Log each task's date information when rendering
+          console.log(`Task ${task.id} (${task.title}) display date: ${format(taskDate, "yyyy-MM-dd")}`);
           
           return (
             <div
@@ -142,7 +113,7 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                   variant={task.completed ? "default" : "secondary"}
                   className={task.completed ? "bg-green-500" : ""}
                 >
-                  {displayDate}
+                  {format(taskDate, "dd/MM/yyyy", { locale: language === 'fr' ? fr : undefined })}
                 </Badge>
                 <Badge variant="outline">{t(task.type)}</Badge>
                 {task.priority && (

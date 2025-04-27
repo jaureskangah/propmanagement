@@ -83,7 +83,7 @@ export interface NewTask {
   title: string;
   type: "regular" | "inspection" | "seasonal";
   priority: "low" | "medium" | "high" | "urgent";
-  date: Date | string; // Allow both Date and string
+  date: Date;
   property_id: string;
   is_recurring?: boolean;
   recurrence_frequency?: "daily" | "weekly" | "monthly" | "yearly";
