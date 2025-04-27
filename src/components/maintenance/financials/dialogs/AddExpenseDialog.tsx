@@ -113,31 +113,30 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // CRITICAL FIX: Using raw year, month, day without timezone conversion
-      // This ensures the date displayed in the UI is exactly what gets sent to the database
+      // CRITICAL FIX: Extract local date components directly
       const selectedDate = form.date;
       
       // Log all date information for diagnosis
       console.log("=== DATE DIAGNOSIS ===");
       console.log("Selected date object:", selectedDate);
       console.log(`Selected date (local): ${selectedDate.toLocaleDateString()}`);
-      console.log(`Date components: Year=${selectedDate.getFullYear()}, Month=${selectedDate.getMonth() + 1}, Day=${selectedDate.getDate()}`);
       
-      // Create ISO date string (YYYY-MM-DD) directly from components
-      // This avoids timezone issues by not using Date.toISOString() which converts to UTC
+      // CRITICAL FIX: Extract year, month, and day directly from local date
       const year = selectedDate.getFullYear();
       const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
       const day = String(selectedDate.getDate()).padStart(2, '0');
+      
+      // Create ISO date string (YYYY-MM-DD) directly from components
       const formattedDate = `${year}-${month}-${day}`;
       
-      console.log(`Formatted date for database: ${formattedDate}`);
+      console.log(`⚠️ FORMATTED DATE FOR DB: ${formattedDate}`);
       console.log("======================");
       
       const maintenanceData = {
         title: form.title,
         description: form.description,
         cost: parseFloat(form.cost),
-        date: formattedDate,
+        date: formattedDate,  // Use formatted date string
         status: form.status,
         unit_number: form.unit_number === "none" ? null : form.unit_number,
         property_id: form.property_id,
@@ -190,11 +189,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Store the exact date as selected in the calendar
+      // CRITICAL FIX: Store the date object directly as selected by the user
       console.log("Calendar date selected:", date);
       console.log(`Selected components: Year=${date.getFullYear()}, Month=${date.getMonth() + 1}, Day=${date.getDate()}`);
       
-      // Make sure to store the date exactly as selected
+      // Store the exact date as selected in the calendar
       setForm(prev => ({ ...prev, date }));
     }
   };
@@ -209,6 +208,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     
     mutation.mutate();
   };
+
+  // AJOUT: Limitons les dates sélectionnables pour éviter des problèmes
+  const today = new Date();
+  const tenYearsAgo = new Date();
+  tenYearsAgo.setFullYear(tenYearsAgo.getFullYear() - 10);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -315,7 +319,10 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                     initialFocus
                     locale={locale}
                     className="pointer-events-auto"
-                    disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                    disabled={(date) => 
+                      date > today || 
+                      date < tenYearsAgo
+                    }
                   />
                 </PopoverContent>
               </Popover>

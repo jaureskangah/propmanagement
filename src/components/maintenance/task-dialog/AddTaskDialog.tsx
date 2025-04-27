@@ -30,7 +30,15 @@ export const AddTaskDialog = ({
   const taskForm = useTaskForm({
     onSubmit: async (task) => {
       try {
+        // Log the task before submission for debugging
         console.log("AddTaskDialog - Starting task submission:", task);
+        console.log("Task date before submission:", task.date);
+        
+        if (task.date instanceof Date) {
+          // Log date components to verify correct date
+          console.log(`Task date components: Year=${task.date.getFullYear()}, Month=${task.date.getMonth() + 1}, Day=${task.date.getDate()}`);
+        }
+        
         // Make sure we await the result of onAddTask, no matter if it returns a Promise or not
         const result = await Promise.resolve(onAddTask(task));
         console.log("AddTaskDialog - Task saved successfully:", result);
