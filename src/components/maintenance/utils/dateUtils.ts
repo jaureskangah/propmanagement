@@ -138,3 +138,21 @@ export const formatDisplayDate = (dateValue: string | Date | undefined, language
     `${day}/${month}/${year}` : 
     `${month}/${day}/${year}`;
 };
+
+/**
+ * CRUCIAL: Safely format date for storage by extracting LOCAL date components
+ * This prevents timezone issues completely
+ * @param date Date object (as selected by user in their local timezone)
+ * @returns ISO date string in YYYY-MM-DD format based on LOCAL components
+ */
+export const formatLocalDateForStorage = (date: Date): string => {
+  // Extract date parts from local date (as seen by user) 
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  // Create ISO format string from local components
+  const formatted = `${year}-${month}-${day}`;
+  console.log(`Formatting date for storage: ${date.toISOString()} → ${formatted} (local components)`);
+  return formatted;
+};

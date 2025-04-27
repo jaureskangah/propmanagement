@@ -2,6 +2,7 @@
 import { supabase } from "@/lib/supabase";
 import { Task, NewTask } from "../../types";
 import { QueryClient } from "@tanstack/react-query";
+import { formatLocalDateForStorage } from "../../utils/dateUtils";
 
 export const useTaskAddition = () => {
   const queryClient = new QueryClient();
@@ -9,29 +10,29 @@ export const useTaskAddition = () => {
   const handleAddTask = async (newTask: NewTask): Promise<Task> => {
     console.log("Adding task with data:", newTask);
     try {
-      // Get the date directly from the task or use current date as fallback
-      const dateToUse = newTask.date instanceof Date 
-        ? newTask.date 
-        : typeof newTask.date === 'string' 
-          ? new Date(newTask.date) 
-          : new Date();
+      // Check if we received a formatted date string from AddTaskDialog
+      let formattedDate: string;
+      
+      if (typeof newTask.date === 'string' && newTask.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        // Already formatted as YYYY-MM-DD, use as is
+        formattedDate = newTask.date;
+        console.log("Using pre-formatted date string:", formattedDate);
+      } else {
+        // Format the date to YYYY-MM-DD
+        const dateObj = newTask.date instanceof Date 
+          ? newTask.date 
+          : typeof newTask.date === 'string'
+            ? new Date(newTask.date)
+            : new Date();
+        
+        formattedDate = formatLocalDateForStorage(dateObj);
+        console.log("Formatted date from date object:", formattedDate, "Original:", dateObj);
+      }
       
       // Log all date information for diagnosis
       console.log("=== TASK DATE DIAGNOSIS ===");
       console.log("Original task date:", newTask.date);
-      console.log("Selected date object:", dateToUse);
-      console.log(`Selected date (local): ${dateToUse.toLocaleDateString()}`);
-      
-      // CRITICAL FIX: Always use the *local* date components as displayed to user
-      // This eliminates timezone issues completely
-      const year = dateToUse.getFullYear();
-      const month = String(dateToUse.getMonth() + 1).padStart(2, '0');
-      const day = String(dateToUse.getDate()).padStart(2, '0');
-      
-      // Create the date string in YYYY-MM-DD format from local components
-      const formattedDate = `${year}-${month}-${day}`;
-      
-      console.log(`⚠️ FORMATTED DATE FOR DB: ${formattedDate}`);
+      console.log("Final formatted date for DB:", formattedDate);
       console.log("=============================");
       
       // Get current user
@@ -41,12 +42,12 @@ export const useTaskAddition = () => {
         throw new Error("User not authenticated");
       }
       
-      // Prepare the task data to insert
+      // Prepare the task data to insert with the properly formatted date
       const taskData = {
         title: newTask.title,
         type: newTask.type || "regular",
         priority: newTask.priority || "medium",
-        date: formattedDate, // Use our formatted date
+        date: formattedDate, // Use our formatted date string
         is_recurring: newTask.is_recurring || false,
         user_id: user.id,
         property_id: newTask.property_id,
@@ -73,9 +74,13 @@ export const useTaskAddition = () => {
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
       queryClient.invalidateQueries({ queryKey: ['tasks'] });
       
+      // Parse the date string back to a Date object for the returned Task
+      const parsedDate = new Date(formattedDate + 'T00:00:00');
+      console.log("Parsed date for return:", parsedDate);
+      
       return {
         ...data,
-        date: dateToUse, // Return the exact date object that was selected
+        date: parsedDate, // Return the exact date that was selected
         completed: false,
       } as Task;
     } catch (error) {
@@ -96,27 +101,30 @@ export const useTaskAddition = () => {
       
       // Prepare tasks for insertion with proper date formatting
       const tasksToInsert = newTasks.map(task => {
-        const dateToUse = task.date instanceof Date 
-          ? task.date 
-          : typeof task.date === 'string' 
-            ? new Date(task.date) 
-            : new Date();
+        // Format date to YYYY-MM-DD regardless of input type
+        let formattedDate: string;
         
-        // CRITICAL FIX: Extract date components directly from the local date object
-        const year = dateToUse.getFullYear();
-        const month = String(dateToUse.getMonth() + 1).padStart(2, '0');
-        const day = String(dateToUse.getDate()).padStart(2, '0');
-        
-        // Create date string in YYYY-MM-DD format
-        const formattedDate = `${year}-${month}-${day}`;
-        
-        console.log(`Task "${task.title}" formatted date: ${formattedDate}`);
+        if (typeof task.date === 'string' && task.date.match(/^\d{4}-\d{2}-\d{2}$/)) {
+          // Already formatted as YYYY-MM-DD, use as is
+          formattedDate = task.date;
+          console.log(`Task "${task.title}" using pre-formatted date string:`, formattedDate);
+        } else {
+          // Format the date to YYYY-MM-DD
+          const dateObj = task.date instanceof Date 
+            ? task.date 
+            : typeof task.date === 'string'
+              ? new Date(task.date)
+              : new Date();
+          
+          formattedDate = formatLocalDateForStorage(dateObj);
+          console.log(`Task "${task.title}" formatted date:`, formattedDate, "Original:", dateObj);
+        }
         
         return {
           title: task.title,
           type: task.type || "regular",
           priority: task.priority || "medium",
-          date: formattedDate, // Use our formatted date
+          date: formattedDate, // Use our safely formatted date
           is_recurring: task.is_recurring || false,
           user_id: user.id,
           property_id: task.property_id,
@@ -145,17 +153,13 @@ export const useTaskAddition = () => {
       
       // Transform the returned data to Task objects with correct dates
       return data.map((task: any) => {
-        // Reconstruct the date from the database formatted string
-        const dateParts = task.date.split('-');
-        const taskDate = new Date(
-          parseInt(dateParts[0]), // year
-          parseInt(dateParts[1]) - 1, // month (0-indexed)
-          parseInt(dateParts[2]) // day
-        );
+        // Reconstruct the date from the stored formatted string
+        // Adding T00:00:00 ensures consistent parsing behavior
+        const parsedDate = new Date(task.date + 'T00:00:00');
         
         return {
           ...task,
-          date: taskDate,
+          date: parsedDate,
           completed: false,
         };
       }) as Task[];

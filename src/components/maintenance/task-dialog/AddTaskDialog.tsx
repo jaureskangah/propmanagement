@@ -6,6 +6,7 @@ import { TaskFormContent } from "./TaskFormContent";
 import { NewTask } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
+import { formatLocalDateForStorage } from "../utils/dateUtils";
 
 export interface AddTaskDialogProps {
   isOpen: boolean;
@@ -30,18 +31,38 @@ export const AddTaskDialog = ({
   const taskForm = useTaskForm({
     onSubmit: async (task) => {
       try {
-        // Log the task before submission for debugging
+        // Diagnostic logging
         console.log("AddTaskDialog - Starting task submission:", task);
         console.log("Task date before submission:", task.date);
         
+        // CRITICAL FIX: Ensure we're using the correct date format
         if (task.date instanceof Date) {
-          // Log date components to verify correct date
-          console.log(`Task date components: Year=${task.date.getFullYear()}, Month=${task.date.getMonth() + 1}, Day=${task.date.getDate()}`);
+          // Safe date formatting that preserves the exact day as selected by user
+          const formattedDate = formatLocalDateForStorage(task.date);
+          
+          // Create a new task object with the formatted date string
+          const safeTask = {
+            ...task,
+            date: formattedDate
+          };
+          
+          console.log("AddTaskDialog - Submitting task with safe date:", safeTask);
+          console.log("Original date components:", {
+            year: task.date.getFullYear(),
+            month: task.date.getMonth() + 1,
+            day: task.date.getDate()
+          });
+          console.log("Formatted date for submission:", formattedDate);
+          
+          // Use the safe task with formatted date string for submission
+          const result = await Promise.resolve(onAddTask(safeTask));
+          console.log("AddTaskDialog - Task saved successfully:", result);
+        } else {
+          // If for some reason we don't have a Date object, just submit as is
+          console.warn("AddTaskDialog - Task date is not a Date object:", task.date);
+          const result = await Promise.resolve(onAddTask(task));
+          console.log("AddTaskDialog - Task saved with non-Date date:", result);
         }
-        
-        // Make sure we await the result of onAddTask, no matter if it returns a Promise or not
-        const result = await Promise.resolve(onAddTask(task));
-        console.log("AddTaskDialog - Task saved successfully:", result);
         
         // Call onSuccess callback if provided
         if (onSuccess) {
@@ -50,8 +71,6 @@ export const AddTaskDialog = ({
         
         // Always close the dialog on success
         onClose();
-        
-        return result;
       } catch (error) {
         console.error("AddTaskDialog - Error adding task:", error);
         toast({
