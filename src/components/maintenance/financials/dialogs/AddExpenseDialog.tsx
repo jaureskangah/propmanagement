@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { format, parse } from "date-fns";
+import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -113,25 +113,31 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error(language === 'fr' ? "Vous devez être connecté pour ajouter une intervention" : "You must be logged in to add a maintenance");
       }
       
-      // Formatage direct YYYY-MM-DD sans conversion de timezone
-      const day = String(form.date.getDate()).padStart(2, '0');
-      const month = String(form.date.getMonth() + 1).padStart(2, '0');
-      const year = form.date.getFullYear();
+      // CRITICAL FIX: Using raw year, month, day without timezone conversion
+      // This ensures the date displayed in the UI is exactly what gets sent to the database
+      const selectedDate = form.date;
+      
+      // Log all date information for diagnosis
+      console.log("=== DATE DIAGNOSIS ===");
+      console.log("Selected date object:", selectedDate);
+      console.log(`Selected date (local): ${selectedDate.toLocaleDateString()}`);
+      console.log(`Date components: Year=${selectedDate.getFullYear()}, Month=${selectedDate.getMonth() + 1}, Day=${selectedDate.getDate()}`);
+      
+      // Create ISO date string (YYYY-MM-DD) directly from components
+      // This avoids timezone issues by not using Date.toISOString() which converts to UTC
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
       const formattedDate = `${year}-${month}-${day}`;
       
-      console.log("--- DIAGNOSTIC DE LA DATE ---");
-      console.log("Date actuelle:", new Date().toISOString());
-      console.log("Objet date sélectionné:", form.date);
-      console.log("Date YYYY-MM-DD formatée:", formattedDate);
-      console.log("Date locale affichée:", format(form.date, 'PPP', { locale }));
-      console.log("Jour:", form.date.getDate(), "Mois:", form.date.getMonth() + 1, "Année:", form.date.getFullYear());
-      console.log("--------------------------");
+      console.log(`Formatted date for database: ${formattedDate}`);
+      console.log("======================");
       
       const maintenanceData = {
         title: form.title,
         description: form.description,
         cost: parseFloat(form.cost),
-        date: formattedDate, // Date formatée directement
+        date: formattedDate,
         status: form.status,
         unit_number: form.unit_number === "none" ? null : form.unit_number,
         property_id: form.property_id,
@@ -139,7 +145,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         user_id: user.id
       };
       
-      console.log("Données d'intervention soumises:", maintenanceData);
+      console.log("Full maintenance data being submitted:", maintenanceData);
       
       const { error } = await supabase
         .from("vendor_interventions")
@@ -184,12 +190,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
-      // Garder la date exactement telle qu'elle est sélectionnée
-      console.log("Date sélectionnée dans le calendrier:", date);
-      console.log("Date au format local:", format(date, 'PPP', { locale }));
-      console.log("Date au format ISO:", date.toISOString());
-      console.log("Jour:", date.getDate(), "Mois:", date.getMonth() + 1, "Année:", date.getFullYear());
+      // Store the exact date as selected in the calendar
+      console.log("Calendar date selected:", date);
+      console.log(`Selected components: Year=${date.getFullYear()}, Month=${date.getMonth() + 1}, Day=${date.getDate()}`);
       
+      // Make sure to store the date exactly as selected
       setForm(prev => ({ ...prev, date }));
     }
   };
