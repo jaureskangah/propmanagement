@@ -42,6 +42,18 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
   // Secure the data against XSS
   const safeData = useMemo(() => sanitizeChartData(data), [data]);
 
+  // Debug log
+  useEffect(() => {
+    console.log("ChartDisplay rendering with data:", {
+      dataCount: safeData?.length || 0,
+      viewMode: view,
+      firstItem: safeData?.[0],
+      displayMode,
+      isLoading,
+      hasError: !!error
+    });
+  }, [safeData, view, displayMode, isLoading, error]);
+
   // Log access attempts for security monitoring
   useEffect(() => {
     if (!isAuthenticated) {
@@ -177,7 +189,7 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
               </defs>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
               <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
-              <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+              <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} tickFormatter={(value) => `$${value}`} />
               <Tooltip 
                 content={<RevenueChartTooltip />} 
                 cursor={{ stroke: '#888', strokeDasharray: '3 3', strokeWidth: 1, opacity: 0.5 }}
@@ -237,7 +249,7 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
             <BarChart data={safeData} margin={{ top: 5, right: 20, left: 0, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
               <XAxis dataKey="name" fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
-              <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} />
+              <YAxis fontSize={10} tick={{ fill: '#888', fontSize: 10 }} tickFormatter={(value) => `$${value}`} />
               <Tooltip 
                 content={<RevenueChartTooltip />}
                 cursor={{ fill: '#f5f5f5', opacity: 0.2 }}

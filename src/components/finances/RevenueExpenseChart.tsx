@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -18,7 +18,19 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
   
   const { monthlyData, yearlyData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
 
+  useEffect(() => {
+    console.log("RevenueExpenseChart rendering with:", {
+      propertyId,
+      selectedYear,
+      view,
+      dataPoints: monthlyData?.length || 0,
+      isLoading,
+      hasError: !!error
+    });
+  }, [propertyId, selectedYear, view, monthlyData, isLoading, error]);
+
   const handleRetry = () => {
+    console.log("Refetching chart data");
     refetch();
   };
 
