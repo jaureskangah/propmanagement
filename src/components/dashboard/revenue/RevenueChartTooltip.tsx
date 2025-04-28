@@ -13,10 +13,13 @@ export const RevenueChartTooltip = ({ active, payload, label }: RevenueTooltipPr
   
   if (active && payload && payload.length) {
     // For the income/expense chart
-    if (payload[0]?.dataKey === 'income' || payload[0]?.dataKey === 'expense') {
+    if (payload[0]?.dataKey === 'income' || payload[0]?.dataKey === 'expense' || payload[0]?.dataKey === 'profit') {
       const income = payload.find(p => p.dataKey === 'income')?.value || 0;
       const expense = payload.find(p => p.dataKey === 'expense')?.value || 0;
-      const profit = income - expense;
+      const profit = payload.find(p => p.dataKey === 'profit')?.value || income - expense;
+      
+      // Debug information
+      console.log("Tooltip data:", { label, income, expense, profit, payload });
       
       return (
         <div className="rounded-lg border bg-card/90 dark:bg-gray-800/90 p-3 shadow-lg backdrop-blur-sm animate-fade-in text-xs font-sans">

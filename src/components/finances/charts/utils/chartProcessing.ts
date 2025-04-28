@@ -44,7 +44,7 @@ const safeParseDate = (dateString: string): Date | null => {
 /**
  * Normalise les données de dépenses, en gérant les structures variées
  */
-const normalizeExpenseData = (expenses = []) => {
+const normalizeExpenseData = (expenses: any[] = []) => {
   return expenses.map(expense => {
     // Si c'est une intervention vendor, souvent elle utilise 'cost' au lieu de 'amount'
     const amount = expense.amount !== undefined ? expense.amount : expense.cost || 0;
@@ -60,7 +60,7 @@ const normalizeExpenseData = (expenses = []) => {
  * Process payment and expense data into monthly format for charts
  * With memoization to improve performance
  */
-export const processMonthlyData = (expenses = [], payments = [], year = new Date().getFullYear()) => {
+export const processMonthlyData = (payments: any[] = [], expenses: any[] = [], year = new Date().getFullYear()) => {
   // Validate inputs to prevent potential security issues
   if (!Array.isArray(payments)) payments = [];
   if (!Array.isArray(expenses)) expenses = [];
@@ -80,16 +80,19 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     return dataCache.get(cacheKey);
   }
   
-  console.log(`Processing chart data for year ${year}: ${expenses.length} expenses, ${payments.length} payments`);
+  console.log(`Processing chart data for year ${year}:`, {
+    paymentItems: payments.length,
+    expenseItems: expenses.length,
+    firstPayment: payments[0],
+    firstExpense: expenses[0],
+  });
   
   // Initialize month data structure
   const monthlyData = Array.from({ length: 12 }, (_, i) => ({
     name: getMonthName(i),
-    month: getMonthName(i),
+    month: i + 1,
     income: 0,
     expense: 0,
-    expenses: 0,  // Alias pour expense pour compatibilité
-    amount: 0,    // Alias pour income pour compatibilité
     profit: 0,
   }));
 
@@ -98,27 +101,48 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
 
   // Process payments with validation
   payments.forEach((payment) => {
-    const date = safeParseDate(payment.payment_date);
-    if (date && date.getFullYear() === year) {
-      const month = date.getMonth();
-      const amount = safeNumber(payment.amount);
-      if (month >= 0 && month < 12) {
-        monthlyData[month].income += amount;
-        monthlyData[month].amount += amount;  // Alias for charts
+    try {
+      if (!payment.payment_date) {
+        console.warn("Payment missing date:", payment);
+        return;
       }
+      
+      const date = safeParseDate(payment.payment_date);
+      if (date && date.getFullYear() === year) {
+        const month = date.getMonth();
+        // Only count paid payments as income
+        if (payment.status === 'paid' || payment.status === 'completed') {
+          const amount = safeNumber(payment.amount);
+          if (month >= 0 && month < 12) {
+            monthlyData[month].income += amount;
+            console.log(`Added payment for ${getMonthName(month)}: ${amount}`);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error processing payment:", payment, error);
     }
   });
 
-  // Process expenses with validation - ensuring we capture both cost and amount fields
+  // Process expenses with validation
   normalizedExpenses.forEach((expense) => {
-    const date = safeParseDate(expense.date);
-    if (date && date.getFullYear() === year) {
-      const month = date.getMonth();
-      const expenseAmount = safeNumber(expense.amount);
-      if (month >= 0 && month < 12) {
-        monthlyData[month].expense += expenseAmount;
-        monthlyData[month].expenses += expenseAmount;  // Alias for charts
+    try {
+      if (!expense.date) {
+        console.warn("Expense missing date:", expense);
+        return;
       }
+      
+      const date = safeParseDate(expense.date);
+      if (date && date.getFullYear() === year) {
+        const month = date.getMonth();
+        const expenseAmount = safeNumber(expense.amount);
+        if (month >= 0 && month < 12) {
+          monthlyData[month].expense += expenseAmount;
+          console.log(`Added expense for ${getMonthName(month)}: ${expenseAmount}`);
+        }
+      }
+    } catch (error) {
+      console.error("Error processing expense:", expense, error);
     }
   });
 
@@ -127,7 +151,7 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     month.profit = month.income - month.expense;
   });
 
-  console.log(`Chart data processed for ${year}: `, monthlyData);
+  console.log(`Chart data processed for ${year}:`, monthlyData);
 
   // Cache the result with timestamp
   dataCache.set(cacheKey, monthlyData);
@@ -160,6 +184,12 @@ export const processYearlyData = (payments = [], expenses = [], currentYear: num
     return dataCache.get(cacheKey);
   }
   
+  console.log("Processing yearly data:", {
+    paymentItems: payments.length,
+    expenseItems: expenses.length,
+    year: currentYear
+  });
+  
   // Get the previous 5 years including current year
   const years = Array.from({ length: 5 }, (_, i) => currentYear - 4 + i);
   
@@ -174,32 +204,51 @@ export const processYearlyData = (payments = [], expenses = [], currentYear: num
   // Create a map for faster lookup
   const yearDataMap = new Map(yearlyData.map(item => [item.name, item]));
 
+  // Normalize expenses first
+  const normalizedExpenses = normalizeExpenseData(expenses);
+
   // Process payments with validation
   payments.forEach((payment) => {
-    const date = safeParseDate(payment.payment_date);
-    if (date) {
-      const year = date.getFullYear().toString();
-      const amount = safeNumber(payment.amount);
+    try {
+      if (!payment.payment_date) return;
       
-      if (yearDataMap.has(year)) {
-        const yearData = yearDataMap.get(year);
-        yearData.income += amount;
+      const date = safeParseDate(payment.payment_date);
+      if (date) {
+        const year = date.getFullYear().toString();
+        // Only count paid payments as income
+        if (payment.status === 'paid' || payment.status === 'completed') {
+          const amount = safeNumber(payment.amount);
+          
+          if (yearDataMap.has(year)) {
+            const yearData = yearDataMap.get(year);
+            yearData.income += amount;
+            console.log(`Added yearly payment for ${year}: ${amount}`);
+          }
+        }
       }
+    } catch (error) {
+      console.error("Error processing yearly payment:", payment, error);
     }
   });
 
   // Process expenses with validation
-  expenses.forEach((expense) => {
-    const date = safeParseDate(expense.date);
-    if (date) {
-      const year = date.getFullYear().toString();
+  normalizedExpenses.forEach((expense) => {
+    try {
+      if (!expense.date) return;
       
-      if (yearDataMap.has(year)) {
-        const yearData = yearDataMap.get(year);
-        // Handle both expense.amount (maintenance_expenses) and expense.cost (vendor_interventions)
-        const expenseAmount = safeNumber(expense.amount || expense.cost);
-        yearData.expense += expenseAmount;
+      const date = safeParseDate(expense.date);
+      if (date) {
+        const year = date.getFullYear().toString();
+        
+        if (yearDataMap.has(year)) {
+          const yearData = yearDataMap.get(year);
+          const expenseAmount = safeNumber(expense.amount);
+          yearData.expense += expenseAmount;
+          console.log(`Added yearly expense for ${year}: ${expenseAmount}`);
+        }
       }
+    } catch (error) {
+      console.error("Error processing yearly expense:", expense, error);
     }
   });
 
@@ -210,6 +259,8 @@ export const processYearlyData = (payments = [], expenses = [], currentYear: num
     data.profit = data.income - data.expense;
     return data;
   });
+
+  console.log("Yearly data processed:", result);
 
   // Cache the result with timestamp
   dataCache.set(cacheKey, result);

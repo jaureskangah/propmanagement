@@ -18,6 +18,7 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
   
   const { monthlyData, yearlyData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
 
+  // Log component rendering and data
   useEffect(() => {
     console.log("RevenueExpenseChart rendering with:", {
       propertyId,
@@ -25,7 +26,8 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
       view,
       dataPoints: monthlyData?.length || 0,
       isLoading,
-      hasError: !!error
+      hasError: !!error,
+      dataFirstItem: monthlyData?.[0],
     });
   }, [propertyId, selectedYear, view, monthlyData, isLoading, error]);
 

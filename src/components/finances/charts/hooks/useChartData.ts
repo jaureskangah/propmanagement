@@ -44,7 +44,6 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0]; // Jan 1
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0]; // Dec 31
 
-      // Run all queries in parallel for better performance
       try {
         // Run queries concurrently using Promise.all
         const [tenantsResult, maintenanceExpensesResult, vendorInterventionsResult] = await Promise.all([
@@ -52,15 +51,13 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
           supabase
             .from('tenants')
             .select('id')
-            .eq('property_id', propertyId)
-            .eq('user_id', user.id), // Security: Only fetch tenants belonging to the current user
+            .eq('property_id', propertyId),
             
           // Fetch maintenance expenses for the selected year
           supabase
             .from('maintenance_expenses')
             .select('amount, date, category')
             .eq('property_id', propertyId)
-            .eq('user_id', user.id) // Security: Only fetch expenses belonging to the current user
             .gte('date', startOfYear)
             .lte('date', endOfYear)
             .order('date', { ascending: true }),
@@ -70,7 +67,6 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
             .from('vendor_interventions')
             .select('cost, date')
             .eq('property_id', propertyId)
-            .eq('user_id', user.id) // Security: Only fetch interventions belonging to the current user
             .gte('date', startOfYear)
             .lte('date', endOfYear)
             .order('date', { ascending: true })
@@ -80,6 +76,10 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
         if (tenantsResult.error) throw new Error(tenantsResult.error.message);
         if (maintenanceExpensesResult.error) throw new Error(maintenanceExpensesResult.error.message);
         if (vendorInterventionsResult.error) throw new Error(vendorInterventionsResult.error.message);
+        
+        console.log("Tenants result:", tenantsResult.data);
+        console.log("Maintenance expenses:", maintenanceExpensesResult.data);
+        console.log("Vendor interventions:", vendorInterventionsResult.data);
         
         const tenantIds = tenantsResult.data?.map(t => t.id) || [];
         
@@ -95,6 +95,8 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
             .order('payment_date', { ascending: true });
             
           if (paymentsError) throw new Error(paymentsError.message);
+          
+          console.log("Payments data:", paymentsData);
           
           // Security: Validate and sanitize payment data
           payments = (paymentsData || []).map(payment => ({
@@ -121,7 +123,9 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
           paymentsCount: payments?.length || 0,
           maintenanceExpensesCount: maintenanceExpensesResult.data?.length || 0,
           vendorInterventionsCount: vendorInterventionsResult.data?.length || 0,
-          totalExpensesCount: allExpenses.length
+          totalExpensesCount: allExpenses.length,
+          paymentsFirstItem: payments[0],
+          expensesFirstItem: allExpenses[0],
         });
 
         return { 
@@ -145,27 +149,24 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
     enabled: !!propertyId && isAuthenticated,
     staleTime: 5 * 60 * 1000, // 5 minutes cache
     gcTime: 10 * 60 * 1000,  // 10 minutes garbage collection
-    meta: {
-      onError: (error: Error) => {
-        console.error('Query error in useChartData:', error);
-        toast({
-          title: t('error'),
-          description: t('unexpectedError'),
-          variant: "destructive",
-        });
-      }
-    }
   });
 
   // Process data whenever raw data or view changes
   useEffect(() => {
     if (result.data) {
+      console.log("Processing chart data with:", {
+        payments: result.data.payments.length,
+        expenses: result.data.expenses.length,
+        year: selectedYear,
+      });
+      
       // Process monthly data
       const monthlyProcessed = processMonthlyData(
         result.data.payments,
         result.data.expenses,
         selectedYear
       );
+      console.log("Monthly data processed:", monthlyProcessed);
       setMonthlyData(monthlyProcessed);
       
       // Process yearly data
@@ -174,6 +175,7 @@ export const useChartData = (propertyId: string | null, view: 'monthly' | 'yearl
         result.data.expenses,
         selectedYear
       );
+      console.log("Yearly data processed:", yearlyProcessed);
       setYearlyData(yearlyProcessed);
     }
   }, [result.data, selectedYear]);
