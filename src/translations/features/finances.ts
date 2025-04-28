@@ -1,9 +1,28 @@
 import type { FinancesTranslations } from "../types/finances";
 
-// Export the translation functions so they can be imported in en.ts and fr.ts
-export const enFinances: Record<string, string> = {};
-export const frFinances: Record<string, string> = {};
+export const enFinances: Record<string, string> = {
+  financialOverview: "Financial Overview",
+  income: "Income",
+  expense: "Expense",
+  totalIncome: "Total Income", 
+  totalExpenses: "Total Expenses",
+  unpaidRent: "Unpaid Rent",
+  selectProperty: "Select a property to view metrics",
+  noPropertiesAvailable: "Please select a property to view its financial data",
+};
 
+export const frFinances: Record<string, string> = {
+  financialOverview: "Vue d'ensemble financière",
+  income: "Revenus",
+  expense: "Dépenses",
+  totalIncome: "Revenu total",
+  totalExpenses: "Dépenses totales",
+  unpaidRent: "Loyers impayés",
+  selectProperty: "Sélectionnez une propriété pour voir les métriques",
+  noPropertiesAvailable: "Veuillez sélectionner une propriété pour voir ses données financières",
+};
+
+// Export the translation functions so they can be imported in en.ts and fr.ts
 // Add finance translations to the main translation object
 export const addFinanceTranslations = (
   locale: 'en' | 'fr',
