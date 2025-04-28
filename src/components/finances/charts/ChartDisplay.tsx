@@ -1,7 +1,7 @@
 
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Loader2 } from "lucide-react";
+import { Loader2, RefreshCw } from "lucide-react";
 import { RevenueChartTooltip } from "@/components/dashboard/revenue/RevenueChartTooltip";
 import { memo, useMemo, useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
@@ -9,12 +9,14 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
 
 interface ChartDisplayProps {
   data: any[];
   view: 'monthly' | 'yearly';
   isLoading: boolean;
   error?: Error | null;
+  onRetry?: () => void;
 }
 
 // Security: Sanitize chart data to prevent XSS
@@ -34,7 +36,7 @@ const sanitizeChartData = (data: any[]): any[] => {
 };
 
 // Using memo to prevent unnecessary re-renders
-export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, error }: ChartDisplayProps) {
+export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, error, onRetry }: ChartDisplayProps) {
   const { t } = useLocale();
   const { isAuthenticated } = useAuth();
   const [displayMode, setDisplayMode] = useState<'all' | 'income' | 'expense' | 'profit'>('all');
@@ -50,7 +52,8 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
       firstItem: safeData?.[0],
       displayMode,
       isLoading,
-      hasError: !!error
+      hasError: !!error,
+      dataValues: safeData?.slice(0, 3)
     });
   }, [safeData, view, displayMode, isLoading, error]);
 
@@ -102,8 +105,19 @@ export const ChartDisplay = memo(function ChartDisplay({ data, view, isLoading, 
       >
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            {t('errorLoadingData')}
+          <AlertDescription className="flex items-center justify-between">
+            <span>{t('errorLoadingData')}</span>
+            {onRetry && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onRetry}
+                className="ml-2 h-7 px-2"
+              >
+                <RefreshCw className="h-3.5 w-3.5 mr-1" />
+                {t('retry')}
+              </Button>
+            )}
           </AlertDescription>
         </Alert>
       </motion.div>

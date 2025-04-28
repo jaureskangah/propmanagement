@@ -6,6 +6,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useChartData } from "./charts/hooks/useChartData";
 import { ChartDisplay } from "./charts/ChartDisplay";
 import { ErrorState } from "./metrics/ErrorState";
+import { useToast } from "@/hooks/use-toast";
 
 interface RevenueExpenseChartProps {
   propertyId: string | null;
@@ -14,6 +15,7 @@ interface RevenueExpenseChartProps {
 
 export default function RevenueExpenseChart({ propertyId, selectedYear }: RevenueExpenseChartProps) {
   const { t } = useLocale();
+  const { toast } = useToast();
   const [view, setView] = useState<'monthly' | 'yearly'>('monthly');
   
   const { monthlyData, yearlyData, isLoading, error, refetch } = useChartData(propertyId, view, selectedYear);
@@ -29,17 +31,26 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
       hasError: !!error,
       dataFirstItem: monthlyData?.[0],
     });
-  }, [propertyId, selectedYear, view, monthlyData, isLoading, error]);
+    
+    // Show toast if there's an error but don't block rendering
+    if (error) {
+      console.error("Error loading chart data:", error);
+      toast({
+        title: t('errorLoadingData'),
+        description: error.message || t('errorLoadingData'),
+        variant: "destructive",
+      });
+    }
+  }, [propertyId, selectedYear, view, monthlyData, isLoading, error, toast, t]);
 
   const handleRetry = () => {
     console.log("Refetching chart data");
     refetch();
+    toast({
+      title: t('refreshing'),
+      description: t('dataBeingRefreshed'),
+    });
   };
-
-  if (error) {
-    console.error("Error loading chart data:", error);
-    return <ErrorState error={error as Error} onRetry={handleRetry} type="chart" />;
-  }
 
   const processedData = view === 'monthly' ? monthlyData : yearlyData;
 
@@ -62,6 +73,7 @@ export default function RevenueExpenseChart({ propertyId, selectedYear }: Revenu
           view={view} 
           isLoading={isLoading}
           error={error}
+          onRetry={handleRetry}
         />
       </CardContent>
     </Card>
