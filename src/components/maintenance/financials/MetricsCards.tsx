@@ -74,46 +74,94 @@ export const MetricsCards = ({
     enabled: !!propertyId && selectedYear > 0
   });
 
-  // Combinons toutes les dépenses (maintenance_expenses et vendor_interventions)
-  // Normalisons les données pour assurer la cohérence 
+  // Normaliser les données pour assurer la cohérence 
   const normalizeExpenses = () => {
-    // Normaliser les objets de maintenance_expenses
-    const normalizedExpenses = expenses.map(expense => ({
-      amount: expense.amount || 0,
-      date: expense.date
-    }));
+    try {
+      // Vérifier que les entrées sont des tableaux valides avant de procéder
+      if (!Array.isArray(expenses)) {
+        console.warn("Les dépenses ne sont pas un tableau valide:", expenses);
+        return [];
+      }
+      
+      if (!Array.isArray(maintenance)) {
+        console.warn("Les interventions de maintenance ne sont pas un tableau valide:", maintenance);
+        return [];
+      }
 
-    // Normaliser les objets de vendor_interventions (qui utilisent 'cost' au lieu de 'amount')
-    const normalizedMaintenance = maintenance.map(item => ({
-      amount: item.cost || 0,
-      date: item.date
-    }));
+      // Normaliser les objets de maintenance_expenses avec validation
+      const normalizedExpenses = expenses
+        .filter(expense => expense && typeof expense === 'object')
+        .map(expense => ({
+          amount: typeof expense.amount === 'number' ? expense.amount : 0,
+          date: expense.date || new Date().toISOString()
+        }));
 
-    // Fusionner les deux ensembles de données normalisés
-    return [...normalizedExpenses, ...normalizedMaintenance];
+      // Normaliser les objets de vendor_interventions avec validation
+      const normalizedMaintenance = maintenance
+        .filter(item => item && typeof item === 'object')
+        .map(item => ({
+          amount: typeof item.cost === 'number' ? item.cost : 0,
+          date: item.date || new Date().toISOString()
+        }));
+
+      // Fusionner les deux ensembles de données normalisés
+      console.log("Expenses normalized:", normalizedExpenses.length, "Maintenance normalized:", normalizedMaintenance.length);
+      return [...normalizedExpenses, ...normalizedMaintenance];
+    } catch (error) {
+      console.error("Erreur lors de la normalisation des dépenses:", error);
+      return [];
+    }
   };
 
   // Utilisation de la même logique que dans le composant Finances
   const allExpenses = normalizeExpenses();
-  
-  // Utiliser processMonthlyData pour avoir la même logique de calcul que dans l'onglet Finances
-  const currentYearData = processMonthlyData(allExpenses, [], selectedYear);
+  console.log("All normalized expenses:", allExpenses.length);
   
   // Calculer la somme des dépenses pour l'année sélectionnée
-  const totalExpenses = currentYearData.reduce((acc, month) => acc + month.expenses, 0);
+  let totalExpenses = 0;
+  
+  try {
+    // Si nous avons des données de dépenses, utilisons processMonthlyData
+    if (allExpenses.length > 0) {
+      const currentYearData = processMonthlyData(allExpenses, [], selectedYear);
+      totalExpenses = currentYearData.reduce((acc, month) => acc + month.expenses, 0);
+    }
+    
+    // Vérification supplémentaire pour éviter NaN
+    if (isNaN(totalExpenses)) {
+      console.warn("Total expenses is NaN, setting to 0");
+      totalExpenses = 0;
+    }
+  } catch (error) {
+    console.error("Erreur lors du calcul des dépenses totales:", error);
+    totalExpenses = 0;
+  }
   
   // Calculer le total des revenus de loyers
-  const totalRentPaid = propertyRentData
-    .filter(payment => payment.status === "paid")
-    .reduce((acc, curr) => acc + curr.amount, 0);
+  let totalRentPaid = 0;
+  
+  try {
+    totalRentPaid = propertyRentData
+      .filter(payment => payment && payment.status === "paid" && typeof payment.amount === 'number')
+      .reduce((acc, curr) => acc + curr.amount, 0);
+      
+    // Vérification supplémentaire pour éviter NaN
+    if (isNaN(totalRentPaid)) {
+      console.warn("Total rent paid is NaN, setting to 0");
+      totalRentPaid = 0;
+    }
+  } catch (error) {
+    console.error("Erreur lors du calcul des loyers payés:", error);
+    totalRentPaid = 0;
+  }
   
   console.log("MetricsCards - Totaux calculés:", {
     totalExpenses,
     totalRentPaid,
     propertyId, 
     year: selectedYear, 
-    expensesCount: expenses.length,
-    maintenanceCount: maintenance.length,
+    expensesCount: expenses?.length || 0,
+    maintenanceCount: maintenance?.length || 0,
     combinedExpensesCount: allExpenses.length
   });
 

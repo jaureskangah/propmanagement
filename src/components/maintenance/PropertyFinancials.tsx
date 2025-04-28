@@ -140,30 +140,54 @@ export const PropertyFinancials = ({
     enabled: !!propertyId
   });
 
-  // Calculate ROI
+  // Calculate ROI with improved error handling
   const calculateROI = () => {
-    // Calculer le total des dépenses en utilisant la même méthode que Finances
-    const totalExpenses = expenses.reduce((acc, curr) => acc + (curr.amount || 0), 0);
-    const totalMaintenance = maintenance.reduce((acc, curr) => acc + (curr.cost || 0), 0);
-    
-    // Filter only paid payments
-    const totalIncome = rentData
-      .filter(payment => payment.status === "paid")
-      .reduce((acc, curr) => acc + curr.amount, 0);
-    
-    console.log("ROI calculation for property:", propertyId, {
-      totalExpenses,
-      totalMaintenance,
-      totalIncome,
-      totalCombined: totalExpenses + totalMaintenance,
-      rentPaymentsCount: rentData.length,
-      year: selectedYear
-    });
-    
-    const propertyValue = 500000; // This would ideally come from the property data
-    const netIncome = totalIncome - totalExpenses - totalMaintenance;
-    
-    return ((netIncome / propertyValue) * 100).toFixed(2);
+    try {
+      // Vérifier que les tableaux sont valides
+      if (!Array.isArray(expenses) || !Array.isArray(maintenance) || !Array.isArray(rentData)) {
+        console.warn("Invalid data types for ROI calculation");
+        return "0.00";
+      }
+
+      // Calculer le total des dépenses avec validation
+      const totalExpenses = expenses
+        .filter(expense => expense && typeof expense === 'object' && typeof expense.amount === 'number')
+        .reduce((acc, curr) => acc + curr.amount, 0);
+        
+      // Calculer le total des coûts de maintenance avec validation
+      const totalMaintenance = maintenance
+        .filter(item => item && typeof item === 'object' && typeof item.cost === 'number')
+        .reduce((acc, curr) => acc + curr.cost, 0);
+      
+      // Calculer le total des loyers payés avec validation
+      const totalIncome = rentData
+        .filter(payment => payment && payment.status === "paid" && typeof payment.amount === 'number')
+        .reduce((acc, curr) => acc + curr.amount, 0);
+      
+      console.log("ROI calculation for property:", propertyId, {
+        totalExpenses,
+        totalMaintenance,
+        totalIncome,
+        totalCombined: totalExpenses + totalMaintenance,
+        rentPaymentsCount: rentData.length,
+        year: selectedYear
+      });
+      
+      // Si les données sont incomplètes ou insuffisantes, renvoyer 0
+      if (isNaN(totalIncome) || isNaN(totalExpenses) || isNaN(totalMaintenance)) {
+        return "0.00";
+      }
+      
+      const propertyValue = 500000; // This would ideally come from the property data
+      const netIncome = totalIncome - totalExpenses - totalMaintenance;
+      
+      // Limiter le résultat à 2 décimales et s'assurer qu'il n'est pas NaN
+      const roi = ((netIncome / propertyValue) * 100);
+      return isNaN(roi) ? "0.00" : roi.toFixed(2);
+    } catch (error) {
+      console.error("Error calculating ROI:", error);
+      return "0.00";
+    }
   };
 
   return (
