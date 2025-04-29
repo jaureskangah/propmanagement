@@ -34,41 +34,43 @@ export const frPricing: PricingTranslations = {
 };
 
 export const enPlanFeatures: PlanFeaturesTranslations = {
-  upTo2Properties: "1 property",
-  upTo5Properties: "5 properties",
+  // Plan Basic - Limité mais fonctionnel
+  upTo2Properties: "Up to 3 properties",
+  upTo5Properties: "Up to 10 properties",
   upTo20Properties: "Unlimited properties",
-  rentManagement: "Online payments",
-  digitalDocuments: "Basic document management",
-  basicPropertyCards: "Up to 5 tenants",
-  emailNotifications: "Email support",
-  tenantVerification: "Advanced reports",
+  rentManagement: "Basic rent tracking",
+  digitalDocuments: "Document storage",
+  basicPropertyCards: "Basic tenant management",
+  emailNotifications: "Email notifications",
+  tenantVerification: "Tenant verification",
   prioritySupport: "Priority support",
-  advancedDashboard: "Premium tenant portal",
-  financialReports: "Unlimited tenants",
-  maintenanceManagement: "Accounting integrations",
-  dedicatedSupport: "24/7 dedicated support",
-  customDashboard: "API access",
+  advancedDashboard: "Advanced dashboard",
+  financialReports: "Basic financial reports",
+  maintenanceManagement: "Maintenance management",
+  dedicatedSupport: "Dedicated support team",
+  customDashboard: "Custom dashboard",
   advancedFinancialReports: "Advanced financial reports",
-  userTraining: "User training",
-  dailyBackup: "Daily backup"
+  userTraining: "User training sessions",
+  dailyBackup: "Automatic data backup"
 };
 
 export const frPlanFeatures: PlanFeaturesTranslations = {
-  upTo2Properties: "1 propriété",
-  upTo5Properties: "5 propriétés",
+  // Plan Basique - Limité mais fonctionnel
+  upTo2Properties: "Jusqu'à 3 propriétés",
+  upTo5Properties: "Jusqu'à 10 propriétés",
   upTo20Properties: "Propriétés illimitées",
-  rentManagement: "Paiements en ligne",
-  digitalDocuments: "Gestion documentaire de base",
-  basicPropertyCards: "5 locataires maximum",
-  emailNotifications: "Support par email",
-  tenantVerification: "Rapports avancés",
+  rentManagement: "Suivi des loyers basique",
+  digitalDocuments: "Stockage de documents",
+  basicPropertyCards: "Gestion des locataires basique",
+  emailNotifications: "Notifications par email",
+  tenantVerification: "Vérification des locataires",
   prioritySupport: "Support prioritaire",
-  advancedDashboard: "Portail locataires premium",
-  financialReports: "Locataires illimités",
-  maintenanceManagement: "Intégrations comptables",
-  dedicatedSupport: "Support dédié 24/7",
-  customDashboard: "API disponible",
+  advancedDashboard: "Tableau de bord avancé",
+  financialReports: "Rapports financiers basiques",
+  maintenanceManagement: "Gestion de la maintenance",
+  dedicatedSupport: "Équipe de support dédiée",
+  customDashboard: "Tableau de bord personnalisable",
   advancedFinancialReports: "Rapports financiers avancés",
-  userTraining: "Formation utilisateur",
-  dailyBackup: "Sauvegarde quotidienne"
+  userTraining: "Sessions de formation",
+  dailyBackup: "Sauvegarde automatique des données"
 };

@@ -19,9 +19,9 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
     price: "15",
     features: [
       t('upTo2Properties'),
-      t('basicPropertyCards'),
       t('rentManagement'),
       t('digitalDocuments'),
+      t('basicPropertyCards'),
       t('emailNotifications'),
     ],
     buttonText: "pricingStartFree",
@@ -37,6 +37,8 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
     features: [
       t('upTo5Properties'),
       t('tenantVerification'),
+      t('financialReports'),
+      t('maintenanceManagement'),
       t('advancedDashboard'),
       t('prioritySupport'),
     ],
@@ -51,10 +53,11 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
     price: "60",
     features: [
       t('upTo20Properties'),
-      t('financialReports'),
-      t('maintenanceManagement'),
+      t('advancedFinancialReports'),
       t('customDashboard'),
       t('dedicatedSupport'),
+      t('userTraining'),
+      t('dailyBackup'),
     ],
     buttonText: "pricingGetStarted",
     priceId: "price_pro",
