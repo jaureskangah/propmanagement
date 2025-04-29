@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Area,
@@ -116,6 +117,10 @@ export const RevenueChart = () => {
     lastMonth: monthlyData[monthlyData.length - 1]?.month
   });
 
+  // Updated colors to match the finance page
+  const revenueColor = "#0EA5E9"; // Blue color for revenue
+  const expensesColor = "#ea384c";  // Red color for expenses
+
   return (
     <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -124,11 +129,11 @@ export const RevenueChart = () => {
         </CardTitle>
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
-            <div className="h-2.5 w-2.5 rounded-full bg-blue-500 animate-pulse" />
+            <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: revenueColor }} />
             <span className="text-xs text-muted-foreground">{t('revenue')}</span>
           </div>
           <div className="flex items-center gap-1.5 transition-transform duration-300 hover:scale-105">
-            <div className="h-2.5 w-2.5 rounded-full bg-blue-200 animate-pulse" />
+            <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: expensesColor }} />
             <span className="text-xs text-muted-foreground">{t('expenses')}</span>
           </div>
         </div>
@@ -139,12 +144,12 @@ export const RevenueChart = () => {
             <AreaChart data={monthlyData}>
               <defs>
                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
+                  <stop offset="5%" stopColor={revenueColor} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={revenueColor} stopOpacity={0} />
                 </linearGradient>
                 <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#93C5FD" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#93C5FD" stopOpacity={0} />
+                  <stop offset="5%" stopColor={expensesColor} stopOpacity={0.3} />
+                  <stop offset="95%" stopColor={expensesColor} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid 
@@ -172,7 +177,7 @@ export const RevenueChart = () => {
               <Area
                 type="monotone"
                 dataKey="amount"
-                stroke="#3B82F6"
+                stroke={revenueColor}
                 strokeWidth={1.5}
                 fillOpacity={1}
                 fill="url(#colorRevenue)"
@@ -180,7 +185,7 @@ export const RevenueChart = () => {
                 animationBegin={0}
                 activeDot={{
                   r: 4,
-                  stroke: '#3B82F6',
+                  stroke: revenueColor,
                   strokeWidth: 1.5,
                   fill: 'white',
                   className: 'animate-pulse'
@@ -189,7 +194,7 @@ export const RevenueChart = () => {
               <Area
                 type="monotone"
                 dataKey="expenses"
-                stroke="#93C5FD"
+                stroke={expensesColor}
                 strokeWidth={1.5}
                 fillOpacity={1}
                 fill="url(#colorExpenses)"
@@ -197,7 +202,7 @@ export const RevenueChart = () => {
                 animationBegin={500}
                 activeDot={{
                   r: 4,
-                  stroke: '#93C5FD',
+                  stroke: expensesColor,
                   strokeWidth: 1.5,
                   fill: 'white',
                   className: 'animate-pulse'
