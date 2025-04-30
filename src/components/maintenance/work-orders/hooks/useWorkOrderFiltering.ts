@@ -16,8 +16,8 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
   const { statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch } = options;
 
   const filteredAndSortedOrders = useMemo(() => {
-    // Limiter le nombre d'éléments traités à 1000 pour éviter les problèmes de mémoire
-    const limitedWorkOrders = workOrders.slice(0, 1000);
+    // Limiter le nombre d'éléments traités à 500 pour éviter les problèmes de mémoire
+    const limitedWorkOrders = workOrders.slice(0, 500);
     
     return limitedWorkOrders
       .filter((order) => {
@@ -27,7 +27,7 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
           order.property?.toLowerCase().includes(searchQuery.toLowerCase());
         const matchesVendor = 
           !vendorSearch || 
-          order.vendor.toLowerCase().includes(vendorSearch.toLowerCase());
+          (order.vendor && order.vendor.toLowerCase().includes(vendorSearch.toLowerCase()));
         const matchesPriority = 
           priorityFilter === "all" || 
           order.priority === priorityFilter;
@@ -36,11 +36,8 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
         let matchesDateRange = true;
         if (dateRange.from && dateRange.to && order.date) {
           try {
-            const orderDate = parseISO(order.date);
-            matchesDateRange = isWithinInterval(orderDate, {
-              start: dateRange.from,
-              end: dateRange.to
-            });
+            const orderDate = typeof order.date === 'string' ? new Date(order.date) : order.date;
+            matchesDateRange = orderDate >= dateRange.from && orderDate <= dateRange.to;
           } catch (error) {
             console.error("Date parsing error:", error);
             matchesDateRange = true;

@@ -57,4 +57,3 @@ export const SidebarNavLink = ({ to, icon: Icon, children, collapsed, tooltipCon
 
   return link;
 };
-
