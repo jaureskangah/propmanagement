@@ -69,6 +69,12 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
           setStatusFilter={setStatusFilter}
           sortBy={sortBy}
           setSortBy={setSortBy}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
+          vendorSearch={vendorSearch}
+          setVendorSearch={setVendorSearch}
         />
         
         <WorkOrderAdvancedFilters
@@ -81,7 +87,62 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
           resetFilters={resetFilters}
         />
         
-        <WorkOrderTable workOrders={filteredOrders} />
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr>
+                <th className="text-left p-2 border-b">Titre</th>
+                <th className="text-left p-2 border-b">Propriété</th>
+                <th className="text-left p-2 border-b">Statut</th>
+                <th className="text-left p-2 border-b">Priorité</th>
+                <th className="text-left p-2 border-b">Prestataire</th>
+                <th className="text-left p-2 border-b">Coût</th>
+                <th className="text-left p-2 border-b">Date</th>
+                <th className="text-left p-2 border-b">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.map(order => (
+                <tr key={order.id} className="hover:bg-muted/50">
+                  <td className="p-2 border-b">{order.title}</td>
+                  <td className="p-2 border-b">{order.property || '-'}</td>
+                  <td className="p-2 border-b">
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      order.status === "En cours" ? "bg-blue-100 text-blue-800" :
+                      order.status === "Planifié" ? "bg-amber-100 text-amber-800" :
+                      order.status === "Terminé" ? "bg-green-100 text-green-800" :
+                      "bg-gray-100 text-gray-800"
+                    }`}>
+                      {order.status}
+                    </span>
+                  </td>
+                  <td className="p-2 border-b">
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      order.priority === "Haute" ? "bg-red-100 text-red-800" :
+                      order.priority === "Moyenne" ? "bg-amber-100 text-amber-800" :
+                      "bg-blue-100 text-blue-800"
+                    }`}>
+                      {order.priority}
+                    </span>
+                  </td>
+                  <td className="p-2 border-b">{order.vendor}</td>
+                  <td className="p-2 border-b">${order.cost.toLocaleString()}</td>
+                  <td className="p-2 border-b">{order.date ? new Date(order.date).toLocaleDateString() : '-'}</td>
+                  <td className="p-2 border-b">
+                    <Button variant="outline" size="sm">Voir</Button>
+                  </td>
+                </tr>
+              ))}
+              {filteredOrders.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="text-center py-4 text-muted-foreground">
+                    Aucun ordre de travail trouvé
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </CardContent>
     </Card>
   );

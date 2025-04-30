@@ -10,12 +10,12 @@ interface WorkOrderFiltersProps {
   setSearchQuery: (query: string) => void;
   statusFilter: string;
   setStatusFilter: (status: string) => void;
+  sortBy: "date" | "cost" | "priority";
+  setSortBy: (sort: "date" | "cost" | "priority") => void;
   dateRange: { from: Date | undefined; to: Date | undefined };
   setDateRange: (range: { from: Date | undefined; to: Date | undefined }) => void;
   priorityFilter: string;
   setPriorityFilter: (priority: string) => void;
-  sortBy: "date" | "cost" | "priority";
-  setSortBy: (sort: "date" | "cost" | "priority") => void;
   vendorSearch: string;
   setVendorSearch: (vendor: string) => void;
 }
@@ -25,12 +25,12 @@ export const WorkOrderFilters = ({
   setSearchQuery,
   statusFilter,
   setStatusFilter,
+  sortBy,
+  setSortBy,
   dateRange,
   setDateRange,
   priorityFilter,
   setPriorityFilter,
-  sortBy,
-  setSortBy,
   vendorSearch,
   setVendorSearch
 }: WorkOrderFiltersProps) => {

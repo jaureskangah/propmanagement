@@ -16,7 +16,10 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
   const { statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch } = options;
 
   const filteredAndSortedOrders = useMemo(() => {
-    return workOrders
+    // Limiter le nombre d'éléments traités à 1000 pour éviter les problèmes de mémoire
+    const limitedWorkOrders = workOrders.slice(0, 1000);
+    
+    return limitedWorkOrders
       .filter((order) => {
         const matchesStatus = statusFilter === "all" || order.status === statusFilter;
         const matchesSearch = 
@@ -31,12 +34,17 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
         
         // Date range filter
         let matchesDateRange = true;
-        if (dateRange.from && dateRange.to) {
-          const orderDate = parseISO(order.date || "");
-          matchesDateRange = isWithinInterval(orderDate, {
-            start: dateRange.from,
-            end: dateRange.to
-          });
+        if (dateRange.from && dateRange.to && order.date) {
+          try {
+            const orderDate = parseISO(order.date);
+            matchesDateRange = isWithinInterval(orderDate, {
+              start: dateRange.from,
+              end: dateRange.to
+            });
+          } catch (error) {
+            console.error("Date parsing error:", error);
+            matchesDateRange = true;
+          }
         }
 
         return matchesStatus && matchesSearch && matchesVendor && matchesPriority && matchesDateRange;
