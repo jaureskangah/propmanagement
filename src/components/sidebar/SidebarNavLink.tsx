@@ -17,7 +17,13 @@ interface SidebarNavLinkProps {
   tooltipContent?: string;
 }
 
-export const SidebarNavLink = ({ to, icon: Icon, children, collapsed, tooltipContent }: SidebarNavLinkProps) => {
+export const SidebarNavLink = ({ 
+  to, 
+  icon: Icon, 
+  children, 
+  collapsed, 
+  tooltipContent 
+}: SidebarNavLinkProps) => {
   const link = (
     <NavLink
       to={to}
@@ -30,7 +36,7 @@ export const SidebarNavLink = ({ to, icon: Icon, children, collapsed, tooltipCon
           collapsed && "justify-center px-2"
         )
       }
-      title={collapsed ? String(children) : undefined}
+      title={collapsed && !tooltipContent ? String(children) : undefined}
     >
       <Icon className={cn(
         "h-5 w-5 transition-transform duration-300",
@@ -43,11 +49,11 @@ export const SidebarNavLink = ({ to, icon: Icon, children, collapsed, tooltipCon
   if (collapsed && tooltipContent) {
     return (
       <TooltipProvider>
-        <Tooltip>
+        <Tooltip delayDuration={200}>
           <TooltipTrigger asChild>
             {link}
           </TooltipTrigger>
-          <TooltipContent side="right">
+          <TooltipContent side="right" sideOffset={10}>
             {tooltipContent}
           </TooltipContent>
         </Tooltip>

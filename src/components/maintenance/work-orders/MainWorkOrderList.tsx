@@ -34,56 +34,12 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   const [vendorSearch, setVendorSearch] = useState("");
 
   // Limit to 500 records to avoid memory issues
-  const safeWorkOrders = workOrders.slice(0, 500);
-
-  // Filter and sort work orders
-  const filteredAndSortedOrders = useMemo(() => {
-    return safeWorkOrders
-      .filter((order) => {
-        const matchesStatus = statusFilter === "all" || order.status === statusFilter;
-        const matchesSearch = 
-          order.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (order.property && order.property.toLowerCase().includes(searchQuery.toLowerCase()));
-        const matchesVendor = 
-          !vendorSearch || 
-          (order.vendor && order.vendor.toLowerCase().includes(vendorSearch.toLowerCase()));
-        const matchesPriority = 
-          priorityFilter === "all" || 
-          order.priority === priorityFilter;
-        
-        // Date range filter
-        let matchesDateRange = true;
-        if (dateRange.from && dateRange.to && order.date) {
-          try {
-            const orderDate = new Date(order.date);
-            matchesDateRange = orderDate >= dateRange.from && orderDate <= dateRange.to;
-          } catch (error) {
-            console.error("Date parsing error:", error);
-            matchesDateRange = true;
-          }
-        }
-        
-        return matchesStatus && matchesSearch && matchesVendor && matchesPriority && matchesDateRange;
-      })
-      .sort((a, b) => {
-        if (sortBy === "date") {
-          return new Date(b.date || "").getTime() - new Date(a.date || "").getTime();
-        } else if (sortBy === "cost") {
-          return (b.cost || 0) - (a.cost || 0);
-        } else if (sortBy === "priority") {
-          const priorityWeight = { "Haute": 3, "Moyenne": 2, "Basse": 1 };
-          return (priorityWeight[b.priority as keyof typeof priorityWeight] || 0) - 
-                 (priorityWeight[a.priority as keyof typeof priorityWeight] || 0);
-        }
-        return 0;
-      });
-  }, [safeWorkOrders, statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch]);
+  const safeWorkOrders = useMemo(() => workOrders.slice(0, 500), [workOrders]);
 
   const handleCreateWorkOrder = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log("Bouton de création d'ordre de travail cliqué");
     setIsCreateDialogOpen(true);
-    onCreateWorkOrder(); // Call the parent handler if needed
+    onCreateWorkOrder(); 
   };
 
   const handleDialogClose = () => {
@@ -91,7 +47,6 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
   };
 
   const handleWorkOrderCreated = () => {
-    // This would typically trigger a refresh of the work orders list
     console.log("Work order created, refreshing list...");
     setIsCreateDialogOpen(false);
   };
@@ -125,7 +80,7 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
           )}
         </div>
 
-        <WorkOrderGrid orders={filteredAndSortedOrders} />
+        <WorkOrderGrid orders={safeWorkOrders} />
 
         <CreateWorkOrderDialog
           isOpen={isCreateDialogOpen}

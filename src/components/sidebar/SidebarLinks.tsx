@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
@@ -13,13 +14,19 @@ import {
   DollarSign,
   FileText
 } from "lucide-react";
+import { SidebarNavLink } from "./SidebarNavLink";
 
 interface SidebarLinksProps {
   isTenant?: boolean;
   collapsed?: boolean;
+  tooltipEnabled?: boolean;
 }
 
-export default function SidebarLinks({ isTenant = false, collapsed = false }: SidebarLinksProps) {
+export default function SidebarLinks({ 
+  isTenant = false, 
+  collapsed = false,
+  tooltipEnabled = false
+}: SidebarLinksProps) {
   const location = useLocation();
   const { user } = useAuth();
   const { t } = useLocale();
@@ -105,28 +112,40 @@ export default function SidebarLinks({ isTenant = false, collapsed = false }: Si
   return (
     <nav className="space-y-1">
       {links.map((link) => (
-        <Link
-          key={link.href}
-          to={link.href}
-          className={cn(
-            "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
-            location.pathname === link.href
-              ? "bg-gray-100 text-gray-900"
-              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-          )}
-        >
-          <link.icon
+        tooltipEnabled ? (
+          <SidebarNavLink
+            key={link.href}
+            to={link.href}
+            icon={link.icon}
+            collapsed={collapsed}
+            tooltipContent={link.label}
+          >
+            {link.label}
+          </SidebarNavLink>
+        ) : (
+          <Link
+            key={link.href}
+            to={link.href}
             className={cn(
-              "mr-3 h-5 w-5",
+              "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
               location.pathname === link.href
-                ? "text-gray-500"
-                : "text-gray-400 group-hover:text-gray-500"
+                ? "bg-gray-100 text-gray-900"
+                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
             )}
-          />
-          {!collapsed && (
-            <span className="truncate">{link.label}</span>
-          )}
-        </Link>
+          >
+            <link.icon
+              className={cn(
+                "mr-3 h-5 w-5",
+                location.pathname === link.href
+                  ? "text-gray-500"
+                  : "text-gray-400 group-hover:text-gray-500"
+              )}
+            />
+            {!collapsed && (
+              <span className="truncate">{link.label}</span>
+            )}
+          </Link>
+        )
       ))}
     </nav>
   );

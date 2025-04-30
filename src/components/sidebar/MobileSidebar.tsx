@@ -1,7 +1,7 @@
 
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, X, HelpCircle } from "lucide-react";
+import { X, HelpCircle } from "lucide-react";
 import { SidebarLogo } from "./SidebarLogo";
 import SidebarLinks from "./SidebarLinks";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -35,7 +35,7 @@ export const MobileSidebar = ({
             <SidebarLogo isCollapsed={false} />
           </div>
           <nav className="flex-1 space-y-2 px-4 pb-6">
-            <SidebarLinks isTenant={isTenant} tooltipEnabled={true} />
+            <SidebarLinks isTenant={isTenant} tooltipEnabled={false} />
           </nav>
           <div className="p-4 border-t">
             <TooltipProvider>
