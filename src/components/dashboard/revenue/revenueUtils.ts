@@ -10,6 +10,12 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     };
   });
 
+  console.log("Processing monthly data with:", { 
+    expensesCount: expenses.length, 
+    paymentsCount: payments.length,
+    year
+  });
+
   // Traiter les paiements
   payments.forEach(payment => {
     const date = new Date(payment.payment_date);
@@ -29,5 +35,6 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     }
   });
 
+  console.log("Generated monthly data:", monthlyData);
   return monthlyData;
 };

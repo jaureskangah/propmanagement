@@ -46,7 +46,8 @@ export const RevenueChartComponent = () => {
   console.log("RevenueChart processed monthly data:", {
     dataPoints: monthlyData.length,
     firstMonth: monthlyData[0]?.month,
-    lastMonth: monthlyData[monthlyData.length - 1]?.month
+    lastMonth: monthlyData[monthlyData.length - 1]?.month,
+    monthlyData
   });
 
   return (
