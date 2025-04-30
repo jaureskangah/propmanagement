@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer } from "recharts";
 import { Loader2 } from "lucide-react";
@@ -6,8 +5,8 @@ import { useRevenueData } from "../hooks/useRevenueData";
 import { processMonthlyData } from "./revenueUtils";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useEffect } from "react";
-import { RevenueChartLegend } from "./RevenueChartLegend";
 import { RevenueAreaChart } from "./RevenueAreaChart";
+import { motion } from "framer-motion";
 
 export const RevenueChartComponent = () => {
   const { t } = useLocale();
@@ -51,20 +50,25 @@ export const RevenueChartComponent = () => {
   });
 
   return (
-    <Card className="font-sans group transition-all duration-300 hover:shadow-lg animate-fade-in">
-      <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="text-base font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-          {t('revenue')} & {t('expenses')}
-        </CardTitle>
-        <RevenueChartLegend />
-      </CardHeader>
-      <CardContent>
-        <div className="h-[270px] transition-transform duration-500 group-hover:scale-[1.02]">
-          <ResponsiveContainer width="100%" height="100%">
-            <RevenueAreaChart monthlyData={monthlyData} />
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
+    <Card className="font-sans group transition-all duration-300 hover:shadow-lg">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <CardHeader className="flex flex-row items-center justify-between pb-4">
+          <CardTitle className="text-base font-medium bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+            {t('revenue')} & {t('expenses')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[300px] transition-transform duration-500 group-hover:scale-[1.02]">
+            <ResponsiveContainer width="100%" height="100%">
+              <RevenueAreaChart monthlyData={monthlyData} />
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </motion.div>
     </Card>
   );
 };
