@@ -10,6 +10,7 @@ import { RecentActivity } from "./RecentActivity";
 import { useDashboardPreferences } from "./hooks/useDashboardPreferences";
 import { DateRange } from "./DashboardDateFilter";
 import { useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface DashboardContentProps {
   isLoading: boolean;
@@ -74,40 +75,61 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
 
   const isHidden = (sectionId: string) => preferences.hidden_sections.includes(sectionId);
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+  };
+
   return (
-    <div className="space-y-8 pb-10">
+    <motion.div 
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
       {!isHidden('metrics') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
+        <motion.div variants={item} className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <DashboardMetrics 
             propertiesData={propertiesData}
             maintenanceData={maintenanceData}
             tenantsData={tenantsData}
             dateRange={dateRange}
           />
-        </div>
+        </motion.div>
       )}
 
       {!isHidden('priority') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
+        <motion.div variants={item} className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <PrioritySection
             maintenanceData={maintenanceData}
             tenantsData={tenantsData}
             paymentsData={paymentsData}
           />
-        </div>
+        </motion.div>
       )}
 
       {!isHidden('revenue') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
+        <motion.div variants={item} className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <RevenueChart />
-        </div>
+        </motion.div>
       )}
 
       {!isHidden('activity') && (
-        <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
+        <motion.div variants={item} className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <RecentActivity />
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 };

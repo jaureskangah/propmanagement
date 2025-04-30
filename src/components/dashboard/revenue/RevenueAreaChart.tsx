@@ -6,7 +6,6 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-  Legend,
   ResponsiveContainer
 } from "recharts";
 import { RevenueChartTooltip } from "./RevenueChartTooltip";
@@ -83,7 +82,7 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex-1"
+        className="flex-1 w-full h-full"
       >
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart 
@@ -108,7 +107,6 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
               strokeDasharray="3 3" 
               className="stroke-muted/30" 
               vertical={false}
-              horizontalPoints={[15, 30, 45, 60, 75]}
             />
             <XAxis
               dataKey="month"
@@ -124,7 +122,7 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
               fontSize={11}
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => `$${value.toLocaleString()}`}
+              tickFormatter={(value) => `$${value}`}
               dx={-5}
             />
             <Tooltip 

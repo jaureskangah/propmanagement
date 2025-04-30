@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ResponsiveContainer } from "recharts";
 import { Loader2 } from "lucide-react";
@@ -61,7 +62,7 @@ export const RevenueChartComponent = () => {
             {t('revenue')} & {t('expenses')}
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="h-[350px]">
           <div className="h-[300px] transition-transform duration-500 group-hover:scale-[1.02]">
             <ResponsiveContainer width="100%" height="100%">
               <RevenueAreaChart monthlyData={monthlyData} />

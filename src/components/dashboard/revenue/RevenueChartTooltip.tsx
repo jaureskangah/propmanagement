@@ -8,6 +8,8 @@ export const RevenueChartTooltip = ({ active, payload, label }: any) => {
   if (!active || !payload || !payload.length) {
     return null;
   }
+  
+  console.log("RevenueChartTooltip payload:", payload);
 
   // Get the appropriate data depending on which data keys are present
   const revenue = payload.find((p: any) => p.dataKey === 'amount' || p.dataKey === 'income');
