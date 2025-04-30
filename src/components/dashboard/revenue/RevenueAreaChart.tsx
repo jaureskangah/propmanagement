@@ -50,7 +50,7 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
         tickFormatter={(value) => `$${value.toLocaleString()}`}
         dx={-5}
       />
-      <Tooltip content={RevenueChartTooltip} />
+      <Tooltip content={<RevenueChartTooltip />} />
       <Area
         type="monotone"
         dataKey="amount"
