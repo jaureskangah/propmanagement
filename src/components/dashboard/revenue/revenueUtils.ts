@@ -6,11 +6,11 @@ interface MonthlyDataItem {
   income: number;
   expenses: number;
   expense: number;
-  profit?: number; // Make profit optional so we can add it later
+  profit: number; // Making profit required
 }
 
 export const processMonthlyData = (expenses = [], payments = [], year = new Date().getFullYear()) => {
-  // Initialiser le tableau des mois
+  // Initialiser le tableau des mois avec toutes les données à 0
   const monthlyData: MonthlyDataItem[] = Array.from({ length: 12 }, (_, i) => {
     const month = new Date(year, i).toLocaleString('default', { month: 'short' });
     return {
@@ -29,7 +29,11 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     year
   });
 
-  // Traiter les paiements
+  // Optimisation: traiter en une seule boucle pour améliorer les performances
+  const monthlyPayments = new Map<number, number>();
+  const monthlyExpenses = new Map<number, number>();
+  
+  // Pré-traitement des paiements pour optimiser
   payments.forEach(payment => {
     try {
       const date = new Date(payment.payment_date);
@@ -37,18 +41,17 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
         const monthIndex = date.getMonth();
         const paymentAmount = Number(payment.amount) || 0;
         
-        // S'assurer que l'indice est valide
         if (monthIndex >= 0 && monthIndex < 12) {
-          monthlyData[monthIndex].amount += paymentAmount;
-          monthlyData[monthIndex].income += paymentAmount;
+          const currentAmount = monthlyPayments.get(monthIndex) || 0;
+          monthlyPayments.set(monthIndex, currentAmount + paymentAmount);
         }
       }
     } catch (error) {
       console.error("Error processing payment:", error, payment);
     }
   });
-
-  // Traiter les dépenses
+  
+  // Pré-traitement des dépenses pour optimiser
   expenses.forEach(expense => {
     try {
       const date = new Date(expense.date);
@@ -57,22 +60,58 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
         const amount = expense.amount || expense.cost || 0;
         const expenseAmount = Number(amount) || 0;
         
-        // S'assurer que l'indice est valide
         if (monthIndex >= 0 && monthIndex < 12) {
-          monthlyData[monthIndex].expenses += expenseAmount;
-          monthlyData[monthIndex].expense += expenseAmount;
+          const currentAmount = monthlyExpenses.get(monthIndex) || 0;
+          monthlyExpenses.set(monthIndex, currentAmount + expenseAmount);
         }
       }
     } catch (error) {
       console.error("Error processing expense:", error, expense);
     }
   });
-
-  // Calculer le profit pour chaque mois
-  monthlyData.forEach(monthData => {
-    monthData.profit = monthData.amount - monthData.expenses;
-  });
+  
+  // Application des montants agrégés
+  for (let i = 0; i < 12; i++) {
+    if (monthlyPayments.has(i)) {
+      const amount = monthlyPayments.get(i) || 0;
+      monthlyData[i].amount = amount;
+      monthlyData[i].income = amount;
+    }
+    
+    if (monthlyExpenses.has(i)) {
+      const amount = monthlyExpenses.get(i) || 0;
+      monthlyData[i].expenses = amount;
+      monthlyData[i].expense = amount;
+    }
+    
+    // Calculer le profit
+    monthlyData[i].profit = monthlyData[i].income - monthlyData[i].expense;
+  }
 
   console.log("Generated monthly data:", monthlyData);
   return monthlyData;
+};
+
+// Fonction pour calculer les totaux annuels
+export const calculateAnnualTotals = (monthlyData: MonthlyDataItem[]) => {
+  return monthlyData.reduce(
+    (totals, month) => {
+      return {
+        income: totals.income + month.income,
+        expenses: totals.expenses + month.expense,
+        profit: totals.profit + month.profit
+      };
+    },
+    { income: 0, expenses: 0, profit: 0 }
+  );
+};
+
+// Fonction pour formater les montants monétaires
+export const formatCurrency = (amount: number) => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(amount);
 };

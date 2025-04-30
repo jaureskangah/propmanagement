@@ -3,6 +3,9 @@ import { MaintenanceTable } from "./tables/MaintenanceTable";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useEffect } from "react";
+import { ExpensesTable } from "./tables/ExpensesTable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ExportButtons } from "./ExportButtons";
 
 interface DataTablesProps {
   propertyId: string;
@@ -29,7 +32,46 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
 
   return (
     <div className="space-y-6">
-      <MaintenanceTable maintenance={maintenance} />
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-xl">Vue d'ensemble financière</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <h3 className="font-medium">Dépenses totales</h3>
+              <p className="text-3xl font-bold text-blue-600">
+                ${expenses.reduce((total, expense) => total + expense.amount, 0).toLocaleString()}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <h3 className="font-medium">Coûts de maintenance</h3>
+              <p className="text-3xl font-bold text-emerald-600">
+                ${maintenance.reduce((total, m) => total + m.cost, 0).toLocaleString()}
+              </p>
+            </div>
+            <div className="col-span-1 md:col-span-2">
+              <ExportButtons 
+                expenses={expenses} 
+                maintenance={maintenance} 
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Tabs defaultValue="maintenance" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
+          <TabsTrigger value="expenses">Dépenses</TabsTrigger>
+        </TabsList>
+        <TabsContent value="maintenance">
+          <MaintenanceTable maintenance={maintenance} />
+        </TabsContent>
+        <TabsContent value="expenses">
+          <ExpensesTable expenses={expenses} propertyId={propertyId} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

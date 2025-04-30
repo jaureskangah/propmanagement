@@ -13,6 +13,8 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, DollarSign, MapPin, Wrench, ChevronDown, ChevronUp, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { DataExport, TableColumn } from "@/components/common/DataExport";
+import { format } from "date-fns";
 
 interface MaintenanceTableProps {
   maintenance: {
@@ -53,11 +55,39 @@ export const MaintenanceTable = ({ maintenance }: MaintenanceTableProps) => {
   const displayedMaintenance = showAll ? maintenance : maintenance.slice(0, 5);
   const hasMoreItems = maintenance.length > 5;
   
+  // Columns configuration for export
+  const exportColumns: TableColumn[] = [
+    { header: "Titre", accessor: "title" },
+    { header: "Description", accessor: "description" },
+    { header: "Coût", accessor: "cost", format: (value) => `$${Number(value).toLocaleString()}` },
+    { header: "Date", accessor: "date", format: (value) => format(new Date(value), 'dd/MM/yyyy') },
+    { header: "Statut", accessor: "status" },
+    { header: "Propriété", accessor: "property", format: (value) => value || 'N/A' },
+    { header: "Unité", accessor: "unit_number", format: (value) => value || 'N/A' },
+  ];
+  
+  // Format data for export
+  const exportData = maintenance.map(item => ({
+    ...item,
+    property: item.properties?.name || '',
+  }));
+  
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>{t('maintenanceTitle')}</CardTitle>
-        <CardDescription>{t('maintenanceAndRepairs')}</CardDescription>
+      <CardHeader className="border-b">
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl">{t('maintenanceTitle')}</CardTitle>
+            <CardDescription>{t('maintenanceAndRepairs')}</CardDescription>
+          </div>
+          <DataExport
+            data={exportData}
+            columns={exportColumns}
+            filename="maintenance_interventions"
+            pdfTitle="Rapport des interventions de maintenance"
+            pdfSubtitle={`Généré le ${format(new Date(), 'dd/MM/yyyy')}`}
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <Table>

@@ -1,23 +1,22 @@
 
-import React from "react";
-import { WorkOrder } from "@/types/workOrder";
-import { WorkOrderHeader } from "./components/WorkOrderHeader";
-import { WorkOrderFilters } from "./components/WorkOrderFilters";
-import { WorkOrderGrid } from "./components/WorkOrderGrid";
-import { useWorkOrderFilters } from "./hooks/useWorkOrderFilters";
-import { useWorkOrdersData } from "./hooks/useWorkOrdersData";
-import { CreateWorkOrderDialog } from "./CreateWorkOrderDialog";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useWorkOrderFilterState } from "./hooks/useWorkOrderFilterState";
+import { useWorkOrderFiltering } from "./hooks/useWorkOrderFiltering";
+import { WorkOrderFilters } from "./WorkOrderFilters";
+import { WorkOrderTable } from "./components/WorkOrderTable";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { WorkOrderAdvancedFilters } from "./components/WorkOrderAdvancedFilters";
 
 interface WorkOrderListProps {
-  workOrders: WorkOrder[];
-  onCreateWorkOrder: () => void;
+  workOrders: any[];
+  onAddOrder?: () => void;
 }
 
-export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListProps) => {
-  const { refetch } = useWorkOrdersData();
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  
+export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) => {
+  const { t } = useLocale();
   const {
     statusFilter,
     setStatusFilter,
@@ -25,54 +24,65 @@ export const WorkOrderList = ({ workOrders, onCreateWorkOrder }: WorkOrderListPr
     setSearchQuery,
     sortBy,
     setSortBy,
-    filteredAndSortedOrders
-  } = useWorkOrderFilters(workOrders);
+    dateRange,
+    setDateRange,
+    priorityFilter,
+    setPriorityFilter,
+    vendorSearch,
+    setVendorSearch
+  } = useWorkOrderFilterState();
 
-  // Gérer les mises à jour d'ordre de travail
-  const handleWorkOrderUpdate = () => {
-    refetch();
+  const resetFilters = () => {
+    setStatusFilter("all");
+    setSearchQuery("");
+    setSortBy("date");
+    setDateRange({ from: undefined, to: undefined });
+    setPriorityFilter("all");
+    setVendorSearch("");
   };
 
-  const handleCreateWorkOrder = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    console.log("Ouvrir la boîte de dialogue de création");
-    setIsCreateDialogOpen(true);
-    onCreateWorkOrder();
-  };
-
-  const handleDialogClose = () => {
-    setIsCreateDialogOpen(false);
-  };
-
-  const handleWorkOrderCreated = () => {
-    console.log("Ordre de travail créé, rafraîchissement de la liste...");
-    refetch();
-    setIsCreateDialogOpen(false);
-  };
+  const filteredOrders = useWorkOrderFiltering(workOrders, {
+    statusFilter,
+    searchQuery,
+    sortBy,
+    dateRange,
+    priorityFilter,
+    vendorSearch
+  });
 
   return (
-    <div className="animate-fade-in space-y-6">
-      <WorkOrderHeader onCreateWorkOrder={handleCreateWorkOrder} />
-
-      <WorkOrderFilters
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-      />
-
-      <WorkOrderGrid 
-        orders={filteredAndSortedOrders} 
-        onOrderUpdate={handleWorkOrderUpdate}
-      />
-
-      <CreateWorkOrderDialog
-        isOpen={isCreateDialogOpen}
-        onClose={handleDialogClose}
-        onSuccess={handleWorkOrderCreated}
-      />
-    </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>Ordres de travail</CardTitle>
+        {onAddOrder && (
+          <Button onClick={onAddOrder} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Nouvel ordre de travail
+          </Button>
+        )}
+      </CardHeader>
+      <CardContent className="space-y-6">
+        <WorkOrderFilters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          sortBy={sortBy}
+          setSortBy={setSortBy}
+        />
+        
+        <WorkOrderAdvancedFilters
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          priorityFilter={priorityFilter}
+          setPriorityFilter={setPriorityFilter}
+          vendorSearch={vendorSearch}
+          setVendorSearch={setVendorSearch}
+          resetFilters={resetFilters}
+        />
+        
+        <WorkOrderTable workOrders={filteredOrders} />
+      </CardContent>
+    </Card>
   );
 };

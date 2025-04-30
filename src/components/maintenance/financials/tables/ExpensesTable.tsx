@@ -15,6 +15,7 @@ import { fr, enUS } from "date-fns/locale";
 import { AddExpenseDialog } from "../dialogs/AddExpenseDialog";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
+import { DataExport, TableColumn } from "@/components/common/DataExport";
 
 interface ExpensesTableProps {
   expenses: {
@@ -55,6 +56,21 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
     setAddDialogOpen(false);
   };
   
+  // Columns configuration for export
+  const exportColumns: TableColumn[] = [
+    { header: "Catégorie", accessor: "category" },
+    { header: "Montant", accessor: "amount", format: (value) => `$${Number(value).toLocaleString()}` },
+    { header: "Date", accessor: "date", format: (value) => format(parseISO(value), 'PPP', { locale }) },
+    { header: "Fournisseur", accessor: "vendorName", format: (value) => value || 'Non spécifié' },
+    { header: "Description", accessor: "description", format: (value) => value || 'Aucune description' },
+  ];
+  
+  // Format data for export
+  const exportData = expenses.map(expense => ({
+    ...expense,
+    vendorName: expense.vendors?.name || '',
+  }));
+  
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -62,17 +78,26 @@ export const ExpensesTable = ({ expenses, propertyId }: ExpensesTableProps) => {
           <CardTitle>{language === 'fr' ? "Dépenses" : t('expenses')}</CardTitle>
           <CardDescription>{language === 'fr' ? "Dépenses de la propriété" : t('propertyExpenses')}</CardDescription>
         </div>
-        <Button
-          type="button"
-          onClick={() => {
-            console.log("Bouton Ajouter un coût cliqué, ouverture du dialogue avec propertyId:", propertyId);
-            setAddDialogOpen(true);
-          }}
-          className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-        >
-          <Plus className="mr-2 h-5 w-5" />
-          {language === 'fr' ? "Ajouter une dépense" : t('addExpense')}
-        </Button>
+        <div className="flex items-center gap-2">
+          <DataExport
+            data={exportData}
+            columns={exportColumns}
+            filename="depenses_propriete"
+            pdfTitle={language === 'fr' ? "Rapport de dépenses" : "Expense Report"}
+            pdfSubtitle={`Généré le ${format(new Date(), 'dd/MM/yyyy')}`}
+          />
+          <Button
+            type="button"
+            onClick={() => {
+              console.log("Bouton Ajouter un coût cliqué, ouverture du dialogue avec propertyId:", propertyId);
+              setAddDialogOpen(true);
+            }}
+            className="inline-flex items-center bg-[#ea384c] hover:bg-[#ea384c]/90 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+          >
+            <Plus className="mr-2 h-5 w-5" />
+            {language === 'fr' ? "Ajouter une dépense" : t('addExpense')}
+          </Button>
+        </div>
       </CardHeader>
       
       {expenses.length === 0 ? (
