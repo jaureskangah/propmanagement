@@ -8,14 +8,18 @@ export const RevenueChartTooltip = ({ active, payload, label }: any) => {
     return null;
   }
 
-  // Obtenir les données du payload
-  const revenue = payload.find((p: any) => p.dataKey === 'amount');
-  const expenses = payload.find((p: any) => p.dataKey === 'expenses');
+  // Adapter le code pour fonctionner avec les propriétés des données du graphique sur la page Finances
+  // Les données peuvent utiliser 'income', 'expense', 'profit' au lieu de 'amount', 'expenses'
+  const revenue = payload.find((p: any) => p.dataKey === 'amount' || p.dataKey === 'income');
+  const expenses = payload.find((p: any) => p.dataKey === 'expenses' || p.dataKey === 'expense');
   
   // Calculer le profit
   const revenueValue = revenue?.value || 0;
   const expensesValue = expenses?.value || 0;
   const profit = revenueValue - expensesValue;
+
+  // Log pour déboguer
+  console.log("Tooltip data:", { label, payload, revenue, expenses });
 
   return (
     <div className="bg-card/95 backdrop-blur-sm border border-border/30 shadow-md rounded-lg p-3 text-sm">

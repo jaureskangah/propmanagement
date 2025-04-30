@@ -17,6 +17,11 @@ interface RevenueAreaChartProps {
 export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
   const { revenueColor, expensesColor } = chartColors;
 
+  console.log("RevenueAreaChart rendering with data:", {
+    dataPoints: monthlyData?.length || 0,
+    firstItem: monthlyData?.[0]
+  });
+
   return (
     <AreaChart 
       data={monthlyData} 

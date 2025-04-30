@@ -1,18 +1,20 @@
 
-export const processMonthlyData = (expenses = [], payments = [], year = new Date().getFullYear()) => {
+export const processMonthlyData = (payments = [], expenses = [], year = new Date().getFullYear()) => {
   // Initialiser le tableau des mois
   const monthlyData = Array.from({ length: 12 }, (_, i) => {
     const month = new Date(year, i).toLocaleString('default', { month: 'short' });
     return {
       month,
-      amount: 0,
-      expenses: 0
+      amount: 0,  // pour compatibilité avec les anciens composants
+      income: 0,  // pour compatibilité avec les nouveaux composants
+      expenses: 0, // pour compatibilité avec les anciens composants
+      expense: 0   // pour compatibilité avec les nouveaux composants
     };
   });
 
   console.log("Processing monthly data with:", { 
-    expensesCount: expenses.length, 
-    paymentsCount: payments.length,
+    paymentsCount: payments.length, 
+    expensesCount: expenses.length,
     year
   });
 
@@ -21,7 +23,9 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     const date = new Date(payment.payment_date);
     if (date.getFullYear() === year) {
       const monthIndex = date.getMonth();
-      monthlyData[monthIndex].amount += Number(payment.amount);
+      const paymentAmount = Number(payment.amount);
+      monthlyData[monthIndex].amount += paymentAmount;
+      monthlyData[monthIndex].income += paymentAmount;
     }
   });
 
@@ -31,8 +35,15 @@ export const processMonthlyData = (expenses = [], payments = [], year = new Date
     if (date.getFullYear() === year) {
       const monthIndex = date.getMonth();
       const amount = expense.amount || expense.cost || 0;
-      monthlyData[monthIndex].expenses += Number(amount);
+      const expenseAmount = Number(amount);
+      monthlyData[monthIndex].expenses += expenseAmount;
+      monthlyData[monthIndex].expense += expenseAmount;
     }
+  });
+
+  // Ajouter la propriété profit pour être cohérent avec la page Finances
+  monthlyData.forEach(monthData => {
+    monthData.profit = monthData.amount - monthData.expenses;
   });
 
   console.log("Generated monthly data:", monthlyData);
