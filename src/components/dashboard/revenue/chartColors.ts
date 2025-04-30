@@ -1,6 +1,7 @@
 
-// Chart colors shared across components to maintain consistency
+// Define chart colors
 export const chartColors = {
-  revenueColor: "#0EA5E9", // Blue color for revenue
-  expensesColor: "#ea384c"  // Red color for expenses
+  revenueColor: "#3B82F6", // Blue
+  expensesColor: "#EF4444", // Red
+  profitColor: "#10B981"    // Green
 };

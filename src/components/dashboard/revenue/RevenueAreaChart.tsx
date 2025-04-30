@@ -15,11 +15,12 @@ interface RevenueAreaChartProps {
 }
 
 export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
-  const { revenueColor, expensesColor } = chartColors;
+  const { revenueColor, expensesColor, profitColor } = chartColors;
 
   console.log("RevenueAreaChart rendering with data:", {
     dataPoints: monthlyData?.length || 0,
-    firstItem: monthlyData?.[0]
+    firstItem: monthlyData?.[0],
+    sampleProfit: monthlyData?.[0]?.profit
   });
 
   return (
@@ -37,6 +38,10 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
         <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
           <stop offset="5%" stopColor={expensesColor} stopOpacity={0.3} />
           <stop offset="95%" stopColor={expensesColor} stopOpacity={0} />
+        </linearGradient>
+        <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor={profitColor || "#10B981"} stopOpacity={0.3} />
+          <stop offset="95%" stopColor={profitColor || "#10B981"} stopOpacity={0} />
         </linearGradient>
       </defs>
       <CartesianGrid 
@@ -90,6 +95,23 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
         activeDot={{
           r: 4,
           stroke: expensesColor,
+          strokeWidth: 1.5,
+          fill: 'white',
+          className: 'animate-pulse'
+        }}
+      />
+      <Area
+        type="monotone"
+        dataKey="profit"
+        stroke={profitColor || "#10B981"}
+        strokeWidth={1.5}
+        fillOpacity={1}
+        fill="url(#colorProfit)"
+        animationDuration={1000}
+        animationBegin={1000}
+        activeDot={{
+          r: 4,
+          stroke: profitColor || "#10B981",
           strokeWidth: 1.5,
           fill: 'white',
           className: 'animate-pulse'

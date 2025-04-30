@@ -8,18 +8,29 @@ export const RevenueChartTooltip = ({ active, payload, label }: any) => {
     return null;
   }
 
-  // Adapter le code pour fonctionner avec les propriétés des données du graphique sur la page Finances
-  // Les données peuvent utiliser 'income', 'expense', 'profit' au lieu de 'amount', 'expenses'
+  // Get the appropriate data depending on which data keys are present
   const revenue = payload.find((p: any) => p.dataKey === 'amount' || p.dataKey === 'income');
   const expenses = payload.find((p: any) => p.dataKey === 'expenses' || p.dataKey === 'expense');
+  const profit = payload.find((p: any) => p.dataKey === 'profit');
   
-  // Calculer le profit
+  // Calculate the profit value
   const revenueValue = revenue?.value || 0;
   const expensesValue = expenses?.value || 0;
-  const profit = revenueValue - expensesValue;
+  
+  // Use the profit value directly from the data if available, otherwise calculate it
+  const profitValue = profit ? profit.value : revenueValue - expensesValue;
 
-  // Log pour déboguer
-  console.log("Tooltip data:", { label, payload, revenue, expenses });
+  // Log for debugging
+  console.log("Tooltip data:", { 
+    label, 
+    payload, 
+    revenue, 
+    expenses, 
+    profit,
+    revenueValue,
+    expensesValue,
+    profitValue
+  });
 
   return (
     <div className="bg-card/95 backdrop-blur-sm border border-border/30 shadow-md rounded-lg p-3 text-sm">
@@ -40,7 +51,7 @@ export const RevenueChartTooltip = ({ active, payload, label }: any) => {
         <div className="border-t border-border pt-1 mt-1">
           <p className="flex justify-between gap-4 font-medium">
             <span className="text-green-500/80">{t('profit')}:</span>
-            <span>${Number(profit).toLocaleString()}</span>
+            <span>${Number(profitValue).toLocaleString()}</span>
           </p>
         </div>
       </div>
