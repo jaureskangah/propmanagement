@@ -1,7 +1,17 @@
 
+// Define the type for monthly data
+interface MonthlyDataItem {
+  month: string;
+  amount: number;
+  income: number;
+  expenses: number;
+  expense: number;
+  profit?: number; // Make profit optional so we can add it later
+}
+
 export const processMonthlyData = (payments = [], expenses = [], year = new Date().getFullYear()) => {
   // Initialiser le tableau des mois
-  const monthlyData = Array.from({ length: 12 }, (_, i) => {
+  const monthlyData: MonthlyDataItem[] = Array.from({ length: 12 }, (_, i) => {
     const month = new Date(year, i).toLocaleString('default', { month: 'short' });
     return {
       month,
