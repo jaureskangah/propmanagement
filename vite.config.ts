@@ -1,4 +1,3 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -42,8 +41,11 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      // Use faster SWC minifier - this is where we properly configure SWC
-      minify: mode !== 'development'
+      // SWC plugin doesn't accept minify directly as an option
+      // We need to use the jsxImportSource option instead
+      swcReactImportSource: mode !== 'development' ? 'react' : undefined,
+      // Other SWC options if needed
+      tsDecorators: true,
     }),
     mode === 'development' &&
     componentTagger(),
