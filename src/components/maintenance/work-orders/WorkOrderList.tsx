@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkOrderFilterState } from "./hooks/useWorkOrderFilterState";
 import { useWorkOrderFiltering } from "./hooks/useWorkOrderFiltering";
@@ -48,9 +48,10 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
     setVendorSearch("");
   };
 
-  // Limit the number of work orders to prevent memory issues
-  const limitedWorkOrders = React.useMemo(() => {
-    return workOrders.slice(0, 200);
+  // Prevent memory issues by limiting the number of work orders
+  const limitedWorkOrders = useMemo(() => {
+    // Set a hard limit of 100 items to prevent memory issues
+    return workOrders.slice(0, 100);
   }, [workOrders]);
 
   const filteredOrders = useWorkOrderFiltering(limitedWorkOrders, {
@@ -172,9 +173,9 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
                 )}
               </tbody>
             </table>
-            {workOrders.length > 200 && (
+            {workOrders.length > 100 && (
               <div className="text-sm text-muted-foreground mt-4 text-center">
-                Affichage limité aux 200 premiers ordres de travail pour des raisons de performance.
+                Affichage limité aux 100 premiers ordres de travail pour des raisons de performance.
                 Utilisez les filtres pour affiner votre recherche.
               </div>
             )}

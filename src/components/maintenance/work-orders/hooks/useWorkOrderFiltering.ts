@@ -15,29 +15,34 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
   const { statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch } = options;
 
   const filteredAndSortedOrders = useMemo(() => {
-    // Hard limit the number of processed items to prevent memory issues
-    const MAX_ITEMS = 200;
-    const limitedWorkOrders = workOrders.slice(0, MAX_ITEMS);
+    // Hard limit to prevent memory issues (should be already limited by parent)
+    const MAX_ITEMS = 100;
+    const safeWorkOrders = Array.isArray(workOrders) ? workOrders : [];
+    // Ensure we're working with a reasonable amount of data
+    const limitedWorkOrders = safeWorkOrders.slice(0, MAX_ITEMS);
     
-    // Create a single filter function to process all conditions in one pass
+    // Create a simplified filter that will use less memory
     const filtered = limitedWorkOrders.filter((order) => {
-      // Status filter
-      if (statusFilter !== "all" && order.status !== statusFilter) {
+      // Skip null or undefined orders to prevent crashes
+      if (!order) return false;
+      
+      // Apply status filter if set
+      if (statusFilter && statusFilter !== "all" && order.status !== statusFilter) {
         return false;
       }
       
-      // Search filter (title or property)
+      // Basic search on title and property with early returns
       if (searchQuery) {
-        const searchTermLower = searchQuery.toLowerCase();
-        const titleMatch = order.title?.toLowerCase().includes(searchTermLower);
-        const propertyMatch = order.property?.toLowerCase().includes(searchTermLower);
+        const searchLower = searchQuery.toLowerCase();
+        const titleMatch = order.title && order.title.toLowerCase().includes(searchLower);
+        const propertyMatch = order.property && order.property.toLowerCase().includes(searchLower);
         
         if (!titleMatch && !propertyMatch) {
           return false;
         }
       }
       
-      // Vendor filter
+      // Vendor search
       if (vendorSearch && order.vendor) {
         if (!order.vendor.toLowerCase().includes(vendorSearch.toLowerCase())) {
           return false;
@@ -45,11 +50,11 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
       }
       
       // Priority filter
-      if (priorityFilter !== "all" && order.priority !== priorityFilter) {
+      if (priorityFilter && priorityFilter !== "all" && order.priority !== priorityFilter) {
         return false;
       }
       
-      // Date range filter
+      // Date filtering - only if both dates are set
       if (dateRange.from && dateRange.to && order.date) {
         try {
           const orderDate = new Date(order.date);
@@ -57,34 +62,50 @@ export const useWorkOrderFiltering = (workOrders: WorkOrder[], options: FilterOp
             return false;
           }
         } catch (error) {
-          console.error("Date parsing error:", error);
+          // Fail silently and include the order if date parsing fails
+          console.error("Date parsing error", error);
         }
       }
       
+      // Include this order if it passed all filters
       return true;
     });
 
-    // Sort the filtered results
-    return filtered.sort((a, b) => {
-      switch (sortBy) {
-        case "date": {
-          const dateA = a.date ? new Date(a.date) : new Date(0);
-          const dateB = b.date ? new Date(b.date) : new Date(0); 
-          return dateB.getTime() - dateA.getTime();
+    // Basic memory-efficient sorting
+    if (filtered.length > 0) {
+      return filtered.sort((a, b) => {
+        // Handle possibly undefined values safely
+        if (!a || !b) return 0;
+        
+        switch (sortBy) {
+          case "date": {
+            const dateA = a.date ? new Date(a.date).getTime() : 0;
+            const dateB = b.date ? new Date(b.date).getTime() : 0;
+            return dateB - dateA; // Descending order
+          }
+          case "cost": {
+            const costA = typeof a.cost === 'number' ? a.cost : 0;
+            const costB = typeof b.cost === 'number' ? b.cost : 0;
+            return costB - costA; // Descending order
+          }
+          case "priority": {
+            // Simplify priority weights to consume less memory
+            const getPriorityWeight = (priority: string): number => {
+              if (priority === "Haute") return 3;
+              if (priority === "Moyenne") return 2;
+              if (priority === "Basse") return 1;
+              return 0;
+            };
+            
+            return getPriorityWeight(b.priority || "") - getPriorityWeight(a.priority || "");
+          }
+          default:
+            return 0;
         }
-        case "cost":
-          return (b.cost || 0) - (a.cost || 0);
-        case "priority": {
-          const priorityWeight = { "Haute": 3, "Moyenne": 2, "Basse": 1 };
-          return (
-            (priorityWeight[b.priority as keyof typeof priorityWeight] || 0) - 
-            (priorityWeight[a.priority as keyof typeof priorityWeight] || 0)
-          );
-        }
-        default:
-          return 0;
-      }
-    });
+      });
+    }
+    
+    return filtered;
   }, [workOrders, statusFilter, searchQuery, sortBy, dateRange, priorityFilter, vendorSearch]);
 
   return filteredAndSortedOrders;

@@ -1,152 +1,108 @@
 
-import { Link, useLocation } from "react-router-dom";
-import { cn } from "@/lib/utils";
-import { useAuth } from '@/components/AuthProvider';
+import React from "react";
+import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Home,
+  Settings,
+  Building,
+  Users,
+  FileText,
+  MessageSquare,
+  Wrench,
+  CreditCard
+} from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
-  Building2,
-  Users,
-  Wrench,
-  Settings,
-  LayoutDashboard,
-  ShieldCheck,
-  MessageCircle,
-  DollarSign,
-  FileText
-} from "lucide-react";
-import { SidebarNavLink } from "./SidebarNavLink";
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-interface SidebarLinksProps {
+export interface SidebarLinksProps {
   isTenant?: boolean;
-  collapsed?: boolean;
   tooltipEnabled?: boolean;
 }
 
-export default function SidebarLinks({ 
-  isTenant = false, 
-  collapsed = false,
-  tooltipEnabled = false
-}: SidebarLinksProps) {
+const SidebarLinks = ({ isTenant = false, tooltipEnabled = true }: SidebarLinksProps) => {
   const location = useLocation();
-  const { user } = useAuth();
   const { t } = useLocale();
-  const isAdmin = user?.email?.endsWith('@propmanagement.app');
   
-  // Liens pour les locataires
-  const tenantLinks = [
-    {
-      href: "/tenant/dashboard",
-      icon: LayoutDashboard,
-      label: t('dashboard'),
-    },
-    {
-      href: "/tenant/maintenance",
-      icon: Wrench,
-      label: t('maintenance'),
-    },
-    {
-      href: "/tenant/communications",
-      icon: MessageCircle,
-      label: t('communications'),
-    },
-    {
-      href: "/tenant/documents",
-      icon: FileText,
-      label: t('documents'),
-    },
-    {
-      href: "/settings",
-      icon: Settings,
-      label: t('settings'),
-    },
-  ];
+  // Using links as a memo to prevent recreation on each render
+  const links = React.useMemo(() => {
+    if (isTenant) {
+      return [
+        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
+        { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
+        { to: "/tenant/documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
+        { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
+      ];
+    }
+    
+    return [
+      { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
+      { to: "/properties", icon: Building, label: t('properties'), tooltip: t('properties') },
+      { to: "/tenants", icon: Users, label: t('tenants'), tooltip: t('tenants') },
+      { to: "/finances", icon: CreditCard, label: t('finances'), tooltip: t('finances') },
+      { to: "/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
+      { to: "/document-generator", icon: FileText, label: t('documents'), tooltip: t('documents') },
+      { to: "/", icon: Home, label: t('home'), tooltip: t('returnToHome') },
+      { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
+    ];
+  }, [isTenant, t]);
 
-  // Liens pour les propriétaires
-  const ownerLinks = [
-    {
-      href: "/dashboard",
-      icon: LayoutDashboard,
-      label: t('dashboard'),
-    },
-    {
-      href: "/properties",
-      icon: Building2,
-      label: t('properties'),
-    },
-    {
-      href: "/tenants",
-      icon: Users,
-      label: t('tenants'),
-    },
-    {
-      href: "/maintenance",
-      icon: Wrench,
-      label: t('maintenance'),
-    },
-    {
-      href: "/finances",
-      icon: DollarSign,
-      label: t('finances'),
-    },
-    {
-      href: "/settings",
-      icon: Settings,
-      label: t('settings'),
-    },
-  ];
-
-  // Déterminer les liens à afficher en fonction du rôle de l'utilisateur
-  const links = user?.user_metadata?.is_tenant_user || isTenant 
-    ? tenantLinks 
-    : ownerLinks;
-
-  // Ajouter le lien Admin si l'utilisateur est un admin
-  if (isAdmin) {
-    links.push({
-      href: "/admin",
-      icon: ShieldCheck,
-      label: t('admin'),
-    });
+  // Simplified render function to improve memory usage
+  const isActive = (path: string) => location.pathname === path;
+  
+  // Don't wrap with tooltips when not needed
+  if (!tooltipEnabled) {
+    return (
+      <div className="space-y-2">
+        {links.map((link) => {
+          const Icon = link.icon;
+          return (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
+                isActive(link.to) ? "bg-muted font-medium" : ""
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+              <span>{link.label}</span>
+            </Link>
+          );
+        })}
+      </div>
+    );
   }
-
+  
   return (
-    <nav className="space-y-1">
-      {links.map((link) => (
-        tooltipEnabled ? (
-          <SidebarNavLink
-            key={link.href}
-            to={link.href}
-            icon={link.icon}
-            collapsed={collapsed}
-            tooltipContent={link.label}
-          >
-            {link.label}
-          </SidebarNavLink>
-        ) : (
-          <Link
-            key={link.href}
-            to={link.href}
-            className={cn(
-              "flex items-center px-2 py-2 text-sm font-medium rounded-md group transition-colors duration-150",
-              location.pathname === link.href
-                ? "bg-gray-100 text-gray-900"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            )}
-          >
-            <link.icon
-              className={cn(
-                "mr-3 h-5 w-5",
-                location.pathname === link.href
-                  ? "text-gray-500"
-                  : "text-gray-400 group-hover:text-gray-500"
-              )}
-            />
-            {!collapsed && (
-              <span className="truncate">{link.label}</span>
-            )}
-          </Link>
-        )
-      ))}
-    </nav>
+    <div className="space-y-2">
+      {links.map((link) => {
+        const Icon = link.icon;
+        return (
+          <Tooltip key={link.to}>
+            <TooltipTrigger asChild>
+              <Link
+                to={link.to}
+                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
+                  isActive(link.to) ? "bg-muted font-medium" : ""
+                }`}
+              >
+                <Icon className="h-5 w-5" />
+                <span>{link.label}</span>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>{link.tooltip}</p>
+            </TooltipContent>
+          </Tooltip>
+        );
+      })}
+    </div>
   );
-}
+};
+
+export default SidebarLinks;

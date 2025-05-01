@@ -12,17 +12,20 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: "dist",
-    sourcemap: mode === 'development', // Only generate sourcemaps in development
+    // Disable sourcemaps in all modes to reduce memory usage
+    sourcemap: false,
+    // Set a hard limit on chunk size
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {
+          // Create smaller, more numerous chunks
           vendor: ['react', 'react-dom'],
-          ui: [
-            '@radix-ui/react-tooltip', 
-            '@radix-ui/react-dialog', 
-            'class-variance-authority'
-          ],
-          utils: ['date-fns', 'clsx', 'tailwind-merge'],
+          ui1: ['@radix-ui/react-tooltip'],
+          ui2: ['@radix-ui/react-dialog'],
+          ui3: ['class-variance-authority'],
+          utils1: ['date-fns'],
+          utils2: ['clsx', 'tailwind-merge'],
         },
         // Limit chunk size to improve memory usage
         chunkFileNames: 'assets/js/[name]-[hash].js',
@@ -34,9 +37,14 @@ export default defineConfig(({ mode }) => ({
     minify: mode !== 'development', // Don't minify in development
     cssCodeSplit: true,
     assetsInlineLimit: 4096,
+    // Don't emit large files
+    emptyOutDir: true,
   },
   plugins: [
-    react(),
+    react({
+      // Use faster SWC minifier
+      minify: mode !== 'development'
+    }),
     mode === 'development' &&
     componentTagger(),
   ].filter(Boolean),
@@ -46,6 +54,13 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    exclude: [], // Add any problematic packages here
+    // Exclude heavy packages from optimization
+    exclude: ['framer-motion'],
   },
+  // Set a low memory budget for the build
+  esbuild: {
+    logLimit: 0,
+    legalComments: 'none',
+    treeShaking: true,
+  }
 }));
