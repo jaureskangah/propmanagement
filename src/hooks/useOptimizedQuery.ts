@@ -134,8 +134,7 @@ export function useOptimizedQuery<T = any>(
     },
     staleTime,
     gcTime: cacheTime,
-    enabled: enabled,
-    keepPreviousData: true, // Garder les données précédentes pendant le chargement pour une UX fluide
+    enabled: enabled
   });
 
   // Précharger la page suivante pour une meilleure expérience utilisateur
@@ -156,7 +155,7 @@ export function useOptimizedQuery<T = any>(
       // Déclencher la requête mais ne pas attendre le résultat
       query.then(() => {
         console.log(`Preloaded page ${nextPage} from ${table}`);
-      }).catch(err => {
+      }).catch((err) => {
         console.error(`Failed to preload page ${nextPage}:`, err);
       });
     }
@@ -179,7 +178,7 @@ export function useOptimizedQuery<T = any>(
       const batchCount = Math.ceil(count / batchSize);
       
       // Récupérer toutes les données par lots
-      const allData: T[] = [];
+      const allData: any[] = [];
       for (let i = 0; i < batchCount; i++) {
         const start = i * batchSize;
         const { data, error } = await buildQuery({
@@ -193,7 +192,7 @@ export function useOptimizedQuery<T = any>(
         console.log(`Fetched batch ${i+1}/${batchCount} (${data?.length} records)`);
       }
       
-      return allData;
+      return allData as T[];
     } catch (err) {
       console.error("Error fetching all data:", err);
       throw err;
@@ -227,19 +226,24 @@ export function useOptimizedQuery<T = any>(
     queryKey: [...queryKey, 'infinite', { filters: activeFilters, search: searchQuery }],
     queryFn: async ({ pageParam = 0 }) => {
       const query = buildQuery({
-        offset: pageParam,
+        offset: pageParam as number,
         pageSize
       });
       
       const { data, error } = await query;
       if (error) throw error;
       
-      return { data: data || [], nextOffset: pageParam + pageSize };
+      return { 
+        data: data || [], 
+        nextOffset: (pageParam as number) + pageSize 
+      };
     },
-    getNextPageParam: (lastPage, pages) => {
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => {
       // Si la dernière page contient moins d'éléments que pageSize, c'est qu'il n'y a plus de pages suivantes
-      if (lastPage.data.length < pageSize) return undefined;
-      return lastPage.nextOffset;
+      const typedLastPage = lastPage as { data: any[]; nextOffset: number };
+      if (typedLastPage.data.length < pageSize) return undefined;
+      return typedLastPage.nextOffset;
     },
     staleTime,
     gcTime: cacheTime,
@@ -285,7 +289,7 @@ export function useOptimizedQuery<T = any>(
     fetchAll,
     
     // Support scroll infini
-    infiniteData: infiniteData?.pages.flatMap(page => page.data) || [],
+    infiniteData: infiniteData?.pages.flatMap(page => (page as any).data) || [],
     fetchNextInfinitePage: fetchNextInfinite,
     hasNextInfinitePage: hasNextPage,
     isFetchingNextInfinitePage: isFetchingNextPage,

@@ -33,59 +33,6 @@ if (process.env.NODE_ENV === 'development') {
   });
 }
 
-// Activer la persistance du cache pour améliorer les performances entre les sessions
-const persistQueryClient = async () => {
-  try {
-    const { persistQueryClientRestore, persistQueryClient } = await import('@tanstack/react-query-persist-client');
-    const { createSyncStoragePersister } = await import('@tanstack/query-sync-storage-persister');
-    
-    const localStoragePersister = createSyncStoragePersister({
-      storage: window.localStorage,
-      key: 'PROPERTY_MANAGER_QUERY_CACHE',
-      throttleTime: 1000,
-      maxAge: 1000 * 60 * 60 * 24, // 1 jour
-    });
-    
-    await persistQueryClientRestore({
-      queryClient,
-      persister: localStoragePersister,
-      maxAge: 1000 * 60 * 60 * 24, // 1 jour
-      dehydrateOptions: {
-        shouldDehydrateQuery: query => {
-          // Ne pas persister les requêtes sensibles ou temporaires
-          const queryKey = Array.isArray(query.queryKey) ? query.queryKey[0] : query.queryKey;
-          const sensitiveKeys = ['auth', 'session', 'user_profile'];
-          return !sensitiveKeys.includes(String(queryKey));
-        },
-      },
-    });
-    
-    persistQueryClient({
-      queryClient,
-      persister: localStoragePersister,
-      dehydrateOptions: {
-        shouldDehydrateQuery: query => {
-          // Ne pas persister les requêtes sensibles ou temporaires
-          const queryKey = Array.isArray(query.queryKey) ? query.queryKey[0] : query.queryKey;
-          const sensitiveKeys = ['auth', 'session', 'user_profile'];
-          return !sensitiveKeys.includes(String(queryKey));
-        },
-      },
-    });
-    
-    console.log('Query client persistence enabled');
-  } catch (err) {
-    console.warn('Query client persistence could not be enabled:', err);
-  }
-};
-
-// Ne pas bloquer le rendu initial avec l'initialisation de la persistance du cache
-if (typeof window !== 'undefined') {
-  persistQueryClient().catch(err => {
-    console.warn('Failed to initialize query persistence:', err);
-  });
-}
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
