@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useWorkOrderFilterState } from "./hooks/useWorkOrderFilterState";
 import { useWorkOrderFiltering } from "./hooks/useWorkOrderFiltering";
@@ -48,7 +48,12 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
     setVendorSearch("");
   };
 
-  const filteredOrders = useWorkOrderFiltering(workOrders, {
+  // Limit the number of work orders to prevent memory issues
+  const limitedWorkOrders = React.useMemo(() => {
+    return workOrders.slice(0, 200);
+  }, [workOrders]);
+
+  const filteredOrders = useWorkOrderFiltering(limitedWorkOrders, {
     statusFilter,
     searchQuery,
     sortBy,
@@ -119,45 +124,46 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
                 </tr>
               </thead>
               <tbody>
-                {filteredOrders.map(order => (
-                  <tr key={order.id} className="hover:bg-muted/50">
-                    <td className="p-2 border-b">{order.title}</td>
-                    <td className="p-2 border-b">{order.property || '-'}</td>
-                    <td className="p-2 border-b">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        order.status === "En cours" ? "bg-blue-100 text-blue-800" :
-                        order.status === "Planifié" ? "bg-amber-100 text-amber-800" :
-                        order.status === "Terminé" ? "bg-green-100 text-green-800" :
-                        "bg-gray-100 text-gray-800"
-                      }`}>
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="p-2 border-b">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        order.priority === "Haute" ? "bg-red-100 text-red-800" :
-                        order.priority === "Moyenne" ? "bg-amber-100 text-amber-800" :
-                        "bg-blue-100 text-blue-800"
-                      }`}>
-                        {order.priority}
-                      </span>
-                    </td>
-                    <td className="p-2 border-b">{order.vendor}</td>
-                    <td className="p-2 border-b">${order.cost.toLocaleString()}</td>
-                    <td className="p-2 border-b">{order.date ? new Date(order.date).toLocaleDateString() : '-'}</td>
-                    <td className="p-2 border-b">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="outline" size="sm">Voir</Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Afficher les détails de l'ordre</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </td>
-                  </tr>
-                ))}
-                {filteredOrders.length === 0 && (
+                {filteredOrders.length > 0 ? (
+                  filteredOrders.map(order => (
+                    <tr key={order.id} className="hover:bg-muted/50">
+                      <td className="p-2 border-b">{order.title}</td>
+                      <td className="p-2 border-b">{order.property || '-'}</td>
+                      <td className="p-2 border-b">
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          order.status === "En cours" ? "bg-blue-100 text-blue-800" :
+                          order.status === "Planifié" ? "bg-amber-100 text-amber-800" :
+                          order.status === "Terminé" ? "bg-green-100 text-green-800" :
+                          "bg-gray-100 text-gray-800"
+                        }`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="p-2 border-b">
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          order.priority === "Haute" ? "bg-red-100 text-red-800" :
+                          order.priority === "Moyenne" ? "bg-amber-100 text-amber-800" :
+                          "bg-blue-100 text-blue-800"
+                        }`}>
+                          {order.priority}
+                        </span>
+                      </td>
+                      <td className="p-2 border-b">{order.vendor}</td>
+                      <td className="p-2 border-b">${order.cost?.toLocaleString() || '0'}</td>
+                      <td className="p-2 border-b">{order.date ? new Date(order.date).toLocaleDateString() : '-'}</td>
+                      <td className="p-2 border-b">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button variant="outline" size="sm">Voir</Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Afficher les détails de l'ordre</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
                   <tr>
                     <td colSpan={8} className="text-center py-4 text-muted-foreground">
                       Aucun ordre de travail trouvé
@@ -166,6 +172,12 @@ export const WorkOrderList = ({ workOrders, onAddOrder }: WorkOrderListProps) =>
                 )}
               </tbody>
             </table>
+            {workOrders.length > 200 && (
+              <div className="text-sm text-muted-foreground mt-4 text-center">
+                Affichage limité aux 200 premiers ordres de travail pour des raisons de performance.
+                Utilisez les filtres pour affiner votre recherche.
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
