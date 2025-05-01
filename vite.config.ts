@@ -33,8 +33,8 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    // Optimize build to use less memory
-    minify: mode !== 'development', // Don't minify in development
+    // Optimize build to use less memory - correctly format the minify option
+    minify: mode !== 'development', // This is correct for Vite config
     cssCodeSplit: true,
     assetsInlineLimit: 4096,
     // Don't emit large files
@@ -42,7 +42,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      // Use faster SWC minifier
+      // Use faster SWC minifier - this is where we properly configure SWC
       minify: mode !== 'development'
     }),
     mode === 'development' &&

@@ -23,9 +23,10 @@ import {
 export interface SidebarLinksProps {
   isTenant?: boolean;
   tooltipEnabled?: boolean;
+  collapsed?: boolean; // Add the collapsed prop
 }
 
-const SidebarLinks = ({ isTenant = false, tooltipEnabled = true }: SidebarLinksProps) => {
+const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = false }: SidebarLinksProps) => {
   const location = useLocation();
   const { t } = useLocale();
   
@@ -89,10 +90,10 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true }: SidebarLinksP
                 to={link.to}
                 className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
                   isActive(link.to) ? "bg-muted font-medium" : ""
-                }`}
+                } ${collapsed ? "justify-center px-2" : ""}`}
               >
                 <Icon className="h-5 w-5" />
-                <span>{link.label}</span>
+                {!collapsed && <span>{link.label}</span>}
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">
