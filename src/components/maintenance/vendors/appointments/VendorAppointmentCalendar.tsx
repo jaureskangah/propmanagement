@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -66,6 +65,11 @@ export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendar
       notes: 'Intervention urgente suite à un dégât des eaux'
     }
   ]);
+  
+  // Define the getVendorById function BEFORE it's used
+  const getVendorById = (id: string) => {
+    return vendors.find(vendor => vendor.id === id) || null;
+  };
   
   // Check for upcoming appointments that need reminders
   useEffect(() => {
@@ -188,10 +192,6 @@ export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendar
       description: statusMessage,
       variant: newStatus === 'cancelled' ? 'destructive' : 'default'
     });
-  };
-  
-  const getVendorById = (id: string) => {
-    return vendors.find(vendor => vendor.id === id) || null;
   };
 
   const handleNewOrUpdateAppointment = (appointmentData: {
