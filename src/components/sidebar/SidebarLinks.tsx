@@ -1,10 +1,8 @@
-
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard,
-  Home,
   Settings,
   Building,
   Users,
@@ -49,7 +47,6 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       { to: "/finances", icon: CreditCard, label: t('finances'), tooltip: t('finances') },
       { to: "/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
       { to: "/document-generator", icon: FileText, label: t('documents'), tooltip: t('documents') },
-      { to: "/", icon: Home, label: t('home'), tooltip: t('returnToHome') },
       { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
     ];
   }, [isTenant, t]);
