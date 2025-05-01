@@ -152,12 +152,20 @@ export function useOptimizedQuery<T = any>(
         pageSize
       });
       
-      // Déclencher la requête mais ne pas attendre le résultat
-      query.then(() => {
-        console.log(`Preloaded page ${nextPage} from ${table}`);
-      }).catch((err) => {
-        console.error(`Failed to preload page ${nextPage}:`, err);
-      });
+      // Fixing the error: Use Promise type properly and handle the Promise differently
+      // Instead of chaining with .then().catch(), use a separate async function or
+      // simply make the async call without waiting for the result
+      const preloadNextPage = async () => {
+        try {
+          await query;
+          console.log(`Preloaded page ${nextPage} from ${table}`);
+        } catch (err) {
+          console.error(`Failed to preload page ${nextPage}:`, err);
+        }
+      };
+      
+      // Execute the preload function without waiting for it
+      preloadNextPage();
     }
   }, [paginatedData, currentPage, pageSize, enabled, buildQuery, table]);
 
