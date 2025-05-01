@@ -1,3 +1,4 @@
+
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
@@ -32,8 +33,8 @@ export default defineConfig(({ mode }) => ({
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    // Optimize build to use less memory - correctly format the minify option
-    minify: mode !== 'development', // This is correct for Vite config
+    // Optimize build to use less memory
+    minify: mode !== 'development',
     cssCodeSplit: true,
     assetsInlineLimit: 4096,
     // Don't emit large files
@@ -41,10 +42,7 @@ export default defineConfig(({ mode }) => ({
   },
   plugins: [
     react({
-      // SWC plugin doesn't accept minify directly as an option
-      // We need to use the jsxImportSource option instead
-      swcReactImportSource: mode !== 'development' ? 'react' : undefined,
-      // Other SWC options if needed
+      // Using proper SWC options - tsDecorators is a valid option
       tsDecorators: true,
     }),
     mode === 'development' &&
