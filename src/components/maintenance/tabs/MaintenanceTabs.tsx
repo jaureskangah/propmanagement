@@ -38,7 +38,7 @@ export const MaintenanceTabs = ({
   }, [propertyId, selectedYear]);
   
   return (
-    <Tabs defaultValue="financials" className="w-full">
+    <Tabs defaultValue="dashboard" className="w-full">
       <TabsList className={`${isMobile ? "flex flex-wrap" : "w-full md:grid md:grid-cols-4"} bg-card`}>
         <TabsTrigger 
           value="dashboard" 
