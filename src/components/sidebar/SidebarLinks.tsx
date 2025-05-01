@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -35,7 +36,6 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
         { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-        { to: "/tenant/documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
         { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
       ];
     }
@@ -46,7 +46,6 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       { to: "/tenants", icon: Users, label: t('tenants'), tooltip: t('tenants') },
       { to: "/finances", icon: CreditCard, label: t('finances'), tooltip: t('finances') },
       { to: "/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-      { to: "/document-generator", icon: FileText, label: t('documents'), tooltip: t('documents') },
       { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
     ];
   }, [isTenant, t]);
