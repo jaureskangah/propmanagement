@@ -18,12 +18,13 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
+  TooltipProvider
 } from "@/components/ui/tooltip";
 
 export interface SidebarLinksProps {
   isTenant?: boolean;
   tooltipEnabled?: boolean;
-  collapsed?: boolean; // Add the collapsed prop
+  collapsed?: boolean;
 }
 
 const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = false }: SidebarLinksProps) => {
@@ -79,30 +80,33 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
     );
   }
   
+  // For tooltips, wrap the entire component with TooltipProvider
   return (
-    <div className="space-y-2">
-      {links.map((link) => {
-        const Icon = link.icon;
-        return (
-          <Tooltip key={link.to}>
-            <TooltipTrigger asChild>
-              <Link
-                to={link.to}
-                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
-                  isActive(link.to) ? "bg-muted font-medium" : ""
-                } ${collapsed ? "justify-center px-2" : ""}`}
-              >
-                <Icon className="h-5 w-5" />
-                {!collapsed && <span>{link.label}</span>}
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>{link.tooltip}</p>
-            </TooltipContent>
-          </Tooltip>
-        );
-      })}
-    </div>
+    <TooltipProvider>
+      <div className="space-y-2">
+        {links.map((link) => {
+          const Icon = link.icon;
+          return (
+            <Tooltip key={link.to}>
+              <TooltipTrigger asChild>
+                <Link
+                  to={link.to}
+                  className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
+                    isActive(link.to) ? "bg-muted font-medium" : ""
+                  } ${collapsed ? "justify-center px-2" : ""}`}
+                >
+                  <Icon className="h-5 w-5" />
+                  {!collapsed && <span>{link.label}</span>}
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{link.tooltip}</p>
+              </TooltipContent>
+            </Tooltip>
+          );
+        })}
+      </div>
+    </TooltipProvider>
   );
 };
 

@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './components/AuthProvider.tsx'
 import { LocaleProvider } from './components/providers/LocaleProvider.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
+import { TooltipProvider } from './components/ui/tooltip'
 
 const queryClient = new QueryClient()
 
@@ -17,9 +18,11 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <AuthProvider>
         <LocaleProvider>
           <ThemeProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+            <TooltipProvider>
+              <BrowserRouter>
+                <App />
+              </BrowserRouter>
+            </TooltipProvider>
           </ThemeProvider>
         </LocaleProvider>
       </AuthProvider>
