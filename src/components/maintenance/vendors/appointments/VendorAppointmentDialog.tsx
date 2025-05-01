@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -13,13 +13,30 @@ import { fr, enUS } from 'date-fns/locale';
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Switch } from "@/components/ui/switch";
-import { addDays, subHours } from "date-fns";
-import { supabase } from "@/lib/supabase";
+import { CalendarIcon, Clock } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+
+interface Appointment {
+  id: string;
+  vendorId: string;
+  date: Date;
+  time: string;
+  title: string;
+  status: 'scheduled' | 'completed' | 'cancelled';
+  notes?: string;
+  sendEmail?: boolean;
+  setReminder?: boolean;
+  reminderTime?: string;
+  reminderSent?: boolean;
+}
 
 interface VendorAppointmentDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   vendors: Vendor[];
+  appointment: Appointment | null;
   onSuccess: (appointmentData: {
     vendorId: string;
     date: Date;
@@ -36,6 +53,7 @@ export const VendorAppointmentDialog = ({
   open,
   onOpenChange,
   vendors,
+  appointment,
   onSuccess
 }: VendorAppointmentDialogProps) => {
   const { t, locale } = useLocale();
@@ -49,6 +67,23 @@ export const VendorAppointmentDialog = ({
   const [sendEmail, setSendEmail] = useState<boolean>(true);
   const [setReminder, setSetReminder] = useState<boolean>(false);
   const [reminderTime, setReminderTime] = useState<string>("1day");
+  const [calendarOpen, setCalendarOpen] = useState(false);
+
+  // Fill the form with the appointment data if editing
+  useEffect(() => {
+    if (appointment) {
+      setSelectedVendor(appointment.vendorId);
+      setSelectedDate(appointment.date);
+      setTime(appointment.time);
+      setTitle(appointment.title);
+      setNotes(appointment.notes || "");
+      setSendEmail(appointment.sendEmail || true);
+      setSetReminder(appointment.setReminder || false);
+      setReminderTime(appointment.reminderTime || "1day");
+    } else {
+      resetForm();
+    }
+  }, [appointment, open]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,19 +100,6 @@ export const VendorAppointmentDialog = ({
     setIsSubmitting(true);
     
     try {
-      // If email notifications are enabled, send email to vendor
-      if (sendEmail) {
-        const vendor = vendors.find(v => v.id === selectedVendor);
-        if (vendor) {
-          await sendEmailToVendor(vendor, {
-            date: selectedDate,
-            time,
-            title,
-            notes
-          });
-        }
-      }
-      
       // Pass the data back to the parent component
       onSuccess({
         vendorId: selectedVendor,
@@ -90,7 +112,6 @@ export const VendorAppointmentDialog = ({
         reminderTime
       });
       
-      resetForm();
       onOpenChange(false);
     } catch (error) {
       console.error("Erreur lors de la création du rendez-vous:", error);
@@ -101,52 +122,6 @@ export const VendorAppointmentDialog = ({
       });
     } finally {
       setIsSubmitting(false);
-    }
-  };
-  
-  const sendEmailToVendor = async (vendor: Vendor, appointmentDetails: { 
-    date: Date; 
-    time: string; 
-    title: string; 
-    notes?: string 
-  }) => {
-    try {
-      const formattedDate = appointmentDetails.date.toLocaleDateString(
-        locale === 'fr' ? 'fr-FR' : 'en-US', 
-        { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
-      );
-      
-      const emailContent = `
-        ${t('appointmentScheduled')}
-        
-        ${t('date')}: ${formattedDate}
-        ${t('time')}: ${appointmentDetails.time}
-        ${t('appointmentTitle')}: ${appointmentDetails.title}
-        ${appointmentDetails.notes ? `${t('notes')}: ${appointmentDetails.notes}` : ''}
-      `;
-      
-      const { error } = await supabase.functions.invoke('send-vendor-email', {
-        body: {
-          vendorEmail: vendor.email,
-          vendorName: vendor.name,
-          subject: `${t('appointmentScheduled')}: ${appointmentDetails.title}`,
-          content: emailContent
-        }
-      });
-      
-      if (error) throw error;
-      
-      toast({
-        title: t('success'),
-        description: t('emailSentToVendor')
-      });
-    } catch (error) {
-      console.error("Error sending email to vendor:", error);
-      toast({
-        description: t('errorSendingEmail'),
-        variant: "destructive"
-      });
-      // We don't throw here to allow the appointment to be created even if email sending fails
     }
   };
   
@@ -165,9 +140,11 @@ export const VendorAppointmentDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[550px] overflow-auto max-h-[90vh]">
         <DialogHeader className="pb-2">
-          <DialogTitle className="text-xl">{t('scheduleAppointment')}</DialogTitle>
+          <DialogTitle className="text-xl">
+            {appointment ? t('editAppointment') : t('scheduleAppointment')}
+          </DialogTitle>
           <DialogDescription>
-            {t('scheduleAppointmentDescription')}
+            {appointment ? t('editAppointmentDescription') : t('scheduleAppointmentDescription')}
           </DialogDescription>
         </DialogHeader>
         
@@ -188,28 +165,55 @@ export const VendorAppointmentDialog = ({
             </Select>
           </div>
           
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">{t('date')}</Label>
-            <div className="border rounded-md p-3 bg-background">
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                locale={locale === 'fr' ? fr : enUS}
-                className="mx-auto"
-              />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">{t('date')}</Label>
+              <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !selectedDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {selectedDate ? (
+                      format(selectedDate, "PPP", { locale: locale === 'fr' ? fr : enUS })
+                    ) : (
+                      <span>{t('pickDate')}</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={selectedDate}
+                    onSelect={(date) => {
+                      setSelectedDate(date);
+                      setCalendarOpen(false);
+                    }}
+                    initialFocus
+                    locale={locale === 'fr' ? fr : enUS}
+                    className="pointer-events-auto p-3"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="time" className="text-sm font-medium">{t('time')}</Label>
-            <Input
-              id="time"
-              type="time"
-              value={time}
-              onChange={(e) => setTime(e.target.value)}
-              className="w-full"
-            />
+            
+            <div className="space-y-2">
+              <Label htmlFor="time" className="text-sm font-medium">{t('time')}</Label>
+              <div className="relative">
+                <Input
+                  id="time"
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="w-full pl-10"
+                />
+                <Clock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+              </div>
+            </div>
           </div>
           
           <div className="space-y-2">
@@ -229,7 +233,7 @@ export const VendorAppointmentDialog = ({
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder={t('notesPlaceholder')}
+              placeholder={t('appointmentNotesPlaceholder', { fallback: t('notesPlaceholder') })}
               rows={3}
               className="w-full resize-none"
             />
@@ -263,7 +267,7 @@ export const VendorAppointmentDialog = ({
             </div>
             
             {setReminder && (
-              <div className="space-y-2 pl-2 border-l-2 border-muted-foreground/20">
+              <div className="space-y-2 pl-4 border-l-2 border-muted-foreground/20">
                 <Label htmlFor="reminder-time" className="text-sm">{t('reminderTime')}</Label>
                 <Select value={reminderTime} onValueChange={setReminderTime}>
                   <SelectTrigger id="reminder-time" className="w-full">
@@ -295,7 +299,7 @@ export const VendorAppointmentDialog = ({
               disabled={isSubmitting}
               className="sm:w-auto w-full"
             >
-              {isSubmitting ? t('scheduling') : t('schedule')}
+              {isSubmitting ? t('saving') : (appointment ? t('update') : t('schedule'))}
             </Button>
           </DialogFooter>
         </form>
