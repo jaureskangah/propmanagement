@@ -56,6 +56,13 @@ function Calendar({
         IconLeft: ({ ..._props }) => <ChevronLeft className="h-4 w-4" />,
         IconRight: ({ ..._props }) => <ChevronRight className="h-4 w-4" />,
       }}
+      weekStartsOn={1} // Semaine commence le lundi (1)
+      formatters={{
+        formatWeekdayName: (weekday) => {
+          const day = weekday.toLocaleLowerCase();
+          return day.substring(0, 2);
+        }
+      }}
       {...props}
     />
   );
