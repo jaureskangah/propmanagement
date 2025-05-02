@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -282,12 +283,12 @@ export const VendorAppointmentCalendar = ({ vendors }: VendorAppointmentCalendar
                 <CardTitle className="text-sm">{t('calendar')}</CardTitle>
                 <CardDescription>{t('selectDateToViewAppointments')}</CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="max-w-full overflow-hidden">
                 <Calendar
                   mode="single"
                   selected={selectedDate}
                   onSelect={setSelectedDate}
-                  className="rounded-md border pointer-events-auto"
+                  className="rounded-md border max-w-full"
                   locale={locale === 'fr' ? fr : enUS}
                   modifiers={{
                     withAppointments: filteredAppointments
