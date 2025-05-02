@@ -1,14 +1,10 @@
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
-import { fr, enUS } from 'date-fns/locale';
-import { CalendarIcon } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Appointment } from "./types";
 import { Vendor } from "@/types/vendor";
-import { TodayAppointmentItem } from "./TodayAppointmentItem";
+import { TodayHeader } from "./today/TodayHeader";
+import { TodayAppointmentsList } from "./today/TodayAppointmentsList";
 
 interface TodayTabProps {
   todayAppointments: Appointment[];
@@ -21,43 +17,17 @@ export const TodayTab = ({
   getVendorById,
   handleStatusChange
 }: TodayTabProps) => {
-  const { t, locale } = useLocale();
-  
   return (
     <Card className="border-l-4 border-l-blue-500">
       <CardHeader>
-        <div className="flex justify-between items-center">
-          <CardTitle>
-            {t('todayAppointments')}
-            <span className="ml-2 text-sm font-normal text-muted-foreground">
-              ({format(new Date(), 'PPP', { locale: locale === 'fr' ? fr : enUS })})
-            </span>
-          </CardTitle>
-          <Badge className="bg-blue-500">{todayAppointments.length}</Badge>
-        </div>
+        <TodayHeader appointmentsCount={todayAppointments.length} />
       </CardHeader>
       <CardContent>
-        {todayAppointments.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground flex flex-col items-center">
-            <CalendarIcon className="h-8 w-8 mb-2 text-muted-foreground/60" />
-            {t('noAppointmentsToday')}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {todayAppointments.map(appointment => {
-              const vendor = getVendorById(appointment.vendorId);
-              
-              return (
-                <TodayAppointmentItem
-                  key={appointment.id}
-                  appointment={appointment}
-                  vendor={vendor}
-                  onStatusChange={handleStatusChange}
-                />
-              );
-            })}
-          </div>
-        )}
+        <TodayAppointmentsList 
+          appointments={todayAppointments}
+          getVendorById={getVendorById}
+          onStatusChange={handleStatusChange}
+        />
       </CardContent>
     </Card>
   );

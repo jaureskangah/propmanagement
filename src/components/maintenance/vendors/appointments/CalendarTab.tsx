@@ -1,14 +1,13 @@
 
 import React from "react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
-import { format, isSameDay, isToday } from "date-fns";
-import { fr, enUS } from 'date-fns/locale';
+import { Card, CardHeader, CardContent, CardDescription, CardTitle } from "@/components/ui/card";
+import { isSameDay } from "date-fns";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Appointment } from "./types";
 import { Vendor } from "@/types/vendor";
-import { AppointmentItem } from "./AppointmentItem";
+import { AppointmentCalendar } from "./calendar/AppointmentCalendar";
+import { DateHeader } from "./calendar/DateHeader";
+import { AppointmentsList } from "./calendar/AppointmentsList";
 
 interface CalendarTabProps {
   selectedDate: Date | undefined;
@@ -27,7 +26,7 @@ export const CalendarTab = ({
   handleEditAppointment,
   handleStatusChange
 }: CalendarTabProps) => {
-  const { t, locale } = useLocale();
+  const { t } = useLocale();
   
   const appointmentsForSelectedDate = selectedDate 
     ? filteredAppointments.filter(appt => isSameDay(appt.date, selectedDate))
@@ -41,64 +40,26 @@ export const CalendarTab = ({
           <CardDescription>{t('selectDateToViewAppointments')}</CardDescription>
         </CardHeader>
         <CardContent className="max-w-full overflow-hidden">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
-            className="rounded-md border max-w-full"
-            locale={locale === 'fr' ? fr : enUS}
-            modifiers={{
-              withAppointments: filteredAppointments
-                .filter(apt => apt.status === 'scheduled')
-                .map(apt => apt.date)
-            }}
-            modifiersStyles={{
-              withAppointments: {
-                backgroundColor: '#e11d48',
-                color: 'white',
-                fontWeight: 'bold'
-              }
-            }}
+          <AppointmentCalendar 
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            appointments={filteredAppointments}
           />
         </CardContent>
       </Card>
       
       <Card className="md:col-span-2 border-l-4 border-l-blue-500">
         <CardHeader>
-          <div className="flex justify-between items-center">
-            <CardTitle className="text-sm">
-              {selectedDate ? (
-                format(selectedDate, 'PPP', { locale: locale === 'fr' ? fr : enUS })
-              ) : (
-                t('noDateSelected')
-              )}
-            </CardTitle>
-            {selectedDate && isToday(selectedDate) && (
-              <Badge className="bg-blue-500">{t('today')}</Badge>
-            )}
-          </div>
+          <DateHeader selectedDate={selectedDate} />
         </CardHeader>
         <CardContent>
-          {appointmentsForSelectedDate.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              {t('noAppointmentsScheduled')}
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {appointmentsForSelectedDate.map(appointment => {
-                const vendor = getVendorById(appointment.vendorId);
-                return (
-                  <AppointmentItem
-                    key={appointment.id}
-                    appointment={appointment}
-                    vendor={vendor}
-                    onEdit={handleEditAppointment}
-                    onStatusChange={handleStatusChange}
-                  />
-                );
-              })}
-            </div>
-          )}
+          <AppointmentsList 
+            appointments={appointmentsForSelectedDate}
+            getVendorById={getVendorById}
+            onEdit={handleEditAppointment}
+            onStatusChange={handleStatusChange}
+            emptyMessage={t('noAppointmentsScheduled')}
+          />
         </CardContent>
       </Card>
     </div>
