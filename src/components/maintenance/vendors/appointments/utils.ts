@@ -1,5 +1,6 @@
 
 import { addDays } from "date-fns";
+import type { Locale } from "date-fns";
 
 export function addHours(date: Date, hours: number): Date {
   const result = new Date(date);

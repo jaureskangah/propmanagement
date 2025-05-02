@@ -2,13 +2,15 @@
 import { useState, useEffect } from "react";
 import { Appointment } from "./types";
 import { Vendor } from "@/types/vendor";
-import { isToday, isAfter, isBefore, addDays, isSameDay } from "date-fns";
+import { isToday, isAfter, isBefore, addDays, isSameDay, format } from "date-fns";
+import { fr, enUS } from 'date-fns/locale';
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { addHours } from "./utils";
 
 export const useAppointmentCalendar = (vendors: Vendor[]) => {
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -104,7 +106,7 @@ export const useAppointmentCalendar = (vendors: Vendor[]) => {
     const interval = setInterval(checkReminders, 60 * 1000);
     
     return () => clearInterval(interval);
-  }, [appointments, t]);
+  }, [appointments, t, locale, toast]);
   
   // Filter appointments based on search query
   const filteredAppointments = appointments.filter(appointment => {
