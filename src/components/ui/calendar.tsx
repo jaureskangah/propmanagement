@@ -59,7 +59,7 @@ function Calendar({
       weekStartsOn={1} // Semaine commence le lundi (1)
       formatters={{
         formatWeekdayName: (weekday) => {
-          const day = weekday.toLocaleLowerCase();
+          const day = weekday.toLocaleString('default', { weekday: 'short' });
           return day.substring(0, 2);
         }
       }}
