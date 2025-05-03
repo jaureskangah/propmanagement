@@ -1,9 +1,9 @@
 
-import { ModalCommonTranslations } from '../../../types/modal/common';
-import { ModalFieldsTranslations } from '../../../types/modal/fields';
-import { ModalPlaceholdersTranslations } from '../../../types/modal/placeholders';
-import { ModalValidationTranslations } from '../../../types/modal/validation';
-import { ModalActionsTranslations } from '../../../types/modal/actions';
+import { ModalCommonTranslations } from '../../types/modal/common';
+import { ModalFieldsTranslations } from '../../types/modal/fields';
+import { ModalPlaceholdersTranslations } from '../../types/modal/placeholders';
+import { ModalValidationTranslations } from '../../types/modal/validation';
+import { ModalActionsTranslations } from '../../types/modal/actions';
 
 import { enModalCommon } from './en/common';
 import { enModalFields } from './en/fields';
@@ -40,8 +40,8 @@ export const frModal: ModalTranslations = {
   ...frModalActions
 };
 
-export * from '../../../types/modal/common';
-export * from '../../../types/modal/fields';
-export * from '../../../types/modal/placeholders';
-export * from '../../../types/modal/validation';
-export * from '../../../types/modal/actions';
+export type { ModalCommonTranslations } from '../../types/modal/common';
+export type { ModalFieldsTranslations } from '../../types/modal/fields';
+export type { ModalPlaceholdersTranslations } from '../../types/modal/placeholders';
+export type { ModalValidationTranslations } from '../../types/modal/validation';
+export type { ModalActionsTranslations } from '../../types/modal/actions';
