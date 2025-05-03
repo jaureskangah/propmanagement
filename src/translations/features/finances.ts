@@ -1,138 +1,154 @@
+
 import { FinancesTranslations } from '../types';
 
 export const enFinances: FinancesTranslations = {
   finances: "Finances",
   financialOverview: "Financial Overview",
   income: "Income",
-  expense: "Expense",
+  expenses: "Expenses", // Changed from expense to expenses to match interface
   totalIncome: "Total Income", 
   totalExpenses: "Total Expenses",
   unpaidRent: "Unpaid Rent",
   selectProperty: "Select a property to view metrics",
   noPropertiesAvailable: "Please select a property to view its financial data",
+  netIncome: "Net Income", // Adding missing fields from the interface
+  addIncome: "Add Income",
+  addExpense: "Add Expense",
+  roi: "ROI",
+  cashFlow: "Cash Flow",
+  rentRoll: "Rent Roll",
+  paymentHistory: "Payment History",
+  rentCollection: "Rent Collection",
+  category: "Category",
+  date: "Date",
+  amount: "Amount",
+  description: "Description",
+  property: "Property",
+  unit: "Unit",
+  paymentDate: "Payment Date",
+  dueDate: "Due Date",
+  status: "Status",
+  noIncomeData: "No Income Data",
+  noExpenseData: "No Expense Data",
+  yearToDate: "Year to Date",
+  selectYear: "Select Year",
+  annualReturn: "Annual Return",
+  expensesByCategory: "Expenses by Category",
+  incomeTrend: "Income Trend",
+  expenseTrend: "Expense Trend",
+  totalRentPaid: "Total Rent Paid",
+  paymentEvolution: "Payment Evolution",
+  cumulativeTotal: "Cumulative Total",
+  overallFinances: "Overall Finances",
+  paid: "Paid",
+  pending: "Pending",
+  overdue: "Overdue",
+  late: "Late",
+  tenant: "Tenant",
+  unitNumber: "Unit Number",
+  allTimeIncome: "All Time Income",
+  allTimeExpenses: "All Time Expenses",
+  occupancyRate: "Occupancy Rate",
+  occupancyRateDescription: "Percentage of occupied units",
+  unpaidRentDescription: "Amount of rent not yet collected"
 };
 
 export const frFinances: FinancesTranslations = {
   finances: "Finances",
   financialOverview: "Aperçu financier",
   income: "Revenus",
-  expense: "Dépenses",
+  expenses: "Dépenses", // Changed from expense to expenses to match interface
   totalIncome: "Revenu total",
   totalExpenses: "Dépenses totales",
   unpaidRent: "Loyers impayés",
   selectProperty: "Sélectionnez une propriété pour voir les métriques",
   noPropertiesAvailable: "Veuillez sélectionner une propriété pour voir ses données financières",
+  netIncome: "Revenu net", // Adding missing fields from the interface
+  addIncome: "Ajouter un revenu",
+  addExpense: "Ajouter une dépense",
+  roi: "ROI",
+  cashFlow: "Flux de trésorerie",
+  rentRoll: "Loyer total",
+  paymentHistory: "Historique des paiements",
+  rentCollection: "Recouvrement de loyers",
+  category: "Catégorie",
+  date: "Date",
+  amount: "Montant",
+  description: "Description",
+  property: "Propriété",
+  unit: "Unité",
+  paymentDate: "Date de paiement",
+  dueDate: "Date d'échéance",
+  status: "Statut",
+  noIncomeData: "Aucune donnée de revenu",
+  noExpenseData: "Aucune donnée de dépense",
+  yearToDate: "Depuis le début de l'année",
+  selectYear: "Sélectionner une année",
+  annualReturn: "Rendement annuel",
+  expensesByCategory: "Dépenses par catégorie",
+  incomeTrend: "Tendance des revenus",
+  expenseTrend: "Tendance des dépenses",
+  totalRentPaid: "Total des loyers payés",
+  paymentEvolution: "Évolution des paiements",
+  cumulativeTotal: "Total cumulé",
+  overallFinances: "Finances générales",
+  paid: "Payé",
+  pending: "En attente",
+  overdue: "En retard",
+  late: "Retard",
+  tenant: "Locataire",
+  unitNumber: "Numéro d'unité",
+  allTimeIncome: "Revenus de tous les temps",
+  allTimeExpenses: "Dépenses de tous les temps",
+  occupancyRate: "Taux d'occupation",
+  occupancyRateDescription: "Pourcentage d'unités occupées",
+  unpaidRentDescription: "Montant des loyers non encore perçus"
 };
 
-// Export the translation functions so they can be imported in en.ts and fr.ts
-// Add finance translations to the main translation object
-export const addFinanceTranslations = (
-  locale: 'en' | 'fr',
-  translations: Record<string, string>
-) => {
-  if (locale === "en") {
-    translations["finance.financialOverview"] = "Financial Overview";
-    translations["finance.income"] = "Income";
-    translations["finance.expense"] = "Expense";
-    translations["finance.totalIncome"] = "Total Income";
-    translations["finance.totalExpenses"] = "Total Expenses";
-    translations["finance.occupancyRate"] = "Occupancy Rate";
-    translations["finance.unpaidRent"] = "Unpaid Rent";
-    translations["finance.revenueAndExpenses"] = "Revenue and Expenses";
-    
-    // More accurate translations
-    translations["finance.occupancyRateDescription"] = "Percentage of occupied units";
-    translations["finance.unpaidRentDescription"] = "Amount of rent not yet collected";
-    
-    // Adding missing translations
-    translations["finance.allTimeIncome"] = "All-time income";
-    translations["finance.allTimeExpenses"] = "All-time expenses";
-    translations["finance.yearlyData"] = "Yearly data";
-    translations["finance.monthlyData"] = "Monthly data";
-    translations["finance.unitNumber"] = "Unit number";
-    translations["finance.monthly"] = "Monthly";
-    translations["finance.yearly"] = "Yearly";
-    translations["finance.all"] = "All";
-    translations["finance.profit"] = "Profit";
-    translations["finance.showAll"] = "Show all";
-    translations["finance.showIncome"] = "Show income";
-    translations["finance.showExpense"] = "Show expense";
-    translations["finance.showProfit"] = "Show profit";
-    translations["finance.noDataAvailable"] = "No data available";
-    translations["finance.authRequired"] = "Authentication required";
-    translations["finance.selectProperty"] = "Select property";
-    translations["finance.noPropertiesAvailable"] = "No properties available";
-    
-    // Adding expense related translations
-    translations["finance.addExpense"] = "Add Expense";
-    translations["finance.editExpense"] = "Edit Expense";
-    translations["finance.fillExpenseDetails"] = "Fill in the expense details.";
-    translations["finance.noExpenseData"] = "No expense data available for this property";
-    translations["finance.propertyExpenses"] = "Property expenses";
-    translations["finance.vendor"] = "Vendor";
-    translations["finance.selectVendor"] = "Select a vendor";
-    translations["finance.noVendor"] = "No vendor";
-    translations["finance.notSpecified"] = "Not specified";
-    
-    // Populate the exported object for en
-    Object.keys(translations)
-      .filter(key => key.startsWith('finance.'))
-      .forEach(key => {
-        enFinances[key.replace('finance.', '')] = translations[key];
-      });
-  } else if (locale === "fr") {
-    translations["finance.financialOverview"] = "Vue d'ensemble financière";
-    translations["finance.income"] = "Revenus";
-    translations["finance.expense"] = "Dépenses";
-    translations["finance.totalIncome"] = "Revenu total";
-    translations["finance.totalExpenses"] = "Dépenses totales";
-    translations["finance.occupancyRate"] = "Taux d'occupation";
-    translations["finance.unpaidRent"] = "Loyers impayés";
-    translations["finance.revenueAndExpenses"] = "Revenus et Dépenses";
-    
-    // Traductions plus précises
-    translations["finance.occupancyRateDescription"] = "Pourcentage d'unités occupées";
-    translations["finance.unpaidRentDescription"] = "Montant des loyers non encore perçus";
-    
-    // Adding missing translations
-    translations["finance.allTimeIncome"] = "Revenus totaux";
-    translations["finance.allTimeExpenses"] = "Dépenses totales";
-    translations["finance.yearlyData"] = "Données annuelles";
-    translations["finance.monthlyData"] = "Données mensuelles";
-    translations["finance.unitNumber"] = "Numéro d'unité";
-    translations["finance.monthly"] = "Mensuel";
-    translations["finance.yearly"] = "Annuel";
-    translations["finance.all"] = "Tous";
-    translations["finance.profit"] = "Profit";
-    translations["finance.showAll"] = "Afficher tout";
-    translations["finance.showIncome"] = "Afficher revenus";
-    translations["finance.showExpense"] = "Afficher dépenses";
-    translations["finance.showProfit"] = "Afficher profit";
-    translations["finance.noDataAvailable"] = "Aucune donnée disponible";
-    translations["finance.authRequired"] = "Authentification requise";
-    translations["finance.selectProperty"] = "Sélectionner une propriété";
-    translations["finance.noPropertiesAvailable"] = "Aucune propriété disponible";
-    
-    // Adding expense related translations
-    translations["finance.addExpense"] = "Ajouter une dépense";
-    translations["finance.editExpense"] = "Modifier la dépense";
-    translations["finance.fillExpenseDetails"] = "Renseignez les informations de la dépense.";
-    translations["finance.noExpenseData"] = "Aucune dépense disponible pour cette propriété";
-    translations["finance.propertyExpenses"] = "Dépenses de la propriété";
-    translations["finance.vendor"] = "Fournisseur";
-    translations["finance.selectVendor"] = "Sélectionner un fournisseur";
-    translations["finance.noVendor"] = "Aucun fournisseur";
-    translations["finance.notSpecified"] = "Non spécifié";
-    
-    // Populate the exported object for fr
-    Object.keys(translations)
-      .filter(key => key.startsWith('finance.'))
-      .forEach(key => {
-        frFinances[key.replace('finance.', '')] = translations[key];
-      });
-  }
-};
+// Removing the addFinanceTranslations function that was causing type errors
+// and replacing it with direct property assignments
 
-// Call the function to populate the exported objects
-addFinanceTranslations('en', enFinances);
-addFinanceTranslations('fr', frFinances);
+// Add additional translations to the objects directly - these were previously added by the function
+// English additional translations
+enFinances.revenueAndExpenses = "Revenue and Expenses";
+enFinances.allTime = "All Time";
+enFinances.comparedToPreviousMonth = "Compared to previous month";
+enFinances.yearlyData = "Yearly data";
+enFinances.monthlyData = "Monthly data";
+enFinances.monthly = "Monthly";
+enFinances.yearly = "Yearly";
+enFinances.all = "All";
+enFinances.profit = "Profit";
+enFinances.showAll = "Show all";
+enFinances.showIncome = "Show income";
+enFinances.showExpense = "Show expense";
+enFinances.showProfit = "Show profit";
+enFinances.noDataAvailable = "No data available";
+enFinances.authRequired = "Authentication required";
+enFinances.vendor = "Vendor";
+enFinances.selectVendor = "Select a vendor";
+enFinances.noVendor = "No vendor";
+enFinances.notSpecified = "Not specified";
+enFinances.propertyExpenses = "Property expenses";
+
+// French additional translations
+frFinances.revenueAndExpenses = "Revenus et Dépenses";
+frFinances.allTime = "Tout le temps";
+frFinances.comparedToPreviousMonth = "Par rapport au mois précédent";
+frFinances.yearlyData = "Données annuelles";
+frFinances.monthlyData = "Données mensuelles";
+frFinances.monthly = "Mensuel";
+frFinances.yearly = "Annuel";
+frFinances.all = "Tous";
+frFinances.profit = "Profit";
+frFinances.showAll = "Afficher tout";
+frFinances.showIncome = "Afficher revenus";
+frFinances.showExpense = "Afficher dépenses";
+frFinances.showProfit = "Afficher profit";
+frFinances.noDataAvailable = "Aucune donnée disponible";
+frFinances.authRequired = "Authentification requise";
+frFinances.vendor = "Fournisseur";
+frFinances.selectVendor = "Sélectionner un fournisseur";
+frFinances.noVendor = "Aucun fournisseur";
+frFinances.notSpecified = "Non spécifié";
+frFinances.propertyExpenses = "Dépenses de la propriété";

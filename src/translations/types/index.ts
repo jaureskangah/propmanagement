@@ -33,30 +33,28 @@ export interface Translations {
   errors: ErrorTranslations;
 }
 
-export {
-  ToastTranslations,
-  ErrorTranslations,
-  CTATranslations,
-  HeroTranslations,
-  ContactTranslations,
-  HowItWorksTranslations,
-  FeaturesTranslations,
-  ModalTranslations,
-  FAQTranslations,
-  FooterTranslations,
-  AdminDashboardTranslations,
-  AuthTranslations,
-  CommonTranslations,
-  SharedTranslations,
-  DashboardTranslations,
-  FinancesTranslations,
-  MaintenanceTranslations,
-  NavigationTranslations,
-  PricingTranslations,
-  PlanFeaturesTranslations,
-  PropertyManagementTranslations,
-  SettingsTranslations,
-  StatusTranslations,
-  TenantTranslations,
-  DocumentGeneratorTranslations
-};
+// Using export type for all type re-exports
+export type { ToastTranslations };
+export type { ErrorTranslations };
+export type { CTATranslations };
+export type { HeroTranslations };
+export type { ContactTranslations };
+export type { HowItWorksTranslations };
+export type { FeaturesTranslations };
+export type { ModalTranslations };
+export type { FAQTranslations };
+export type { FooterTranslations };
+export type { AdminDashboardTranslations };
+export type { AuthTranslations };
+export type { CommonTranslations };
+export type { SharedTranslations };
+export type { DashboardTranslations };
+export type { FinancesTranslations };
+export type { MaintenanceTranslations };
+export type { NavigationTranslations };
+export type { PricingTranslations, PlanFeaturesTranslations };
+export type { PropertyManagementTranslations };
+export type { SettingsTranslations };
+export type { StatusTranslations };
+export type { TenantTranslations };
+export type { DocumentGeneratorTranslations };

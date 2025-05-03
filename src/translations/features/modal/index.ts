@@ -1,9 +1,21 @@
 
-import { ModalCommonTranslations } from './common';
-import { ModalFieldsTranslations } from './fields';
-import { ModalPlaceholdersTranslations } from './placeholders';
-import { ModalValidationTranslations } from './validation';
-import { ModalActionsTranslations } from './actions';
+import { ModalCommonTranslations } from '../../../types/modal/common';
+import { ModalFieldsTranslations } from '../../../types/modal/fields';
+import { ModalPlaceholdersTranslations } from '../../../types/modal/placeholders';
+import { ModalValidationTranslations } from '../../../types/modal/validation';
+import { ModalActionsTranslations } from '../../../types/modal/actions';
+
+import { enModalCommon } from './en/common';
+import { enModalFields } from './en/fields';
+import { enModalPlaceholders } from './en/placeholders';
+import { enModalValidation } from './en/validation';
+import { enModalActions } from './en/actions';
+
+import { frModalCommon } from './fr/common';
+import { frModalFields } from './fr/fields';
+import { frModalPlaceholders } from './fr/placeholders';
+import { frModalValidation } from './fr/validation';
+import { frModalActions } from './fr/actions';
 
 export interface ModalTranslations extends 
   ModalCommonTranslations,
@@ -13,29 +25,23 @@ export interface ModalTranslations extends
   ModalActionsTranslations {}
 
 export const enModal: ModalTranslations = {
-  // Inclure ici les traductions en anglais pour modal
-  // ... au besoin, importer les traductions depuis des fichiers séparés
-  // Exemple:
-  close: "Close",
-  confirm: "Confirm",
-  cancel: "Cancel",
-  delete: "Delete",
-  // ... etc.
+  ...enModalCommon,
+  ...enModalFields,
+  ...enModalPlaceholders,
+  ...enModalValidation,
+  ...enModalActions
 };
 
 export const frModal: ModalTranslations = {
-  // Inclure ici les traductions en français pour modal
-  // ... au besoin, importer les traductions depuis des fichiers séparés
-  // Exemple:
-  close: "Fermer",
-  confirm: "Confirmer",
-  cancel: "Annuler",
-  delete: "Supprimer",
-  // ... etc.
+  ...frModalCommon,
+  ...frModalFields,
+  ...frModalPlaceholders,
+  ...frModalValidation,
+  ...frModalActions
 };
 
-export * from './common';
-export * from './fields';
-export * from './placeholders';
-export * from './validation';
-export * from './actions';
+export * from '../../../types/modal/common';
+export * from '../../../types/modal/fields';
+export * from '../../../types/modal/placeholders';
+export * from '../../../types/modal/validation';
+export * from '../../../types/modal/actions';

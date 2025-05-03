@@ -12,8 +12,8 @@ export interface ModalTranslations extends
   ModalValidationTranslations,
   ModalActionsTranslations {}
 
-export * from './common';
-export * from './fields';
-export * from './placeholders';
-export * from './validation';
-export * from './actions';
+export type { ModalCommonTranslations };
+export type { ModalFieldsTranslations };
+export type { ModalPlaceholdersTranslations };
+export type { ModalValidationTranslations };
+export type { ModalActionsTranslations };

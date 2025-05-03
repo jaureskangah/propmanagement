@@ -1,14 +1,156 @@
 
 import { DocumentGeneratorTranslations } from '../types';
+import enDocumentsData from './documents/en';
+import frDocumentsData from './documents/fr';
 
 export const enDocumentGenerator: DocumentGeneratorTranslations = {
-  // ... contenu existant
   documentGenerator: "Document Generator",
-  // ... etc.
+  documentTemplates: enDocumentsData.documentTemplates || "Document Templates",
+  editContent: enDocumentsData.editContent || "Edit Content",
+  preview: enDocumentsData.preview || "Preview",
+  documentType: enDocumentsData.documentType || "Document Type",
+  generatePreview: enDocumentsData.generatePreview || "Generate Preview",
+  downloadDocument: enDocumentsData.downloadDocument || "Download Document",
+  saveDocument: enDocumentsData.saveDocument || "Save Document",
+  generating: enDocumentsData.generating || "Generating...",
+  downloading: enDocumentsData.downloading || "Downloading...",
+  saving: enDocumentsData.saving || "Saving...",
+  noPreviewAvailable: enDocumentsData.noPreviewAvailable || "No preview available",
+  generatePreviewDescription: enDocumentsData.generatePreviewDescription || "Generate a preview of your document",
+  startTypingDocument: enDocumentsData.startTypingDocument || "Start typing your document",
+  downloadStarted: enDocumentsData.downloadStarted || "Download started",
+  downloadStartedDescription: enDocumentsData.downloadStartedDescription || "Your document will be downloaded shortly",
+  documentSaved: enDocumentsData.documentSaved || "Document saved",
+  documentSavedDescription: enDocumentsData.documentSavedDescription || "Your document has been saved successfully",
+  generatingPreview: enDocumentsData.generatingPreview || "Generating preview",
+  templateLoaded: enDocumentsData.templateLoaded || "Template loaded",
+  templateLoadedDescription: enDocumentsData.templateLoadedDescription || "Template content loaded successfully",
+  description: enDocumentsData.description || "Generate and manage documents",
+
+  // Document history related translations
+  documentHistory: enDocumentsData.documentHistory || "Document history",
+  noDocumentHistory: enDocumentsData.noDocumentHistory || "No document history",
+  viewDocumentHistory: enDocumentsData.viewDocumentHistory || "View document history",
+  documentHistoryDescription: enDocumentsData.documentHistoryDescription || "View your document history",
+  dateGenerated: enDocumentsData.dateGenerated || "Date generated",
+  documentName: enDocumentsData.documentName || "Document name",
+  documentCategory: enDocumentsData.documentCategory || "Document category",
+  documentActions: enDocumentsData.documentActions || "Actions",
+
+  // Document categories
+  leaseDocuments: enDocumentsData.leaseDocuments || "Lease Documents",
+  paymentDocuments: enDocumentsData.paymentDocuments || "Payment Documents",
+  noticeDocuments: enDocumentsData.noticeDocuments || "Notice Documents",
+  inspectionDocuments: enDocumentsData.inspectionDocuments || "Inspection Documents",
+  miscDocuments: enDocumentsData.miscDocuments || "Miscellaneous Documents",
+
+  // Document templates
+  leaseAgreement: enDocumentsData.leaseAgreement || "Lease Agreement",
+  leaseRenewal: enDocumentsData.leaseRenewal || "Lease Renewal",
+  leaseTermination: enDocumentsData.leaseTermination || "Lease Termination",
+  rentReceipt: enDocumentsData.rentReceipt || "Rent Receipt",
+  paymentReminder: enDocumentsData.paymentReminder || "Payment Reminder",
+  latePaymentNotice: enDocumentsData.latePaymentNotice || "Late Payment Notice",
+  noticeToVacate: enDocumentsData.noticeToVacate || "Notice to Vacate",
+  entryNotice: enDocumentsData.entryNotice || "Entry Notice",
+  maintenanceNotice: enDocumentsData.maintenanceNotice || "Maintenance Notice",
+  moveInChecklist: enDocumentsData.moveInChecklist || "Move-in Checklist",
+  moveOutChecklist: enDocumentsData.moveOutChecklist || "Move-out Checklist",
+  inspectionReport: enDocumentsData.inspectionReport || "Inspection Report",
+  tenantComplaint: enDocumentsData.tenantComplaint || "Tenant Complaint",
+  propertyRules: enDocumentsData.propertyRules || "Property Rules",
+  customDocument: enDocumentsData.customDocument || "Custom Document",
+
+  // Template content
+  leaseAgreementContent: enDocumentsData.leaseAgreementContent,
+  leaseRenewalContent: enDocumentsData.leaseRenewalContent,
+  leaseTerminationContent: enDocumentsData.leaseTerminationContent,
+  rentReceiptContent: enDocumentsData.rentReceiptContent,
+  paymentReminderContent: enDocumentsData.paymentReminderContent,
+  latePaymentNoticeContent: enDocumentsData.latePaymentNoticeContent,
+  noticeToVacateContent: enDocumentsData.noticeToVacateContent,
+  entryNoticeContent: enDocumentsData.entryNoticeContent,
+  maintenanceNoticeContent: enDocumentsData.maintenanceNoticeContent,
+  moveInChecklistContent: enDocumentsData.moveInChecklistContent,
+  moveOutChecklistContent: enDocumentsData.moveOutChecklistContent,
+  inspectionReportContent: enDocumentsData.inspectionReportContent,
+  tenantComplaintContent: enDocumentsData.tenantComplaintContent,
+  propertyRulesContent: enDocumentsData.propertyRulesContent,
+  customDocumentContent: enDocumentsData.customDocumentContent
 };
 
 export const frDocumentGenerator: DocumentGeneratorTranslations = {
-  // ... contenu existant
   documentGenerator: "Générateur de documents",
-  // ... etc.
+  documentTemplates: frDocumentsData.documentTemplates || "Modèles de documents",
+  editContent: frDocumentsData.editContent || "Éditer le contenu",
+  preview: frDocumentsData.preview || "Aperçu",
+  documentType: frDocumentsData.documentType || "Type de document",
+  generatePreview: frDocumentsData.generatePreview || "Générer un aperçu",
+  downloadDocument: frDocumentsData.downloadDocument || "Télécharger le document",
+  saveDocument: frDocumentsData.saveDocument || "Enregistrer le document",
+  generating: frDocumentsData.generating || "Génération...",
+  downloading: frDocumentsData.downloading || "Téléchargement...",
+  saving: frDocumentsData.saving || "Enregistrement...",
+  noPreviewAvailable: frDocumentsData.noPreviewAvailable || "Aucun aperçu disponible",
+  generatePreviewDescription: frDocumentsData.generatePreviewDescription || "Générer un aperçu de votre document",
+  startTypingDocument: frDocumentsData.startTypingDocument || "Commencez à taper votre document",
+  downloadStarted: frDocumentsData.downloadStarted || "Téléchargement commencé",
+  downloadStartedDescription: frDocumentsData.downloadStartedDescription || "Votre document sera téléchargé sous peu",
+  documentSaved: frDocumentsData.documentSaved || "Document enregistré",
+  documentSavedDescription: frDocumentsData.documentSavedDescription || "Votre document a été enregistré avec succès",
+  generatingPreview: frDocumentsData.generatingPreview || "Génération de l'aperçu",
+  templateLoaded: frDocumentsData.templateLoaded || "Modèle chargé",
+  templateLoadedDescription: frDocumentsData.templateLoadedDescription || "Contenu du modèle chargé avec succès",
+  description: frDocumentsData.description || "Générer et gérer des documents",
+
+  // Document history related translations
+  documentHistory: frDocumentsData.documentHistory || "Historique des documents",
+  noDocumentHistory: frDocumentsData.noDocumentHistory || "Aucun historique de documents",
+  viewDocumentHistory: frDocumentsData.viewDocumentHistory || "Voir l'historique des documents",
+  documentHistoryDescription: frDocumentsData.documentHistoryDescription || "Voir l'historique de vos documents",
+  dateGenerated: frDocumentsData.dateGenerated || "Date de génération",
+  documentName: frDocumentsData.documentName || "Nom du document",
+  documentCategory: frDocumentsData.documentCategory || "Catégorie du document",
+  documentActions: frDocumentsData.documentActions || "Actions",
+
+  // Document categories
+  leaseDocuments: frDocumentsData.leaseDocuments || "Documents de bail",
+  paymentDocuments: frDocumentsData.paymentDocuments || "Documents de paiement",
+  noticeDocuments: frDocumentsData.noticeDocuments || "Documents d'avis",
+  inspectionDocuments: frDocumentsData.inspectionDocuments || "Documents d'inspection",
+  miscDocuments: frDocumentsData.miscDocuments || "Documents divers",
+
+  // Document templates
+  leaseAgreement: frDocumentsData.leaseAgreement || "Contrat de bail",
+  leaseRenewal: frDocumentsData.leaseRenewal || "Renouvellement de bail",
+  leaseTermination: frDocumentsData.leaseTermination || "Résiliation de bail",
+  rentReceipt: frDocumentsData.rentReceipt || "Quittance de loyer",
+  paymentReminder: frDocumentsData.paymentReminder || "Rappel de paiement",
+  latePaymentNotice: frDocumentsData.latePaymentNotice || "Avis de paiement en retard",
+  noticeToVacate: frDocumentsData.noticeToVacate || "Avis de départ",
+  entryNotice: frDocumentsData.entryNotice || "Avis d'entrée",
+  maintenanceNotice: frDocumentsData.maintenanceNotice || "Avis de maintenance",
+  moveInChecklist: frDocumentsData.moveInChecklist || "Liste de contrôle d'entrée",
+  moveOutChecklist: frDocumentsData.moveOutChecklist || "Liste de contrôle de sortie",
+  inspectionReport: frDocumentsData.inspectionReport || "Rapport d'inspection",
+  tenantComplaint: frDocumentsData.tenantComplaint || "Plainte du locataire",
+  propertyRules: frDocumentsData.propertyRules || "Règles de la propriété",
+  customDocument: frDocumentsData.customDocument || "Document personnalisé",
+
+  // Template content
+  leaseAgreementContent: frDocumentsData.leaseAgreementContent,
+  leaseRenewalContent: frDocumentsData.leaseRenewalContent,
+  leaseTerminationContent: frDocumentsData.leaseTerminationContent,
+  rentReceiptContent: frDocumentsData.rentReceiptContent,
+  paymentReminderContent: frDocumentsData.paymentReminderContent,
+  latePaymentNoticeContent: frDocumentsData.latePaymentNoticeContent,
+  noticeToVacateContent: frDocumentsData.noticeToVacateContent,
+  entryNoticeContent: frDocumentsData.entryNoticeContent,
+  maintenanceNoticeContent: frDocumentsData.maintenanceNoticeContent,
+  moveInChecklistContent: frDocumentsData.moveInChecklistContent,
+  moveOutChecklistContent: frDocumentsData.moveOutChecklistContent,
+  inspectionReportContent: frDocumentsData.inspectionReportContent,
+  tenantComplaintContent: frDocumentsData.tenantComplaintContent,
+  propertyRulesContent: frDocumentsData.propertyRulesContent,
+  customDocumentContent: frDocumentsData.customDocumentContent
 };
