@@ -1,15 +1,17 @@
 
 import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useWorkOrderForm } from "./WorkOrderFormContext";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { useNotification } from "@/hooks/useNotification";
 
 interface UseWorkOrderSubmitProps {
   onSuccess: () => void;
 }
 
 export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
-  const { toast } = useToast();
+  const { t } = useLocale();
+  const notification = useNotification();
   const {
     title,
     description,
@@ -26,11 +28,7 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
 
   const validateForm = (): boolean => {
     if (!title || !description || !propertyId || !unit || !cost || !date || !vendor) {
-      toast({
-        title: "Champs manquants",
-        description: "Veuillez remplir tous les champs obligatoires",
-        variant: "destructive",
-      });
+      notification.error(t("pleaseFillAllFields"));
       return false;
     }
     return true;
@@ -43,10 +41,7 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
 
     setIsSubmitting(true);
     try {
-      toast({
-        title: "Création en cours",
-        description: "Traitement de votre bon de travail...",
-      });
+      notification.info(t("processingWorkOrder"));
 
       const photoUrls: string[] = [];
       if (photos.length > 0) {
@@ -86,21 +81,14 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
 
       if (error) throw error;
 
-      toast({
-        title: "Succès",
-        description: "Le bon de travail a été créé avec succès",
-      });
+      notification.success(t("workOrderCreated"));
       
       resetForm();
       onSuccess();
       
     } catch (error: any) {
       console.error("Erreur lors de la création du bon de travail:", error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de créer le bon de travail",
-        variant: "destructive",
-      });
+      notification.error(t("errorCreatingWorkOrder"));
     } finally {
       setIsSubmitting(false);
     }

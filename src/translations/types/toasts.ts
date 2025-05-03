@@ -1,3 +1,4 @@
+
 export interface ToastTranslations {
   authRequired: string;
   pleaseSignInToSubscribe: string;
@@ -28,4 +29,20 @@ export interface ToastTranslations {
   filterReset: string;
   welcomeTenant: string;
   welcomeGeneric: string;
+  
+  // Nouvelles traductions pour les notifications de maintenance
+  maintenanceRequestDeleted: string;
+  maintenanceRequestUpdated: string;
+  pleaseFillAllFields: string;
+  errorDeletingRequest: string;
+  errorUpdatingRequest: string;
+  processingWorkOrder: string;
+  workOrderCreated: string;
+  errorCreatingWorkOrder: string;
+  tenantNotified: string;
+  priorityChanged: string;
+  feedbackReceivedFor: string;
+  from: string;
+  to: string;
+  urgentMaintenanceRequest: string;
 }

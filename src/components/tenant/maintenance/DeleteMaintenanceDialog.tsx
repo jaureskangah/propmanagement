@@ -10,8 +10,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useNotification } from "@/hooks/useNotification";
 import type { MaintenanceRequest } from "@/types/tenant";
 
 interface DeleteMaintenanceDialogProps {
@@ -27,8 +27,8 @@ export const DeleteMaintenanceDialog = ({
   request,
   onSuccess,
 }: DeleteMaintenanceDialogProps) => {
-  const { toast } = useToast();
   const { t } = useLocale();
+  const notification = useNotification();
 
   const handleDelete = async () => {
     const { error } = await supabase
@@ -38,18 +38,11 @@ export const DeleteMaintenanceDialog = ({
 
     if (error) {
       console.error("Error deleting maintenance request:", error);
-      toast({
-        title: t('error'),
-        description: t('errorDeletingRequest'),
-        variant: "destructive",
-      });
+      notification.error(t('errorDeletingRequest'));
       return;
     }
 
-    toast({
-      title: t('success'),
-      description: t('maintenanceRequestDeleted'),
-    });
+    notification.success(t('maintenanceRequestDeleted'));
     onSuccess();
     onClose();
   };
