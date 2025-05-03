@@ -1,43 +1,37 @@
 
-import { Translations } from "./types";
-import { frToasts } from "./features/toasts";
-import { frErrors } from "./features/errors";
+import { Translations } from './types';
+import { frNavigation } from './features/navigation';
+import { frHero } from './features/hero';
+import { frFeatures } from './features/features';
+import { frPricing, frPlanFeatures } from './features/pricing';
+import { frToasts } from './features/toasts';
+import { frContact } from './features/contact';
+import { frAuth } from './features/auth';
+import { frCTA } from './features/cta';
+import { frFAQ } from './features/faq';
+import { frAdmin } from './features/admin';
+import { frStatus } from './features/status';
+import { frProperty } from './features/property';
+import { frMaintenance } from './features/maintenance';
+import { frTenant } from './features/tenant';
+import { frHowItWorks } from './features/how-it-works';
+import { frFooter } from './features/footer';
+import { frCommon } from './features/common';
+import { frDashboard } from './features/dashboard';
+import { frSettings } from './features/settings';
+import { frModal } from './features/modal';
+import { frTasks } from './features/maintenance/tasks';
+import { frList } from './features/tenant/fr/list';
+import { frFinances } from './features/finances'; // Import the exported object
+import frDocumentGenerator from './features/documents/fr';
 
-// Imports from feature translation files
-import { frNavigation } from "./features/navigation";
-import { frHero } from "./features/hero";
-import { frFeatures } from "./features/features";
-import { frPricing, frPlanFeatures } from "./features/pricing";
-import { frContact } from "./features/contact";
-import { frAuth } from "./features/auth";
-import { frCTA } from "./features/cta";
-import { frFAQ } from "./features/faq";
-import { frAdmin } from "./features/admin";
-import { frStatus } from "./features/status";
-import { frProperty } from "./features/property";
-import { frMaintenance } from "./features/maintenance";
-import { frTenant } from "./features/tenant";
-import { frHowItWorks } from "./features/how-it-works";
-import { frFooter } from "./features/footer";
-import { frCommon } from "./features/common";
-import { frDashboard } from "./features/dashboard";
-import { frSettings } from "./features/settings";
-import { frModal } from "./features/modal";
-import { frFinances } from "./features/finances";
+import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
+import { frProfile } from './features/tenant/fr/profile';
+import { frDocuments } from './features/tenant/fr/documents';
+import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
+import { frCommunications } from './features/tenant/fr/communications';
 
-// Import document generator translations
-import { frDocumentGenerator } from "./features/documents";
-
-// Imports manquants qu'il faudrait créer
-const frTasks = { /* Ajouter les traductions pour tasks */ };
-const frList = { /* Ajouter les traductions pour list */ };
-const frTenantDashboard = { /* Ajouter les traductions pour tenant dashboard */ };
-const frProfile = { /* Ajouter les traductions pour profile */ };
-const frDocuments = { /* Ajouter les traductions pour documents */ };
-const frTenantMaintenance = { /* Ajouter les traductions pour tenant maintenance */ };
-const frCommunications = { /* Ajouter les traductions pour communications */ };
-
-const translations: Translations = {
+const translations = {
   ...frNavigation,
   ...frHero,
   ...frFeatures,
@@ -66,10 +60,8 @@ const translations: Translations = {
   ...frDocuments,
   ...frTenantMaintenance,
   ...frCommunications,
-  ...frFinances,
-  documentGenerator: frDocumentGenerator,
-  toasts: frToasts,
-  errors: frErrors
+  ...frFinances, // Use the exported object
+  documentGenerator: frDocumentGenerator
 };
 
 export default translations;

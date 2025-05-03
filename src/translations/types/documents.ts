@@ -57,20 +57,20 @@ export interface DocumentGeneratorTranslations {
   propertyRules: string;
   customDocument: string;
   
-  // Template content
-  leaseAgreementContent: string;
-  leaseRenewalContent: string;
-  leaseTerminationContent: string;
-  rentReceiptContent: string;
-  paymentReminderContent: string;
-  latePaymentNoticeContent: string;
-  noticeToVacateContent: string;
-  entryNoticeContent: string;
-  maintenanceNoticeContent: string;
-  moveInChecklistContent: string;
-  moveOutChecklistContent: string;
-  inspectionReportContent: string;
-  tenantComplaintContent: string;
-  propertyRulesContent: string;
-  customDocumentContent: string;
+  // Dummy content for templates
+  leaseAgreementContent?: string;
+  leaseRenewalContent?: string;
+  leaseTerminationContent?: string;
+  rentReceiptContent?: string;
+  paymentReminderContent?: string;
+  latePaymentNoticeContent?: string;
+  noticeToVacateContent?: string;
+  entryNoticeContent?: string;
+  maintenanceNoticeContent?: string;
+  moveInChecklistContent?: string;
+  moveOutChecklistContent?: string;
+  inspectionReportContent?: string;
+  tenantComplaintContent?: string;
+  propertyRulesContent?: string;
+  customDocumentContent?: string;
 }

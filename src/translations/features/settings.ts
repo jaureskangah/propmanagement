@@ -1,7 +1,5 @@
-import { SettingsTranslations } from '../types';
 
-export const enSettings: SettingsTranslations = {
-  // Traductions en anglais pour les paramètres
+export const enSettings = {
   settings: "Settings",
   profile: "Profile",
   profileDescription: "Manage your personal information and account settings",
@@ -46,8 +44,7 @@ export const enSettings: SettingsTranslations = {
   email: "Email"
 };
 
-export const frSettings: SettingsTranslations = {
-  // Traductions en français pour les paramètres
+export const frSettings = {
   settings: "Paramètres",
   profile: "Profil",
   profileDescription: "Gérez vos informations personnelles et les paramètres de votre compte",
