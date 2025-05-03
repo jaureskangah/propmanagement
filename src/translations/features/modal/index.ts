@@ -1,30 +1,41 @@
 
-import { enModalCommon } from './en/common';
-import { enModalFields } from './en/fields';
-import { enModalPlaceholders } from './en/placeholders';
-import { enModalValidation } from './en/validation';
-import { enModalActions } from './en/actions';
+import { ModalCommonTranslations } from './common';
+import { ModalFieldsTranslations } from './fields';
+import { ModalPlaceholdersTranslations } from './placeholders';
+import { ModalValidationTranslations } from './validation';
+import { ModalActionsTranslations } from './actions';
 
-import { frModalCommon } from './fr/common';
-import { frModalFields } from './fr/fields';
-import { frModalPlaceholders } from './fr/placeholders';
-import { frModalValidation } from './fr/validation';
-import { frModalActions } from './fr/actions';
-
-import type { ModalTranslations } from '../../types/modal';
+export interface ModalTranslations extends 
+  ModalCommonTranslations,
+  ModalFieldsTranslations,
+  ModalPlaceholdersTranslations,
+  ModalValidationTranslations,
+  ModalActionsTranslations {}
 
 export const enModal: ModalTranslations = {
-  ...enModalCommon,
-  ...enModalFields,
-  ...enModalPlaceholders,
-  ...enModalValidation,
-  ...enModalActions,
+  // Inclure ici les traductions en anglais pour modal
+  // ... au besoin, importer les traductions depuis des fichiers séparés
+  // Exemple:
+  close: "Close",
+  confirm: "Confirm",
+  cancel: "Cancel",
+  delete: "Delete",
+  // ... etc.
 };
 
 export const frModal: ModalTranslations = {
-  ...frModalCommon,
-  ...frModalFields,
-  ...frModalPlaceholders,
-  ...frModalValidation,
-  ...frModalActions,
+  // Inclure ici les traductions en français pour modal
+  // ... au besoin, importer les traductions depuis des fichiers séparés
+  // Exemple:
+  close: "Fermer",
+  confirm: "Confirmer",
+  cancel: "Annuler",
+  delete: "Supprimer",
+  // ... etc.
 };
+
+export * from './common';
+export * from './fields';
+export * from './placeholders';
+export * from './validation';
+export * from './actions';

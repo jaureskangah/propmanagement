@@ -1,6 +1,7 @@
-import type { FinancesTranslations } from "../types/finances";
+import { FinancesTranslations } from '../types';
 
-export const enFinances: Record<string, string> = {
+export const enFinances: FinancesTranslations = {
+  finances: "Finances",
   financialOverview: "Financial Overview",
   income: "Income",
   expense: "Expense",
@@ -11,8 +12,9 @@ export const enFinances: Record<string, string> = {
   noPropertiesAvailable: "Please select a property to view its financial data",
 };
 
-export const frFinances: Record<string, string> = {
-  financialOverview: "Vue d'ensemble financière",
+export const frFinances: FinancesTranslations = {
+  finances: "Finances",
+  financialOverview: "Aperçu financier",
   income: "Revenus",
   expense: "Dépenses",
   totalIncome: "Revenu total",
