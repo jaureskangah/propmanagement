@@ -25,7 +25,7 @@ export const enDocumentGenerator: DocumentGeneratorTranslations = {
   generatingPreview: enDocumentsData.generatingPreview || "Generating preview",
   templateLoaded: enDocumentsData.templateLoaded || "Template loaded",
   templateLoadedDescription: enDocumentsData.templateLoadedDescription || "Template content loaded successfully",
-  description: enDocumentsData.description || "Generate and manage documents",
+  description: enDocumentsData.documentDescription || "Generate and manage documents",
 
   // Document history related translations
   documentHistory: enDocumentsData.documentHistory || "Document history",
@@ -61,22 +61,22 @@ export const enDocumentGenerator: DocumentGeneratorTranslations = {
   propertyRules: enDocumentsData.propertyRules || "Property Rules",
   customDocument: enDocumentsData.customDocument || "Custom Document",
 
-  // Template content
-  leaseAgreementContent: enDocumentsData.leaseAgreementContent,
-  leaseRenewalContent: enDocumentsData.leaseRenewalContent,
-  leaseTerminationContent: enDocumentsData.leaseTerminationContent,
-  rentReceiptContent: enDocumentsData.rentReceiptContent,
-  paymentReminderContent: enDocumentsData.paymentReminderContent,
-  latePaymentNoticeContent: enDocumentsData.latePaymentNoticeContent,
-  noticeToVacateContent: enDocumentsData.noticeToVacateContent,
-  entryNoticeContent: enDocumentsData.entryNoticeContent,
-  maintenanceNoticeContent: enDocumentsData.maintenanceNoticeContent,
-  moveInChecklistContent: enDocumentsData.moveInChecklistContent,
-  moveOutChecklistContent: enDocumentsData.moveOutChecklistContent,
-  inspectionReportContent: enDocumentsData.inspectionReportContent,
-  tenantComplaintContent: enDocumentsData.tenantComplaintContent,
-  propertyRulesContent: enDocumentsData.propertyRulesContent,
-  customDocumentContent: enDocumentsData.customDocumentContent
+  // Template content (make sure these exist in the type)
+  leaseAgreementContent: enDocumentsData.leaseAgreementContent || "",
+  leaseRenewalContent: enDocumentsData.leaseRenewalContent || "",
+  leaseTerminationContent: enDocumentsData.leaseTerminationContent || "",
+  rentReceiptContent: enDocumentsData.rentReceiptContent || "",
+  paymentReminderContent: enDocumentsData.paymentReminderContent || "",
+  latePaymentNoticeContent: enDocumentsData.latePaymentNoticeContent || "",
+  noticeToVacateContent: enDocumentsData.noticeToVacateContent || "",
+  entryNoticeContent: enDocumentsData.entryNoticeContent || "",
+  maintenanceNoticeContent: enDocumentsData.maintenanceNoticeContent || "",
+  moveInChecklistContent: enDocumentsData.moveInChecklistContent || "",
+  moveOutChecklistContent: enDocumentsData.moveOutChecklistContent || "",
+  inspectionReportContent: enDocumentsData.inspectionReportContent || "",
+  tenantComplaintContent: enDocumentsData.tenantComplaintContent || "",
+  propertyRulesContent: enDocumentsData.propertyRulesContent || "",
+  customDocumentContent: enDocumentsData.customDocumentContent || ""
 };
 
 export const frDocumentGenerator: DocumentGeneratorTranslations = {
@@ -101,7 +101,7 @@ export const frDocumentGenerator: DocumentGeneratorTranslations = {
   generatingPreview: frDocumentsData.generatingPreview || "Génération de l'aperçu",
   templateLoaded: frDocumentsData.templateLoaded || "Modèle chargé",
   templateLoadedDescription: frDocumentsData.templateLoadedDescription || "Contenu du modèle chargé avec succès",
-  description: frDocumentsData.description || "Générer et gérer des documents",
+  description: frDocumentsData.documentDescription || "Générer et gérer des documents",
 
   // Document history related translations
   documentHistory: frDocumentsData.documentHistory || "Historique des documents",
@@ -137,20 +137,20 @@ export const frDocumentGenerator: DocumentGeneratorTranslations = {
   propertyRules: frDocumentsData.propertyRules || "Règles de la propriété",
   customDocument: frDocumentsData.customDocument || "Document personnalisé",
 
-  // Template content
-  leaseAgreementContent: frDocumentsData.leaseAgreementContent,
-  leaseRenewalContent: frDocumentsData.leaseRenewalContent,
-  leaseTerminationContent: frDocumentsData.leaseTerminationContent,
-  rentReceiptContent: frDocumentsData.rentReceiptContent,
-  paymentReminderContent: frDocumentsData.paymentReminderContent,
-  latePaymentNoticeContent: frDocumentsData.latePaymentNoticeContent,
-  noticeToVacateContent: frDocumentsData.noticeToVacateContent,
-  entryNoticeContent: frDocumentsData.entryNoticeContent,
-  maintenanceNoticeContent: frDocumentsData.maintenanceNoticeContent,
-  moveInChecklistContent: frDocumentsData.moveInChecklistContent,
-  moveOutChecklistContent: frDocumentsData.moveOutChecklistContent,
-  inspectionReportContent: frDocumentsData.inspectionReportContent,
-  tenantComplaintContent: frDocumentsData.tenantComplaintContent,
-  propertyRulesContent: frDocumentsData.propertyRulesContent,
-  customDocumentContent: frDocumentsData.customDocumentContent
+  // Template content (make sure these exist in the type)
+  leaseAgreementContent: frDocumentsData.leaseAgreementContent || "",
+  leaseRenewalContent: frDocumentsData.leaseRenewalContent || "",
+  leaseTerminationContent: frDocumentsData.leaseTerminationContent || "",
+  rentReceiptContent: frDocumentsData.rentReceiptContent || "",
+  paymentReminderContent: frDocumentsData.paymentReminderContent || "",
+  latePaymentNoticeContent: frDocumentsData.latePaymentNoticeContent || "",
+  noticeToVacateContent: frDocumentsData.noticeToVacateContent || "",
+  entryNoticeContent: frDocumentsData.entryNoticeContent || "",
+  maintenanceNoticeContent: frDocumentsData.maintenanceNoticeContent || "",
+  moveInChecklistContent: frDocumentsData.moveInChecklistContent || "",
+  moveOutChecklistContent: frDocumentsData.moveOutChecklistContent || "",
+  inspectionReportContent: frDocumentsData.inspectionReportContent || "",
+  tenantComplaintContent: frDocumentsData.tenantComplaintContent || "",
+  propertyRulesContent: frDocumentsData.propertyRulesContent || "",
+  customDocumentContent: frDocumentsData.customDocumentContent || ""
 };
