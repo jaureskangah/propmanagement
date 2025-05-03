@@ -107,5 +107,32 @@
       border-radius: 0 !important;
       margin: 0 !important;
     }
+    
+    /* Styles pour le calendrier sur mobile */
+    .rdp-caption {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+    
+    .rdp-nav {
+      display: flex;
+      align-items: center;
+    }
+    
+    .rdp-cell {
+      padding: 0;
+    }
+    
+    .rdp-day {
+      width: 30px !important;
+      height: 30px !important;
+      font-size: 0.875rem !important;
+    }
+    
+    .rdp-head_cell {
+      font-size: 0.75rem !important;
+    }
   }
 }

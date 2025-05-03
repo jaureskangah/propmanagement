@@ -1,4 +1,3 @@
-
 import { Calendar } from "@/components/ui/calendar";
 import { format, startOfDay, isSameDay, isValid, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -168,16 +167,19 @@ export const MaintenanceCalendar = ({
         mode="single"
         selected={selectedDate}
         onSelect={handleSelectDate}
-        className="rounded-md border w-full max-w-[400px] mx-auto pointer-events-auto"
+        className="rounded-md border w-full pointer-events-auto"
         modifiers={{
           hasTasks: (date) => getTasksForDate(date).length > 0,
         }}
         modifiersStyles={modifiersStyles}
         locale={dateFnsLocale}
-        // Customize calendar texts (weekdays, months, etc.)
         formatters={{
           formatCaption: (date, options) => {
             return format(date, 'MMMM yyyy', { locale: dateFnsLocale });
+          },
+          formatWeekdayName: (weekday) => {
+            const day = weekday.toLocaleString(language === 'fr' ? 'fr' : 'en', { weekday: 'short' });
+            return day.substring(0, 1);
           }
         }}
       />

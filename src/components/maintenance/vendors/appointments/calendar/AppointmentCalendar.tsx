@@ -24,7 +24,7 @@ export const AppointmentCalendar = ({
       mode="single"
       selected={selectedDate}
       onSelect={setSelectedDate}
-      className="rounded-md border max-w-full"
+      className="rounded-md border w-full"
       locale={locale === 'fr' ? fr : enUS}
       modifiers={{
         withAppointments: appointments

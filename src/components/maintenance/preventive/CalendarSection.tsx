@@ -59,12 +59,14 @@ export const CalendarSection = ({
         </div>
       </CardHeader>
       <CardContent>
-        <MaintenanceCalendar
-          selectedDate={selectedDate}
-          onSelectDate={onSelectDate}
-          tasks={tasks}
-          selectedType={selectedType}
-        />
+        <div className="max-w-md mx-auto">
+          <MaintenanceCalendar
+            selectedDate={selectedDate}
+            onSelectDate={onSelectDate}
+            tasks={tasks}
+            selectedType={selectedType}
+          />
+        </div>
         <div className="mt-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-medium">{t('scheduledTasks')}</h3>

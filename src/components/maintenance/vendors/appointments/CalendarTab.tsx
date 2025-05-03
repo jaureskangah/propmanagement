@@ -33,13 +33,13 @@ export const CalendarTab = ({
     : [];
     
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card className="md:col-span-1 border-l-4 border-l-blue-500">
+    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+      <Card className="md:col-span-5 border-l-4 border-l-blue-500">
         <CardHeader>
           <CardTitle className="text-sm">{t('calendar')}</CardTitle>
           <CardDescription>{t('selectDateToViewAppointments')}</CardDescription>
         </CardHeader>
-        <CardContent className="max-w-full overflow-hidden">
+        <CardContent className="overflow-hidden p-0 sm:p-2">
           <AppointmentCalendar 
             selectedDate={selectedDate}
             setSelectedDate={setSelectedDate}
@@ -48,7 +48,7 @@ export const CalendarTab = ({
         </CardContent>
       </Card>
       
-      <Card className="md:col-span-2 border-l-4 border-l-blue-500">
+      <Card className="md:col-span-7 border-l-4 border-l-blue-500">
         <CardHeader>
           <DateHeader selectedDate={selectedDate} />
         </CardHeader>

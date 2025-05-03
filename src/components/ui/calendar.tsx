@@ -17,7 +17,7 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 pointer-events-auto", className)}
+      className={cn("p-2 pointer-events-auto w-full", className)}
       classNames={{
         months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
         month: "space-y-4 w-full",
@@ -31,14 +31,14 @@ function Calendar({
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
         table: "w-full border-collapse space-y-1",
-        head_row: "flex w-full",
+        head_row: "flex w-full justify-between",
         head_cell:
-          "text-muted-foreground rounded-md w-8 font-normal text-[0.8rem]",
-        row: "flex w-full mt-2",
-        cell: "text-center text-sm relative p-0 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 h-8 w-8",
+          "text-muted-foreground rounded-md w-7 font-normal text-[0.7rem] md:w-8 md:text-[0.8rem]",
+        row: "flex w-full justify-between mt-2",
+        cell: "text-center text-sm relative p-0 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20 h-7 w-7 md:h-8 md:w-8",
         day: cn(
           buttonVariants({ variant: "ghost" }),
-          "h-8 w-8 p-0 font-normal aria-selected:opacity-100"
+          "h-7 w-7 p-0 font-normal aria-selected:opacity-100 md:h-8 md:w-8"
         ),
         day_range_end: "day-range-end",
         day_selected:
@@ -60,7 +60,7 @@ function Calendar({
       formatters={{
         formatWeekdayName: (weekday) => {
           const day = weekday.toLocaleString('default', { weekday: 'short' });
-          return day.substring(0, 2);
+          return day.substring(0, 1);
         }
       }}
       {...props}
