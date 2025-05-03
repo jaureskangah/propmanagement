@@ -13,7 +13,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 export const InterventionHistory = () => {
   const { t } = useLocale();
   
-  const { data: interventions = [] } = useQuery({
+  const { data: interventions = [], isLoading } = useQuery({
     queryKey: ['vendor_interventions'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -59,7 +59,13 @@ export const InterventionHistory = () => {
               <CardTitle>{t('interventionHistory')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <InterventionTimeline interventions={interventions} />
+              {isLoading ? (
+                <div className="flex items-center justify-center h-40">
+                  <div className="animate-spin rounded-full h-6 w-6 border-2 border-primary"></div>
+                </div>
+              ) : (
+                <InterventionTimeline interventions={interventions} />
+              )}
             </CardContent>
           </Card>
         </TabsContent>

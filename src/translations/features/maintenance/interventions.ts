@@ -27,7 +27,12 @@ export const enInterventions = {
   inProgress: "In Progress",
   pending: "Pending",
   vendor: "Vendor",
-  specialty: "Specialty"
+  specialty: "Specialty",
+  
+  // New calendar translations
+  interventionsCount: "{count} interventions scheduled",
+  totalExpenses: "Total Expenses",
+  allTime: "All Time"
 };
 
 export const frInterventions = {
@@ -58,5 +63,10 @@ export const frInterventions = {
   inProgress: "En cours",
   pending: "En attente",
   vendor: "Fournisseur",
-  specialty: "Spécialité"
+  specialty: "Spécialité",
+  
+  // New calendar translations
+  interventionsCount: "{count} interventions programmées",
+  totalExpenses: "Dépenses Totales",
+  allTime: "Depuis le Début"
 };
