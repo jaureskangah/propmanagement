@@ -1,18 +1,22 @@
+
 import React from "react";
 import { VendorIntervention } from "@/types/vendor";
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface InterventionTimelineProps {
   interventions: VendorIntervention[];
 }
 
 export const InterventionTimeline = ({ interventions }: InterventionTimelineProps) => {
+  const { t } = useLocale();
+  
   return (
     <div className="space-y-4">
       {interventions.length === 0 ? (
         <p className="text-muted-foreground text-center py-4">
-          No interventions found
+          {t('noInterventions')}
         </p>
       ) : (
         interventions.map((intervention, index) => (
@@ -31,9 +35,9 @@ export const InterventionTimeline = ({ interventions }: InterventionTimelineProp
                   intervention.status === "in_progress" ? "secondary" :
                   "outline"
                 }>
-                  {intervention.status === "completed" ? "Completed" :
-                   intervention.status === "in_progress" ? "In Progress" :
-                   "Pending"}
+                  {intervention.status === "completed" ? t('completed') :
+                   intervention.status === "in_progress" ? t('inProgress') :
+                   t('pending')}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -41,11 +45,11 @@ export const InterventionTimeline = ({ interventions }: InterventionTimelineProp
               </p>
               <p className="text-sm">{intervention.description}</p>
               <p className="text-sm font-medium">
-                Cost: ${intervention.cost?.toFixed(2) || "N/A"}
+                {t('columnCost')}: ${intervention.cost?.toFixed(2) || "N/A"}
               </p>
               {intervention.vendors && (
                 <p className="text-sm text-muted-foreground">
-                  Vendor: {intervention.vendors.name} ({intervention.vendors.specialty})
+                  {t('vendor')}: {intervention.vendors.name} ({intervention.vendors.specialty})
                 </p>
               )}
             </div>

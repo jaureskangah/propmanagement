@@ -19,7 +19,15 @@ export const enInterventions = {
   pendingInterventions: "Pending Interventions",
   toBeProcessed: "To be processed",
   averageCost: "Average Cost",
-  perIntervention: "Per intervention"
+  perIntervention: "Per intervention",
+  
+  // Timeline translations
+  noInterventions: "No interventions found",
+  completed: "Completed",
+  inProgress: "In Progress",
+  pending: "Pending",
+  vendor: "Vendor",
+  specialty: "Specialty"
 };
 
 export const frInterventions = {
@@ -42,5 +50,13 @@ export const frInterventions = {
   pendingInterventions: "Interventions en Attente",
   toBeProcessed: "À traiter",
   averageCost: "Coût Moyen",
-  perIntervention: "Par intervention"
+  perIntervention: "Par intervention",
+  
+  // Timeline translations
+  noInterventions: "Aucune intervention trouvée",
+  completed: "Terminée",
+  inProgress: "En cours",
+  pending: "En attente",
+  vendor: "Fournisseur",
+  specialty: "Spécialité"
 };
