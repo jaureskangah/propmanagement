@@ -1,3 +1,4 @@
+
 export const enInterventions = {
   scheduledIntervention: "Scheduled intervention",
   interventionCalendar: "Intervention Calendar",
@@ -10,7 +11,15 @@ export const enInterventions = {
   maintenanceCompleted: "Maintenance Completed",
   existingFiles: "Existing files",
   searchEmergencyContacts: "Search emergency contacts...",
-  numberCopied: "Phone number copied to clipboard"
+  numberCopied: "Phone number copied to clipboard",
+  
+  // New intervention stats translations
+  monthlyInterventions: "Monthly Interventions",
+  thisMonth: "This month's activity",
+  pendingInterventions: "Pending Interventions",
+  toBeProcessed: "To be processed",
+  averageCost: "Average Cost",
+  perIntervention: "Per intervention"
 };
 
 export const frInterventions = {
@@ -25,5 +34,13 @@ export const frInterventions = {
   maintenanceCompleted: "Maintenance terminée",
   existingFiles: "Fichiers existants",
   searchEmergencyContacts: "Rechercher des contacts d'urgence...",
-  numberCopied: "Numéro de téléphone copié dans le presse-papiers"
+  numberCopied: "Numéro de téléphone copié dans le presse-papiers",
+  
+  // New intervention stats translations
+  monthlyInterventions: "Interventions Mensuelles",
+  thisMonth: "Activité du mois",
+  pendingInterventions: "Interventions en Attente",
+  toBeProcessed: "À traiter",
+  averageCost: "Coût Moyen",
+  perIntervention: "Par intervention"
 };
