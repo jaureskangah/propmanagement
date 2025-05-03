@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { Language, UnitSystem, Translations } from '@/translations/types';
 import translations from '@/translations/en';
@@ -141,7 +142,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       )}
     </LocaleContext.Provider>
   );
-}
+};
 
 export const useLocale = () => {
   const context = useContext(LocaleContext);

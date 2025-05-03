@@ -4,13 +4,17 @@ import { Calendar } from "@/components/ui/calendar";
 import { VendorIntervention } from "@/types/vendor";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { fr, enUS } from "date-fns/locale";
 
 interface InterventionCalendarProps {
   interventions: VendorIntervention[];
 }
 
 export const InterventionCalendar = ({ interventions }: InterventionCalendarProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
+  
+  // Choisir la locale en fonction de la langue
+  const calendarLocale = language === 'fr' ? fr : enUS;
   
   // Convertir correctement les dates en objets Date
   const modifiers = {
@@ -53,6 +57,7 @@ export const InterventionCalendar = ({ interventions }: InterventionCalendarProp
             modifiers={modifiers}
             modifiersStyles={modifiersStyles}
             className="rounded-md border"
+            locale={calendarLocale}
           />
           <div className="text-sm text-muted-foreground mt-2">
             {Object.keys(daysWithInterventions).length > 0 && (

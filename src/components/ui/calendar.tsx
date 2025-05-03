@@ -58,9 +58,15 @@ function Calendar({
       }}
       weekStartsOn={1} // Semaine commence le lundi (1)
       formatters={{
-        formatWeekdayName: (weekday) => {
-          const day = weekday.toLocaleString('default', { weekday: 'short' });
+        formatWeekdayName: (weekday, options) => {
+          const locale = options?.locale;
+          const day = weekday.toLocaleString(locale?.code || 'default', { weekday: 'short' });
           return day.substring(0, 1);
+        },
+        formatCaption: (date, options) => {
+          const locale = options?.locale;
+          const month = date.toLocaleString(locale?.code || 'default', { month: 'long' });
+          return `${month} ${date.getFullYear()}`;
         }
       }}
       {...props}
