@@ -29,4 +29,7 @@ export const frModalFields: ModalFieldsTranslations = {
   dueDate: "Date d'échéance",
   startDate: "Date de début",
   endDate: "Date de fin",
+  paymentDate: "Date de paiement",
+  paymentStatus: "Statut du paiement",
+  selectDate: "Sélectionner une date"
 };
