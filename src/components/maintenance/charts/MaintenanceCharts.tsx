@@ -40,6 +40,7 @@ interface MaintenanceChartsProps {
 export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFullYear() }: MaintenanceChartsProps) => {
   const { t, locale } = useLocale();
   const [activeMetrics, setActiveMetrics] = useState<string[]>(["totalRequests", "completedRequests", "urgentRequests"]);
+  // Gardons la variable d'état mais n'affichons plus les boutons de bascule
   const [expensesView, setExpensesView] = useState<'bar' | 'area'>('area');
   
   // Function to toggle metrics visibility
@@ -372,14 +373,7 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
               <CardTitle className="text-sm font-semibold text-primary/90 dark:text-white/90">
                 {t('maintenanceExpensesTrends')}
               </CardTitle>
-              <ToggleGroup type="single" value={expensesView} onValueChange={(value) => value && setExpensesView(value as 'bar' | 'area')}>
-                <ToggleGroupItem value="bar" size="sm">
-                  {t('barChart')}
-                </ToggleGroupItem>
-                <ToggleGroupItem value="area" size="sm">
-                  {t('areaChart')}
-                </ToggleGroupItem>
-              </ToggleGroup>
+              {/* Suppression des boutons de bascule ici */}
             </div>
           </CardHeader>
           <CardContent>
