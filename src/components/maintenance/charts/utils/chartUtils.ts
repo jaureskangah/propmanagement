@@ -1,5 +1,6 @@
 
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { chartColors } from "@/components/dashboard/revenue/chartColors";
 
 // Chart data type
 export interface MaintenanceChartData {
@@ -37,41 +38,22 @@ export const formatMonthsForLocale = (data: MaintenanceChartData[], locale: stri
   return data;
 };
 
-// Mock data - this would be replaced with actual API data
-export const getMaintenanceChartData = (propertyId: string): MaintenanceChartData[] => {
-  console.log("Fetching chart data for property:", propertyId);
-  
-  // This is mock data - in a real app, this would be fetched from an API
-  return [
-    { month: "Jan", requests: 4, completed: 3, urgent: 1, expenses: 400 },
-    { month: "Feb", requests: 3, completed: 2, urgent: 0, expenses: 300 },
-    { month: "Mar", requests: 5, completed: 4, urgent: 2, expenses: 550 },
-    { month: "Apr", requests: 2, completed: 2, urgent: 0, expenses: 200 },
-    { month: "May", requests: 7, completed: 5, urgent: 3, expenses: 650 },
-    { month: "Jun", requests: 4, completed: 3, urgent: 1, expenses: 450 },
-  ];
-};
-
-// Hook to get chart configuration with proper translations and colors like in Finance page
+// Hook to get chart configuration with proper translations and colors
 export const useMaintenanceChartConfig = () => {
   const { t } = useLocale();
   
   return {
     totalRequests: {
       label: t('totalMaintenanceRequests'),
-      theme: { light: "#3B82F6", dark: "#60A5FA" } // Blue like in Finance charts
+      theme: { light: chartColors.incomeColor, dark: chartColors.incomeColorDark }
     },
     completedRequests: {
       label: t('completedMaintenanceRequests'),
-      theme: { light: "#22C55E", dark: "#4ADE80" } // Green like in Finance charts
+      theme: { light: chartColors.profitColor, dark: chartColors.profitColorDark }
     },
     urgentRequests: {
       label: t('urgentMaintenanceRequests'),
-      theme: { light: "#EF4444", dark: "#F87171" } // Red like in Finance charts
-    },
-    expenses: {
-      label: t('maintenanceExpenses'),
-      theme: { light: "#F59E0B", dark: "#FBBF24" } // Amber like in Finance charts
+      theme: { light: chartColors.expenseColor, dark: chartColors.expenseColorDark }
     }
   };
 };
@@ -83,7 +65,7 @@ export const useExpensesChartConfig = () => {
   return {
     expenses: {
       label: t('maintenanceExpenses'),
-      theme: { light: "#F59E0B", dark: "#FBBF24" } // Amber like in Finance charts
+      theme: { light: chartColors.pendingColor, dark: chartColors.pendingColorDark }
     }
   };
 };

@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  ResponsiveContainer, 
   LineChart, 
   Line, 
   BarChart, 
@@ -11,7 +10,10 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend 
+  Legend, 
+  ResponsiveContainer, 
+  Area, 
+  AreaChart 
 } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
@@ -25,6 +27,10 @@ import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { chartColors } from "@/components/dashboard/revenue/chartColors";
+import { Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 interface MaintenanceChartsProps {
   propertyId: string;
@@ -34,7 +40,7 @@ interface MaintenanceChartsProps {
 export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFullYear() }: MaintenanceChartsProps) => {
   const { t, locale } = useLocale();
   const [activeMetrics, setActiveMetrics] = useState<string[]>(["totalRequests", "completedRequests", "urgentRequests"]);
-  const [expensesView, setExpensesView] = useState<'bar' | 'area'>('bar');
+  const [expensesView, setExpensesView] = useState<'bar' | 'area'>('area');
   
   // Function to toggle metrics visibility
   const toggleMetric = (metricKey: string) => {
@@ -46,7 +52,12 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
   };
   
   // Fetch maintenance requests data for the charts
-  const { data: maintenanceRequests = [] } = useQuery({
+  const { 
+    data: maintenanceRequests = [], 
+    isLoading: isLoadingRequests,
+    error: requestsError,
+    refetch: refetchRequests
+  } = useQuery({
     queryKey: ['maintenance_requests_chart', propertyId, selectedYear],
     queryFn: async () => {
       console.log("Fetching maintenance requests chart data for property:", propertyId, "and year:", selectedYear);
@@ -88,7 +99,12 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
   });
   
   // Fetch expenses data for the charts
-  const { data: expensesData = [] } = useQuery({
+  const { 
+    data: expensesData = [],
+    isLoading: isLoadingExpenses,
+    error: expensesError,
+    refetch: refetchExpenses
+  } = useQuery({
     queryKey: ['maintenance_expenses_chart', propertyId, selectedYear],
     queryFn: async () => {
       console.log("Fetching expenses chart data for property:", propertyId, "and year:", selectedYear);
@@ -134,6 +150,15 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
       return allExpenses;
     },
   });
+  
+  const isLoading = isLoadingRequests || isLoadingExpenses;
+  const error = requestsError || expensesError;
+
+  // Handle refetching data
+  const handleRefetch = () => {
+    refetchRequests();
+    refetchExpenses();
+  };
   
   // Process chart data
   const chartData = useMemo(() => {
@@ -193,6 +218,28 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
       {children}
     </motion.div>
   );
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription className="flex items-center justify-between">
+            <span>{t('errorLoadingData')}</span>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleRefetch}
+              className="ml-2 h-7 px-2"
+            >
+              <RefreshCw className="h-3.5 w-3.5 mr-1" />
+              {t('retry')}
+            </Button>
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6">
@@ -224,79 +271,96 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
-              <ChartContainer 
-                config={chartConfig}
-                className="h-full w-full"
-              >
-                <LineChart
-                  data={chartData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            {isLoading ? (
+              <div className="flex justify-center items-center h-80">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+            ) : (
+              <div className="h-80">
+                <ChartContainer 
+                  config={chartConfig}
+                  className="h-full w-full"
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" vertical={false} />
-                  <XAxis 
-                    dataKey="month" 
-                    fontSize={10}
-                    tickLine={false}
-                    axisLine={false}
-                    padding={{ left: 10, right: 10 }}
-                  />
-                  <YAxis 
-                    fontSize={10}
-                    tickLine={false}
-                    axisLine={false}
-                    padding={{ top: 10, bottom: 10 }}
-                    width={30}
-                  />
-                  <Tooltip 
-                    content={<ChartTooltipContent />} 
-                    animationDuration={200}
-                  />
-                  
-                  {activeMetrics.includes('totalRequests') && (
-                    <Line 
-                      type="monotone" 
-                      dataKey="requests" 
-                      name={chartConfig.totalRequests.label}
-                      stroke={chartConfig.totalRequests.theme.light}
-                      strokeWidth={2}
-                      activeDot={{ r: 6, strokeWidth: 1 }}
-                      dot={{ r: 0 }}
-                      animationDuration={1200}
-                      animationBegin={0}
+                  <AreaChart
+                    data={chartData}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <defs>
+                      {Object.keys(chartConfig).map(key => (
+                        <linearGradient key={`gradient-${key}`} id={`color${key}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={chartConfig[key].theme.light} stopOpacity={0.8}/>
+                          <stop offset="95%" stopColor={chartConfig[key].theme.light} stopOpacity={0.1}/>
+                        </linearGradient>
+                      ))}
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" vertical={false} />
+                    <XAxis 
+                      dataKey="month" 
+                      fontSize={10}
+                      tickLine={false}
+                      axisLine={false}
+                      padding={{ left: 10, right: 10 }}
                     />
-                  )}
-                  
-                  {activeMetrics.includes('completedRequests') && (
-                    <Line 
-                      type="monotone" 
-                      dataKey="completed" 
-                      name={chartConfig.completedRequests.label}
-                      stroke={chartConfig.completedRequests.theme.light}
-                      strokeWidth={2}
-                      activeDot={{ r: 6, strokeWidth: 1 }} 
-                      dot={{ r: 0 }}
-                      animationDuration={1200}
-                      animationBegin={300}
+                    <YAxis 
+                      fontSize={10}
+                      tickLine={false}
+                      axisLine={false}
+                      padding={{ top: 10, bottom: 10 }}
+                      width={30}
                     />
-                  )}
-                  
-                  {activeMetrics.includes('urgentRequests') && (
-                    <Line 
-                      type="monotone" 
-                      dataKey="urgent" 
-                      name={chartConfig.urgentRequests.label}
-                      stroke={chartConfig.urgentRequests.theme.light}
-                      strokeWidth={2}
-                      activeDot={{ r: 6, strokeWidth: 1 }}
-                      dot={{ r: 0 }}
-                      animationDuration={1200}
-                      animationBegin={600}
+                    <Tooltip 
+                      content={<ChartTooltipContent />} 
+                      animationDuration={200}
                     />
-                  )}
-                </LineChart>
-              </ChartContainer>
-            </div>
+                    
+                    {activeMetrics.includes('totalRequests') && (
+                      <Area 
+                        type="monotone" 
+                        dataKey="requests" 
+                        name={chartConfig.totalRequests.label}
+                        stroke={chartConfig.totalRequests.theme.light}
+                        strokeWidth={2}
+                        activeDot={{ r: 6, strokeWidth: 1 }}
+                        fillOpacity={1}
+                        fill={`url(#colortotalRequests)`}
+                        animationDuration={1200}
+                        animationBegin={0}
+                      />
+                    )}
+                    
+                    {activeMetrics.includes('completedRequests') && (
+                      <Area 
+                        type="monotone" 
+                        dataKey="completed" 
+                        name={chartConfig.completedRequests.label}
+                        stroke={chartConfig.completedRequests.theme.light}
+                        strokeWidth={2}
+                        activeDot={{ r: 6, strokeWidth: 1 }} 
+                        fillOpacity={1}
+                        fill={`url(#colorcompletedRequests)`}
+                        animationDuration={1200}
+                        animationBegin={300}
+                      />
+                    )}
+                    
+                    {activeMetrics.includes('urgentRequests') && (
+                      <Area 
+                        type="monotone" 
+                        dataKey="urgent" 
+                        name={chartConfig.urgentRequests.label}
+                        stroke={chartConfig.urgentRequests.theme.light}
+                        strokeWidth={2}
+                        activeDot={{ r: 6, strokeWidth: 1 }}
+                        fillOpacity={1}
+                        fill={`url(#colorurgentRequests)`}
+                        animationDuration={1200}
+                        animationBegin={600}
+                      />
+                    )}
+                  </AreaChart>
+                </ChartContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
       </MotionCard>
@@ -319,92 +383,98 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
             </div>
           </CardHeader>
           <CardContent>
-            <div className="h-80">
-              <ChartContainer
-                config={expensesChartConfig}
-                className="h-full w-full"
-              >
-                {expensesView === 'bar' ? (
-                  <BarChart
-                    data={chartData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" vertical={false} />
-                    <XAxis 
-                      dataKey="month" 
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      padding={{ left: 10, right: 10 }}
-                    />
-                    <YAxis 
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      padding={{ top: 10, bottom: 10 }}
-                      width={30}
-                      tickFormatter={(value) => `$${value}`}
-                    />
-                    <Tooltip 
-                      content={<ChartTooltipContent />}
-                      animationDuration={200}
-                    />
-                    <Bar 
-                      dataKey="expenses" 
-                      name={expensesChartConfig.expenses.label}
-                      fill={chartColors.pendingColor}
-                      animationDuration={1200}
-                      animationBegin={0}
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
-                ) : (
-                  <LineChart
-                    data={chartData}
-                    margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={chartColors.pendingColor} stopOpacity={0.8} />
-                        <stop offset="95%" stopColor={chartColors.pendingColor} stopOpacity={0.1} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" vertical={false} />
-                    <XAxis 
-                      dataKey="month" 
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      padding={{ left: 10, right: 10 }}
-                    />
-                    <YAxis 
-                      fontSize={10}
-                      tickLine={false}
-                      axisLine={false}
-                      padding={{ top: 10, bottom: 10 }}
-                      width={30}
-                      tickFormatter={(value) => `$${value}`}
-                    />
-                    <Tooltip 
-                      content={<ChartTooltipContent />}
-                      animationDuration={200}
-                    />
-                    <Line 
-                      type="monotone"
-                      dataKey="expenses" 
-                      name={expensesChartConfig.expenses.label}
-                      stroke={chartColors.pendingColor}
-                      strokeWidth={2}
-                      dot={{ r: 3, fill: chartColors.pendingColor }}
-                      activeDot={{ r: 6, stroke: chartColors.pendingColor, strokeWidth: 1, fill: '#fff' }}
-                      fill="url(#colorExpenses)"
-                      fillOpacity={1}
-                      animationDuration={1200}
-                    />
-                  </LineChart>
-                )}
-              </ChartContainer>
-            </div>
+            {isLoading ? (
+              <div className="flex justify-center items-center h-80">
+                <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              </div>
+            ) : (
+              <div className="h-80">
+                <ChartContainer
+                  config={expensesChartConfig}
+                  className="h-full w-full"
+                >
+                  {expensesView === 'bar' ? (
+                    <BarChart
+                      data={chartData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" vertical={false} />
+                      <XAxis 
+                        dataKey="month" 
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        padding={{ left: 10, right: 10 }}
+                      />
+                      <YAxis 
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        padding={{ top: 10, bottom: 10 }}
+                        width={30}
+                        tickFormatter={(value) => `$${value}`}
+                      />
+                      <Tooltip 
+                        content={<ChartTooltipContent />}
+                        animationDuration={200}
+                      />
+                      <Bar 
+                        dataKey="expenses" 
+                        name={expensesChartConfig.expenses.label}
+                        fill={chartColors.pendingColor}
+                        animationDuration={1200}
+                        animationBegin={0}
+                        radius={[4, 4, 0, 0]}
+                      />
+                    </BarChart>
+                  ) : (
+                    <AreaChart
+                      data={chartData}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+                    >
+                      <defs>
+                        <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor={chartColors.pendingColor} stopOpacity={0.8} />
+                          <stop offset="95%" stopColor={chartColors.pendingColor} stopOpacity={0.1} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" className="stroke-muted/40" vertical={false} />
+                      <XAxis 
+                        dataKey="month" 
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        padding={{ left: 10, right: 10 }}
+                      />
+                      <YAxis 
+                        fontSize={10}
+                        tickLine={false}
+                        axisLine={false}
+                        padding={{ top: 10, bottom: 10 }}
+                        width={30}
+                        tickFormatter={(value) => `$${value}`}
+                      />
+                      <Tooltip 
+                        content={<ChartTooltipContent />}
+                        animationDuration={200}
+                      />
+                      <Area 
+                        type="monotone"
+                        dataKey="expenses" 
+                        name={expensesChartConfig.expenses.label}
+                        stroke={chartColors.pendingColor}
+                        strokeWidth={2}
+                        dot={{ r: 3, fill: chartColors.pendingColor }}
+                        activeDot={{ r: 6, stroke: chartColors.pendingColor, strokeWidth: 1, fill: '#fff' }}
+                        fill="url(#colorExpenses)"
+                        fillOpacity={1}
+                        animationDuration={1200}
+                      />
+                    </AreaChart>
+                  )}
+                </ChartContainer>
+              </div>
+            )}
           </CardContent>
         </Card>
       </MotionCard>
