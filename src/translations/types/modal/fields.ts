@@ -27,4 +27,7 @@ export interface ModalFieldsTranslations {
   dueDate: string;
   startDate: string;
   endDate: string;
+  paymentDate: string;
+  paymentStatus: string;
+  selectDate: string;
 }
