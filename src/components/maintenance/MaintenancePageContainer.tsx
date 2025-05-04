@@ -12,7 +12,6 @@ import { AddTaskDialog } from "./task-dialog/AddTaskDialog";
 import { useToast } from "@/hooks/use-toast";
 import { NewTask } from "./types";
 import { VendorList } from "./vendors/VendorList";
-import { Button } from "@/components/ui/button";
 import { Filter, Plus } from "lucide-react";
 import { useTaskAddition } from "./tasks/hooks/useTaskAddition";
 import { useNavigate } from "react-router-dom";
@@ -140,24 +139,7 @@ export const MaintenancePageContainer = () => {
         selectedYear={selectedYear}
       />
       
-      <div className="flex justify-between items-center">
-        <Button 
-          onClick={handleCreateTask}
-          className="bg-primary hover:bg-primary/90"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {t('addTask')}
-        </Button>
-        
-        <Button 
-          onClick={handleAddExpense}
-          variant="outline"
-          className="border-primary text-primary hover:bg-primary/10"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {t('addExpense') || "Ajouter une dépense"}
-        </Button>
-      </div>
+      {/* Les boutons ont été supprimés ici */}
 
       <MaintenanceMetricsSection 
         totalRequests={requests.length} 
