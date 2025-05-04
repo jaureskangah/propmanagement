@@ -1,10 +1,7 @@
 
 import { MaintenanceTable } from "./tables/MaintenanceTable";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useEffect } from "react";
-import { ExpensesTable } from "./tables/ExpensesTable";
-import { ExportButtons } from "./ExportButtons";
 
 interface DataTablesProps {
   propertyId: string;
@@ -31,25 +28,7 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
 
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <ExportButtons 
-          expenses={expenses} 
-          maintenance={maintenance} 
-        />
-      </div>
-
-      <Tabs defaultValue="maintenance" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-          <TabsTrigger value="expenses">Dépenses</TabsTrigger>
-        </TabsList>
-        <TabsContent value="maintenance">
-          <MaintenanceTable maintenance={maintenance} />
-        </TabsContent>
-        <TabsContent value="expenses">
-          <ExpensesTable expenses={expenses} propertyId={propertyId} />
-        </TabsContent>
-      </Tabs>
+      <MaintenanceTable maintenance={maintenance} />
     </div>
   );
 };
