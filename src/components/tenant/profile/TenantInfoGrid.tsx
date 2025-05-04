@@ -2,7 +2,7 @@
 import { Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { format } from "date-fns";
-import { HomeIcon, CalendarIcon, BanknotesIcon, IdentificationIcon } from "lucide-react";
+import { HomeIcon, CalendarIcon, BanknoteIcon, IdCardIcon } from "lucide-react";
 
 interface TenantInfoGridProps {
   tenant: Tenant;
@@ -35,7 +35,7 @@ export const TenantInfoGrid = ({ tenant }: TenantInfoGridProps) => {
       </div>
       
       <div className="flex items-start gap-3">
-        <BanknotesIcon className="h-5 w-5 text-amber-600 mt-1" />
+        <BanknoteIcon className="h-5 w-5 text-amber-600 mt-1" />
         <div>
           <p className="text-sm font-medium text-muted-foreground dark:text-gray-400">{t('monthlyRent')}</p>
           <p className="font-medium">${tenant.rent_amount?.toLocaleString()}</p>
@@ -43,7 +43,7 @@ export const TenantInfoGrid = ({ tenant }: TenantInfoGridProps) => {
       </div>
       
       <div className="flex items-start gap-3">
-        <IdentificationIcon className="h-5 w-5 text-purple-600 mt-1" />
+        <IdCardIcon className="h-5 w-5 text-purple-600 mt-1" />
         <div>
           <p className="text-sm font-medium text-muted-foreground dark:text-gray-400">{t('contactInfo')}</p>
           <p className="font-medium">{tenant.email} {tenant.phone ? `· ${tenant.phone}` : ''}</p>
