@@ -3,19 +3,24 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MaintenanceRequest } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { Button } from "@/components/ui/button";
 
 interface MaintenanceRequestsProps {
   requests: MaintenanceRequest[];
   onRequestClick: (request: MaintenanceRequest) => void;
+  onViewAllRequests: () => void;
 }
 
-export const MaintenanceRequests = ({ requests, onRequestClick }: MaintenanceRequestsProps) => {
+export const MaintenanceRequests = ({ requests, onRequestClick, onViewAllRequests }: MaintenanceRequestsProps) => {
   const { t } = useLocale();
   
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle>{t('maintenanceRequests')}</CardTitle>
+        <Button onClick={onViewAllRequests} variant="outline">
+          {t('viewAllRequests')}
+        </Button>
       </CardHeader>
       <CardContent>
         {requests.length === 0 ? (

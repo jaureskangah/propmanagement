@@ -179,12 +179,6 @@ export const MaintenancePageContainer = () => {
         </TabsList>
         
         <TabsContent value="maintenance" className="pt-4">
-          <div className="mb-4 flex justify-between items-center">
-            <h3 className="text-lg font-medium">{t('recentMaintenanceRequests')}</h3>
-            <Button onClick={handleViewAllRequests} variant="outline">
-              {t('viewAllRequests')}
-            </Button>
-          </div>
           <MaintenanceTabs 
             propertyId={selectedPropertyId} 
             selectedYear={selectedYear}
@@ -193,6 +187,7 @@ export const MaintenancePageContainer = () => {
               // Navigate to the requests list instead of opening the dialog here
               navigate('/maintenance-requests');
             }}
+            onViewAllRequests={handleViewAllRequests}
           />
         </TabsContent>
         

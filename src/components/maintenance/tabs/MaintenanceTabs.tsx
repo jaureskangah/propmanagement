@@ -27,7 +27,8 @@ export const MaintenanceTabs = ({
   propertyId, 
   selectedYear,
   filteredRequests, 
-  onRequestClick 
+  onRequestClick,
+  onViewAllRequests
 }) => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
@@ -73,7 +74,8 @@ export const MaintenanceTabs = ({
       <TabsContent value="requests" className="pt-6">
         <MaintenanceRequests 
           requests={filteredRequests} 
-          onRequestClick={onRequestClick} 
+          onRequestClick={onRequestClick}
+          onViewAllRequests={onViewAllRequests}
         />
       </TabsContent>
       
