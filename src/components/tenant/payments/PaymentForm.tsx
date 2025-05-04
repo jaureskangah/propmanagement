@@ -27,7 +27,6 @@ import { cn } from "@/lib/utils";
 import { paymentSchema, PaymentFormValues } from "./schema/paymentSchema";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PaymentFormProps {
   tenantId: string;
@@ -38,7 +37,6 @@ interface PaymentFormProps {
 export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { t } = useLocale();
   
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -76,16 +74,16 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
       if (error) throw error;
 
       toast({
-        title: t('paymentAdded'),
-        description: t('paymentAddedDescription', { fallback: "The payment has been recorded successfully." }),
+        title: "Payment Added",
+        description: "The payment has been recorded successfully.",
       });
       
       onSuccess();
     } catch (error) {
       console.error("Error adding payment:", error);
       toast({
-        title: t('error'),
-        description: t('paymentError'),
+        title: "Error",
+        description: "An error occurred while adding the payment.",
         variant: "destructive",
       });
     } finally {
@@ -101,7 +99,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('amount')} ($)</FormLabel>
+              <FormLabel>Amount ($)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -120,20 +118,20 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('paymentStatus')}</FormLabel>
+              <FormLabel>Status</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('selectPaymentStatus')} />
+                    <SelectValue placeholder="Select a status" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="paid">{t('paid')}</SelectItem>
-                  <SelectItem value="pending">{t('pending')}</SelectItem>
-                  <SelectItem value="overdue">{t('overdue')}</SelectItem>
+                  <SelectItem value="paid">Paid</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="overdue">Overdue</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -146,7 +144,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
           name="payment_date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t('paymentDate')}</FormLabel>
+              <FormLabel>Payment Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -160,7 +158,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
                       {field.value ? (
                         format(field.value, "PPP")
                       ) : (
-                        <span>{t('selectDate', { fallback: "Pick a date" })}</span>
+                        <span>Pick a date</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -186,14 +184,14 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
             variant="outline"
             onClick={onCancel}
           >
-            {t('cancel')}
+            Cancel
           </Button>
           <Button
             type="submit"
             disabled={isSubmitting}
             className="bg-[#ea384c] hover:bg-[#ea384c]/90"
           >
-            {isSubmitting ? t('adding') : t('add')}
+            {isSubmitting ? "Adding..." : "Add"}
           </Button>
         </div>
       </form>

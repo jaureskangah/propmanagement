@@ -1,52 +1,67 @@
+
 import { Translations } from './types';
-import { frAdmin } from './features/admin';
-import { frAuth } from './features/auth';
-import { frCommon } from './features/common';
-import { frContact } from './features/contact';
-import { frCTA } from './features/cta';
-import { frDashboard } from './features/dashboard';
-import { frFAQ } from './features/faq';
-import { frFeatures } from './features/features';
-import { frFooter } from './features/footer';
-import { frHero } from './features/hero';
-import { frHowItWorks } from './features/how-it-works';
-import { frMaintenance } from './features/maintenance';
-import { frModal } from './features/modal';
 import { frNavigation } from './features/navigation';
-import { frPricing } from './features/pricing';
-import { frProperty } from './features/property';
-import { frSettings } from './features/settings';
-import { frStatus } from './features/status';
-import { frTenant } from './features/tenant';
+import { frHero } from './features/hero';
+import { frFeatures } from './features/features';
+import { frPricing, frPlanFeatures } from './features/pricing';
 import { frToasts } from './features/toasts';
-import { frFinances } from './features/finances';
-import { frVendors } from './features/maintenance/vendors';
+import { frContact } from './features/contact';
+import { frAuth } from './features/auth';
+import { frCTA } from './features/cta';
+import { frFAQ } from './features/faq';
+import { frAdmin } from './features/admin';
+import { frStatus } from './features/status';
+import { frProperty } from './features/property';
+import { frMaintenance } from './features/maintenance';
+import { frTenant } from './features/tenant';
+import { frHowItWorks } from './features/how-it-works';
+import { frFooter } from './features/footer';
+import { frCommon } from './features/common';
+import { frDashboard } from './features/dashboard';
+import { frSettings } from './features/settings';
+import { frModal } from './features/modal';
+import { frTasks } from './features/maintenance/tasks';
+import { frList } from './features/tenant/fr/list';
+import { frFinances } from './features/finances'; // Import the exported object
 import frDocumentGenerator from './features/documents/fr';
 
+import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
+import { frProfile } from './features/tenant/fr/profile';
+import { frDocuments } from './features/tenant/fr/documents';
+import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
+import { frCommunications } from './features/tenant/fr/communications';
+
 const translations = {
-  ...frAdmin,
-  ...frAuth,
-  ...frCommon,
-  ...frContact,
-  ...frCTA,
-  ...frDashboard,
-  ...frFAQ,
-  ...frFeatures,
-  ...frFooter,
-  ...frHero,
-  ...frHowItWorks,
-  ...frMaintenance,
-  ...frModal,
   ...frNavigation,
+  ...frHero,
+  ...frFeatures,
   ...frPricing,
-  ...frProperty,
-  ...frSettings,
-  ...frStatus,
-  ...frTenant,
+  ...frPlanFeatures,
   ...frToasts,
-  ...frFinances,
-  ...frVendors,
-  documentGenerator: frDocumentGenerator,
+  ...frContact,
+  ...frAuth,
+  ...frCTA,
+  ...frFAQ,
+  ...frAdmin,
+  ...frStatus,
+  ...frProperty,
+  ...frMaintenance,
+  ...frTenant,
+  ...frHowItWorks,
+  ...frFooter,
+  ...frCommon,
+  ...frDashboard,
+  ...frSettings,
+  ...frModal,
+  ...frTasks,
+  ...frList,
+  ...frTenantDashboard,
+  ...frProfile,
+  ...frDocuments,
+  ...frTenantMaintenance,
+  ...frCommunications,
+  ...frFinances, // Use the exported object
+  documentGenerator: frDocumentGenerator
 };
 
 export default translations;
