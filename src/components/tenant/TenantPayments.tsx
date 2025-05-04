@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Plus, DollarSign } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,7 +9,6 @@ import { EditPaymentDialog } from "./payments/EditPaymentDialog";
 import { DeletePaymentDialog } from "./payments/DeletePaymentDialog";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
-import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantPaymentsProps {
   payments: TenantPayment[];
@@ -23,7 +21,6 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
   const [isEditPaymentOpen, setIsEditPaymentOpen] = useState(false);
   const [isDeletePaymentOpen, setIsDeletePaymentOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<TenantPayment | null>(null);
-  const { t } = useLocale();
 
   console.log("Rendering TenantPayments with payments:", payments);
 
@@ -42,14 +39,14 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
       <CardHeader className="flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <DollarSign className="h-5 w-5 text-green-600" />
-          <CardTitle className="text-lg">{t('payments')}</CardTitle>
+          <CardTitle className="text-lg">Payment History</CardTitle>
         </div>
         <Button 
           onClick={() => setIsAddPaymentOpen(true)}
           className="bg-green-600 hover:bg-green-700"
         >
           <Plus className="h-4 w-4 mr-2" />
-          {t('addPayment')}
+          Add Payment
         </Button>
       </CardHeader>
       <CardContent>
@@ -58,7 +55,7 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
             <div className="text-center py-8 border-2 border-dashed rounded-lg">
               <DollarSign className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">
-                {t('noPayments')}
+                No payments recorded yet
               </p>
             </div>
           ) : (
@@ -90,7 +87,7 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
                       onClick={() => handleEditClick(payment)}
                       className="hover:text-blue-600 hover:border-blue-600"
                     >
-                      {t('edit')}
+                      Edit
                     </Button>
                     <Button
                       variant="outline"
@@ -98,7 +95,7 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
                       onClick={() => handleDeleteClick(payment)}
                       className="text-red-500 hover:text-red-600 hover:border-red-600"
                     >
-                      {t('deletePayment')}
+                      Delete
                     </Button>
                   </div>
                 </div>
