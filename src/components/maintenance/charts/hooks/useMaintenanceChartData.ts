@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { getMaintenanceChartData, MaintenanceChartData } from "../utils/chartUtils";
+import { MaintenanceChartData, getMaintenanceChartData } from "../utils/chartUtils";
 
 export const useMaintenanceChartData = (propertyId: string) => {
   const [data, setData] = useState<MaintenanceChartData[]>([]);

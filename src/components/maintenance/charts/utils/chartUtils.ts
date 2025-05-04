@@ -11,6 +11,20 @@ export interface MaintenanceChartData {
   expenses: number;
 }
 
+// Helper function to generate chart data (used by the hook)
+export const getMaintenanceChartData = (propertyId: string): MaintenanceChartData[] => {
+  // This is a placeholder function that would normally fetch real data
+  // In a real app, this would be replaced by actual API calls
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return months.map(month => ({
+    month,
+    requests: Math.floor(Math.random() * 15) + 1,
+    completed: Math.floor(Math.random() * 10),
+    urgent: Math.floor(Math.random() * 5),
+    expenses: Math.floor(Math.random() * 1000) + 200
+  }));
+};
+
 // Function to translate month names based on the selected locale
 export const formatMonthsForLocale = (data: MaintenanceChartData[], locale: string): MaintenanceChartData[] => {
   const frenchMonths: Record<string, string> = {
@@ -45,15 +59,15 @@ export const useMaintenanceChartConfig = () => {
   return {
     totalRequests: {
       label: t('totalMaintenanceRequests'),
-      theme: { light: chartColors.incomeColor, dark: chartColors.incomeColorDark }
+      theme: { light: chartColors.revenueColor, dark: chartColors.revenueColor }
     },
     completedRequests: {
       label: t('completedMaintenanceRequests'),
-      theme: { light: chartColors.profitColor, dark: chartColors.profitColorDark }
+      theme: { light: chartColors.profitColor, dark: chartColors.profitColor }
     },
     urgentRequests: {
       label: t('urgentMaintenanceRequests'),
-      theme: { light: chartColors.expenseColor, dark: chartColors.expenseColorDark }
+      theme: { light: chartColors.expensesColor, dark: chartColors.expensesColor }
     }
   };
 };
@@ -65,7 +79,7 @@ export const useExpensesChartConfig = () => {
   return {
     expenses: {
       label: t('maintenanceExpenses'),
-      theme: { light: chartColors.pendingColor, dark: chartColors.pendingColorDark }
+      theme: { light: chartColors.pendingColor, dark: chartColors.pendingColor }
     }
   };
 };
