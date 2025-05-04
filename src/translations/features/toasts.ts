@@ -1,3 +1,4 @@
+
 import { ToastTranslations } from '../types/toasts';
 
 export const enToasts: ToastTranslations = {
@@ -30,20 +31,6 @@ export const enToasts: ToastTranslations = {
   filterReset: "Filters reset",
   welcomeTenant: "Welcome, {name}!",
   welcomeGeneric: "Welcome to your dashboard",
-  maintenanceRequestDeleted: "Maintenance request deleted successfully",
-  maintenanceRequestUpdated: "Maintenance request updated successfully",
-  pleaseFillAllFields: "Please fill all required fields",
-  errorDeletingRequest: "Error deleting maintenance request",
-  errorUpdatingRequest: "Error updating maintenance request",
-  processingWorkOrder: "Processing work order...",
-  workOrderCreated: "Work order created successfully",
-  errorCreatingWorkOrder: "Error creating work order",
-  tenantNotified: "Tenant was notified about",
-  priorityChanged: "Priority for",
-  feedbackReceivedFor: "Feedback received for",
-  from: "from",
-  to: "to",
-  urgentMaintenanceRequest: "Urgent maintenance request"
 };
 
 export const frToasts: ToastTranslations = {
@@ -76,18 +63,4 @@ export const frToasts: ToastTranslations = {
   filterReset: "Filtres réinitialisés",
   welcomeTenant: "Bienvenue, {name} !",
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
-  maintenanceRequestDeleted: "Demande de maintenance supprimée avec succès",
-  maintenanceRequestUpdated: "Demande de maintenance mise à jour avec succès",
-  pleaseFillAllFields: "Veuillez remplir tous les champs obligatoires",
-  errorDeletingRequest: "Erreur lors de la suppression de la demande de maintenance",
-  errorUpdatingRequest: "Erreur lors de la mise à jour de la demande de maintenance",
-  processingWorkOrder: "Traitement du bon de travail en cours...",
-  workOrderCreated: "Bon de travail créé avec succès",
-  errorCreatingWorkOrder: "Erreur lors de la création du bon de travail",
-  tenantNotified: "Le locataire a été informé de",
-  priorityChanged: "La priorité pour",
-  feedbackReceivedFor: "Commentaire reçu pour",
-  from: "de",
-  to: "à",
-  urgentMaintenanceRequest: "Demande de maintenance urgente"
 };

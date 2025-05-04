@@ -6,8 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useNotification } from "@/hooks/useNotification";
 import type { MaintenanceRequest } from "@/types/tenant";
 
 interface EditMaintenanceDialogProps {
@@ -26,13 +26,17 @@ export const EditMaintenanceDialog = ({
   const [issue, setIssue] = useState(request.issue);
   const [status, setStatus] = useState(request.status);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const { t } = useLocale();
-  const notification = useNotification();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!issue.trim()) {
-      notification.error(t('pleaseFillAllFields'));
+      toast({
+        title: t('error'),
+        description: t('pleaseFillAllFields'),
+        variant: "destructive",
+      });
       return;
     }
 
@@ -49,11 +53,18 @@ export const EditMaintenanceDialog = ({
 
     if (error) {
       console.error("Error updating maintenance request:", error);
-      notification.error(t('errorUpdatingRequest'));
+      toast({
+        title: t('error'),
+        description: t('errorUpdatingRequest'),
+        variant: "destructive",
+      });
       return;
     }
 
-    notification.success(t('maintenanceRequestUpdated'));
+    toast({
+      title: t('success'),
+      description: t('maintenanceRequestUpdated'),
+    });
     onSuccess();
     onClose();
   };

@@ -2,16 +2,16 @@
 import { useState } from "react";
 import { MaintenanceRequest } from "@/types/tenant";
 import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useNotification } from "@/hooks/useNotification";
 
 export const useMaintenanceActions = (onDataUpdate: () => void) => {
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [isDetailSheetOpen, setIsDetailSheetOpen] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { toast } = useToast();
   const { t } = useLocale();
-  const notification = useNotification();
 
   const handleViewDetails = (request: MaintenanceRequest) => {
     setSelectedRequest(request);
@@ -31,12 +31,19 @@ export const useMaintenanceActions = (onDataUpdate: () => void) => {
       setIsDetailSheetOpen(false);
       setSelectedRequest(null);
       
-      notification.success(t('maintenanceRequestDeleted'));
+      toast({
+        title: t('success'),
+        description: t('maintenanceRequestDeleted'),
+      });
       
       onDataUpdate();
     } catch (error) {
       console.error('Error deleting maintenance request:', error);
-      notification.error(t('errorDeletingRequest'));
+      toast({
+        title: t('error'),
+        description: t('errorDeletingRequest'),
+        variant: "destructive",
+      });
     }
   };
 

@@ -1,17 +1,15 @@
 
 import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useWorkOrderForm } from "./WorkOrderFormContext";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { useNotification } from "@/hooks/useNotification";
 
 interface UseWorkOrderSubmitProps {
   onSuccess: () => void;
 }
 
 export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
-  const { t } = useLocale();
-  const notification = useNotification();
+  const { toast } = useToast();
   const {
     title,
     description,
@@ -28,7 +26,11 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
 
   const validateForm = (): boolean => {
     if (!title || !description || !propertyId || !unit || !cost || !date || !vendor) {
-      notification.error(t("pleaseFillAllFields"));
+      toast({
+        title: "Champs manquants",
+        description: "Veuillez remplir tous les champs obligatoires",
+        variant: "destructive",
+      });
       return false;
     }
     return true;
@@ -41,7 +43,10 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
 
     setIsSubmitting(true);
     try {
-      notification.info(t("processingWorkOrder"));
+      toast({
+        title: "Création en cours",
+        description: "Traitement de votre bon de travail...",
+      });
 
       const photoUrls: string[] = [];
       if (photos.length > 0) {
@@ -81,14 +86,21 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
 
       if (error) throw error;
 
-      notification.success(t("workOrderCreated"));
+      toast({
+        title: "Succès",
+        description: "Le bon de travail a été créé avec succès",
+      });
       
       resetForm();
       onSuccess();
       
     } catch (error: any) {
       console.error("Erreur lors de la création du bon de travail:", error);
-      notification.error(t("errorCreatingWorkOrder"));
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer le bon de travail",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
