@@ -4,7 +4,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useEffect } from "react";
 import { ExpensesTable } from "./tables/ExpensesTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExportButtons } from "./ExportButtons";
 
 interface DataTablesProps {
@@ -32,33 +31,12 @@ export const DataTables = ({ propertyId, expenses, maintenance }: DataTablesProp
 
   return (
     <div className="space-y-6">
-      <Card className="mb-6">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-xl">Vue d'ensemble financière</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <h3 className="font-medium">Dépenses totales</h3>
-              <p className="text-3xl font-bold text-blue-600">
-                ${expenses.reduce((total, expense) => total + expense.amount, 0).toLocaleString()}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h3 className="font-medium">Coûts de maintenance</h3>
-              <p className="text-3xl font-bold text-emerald-600">
-                ${maintenance.reduce((total, m) => total + m.cost, 0).toLocaleString()}
-              </p>
-            </div>
-            <div className="col-span-1 md:col-span-2">
-              <ExportButtons 
-                expenses={expenses} 
-                maintenance={maintenance} 
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mb-6">
+        <ExportButtons 
+          expenses={expenses} 
+          maintenance={maintenance} 
+        />
+      </div>
 
       <Tabs defaultValue="maintenance" className="w-full">
         <TabsList className="mb-4">
