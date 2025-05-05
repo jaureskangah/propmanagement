@@ -72,6 +72,19 @@ export const TenantCard = ({
     return null;
   };
 
+  // Fonction pour obtenir le nom de la propriété de manière sécurisée
+  const getPropertyName = () => {
+    if (!tenant.properties) return t('noProperty');
+    
+    if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+      if ('name' in tenant.properties && tenant.properties.name) {
+        return tenant.properties.name;
+      }
+    }
+    
+    return t('noProperty');
+  };
+
   return (
     <Card
       className={cn(
@@ -100,7 +113,7 @@ export const TenantCard = ({
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
               <Home className="h-3.5 w-3.5 flex-shrink-0" />
-              <span>{tenant.properties?.name || t('noProperty')} - {t('unitLabel')} {tenant.unit_number}</span>
+              <span>{getPropertyName()} - {t('unitLabel')} {tenant.unit_number}</span>
             </p>
           </div>
           <div className="flex gap-2 items-center flex-shrink-0 ml-2">

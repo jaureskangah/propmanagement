@@ -80,29 +80,8 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // Extraire correctement les données de propriété et assurer le bon format
-        let propertyData: { name: string } = { name: "" };
-        
-        if (tenant.properties) {
-          if (Array.isArray(tenant.properties)) {
-            // Si c'est un tableau, prendre le premier élément s'il existe
-            if (tenant.properties.length > 0) {
-              const firstProperty = tenant.properties[0];
-              if (firstProperty && typeof firstProperty === 'object') {
-                // Vérifier si la propriété 'name' existe dans l'objet
-                propertyData = { 
-                  name: 'name' in firstProperty ? String(firstProperty.name || "") : "" 
-                };
-              }
-            }
-          } else if (typeof tenant.properties === 'object') {
-            // Si c'est déjà un objet, l'utiliser directement
-            const propObj = tenant.properties as Record<string, any>;
-            propertyData = { 
-              name: 'name' in propObj ? String(propObj.name || "") : "" 
-            };
-          }
-        }
+        // Extraire correctement les données de propriété
+        const propertyName = tenant.properties?.name || "";
         
         setTenant({
           ...tenant,
@@ -111,7 +90,7 @@ export const useTenantData = () => {
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
           // Utiliser le format correct pour properties
-          properties: propertyData
+          properties: { name: propertyName }
         });
       }
       
