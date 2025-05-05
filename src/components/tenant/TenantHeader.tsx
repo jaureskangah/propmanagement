@@ -1,82 +1,97 @@
-import { Mail, Phone, Calendar, DollarSign, Building2, Hash } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Tenant } from "@/types/tenant";
-import { formatDate } from "@/lib/utils";
+
+import { Badge } from "@/components/ui/badge";
+import { Building, CheckCircle, AlertCircle, XCircle } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import type { Tenant } from "@/types/tenant";
+import { cn } from "@/lib/utils";
 
 interface TenantHeaderProps {
   tenant: Tenant;
 }
 
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
+  const { t } = useLocale();
+  
+  // Logging avancé pour le débogage des données de propriété
+  console.log("TenantHeader - Tenant property data:", tenant.properties);
+  console.log("TenantHeader - Properties type:", tenant.properties ? typeof tenant.properties : "undefined");
+  if (tenant.properties) {
+    console.log("TenantHeader - Properties structure:", JSON.stringify(tenant.properties));
+  }
+  
+  const leaseEnded = new Date(tenant.lease_end) < new Date();
+  const leaseEnding = !leaseEnded && 
+    (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
+
+  const getLeaseBadgeVariant = () => {
+    if (leaseEnded) return "destructive";
+    if (leaseEnding) return "warning";
+    return "success";
+  };
+
+  const getLeaseBadgeText = () => {
+    if (leaseEnded) return t('leaseExpired');
+    if (leaseEnding) return t('leaseExpiring');
+    return t('leaseActive');
+  };
+  
+  const getLeaseStatusIcon = () => {
+    if (leaseEnded) return <XCircle className="h-4 w-4 mr-1" />;
+    if (leaseEnding) return <AlertCircle className="h-4 w-4 mr-1" />;
+    return <CheckCircle className="h-4 w-4 mr-1" />;
+  };
+
+  // Obtenir le nom de la propriété de manière sécurisée
+  const getPropertyName = () => {
+    if (!tenant.properties) {
+      return t('noProperty');
+    }
+    
+    // Si properties est un objet avec une propriété name
+    if (typeof tenant.properties === 'object' && tenant.properties !== null && !Array.isArray(tenant.properties)) {
+      if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
+        return tenant.properties.name;
+      }
+    }
+    
+    // Si properties est un tableau avec un élément qui contient name
+    if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+      const firstProperty = tenant.properties[0];
+      if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+        return firstProperty.name;
+      }
+    }
+    
+    return t('noProperty');
+  };
+
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-2xl font-bold">{tenant.name}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-100 text-blue-700">
-                <Mail className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Email</p>
-                <p className="font-medium">{tenant.email}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-100 text-green-700">
-                <Phone className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Phone</p>
-                <p className="font-medium">{tenant.phone || "Not provided"}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-purple-100 text-purple-700">
-                <Building2 className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Property</p>
-                <p className="font-medium">{tenant.properties?.name || "Not assigned"}</p>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-orange-100 text-orange-700">
-                <Hash className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Unit Number</p>
-                <p className="font-medium">{tenant.unit_number}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-yellow-100 text-yellow-700">
-                <Calendar className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Lease Period</p>
-                <p className="font-medium">
-                  {formatDate(tenant.lease_start)} - {formatDate(tenant.lease_end)}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-red-100 text-red-700">
-                <DollarSign className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-sm text-muted-foreground">Monthly Rent</p>
-                <p className="font-medium">${tenant.rent_amount}</p>
-              </div>
-            </div>
-          </div>
+    <div className={cn(
+      "p-4 sm:p-6 border-b",
+      getLeaseBadgeVariant() === "success" ? "bg-green-50 dark:bg-green-950/20" : "",
+      getLeaseBadgeVariant() === "warning" ? "bg-amber-50 dark:bg-amber-950/20" : "",
+      getLeaseBadgeVariant() === "destructive" ? "bg-red-50 dark:bg-red-950/20" : "",
+    )}>
+      <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+        <div className="space-y-1">
+          <h2 className="text-xl sm:text-2xl font-bold flex flex-wrap items-center gap-3">
+            {tenant.name}
+            <Badge variant={getLeaseBadgeVariant()} className={cn(
+              "ml-0 mt-1 sm:mt-0 transition-colors flex items-center",
+              getLeaseBadgeVariant() === "success" ? "bg-green-500/15 text-green-600 hover:bg-green-500/20 dark:text-green-400" : "",
+              getLeaseBadgeVariant() === "warning" ? "bg-amber-500/15 text-amber-600 hover:bg-amber-500/20 dark:text-amber-400" : "",
+              getLeaseBadgeVariant() === "destructive" ? "bg-red-500/15 text-red-600 hover:bg-red-500/20 dark:text-red-400" : ""
+            )}>
+              {getLeaseStatusIcon()}
+              {getLeaseBadgeText()}
+            </Badge>
+          </h2>
+          <p className="text-muted-foreground flex items-center">
+            <Building className="w-4 h-4 mr-2" />
+            {getPropertyName()} - {t('unitLabel')} {tenant.unit_number}
+          </p>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
