@@ -63,7 +63,7 @@ export const DashboardWidgets = ({
           return tenant?.properties && (
             <div className="h-full bg-white dark:bg-gray-900 dark:border-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 flex flex-col">
               <h3 className="text-lg font-semibold mb-2 dark:text-white">{tenant.properties.name}</h3>
-              <p className="text-gray-500 dark:text-gray-400">Unit: {tenant.unit_number}</p>
+              <p className="text-gray-500 dark:text-gray-400">{t('unitLabel')}: {tenant.unit_number}</p>
             </div>
           );
         case 'lease':

@@ -41,7 +41,7 @@ export function AddTenantModal({ isOpen, onClose, onSubmit }: AddTenantModalProp
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>{t('addTenant')}</DialogTitle>
+          <DialogTitle>{t('list.addTenant')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="flex-grow pr-4">
           <TenantForm 

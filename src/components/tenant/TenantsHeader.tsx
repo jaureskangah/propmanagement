@@ -24,14 +24,14 @@ export const TenantsHeader = ({ tenantCount, onAddClick, isMobile }: TenantsHead
             <Users className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t('tenantsList')}</h1>
-            <p className="text-muted-foreground mt-1">{t('tenantsSubtitle')}</p>
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{t('list.tenantsList')}</h1>
+            <p className="text-muted-foreground mt-1">{t('list.tenantsSubtitle')}</p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Badge variant="secondary" className="text-sm px-3 py-1.5">
             <Info className="h-4 w-4 mr-1.5" />
-            {tenantCount} {tenantCount === 1 ? t('tenant') : t('tenants')}
+            {tenantCount} {tenantCount === 1 ? t('list.tenant') : t('list.tenants')}
           </Badge>
           
           {isMobile ? (
@@ -41,7 +41,7 @@ export const TenantsHeader = ({ tenantCount, onAddClick, isMobile }: TenantsHead
               onClick={onAddClick}
             >
               <UserPlus className="h-4 w-4" />
-              {t('addTenant')}
+              {t('list.addTenant')}
             </Button>
           ) : (
             <TenantActions onAddClick={onAddClick} />

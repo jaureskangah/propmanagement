@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export interface TenantData {
   id: string;
@@ -31,7 +32,8 @@ export const useTenantData = () => {
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const { toast } = useToast();
+  const { toast, t } = useToast();
+  const { t: translate, language } = useLocale();
 
   useEffect(() => {
     if (user) {
@@ -39,7 +41,7 @@ export const useTenantData = () => {
     } else {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, language]);
 
   const fetchTenantData = async () => {
     try {
@@ -134,8 +136,8 @@ export const useTenantData = () => {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
       toast({
-        title: "Erreur",
-        description: "Impossible de charger les données du locataire",
+        title: translate('error'),
+        description: translate('errorLoadingTenantData'),
         variant: "destructive",
       });
     }
