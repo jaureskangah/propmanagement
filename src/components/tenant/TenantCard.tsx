@@ -84,7 +84,7 @@ export const TenantCard = ({
     }
     
     // Si c'est un objet direct avec une propriété name
-    if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+    if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && tenant.properties !== null) {
       if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
         return tenant.properties.name;
       }

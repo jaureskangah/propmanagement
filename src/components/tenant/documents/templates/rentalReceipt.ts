@@ -11,6 +11,28 @@ import { getDefaultStyles } from "./utils/pdfStyles";
 // Initialize pdfMake with the fonts
 (pdfMake as any).vfs = (pdfFonts as any).vfs;
 
+// Helper function to get property name safely
+const getPropertyName = (tenant: Tenant): string => {
+  if (!tenant.properties) {
+    return 'Not specified';
+  }
+  
+  if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && tenant.properties !== null) {
+    if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
+      return tenant.properties.name;
+    }
+  }
+  
+  if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+    const firstProperty = tenant.properties[0];
+    if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+      return firstProperty.name;
+    }
+  }
+  
+  return 'Not specified';
+};
+
 export const generateRentalReceipt = async (tenant: Tenant) => {
   const documentDefinition: TDocumentDefinitions = {
     content: [
@@ -25,7 +47,7 @@ export const generateRentalReceipt = async (tenant: Tenant) => {
       {
         ul: [
           `Tenant Name: ${tenant.name}`,
-          `Property: ${tenant.properties?.name || 'Not specified'}`,
+          `Property: ${getPropertyName(tenant)}`,
           `Unit Number: ${tenant.unit_number}`,
         ]
       },

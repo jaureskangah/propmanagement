@@ -48,7 +48,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     }
     
     // Si properties est un objet avec une propriété name
-    if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+    if (typeof tenant.properties === 'object' && tenant.properties !== null && !Array.isArray(tenant.properties)) {
       if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
         return tenant.properties.name;
       }
