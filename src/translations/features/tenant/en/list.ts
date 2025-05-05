@@ -3,6 +3,8 @@ import type { TenantListTranslations } from '../../../types/tenant/list';
 
 export const enList: TenantListTranslations = {
   title: "Tenants",
+  tenantsList: "Tenants",
+  tenantsSubtitle: "Manage your tenants",
   addTenant: "Add Tenant",
   editTenant: "Edit Tenant",
   deleteTenant: "Delete Tenant",
@@ -44,5 +46,12 @@ export const enList: TenantListTranslations = {
   filterAll: "All",
   filterActive: "Active",
   filterExpiring: "Expiring",
-  filterExpired: "Expired"
+  filterExpired: "Expired",
+  back: "Back",
+  tenant: "tenant",
+  tenants: "tenants",
+  selectTenantToView: "Select a tenant to view details",
+  noTenantsFiltered: "No tenants match the current filters",
+  filterByStatus: "Filter by status",
+  allStatuses: "All statuses"
 };

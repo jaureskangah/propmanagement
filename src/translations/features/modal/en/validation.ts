@@ -2,14 +2,21 @@
 import type { ModalValidationTranslations } from '../../../types/modal/validation';
 
 export const enModalValidation: ModalValidationTranslations = {
-  fieldRequired: "This field is required",
+  required: "This field is required",
+  minLength: "Must be at least {min} characters",
+  maxLength: "Must be less than {max} characters",
   invalidEmail: "Invalid email address",
-  passwordMismatch: "Passwords do not match",
+  passwordsDoNotMatch: "Passwords do not match",
+  passwordTooWeak: "Password is too weak",
+  invalidURL: "Invalid URL",
   invalidPhone: "Invalid phone number",
+  invalidZipCode: "Invalid zip code",
   invalidAmount: "Invalid amount",
-  minimumLength: "Must be at least {0} characters",
-  maximumLength: "Must be less than {0} characters",
   invalidDate: "Invalid date",
-  futureDate: "Date must be in the future",
-  pastDate: "Date must be in the past",
+  pastDate: "Date cannot be in the past",
+  futureDate: "Date cannot be in the future",
+  invalidTime: "Invalid time",
+  form: {
+    required: "This field is required"
+  }
 };

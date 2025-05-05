@@ -3,6 +3,8 @@ import type { TenantListTranslations } from '../../../types/tenant/list';
 
 export const frList: TenantListTranslations = {
   title: "Locataires",
+  tenantsList: "Locataires",
+  tenantsSubtitle: "Gérer vos locataires",
   addTenant: "Ajouter un locataire",
   editTenant: "Modifier le locataire",
   deleteTenant: "Supprimer le locataire",
@@ -44,5 +46,12 @@ export const frList: TenantListTranslations = {
   filterAll: "Tous",
   filterActive: "Actifs",
   filterExpiring: "Expirants",
-  filterExpired: "Expirés"
+  filterExpired: "Expirés",
+  back: "Retour",
+  tenant: "locataire",
+  tenants: "locataires",
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
+  noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
+  filterByStatus: "Filtrer par statut",
+  allStatuses: "Tous les statuts"
 };

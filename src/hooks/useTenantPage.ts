@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { useQueryCache } from "@/hooks/useQueryCache";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import type { Tenant } from "@/types/tenant";
-import type { SearchFilters } from "@/components/tenant/TenantSearch";
+import { SearchFilters } from "@/components/tenant/TenantSearch";
 
 export const useTenantPage = () => {
   const [selectedTenant, setSelectedTenant] = useState<string | null>(null);
@@ -265,104 +264,8 @@ export const useTenantPage = () => {
     isLoading,
     filteredTenants,
     selectedTenantData,
-    handleAddTenant: async (data: any) => {
-      if (!user) {
-        toast({
-          title: "Erreur",
-          description: "Vous devez être connecté pour ajouter un locataire",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      try {
-        const { error } = await supabase.from("tenants").insert({
-          ...data,
-          user_id: user.id,
-        });
-
-        if (error) {
-          throw error;
-        }
-        
-        // Invalider le cache pour rafraîchir les données
-        refetch();
-        
-        toast({
-          title: "Succès",
-          description: "Locataire ajouté avec succès",
-        });
-      } catch (error: any) {
-        console.error("Error adding tenant:", error);
-        toast({
-          title: "Erreur lors de l'ajout du locataire",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    },
-    handleUpdateTenant: async (data: any) => {
-      if (!selectedTenantData) return;
-      
-      try {
-        const { error } = await supabase
-          .from("tenants")
-          .update({
-            ...data,
-          })
-          .eq("id", selectedTenantData.id);
-          
-        if (error) {
-          throw error;
-        }
-        
-        // Invalider le cache pour rafraîchir les données
-        refetch();
-        
-        toast({
-          title: "Succès",
-          description: "Locataire mis à jour avec succès",
-        });
-      } catch (error: any) {
-        console.error("Error updating tenant:", error);
-        toast({
-          title: "Erreur lors de la mise à jour du locataire",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    },
-    handleDeleteTenant: async () => {
-      if (!selectedTenantData) return;
-      
-      try {
-        const { error } = await supabase
-          .from("tenants")
-          .delete()
-          .eq("id", selectedTenantData.id);
-          
-        if (error) {
-          throw error;
-        }
-        
-        // Invalider le cache pour rafraîchir les données
-        refetch();
-        
-        setSelectedTenant(null);
-        setIsDeleteDialogOpen(false);
-        
-        toast({
-          title: "Succès",
-          description: "Locataire supprimé avec succès",
-        });
-      } catch (error: any) {
-        console.error("Error deleting tenant:", error);
-        toast({
-          title: "Erreur lors de la suppression du locataire",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    },
+    handleAddTenant,
+    handleUpdateTenant,
+    handleDeleteTenant,
   };
 };

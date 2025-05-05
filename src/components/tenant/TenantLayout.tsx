@@ -45,7 +45,7 @@ export const TenantLayout = ({
         <div className="w-full space-y-5">
           <div className="sticky top-4 z-10 mb-4 bg-background/80 backdrop-blur-sm py-2">
             <TenantSearch 
-              value={searchQuery}
+              searchQuery={searchQuery}
               onChange={onSearchChange}
               onFilterChange={onFilterChange}
               filters={searchFilters}
@@ -82,7 +82,7 @@ export const TenantLayout = ({
             <TenantProfile tenant={selectedTenantData} />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-muted-foreground">{t('list.selectTenantToView')}</p>
+              <p className="text-muted-foreground">{t('list.selectTenant')}</p>
             </Card>
           )}
         </div>

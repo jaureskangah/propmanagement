@@ -4,12 +4,20 @@ import { Search } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ChangeEventHandler } from "react";
 
+// Add SearchFilters interface
+export interface SearchFilters {
+  propertyId: string | null;
+  leaseStatus: "all" | "active" | "expiring" | "expired";
+}
+
 interface TenantSearchProps {
   searchQuery: string;
   onChange: (query: string) => void;
+  onFilterChange?: (filters: SearchFilters) => void;
+  filters?: SearchFilters;
 }
 
-export function TenantSearch({ searchQuery, onChange }: TenantSearchProps) {
+export function TenantSearch({ searchQuery, onChange, onFilterChange, filters }: TenantSearchProps) {
   const { t } = useLocale();
   
   const handleChange: ChangeEventHandler<HTMLInputElement> = (e) => {
