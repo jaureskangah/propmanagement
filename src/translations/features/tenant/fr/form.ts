@@ -32,4 +32,15 @@ export const frForm: TenantFormTranslations = {
   cancel: "Annuler",
   required: "Requis",
   optional: "Optionnel",
+  // Nouvelles traductions pour les états de bail et autres textes
+  expired: "Expiré",
+  expiring: "Expire bientôt",
+  active: "Actif",
+  noProperty: "Aucune propriété",
+  notAvailable: "Non disponible",
+  perMonth: "/mois",
+  unitLabel: "Unité",
+  leaseExpired: "Bail expiré",
+  leaseExpiring: "Bail expire bientôt",
+  leaseActive: "Bail actif",
 };

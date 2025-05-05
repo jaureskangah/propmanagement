@@ -32,4 +32,15 @@ export const enForm: TenantFormTranslations = {
   cancel: "Cancel",
   required: "Required",
   optional: "Optional",
+  // New translations for lease status and other texts
+  expired: "Expired",
+  expiring: "Expiring",
+  active: "Active",
+  noProperty: "No property",
+  notAvailable: "Not available",
+  perMonth: "/month",
+  unitLabel: "Unit",
+  leaseExpired: "Lease expired",
+  leaseExpiring: "Lease expiring",
+  leaseActive: "Lease active",
 };

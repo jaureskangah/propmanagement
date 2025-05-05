@@ -49,7 +49,7 @@ export const useTenantPage = () => {
         .from("tenants")
         .select(`
           *,
-          properties (
+          properties:property_id (
             name
           ),
           tenant_documents (
@@ -89,6 +89,7 @@ export const useTenantPage = () => {
       }
 
       console.log("Tenants data fetched successfully with cache:", data?.length || 0);
+      console.log("Sample tenant properties structure:", data && data.length > 0 ? data[0].properties : "No tenants");
       return data || [];
     },
     {

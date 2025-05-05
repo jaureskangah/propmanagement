@@ -1,11 +1,8 @@
 
 export interface TenantFormTranslations {
-  // Sections
   personalInfo: string;
   propertyInfo: string;
   leaseInfo: string;
-
-  // Fields
   name: string;
   nameLabel: string;
   namePlaceholder: string;
@@ -28,11 +25,20 @@ export interface TenantFormTranslations {
   rentAmount: string;
   rentLabel: string;
   rentPlaceholder: string;
-
-  // Actions
   saveTenant: string;
   saveChanges: string;
   cancel: string;
   required: string;
   optional: string;
+  // Lease status and other translations
+  expired?: string;
+  expiring?: string;
+  active?: string;
+  noProperty?: string;
+  notAvailable?: string;
+  perMonth?: string;
+  unitLabel?: string;
+  leaseExpired?: string;
+  leaseExpiring?: string;
+  leaseActive?: string;
 }
