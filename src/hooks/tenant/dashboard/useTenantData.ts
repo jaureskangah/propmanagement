@@ -21,7 +21,7 @@ export interface TenantData {
   fullName?: string;
 }
 
-// Define interface for property objects returned from Supabase
+// Interface pour la structure de données des propriétés
 interface PropertyObject {
   name: string;
   [key: string]: any;
@@ -91,30 +91,29 @@ export const useTenantData = () => {
           : tenant.name || user?.user_metadata?.full_name;
         
         // Traiter la propriété correctement en fonction de la structure retournée par Supabase
-        let propertyData: { name: string } | null = null;
+        let propertyData = null;
         
-        if (tenant.properties) {
+        if (tenant.properties !== null && tenant.properties !== undefined) {
           console.log("Properties data type:", typeof tenant.properties);
           
-          // Safely access properties data based on its structure
-          if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+          if (typeof tenant.properties === 'object') {
+            // Cas 1: properties est un objet direct comme {name: 'Nom de propriété'}
             if (!Array.isArray(tenant.properties)) {
-              // Case: properties is a direct object like {name: 'Property Name'}
               const props = tenant.properties as PropertyObject;
-              if ('name' in props && typeof props.name === 'string') {
+              if (props && 'name' in props) {
                 propertyData = { name: props.name };
               }
-            } else {
-              // Case: properties is an array of objects
-              const propsArray = tenant.properties as PropertyObject[];
-              if (propsArray.length > 0) {
-                const firstProperty = propsArray[0];
-                if (typeof firstProperty === 'object' && firstProperty !== null && 
-                    'name' in firstProperty && typeof firstProperty.name === 'string') {
-                  propertyData = { name: firstProperty.name };
-                }
+            } 
+            // Cas 2: properties est un tableau d'objets
+            else if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+              const firstProperty = tenant.properties[0] as PropertyObject;
+              if (firstProperty && 'name' in firstProperty) {
+                propertyData = { name: firstProperty.name };
               }
             }
+          } else if (typeof tenant.properties === 'string') {
+            // Cas 3: dans certains cas, properties peut être une chaîne simple
+            propertyData = { name: tenant.properties };
           }
         }
         
@@ -126,7 +125,6 @@ export const useTenantData = () => {
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          // Assign the processed property data
           properties: propertyData
         });
       }
