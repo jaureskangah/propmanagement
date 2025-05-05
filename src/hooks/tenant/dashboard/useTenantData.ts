@@ -41,13 +41,12 @@ export const useTenantData = () => {
     } else {
       setIsLoading(false);
     }
-  }, [user, language]);
+  }, [user, language]); // Réagir aux changements de langue
 
   const fetchTenantData = async () => {
     try {
       setIsLoading(true);
       
-      // Log l'ID utilisateur pour le débogage
       console.log("Fetching tenant data for user_id:", user?.id);
       
       // D'abord récupérer les données du profil
@@ -81,25 +80,22 @@ export const useTenantData = () => {
 
       console.log("Tenant data fetched:", tenant);
       
-      // Log la structure exacte des données de la propriété
       if (tenant) {
         console.log("Raw properties data structure:", JSON.stringify(tenant.properties));
-      }
-
-      if (tenant) {
+      
         // Utiliser le nom du profil si disponible, sinon utiliser le nom du locataire
         const displayName = profileData?.first_name && profileData?.last_name 
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // Traiter la propriété correctement en fonction de la structure retournée par Supabase
+        // Traitement amélioré des données de propriété
         let propertyData = null;
         
         if (tenant.properties !== null && tenant.properties !== undefined) {
           console.log("Properties data type:", typeof tenant.properties);
           
           if (typeof tenant.properties === 'object') {
-            // Cas 1: properties est un objet direct comme {name: 'Nom de propriété'}
+            // Cas 1: properties est un objet direct avec une propriété name
             if (!Array.isArray(tenant.properties)) {
               const props = tenant.properties as PropertyObject;
               if (props && 'name' in props) {
@@ -114,7 +110,7 @@ export const useTenantData = () => {
               }
             }
           } else if (typeof tenant.properties === 'string') {
-            // Cas 3: dans certains cas, properties peut être une chaîne simple
+            // Cas 3: properties peut être une chaîne simple
             propertyData = { name: tenant.properties };
           }
         }

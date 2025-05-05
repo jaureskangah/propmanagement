@@ -37,11 +37,11 @@ const getLeaseBadgeText = (leaseEnd: string, t: (key: string) => string) => {
   const monthsUntilEnd = (endDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24 * 30);
 
   if (endDate < today) {
-    return t('expired');
+    return t('list.expired');
   } else if (monthsUntilEnd <= 2) {
-    return t('expiring');
+    return t('list.expiring');
   } else {
-    return t('active');
+    return t('list.active');
   }
 };
 
@@ -55,7 +55,7 @@ export const TenantCard = ({
   const isMobile = useIsMobile();
   const { t } = useLocale();
   
-  // Logging pour débogage
+  // Debugging logs
   console.log("TenantCard - Tenant data:", tenant);
   console.log("TenantCard - Property data:", tenant.properties);
   console.log("TenantCard - Property type:", tenant.properties ? typeof tenant.properties : "undefined");
@@ -78,15 +78,15 @@ export const TenantCard = ({
     return null;
   };
 
-  // Fonction pour obtenir le nom de la propriété de manière sécurisée
+  // Fonction plus robuste pour obtenir le nom de la propriété
   const getPropertyName = () => {
     if (!tenant.properties) {
-      return t('noProperty');
+      return t('list.noProperty');
     }
     
     // Si c'est un objet direct avec une propriété name
     if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && tenant.properties !== null) {
-      if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
+      if ('name' in tenant.properties && tenant.properties.name) {
         return tenant.properties.name;
       }
     }
@@ -99,7 +99,12 @@ export const TenantCard = ({
       }
     }
     
-    return t('noProperty');
+    // Si c'est une chaîne directement
+    if (typeof tenant.properties === 'string') {
+      return tenant.properties;
+    }
+    
+    return t('list.noProperty');
   };
 
   return (
@@ -130,7 +135,7 @@ export const TenantCard = ({
             </div>
             <p className="text-sm text-muted-foreground flex items-center gap-1 truncate">
               <Home className="h-3.5 w-3.5 flex-shrink-0" />
-              <span>{getPropertyName()} - {t('unitLabel')} {tenant.unit_number}</span>
+              <span>{getPropertyName()} - {t('list.unitLabel')} {tenant.unit_number}</span>
             </p>
           </div>
           <div className="flex gap-2 items-center flex-shrink-0 ml-2">
@@ -180,8 +185,8 @@ export const TenantCard = ({
           {!isMobile && (
             <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
               <Phone className="h-4 w-4 flex-shrink-0 text-primary/60" />
-              <span className="truncate" title={tenant.phone || t('notAvailable')}>
-                {tenant.phone || t('notAvailable')}
+              <span className="truncate" title={tenant.phone || t('list.notAvailable')}>
+                {tenant.phone || t('list.notAvailable')}
               </span>
             </div>
           )}
@@ -191,19 +196,19 @@ export const TenantCard = ({
             isMobile ? "justify-end" : ""
           )}>
             <CreditCard className="h-4 w-4 flex-shrink-0 text-primary/60" />
-            <span className="truncate font-medium" title={`$${tenant.rent_amount}${t('perMonth')}`}>
-              ${tenant.rent_amount}{t('perMonth')}
+            <span className="truncate font-medium" title={`$${tenant.rent_amount}${t('list.perMonth')}`}>
+              ${tenant.rent_amount}{t('list.perMonth')}
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-2 pt-2 border-t">
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">{t('leaseStart')}</span>
+            <span className="text-xs text-muted-foreground">{t('list.leaseStart')}</span>
             <span className="text-sm">{formatDate(tenant.lease_start)}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-xs text-muted-foreground">{t('leaseEnd')}</span>
+            <span className="text-xs text-muted-foreground">{t('list.leaseEnd')}</span>
             <span className={cn(
               "text-sm",
               badgeVariant === "destructive" ? "text-destructive" : "",

@@ -12,7 +12,7 @@ interface TenantHeaderProps {
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   
-  // Logging pour débogage avancé
+  // Debugging logs
   console.log("TenantHeader - Tenant property data:", tenant.properties);
   console.log("TenantHeader - Properties type:", tenant.properties ? typeof tenant.properties : "undefined");
   
@@ -27,9 +27,9 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   };
 
   const getLeaseBadgeText = () => {
-    if (leaseEnded) return t('leaseExpired');
-    if (leaseEnding) return t('leaseExpiring');
-    return t('leaseActive');
+    if (leaseEnded) return t('list.leaseExpired');
+    if (leaseEnding) return t('list.leaseExpiring');
+    return t('list.leaseActive');
   };
   
   const getLeaseStatusIcon = () => {
@@ -38,10 +38,10 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     return <CheckCircle className="h-4 w-4 mr-1" />;
   };
 
-  // Obtenir le nom de la propriété de manière sécurisée
+  // Fonction robuste pour obtenir le nom de la propriété
   const getPropertyName = () => {
     if (!tenant.properties) {
-      return t('noProperty');
+      return t('list.noProperty');
     }
     
     // Si properties est un objet avec une propriété name
@@ -59,7 +59,12 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
       }
     }
     
-    return t('noProperty');
+    // Si properties est une chaîne simple
+    if (typeof tenant.properties === 'string') {
+      return tenant.properties;
+    }
+    
+    return t('list.noProperty');
   };
 
   return (
@@ -85,7 +90,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
           </h2>
           <p className="text-muted-foreground flex items-center">
             <Building className="w-4 h-4 mr-2" />
-            {getPropertyName()} - {t('unitLabel')} {tenant.unit_number}
+            {getPropertyName()} - {t('list.unitLabel')} {tenant.unit_number}
           </p>
         </div>
       </div>
