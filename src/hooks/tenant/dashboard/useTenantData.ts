@@ -87,7 +87,7 @@ export const useTenantData = () => {
         if (tenant.properties) {
           if (typeof tenant.properties === 'object' && tenant.properties !== null) {
             // Si c'est un objet simple avec une propriété name
-            if ('name' in tenant.properties && tenant.properties.name) {
+            if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
               propertyName = tenant.properties.name;
             }
           }
