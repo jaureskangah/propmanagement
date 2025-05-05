@@ -49,6 +49,13 @@ const translations: any = {
   ...enFinances,
   ...enVendors,
   documentGenerator: enDocumentGenerator,
+  // Add generic keys for error messages
+  error: 'Error',
+  success: 'Success',
+  tenantAdded: 'Tenant added successfully',
+  errorLoadingTenantData: 'Error loading tenant data',
+  invalidEmail: 'Invalid email address',
+  invalidAmount: 'Invalid amount'
 };
 
 export default translations;

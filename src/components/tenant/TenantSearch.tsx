@@ -61,7 +61,7 @@ export const TenantSearch = ({
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
         <Input
           className="pl-9 pr-4"
-          placeholder={t('searchTenants')}
+          placeholder={t('list.searchTenants')}
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />
@@ -74,7 +74,7 @@ export const TenantSearch = ({
               className="ml-2 gap-1 relative"
             >
               <Filter className="h-4 w-4" />
-              <span className="hidden sm:inline">{t('filters')}</span>
+              <span className="hidden sm:inline">{t('list.filters')}</span>
               {activeFiltersCount > 0 && (
                 <Badge className="h-5 w-5 p-0 flex items-center justify-center rounded-full text-xs absolute -top-2 -right-2">
                   {activeFiltersCount}
@@ -84,19 +84,19 @@ export const TenantSearch = ({
           </PopoverTrigger>
           <PopoverContent className="w-80">
             <div className="space-y-4">
-              <div className="font-medium">{t('leaseStatus')}</div>
+              <div className="font-medium">{t('list.leaseStatus')}</div>
               <Select
                 value={filters.leaseStatus}
                 onValueChange={handleStatusChange}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder={t('filterByStatus')} />
+                  <SelectValue placeholder={t('list.filterByStatus')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t('allStatuses')}</SelectItem>
-                  <SelectItem value="active">{t('active')}</SelectItem>
-                  <SelectItem value="expiring">{t('expiring')}</SelectItem>
-                  <SelectItem value="expired">{t('expired')}</SelectItem>
+                  <SelectItem value="all">{t('list.allStatuses')}</SelectItem>
+                  <SelectItem value="active">{t('list.active')}</SelectItem>
+                  <SelectItem value="expiring">{t('list.expiring')}</SelectItem>
+                  <SelectItem value="expired">{t('list.expired')}</SelectItem>
                 </SelectContent>
               </Select>
 
@@ -111,10 +111,10 @@ export const TenantSearch = ({
                     })
                   }
                 >
-                  {t('resetFilters')}
+                  {t('list.resetFilters')}
                 </Button>
                 <Button size="sm" onClick={() => setIsFiltersOpen(false)}>
-                  {t('applyFilters')}
+                  {t('list.applyFilters')}
                 </Button>
               </div>
             </div>

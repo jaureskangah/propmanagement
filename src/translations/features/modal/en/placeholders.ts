@@ -2,19 +2,19 @@
 import type { ModalPlaceholdersTranslations } from '../../../types/modal/placeholders';
 
 export const enModalPlaceholders: ModalPlaceholdersTranslations = {
-  enterFirstName: "Enter first name",
-  enterLastName: "Enter last name",
-  enterEmail: "Enter email address",
-  enterPhone: "Enter phone number",
-  enterPassword: "Enter password",
+  enterFirstName: "Enter your first name",
+  enterLastName: "Enter your last name",
+  enterEmail: "Enter your email address",
+  enterPhone: "Enter your phone number",
+  enterPassword: "Enter your password",
   confirmYourPassword: "Confirm your password",
-  enterAddress: "Enter address",
-  enterCity: "Enter city",
-  enterState: "Enter state",
-  enterZipCode: "Enter zip code",
-  enterCountry: "Enter country",
+  enterAddress: "Enter your address",
+  enterCity: "Enter your city",
+  enterState: "Enter your state/province",
+  enterZipCode: "Enter your zip/postal code",
+  enterCountry: "Enter your country",
   enterCompany: "Enter company name",
-  enterWebsite: "Enter website",
+  enterWebsite: "Enter website URL",
   enterNotes: "Enter notes",
   enterDescription: "Enter description",
   enterTitle: "Enter title",
@@ -25,5 +25,5 @@ export const enModalPlaceholders: ModalPlaceholdersTranslations = {
   selectTime: "Select time",
   enterAmount: "Enter amount",
   selectCategory: "Select category",
-  selectPriority: "Select priority",
+  selectPriority: "Select priority"
 };
