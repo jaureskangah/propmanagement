@@ -55,9 +55,10 @@ export const TenantCard = ({
   const isMobile = useIsMobile();
   const { t } = useLocale();
   
-  // Log pour débogage
+  // Log pour débogage avancé
   console.log("TenantCard - Tenant data:", tenant);
   console.log("TenantCard - Property data:", tenant.properties);
+  console.log("TenantCard - Property type:", tenant.properties ? typeof tenant.properties : "undefined");
   
   const formatDate = (dateString: string) => {
     try {
@@ -78,11 +79,22 @@ export const TenantCard = ({
 
   // Fonction pour obtenir le nom de la propriété de manière sécurisée
   const getPropertyName = () => {
-    if (!tenant.properties) return t('noProperty');
+    if (!tenant.properties) {
+      return t('noProperty');
+    }
     
+    // Si c'est un objet direct avec une propriété name
     if (typeof tenant.properties === 'object' && tenant.properties !== null) {
       if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
         return tenant.properties.name;
+      }
+    }
+    
+    // Si c'est un tableau avec un élément qui contient name
+    if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+      const firstProperty = tenant.properties[0];
+      if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+        return firstProperty.name;
       }
     }
     

@@ -12,8 +12,12 @@ interface TenantHeaderProps {
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   
-  // Logging pour le débogage des données de propriété
+  // Logging avancé pour le débogage des données de propriété
   console.log("TenantHeader - Tenant property data:", tenant.properties);
+  console.log("TenantHeader - Properties type:", tenant.properties ? typeof tenant.properties : "undefined");
+  if (tenant.properties) {
+    console.log("TenantHeader - Properties structure:", JSON.stringify(tenant.properties));
+  }
   
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
@@ -39,13 +43,22 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
 
   // Obtenir le nom de la propriété de manière sécurisée
   const getPropertyName = () => {
-    if (!tenant.properties) return t('noProperty');
+    if (!tenant.properties) {
+      return t('noProperty');
+    }
     
-    // Si properties est un objet
+    // Si properties est un objet avec une propriété name
     if (typeof tenant.properties === 'object' && tenant.properties !== null) {
-      // Si properties a une propriété name qui est une string
       if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
         return tenant.properties.name;
+      }
+    }
+    
+    // Si properties est un tableau avec un élément qui contient name
+    if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+      const firstProperty = tenant.properties[0];
+      if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+        return firstProperty.name;
       }
     }
     

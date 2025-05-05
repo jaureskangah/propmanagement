@@ -1,3 +1,4 @@
+
 export interface Tenant {
   id: string;
   name: string;
@@ -6,7 +7,7 @@ export interface Tenant {
   property_id: string | null;
   properties?: {
     name: string;
-  };
+  } | Array<{ name: string }> | null;
   unit_number: string;
   lease_start: string;
   lease_end: string;

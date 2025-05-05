@@ -72,7 +72,11 @@ export const useTenantData = () => {
       }
 
       console.log("Tenant data fetched:", tenant);
-      console.log("Properties data structure:", tenant?.properties);
+      
+      // Log la structure exacte des données de la propriété
+      if (tenant) {
+        console.log("Raw properties data structure:", JSON.stringify(tenant.properties));
+      }
 
       if (tenant) {
         // Utiliser le nom du profil si disponible, sinon utiliser le nom du locataire
@@ -80,20 +84,29 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // Initialiser le nom de la propriété
-        let propertyName = "";
+        // Traiter la propriété correctement en fonction de la structure retournée par Supabase
+        let propertyData = null;
         
-        // Déterminer le nom de la propriété de manière sécurisée
         if (tenant.properties) {
-          // Si c'est un objet direct
+          console.log("Properties data type:", typeof tenant.properties);
+          
+          // Si properties est un objet direct (structure {name: 'Dominion'})
           if (typeof tenant.properties === 'object' && tenant.properties !== null) {
             if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
-              propertyName = tenant.properties.name;
+              propertyData = { name: tenant.properties.name };
+            }
+          }
+          
+          // Si properties est un array avec un objet à l'intérieur (structure [{name: 'Dominion'}])
+          if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+            const firstProperty = tenant.properties[0];
+            if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+              propertyData = { name: firstProperty.name };
             }
           }
         }
-
-        console.log("Property name extracted:", propertyName); // Ajout pour le débogage
+        
+        console.log("Processed property data:", propertyData);
         
         setTenant({
           ...tenant,
@@ -101,8 +114,8 @@ export const useTenantData = () => {
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          // Utiliser le format correct pour properties
-          properties: { name: propertyName }
+          // Assigner les données de propriété traitées
+          properties: propertyData
         });
       }
       
