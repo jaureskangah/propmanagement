@@ -85,23 +85,24 @@ export const useTenantData = () => {
           : tenant.name || user?.user_metadata?.full_name;
         
         // Traiter la propriété correctement en fonction de la structure retournée par Supabase
-        let propertyData = null;
+        let propertyData: { name: string } | null = null;
         
         if (tenant.properties) {
           console.log("Properties data type:", typeof tenant.properties);
           
-          // Si properties est un objet direct (structure {name: 'Dominion'})
-          if (typeof tenant.properties === 'object' && tenant.properties !== null && !Array.isArray(tenant.properties)) {
-            if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
-              propertyData = { name: tenant.properties.name };
-            }
-          }
-          
-          // Si properties est un array avec un objet à l'intérieur (structure [{name: 'Dominion'}])
-          if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
-            const firstProperty = tenant.properties[0];
-            if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
-              propertyData = { name: firstProperty.name };
+          // Safely access properties data based on its structure
+          if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+            if (!Array.isArray(tenant.properties)) {
+              // Case: properties is a direct object like {name: 'Property Name'}
+              if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
+                propertyData = { name: tenant.properties.name };
+              }
+            } else if (tenant.properties.length > 0) {
+              // Case: properties is an array of objects
+              const firstProperty = tenant.properties[0];
+              if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+                propertyData = { name: String(firstProperty.name) };
+              }
             }
           }
         }
@@ -114,7 +115,7 @@ export const useTenantData = () => {
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          // Assigner les données de propriété traitées
+          // Assign the processed property data
           properties: propertyData
         });
       }
