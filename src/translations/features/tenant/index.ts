@@ -9,6 +9,7 @@ import { enDashboard } from './en/dashboard';
 import { enProfile } from './en/profile';
 import { enMaintenance } from './en/maintenance';
 import { enList } from './en/list';
+import { enForm } from './en/form';
 
 // French translations
 import { frLease } from './fr/lease';
@@ -20,6 +21,7 @@ import { frDashboard } from './fr/dashboard';
 import { frProfile } from './fr/profile';
 import { frMaintenance } from './fr/maintenance';
 import { frList } from './fr/list';
+import { frForm } from './fr/form';
 
 export const enTenant = {
   communications: enCommunications,
@@ -30,7 +32,8 @@ export const enTenant = {
   dashboard: enDashboard,
   profile: enProfile,
   maintenance: enMaintenance,
-  list: enList
+  list: enList,
+  form: enForm
 };
 
 export const frTenant = {
@@ -42,5 +45,6 @@ export const frTenant = {
   dashboard: frDashboard,
   profile: frProfile,
   maintenance: frMaintenance,
-  list: frList
+  list: frList,
+  form: frForm
 };

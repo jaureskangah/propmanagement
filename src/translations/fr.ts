@@ -21,9 +21,9 @@ import { frDashboard } from './features/dashboard';
 import { frSettings } from './features/settings';
 import { frModal } from './features/modal';
 import { frTasks } from './features/maintenance/tasks';
-import { frList } from './features/tenant/fr/list';
-import { frFinances } from './features/finances'; // Import the exported object
+import { frFinances } from './features/finances'; 
 import frDocumentGenerator from './features/documents/fr';
+import { frForm } from './features/tenant/fr/form';
 
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
 import { frProfile } from './features/tenant/fr/profile';
@@ -54,13 +54,13 @@ const translations = {
   ...frSettings,
   ...frModal,
   ...frTasks,
-  ...frList,
+  ...frForm,
   ...frTenantDashboard,
   ...frProfile,
   ...frDocuments,
   ...frTenantMaintenance,
   ...frCommunications,
-  ...frFinances, // Use the exported object
+  ...frFinances,
   documentGenerator: frDocumentGenerator
 };
 

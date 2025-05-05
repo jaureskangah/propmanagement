@@ -20,9 +20,10 @@ import { enSettings } from './features/settings';
 import { enStatus } from './features/status';
 import { enTenant } from './features/tenant';
 import { enToasts } from './features/toasts';
-import { enFinances } from './features/finances'; // Import the exported object
+import { enFinances } from './features/finances';
 import { enVendors } from './features/maintenance/vendors';
 import enDocumentGenerator from './features/documents/en';
+import { enForm } from './features/tenant/en/form';
 
 const translations = {
   ...enAdmin,
@@ -45,8 +46,9 @@ const translations = {
   ...enStatus,
   ...enTenant,
   ...enToasts,
-  ...enFinances, // Use the exported object
+  ...enFinances,
   ...enVendors,
+  ...enForm,
   documentGenerator: enDocumentGenerator,
 };
 

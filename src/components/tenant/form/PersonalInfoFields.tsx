@@ -19,9 +19,12 @@ export const PersonalInfoFields = ({ form }: PersonalInfoFieldsProps) => {
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('name')}</FormLabel>
+            <FormLabel>{t('nameLabel')}</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input 
+                placeholder={t('namePlaceholder')} 
+                {...field} 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -33,9 +36,13 @@ export const PersonalInfoFields = ({ form }: PersonalInfoFieldsProps) => {
         name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('email')}</FormLabel>
+            <FormLabel>{t('emailFormLabel')}</FormLabel>
             <FormControl>
-              <Input type="email" {...field} />
+              <Input 
+                type="email"
+                placeholder={t('emailPlaceholder')}
+                {...field} 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -47,9 +54,12 @@ export const PersonalInfoFields = ({ form }: PersonalInfoFieldsProps) => {
         name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('phone')}</FormLabel>
+            <FormLabel>{t('phoneFormLabel')}</FormLabel>
             <FormControl>
-              <Input type="tel" {...field} />
+              <Input 
+                placeholder={t('phonePlaceholder')}
+                {...field} 
+              />
             </FormControl>
             <FormMessage />
           </FormItem>

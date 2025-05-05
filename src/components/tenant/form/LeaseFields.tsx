@@ -19,7 +19,7 @@ export const LeaseFields = ({ form }: LeaseFieldsProps) => {
         name="lease_start"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('leaseStart')}</FormLabel>
+            <FormLabel>{t('leaseStartFormLabel')}</FormLabel>
             <FormControl>
               <Input type="date" {...field} />
             </FormControl>
@@ -33,7 +33,7 @@ export const LeaseFields = ({ form }: LeaseFieldsProps) => {
         name="lease_end"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('leaseEnd')}</FormLabel>
+            <FormLabel>{t('leaseEndFormLabel')}</FormLabel>
             <FormControl>
               <Input type="date" {...field} />
             </FormControl>
@@ -47,10 +47,11 @@ export const LeaseFields = ({ form }: LeaseFieldsProps) => {
         name="rent_amount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('rentAmount')}</FormLabel>
+            <FormLabel>{t('rentLabel')}</FormLabel>
             <FormControl>
               <Input 
                 type="number" 
+                placeholder={t('rentPlaceholder')}
                 {...field} 
                 onChange={(e) => field.onChange(parseFloat(e.target.value))}
               />
