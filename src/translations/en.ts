@@ -23,9 +23,9 @@ import { enToasts } from './features/toasts';
 import { enFinances } from './features/finances';
 import { enVendors } from './features/maintenance/vendors';
 import enDocumentGenerator from './features/documents/en';
-import { enForm } from './features/tenant/en/form';
 
-const translations = {
+// Créer un objet de traduction unique qui résout les conflits
+const translations: any = {
   ...enAdmin,
   ...enAuth,
   ...enCommon,
@@ -48,7 +48,6 @@ const translations = {
   ...enToasts,
   ...enFinances,
   ...enVendors,
-  ...enForm,
   documentGenerator: enDocumentGenerator,
 };
 

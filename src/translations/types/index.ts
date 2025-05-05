@@ -51,29 +51,40 @@ export type { SharedTranslations };
 export type Language = 'en' | 'fr';
 export type UnitSystem = 'metric' | 'imperial';
 
-// Extend translations using a type intersection to avoid property conflicts
-export interface Translations extends 
-  Omit<AdminDashboardTranslations, keyof SharedTranslations>,
-  Omit<AuthTranslations, keyof SharedTranslations>,
-  Omit<ContactTranslations, keyof SharedTranslations>,
-  Omit<CTATranslations, keyof SharedTranslations>,
-  Omit<FAQTranslations, keyof SharedTranslations>,
-  Omit<FeaturesTranslations, keyof SharedTranslations>,
-  Omit<FooterTranslations, keyof SharedTranslations>,
-  Omit<HeroTranslations, keyof SharedTranslations>,
-  Omit<HowItWorksTranslations, keyof SharedTranslations>,
-  Omit<MaintenanceTranslations, keyof SharedTranslations>,
-  Omit<NavigationTranslations, keyof SharedTranslations>,
-  Omit<PricingTranslations, keyof SharedTranslations>,
-  Omit<PlanFeaturesTranslations, keyof SharedTranslations>,
-  Omit<PropertyManagementTranslations, keyof SharedTranslations>,
-  Omit<StatusTranslations, keyof SharedTranslations>,
-  Omit<TenantTranslations, keyof SharedTranslations>,
-  Omit<ToastTranslations, keyof SharedTranslations>,
-  Omit<CommonTranslations, keyof SharedTranslations>,
-  Omit<DashboardTranslations, keyof SharedTranslations>,
-  Omit<SettingsTranslations, keyof SharedTranslations>,
-  Omit<ModalTranslations, keyof SharedTranslations>,
-  Omit<FinancesTranslations, keyof SharedTranslations>,
-  Omit<DocumentGeneratorTranslations, keyof SharedTranslations>,
-  SharedTranslations {}
+// Liste des propriétés en conflit qui doivent être traitées spécialement
+type ConflictKeys = 'active' | 'notAvailable' | 'success' | 'error' | 'cancel';
+
+// Utiliser un type d'intersection pour éviter les conflits de propriétés
+export type Translations = 
+  & Omit<AdminDashboardTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<AuthTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<ContactTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<CTATranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<FAQTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<FeaturesTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<FooterTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<HeroTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<HowItWorksTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<MaintenanceTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<NavigationTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<PricingTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<PlanFeaturesTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<PropertyManagementTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<StatusTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<TenantTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<ToastTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<CommonTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<DashboardTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<SettingsTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<ModalTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<FinancesTranslations, keyof SharedTranslations | ConflictKeys>
+  & Omit<DocumentGeneratorTranslations, keyof SharedTranslations | ConflictKeys>
+  & SharedTranslations
+  // Réintroduire les propriétés en conflit avec des types string
+  & {
+    active: string;
+    notAvailable: string;
+    success: string;
+    error: string;
+    cancel: string;
+  };

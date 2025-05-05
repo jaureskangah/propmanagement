@@ -23,15 +23,9 @@ import { frModal } from './features/modal';
 import { frTasks } from './features/maintenance/tasks';
 import { frFinances } from './features/finances'; 
 import frDocumentGenerator from './features/documents/fr';
-import { frForm } from './features/tenant/fr/form';
 
-import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
-import { frProfile } from './features/tenant/fr/profile';
-import { frDocuments } from './features/tenant/fr/documents';
-import { frMaintenance as frTenantMaintenance } from './features/tenant/fr/maintenance';
-import { frCommunications } from './features/tenant/fr/communications';
-
-const translations = {
+// Créer un objet de traduction unique qui résout les conflits
+const translations: any = {
   ...frNavigation,
   ...frHero,
   ...frFeatures,
@@ -54,12 +48,6 @@ const translations = {
   ...frSettings,
   ...frModal,
   ...frTasks,
-  ...frForm,
-  ...frTenantDashboard,
-  ...frProfile,
-  ...frDocuments,
-  ...frTenantMaintenance,
-  ...frCommunications,
   ...frFinances,
   documentGenerator: frDocumentGenerator
 };
