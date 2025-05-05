@@ -100,8 +100,9 @@ export const useTenantData = () => {
             } else if (tenant.properties.length > 0) {
               // Case: properties is an array of objects
               const firstProperty = tenant.properties[0];
-              if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
-                propertyData = { name: String(firstProperty.name) };
+              if (typeof firstProperty === 'object' && firstProperty !== null && 
+                  'name' in firstProperty && typeof firstProperty.name === 'string') {
+                propertyData = { name: firstProperty.name };
               }
             }
           }
