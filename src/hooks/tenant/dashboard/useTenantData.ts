@@ -32,8 +32,8 @@ export const useTenantData = () => {
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const { toast, t } = useToast();
-  const { t: translate, language } = useLocale();
+  const { toast } = useToast();
+  const { t, language } = useLocale();
 
   useEffect(() => {
     if (user) {
@@ -136,8 +136,8 @@ export const useTenantData = () => {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
       toast({
-        title: translate('error'),
-        description: translate('errorLoadingTenantData'),
+        title: t('error'),
+        description: t('errorLoadingTenantData'),
         variant: "destructive",
       });
     }
