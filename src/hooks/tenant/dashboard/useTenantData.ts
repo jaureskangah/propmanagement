@@ -21,6 +21,12 @@ export interface TenantData {
   fullName?: string;
 }
 
+// Define interface for property objects returned from Supabase
+interface PropertyObject {
+  name: string;
+  [key: string]: any;
+}
+
 export const useTenantData = () => {
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,15 +100,19 @@ export const useTenantData = () => {
           if (typeof tenant.properties === 'object' && tenant.properties !== null) {
             if (!Array.isArray(tenant.properties)) {
               // Case: properties is a direct object like {name: 'Property Name'}
-              if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
-                propertyData = { name: tenant.properties.name };
+              const props = tenant.properties as PropertyObject;
+              if ('name' in props && typeof props.name === 'string') {
+                propertyData = { name: props.name };
               }
-            } else if (tenant.properties.length > 0) {
+            } else {
               // Case: properties is an array of objects
-              const firstProperty = tenant.properties[0];
-              if (typeof firstProperty === 'object' && firstProperty !== null && 
-                  'name' in firstProperty && typeof firstProperty.name === 'string') {
-                propertyData = { name: firstProperty.name };
+              const propsArray = tenant.properties as PropertyObject[];
+              if (propsArray.length > 0) {
+                const firstProperty = propsArray[0];
+                if (typeof firstProperty === 'object' && firstProperty !== null && 
+                    'name' in firstProperty && typeof firstProperty.name === 'string') {
+                  propertyData = { name: firstProperty.name };
+                }
               }
             }
           }
