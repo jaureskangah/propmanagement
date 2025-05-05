@@ -13,7 +13,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   
   // Logging pour le débogage des données de propriété
-  console.log("Tenant property data:", tenant.properties);
+  console.log("TenantHeader - Tenant property data:", tenant.properties);
   
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
@@ -41,9 +41,10 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const getPropertyName = () => {
     if (!tenant.properties) return t('noProperty');
     
+    // Si properties est un objet
     if (typeof tenant.properties === 'object' && tenant.properties !== null) {
-      // Si properties est un objet avec une propriété 'name'
-      if ('name' in tenant.properties && tenant.properties.name) {
+      // Si properties a une propriété name qui est une string
+      if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
         return tenant.properties.name;
       }
     }

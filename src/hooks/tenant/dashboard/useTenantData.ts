@@ -80,18 +80,20 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenant.name || user?.user_metadata?.full_name;
         
-        // Extraire correctement les données de propriété
+        // Initialiser le nom de la propriété
         let propertyName = "";
         
-        // Gérer les différentes structures possibles renvoyées par Supabase
+        // Déterminer le nom de la propriété de manière sécurisée
         if (tenant.properties) {
+          // Si c'est un objet direct
           if (typeof tenant.properties === 'object' && tenant.properties !== null) {
-            // Si c'est un objet simple avec une propriété name
             if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
               propertyName = tenant.properties.name;
             }
           }
         }
+
+        console.log("Property name extracted:", propertyName); // Ajout pour le débogage
         
         setTenant({
           ...tenant,

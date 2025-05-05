@@ -55,6 +55,10 @@ export const TenantCard = ({
   const isMobile = useIsMobile();
   const { t } = useLocale();
   
+  // Log pour débogage
+  console.log("TenantCard - Tenant data:", tenant);
+  console.log("TenantCard - Property data:", tenant.properties);
+  
   const formatDate = (dateString: string) => {
     try {
       return format(new Date(dateString), "MMM d, yyyy");
@@ -77,7 +81,7 @@ export const TenantCard = ({
     if (!tenant.properties) return t('noProperty');
     
     if (typeof tenant.properties === 'object' && tenant.properties !== null) {
-      if ('name' in tenant.properties && tenant.properties.name) {
+      if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
         return tenant.properties.name;
       }
     }
