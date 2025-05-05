@@ -4,7 +4,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
-interface TenantData {
+export interface TenantData {
   id: string;
   name: string;
   email: string;
@@ -15,7 +15,7 @@ interface TenantData {
   property_id: string | null;
   properties?: {
     name: string;
-  } | Array<{ name: string }> | null;
+  } | null;
   firstName?: string;
   lastName?: string;
   fullName?: string;

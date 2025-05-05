@@ -1,3 +1,4 @@
+
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { LeaseStatusCard } from "./LeaseStatusCard";
 import { NotificationSummary } from "./NotificationSummary";
@@ -8,20 +9,7 @@ import { DocumentsWidget } from "./DocumentsWidget";
 import { PaymentHistoryChart } from "./widgets/PaymentHistoryChart";
 import { motion } from "framer-motion";
 import type { Communication, MaintenanceRequest, Payment, TenantDocument } from "@/types/tenant";
-
-// Define interface matching the structure provided by useTenantData
-interface TenantData {
-  id: string;
-  name: string;
-  email: string;
-  unit_number: string;
-  lease_start: string;
-  lease_end: string;
-  rent_amount: number;
-  properties?: {
-    name: string;
-  };
-}
+import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
 
 interface DashboardWidgetsProps {
   tenant: TenantData;
