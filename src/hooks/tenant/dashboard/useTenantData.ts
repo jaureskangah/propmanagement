@@ -81,7 +81,17 @@ export const useTenantData = () => {
           : tenant.name || user?.user_metadata?.full_name;
         
         // Extraire correctement les données de propriété
-        const propertyName = tenant.properties?.name || "";
+        let propertyName = "";
+        
+        // Gérer les différentes structures possibles renvoyées par Supabase
+        if (tenant.properties) {
+          if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+            // Si c'est un objet simple avec une propriété name
+            if ('name' in tenant.properties && tenant.properties.name) {
+              propertyName = tenant.properties.name;
+            }
+          }
+        }
         
         setTenant({
           ...tenant,
