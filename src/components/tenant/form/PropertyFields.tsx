@@ -22,11 +22,11 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
         name="property_id"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('selectProperty')}</FormLabel>
+            <FormLabel>{t('form.propertyLabel')}</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('selectProperty')} />
+                  <SelectValue placeholder={t('form.propertyPlaceholder')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -47,9 +47,9 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
         name="unit_number"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>{t('unitNumber')}</FormLabel>
+            <FormLabel>{t('form.unitFormLabel')}</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input placeholder={t('form.unitPlaceholder')} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>

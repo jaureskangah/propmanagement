@@ -1,13 +1,20 @@
 
 export interface ModalValidationTranslations {
-  fieldRequired: string;
+  required: string;
+  minLength: string;
+  maxLength: string;
   invalidEmail: string;
-  passwordMismatch: string;
+  passwordsDoNotMatch: string;
+  passwordTooWeak: string;
+  invalidURL: string;
   invalidPhone: string;
+  invalidZipCode: string;
   invalidAmount: string;
-  minimumLength: string;
-  maximumLength: string;
   invalidDate: string;
-  futureDate: string;
   pastDate: string;
+  futureDate: string;
+  invalidTime: string;
+  form: {
+    required: string;
+  };
 }

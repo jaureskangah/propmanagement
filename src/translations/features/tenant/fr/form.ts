@@ -1,5 +1,7 @@
 
-export const frForm = {
+import type { TenantFormTranslations } from '../../../types/tenant/form';
+
+export const frForm: TenantFormTranslations = {
   personalInfo: "Informations personnelles",
   propertyInfo: "Informations sur la propriété",
   leaseInfo: "Informations sur le bail",
