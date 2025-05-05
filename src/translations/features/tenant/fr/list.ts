@@ -12,7 +12,7 @@ export const frList = {
   filterByStatus: "Filtrer par statut",
   allStatuses: "Tous les statuts",
   active: "Actif",
-  expiring: "Expirant",
+  expiring: "Expirant bientôt",
   expired: "Expiré",
   leaseStart: "Début du bail",
   leaseEnd: "Fin du bail",
@@ -26,5 +26,8 @@ export const frList = {
   selectTenantToView: "Sélectionnez un locataire pour voir les détails",
   filters: "Filtres",
   resetFilters: "Réinitialiser",
-  applyFilters: "Appliquer"
+  applyFilters: "Appliquer",
+  leaseActive: "Bail actif",
+  leaseExpired: "Bail expiré",
+  leaseExpiring: "Bail expirant bientôt"
 };

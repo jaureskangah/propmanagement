@@ -12,12 +12,9 @@ interface TenantHeaderProps {
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   
-  // Logging avancé pour le débogage des données de propriété
+  // Logging pour débogage avancé
   console.log("TenantHeader - Tenant property data:", tenant.properties);
   console.log("TenantHeader - Properties type:", tenant.properties ? typeof tenant.properties : "undefined");
-  if (tenant.properties) {
-    console.log("TenantHeader - Properties structure:", JSON.stringify(tenant.properties));
-  }
   
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 

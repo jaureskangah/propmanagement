@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQueryCache } from "@/hooks/useQueryCache";
 import { useToast } from "@/hooks/use-toast";
@@ -25,15 +26,23 @@ export const useTenantPage = () => {
       return '';
     }
     
+    // Log pour débogage
+    console.log("getPropertyName - properties data:", tenant.properties);
+    console.log("getPropertyName - properties type:", typeof tenant.properties);
+    
+    // Si properties est un objet direct avec une propriété name
     if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && tenant.properties !== null) {
       if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
+        console.log("getPropertyName - Found name in object:", tenant.properties.name);
         return tenant.properties.name;
       }
     }
     
+    // Si properties est un array avec un élément qui contient name
     if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
       const firstProperty = tenant.properties[0];
       if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
+        console.log("getPropertyName - Found name in array:", firstProperty.name);
         return firstProperty.name;
       }
     }
@@ -89,7 +98,7 @@ export const useTenantPage = () => {
       }
 
       console.log("Tenants data fetched successfully with cache:", data?.length || 0);
-      console.log("Sample tenant properties structure:", data && data.length > 0 ? data[0].properties : "No tenants");
+      console.log("Sample tenant properties structure:", data && data.length > 0 ? JSON.stringify(data[0].properties) : "No tenants");
       return data || [];
     },
     {
@@ -110,8 +119,9 @@ export const useTenantPage = () => {
   });
 
   const filterTenants = (tenant: Tenant) => {
+    const propertyName = getPropertyName(tenant);
     const matchesSearch = tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (getPropertyName(tenant).toLowerCase().includes(searchQuery.toLowerCase()));
+      (propertyName.toLowerCase().includes(searchQuery.toLowerCase()));
 
     if (!matchesSearch) return false;
 
@@ -255,8 +265,104 @@ export const useTenantPage = () => {
     isLoading,
     filteredTenants,
     selectedTenantData,
-    handleAddTenant,
-    handleUpdateTenant,
-    handleDeleteTenant,
+    handleAddTenant: async (data: any) => {
+      if (!user) {
+        toast({
+          title: "Erreur",
+          description: "Vous devez être connecté pour ajouter un locataire",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      try {
+        const { error } = await supabase.from("tenants").insert({
+          ...data,
+          user_id: user.id,
+        });
+
+        if (error) {
+          throw error;
+        }
+        
+        // Invalider le cache pour rafraîchir les données
+        refetch();
+        
+        toast({
+          title: "Succès",
+          description: "Locataire ajouté avec succès",
+        });
+      } catch (error: any) {
+        console.error("Error adding tenant:", error);
+        toast({
+          title: "Erreur lors de l'ajout du locataire",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    },
+    handleUpdateTenant: async (data: any) => {
+      if (!selectedTenantData) return;
+      
+      try {
+        const { error } = await supabase
+          .from("tenants")
+          .update({
+            ...data,
+          })
+          .eq("id", selectedTenantData.id);
+          
+        if (error) {
+          throw error;
+        }
+        
+        // Invalider le cache pour rafraîchir les données
+        refetch();
+        
+        toast({
+          title: "Succès",
+          description: "Locataire mis à jour avec succès",
+        });
+      } catch (error: any) {
+        console.error("Error updating tenant:", error);
+        toast({
+          title: "Erreur lors de la mise à jour du locataire",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    },
+    handleDeleteTenant: async () => {
+      if (!selectedTenantData) return;
+      
+      try {
+        const { error } = await supabase
+          .from("tenants")
+          .delete()
+          .eq("id", selectedTenantData.id);
+          
+        if (error) {
+          throw error;
+        }
+        
+        // Invalider le cache pour rafraîchir les données
+        refetch();
+        
+        setSelectedTenant(null);
+        setIsDeleteDialogOpen(false);
+        
+        toast({
+          title: "Succès",
+          description: "Locataire supprimé avec succès",
+        });
+      } catch (error: any) {
+        console.error("Error deleting tenant:", error);
+        toast({
+          title: "Erreur lors de la suppression du locataire",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    },
   };
 };

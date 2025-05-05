@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, Pencil, Trash2, Phone, Mail, Calendar, Home, CreditCard, Check, AlertTriangle } from "lucide-react";
+import { ChevronRight, Pencil, Trash2, Phone, Mail, Calendar, Home, CreditCard, Check, AlertTriangle, X } from "lucide-react";
 import type { Tenant } from "@/types/tenant";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -55,7 +55,7 @@ export const TenantCard = ({
   const isMobile = useIsMobile();
   const { t } = useLocale();
   
-  // Log pour débogage avancé
+  // Logging pour débogage
   console.log("TenantCard - Tenant data:", tenant);
   console.log("TenantCard - Property data:", tenant.properties);
   console.log("TenantCard - Property type:", tenant.properties ? typeof tenant.properties : "undefined");
@@ -74,6 +74,7 @@ export const TenantCard = ({
   const getStatusIcon = () => {
     if (badgeVariant === "success") return <Check className="h-3.5 w-3.5 mr-1" />;
     if (badgeVariant === "warning") return <AlertTriangle className="h-3.5 w-3.5 mr-1" />;
+    if (badgeVariant === "destructive") return <X className="h-3.5 w-3.5 mr-1" />;
     return null;
   };
 

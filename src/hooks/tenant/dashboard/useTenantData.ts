@@ -15,7 +15,7 @@ interface TenantData {
   property_id: string | null;
   properties?: {
     name: string;
-  };
+  } | Array<{ name: string }> | null;
   firstName?: string;
   lastName?: string;
   fullName?: string;
@@ -91,7 +91,7 @@ export const useTenantData = () => {
           console.log("Properties data type:", typeof tenant.properties);
           
           // Si properties est un objet direct (structure {name: 'Dominion'})
-          if (typeof tenant.properties === 'object' && tenant.properties !== null) {
+          if (typeof tenant.properties === 'object' && tenant.properties !== null && !Array.isArray(tenant.properties)) {
             if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
               propertyData = { name: tenant.properties.name };
             }
@@ -124,8 +124,8 @@ export const useTenantData = () => {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
       toast({
-        title: "Error",
-        description: "Could not load tenant data",
+        title: "Erreur",
+        description: "Impossible de charger les données du locataire",
         variant: "destructive",
       });
     }

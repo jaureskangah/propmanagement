@@ -27,4 +27,7 @@ export const enList = {
   filters: "Filters",
   resetFilters: "Reset",
   applyFilters: "Apply",
+  leaseActive: "Lease active",
+  leaseExpired: "Lease expired",
+  leaseExpiring: "Lease expiring"
 };
