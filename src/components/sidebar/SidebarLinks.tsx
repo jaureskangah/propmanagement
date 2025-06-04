@@ -10,7 +10,8 @@ import {
   FileText,
   MessageSquare,
   Wrench,
-  CreditCard
+  CreditCard,
+  Mail
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
@@ -44,6 +45,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
       { to: "/properties", icon: Building, label: t('properties'), tooltip: t('properties') },
       { to: "/tenants", icon: Users, label: t('tenants'), tooltip: t('tenants') },
+      { to: "/invitations", icon: Mail, label: "Invitations", tooltip: "Gestion des invitations" },
       { to: "/finances", icon: CreditCard, label: t('finances'), tooltip: t('finances') },
       { to: "/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
       { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
