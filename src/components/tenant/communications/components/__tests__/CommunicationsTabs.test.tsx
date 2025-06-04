@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react';
-import { fireEvent } from '@testing-library/user-event';
+
+import { render } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/dom';
 import '@testing-library/jest-dom';
 import { CommunicationsTabs } from '../CommunicationsTabs';
 import { Communication } from '@/types/tenant';
