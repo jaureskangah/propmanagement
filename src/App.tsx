@@ -1,70 +1,65 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useAuth } from './components/AuthProvider';
-import NotFound from './pages/NotFound';
-import Login from './pages/Login';
-import Signup from './pages/Signup';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-import Vendors from './pages/Vendors';
-import AddVendor from './pages/AddVendor';
-import TaskList from './pages/TaskList';
-import AddTask from './pages/AddTask';
-import EditTask from './pages/EditTask';
-import Finances from './pages/Finances';
-import AddTenant from './pages/AddTenant';
-import TenantDashboardPage from './pages/tenant/TenantDashboard';
-import AuthPage from './pages/AuthPage';
-import DocumentHistory from './pages/DocumentHistory';
-import DocumentGenerator from './pages/DocumentGenerator';
-import Tenants from './pages/Tenants';
-import TenantCommunications from './pages/tenant/TenantCommunications';
-import TenantMaintenance from './pages/tenant/TenantMaintenance';
 import Properties from './pages/Properties';
-import Maintenance from './pages/Maintenance';
-import MaintenanceRequestList from './pages/MaintenanceRequestList';
+import PropertyDetails from './pages/PropertyDetails';
+import Leases from './pages/Leases';
+import Tenants from './pages/Tenants';
+import TenantDetails from './pages/TenantDetails';
+import TenantDashboard from './pages/TenantDashboard';
+import AddTenant from './pages/AddTenant';
+import EditTenant from './pages/EditTenant';
+import TenantList from './pages/TenantList';
+import Documents from './pages/Documents';
+import Payments from './pages/Payments';
 import Settings from './pages/Settings';
-import LandingPage from './pages/LandingPage';
-import AddMaintenanceRequest from './pages/AddMaintenanceRequest';
-import DocumentsPage from './pages/tenant/TenantDocuments';
+import AuthModal from './components/auth/AuthModal';
+import { AuthProvider } from './components/AuthProvider';
+import { LocaleProvider } from './components/providers/LocaleProvider';
+import { ThemeProvider } from './components/providers/ThemeProvider';
+import { Toaster } from '@/components/ui/toaster';
+import { QueryClient } from '@tanstack/react-query';
+import { TenantProvider } from './components/TenantProvider';
+import AcceptInvitation from './pages/AcceptInvitation';
+import InvitationsPage from './pages/InvitationsPage';
 
 function App() {
-  const { isAuthenticated } = useAuth();
-
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
-      <Route path="/auth" element={<AuthPage />} />
-      
-      {/* Landing Page - Accessible à tous */}
-      <Route path="/" element={<LandingPage />} />
-
-      {/* Protected Routes - only accessible when logged in */}
-      <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
-      
-      <Route path="/vendors" element={isAuthenticated ? <Vendors /> : <Navigate to="/login" />} />
-      <Route path="/add-vendor" element={isAuthenticated ? <AddVendor /> : <Navigate to="/login" />} />
-      <Route path="/tasks" element={isAuthenticated ? <TaskList /> : <Navigate to="/login" />} />
-      <Route path="/add-task" element={isAuthenticated ? <AddTask /> : <Navigate to="/login" />} />
-      <Route path="/edit-task/:id" element={isAuthenticated ? <EditTask /> : <Navigate to="/login" />} />
-      <Route path="/finances" element={isAuthenticated ? <Finances /> : <Navigate to="/login" />} />
-      <Route path="/add-tenant" element={isAuthenticated ? <AddTenant /> : <Navigate to="/login" />} />
-      <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
-      <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
-      <Route path="/tenants" element={isAuthenticated ? <Tenants /> : <Navigate to="/login" />} />
-      
-      
-      <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
-      <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
-      <Route path="/tenant/maintenance/new" element={isAuthenticated ? <AddMaintenanceRequest /> : <Navigate to="/login" />} />
-      <Route path="/tenant/documents" element={isAuthenticated ? <DocumentsPage /> : <Navigate to="/login" />} />
-      
-      <Route path="/properties" element={isAuthenticated ? <Properties /> : <Navigate to="/login" />} />
-      <Route path="/maintenance" element={isAuthenticated ? <Maintenance /> : <Navigate to="/login" />} />
-      <Route path="/maintenance-requests" element={isAuthenticated ? <MaintenanceRequestList /> : <Navigate to="/login" />} />
-      <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <Router>
+      <AuthProvider>
+        <LocaleProvider>
+          <TenantProvider>
+            <QueryClient>
+              <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+                <Toaster />
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/properties" element={<Properties />} />
+                  <Route path="/properties/:id" element={<PropertyDetails />} />
+                  <Route path="/leases" element={<Leases />} />
+                  <Route path="/tenants" element={<Tenants />} />
+                  <Route path="/tenant-details/:id" element={<TenantDetails />} />
+                  <Route path="/tenant-dashboard" element={<TenantDashboard />} />
+                  <Route path="/add-tenant" element={<AddTenant />} />
+                  <Route path="/edit-tenant/:id" element={<EditTenant />} />
+                  <Route path="/tenant-list" element={<TenantList />} />
+                  <Route path="/documents" element={<Documents />} />
+                  <Route path="/payments" element={<Payments />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/auth" element={<AuthModal isOpen={true} onClose={() => {}} />} />
+                  
+                  {/* Add the new invitation acceptance route */}
+                  <Route path="/invite/:token" element={<AcceptInvitation />} />
+                  
+                  <Route path="/invitations" element={<InvitationsPage />} />
+                </Routes>
+              </ThemeProvider>
+            </QueryClient>
+          </TenantProvider>
+        </LocaleProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 
