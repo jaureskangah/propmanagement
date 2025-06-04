@@ -1,5 +1,6 @@
 
 import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { ShowMoreLessButton } from '../ShowMoreLessButton';
 import { LocaleProvider } from '@/components/providers/LocaleProvider';
 
