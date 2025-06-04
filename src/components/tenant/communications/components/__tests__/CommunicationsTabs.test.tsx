@@ -1,4 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { CommunicationsTabs } from '../CommunicationsTabs';
 import { Communication } from '@/types/tenant';
@@ -104,15 +106,17 @@ describe('CommunicationsTabs', () => {
     expect(tabsContent.length).toBe(3); // Three tabs: all, urgent, unread
   });
 
-  it('calls setActiveTab when a tab is clicked', () => {
+  it('calls setActiveTab when a tab is clicked', async () => {
+    const user = userEvent.setup();
+    
     render(<CommunicationsTabs {...mockProps} />);
     
     // Click on Urgent tab
-    fireEvent.click(screen.getByText('Urgent'));
+    await user.click(screen.getByText('Urgent'));
     expect(mockProps.setActiveTab).toHaveBeenCalledWith('urgent');
     
     // Click on Unread tab
-    fireEvent.click(screen.getByText('Unread'));
+    await user.click(screen.getByText('Unread'));
     expect(mockProps.setActiveTab).toHaveBeenCalledWith('unread');
   });
 });

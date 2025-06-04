@@ -1,4 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { ShowMoreLessButton } from '../ShowMoreLessButton';
 import { LocaleProvider } from '@/components/providers/LocaleProvider';
@@ -59,7 +61,9 @@ describe('ShowMoreLessButton', () => {
     expect(button).toBeInTheDocument();
   });
 
-  it('calls toggleShowAll function when button is clicked', () => {
+  it('calls toggleShowAll function when button is clicked', async () => {
+    const user = userEvent.setup();
+    
     render(
       <ShowMoreLessButton 
         showAll={false}
@@ -70,7 +74,7 @@ describe('ShowMoreLessButton', () => {
     );
     
     const button = screen.getByRole('button');
-    fireEvent.click(button);
+    await user.click(button);
     
     expect(mockToggle).toHaveBeenCalledTimes(1);
   });
