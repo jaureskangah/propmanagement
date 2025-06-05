@@ -27,7 +27,7 @@ const handler = async (req: Request): Promise<Response> => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     const { tenantId, subject, content, category } = await req.json();
     
-    console.log("Request data:", { tenantId, subject, content, category });
+    console.log("Request data:", { tenantId, subject, category });
 
     if (!tenantId) {
       throw new Error("Missing tenant ID");
@@ -47,21 +47,12 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Found tenant:", tenant);
 
-    // Send email
+    // Send email using verified domain
     const emailResponse = await resend.emails.send({
-      from: "Property Management <onboarding@resend.dev>",
+      from: "Property Management <noreply@propmanagement.app>",
       to: [tenant.email],
       subject: subject,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">${subject}</h2>
-          <p style="color: #666; line-height: 1.6;">${content}</p>
-          <hr style="border: 1px solid #eee; margin: 20px 0;" />
-          <p style="color: #888; font-size: 0.9em;">
-            This message was sent via our property management system.
-          </p>
-        </div>
-      `,
+      html: content,
     });
 
     console.log("Email sent successfully:", emailResponse);
