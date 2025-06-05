@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
-import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle, AlertCircle, Mail } from 'lucide-react';
 
 interface InvitationDetails {
   id: string;
@@ -36,7 +37,7 @@ const AcceptInvitation = () => {
   const [accepting, setAccepting] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [step, setStep] = useState<'loading' | 'signup' | 'success' | 'error'>('loading');
+  const [step, setStep] = useState<'loading' | 'signup' | 'email-verification' | 'success' | 'error'>('loading');
 
   useEffect(() => {
     if (token) {
@@ -154,14 +155,18 @@ const AcceptInvitation = () => {
     try {
       console.log('Creating user account for:', invitation!.email);
       
-      // Créer le compte utilisateur avec les métadonnées correctes
+      // Créer le compte utilisateur avec redirection vers le tenant dashboard
+      const redirectUrl = `${window.location.origin}/tenant-dashboard`;
+      
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: invitation!.email,
         password: password,
         options: {
+          emailRedirectTo: redirectUrl,
           data: {
             is_tenant_user: true,
-            email: invitation!.email
+            email: invitation!.email,
+            tenant_id: invitation!.tenant_id
           }
         }
       });
@@ -214,17 +219,13 @@ const AcceptInvitation = () => {
         }
       }
 
-      setStep('success');
+      // Passer à l'étape de vérification email
+      setStep('email-verification');
       
       toast({
         title: "Compte créé avec succès",
-        description: "Bienvenue ! Redirection vers votre portail locataire...",
+        description: "Un email de confirmation vous a été envoyé.",
       });
-
-      // Redirection avec rechargement complet de la page
-      setTimeout(() => {
-        window.location.href = '/tenant-dashboard';
-      }, 2000);
 
     } catch (error: any) {
       console.error('Error accepting invitation:', error);
@@ -270,13 +271,35 @@ const AcceptInvitation = () => {
     );
   }
 
+  if (step === 'email-verification') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex flex-col items-center justify-center p-8 text-center">
+            <Mail className="h-12 w-12 text-blue-500 mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Vérifiez votre email</h2>
+            <p className="text-gray-600 mb-4">
+              Un email de confirmation a été envoyé à <strong>{invitation?.email}</strong>
+            </p>
+            <p className="text-gray-600 mb-6">
+              Cliquez sur le lien dans l'email pour activer votre compte et accéder à votre portail locataire.
+            </p>
+            <div className="text-sm text-gray-500">
+              Vous ne voyez pas l'email ? Vérifiez vos spams ou contactez votre propriétaire.
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (step === 'success') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <Card className="w-full max-w-md">
           <CardContent className="flex flex-col items-center justify-center p-8 text-center">
             <CheckCircle className="h-12 w-12 text-green-500 mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Compte créé avec succès !</h2>
+            <h2 className="text-xl font-semibold mb-2">Compte activé avec succès !</h2>
             <p className="text-gray-600 mb-4">
               Vous allez être redirigé vers votre portail locataire...
             </p>

@@ -30,6 +30,7 @@ const TenantDashboardPage = () => {
   const isTenantUser = user?.user_metadata?.is_tenant_user === true;
   
   console.log('Is tenant user:', isTenantUser);
+  console.log('User metadata:', user?.user_metadata);
 
   if (user && !isTenantUser) {
     console.log('Not a tenant user, redirecting to dashboard');
