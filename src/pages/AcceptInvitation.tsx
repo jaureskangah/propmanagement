@@ -22,7 +22,7 @@ interface InvitationDetails {
     properties: {
       name: string;
       address: string;
-    };
+    } | null;
   };
 }
 
@@ -47,24 +47,21 @@ const AcceptInvitation = () => {
 
   const validateInvitation = async () => {
     try {
-      const { data, error } = await supabase
+      console.log('Validating invitation with token:', token);
+      
+      // First, let's try a simpler query to debug
+      const { data: invitationData, error: invitationError } = await supabase
         .from('tenant_invitations')
-        .select(`
-          *,
-          tenants (
-            name,
-            property_id,
-            properties (
-              name,
-              address
-            )
-          )
-        `)
+        .select('*')
         .eq('token', token)
         .eq('status', 'pending')
         .single();
 
-      if (error || !data) {
+      console.log('Invitation data:', invitationData);
+      console.log('Invitation error:', invitationError);
+
+      if (invitationError || !invitationData) {
+        console.error('Invitation not found:', invitationError);
         setStep('error');
         toast({
           title: "Invitation invalide",
@@ -74,7 +71,8 @@ const AcceptInvitation = () => {
         return;
       }
 
-      if (new Date(data.expires_at) < new Date()) {
+      if (new Date(invitationData.expires_at) < new Date()) {
+        console.log('Invitation expired');
         setStep('error');
         toast({
           title: "Invitation expirée",
@@ -84,11 +82,51 @@ const AcceptInvitation = () => {
         return;
       }
 
-      setInvitation(data);
+      // Now get tenant details
+      const { data: tenantData, error: tenantError } = await supabase
+        .from('tenants')
+        .select(`
+          name,
+          property_id,
+          properties (
+            name,
+            address
+          )
+        `)
+        .eq('id', invitationData.tenant_id)
+        .single();
+
+      console.log('Tenant data:', tenantData);
+      console.log('Tenant error:', tenantError);
+
+      if (tenantError || !tenantData) {
+        console.error('Tenant not found:', tenantError);
+        setStep('error');
+        toast({
+          title: "Erreur",
+          description: "Locataire introuvable.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Combine the data
+      const fullInvitation: InvitationDetails = {
+        ...invitationData,
+        tenant: tenantData
+      };
+
+      console.log('Full invitation:', fullInvitation);
+      setInvitation(fullInvitation);
       setStep('signup');
     } catch (error) {
       console.error('Error validating invitation:', error);
       setStep('error');
+      toast({
+        title: "Erreur",
+        description: "Une erreur est survenue lors de la validation de l'invitation.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
@@ -118,12 +156,17 @@ const AcceptInvitation = () => {
     setAccepting(true);
 
     try {
+      console.log('Creating user account for:', invitation!.email);
+      
       // Create user account
       const { error: signUpError } = await signUp(invitation!.email, password);
       
       if (signUpError) {
+        console.error('Sign up error:', signUpError);
         throw signUpError;
       }
+
+      console.log('Account created successfully');
 
       // Update invitation status
       const { error: updateError } = await supabase
@@ -132,12 +175,17 @@ const AcceptInvitation = () => {
         .eq('token', token);
 
       if (updateError) {
+        console.error('Error updating invitation:', updateError);
         throw updateError;
       }
+
+      console.log('Invitation status updated');
 
       // Link tenant profile
       const { data: userData } = await supabase.auth.getUser();
       if (userData.user) {
+        console.log('Linking tenant profile for user:', userData.user.id);
+        
         const { error: linkError } = await supabase
           .from('tenants')
           .update({ tenant_profile_id: userData.user.id })
@@ -145,6 +193,8 @@ const AcceptInvitation = () => {
 
         if (linkError) {
           console.error('Error linking tenant profile:', linkError);
+        } else {
+          console.log('Tenant profile linked successfully');
         }
       }
 
@@ -230,11 +280,18 @@ const AcceptInvitation = () => {
             <div className="mb-6 p-4 bg-blue-50 rounded-lg">
               <h3 className="font-medium text-blue-900">Détails de l'invitation</h3>
               <p className="text-sm text-blue-700 mt-1">
-                <strong>Propriété :</strong> {invitation.tenant.properties?.name}
+                <strong>Locataire :</strong> {invitation.tenant.name}
               </p>
-              <p className="text-sm text-blue-700">
-                <strong>Adresse :</strong> {invitation.tenant.properties?.address}
-              </p>
+              {invitation.tenant.properties && (
+                <>
+                  <p className="text-sm text-blue-700">
+                    <strong>Propriété :</strong> {invitation.tenant.properties.name}
+                  </p>
+                  <p className="text-sm text-blue-700">
+                    <strong>Adresse :</strong> {invitation.tenant.properties.address}
+                  </p>
+                </>
+              )}
               <p className="text-sm text-blue-700">
                 <strong>Email :</strong> {invitation.email}
               </p>
