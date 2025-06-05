@@ -35,7 +35,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
   const links = React.useMemo(() => {
     if (isTenant) {
       return [
-        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
+        { to: "/tenant-dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
         { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
         { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
       ];

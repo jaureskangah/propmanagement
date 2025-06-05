@@ -45,10 +45,10 @@ const Dashboard = () => {
     return <Navigate to="/auth" replace />;
   }
   
-  // Vérifier si l'utilisateur est un locataire
+  // Vérifier si l'utilisateur est un locataire et le rediriger vers le bon dashboard
   if (user?.user_metadata?.is_tenant_user) {
     console.log("User is tenant, redirecting to tenant dashboard");
-    return <Navigate to="/tenant/dashboard" replace />;
+    return <Navigate to="/tenant-dashboard" replace />;
   }
 
   console.log("Rendering owner dashboard");

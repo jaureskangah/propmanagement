@@ -7,7 +7,7 @@ import Properties from './pages/Properties';
 import PropertyDetails from './pages/PropertyDetails';
 import Tenants from './pages/Tenants';
 import TenantDetails from './pages/TenantDetails';
-import TenantDashboard from './pages/TenantDashboard';
+import TenantDashboardPage from './pages/tenant/TenantDashboard';
 import AddTenant from './pages/AddTenant';
 import EditTenant from './pages/EditTenant';
 import TenantList from './pages/TenantList';
@@ -45,7 +45,7 @@ function App() {
               <Route path="/properties/:id" element={<PropertyDetails />} />
               <Route path="/tenants" element={<Tenants />} />
               <Route path="/tenant-details/:id" element={<TenantDetails />} />
-              <Route path="/tenant-dashboard" element={<TenantDashboard />} />
+              <Route path="/tenant-dashboard" element={<TenantDashboardPage />} />
               <Route path="/add-tenant" element={<AddTenant />} />
               <Route path="/edit-tenant/:id" element={<EditTenant />} />
               <Route path="/tenant-list" element={<TenantList />} />
