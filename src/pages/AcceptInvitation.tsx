@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,7 +48,6 @@ const AcceptInvitation = () => {
     try {
       console.log('Validating invitation with token:', token);
       
-      // First, let's try a simpler query to debug
       const { data: invitationData, error: invitationError } = await supabase
         .from('tenant_invitations')
         .select('*')
@@ -82,7 +80,6 @@ const AcceptInvitation = () => {
         return;
       }
 
-      // Now get tenant details
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select(`
@@ -110,7 +107,6 @@ const AcceptInvitation = () => {
         return;
       }
 
-      // Combine the data
       const fullInvitation: InvitationDetails = {
         ...invitationData,
         tenant: tenantData
@@ -158,37 +154,47 @@ const AcceptInvitation = () => {
     try {
       console.log('Creating user account for:', invitation!.email);
       
-      // Create user account
-      const { error: signUpError } = await signUp(invitation!.email, password);
+      // Créer le compte utilisateur avec les métadonnées correctes
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: invitation!.email,
+        password: password,
+        options: {
+          data: {
+            is_tenant_user: true,
+            email: invitation!.email
+          }
+        }
+      });
       
       if (signUpError) {
         console.error('Sign up error:', signUpError);
         throw signUpError;
       }
 
-      console.log('Account created successfully');
+      console.log('Account created successfully:', signUpData);
 
-      // Update invitation status
-      const { error: updateError } = await supabase
-        .from('tenant_invitations')
-        .update({ status: 'accepted' })
-        .eq('token', token);
+      if (signUpData.user) {
+        // Mettre à jour le profil avec les bonnes informations
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: signUpData.user.id,
+            email: invitation!.email,
+            is_tenant_user: true,
+            first_name: invitation!.tenant.name.split(' ')[0] || '',
+            last_name: invitation!.tenant.name.split(' ').slice(1).join(' ') || ''
+          });
 
-      if (updateError) {
-        console.error('Error updating invitation:', updateError);
-        throw updateError;
-      }
+        if (profileError) {
+          console.error('Profile error:', profileError);
+        }
 
-      console.log('Invitation status updated');
-
-      // Link tenant profile
-      const { data: userData } = await supabase.auth.getUser();
-      if (userData.user) {
-        console.log('Linking tenant profile for user:', userData.user.id);
+        // Lier le profil locataire
+        console.log('Linking tenant profile for user:', signUpData.user.id);
         
         const { error: linkError } = await supabase
           .from('tenants')
-          .update({ tenant_profile_id: userData.user.id })
+          .update({ tenant_profile_id: signUpData.user.id })
           .eq('id', invitation!.tenant_id);
 
         if (linkError) {
@@ -196,17 +202,28 @@ const AcceptInvitation = () => {
         } else {
           console.log('Tenant profile linked successfully');
         }
+
+        // Mettre à jour le statut de l'invitation
+        const { error: updateError } = await supabase
+          .from('tenant_invitations')
+          .update({ status: 'accepted' })
+          .eq('token', token);
+
+        if (updateError) {
+          console.error('Error updating invitation:', updateError);
+        }
       }
 
       setStep('success');
       
       toast({
         title: "Compte créé avec succès",
-        description: "Bienvenue ! Vous pouvez maintenant accéder à votre portail locataire.",
+        description: "Bienvenue ! Redirection vers votre portail locataire...",
       });
 
+      // Redirection avec rechargement complet de la page
       setTimeout(() => {
-        navigate('/tenant-dashboard');
+        window.location.href = '/tenant-dashboard';
       }, 2000);
 
     } catch (error: any) {
