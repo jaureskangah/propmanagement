@@ -5,15 +5,26 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
-import { useQuery } from '@tanstack/react-query';
-import { RefreshCw, Send, Clock, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { RefreshCw, Send, Clock, CheckCircle, XCircle, AlertCircle, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Invitation {
   id: string;
   email: string;
-  status: 'pending' | 'accepted' | 'expired';
+  status: 'pending' | 'accepted' | 'expired' | 'cancelled';
   created_at: string;
   expires_at: string;
   tenant_id: string;
@@ -27,6 +38,7 @@ interface Invitation {
 
 const InvitationsDashboard = () => {
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [resendingId, setResendingId] = useState<string | null>(null);
 
   const { data: invitations, isLoading, refetch } = useQuery({
@@ -50,9 +62,38 @@ const InvitationsDashboard = () => {
     }
   });
 
+  const cancelInvitationMutation = useMutation({
+    mutationFn: async (invitationId: string) => {
+      const { error } = await supabase
+        .from('tenant_invitations')
+        .update({ status: 'cancelled' })
+        .eq('id', invitationId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Invitation annulée",
+        description: "L'invitation a été annulée avec succès.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['tenant-invitations'] });
+    },
+    onError: (error: any) => {
+      console.error('Error cancelling invitation:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'annuler l'invitation.",
+        variant: "destructive",
+      });
+    }
+  });
+
   const getStatusIcon = (status: string, expiresAt: string) => {
     if (status === 'accepted') {
       return <CheckCircle className="h-4 w-4 text-green-500" />;
+    }
+    if (status === 'cancelled') {
+      return <X className="h-4 w-4 text-gray-500" />;
     }
     if (status === 'expired' || new Date(expiresAt) < new Date()) {
       return <XCircle className="h-4 w-4 text-red-500" />;
@@ -63,6 +104,9 @@ const InvitationsDashboard = () => {
   const getStatusBadge = (status: string, expiresAt: string) => {
     if (status === 'accepted') {
       return <Badge variant="default" className="bg-green-100 text-green-800">Acceptée</Badge>;
+    }
+    if (status === 'cancelled') {
+      return <Badge variant="secondary" className="bg-gray-100 text-gray-800">Annulée</Badge>;
     }
     if (status === 'expired' || new Date(expiresAt) < new Date()) {
       return <Badge variant="destructive">Expirée</Badge>;
@@ -92,26 +136,61 @@ const InvitationsDashboard = () => {
       if (updateError) throw updateError;
 
       // Send new email via edge function
+      const invitationUrl = `${window.location.origin}/invite/${newToken}`;
+      
       const { error: emailError } = await supabase.functions.invoke('send-tenant-email', {
         body: {
-          to: [email],
+          tenantId: tenantId,
           subject: "Nouvelle invitation - Portail Locataire",
           content: `
-            <h2>Rejoignez votre portail locataire</h2>
-            <p>Vous avez été invité(e) à rejoindre le portail locataire.</p>
-            <p>Cliquez sur le lien ci-dessous pour créer votre compte :</p>
-            <p><a href="${window.location.origin}/invite/${newToken}" style="background: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;">Créer mon compte</a></p>
-            <p>Ce lien expire dans 7 jours.</p>
-          `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h1 style="color: #2563eb; text-align: center;">Rappel - Votre portail locataire vous attend</h1>
+              
+              <p>Bonjour,</p>
+              
+              <p>Nous vous avons récemment envoyé une invitation pour rejoindre votre portail locataire. Cette invitation avait expiré, nous vous en envoyons donc une nouvelle.</p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${invitationUrl}" 
+                   style="background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                  Créer mon compte maintenant
+                </a>
+              </div>
+              
+              <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+                <p style="margin: 0; color: #92400e; font-size: 14px;">
+                  <strong>⚠️ Attention :</strong> Cette nouvelle invitation expire dans 7 jours.
+                </p>
+              </div>
+              
+              <p style="color: #666;">
+                Si vous rencontrez des difficultés pour créer votre compte, contactez directement votre propriétaire.
+              </p>
+              
+              <hr style="border: 1px solid #e2e8f0; margin: 30px 0;" />
+              
+              <p style="color: #888; font-size: 12px; text-align: center;">
+                Ce message a été envoyé via notre système de gestion immobilière.
+              </p>
+            </div>
+          `,
+          category: 'invitation'
         }
       });
 
-      if (emailError) throw emailError;
-
-      toast({
-        title: "Invitation renvoyée",
-        description: "Une nouvelle invitation a été envoyée par email.",
-      });
+      if (emailError) {
+        console.error('Email error:', emailError);
+        toast({
+          title: "Invitation mise à jour",
+          description: "L'invitation a été mise à jour mais l'email n'a pas pu être envoyé.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Invitation renvoyée",
+          description: "Une nouvelle invitation a été envoyée par email.",
+        });
+      }
 
       refetch();
     } catch (error: any) {
@@ -169,6 +248,9 @@ const InvitationsDashboard = () => {
           <div className="space-y-4">
             {invitations.map((invitation) => {
               const isExpired = new Date(invitation.expires_at) < new Date();
+              const isPending = invitation.status === 'pending' && !isExpired;
+              const canResend = invitation.status === 'expired' || isExpired || invitation.status === 'cancelled';
+              const canCancel = invitation.status === 'pending' && !isExpired;
               const daysRemaining = calculateDaysRemaining(invitation.expires_at);
               
               return (
@@ -187,7 +269,7 @@ const InvitationsDashboard = () => {
                         <p><strong>Envoyée le :</strong> {format(new Date(invitation.created_at), 'PPP', { locale: fr })}</p>
                         <p><strong>Expire le :</strong> {format(new Date(invitation.expires_at), 'PPP', { locale: fr })}</p>
                         
-                        {invitation.status === 'pending' && !isExpired && (
+                        {isPending && (
                           <div className="flex items-center gap-1 text-yellow-600">
                             <AlertCircle className="h-3 w-3" />
                             <span>{daysRemaining > 0 ? `${daysRemaining} jour(s) restant(s)` : 'Expire aujourd\'hui'}</span>
@@ -197,7 +279,39 @@ const InvitationsDashboard = () => {
                     </div>
                     
                     <div className="flex flex-col gap-2">
-                      {(invitation.status === 'pending' && isExpired) || invitation.status === 'expired' ? (
+                      {canCancel && (
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <X className="h-3 w-3 mr-1" />
+                              Annuler
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Annuler l'invitation</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Êtes-vous sûr de vouloir annuler cette invitation ? Le locataire ne pourra plus utiliser le lien d'invitation.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Annuler</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => cancelInvitationMutation.mutate(invitation.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Confirmer
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      )}
+                      
+                      {canResend && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -216,7 +330,7 @@ const InvitationsDashboard = () => {
                             </>
                           )}
                         </Button>
-                      ) : null}
+                      )}
                     </div>
                   </div>
                 </div>
