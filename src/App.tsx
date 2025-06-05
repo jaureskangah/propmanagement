@@ -13,6 +13,8 @@ import EditTenant from './pages/EditTenant';
 import TenantList from './pages/TenantList';
 import Documents from './pages/Documents';
 import Settings from './pages/Settings';
+import Finances from './pages/Finances';
+import Maintenance from './pages/Maintenance';
 import AuthModal from './components/auth/AuthModal';
 import { AuthProvider } from './components/AuthProvider';
 import { LocaleProvider } from './components/providers/LocaleProvider';
@@ -50,6 +52,8 @@ function App() {
               <Route path="/edit-tenant/:id" element={<EditTenant />} />
               <Route path="/tenant-list" element={<TenantList />} />
               <Route path="/documents" element={<Documents />} />
+              <Route path="/finances" element={<Finances />} />
+              <Route path="/maintenance" element={<Maintenance />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/auth" element={<AuthModal isOpen={true} onClose={() => {}} />} />
               
