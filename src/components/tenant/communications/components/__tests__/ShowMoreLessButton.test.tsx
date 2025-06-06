@@ -1,7 +1,5 @@
 
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { ShowMoreLessButton } from '../ShowMoreLessButton';
 import { LocaleProvider } from '@/components/providers/LocaleProvider';
 
@@ -34,7 +32,7 @@ describe('ShowMoreLessButton', () => {
   });
 
   it('renders "Show More" button when not showing all and total count is greater than initial display count', () => {
-    const { getByRole } = render(
+    render(
       <ShowMoreLessButton 
         showAll={false}
         toggleShowAll={mockToggle}
@@ -43,12 +41,12 @@ describe('ShowMoreLessButton', () => {
       />
     );
     
-    const button = getByRole('button', { name: /Show More/i });
+    const button = screen.getByRole('button', { name: /Show More/i });
     expect(button).toBeInTheDocument();
   });
 
   it('renders "Show Less" button when showing all and total count is greater than initial display count', () => {
-    const { getByRole } = render(
+    render(
       <ShowMoreLessButton 
         showAll={true}
         toggleShowAll={mockToggle}
@@ -57,14 +55,12 @@ describe('ShowMoreLessButton', () => {
       />
     );
     
-    const button = getByRole('button', { name: /Show Less/i });
+    const button = screen.getByRole('button', { name: /Show Less/i });
     expect(button).toBeInTheDocument();
   });
 
-  it('calls toggleShowAll function when button is clicked', async () => {
-    const user = userEvent.setup();
-    
-    const { getByRole } = render(
+  it('calls toggleShowAll function when button is clicked', () => {
+    render(
       <ShowMoreLessButton 
         showAll={false}
         toggleShowAll={mockToggle}
@@ -73,8 +69,8 @@ describe('ShowMoreLessButton', () => {
       />
     );
     
-    const button = getByRole('button');
-    await user.click(button);
+    const button = screen.getByRole('button');
+    fireEvent.click(button);
     
     expect(mockToggle).toHaveBeenCalledTimes(1);
   });

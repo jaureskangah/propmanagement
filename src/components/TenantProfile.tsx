@@ -1,9 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { TenantInfoCard } from "./tenant/profile/TenantInfoCard";
 import { UnlinkedTenantProfile } from "./tenant/profile/UnlinkedTenantProfile";
 import { TenantTabs } from "./tenant/profile/TenantTabs";
-import { InviteTenantDialog } from "./tenant/communications/InviteTenantDialog";
 import type { Tenant } from "@/types/tenant";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/components/AuthProvider";
@@ -21,8 +20,6 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const { t } = useLocale();
   const isMobile = useIsMobile();
   const isTenantUser = user?.id === tenant.tenant_profile_id;
-  
-  const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
   // Préchargement des données
   React.useEffect(() => {
@@ -32,10 +29,12 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
       queryKey: ["tenant_documents", tenant.id],
       queryFn: async () => tenant.documents
     });
+    // Précharger les paiements
     queryClient.prefetchQuery({
       queryKey: ["tenant_payments", tenant.id],
       queryFn: async () => tenant.paymentHistory
     });
+    // Précharger les demandes de maintenance
     queryClient.prefetchQuery({
       queryKey: ["tenant_maintenance", tenant.id],
       queryFn: async () => tenant.maintenanceRequests
@@ -57,36 +56,17 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
   };
 
-  const handleInviteClick = () => {
-    setIsInviteDialogOpen(true);
-  };
-
-  const handleInviteClose = () => {
-    setIsInviteDialogOpen(false);
-    handleDataUpdate(); // Refresh data after invitation
-  };
-
   if (user && !isTenantUser && user.email === tenant.email) {
     return <UnlinkedTenantProfile tenant={tenant} onProfileLinked={handleDataUpdate} />;
   }
 
   return (
     <div className={`space-y-6 ${isMobile ? 'pb-10' : ''}`}>
-      <TenantInfoCard 
-        tenant={tenant} 
-        onInviteClick={handleInviteClick}
-      />
+      <TenantInfoCard tenant={tenant} />
       <TenantTabs 
         tenant={tenant} 
         isTenantUser={isTenantUser} 
         handleDataUpdate={handleDataUpdate} 
-      />
-      
-      <InviteTenantDialog
-        isOpen={isInviteDialogOpen}
-        onClose={handleInviteClose}
-        tenantId={tenant.id}
-        defaultEmail={tenant.email}
       />
     </div>
   );

@@ -11,8 +11,6 @@ const TenantDashboardPage = () => {
   const { isAuthenticated, loading, user } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
-  console.log('TenantDashboard - Auth state:', { isAuthenticated, loading, user });
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
@@ -22,18 +20,10 @@ const TenantDashboardPage = () => {
   }
 
   if (!isAuthenticated) {
-    console.log('Not authenticated, redirecting to auth');
     return <Navigate to="/auth" replace />;
   }
 
-  // Vérifier si l'utilisateur est un locataire
-  const isTenantUser = user?.user_metadata?.is_tenant_user === true;
-  
-  console.log('Is tenant user:', isTenantUser);
-  console.log('User metadata:', user?.user_metadata);
-
-  if (user && !isTenantUser) {
-    console.log('Not a tenant user, redirecting to dashboard');
+  if (user && !user.user_metadata?.is_tenant_user) {
     return <Navigate to="/dashboard" replace />;
   }
 

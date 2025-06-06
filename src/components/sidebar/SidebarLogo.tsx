@@ -13,11 +13,11 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("Sidebar logo clicked - navigating to dashboard");
+    console.log("Sidebar logo clicked - navigating to landing page");
     
     try {
-      // Navigate to dashboard page
-      navigate('/dashboard', { replace: false });
+      // Navigate to landing page
+      navigate('/', { replace: true });
     } catch (error) {
       console.error("Logo navigation error:", error);
     }

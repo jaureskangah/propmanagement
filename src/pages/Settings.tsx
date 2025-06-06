@@ -1,149 +1,144 @@
 
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { useAuth } from "@/components/AuthProvider";
 import AppSidebar from "@/components/AppSidebar";
-import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
+import { useTheme } from "next-themes";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import { ProfileSection } from "@/components/settings/ProfileSection";
 import { SecuritySection } from "@/components/settings/SecuritySection";
 import { NotificationsSection } from "@/components/settings/NotificationsSection";
 import { AppearanceSection } from "@/components/settings/AppearanceSection";
 import { LanguageSection } from "@/components/settings/LanguageSection";
-import { useAuth } from '@/components/AuthProvider';
-import { useTheme } from "next-themes";
-import { motion } from "framer-motion";
+import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
+import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
-import { useToast } from '@/hooks/use-toast';
-import { Profile } from '@/types/profile';
 
-const Settings = () => {
-  const { isAuthenticated, loading, user } = useAuth();
+export default function Settings() {
+  const { user } = useAuth();
   const { theme, setTheme } = useTheme();
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
+  const { t } = useLocale();
+  const isMobile = useIsMobile();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // Fetch profile data
-  const { data: profile, isLoading: profileLoading } = useQuery({
+  // Add this effect to ensure theme is available after component mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const { data: profile, isLoading, refetch } = useQuery({
     queryKey: ['profile', user?.id],
     queryFn: async () => {
-      if (!user?.id) return null;
-      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('id', user.id)
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data as Profile | null;
-    },
-    enabled: !!user?.id,
-  });
-
-  // Profile update mutation
-  const profileUpdateMutation = useMutation({
-    mutationFn: async (updates: Partial<Profile>) => {
-      if (!user?.id) throw new Error('User not authenticated');
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .update(updates)
-        .eq('id', user.id)
-        .select()
+        .eq('id', user?.id)
         .single();
-      
+
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile', user?.id] });
-      toast({
-        title: "Profil mis à jour",
-        description: "Vos informations ont été sauvegardées avec succès.",
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour le profil.",
-        variant: "destructive",
-      });
-    },
+    enabled: !!user?.id
   });
 
-  const handleProfileUpdate = () => {
-    queryClient.invalidateQueries({ queryKey: ['profile', user?.id] });
+  // Log the current theme state for debugging
+  useEffect(() => {
+    if (mounted) {
+      console.log("Current theme in Settings page:", theme);
+    }
+  }, [theme, mounted]);
+
+  const updateNotificationPreference = async (type: 'push_notifications' | 'email_updates', value: boolean) => {
+    if (!user) return;
+
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ [type]: value })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: t('preferencesUpdated'),
+        description: t('preferencesUpdatedMessage')
+      });
+
+      refetch();
+    } catch (error) {
+      toast({
+        title: t('error'),
+        description: t('preferencesUpdateError'),
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleNotificationUpdate = async (type: 'push_notifications' | 'email_updates', value: boolean) => {
-    await profileUpdateMutation.mutateAsync({ [type]: value });
-  };
-
-  const handleThemeChange = (isDark: boolean) => {
-    setTheme(isDark ? 'dark' : 'light');
-  };
-
-  if (loading) {
+  if (!mounted) {
+    // Return placeholder UI if theme is not yet available
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
+      <div className="min-h-screen bg-background">
+        <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+        <div className={cn(
+          "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+          sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+        )}>
+          <div className="container max-w-5xl mx-auto animate-pulse">
+            <div className="h-10 w-64 bg-muted rounded-md mb-8 dark:bg-gray-800"></div>
+            <div className="space-y-8">
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+              <div className="h-48 bg-muted rounded-lg dark:bg-gray-800"></div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
-  }
-
-  // Vérifier si l'utilisateur est un locataire pour afficher la bonne sidebar
-  const isTenantUser = user?.user_metadata?.is_tenant_user === true;
-
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar 
-        isTenant={isTenantUser} 
-        isCollapsed={sidebarCollapsed} 
-        setIsCollapsed={setSidebarCollapsed} 
-      />
-      <main className={cn(
-        "pt-16 md:pt-8 transition-all duration-300",
+    <div className="min-h-screen bg-background dark:bg-gray-950">
+      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
         sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
       )}>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="pb-8"
-        >
-          <div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-6 max-w-4xl">
-            <SettingsPageHeader userEmail={user?.email} />
-            
-            <div className="grid gap-6">
-              <ProfileSection 
-                profile={profile}
-                isLoading={profileLoading}
-                userEmail={user?.email}
-                onProfileUpdate={handleProfileUpdate}
-              />
-              <SecuritySection />
-              <NotificationsSection 
-                profile={profile}
-                isLoading={profileLoading}
-                onUpdatePreference={handleNotificationUpdate}
-              />
-              <AppearanceSection 
-                theme={theme}
-                onThemeChange={handleThemeChange}
-              />
-              <LanguageSection />
-            </div>
+        <div className="container max-w-5xl mx-auto">
+          <SettingsPageHeader userEmail={user?.email} />
+
+          <div className="space-y-8 pb-16">
+            <ProfileSection
+              profile={profile}
+              isLoading={isLoading}
+              userEmail={user?.email}
+              onProfileUpdate={refetch}
+            />
+
+            <SecuritySection />
+
+            <LanguageSection />
+
+            <NotificationsSection
+              profile={profile}
+              isLoading={isLoading}
+              onUpdatePreference={updateNotificationPreference}
+            />
+
+            <AppearanceSection
+              theme={theme}
+              onThemeChange={(checked) => {
+                console.log("Settings page changing theme to:", checked ? "dark" : "light");
+                setTheme(checked ? "dark" : "light");
+              }}
+            />
           </div>
-        </motion.div>
-      </main>
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Settings;
+}

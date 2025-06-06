@@ -11,10 +11,9 @@ import { TenantNotes } from "./TenantNotes";
 
 interface TenantInfoCardProps {
   tenant: Tenant;
-  onInviteClick?: () => void;
 }
 
-export const TenantInfoCard = ({ tenant, onInviteClick }: TenantInfoCardProps) => {
+export const TenantInfoCard = ({ tenant }: TenantInfoCardProps) => {
   const { t } = useLocale();
   const { toast } = useToast();
   
@@ -42,7 +41,7 @@ export const TenantInfoCard = ({ tenant, onInviteClick }: TenantInfoCardProps) =
 
   return (
     <Card className="shadow-sm overflow-hidden border-primary/10 transition-all duration-300 hover:shadow-md dark:bg-gray-900">
-      <TenantHeader tenant={tenant} onInviteClick={onInviteClick} />
+      <TenantHeader tenant={tenant} />
 
       <div className="p-0">
         <TenantSecurityDeposit 

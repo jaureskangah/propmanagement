@@ -22,6 +22,7 @@ export interface TenantData {
   fullName?: string;
 }
 
+// Interface pour la structure de données des propriétés
 interface PropertyObject {
   name: string;
   [key: string]: any;
@@ -40,28 +41,21 @@ export const useTenantData = () => {
     } else {
       setIsLoading(false);
     }
-  }, [user, language]);
+  }, [user, language]); // Réagir aux changements de langue
 
   const fetchTenantData = async () => {
     try {
       setIsLoading(true);
       
       console.log("Fetching tenant data for user_id:", user?.id);
-      console.log("User metadata:", user?.user_metadata);
       
       // D'abord récupérer les données du profil
-      const { data: profileData, error: profileError } = await supabase
+      const { data: profileData } = await supabase
         .from('profiles')
-        .select('first_name, last_name, is_tenant_user')
+        .select('first_name, last_name')
         .eq('id', user?.id)
         .maybeSingle();
         
-      console.log("Profile data:", profileData);
-      
-      if (profileError) {
-        console.error("Profile error:", profileError);
-      }
-
       // Puis récupérer les données du locataire avec la jointure sur properties
       const { data: tenant, error } = await supabase
         .from('tenants')
@@ -81,17 +75,7 @@ export const useTenantData = () => {
 
       if (error) {
         console.error("Error fetching tenant data:", error);
-        
-        // Si pas de données locataire trouvées et que c'est un utilisateur locataire
-        if (error.code === 'PGRST116' && (user?.user_metadata?.is_tenant_user || profileData?.is_tenant_user)) {
-          console.log("No tenant data found for tenant user - this might be a new account");
-          toast({
-            title: t('info') || 'Information',
-            description: "Votre profil locataire est en cours de configuration. Contactez votre propriétaire si le problème persiste.",
-          });
-        } else {
-          throw error;
-        }
+        throw error;
       }
 
       console.log("Tenant data fetched:", tenant);
@@ -102,7 +86,7 @@ export const useTenantData = () => {
         // Utiliser le nom du profil si disponible, sinon utiliser le nom du locataire
         const displayName = profileData?.first_name && profileData?.last_name 
           ? `${profileData.first_name} ${profileData.last_name}` 
-          : tenant.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
+          : tenant.name || user?.user_metadata?.full_name;
         
         // Traitement amélioré des données de propriété
         let propertyData = null;
@@ -111,12 +95,14 @@ export const useTenantData = () => {
           console.log("Properties data type:", typeof tenant.properties);
           
           if (typeof tenant.properties === 'object') {
+            // Cas 1: properties est un objet direct avec une propriété name
             if (!Array.isArray(tenant.properties)) {
               const props = tenant.properties as PropertyObject;
               if (props && 'name' in props) {
                 propertyData = { name: props.name };
               }
             } 
+            // Cas 2: properties est un tableau d'objets
             else if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
               const firstProperty = tenant.properties[0] as PropertyObject;
               if (firstProperty && 'name' in firstProperty) {
@@ -124,6 +110,7 @@ export const useTenantData = () => {
               }
             }
           } else if (typeof tenant.properties === 'string') {
+            // Cas 3: properties peut être une chaîne simple
             propertyData = { name: tenant.properties };
           }
         }
@@ -138,9 +125,6 @@ export const useTenantData = () => {
           fullName: displayName,
           properties: propertyData
         });
-      } else {
-        // Aucune donnée locataire trouvée
-        setTenant(null);
       }
       
       setIsLoading(false);
@@ -148,8 +132,8 @@ export const useTenantData = () => {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
       toast({
-        title: t('error') || 'Erreur',
-        description: t('errorLoadingTenantData') || 'Erreur lors du chargement des données locataire',
+        title: t('error'),
+        description: t('errorLoadingTenantData'),
         variant: "destructive",
       });
     }

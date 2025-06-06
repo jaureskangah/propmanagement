@@ -1,7 +1,5 @@
 
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import '@testing-library/jest-dom';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { CommunicationsTabs } from '../CommunicationsTabs';
 import { Communication } from '@/types/tenant';
 
@@ -63,8 +61,8 @@ describe('CommunicationsTabs', () => {
     setSelectedType: jest.fn(),
     selectedDate: '',
     setSelectedDate: jest.fn(),
-    sortOrder: "newest" as const,
-    setSortOrder: jest.fn(),
+    sortOrder: "newest" as const,  // Add the missing sortOrder property
+    setSortOrder: jest.fn(),       // Add the missing setSortOrder property
     unreadCount: 1,
     urgentCount: 1,
     showAll: false,
@@ -79,44 +77,42 @@ describe('CommunicationsTabs', () => {
   };
 
   it('renders tab triggers with correct counts', () => {
-    const { getByText } = render(<CommunicationsTabs {...mockProps} />);
+    render(<CommunicationsTabs {...mockProps} />);
     
-    expect(getByText('All Messages')).toBeInTheDocument();
-    expect(getByText('Urgent')).toBeInTheDocument();
-    expect(getByText('Unread')).toBeInTheDocument();
+    expect(screen.getByText('All Messages')).toBeInTheDocument();
+    expect(screen.getByText('Urgent')).toBeInTheDocument();
+    expect(screen.getByText('Unread')).toBeInTheDocument();
     
     // Check badge counts
-    expect(getByText('2')).toBeInTheDocument(); // Total communication count
-    expect(getByText('1')).toBeInTheDocument(); // Unread count (first occurrence)
+    expect(screen.getByText('2')).toBeInTheDocument(); // Total communication count
+    expect(screen.getAllByText('1').length).toBe(2); // Unread and urgent counts
   });
 
   it('renders CommunicationFilters with correct props', () => {
-    const { getByTestId } = render(<CommunicationsTabs {...mockProps} />);
+    render(<CommunicationsTabs {...mockProps} />);
     
-    const filters = getByTestId('communication-filters');
+    const filters = screen.getByTestId('communication-filters');
     expect(filters).toBeInTheDocument();
     expect(filters).toHaveTextContent('Filters: search=, type=none, date=');
   });
 
   it('renders CommunicationsTab for each tab content', () => {
-    const { getAllByTestId } = render(<CommunicationsTabs {...mockProps} />);
+    render(<CommunicationsTabs {...mockProps} />);
     
     // All tabs should be rendered, but only the active one should be visible
-    const tabsContent = getAllByTestId('communications-tab');
+    const tabsContent = screen.getAllByTestId('communications-tab');
     expect(tabsContent.length).toBe(3); // Three tabs: all, urgent, unread
   });
 
-  it('calls setActiveTab when a tab is clicked', async () => {
-    const user = userEvent.setup();
-    
-    const { getByText } = render(<CommunicationsTabs {...mockProps} />);
+  it('calls setActiveTab when a tab is clicked', () => {
+    render(<CommunicationsTabs {...mockProps} />);
     
     // Click on Urgent tab
-    await user.click(getByText('Urgent'));
+    fireEvent.click(screen.getByText('Urgent'));
     expect(mockProps.setActiveTab).toHaveBeenCalledWith('urgent');
     
     // Click on Unread tab
-    await user.click(getByText('Unread'));
+    fireEvent.click(screen.getByText('Unread'));
     expect(mockProps.setActiveTab).toHaveBeenCalledWith('unread');
   });
 });

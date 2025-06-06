@@ -1,6 +1,5 @@
 
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
 import { CommunicationsTab } from '../CommunicationsTab';
 import { Communication } from '@/types/tenant';
 
@@ -66,18 +65,18 @@ describe('CommunicationsTab', () => {
   };
 
   it('renders CommunicationsListContainer with correct props', () => {
-    const { getByTestId } = render(<CommunicationsTab {...mockProps} />);
+    render(<CommunicationsTab {...mockProps} />);
     
-    const listContainer = getByTestId('communications-list-container');
+    const listContainer = screen.getByTestId('communications-list-container');
     expect(listContainer).toBeInTheDocument();
     expect(listContainer).toHaveTextContent('Communications: 2');
     expect(listContainer).toHaveTextContent('Groups: 2');
   });
 
   it('renders ShowMoreLessButton with correct props', () => {
-    const { getByTestId } = render(<CommunicationsTab {...mockProps} />);
+    render(<CommunicationsTab {...mockProps} />);
     
-    const button = getByTestId('show-more-less-button');
+    const button = screen.getByTestId('show-more-less-button');
     expect(button).toBeInTheDocument();
     expect(button).toHaveTextContent('ShowMoreLessButton: false');
     expect(button).toHaveTextContent('total: 2');

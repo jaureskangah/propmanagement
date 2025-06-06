@@ -1,17 +1,15 @@
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Building, CheckCircle, AlertCircle, XCircle, UserPlus } from "lucide-react";
+import { Building, CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
 import { cn } from "@/lib/utils";
 
 interface TenantHeaderProps {
   tenant: Tenant;
-  onInviteClick?: () => void;
 }
 
-export const TenantHeader = ({ tenant, onInviteClick }: TenantHeaderProps) => {
+export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   
   // Debugging logs
@@ -69,9 +67,6 @@ export const TenantHeader = ({ tenant, onInviteClick }: TenantHeaderProps) => {
     return t('list.noProperty');
   };
 
-  // Vérifier si le locataire n'a pas encore de profil lié
-  const canInvite = !tenant.tenant_profile_id && onInviteClick;
-
   return (
     <div className={cn(
       "p-4 sm:p-6 border-b",
@@ -80,7 +75,7 @@ export const TenantHeader = ({ tenant, onInviteClick }: TenantHeaderProps) => {
       getLeaseBadgeVariant() === "destructive" ? "bg-red-50 dark:bg-red-950/20" : "",
     )}>
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-        <div className="space-y-1 flex-1">
+        <div className="space-y-1">
           <h2 className="text-xl sm:text-2xl font-bold flex flex-wrap items-center gap-3">
             {tenant.name}
             <Badge variant={getLeaseBadgeVariant()} className={cn(
@@ -98,20 +93,6 @@ export const TenantHeader = ({ tenant, onInviteClick }: TenantHeaderProps) => {
             {getPropertyName()} - {t('list.unitLabel')} {tenant.unit_number}
           </p>
         </div>
-        
-        {canInvite && (
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={onInviteClick}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <UserPlus className="h-4 w-4" />
-              Inviter le locataire
-            </Button>
-          </div>
-        )}
       </div>
     </div>
   );
