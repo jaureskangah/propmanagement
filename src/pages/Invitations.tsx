@@ -84,6 +84,8 @@ const Invitations = () => {
 
   const handleResendInvitation = async (invitation: Invitation) => {
     try {
+      console.log("Resending invitation for:", invitation.email, "to tenant ID:", invitation.tenant_id);
+      
       // Générer un nouveau token et mettre à jour l'invitation
       const newToken = crypto.randomUUID();
       const expiresAt = new Date();
@@ -99,6 +101,66 @@ const Invitations = () => {
         .eq('id', invitation.id);
 
       if (error) throw error;
+      
+      console.log("Invitation updated successfully, now sending email");
+      
+      // Récupérer les données du locataire pour l'email
+      const { data: tenantData, error: tenantError } = await supabase
+        .from('tenants')
+        .select('name, email')
+        .eq('id', invitation.tenant_id)
+        .single();
+
+      if (tenantError) {
+        console.error("Error fetching tenant data:", tenantError);
+        throw new Error("Impossible de récupérer les données du locataire");
+      }
+      
+      // Appeler la fonction Edge pour envoyer l'email
+      try {
+        console.log("Calling send-tenant-email edge function");
+        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
+          body: {
+            tenantId: invitation.tenant_id,
+            subject: "Nouvelle invitation à rejoindre l'espace locataire",
+            content: `
+              <p>Bonjour ${tenantData.name},</p>
+              <p>Vous avez reçu une nouvelle invitation à rejoindre l'espace locataire de votre propriété.</p>
+              <p>Pour créer votre compte et accéder à vos informations, veuillez cliquer sur le lien ci-dessous :</p>
+              <p><a href="${window.location.origin}/signup?invitation=true">Créer mon compte</a></p>
+              <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités de l'espace locataire.</p>
+              <p>Cordialement,<br>Votre équipe de gestion immobilière</p>
+            `,
+            category: 'invitation'
+          }
+        });
+
+        console.log("Email function response:", emailData);
+
+        if (emailError) {
+          console.error("Error sending invitation email:", emailError);
+          console.error("Error details:", emailError.message, emailError.stack);
+          
+          toast({
+            title: t('warning'),
+            description: "L'invitation a été mise à jour mais l'email n'a pas pu être envoyé automatiquement",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        console.log("Email sent successfully");
+      } catch (emailError: any) {
+        console.error("Error in resend email process:", emailError);
+        console.error("Error details:", emailError.message, emailError.stack);
+        
+        toast({
+          title: t('warning'),
+          description: "L'invitation a été mise à jour mais l'email n'a pas pu être envoyé",
+          variant: "destructive",
+        });
+        return;
+      }
 
       toast({
         title: t('success'),
