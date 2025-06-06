@@ -4,6 +4,7 @@ import { useAuth } from './components/AuthProvider';
 import NotFound from './pages/NotFound';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import TenantSignup from './pages/TenantSignup';
 import Dashboard from './pages/Dashboard';
 import Vendors from './pages/Vendors';
 import AddVendor from './pages/AddVendor';
@@ -36,6 +37,7 @@ function App() {
       {/* Public Routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/tenant-signup" element={<TenantSignup />} />
       <Route path="/auth" element={<AuthPage />} />
       
       {/* Landing Page - Accessible à tous */}

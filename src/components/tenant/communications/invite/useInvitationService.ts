@@ -48,6 +48,7 @@ export const useInvitationService = (tenantId: string, onClose: () => void) => {
       
       let invitationCreated = false;
       let invitationId = '';
+      let invitationToken = '';
       
       // Si une invitation active existe, mettre à jour cette invitation au lieu d'en créer une nouvelle
       if (existingInvites) {
@@ -67,6 +68,7 @@ export const useInvitationService = (tenantId: string, onClose: () => void) => {
         if (updateError) throw updateError;
         invitationCreated = true;
         invitationId = existingInvites.id;
+        invitationToken = token;
       } else {
         // Sinon, créer une nouvelle invitation
         const token = crypto.randomUUID();
@@ -89,11 +91,18 @@ export const useInvitationService = (tenantId: string, onClose: () => void) => {
         if (error) throw error;
         invitationCreated = true;
         invitationId = newInvite.id;
+        invitationToken = newInvite.token;
       }
 
       // Si l'invitation a été créée/mise à jour avec succès, envoyer l'email
       if (invitationCreated) {
         console.log("Sending invitation email to:", email);
+        
+        // Notification d'envoi en cours
+        toast({
+          title: "Envoi en cours",
+          description: `Envoi de l'invitation à ${email}...`,
+        });
         
         try {
           const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
@@ -104,7 +113,7 @@ export const useInvitationService = (tenantId: string, onClose: () => void) => {
                 <p>Bonjour ${tenantData.name},</p>
                 <p>Vous avez été invité(e) à rejoindre l'espace locataire de votre propriété.</p>
                 <p>Pour créer votre compte et accéder à vos informations, veuillez cliquer sur le lien ci-dessous :</p>
-                <p><a href="${window.location.origin}/signup?invitation=true">Créer mon compte</a></p>
+                <p><a href="${window.location.origin}/tenant-signup?invitation=${invitationToken}">Créer mon compte</a></p>
                 <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités de l'espace locataire.</p>
                 <p>Cordialement,<br>Votre équipe de gestion immobilière</p>
               `,
@@ -126,8 +135,8 @@ export const useInvitationService = (tenantId: string, onClose: () => void) => {
             console.log("Invitation email sent successfully");
             
             toast({
-              title: "Invitation envoyée",
-              description: "Le locataire recevra un email avec les instructions pour créer son compte",
+              title: "Invitation envoyée avec succès",
+              description: `L'invitation a été envoyée à ${email}`,
             });
           }
         } catch (emailError: any) {
