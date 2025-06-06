@@ -10,52 +10,84 @@ export const usePaymentsAndDocuments = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
-  const fetchPayments = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
+  const fetchPayments = async (tenantId: string) => {
     try {
+      console.log("Fetching payments for tenant:", tenantId);
       const { data, error } = await supabase
         .from('tenant_payments')
         .select('*')
-        .eq('tenant_id', user.id)
+        .eq('tenant_id', tenantId)
         .order('payment_date', { ascending: false });
 
       if (error) throw error;
       
+      console.log("Payments fetched:", data);
       setPayments(data || []);
     } catch (error) {
       console.error('Error fetching payments:', error);
-    } finally {
-      setIsLoading(false);
+      setPayments([]);
     }
   };
 
-  const fetchDocuments = async () => {
-    if (!user) return;
-    
-    setIsLoading(true);
+  const fetchDocuments = async (tenantId: string) => {
     try {
+      console.log("Fetching documents for tenant:", tenantId);
       const { data, error } = await supabase
         .from('tenant_documents')
         .select('*')
-        .eq('tenant_id', user.id)
+        .eq('tenant_id', tenantId)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
       
+      console.log("Documents fetched:", data);
       setDocuments(data || []);
     } catch (error) {
       console.error('Error fetching documents:', error);
-    } finally {
-      setIsLoading(false);
+      setDocuments([]);
     }
   };
 
   const fetchPaymentsAndDocuments = async () => {
+    if (!user) return;
+    
     setIsLoading(true);
-    await Promise.all([fetchPayments(), fetchDocuments()]);
-    setIsLoading(false);
+    try {
+      console.log("Fetching tenant data for user:", user.id);
+      
+      // First get the tenant ID
+      const { data: tenantData, error: tenantError } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('tenant_profile_id', user.id)
+        .maybeSingle();
+
+      if (tenantError) {
+        console.error('Error fetching tenant data:', tenantError);
+        setPayments([]);
+        setDocuments([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const tenantId = tenantData?.id;
+      if (!tenantId) {
+        console.log('No tenant found for user:', user.id);
+        setPayments([]);
+        setDocuments([]);
+        setIsLoading(false);
+        return;
+      }
+      
+      console.log("Found tenant ID:", tenantId);
+      await Promise.all([fetchPayments(tenantId), fetchDocuments(tenantId)]);
+    } catch (error) {
+      console.error('Error in fetchPaymentsAndDocuments:', error);
+      setPayments([]);
+      setDocuments([]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

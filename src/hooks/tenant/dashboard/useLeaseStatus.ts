@@ -1,38 +1,26 @@
 
-import { differenceInDays } from "date-fns";
-
-export interface LeaseStatus {
-  daysLeft: number;
-  status: 'active' | 'expiring' | 'expired';
-}
+import { useMemo } from 'react';
 
 export const useLeaseStatus = (leaseEnd?: string) => {
-  const calculateLeaseStatus = (endDate: string): LeaseStatus => {
+  return useMemo(() => {
+    if (!leaseEnd) {
+      return { daysLeft: 0, status: 'expired' as const };
+    }
+
+    const endDate = new Date(leaseEnd);
     const today = new Date();
-    const end = new Date(endDate);
-    const daysLeft = differenceInDays(end, today);
-    
+    const diffTime = endDate.getTime() - today.getTime();
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
     let status: 'active' | 'expiring' | 'expired';
     if (daysLeft < 0) {
       status = 'expired';
-    } else if (daysLeft < 30) {
+    } else if (daysLeft <= 30) {
       status = 'expiring';
     } else {
       status = 'active';
     }
 
-    return { daysLeft: Math.abs(daysLeft), status };
-  };
-
-  // Calculate status if leaseEnd is provided
-  let status: LeaseStatus = { daysLeft: 0, status: 'active' };
-  if (leaseEnd) {
-    status = calculateLeaseStatus(leaseEnd);
-  }
-
-  return {
-    calculateLeaseStatus,
-    daysLeft: status.daysLeft,
-    status: status.status
-  };
+    return { daysLeft: Math.max(0, daysLeft), status };
+  }, [leaseEnd]);
 };
