@@ -1,11 +1,12 @@
 
 import React from "react";
-import { Users, Info } from "lucide-react";
+import { Users, Info, UserPlus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantActions } from "@/components/tenant/TenantActions";
 import { Button } from "@/components/ui/button";
-import { UserPlus } from "lucide-react";
+import { useInviteDialog } from "@/hooks/communications/useInviteDialog";
+import { InviteTenantDialog } from "@/components/tenant/communications/InviteTenantDialog";
 
 interface TenantsHeaderProps {
   tenantCount: number;
@@ -15,6 +16,7 @@ interface TenantsHeaderProps {
 
 export const TenantsHeader = ({ tenantCount, onAddClick, isMobile }: TenantsHeaderProps) => {
   const { t } = useLocale();
+  const { isInviteDialogOpen, openInviteDialog, closeInviteDialog } = useInviteDialog();
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
@@ -38,20 +40,40 @@ export const TenantsHeader = ({ tenantCount, onAddClick, isMobile }: TenantsHead
             {tenantCount} {tenantCount === 1 ? t('list.tenant') : t('list.tenants')}
           </Badge>
           
-          {isMobile ? (
+          <div className="flex items-center gap-2">
             <Button 
+              variant="outline" 
               size="sm" 
               className="flex items-center gap-1.5" 
-              onClick={onAddClick}
+              onClick={openInviteDialog}
             >
               <UserPlus className="h-4 w-4" />
-              {t('list.addTenant')}
+              {t('inviteTenant')}
             </Button>
-          ) : (
-            <TenantActions onAddClick={onAddClick} />
-          )}
+            
+            {isMobile ? (
+              <Button 
+                size="sm" 
+                className="flex items-center gap-1.5" 
+                onClick={onAddClick}
+              >
+                <UserPlus className="h-4 w-4" />
+                {t('list.addTenant')}
+              </Button>
+            ) : (
+              <TenantActions onAddClick={onAddClick} />
+            )}
+          </div>
         </div>
       </div>
+
+      {isInviteDialogOpen && (
+        <InviteTenantDialog
+          isOpen={isInviteDialogOpen}
+          onClose={closeInviteDialog}
+          tenantId="default-tenant-id"
+        />
+      )}
     </div>
   );
 };
