@@ -41,21 +41,31 @@ export const useTenantData = () => {
     } else {
       setIsLoading(false);
     }
-  }, [user, language]); // Réagir aux changements de langue
+  }, [user, language]);
 
   const fetchTenantData = async () => {
     try {
       setIsLoading(true);
       
       console.log("Fetching tenant data for user_id:", user?.id);
+      console.log("User metadata:", user?.user_metadata);
       
       // D'abord récupérer les données du profil
       const { data: profileData } = await supabase
         .from('profiles')
-        .select('first_name, last_name')
+        .select('first_name, last_name, is_tenant_user')
         .eq('id', user?.id)
         .maybeSingle();
         
+      console.log("Profile data:", profileData);
+      
+      // Vérifier si c'est bien un utilisateur locataire
+      if (!profileData?.is_tenant_user && !user?.user_metadata?.is_tenant_user) {
+        console.log("User is not a tenant user");
+        setIsLoading(false);
+        return;
+      }
+      
       // Puis récupérer les données du locataire avec la jointure sur properties
       const { data: tenant, error } = await supabase
         .from('tenants')
@@ -86,7 +96,7 @@ export const useTenantData = () => {
         // Utiliser le nom du profil si disponible, sinon utiliser le nom du locataire
         const displayName = profileData?.first_name && profileData?.last_name 
           ? `${profileData.first_name} ${profileData.last_name}` 
-          : tenant.name || user?.user_metadata?.full_name;
+          : tenant.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
         
         // Traitement amélioré des données de propriété
         let propertyData = null;
@@ -124,6 +134,14 @@ export const useTenantData = () => {
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
           properties: propertyData
+        });
+      } else {
+        console.log("No tenant data found for user:", user?.id);
+        // Si aucune donnée de locataire n'est trouvée, on peut quand même afficher un état approprié
+        toast({
+          title: t('error'),
+          description: "Aucune donnée de locataire trouvée. Veuillez contacter votre propriétaire.",
+          variant: "destructive",
         });
       }
       

@@ -22,6 +22,9 @@ export const TenantDashboard = () => {
     }
   }, [tenant, sectionOrder.length]);
 
+  console.log("TenantDashboard - tenant:", tenant);
+  console.log("TenantDashboard - isLoading:", isLoading);
+
   if (isLoading) {
     return <DashboardLoading />;
   }

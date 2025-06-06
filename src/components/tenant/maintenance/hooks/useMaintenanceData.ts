@@ -4,7 +4,6 @@ import { supabase } from "@/lib/supabase";
 import { MaintenanceRequest } from "@/types/tenant";
 import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
-import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const useMaintenanceData = () => {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
@@ -12,128 +11,90 @@ export const useMaintenanceData = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
   const { toast } = useToast();
-  const { t } = useLocale();
-
-  // Statistics based on current requests
-  const totalRequests = requests.length;
-  const pendingRequests = requests.filter(r => r.status === "Pending").length;
-  const resolvedRequests = requests.filter(r => r.status === "Resolved").length;
-
-  const fetchTenantId = async () => {
-    try {
-      const { data: tenant, error } = await supabase
-        .from('tenants')
-        .select('id')
-        .eq('tenant_profile_id', user?.id)
-        .maybeSingle();
-
-      if (error) throw error;
-      
-      if (tenant) {
-        console.log("Found tenant ID:", tenant.id);
-        setTenantId(tenant.id);
-      } else {
-        console.log("No tenant found for user:", user?.id);
-        toast({
-          title: t('error'),
-          description: t('notLinkedToTenant'),
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching tenant ID:', error);
-      toast({
-        title: t('error'),
-        description: t('errorLoadingTenant'),
-        variant: "destructive",
-      });
-    }
-  };
 
   const fetchMaintenanceRequests = async () => {
-    if (!tenantId) return;
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
     
+    setIsLoading(true);
     try {
-      console.log("Fetching maintenance requests for tenant ID:", tenantId);
+      console.log("useMaintenanceData - Fetching data for user:", user.id);
       
-      const { data, error } = await supabase
+      // First get the tenant ID
+      const { data: tenantData, error: tenantError } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('tenant_profile_id', user.id)
+        .maybeSingle();
+
+      if (tenantError) {
+        console.error('Error fetching tenant data:', tenantError);
+        setTenantId(null);
+        setRequests([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const currentTenantId = tenantData?.id;
+      console.log("useMaintenanceData - Found tenant ID:", currentTenantId);
+      
+      if (!currentTenantId) {
+        console.log('useMaintenanceData - No tenant found for user:', user.id);
+        setTenantId(null);
+        setRequests([]);
+        setIsLoading(false);
+        return;
+      }
+      
+      setTenantId(currentTenantId);
+      
+      // Then fetch maintenance requests
+      const { data: maintenanceData, error: maintenanceError } = await supabase
         .from('maintenance_requests')
         .select('*')
-        .eq('tenant_id', tenantId)
+        .eq('tenant_id', currentTenantId)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (maintenanceError) {
+        console.error("Error fetching maintenance requests:", maintenanceError);
+        throw maintenanceError;
+      }
       
-      console.log("Fetched maintenance requests:", data);
-      setRequests(data || []);
-      setIsLoading(false);
+      console.log("useMaintenanceData - Maintenance requests fetched:", maintenanceData);
+      setRequests(maintenanceData || []);
+      
     } catch (error) {
-      console.error('Error fetching maintenance requests:', error);
+      console.error('useMaintenanceData - Error:', error);
       toast({
-        title: t('error'),
-        description: t('errorLoadingRequests'),
+        title: "Erreur",
+        description: "Impossible de charger les demandes de maintenance",
         variant: "destructive",
       });
+      setRequests([]);
+      setTenantId(null);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const setupRealtimeSubscription = () => {
-    if (!tenantId) return;
-    
-    const channel = supabase
-      .channel('maintenance_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'maintenance_requests',
-          filter: `tenant_id=eq.${tenantId}`
-        },
-        (payload) => {
-          console.log("Realtime notification received:", payload);
-          
-          // Show toast notification for status updates
-          if (payload.eventType === 'UPDATE' && payload.new.status !== payload.old.status) {
-            toast({
-              title: t('maintenanceNotification'),
-              description: `${t('maintenanceRequestTitle')} "${payload.new.issue}" ${t('statusChanged')} ${payload.new.status}`,
-            });
-          }
-          
-          // Always refresh data after any change
-          fetchMaintenanceRequests();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  };
-
   useEffect(() => {
-    if (user) {
-      fetchTenantId();
-    }
+    fetchMaintenanceRequests();
   }, [user]);
 
-  useEffect(() => {
-    if (tenantId) {
-      fetchMaintenanceRequests();
-      const unsubscribe = setupRealtimeSubscription();
-      return unsubscribe;
-    }
-  }, [tenantId]);
+  // Calculate stats
+  const totalRequests = requests.length;
+  const pendingRequests = requests.filter(req => req.status === 'Pending').length;
+  const resolvedRequests = requests.filter(req => req.status === 'Resolved').length;
 
   return {
     requests,
     tenantId,
-    isLoading,
     totalRequests,
     pendingRequests,
     resolvedRequests,
+    isLoading,
     fetchMaintenanceRequests
   };
 };

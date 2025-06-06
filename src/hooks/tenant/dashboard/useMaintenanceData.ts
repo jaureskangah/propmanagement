@@ -17,23 +17,31 @@ export const useMaintenanceData = () => {
     
     setIsLoading(true);
     try {
+      console.log("Fetching maintenance requests for user:", user.id);
+      
       // Fetch tenant data to get the tenant_id
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select('id')
         .eq('tenant_profile_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (tenantError) {
         console.error('Error fetching tenant data:', tenantError);
+        setMaintenanceRequests([]);
+        setIsLoading(false);
         return;
       }
 
       const tenantId = tenantData?.id;
       if (!tenantId) {
-        console.error('No tenant found for user:', user.id);
+        console.log('No tenant found for user:', user.id);
+        setMaintenanceRequests([]);
+        setIsLoading(false);
         return;
       }
+      
+      console.log("Found tenant ID:", tenantId);
       
       const { data, error } = await supabase
         .from('maintenance_requests')
@@ -41,7 +49,12 @@ export const useMaintenanceData = () => {
         .eq('tenant_id', tenantId)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching maintenance requests:", error);
+        throw error;
+      }
+      
+      console.log("Maintenance requests fetched:", data);
       
       // Check for unread/unnotified updates
       const hasUnnotified = data?.some(req => req.tenant_notified === false);
@@ -50,6 +63,7 @@ export const useMaintenanceData = () => {
       setMaintenanceRequests(data || []);
     } catch (error) {
       console.error('Error fetching maintenance requests:', error);
+      setMaintenanceRequests([]);
       toast({
         title: "Erreur",
         description: "Impossible de charger les demandes de maintenance",
