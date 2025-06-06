@@ -49,13 +49,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Send email
     const emailResponse = await resend.emails.send({
-      from: "Property Management <onboarding@resend.dev>",
+      from: "PropManagement <contact@propmanagement.app>", // Using your verified domain
       to: [tenant.email],
       subject: subject,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #333;">${subject}</h2>
-          <p style="color: #666; line-height: 1.6;">${content}</p>
+          <div style="color: #666; line-height: 1.6;">${content}</div>
           <hr style="border: 1px solid #eee; margin: 20px 0;" />
           <p style="color: #888; font-size: 0.9em;">
             This message was sent via our property management system.
