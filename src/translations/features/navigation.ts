@@ -23,6 +23,7 @@ export const enNavigation: NavigationTranslations = {
   finances: "Finances",
   costs: "Costs",
   getSupport: "Get Support",
+  invitations: "Invitations",
 };
 
 export const frNavigation: NavigationTranslations = {
@@ -47,4 +48,5 @@ export const frNavigation: NavigationTranslations = {
   finances: "Finances",
   costs: "Coûts",
   getSupport: "Obtenir de l'aide",
+  invitations: "Invitations",
 };

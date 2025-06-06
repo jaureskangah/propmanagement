@@ -1,3 +1,4 @@
+
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthProvider';
 import NotFound from './pages/NotFound';
@@ -25,6 +26,7 @@ import Settings from './pages/Settings';
 import LandingPage from './pages/LandingPage';
 import AddMaintenanceRequest from './pages/AddMaintenanceRequest';
 import DocumentsPage from './pages/tenant/TenantDocuments';
+import Invitations from './pages/Invitations';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -52,7 +54,7 @@ function App() {
       <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
       <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
       <Route path="/tenants" element={isAuthenticated ? <Tenants /> : <Navigate to="/login" />} />
-      
+      <Route path="/invitations" element={isAuthenticated ? <Invitations /> : <Navigate to="/login" />} />
       
       <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
       <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
