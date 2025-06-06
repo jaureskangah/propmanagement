@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQueryCache } from "@/hooks/useQueryCache";
 import { useToast } from "@/hooks/use-toast";
@@ -218,14 +219,33 @@ export const useTenantPage = () => {
     if (!selectedTenantData) return;
     
     try {
-      const { error } = await supabase
+      console.log("Starting tenant deletion process for ID:", selectedTenantData.id);
+      
+      // D'abord, supprimer toutes les invitations associées au locataire
+      const { error: invitationsError } = await supabase
+        .from("tenant_invitations")
+        .delete()
+        .eq("tenant_id", selectedTenantData.id);
+        
+      if (invitationsError) {
+        console.error("Error deleting tenant invitations:", invitationsError);
+        throw invitationsError;
+      }
+      
+      console.log("Tenant invitations deleted successfully");
+      
+      // Ensuite, supprimer le locataire
+      const { error: tenantError } = await supabase
         .from("tenants")
         .delete()
         .eq("id", selectedTenantData.id);
         
-      if (error) {
-        throw error;
+      if (tenantError) {
+        console.error("Error deleting tenant:", tenantError);
+        throw tenantError;
       }
+      
+      console.log("Tenant deleted successfully");
       
       // Invalidate cache to refresh data
       refetch();
