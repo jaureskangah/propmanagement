@@ -43,7 +43,7 @@ describe('ShowMoreLessButton', () => {
     );
     
     const button = getByRole('button');
-    expect(button).toHaveTextContent(/Show More/i);
+    expect(button.textContent).toContain('Show More');
   });
 
   it('renders "Show Less" button when showing all and total count is greater than initial display count', () => {
@@ -57,7 +57,7 @@ describe('ShowMoreLessButton', () => {
     );
     
     const button = getByRole('button');
-    expect(button).toHaveTextContent(/Show Less/i);
+    expect(button.textContent).toContain('Show Less');
   });
 
   it('calls toggleShowAll function when button is clicked', () => {
