@@ -1,5 +1,6 @@
 
-import { render, screen, fireEvent } from '@testing-library/react';
+import * as React from 'react';
+import { render } from '@testing-library/react';
 import { ShowMoreLessButton } from '../ShowMoreLessButton';
 import { LocaleProvider } from '@/components/providers/LocaleProvider';
 
@@ -32,7 +33,7 @@ describe('ShowMoreLessButton', () => {
   });
 
   it('renders "Show More" button when not showing all and total count is greater than initial display count', () => {
-    render(
+    const { getByRole } = render(
       <ShowMoreLessButton 
         showAll={false}
         toggleShowAll={mockToggle}
@@ -41,12 +42,12 @@ describe('ShowMoreLessButton', () => {
       />
     );
     
-    const button = screen.getByRole('button', { name: /Show More/i });
-    expect(button).toBeInTheDocument();
+    const button = getByRole('button');
+    expect(button).toHaveTextContent(/Show More/i);
   });
 
   it('renders "Show Less" button when showing all and total count is greater than initial display count', () => {
-    render(
+    const { getByRole } = render(
       <ShowMoreLessButton 
         showAll={true}
         toggleShowAll={mockToggle}
@@ -55,12 +56,12 @@ describe('ShowMoreLessButton', () => {
       />
     );
     
-    const button = screen.getByRole('button', { name: /Show Less/i });
-    expect(button).toBeInTheDocument();
+    const button = getByRole('button');
+    expect(button).toHaveTextContent(/Show Less/i);
   });
 
   it('calls toggleShowAll function when button is clicked', () => {
-    render(
+    const { getByRole } = render(
       <ShowMoreLessButton 
         showAll={false}
         toggleShowAll={mockToggle}
@@ -69,8 +70,8 @@ describe('ShowMoreLessButton', () => {
       />
     );
     
-    const button = screen.getByRole('button');
-    fireEvent.click(button);
+    const button = getByRole('button');
+    button.click();
     
     expect(mockToggle).toHaveBeenCalledTimes(1);
   });
