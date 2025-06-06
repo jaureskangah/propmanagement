@@ -136,7 +136,7 @@ const Invitations = () => {
               <p>Bonjour ${tenantData.name},</p>
               <p>Vous avez reçu une nouvelle invitation à rejoindre l'espace locataire de votre propriété.</p>
               <p>Pour créer votre compte et accéder à vos informations, veuillez cliquer sur le lien ci-dessous :</p>
-              <p><a href="${window.location.origin}/signup?invitation=${newToken}">Créer mon compte</a></p>
+              <p><a href="${window.location.origin}/tenant-signup?invitation=${newToken}">Créer mon compte</a></p>
               <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités de l'espace locataire.</p>
               <p>Cordialement,<br>Votre équipe de gestion immobilière</p>
             `,
