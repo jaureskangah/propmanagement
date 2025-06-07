@@ -8,8 +8,8 @@ import { useTenantDashboard } from '@/hooks/tenant/useTenantDashboard';
 import { motion } from "framer-motion";
 
 export const TenantDashboard = () => {
-  // Widgets to always hide from the dashboard
-  const alwaysHiddenWidgets = ['property', 'payments', 'communications', 'chart'];
+  // Widgets to always hide from the dashboard (including notifications)
+  const alwaysHiddenWidgets = ['property', 'payments', 'communications', 'chart', 'notifications'];
   
   const [sectionOrder, setSectionOrder] = useState<string[]>([]);
   const [hiddenSections, setHiddenSections] = useState<string[]>([...alwaysHiddenWidgets]);
@@ -17,7 +17,8 @@ export const TenantDashboard = () => {
 
   useEffect(() => {
     if (tenant && sectionOrder.length === 0) {
-      const defaultOrder = ['lease', 'notifications', 'documents', 'maintenance'];
+      // Removed 'notifications' from the default order
+      const defaultOrder = ['lease', 'documents', 'maintenance'];
       setSectionOrder(defaultOrder);
     }
   }, [tenant, sectionOrder.length]);
