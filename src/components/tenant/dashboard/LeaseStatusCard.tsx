@@ -1,4 +1,3 @@
-
 import { Calendar, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
@@ -86,24 +85,24 @@ export const LeaseStatusCard = ({ leaseStart, leaseEnd, daysLeft, status }: Leas
     <motion.div 
       whileHover={{ y: -8, scale: 1.02 }}
       transition={{ duration: 0.3, ease: "easeOut" }}
-      className={`relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br ${statusConfig.gradient} border`}
+      className={`relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br ${statusConfig.gradient} border h-full flex flex-col`}
     >
       {/* Decorative background element */}
       <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br ${statusConfig.decorativeColor} rounded-full -translate-y-16 translate-x-16`} />
       
-      <div className="relative p-6">
-        <div className="flex items-center justify-between mb-5">
+      <div className="relative p-4 sm:p-6 flex-1 flex flex-col">
+        <div className="flex items-center justify-between mb-4 sm:mb-5">
           <div className="flex items-center">
             <div className={`p-2.5 rounded-xl bg-gradient-to-br ${statusConfig.iconBg} text-white shadow-lg`}>
               {getStatusIcon()}
             </div>
             <div className="ml-3">
-              <h3 className={`font-bold text-lg ${statusConfig.textColor}`}>
+              <h3 className={`font-bold text-base sm:text-lg ${statusConfig.textColor}`}>
                 {status === 'active' && t('leaseStatusActive')}
                 {status === 'expiring' && t('leaseStatusExpiringDays', { days: daysLeft.toString() })}
                 {status === 'expired' && t('leaseStatusExpired', { days: daysLeft.toString() })}
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                 {status === 'active' && 'Bail en cours'}
                 {status === 'expiring' && 'Expiration prochaine'}
                 {status === 'expired' && 'Bail expiré'}
@@ -122,54 +121,54 @@ export const LeaseStatusCard = ({ leaseStart, leaseEnd, daysLeft, status }: Leas
           )}
         </div>
         
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/70 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100/50 dark:border-gray-700/30">
+        <div className="space-y-3 sm:space-y-4 flex-1">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
+            <div className="bg-white/70 dark:bg-gray-800/50 rounded-xl p-3 sm:p-4 border border-gray-100/50 dark:border-gray-700/30">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">{t('lease.start')}</div>
-              <div className="font-semibold text-gray-800 dark:text-gray-200">
+              <div className="font-semibold text-sm sm:text-base text-gray-800 dark:text-gray-200">
                 {new Date(leaseStart).toLocaleDateString('fr-FR')}
               </div>
             </div>
-            <div className="bg-white/70 dark:bg-gray-800/50 rounded-xl p-4 border border-gray-100/50 dark:border-gray-700/30">
+            <div className="bg-white/70 dark:bg-gray-800/50 rounded-xl p-3 sm:p-4 border border-gray-100/50 dark:border-gray-700/30">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">{t('lease.end')}</div>
-              <div className="font-semibold text-gray-800 dark:text-gray-200">
+              <div className="font-semibold text-sm sm:text-base text-gray-800 dark:text-gray-200">
                 {new Date(leaseEnd).toLocaleDateString('fr-FR')}
               </div>
             </div>
           </div>
           
-          <div className="bg-white/60 dark:bg-gray-800/40 rounded-xl p-4 border border-gray-100/50 dark:border-gray-700/30">
+          <div className="bg-white/60 dark:bg-gray-800/40 rounded-xl p-3 sm:p-4 border border-gray-100/50 dark:border-gray-700/30">
             <div className="flex justify-between items-center mb-3">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Progression du bail</span>
-              <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">{progressPercentage}%</span>
+              <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">Progression du bail</span>
+              <span className="text-xs sm:text-sm font-semibold text-gray-600 dark:text-gray-400">{progressPercentage}%</span>
             </div>
             
-            <div className="w-full bg-gray-200/70 dark:bg-gray-700/70 rounded-full h-3 mb-3 overflow-hidden">
+            <div className="w-full bg-gray-200/70 dark:bg-gray-700/70 rounded-full h-2.5 sm:h-3 mb-3 overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
                 transition={{ duration: 1.2, delay: 0.3, ease: "easeOut" }}
-                className={`h-3 rounded-full ${statusConfig.progressColor} shadow-sm`}
+                className={`h-2.5 sm:h-3 rounded-full ${statusConfig.progressColor} shadow-sm`}
               />
             </div>
             
             <div className="flex items-center justify-center">
               {status === 'active' && (
                 <div className="flex items-center text-emerald-600 dark:text-emerald-400">
-                  <CheckCircle className="h-4 w-4 mr-2" />
-                  <span className="text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
+                  <CheckCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                  <span className="text-xs sm:text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
                 </div>
               )}
               {status === 'expiring' && (
                 <div className="flex items-center text-amber-600 dark:text-amber-400">
-                  <Clock className="h-4 w-4 mr-2" />
-                  <span className="text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
+                  <Clock className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                  <span className="text-xs sm:text-sm font-medium">{t('daysLeft', { days: daysLeft.toString() })}</span>
                 </div>
               )}
               {status === 'expired' && (
                 <div className="flex items-center text-rose-600 dark:text-rose-400">
-                  <AlertTriangle className="h-4 w-4 mr-2" />
-                  <span className="text-sm font-medium">{t('daysAgo', { days: daysLeft.toString() })}</span>
+                  <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+                  <span className="text-xs sm:text-sm font-medium">{t('daysAgo', { days: daysLeft.toString() })}</span>
                 </div>
               )}
             </div>
