@@ -52,6 +52,9 @@ export const DashboardWidgets = ({
   // Filter out hidden widgets first
   const visibleWidgets = widgetOrder.filter(id => !hiddenSections.includes(id));
   
+  // Take only the first 4 visible widgets for our 2x2 grid
+  const gridWidgets = visibleWidgets.slice(0, 4);
+  
   // Render a widget
   const renderWidget = (widgetId: string, index: number) => {
     const widgetContent = () => {
@@ -119,7 +122,7 @@ export const DashboardWidgets = ({
       <motion.div 
         key={widgetId}
         variants={item}
-        className="w-full h-full"
+        className="w-full h-full transform transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md rounded-xl overflow-hidden dark:bg-gray-800/90 dark:backdrop-blur-sm dark:border dark:border-gray-700/80"
         initial="hidden"
         animate="show"
         transition={{ duration: 0.3, delay: index * 0.05 }}
@@ -134,19 +137,16 @@ export const DashboardWidgets = ({
       variants={container}
       initial="hidden"
       animate="show"
-      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-6 auto-rows-fr" 
+      className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 md:gap-6 auto-rows-fr" 
     >
-      {visibleWidgets.map((widgetId, index) => (
+      {gridWidgets.map((widgetId, index) => (
         <motion.div
           key={widgetId}
           variants={item}
-          className={`w-full h-full ${
-            // Ajuster les spans selon le type de widget
-            widgetId === 'lease' ? 'lg:col-span-2 xl:col-span-2' : 
-            widgetId === 'chart' ? 'md:col-span-2 lg:col-span-3 xl:col-span-3' : 
-            ''
+          className={`w-full h-full min-h-[280px] ${
+            // Si c'est le graphique de paiement, on le fait prendre toute la largeur en dessous de xl
+            widgetId === 'chart' ? 'md:col-span-2 xl:col-span-1' : ''
           }`}
-          style={{ minHeight: '320px' }}
         >
           {renderWidget(widgetId, index)}
         </motion.div>

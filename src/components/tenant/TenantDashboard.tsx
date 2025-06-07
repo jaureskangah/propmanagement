@@ -35,7 +35,7 @@ export const TenantDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 space-y-4 sm:space-y-6 max-w-full">
+    <div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-6 max-w-7xl">
       <DashboardHeader 
         tenantName={tenant.name || ""}
         firstName={tenant.firstName}
@@ -48,7 +48,7 @@ export const TenantDashboard = () => {
       />
       
       <motion.div 
-        className="w-full"
+        className="grid gap-4 sm:gap-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
