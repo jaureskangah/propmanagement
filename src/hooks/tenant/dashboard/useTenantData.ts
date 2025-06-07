@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
@@ -65,8 +66,8 @@ export const useTenantData = () => {
         return;
       }
       
-      // Puis récupérer les données du locataire avec la jointure sur properties
-      const { data: tenant, error } = await supabase
+      // Essayer de récupérer les données du locataire avec tenant_profile_id
+      let { data: tenant, error } = await supabase
         .from('tenants')
         .select(`
           id, 
@@ -82,7 +83,46 @@ export const useTenantData = () => {
         .eq('tenant_profile_id', user?.id)
         .maybeSingle();
 
-      if (error) {
+      // Si pas trouvé par tenant_profile_id, essayer avec l'email
+      if (!tenant && user?.email) {
+        console.log("No tenant found by profile_id, trying by email:", user.email);
+        
+        const { data: tenantByEmail, error: emailError } = await supabase
+          .from('tenants')
+          .select(`
+            id, 
+            name, 
+            email, 
+            unit_number, 
+            lease_start, 
+            lease_end, 
+            rent_amount,
+            property_id,
+            properties:property_id(name)
+          `)
+          .eq('email', user.email)
+          .is('tenant_profile_id', null)
+          .maybeSingle();
+
+        if (tenantByEmail && !emailError) {
+          console.log("Found tenant by email, linking profile...");
+          
+          // Lier automatiquement le profil
+          const { error: linkError } = await supabase
+            .from('tenants')
+            .update({ tenant_profile_id: user.id })
+            .eq('id', tenantByEmail.id);
+
+          if (!linkError) {
+            tenant = tenantByEmail;
+            console.log("Successfully linked tenant profile");
+          } else {
+            console.error("Error linking tenant profile:", linkError);
+          }
+        }
+      }
+
+      if (error && !tenant) {
         console.error("Error fetching tenant data:", error);
         throw error;
       }
@@ -136,22 +176,16 @@ export const useTenantData = () => {
         });
       } else {
         console.log("No tenant data found for user:", user?.id);
-        toast({
-          title: t('error'),
-          description: "Aucune donnée de locataire trouvée. Veuillez contacter votre propriétaire.",
-          variant: "destructive",
-        });
+        // Ne pas afficher d'erreur immédiatement, laisser une chance au processus de création
+        setTenant(null);
       }
       
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
-      toast({
-        title: t('error'),
-        description: t('errorLoadingTenantData'),
-        variant: "destructive",
-      });
+      // Ne pas afficher d'erreur toast pour éviter le spam si l'utilisateur vient de créer son compte
+      setTenant(null);
     }
   };
 

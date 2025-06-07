@@ -103,7 +103,9 @@ const TenantSignup = () => {
     setLoading(true);
 
     try {
-      // Créer le compte utilisateur
+      console.log("Creating account for tenant:", tenantData.id);
+      
+      // Créer le compte utilisateur avec les métadonnées incluant le tenant_id
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -112,6 +114,7 @@ const TenantSignup = () => {
             first_name: tenantData.name.split(' ')[0] || '',
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
+            tenant_id: tenantData.id, // Ajouter l'ID du locataire dans les métadonnées
           },
         },
       });
@@ -122,6 +125,26 @@ const TenantSignup = () => {
 
       if (!signUpData.user) {
         throw new Error('Aucune donnée utilisateur retournée');
+      }
+
+      console.log("User created with ID:", signUpData.user.id);
+
+      // Attendre un peu pour que le trigger de création du profil se termine
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // Lier le profil du locataire au nouvel utilisateur
+      console.log("Linking tenant profile:", tenantData.id, "to user:", signUpData.user.id);
+      
+      const { error: tenantUpdateError } = await supabase
+        .from('tenants')
+        .update({
+          tenant_profile_id: signUpData.user.id
+        })
+        .eq('id', tenantData.id);
+
+      if (tenantUpdateError) {
+        console.error("Error linking tenant profile:", tenantUpdateError);
+        throw tenantUpdateError;
       }
 
       // Mettre à jour l'invitation comme acceptée
@@ -136,21 +159,11 @@ const TenantSignup = () => {
         console.error("Error updating invitation status:", updateError);
       }
 
-      // Lier le profil du locataire au nouvel utilisateur
-      const { error: tenantUpdateError } = await supabase
-        .from('tenants')
-        .update({
-          tenant_profile_id: signUpData.user.id
-        })
-        .eq('id', tenantData.id);
-
-      if (tenantUpdateError) {
-        console.error("Error linking tenant profile:", tenantUpdateError);
-      }
+      console.log("Tenant profile successfully linked!");
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé. Vous allez être redirigé vers votre espace locataire.",
+        description: "Votre compte a été créé et lié à votre profil locataire. Vous allez être redirigé.",
       });
 
       // Rediriger vers le dashboard locataire après 2 secondes
