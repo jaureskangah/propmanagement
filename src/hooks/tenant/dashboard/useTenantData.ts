@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
@@ -137,7 +136,6 @@ export const useTenantData = () => {
         });
       } else {
         console.log("No tenant data found for user:", user?.id);
-        // Si aucune donnée de locataire n'est trouvée, on peut quand même afficher un état approprié
         toast({
           title: t('error'),
           description: "Aucune donnée de locataire trouvée. Veuillez contacter votre propriétaire.",

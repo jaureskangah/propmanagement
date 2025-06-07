@@ -10,17 +10,22 @@ export const useLeaseStatus = (leaseEnd?: string) => {
     const endDate = new Date(leaseEnd);
     const today = new Date();
     const diffTime = endDate.getTime() - today.getTime();
-    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const daysDifference = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     let status: 'active' | 'expiring' | 'expired';
-    if (daysLeft < 0) {
+    let daysLeft: number;
+
+    if (daysDifference < 0) {
       status = 'expired';
-    } else if (daysLeft <= 30) {
+      daysLeft = Math.abs(daysDifference); // Nombre de jours depuis l'expiration
+    } else if (daysDifference <= 30) {
       status = 'expiring';
+      daysLeft = daysDifference;
     } else {
       status = 'active';
+      daysLeft = daysDifference;
     }
 
-    return { daysLeft: Math.max(0, daysLeft), status };
+    return { daysLeft, status };
   }, [leaseEnd]);
 };
