@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -12,7 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, CheckCircle } from 'lucide-react';
+import { Loader2, CheckCircle, AlertCircle } from 'lucide-react';
 
 const tenantSignupSchema = z.object({
   password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
@@ -32,6 +31,7 @@ const TenantSignup = () => {
   const [loading, setLoading] = useState(false);
   const [tenantData, setTenantData] = useState<any>(null);
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
+  const [linkingStatus, setLinkingStatus] = useState<'idle' | 'linking' | 'verifying' | 'success' | 'failed'>('idle');
 
   const form = useForm<TenantSignupValues>({
     resolver: zodResolver(tenantSignupSchema),
@@ -52,6 +52,8 @@ const TenantSignup = () => {
 
   const fetchTenantDataFromInvitation = async (token: string) => {
     try {
+      console.log("Fetching tenant data for invitation token:", token);
+      
       // Rechercher l'invitation avec ce token
       const { data: invitation, error: invitationError } = await supabase
         .from('tenant_invitations')
@@ -71,6 +73,7 @@ const TenantSignup = () => {
         .single();
 
       if (invitationError || !invitation) {
+        console.error("Invalid invitation:", invitationError);
         toast({
           title: "Invitation invalide",
           description: "Ce lien d'invitation n'est pas valide ou a expiré.",
@@ -79,6 +82,7 @@ const TenantSignup = () => {
         return;
       }
 
+      console.log("Invitation found:", invitation);
       setTenantData(invitation.tenants);
     } catch (error) {
       console.error("Error fetching tenant data:", error);
@@ -88,6 +92,77 @@ const TenantSignup = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const verifyTenantLinking = async (userId: string, tenantId: string, retryCount = 0): Promise<boolean> => {
+    console.log(`Verifying tenant linking (attempt ${retryCount + 1}):`, { userId, tenantId });
+    
+    try {
+      const { data: linkedTenant, error } = await supabase
+        .from('tenants')
+        .select('tenant_profile_id')
+        .eq('id', tenantId)
+        .eq('tenant_profile_id', userId)
+        .single();
+
+      if (error) {
+        console.error("Error verifying linking:", error);
+        return false;
+      }
+
+      const isLinked = linkedTenant && linkedTenant.tenant_profile_id === userId;
+      console.log("Linking verification result:", isLinked);
+      return isLinked;
+    } catch (error) {
+      console.error("Exception during verification:", error);
+      return false;
+    }
+  };
+
+  const retryTenantLinking = async (userId: string, tenantId: string, maxRetries = 3): Promise<boolean> => {
+    for (let attempt = 0; attempt < maxRetries; attempt++) {
+      console.log(`Linking attempt ${attempt + 1}/${maxRetries}`);
+      
+      try {
+        const { error: linkError } = await supabase
+          .from('tenants')
+          .update({ 
+            tenant_profile_id: userId,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', tenantId);
+
+        if (linkError) {
+          console.error(`Linking attempt ${attempt + 1} failed:`, linkError);
+          if (attempt === maxRetries - 1) return false;
+          
+          // Wait before retry
+          await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+          continue;
+        }
+
+        // Wait a bit for the update to propagate
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Verify the linking was successful
+        const isLinked = await verifyTenantLinking(userId, tenantId, attempt);
+        if (isLinked) {
+          console.log(`Linking successful on attempt ${attempt + 1}`);
+          return true;
+        }
+
+        console.log(`Linking verification failed on attempt ${attempt + 1}`);
+        if (attempt < maxRetries - 1) {
+          await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+        }
+      } catch (error) {
+        console.error(`Exception during linking attempt ${attempt + 1}:`, error);
+        if (attempt === maxRetries - 1) return false;
+        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
+      }
+    }
+    
+    return false;
   };
 
   const onSubmit = async (values: TenantSignupValues) => {
@@ -101,8 +176,10 @@ const TenantSignup = () => {
     }
 
     setLoading(true);
+    setLinkingStatus('idle');
 
     try {
+      console.log("=== STARTING TENANT SIGNUP PROCESS ===");
       console.log("Creating account for tenant:", tenantData.id);
       
       // Créer le compte utilisateur avec les métadonnées incluant le tenant_id
@@ -114,12 +191,13 @@ const TenantSignup = () => {
             first_name: tenantData.name.split(' ')[0] || '',
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
-            tenant_id: tenantData.id, // Ajouter l'ID du locataire dans les métadonnées
+            tenant_id: tenantData.id,
           },
         },
       });
 
       if (signUpError) {
+        console.error("Signup error:", signUpError);
         throw signUpError;
       }
 
@@ -127,57 +205,60 @@ const TenantSignup = () => {
         throw new Error('Aucune donnée utilisateur retournée');
       }
 
-      console.log("User created with ID:", signUpData.user.id);
+      console.log("User created successfully with ID:", signUpData.user.id);
 
-      // Attendre un peu pour que le trigger de création du profil se termine
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Étape 1: Attendre que le profil soit créé par le trigger
+      setLinkingStatus('linking');
+      console.log("Waiting for profile creation...");
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Lier le profil du locataire au nouvel utilisateur
-      console.log("Linking tenant profile:", tenantData.id, "to user:", signUpData.user.id);
+      // Étape 2: Lier le profil du locataire avec retry
+      console.log("Starting tenant linking process...");
+      setLinkingStatus('verifying');
       
-      const { error: tenantUpdateError } = await supabase
-        .from('tenants')
-        .update({
-          tenant_profile_id: signUpData.user.id
-        })
-        .eq('id', tenantData.id);
-
-      if (tenantUpdateError) {
-        console.error("Error linking tenant profile:", tenantUpdateError);
-        throw tenantUpdateError;
+      const linkingSuccess = await retryTenantLinking(signUpData.user.id, tenantData.id);
+      
+      if (!linkingSuccess) {
+        console.error("Failed to link tenant after multiple retries");
+        throw new Error('Impossible de lier le profil locataire après plusieurs tentatives');
       }
+
+      console.log("Tenant linking successful!");
+      setLinkingStatus('success');
 
       // Mettre à jour l'invitation comme acceptée
       const { error: updateError } = await supabase
         .from('tenant_invitations')
-        .update({
-          status: 'accepted'
-        })
+        .update({ status: 'accepted' })
         .eq('token', invitationToken);
 
       if (updateError) {
         console.error("Error updating invitation status:", updateError);
+        // Non bloquant, on continue
       }
 
-      console.log("Tenant profile successfully linked!");
+      console.log("=== SIGNUP PROCESS COMPLETED SUCCESSFULLY ===");
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé et lié à votre profil locataire. Vous allez être redirigé.",
+        description: "Votre compte a été créé et lié à votre profil locataire. Redirection en cours...",
       });
 
-      // Rediriger vers le dashboard locataire après 2 secondes
+      // Redirection après un délai pour permettre à l'utilisateur de voir le message
       setTimeout(() => {
         window.location.href = '/tenant/dashboard';
       }, 2000);
 
     } catch (error: any) {
-      console.error("Error creating tenant account:", error);
+      console.error("=== SIGNUP PROCESS FAILED ===", error);
+      setLinkingStatus('failed');
       
       let errorMessage = "Une erreur s'est produite lors de la création du compte.";
       
       if (error.message.includes('already registered')) {
         errorMessage = "Un compte existe déjà avec cette adresse email.";
+      } else if (error.message.includes('lier le profil')) {
+        errorMessage = "Le compte a été créé mais n'a pas pu être lié au profil locataire. Contactez le support.";
       }
 
       toast({
@@ -213,6 +294,41 @@ const TenantSignup = () => {
     );
   }
 
+  const getLinkingStatusDisplay = () => {
+    switch (linkingStatus) {
+      case 'linking':
+        return (
+          <div className="flex items-center space-x-2 text-blue-600">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-sm">Liaison du profil en cours...</span>
+          </div>
+        );
+      case 'verifying':
+        return (
+          <div className="flex items-center space-x-2 text-orange-600">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-sm">Vérification de la liaison...</span>
+          </div>
+        );
+      case 'success':
+        return (
+          <div className="flex items-center space-x-2 text-green-600">
+            <CheckCircle className="h-4 w-4" />
+            <span className="text-sm">Profil lié avec succès!</span>
+          </div>
+        );
+      case 'failed':
+        return (
+          <div className="flex items-center space-x-2 text-red-600">
+            <AlertCircle className="h-4 w-4" />
+            <span className="text-sm">Échec de la liaison du profil</span>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
@@ -247,6 +363,13 @@ const TenantSignup = () => {
                   )}
                 </div>
               </div>
+
+              {/* Status de liaison */}
+              {linkingStatus !== 'idle' && (
+                <div className="mb-4 p-3 bg-gray-50 rounded-lg">
+                  {getLinkingStatusDisplay()}
+                </div>
+              )}
 
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -288,12 +411,20 @@ const TenantSignup = () => {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={loading || linkingStatus === 'success'}
+                  >
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Création du compte...
+                        {linkingStatus === 'linking' ? 'Liaison en cours...' : 
+                         linkingStatus === 'verifying' ? 'Vérification...' : 
+                         'Création du compte...'}
                       </>
+                    ) : linkingStatus === 'success' ? (
+                      'Redirection...'
                     ) : (
                       'Créer mon compte'
                     )}

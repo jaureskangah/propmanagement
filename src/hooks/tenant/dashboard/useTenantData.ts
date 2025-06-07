@@ -31,6 +31,7 @@ interface PropertyObject {
 export const useTenantData = () => {
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [linkingAttempted, setLinkingAttempted] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
   const { t, language } = useLocale();
@@ -43,11 +44,177 @@ export const useTenantData = () => {
     }
   }, [user, language]);
 
+  const attemptTenantLinking = async (email: string, userId: string): Promise<any> => {
+    console.log("Attempting tenant linking for email:", email);
+    
+    try {
+      // Chercher un locataire non lié avec cette adresse email
+      const { data: tenantByEmail, error: emailError } = await supabase
+        .from('tenants')
+        .select(`
+          id, 
+          name, 
+          email, 
+          unit_number, 
+          lease_start, 
+          lease_end, 
+          rent_amount,
+          property_id,
+          tenant_profile_id,
+          properties:property_id(name)
+        `)
+        .eq('email', email)
+        .is('tenant_profile_id', null)
+        .maybeSingle();
+
+      if (emailError) {
+        console.error("Error searching tenant by email:", emailError);
+        return null;
+      }
+
+      if (!tenantByEmail) {
+        console.log("No unlinked tenant found for email:", email);
+        return null;
+      }
+
+      console.log("Found unlinked tenant, attempting to link:", tenantByEmail.id);
+
+      // Tenter de lier le locataire
+      const { error: linkError } = await supabase
+        .from('tenants')
+        .update({ 
+          tenant_profile_id: userId,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', tenantByEmail.id)
+        .eq('email', email); // Double vérification pour la sécurité
+
+      if (linkError) {
+        console.error("Error linking tenant profile:", linkError);
+        return null;
+      }
+
+      console.log("Successfully linked tenant profile");
+      
+      // Vérifier que la liaison a bien fonctionné
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const { data: verificationData, error: verificationError } = await supabase
+        .from('tenants')
+        .select('tenant_profile_id')
+        .eq('id', tenantByEmail.id)
+        .single();
+
+      if (verificationError || verificationData?.tenant_profile_id !== userId) {
+        console.error("Linking verification failed:", verificationError);
+        return null;
+      }
+
+      return tenantByEmail;
+    } catch (error) {
+      console.error("Exception during tenant linking:", error);
+      return null;
+    }
+  };
+
+  const forceTenantLinking = async (userId: string, email: string): Promise<any> => {
+    console.log("=== FORCE TENANT LINKING ===");
+    console.log("User ID:", userId);
+    console.log("Email:", email);
+
+    try {
+      // Rechercher TOUS les locataires avec cette adresse email
+      const { data: allTenants, error: searchError } = await supabase
+        .from('tenants')
+        .select(`
+          id, 
+          name, 
+          email, 
+          unit_number, 
+          lease_start, 
+          lease_end, 
+          rent_amount,
+          property_id,
+          tenant_profile_id,
+          properties:property_id(name)
+        `)
+        .eq('email', email);
+
+      if (searchError) {
+        console.error("Error searching all tenants:", searchError);
+        return null;
+      }
+
+      if (!allTenants || allTenants.length === 0) {
+        console.log("No tenants found for email:", email);
+        return null;
+      }
+
+      console.log("Found tenants for email:", allTenants);
+
+      // Chercher d'abord un locataire déjà lié à ce user
+      const alreadyLinked = allTenants.find(t => t.tenant_profile_id === userId);
+      if (alreadyLinked) {
+        console.log("Found already linked tenant:", alreadyLinked.id);
+        return alreadyLinked;
+      }
+
+      // Sinon, chercher un locataire non lié
+      const unlinked = allTenants.find(t => !t.tenant_profile_id);
+      if (unlinked) {
+        console.log("Found unlinked tenant, attempting forced linking:", unlinked.id);
+        
+        const { error: forceLinkError } = await supabase
+          .from('tenants')
+          .update({ 
+            tenant_profile_id: userId,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', unlinked.id);
+
+        if (forceLinkError) {
+          console.error("Force linking failed:", forceLinkError);
+          return null;
+        }
+
+        console.log("Force linking successful");
+        return { ...unlinked, tenant_profile_id: userId };
+      }
+
+      // En dernier recours, prendre le premier locataire (même s'il est lié à un autre user)
+      // Ceci peut arriver si il y a eu des problèmes de données
+      const firstTenant = allTenants[0];
+      console.log("No unlinked tenant found, attempting to override link for:", firstTenant.id);
+      
+      const { error: overrideLinkError } = await supabase
+        .from('tenants')
+        .update({ 
+          tenant_profile_id: userId,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', firstTenant.id);
+
+      if (overrideLinkError) {
+        console.error("Override linking failed:", overrideLinkError);
+        return null;
+      }
+
+      console.log("Override linking successful");
+      return { ...firstTenant, tenant_profile_id: userId };
+
+    } catch (error) {
+      console.error("Exception during force linking:", error);
+      return null;
+    }
+  };
+
   const fetchTenantData = async () => {
     try {
       setIsLoading(true);
       
-      console.log("Fetching tenant data for user_id:", user?.id);
+      console.log("=== FETCHING TENANT DATA ===");
+      console.log("User ID:", user?.id);
+      console.log("User email:", user?.email);
       console.log("User metadata:", user?.user_metadata);
       
       // D'abord récupérer les données du profil
@@ -83,42 +250,30 @@ export const useTenantData = () => {
         .eq('tenant_profile_id', user?.id)
         .maybeSingle();
 
-      // Si pas trouvé par tenant_profile_id, essayer avec l'email
-      if (!tenant && user?.email) {
-        console.log("No tenant found by profile_id, trying by email:", user.email);
+      console.log("Tenant by profile_id result:", tenant, error);
+
+      // Si pas trouvé par tenant_profile_id, essayer différentes stratégies de liaison
+      if (!tenant && user?.email && !linkingAttempted) {
+        console.log("No tenant found by profile_id, attempting linking strategies...");
+        setLinkingAttempted(true);
         
-        const { data: tenantByEmail, error: emailError } = await supabase
-          .from('tenants')
-          .select(`
-            id, 
-            name, 
-            email, 
-            unit_number, 
-            lease_start, 
-            lease_end, 
-            rent_amount,
-            property_id,
-            properties:property_id(name)
-          `)
-          .eq('email', user.email)
-          .is('tenant_profile_id', null)
-          .maybeSingle();
-
-        if (tenantByEmail && !emailError) {
-          console.log("Found tenant by email, linking profile...");
+        // Stratégie 1: Liaison automatique normale
+        let linkedTenant = await attemptTenantLinking(user.email, user.id);
+        
+        // Stratégie 2: Si échec, forcer la liaison
+        if (!linkedTenant) {
+          console.log("Normal linking failed, attempting force linking...");
+          linkedTenant = await forceTenantLinking(user.id, user.email);
+        }
+        
+        if (linkedTenant) {
+          tenant = linkedTenant;
+          console.log("Tenant successfully linked:", tenant.id);
           
-          // Lier automatiquement le profil
-          const { error: linkError } = await supabase
-            .from('tenants')
-            .update({ tenant_profile_id: user.id })
-            .eq('id', tenantByEmail.id);
-
-          if (!linkError) {
-            tenant = tenantByEmail;
-            console.log("Successfully linked tenant profile");
-          } else {
-            console.error("Error linking tenant profile:", linkError);
-          }
+          toast({
+            title: "Profil locataire trouvé",
+            description: "Votre profil a été automatiquement lié à votre compte locataire.",
+          });
         }
       }
 
@@ -127,7 +282,7 @@ export const useTenantData = () => {
         throw error;
       }
 
-      console.log("Tenant data fetched:", tenant);
+      console.log("Final tenant data:", tenant);
       
       if (tenant) {
         console.log("Raw properties data structure:", JSON.stringify(tenant.properties));
@@ -176,16 +331,32 @@ export const useTenantData = () => {
         });
       } else {
         console.log("No tenant data found for user:", user?.id);
-        // Ne pas afficher d'erreur immédiatement, laisser une chance au processus de création
         setTenant(null);
+        
+        // Afficher un message d'aide si aucun locataire n'a été trouvé après toutes les tentatives
+        if (linkingAttempted) {
+          toast({
+            title: "Profil locataire non trouvé",
+            description: "Aucun profil locataire n'a pu être trouvé ou lié à votre compte. Contactez votre gestionnaire.",
+            variant: "destructive",
+          });
+        }
       }
       
       setIsLoading(false);
     } catch (error) {
       console.error('Error fetching tenant data:', error);
       setIsLoading(false);
-      // Ne pas afficher d'erreur toast pour éviter le spam si l'utilisateur vient de créer son compte
       setTenant(null);
+      
+      // Ne pas afficher d'erreur toast pour éviter le spam si l'utilisateur vient de créer son compte
+      if (linkingAttempted) {
+        toast({
+          title: "Erreur",
+          description: "Impossible de récupérer les données locataire. Veuillez réessayer.",
+          variant: "destructive",
+        });
+      }
     }
   };
 
