@@ -100,38 +100,27 @@ const TenantSignup = () => {
     console.log("Tenant ID:", tenantId);
     
     try {
-      // Étape 1: Attendre un peu pour que les triggers Supabase s'exécutent
-      console.log("Step 1: Waiting for user setup to complete...");
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      // Étape 1: Attendre que les triggers Supabase s'exécutent (création du profil)
+      console.log("Step 1: Waiting for profile creation triggers...");
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      // Étape 2: Vérifier que l'utilisateur a été créé avec succès dans auth.users
-      console.log("Step 2: Verifying user authentication...");
-      const { data: authUser, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !authUser?.user || authUser.user.id !== userId) {
-        console.error("Auth verification failed:", authError);
-        return false;
-      }
-      
-      console.log("User authenticated successfully:", authUser.user.id);
-
-      // Étape 3: Nettoyer toute liaison existante pour ce locataire
-      console.log("Step 3: Clearing any existing tenant profile links...");
+      // Étape 2: Nettoyer toute liaison existante pour ce locataire
+      console.log("Step 2: Clearing any existing tenant profile links...");
       const { error: clearError } = await supabase
         .from('tenants')
         .update({ tenant_profile_id: null })
         .eq('id', tenantId);
 
       if (clearError) {
-        console.error("Error clearing existing link:", clearError);
-        // Ne pas arrêter pour cette erreur, continuer
+        console.warn("Warning clearing existing link:", clearError);
+        // Continuer même si cette étape échoue
       }
 
-      // Attendre un moment pour que la mise à jour se propage
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Attendre que la mise à jour se propage
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Étape 4: Créer la nouvelle liaison
-      console.log("Step 4: Creating new tenant profile link...");
+      // Étape 3: Créer la nouvelle liaison
+      console.log("Step 3: Creating new tenant profile link...");
       const { data: updateResult, error: linkError } = await supabase
         .from('tenants')
         .update({ 
@@ -148,9 +137,9 @@ const TenantSignup = () => {
 
       console.log("Update result:", updateResult);
 
-      // Étape 5: Vérifier que la liaison a bien été effectuée
-      console.log("Step 5: Verifying the link was successful...");
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Étape 4: Vérifier que la liaison a bien été effectuée
+      console.log("Step 4: Verifying the link was successful...");
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       const { data: verification, error: verifyError } = await supabase
         .from('tenants')
