@@ -31,71 +31,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [tenantData, setTenantData] = useState<any | null>(null);
   const isAuthenticated = !!user;
 
-  const fetchTenantData = async (userId: string) => {
-    try {
-      const { data, error } = await supabase.rpc('get_user_tenant_data', {
-        p_user_id: userId
-      });
-
-      if (error) {
-        console.error("Error fetching tenant data:", error);
-        return { isTenant: false, tenantData: null };
-      }
-
-      if (data && data.length > 0) {
-        console.log("User is a tenant:", data[0]);
-        return { isTenant: true, tenantData: data[0] };
-      } else {
-        console.log("User is not a tenant");
-        return { isTenant: false, tenantData: null };
-      }
-    } catch (err) {
-      console.error("Exception fetching tenant data:", err);
-      return { isTenant: false, tenantData: null };
-    }
-  };
-
   useEffect(() => {
-    // Check active session
-    const checkSession = async () => {
-      const { data, error } = await supabase.auth.getSession();
+    let isMounted = true;
+
+    // Get initial session
+    const getInitialSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       
-      if (error) {
-        console.error("Error checking session:", error);
-        setUser(null);
-        setIsTenant(false);
-        setTenantData(null);
-      } else if (data?.session) {
-        const sessionUser = data.session.user;
-        setUser(sessionUser);
-        
-        // Vérifier si l'utilisateur est un locataire
-        const { isTenant: userIsTenant, tenantData: userTenantData } = await fetchTenantData(sessionUser.id);
-        setIsTenant(userIsTenant);
-        setTenantData(userTenantData);
-      } else {
-        setUser(null);
-        setIsTenant(false);
-        setTenantData(null);
+      if (isMounted) {
+        if (session?.user) {
+          setUser(session.user);
+          checkTenantStatus(session.user.id);
+        } else {
+          setUser(null);
+          setIsTenant(false);
+          setTenantData(null);
+        }
+        setLoading(false);
       }
-      
-      setLoading(false);
     };
 
-    checkSession();
-
     // Listen for auth state changes
-    const { data: authListener } = supabase.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        if (!isMounted) return;
+
         console.log("Auth state changed:", event);
         
         if (session?.user) {
           setUser(session.user);
-          
-          // Vérifier si l'utilisateur est un locataire
-          const { isTenant: userIsTenant, tenantData: userTenantData } = await fetchTenantData(session.user.id);
-          setIsTenant(userIsTenant);
-          setTenantData(userTenantData);
+          if (event === 'SIGNED_IN') {
+            // Defer tenant check to avoid blocking the auth callback
+            setTimeout(() => {
+              if (isMounted) {
+                checkTenantStatus(session.user.id);
+              }
+            }, 100);
+          }
         } else {
           setUser(null);
           setIsTenant(false);
@@ -106,13 +78,43 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Cleanup
+    getInitialSession();
+
     return () => {
-      authListener?.subscription.unsubscribe();
+      isMounted = false;
+      subscription.unsubscribe();
     };
   }, []);
 
-  // Sign in function
+  const checkTenantStatus = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.rpc('get_user_tenant_data', {
+        p_user_id: userId
+      });
+
+      if (error) {
+        console.error("Error checking tenant status:", error);
+        setIsTenant(false);
+        setTenantData(null);
+        return;
+      }
+
+      if (data && data.length > 0) {
+        console.log("User is a tenant:", data[0]);
+        setIsTenant(true);
+        setTenantData(data[0]);
+      } else {
+        console.log("User is not a tenant");
+        setIsTenant(false);
+        setTenantData(null);
+      }
+    } catch (err) {
+      console.error("Exception checking tenant status:", err);
+      setIsTenant(false);
+      setTenantData(null);
+    }
+  };
+
   const signIn = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -123,15 +125,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         return { error };
       }
-
-      if (data.user) {
-        setUser(data.user);
-        
-        // Vérifier si l'utilisateur est un locataire
-        const { isTenant: userIsTenant, tenantData: userTenantData } = await fetchTenantData(data.user.id);
-        setIsTenant(userIsTenant);
-        setTenantData(userTenantData);
-      }
       
       return { error: null };
     } catch (error) {
@@ -139,7 +132,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Sign up function
   const signUp = async (email: string, password: string) => {
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -157,25 +149,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  // Sign out function
   const signOut = async () => {
     try {
-      await supabase.auth.signOut();
+      console.log("Signing out...");
+      setLoading(true);
+      
+      // Clear state first
       setUser(null);
       setIsTenant(false);
       setTenantData(null);
+      
+      // Then sign out from Supabase
+      await supabase.auth.signOut();
+      
+      console.log("Sign out successful");
     } catch (error) {
       console.error("Error signing out:", error);
+    } finally {
+      setLoading(false);
     }
   };
-
-  // For debugging
-  console.log("AuthProvider rendering with values:", { 
-    isAuthenticated, 
-    loading, 
-    isTenant, 
-    tenantData: tenantData ? tenantData.tenant_name : null 
-  });
 
   return (
     <AuthContext.Provider value={{ 

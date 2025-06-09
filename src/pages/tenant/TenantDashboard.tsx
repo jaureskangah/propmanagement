@@ -11,6 +11,7 @@ const TenantDashboardPage = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
+  // Show loading spinner while checking auth
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
@@ -19,11 +20,12 @@ const TenantDashboardPage = () => {
     );
   }
 
+  // Redirect to auth if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/auth" replace />;
   }
 
-  // Rediriger les propriétaires vers leur dashboard
+  // Redirect non-tenants to owner dashboard
   if (!isTenant) {
     return <Navigate to="/dashboard" replace />;
   }

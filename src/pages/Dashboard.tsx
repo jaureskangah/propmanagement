@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
@@ -8,6 +8,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DateRange } from "@/components/dashboard/DashboardDateFilter";
 import { cn } from "@/lib/utils";
+import { useState } from 'react';
 
 const Dashboard = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
@@ -31,6 +32,7 @@ const Dashboard = () => {
     });
   }, [isAuthenticated, isTenant, loading]);
 
+  // Show loading spinner while checking auth
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -39,12 +41,13 @@ const Dashboard = () => {
     );
   }
 
+  // Redirect to auth if not authenticated
   if (!isAuthenticated) {
     console.log("User not authenticated, redirecting to /auth");
     return <Navigate to="/auth" replace />;
   }
   
-  // Rediriger les locataires vers leur dashboard spécifique
+  // Redirect tenants to their dashboard
   if (isTenant) {
     console.log("User is tenant, redirecting to tenant dashboard");
     return <Navigate to="/tenant/dashboard" replace />;
