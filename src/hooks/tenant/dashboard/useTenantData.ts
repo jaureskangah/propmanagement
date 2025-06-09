@@ -30,354 +30,147 @@ interface PropertyObject {
 export const useTenantData = () => {
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [linkingAttempted, setLinkingAttempted] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const { user } = useAuth();
+  const { user, isTenant, tenantData } = useAuth();
   const { toast } = useToast();
-  const { t, language } = useLocale();
+  const { t } = useLocale();
 
   useEffect(() => {
-    let isMounted = true;
-    
-    const loadTenantData = async () => {
-      if (!user) {
-        if (isMounted) {
-          setIsLoading(false);
-          setTenant(null);
-        }
-        return;
-      }
-
-      try {
-        setIsLoading(true);
-        setHasError(false);
-        await fetchTenantData();
-      } catch (error) {
-        console.error('Error in loadTenantData:', error);
-        if (isMounted) {
-          setHasError(true);
-          setIsLoading(false);
-        }
-      }
-    };
-
-    loadTenantData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [user?.id, language]);
-
-  const attemptTenantLinking = async (email: string, userId: string): Promise<any> => {
-    console.log("Attempting tenant linking for email:", email);
-    
-    try {
-      const { data: tenantByEmail, error: emailError } = await supabase
-        .from('tenants')
-        .select(`
-          id, 
-          name, 
-          email, 
-          unit_number, 
-          lease_start, 
-          lease_end, 
-          rent_amount,
-          property_id,
-          tenant_profile_id,
-          properties:property_id(name)
-        `)
-        .eq('email', email)
-        .is('tenant_profile_id', null)
-        .maybeSingle();
-
-      if (emailError) {
-        console.error("Error searching tenant by email:", emailError);
-        return null;
-      }
-
-      if (!tenantByEmail) {
-        console.log("No unlinked tenant found for email:", email);
-        return null;
-      }
-
-      console.log("Found unlinked tenant, attempting to link:", tenantByEmail.id);
-
-      const { error: linkError } = await supabase
-        .from('tenants')
-        .update({ 
-          tenant_profile_id: userId,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', tenantByEmail.id)
-        .eq('email', email);
-
-      if (linkError) {
-        console.error("Error linking tenant profile:", linkError);
-        return null;
-      }
-
-      console.log("Successfully linked tenant profile");
-      
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const { data: verificationData, error: verificationError } = await supabase
-        .from('tenants')
-        .select('tenant_profile_id')
-        .eq('id', tenantByEmail.id)
-        .single();
-
-      if (verificationError || verificationData?.tenant_profile_id !== userId) {
-        console.error("Linking verification failed:", verificationError);
-        return null;
-      }
-
-      return tenantByEmail;
-    } catch (error) {
-      console.error("Exception during tenant linking:", error);
-      return null;
+    if (!user) {
+      setTenant(null);
+      setIsLoading(false);
+      return;
     }
-  };
 
-  const forceTenantLinking = async (userId: string, email: string): Promise<any> => {
-    console.log("=== FORCE TENANT LINKING ===");
-    console.log("User ID:", userId);
-    console.log("Email:", email);
-
-    try {
-      const { data: allTenants, error: searchError } = await supabase
-        .from('tenants')
-        .select(`
-          id, 
-          name, 
-          email, 
-          unit_number, 
-          lease_start, 
-          lease_end, 
-          rent_amount,
-          property_id,
-          tenant_profile_id,
-          properties:property_id(name)
-        `)
-        .eq('email', email);
-
-      if (searchError) {
-        console.error("Error searching all tenants:", searchError);
-        return null;
-      }
-
-      if (!allTenants || allTenants.length === 0) {
-        console.log("No tenants found for email:", email);
-        return null;
-      }
-
-      console.log("Found tenants for email:", allTenants);
-
-      const alreadyLinked = allTenants.find(t => t.tenant_profile_id === userId);
-      if (alreadyLinked) {
-        console.log("Found already linked tenant:", alreadyLinked.id);
-        return alreadyLinked;
-      }
-
-      const unlinked = allTenants.find(t => !t.tenant_profile_id);
-      if (unlinked) {
-        console.log("Found unlinked tenant, attempting forced linking:", unlinked.id);
-        
-        const { error: forceLinkError } = await supabase
-          .from('tenants')
-          .update({ 
-            tenant_profile_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', unlinked.id);
-
-        if (forceLinkError) {
-          console.error("Force linking failed:", forceLinkError);
-          return null;
-        }
-
-        console.log("Force linking successful");
-        return { ...unlinked, tenant_profile_id: userId };
-      }
-
-      const firstTenant = allTenants[0];
-      console.log("No unlinked tenant found, attempting to override link for:", firstTenant.id);
-      
-      const { error: overrideLinkError } = await supabase
-        .from('tenants')
-        .update({ 
-          tenant_profile_id: userId,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', firstTenant.id);
-
-      if (overrideLinkError) {
-        console.error("Override linking failed:", overrideLinkError);
-        return null;
-      }
-
-      console.log("Override linking successful");
-      return { ...firstTenant, tenant_profile_id: userId };
-
-    } catch (error) {
-      console.error("Exception during force linking:", error);
-      return null;
+    // Si l'utilisateur n'est pas un locataire, on arrête ici
+    if (!isTenant) {
+      console.log("User is not a tenant, clearing tenant data");
+      setTenant(null);
+      setIsLoading(false);
+      return;
     }
-  };
+
+    // Si on a déjà les données du locataire dans AuthProvider, on les utilise
+    if (tenantData) {
+      console.log("Using tenant data from AuthProvider:", tenantData);
+      setTenant({
+        ...tenantData,
+        fullName: tenantData.name
+      });
+      setIsLoading(false);
+      return;
+    }
+
+    // Sinon, on essaie de récupérer les données
+    fetchTenantData();
+  }, [user?.id, isTenant, tenantData]);
 
   const fetchTenantData = async () => {
-    if (!user) {
+    if (!user?.id) {
       setIsLoading(false);
       return;
     }
 
     try {
       console.log("=== FETCHING TENANT DATA ===");
-      console.log("User ID:", user?.id);
-      console.log("User email:", user?.email);
+      console.log("User ID:", user.id);
+      console.log("User email:", user.email);
       
-      // Add timeout to prevent infinite loading
-      const timeoutPromise = new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Fetch timeout')), 30000)
-      );
+      setIsLoading(true);
+      setHasError(false);
 
-      const fetchPromise = async () => {
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('first_name, last_name, is_tenant_user')
-          .eq('id', user?.id)
-          .maybeSingle();
-          
-        console.log("Profile data:", profileData);
+      // Récupérer les données du profil
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('first_name, last_name, is_tenant_user')
+        .eq('id', user.id)
+        .maybeSingle();
         
-        if (!profileData?.is_tenant_user && !user?.user_metadata?.is_tenant_user) {
-          console.log("User is not a tenant user");
-          setTenant(null);
-          setIsLoading(false);
-          return;
-        }
+      console.log("Profile data:", profileData);
+      
+      // Vérifier que l'utilisateur est bien un locataire
+      if (!profileData?.is_tenant_user) {
+        console.log("User is not a tenant user");
+        setTenant(null);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Récupérer les données du locataire en utilisant tenant_profile_id
+      const { data: tenantRecord, error } = await supabase
+        .from('tenants')
+        .select(`
+          id, 
+          name, 
+          email, 
+          unit_number, 
+          lease_start, 
+          lease_end, 
+          rent_amount,
+          property_id,
+          properties:property_id(name)
+        `)
+        .eq('tenant_profile_id', user.id)
+        .maybeSingle();
+
+      console.log("Tenant record result:", tenantRecord, error);
+
+      if (error) {
+        console.error("Error fetching tenant data:", error);
+        setHasError(true);
+        setTenant(null);
+        return;
+      }
+
+      if (tenantRecord) {
+        console.log("Tenant data found:", tenantRecord);
         
-        let { data: tenant, error } = await supabase
-          .from('tenants')
-          .select(`
-            id, 
-            name, 
-            email, 
-            unit_number, 
-            lease_start, 
-            lease_end, 
-            rent_amount,
-            property_id,
-            properties:property_id(name)
-          `)
-          .eq('tenant_profile_id', user?.id)
-          .maybeSingle();
-
-        console.log("Tenant by profile_id result:", tenant, error);
-
-        if (!tenant && user?.email && !linkingAttempted) {
-          console.log("No tenant found by profile_id, attempting linking strategies...");
-          setLinkingAttempted(true);
-          
-          let linkedTenant = await attemptTenantLinking(user.email, user.id);
-          
-          if (!linkedTenant) {
-            console.log("Normal linking failed, attempting force linking...");
-            linkedTenant = await forceTenantLinking(user.id, user.email);
-          }
-          
-          if (linkedTenant) {
-            tenant = linkedTenant;
-            console.log("Tenant successfully linked:", tenant.id);
-            
-            toast({
-              title: "Profil locataire trouvé",
-              description: "Votre profil a été automatiquement lié à votre compte locataire.",
-            });
-          }
-        }
-
-        if (error && !tenant) {
-          console.error("Error fetching tenant data:", error);
-          throw error;
-        }
-
-        console.log("Final tenant data:", tenant);
+        const displayName = profileData?.first_name && profileData?.last_name 
+          ? `${profileData.first_name} ${profileData.last_name}` 
+          : tenantRecord.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
         
-        if (tenant) {
-          console.log("Raw properties data structure:", JSON.stringify(tenant.properties));
+        let propertyData = null;
         
-          const displayName = profileData?.first_name && profileData?.last_name 
-            ? `${profileData.first_name} ${profileData.last_name}` 
-            : tenant.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
-          
-          let propertyData = null;
-          
-          if (tenant.properties !== null && tenant.properties !== undefined) {
-            console.log("Properties data type:", typeof tenant.properties);
-            
-            if (typeof tenant.properties === 'object') {
-              if (!Array.isArray(tenant.properties)) {
-                const props = tenant.properties as PropertyObject;
-                if (props && 'name' in props) {
-                  propertyData = { name: props.name };
-                }
-              } 
-              else if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
-                const firstProperty = tenant.properties[0] as PropertyObject;
-                if (firstProperty && 'name' in firstProperty) {
-                  propertyData = { name: firstProperty.name };
-                }
+        if (tenantRecord.properties !== null && tenantRecord.properties !== undefined) {
+          if (typeof tenantRecord.properties === 'object') {
+            if (!Array.isArray(tenantRecord.properties)) {
+              const props = tenantRecord.properties as PropertyObject;
+              if (props && 'name' in props) {
+                propertyData = { name: props.name };
               }
-            } else if (typeof tenant.properties === 'string') {
-              propertyData = { name: tenant.properties };
-            }
-          }
-          
-          console.log("Processed property data:", propertyData);
-          
-          setTenant({
-            ...tenant,
-            name: displayName,
-            firstName: profileData?.first_name || user?.user_metadata?.first_name,
-            lastName: profileData?.last_name || user?.user_metadata?.last_name,
-            fullName: displayName,
-            properties: propertyData
-          });
-        } else {
-          console.log("No tenant data found for user:", user?.id);
-          setTenant(null);
-          
-          if (linkingAttempted) {
-            toast({
-              title: "Profil locataire non trouvé",
-              description: "Aucun profil locataire n'a pu être trouvé ou lié à votre compte. Contactez votre gestionnaire.",
-              variant: "destructive",
-            });
+            } 
           }
         }
-      };
-
-      // Race between fetch and timeout
-      await Promise.race([fetchPromise(), timeoutPromise]);
+        
+        setTenant({
+          ...tenantRecord,
+          name: displayName,
+          firstName: profileData?.first_name || user?.user_metadata?.first_name,
+          lastName: profileData?.last_name || user?.user_metadata?.last_name,
+          fullName: displayName,
+          properties: propertyData
+        });
+      } else {
+        console.log("No tenant data found for user:", user.id);
+        setTenant(null);
+        
+        toast({
+          title: "Profil locataire non trouvé",
+          description: "Aucun profil locataire n'a été trouvé pour votre compte. Contactez votre gestionnaire.",
+          variant: "destructive",
+        });
+      }
       
     } catch (error) {
       console.error('Error fetching tenant data:', error);
       setHasError(true);
       setTenant(null);
       
-      if (error.message === 'Fetch timeout') {
-        toast({
-          title: "Délai d'attente dépassé",
-          description: "Le chargement prend trop de temps. Veuillez rafraîchir la page.",
-          variant: "destructive",
-        });
-      } else if (linkingAttempted) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de récupérer les données locataire. Veuillez réessayer.",
-          variant: "destructive",
-        });
-      }
+      toast({
+        title: "Erreur",
+        description: "Impossible de récupérer les données locataire. Veuillez réessayer.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

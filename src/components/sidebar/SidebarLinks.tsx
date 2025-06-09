@@ -31,16 +31,19 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
   const location = useLocation();
   const { t } = useLocale();
   
-  // Using links as a memo to prevent recreation on each render
+  // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {
     if (isTenant) {
+      // Menu limité pour les locataires
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
         { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
+        { to: "/tenant/documents", icon: FileText, label: "Documents", tooltip: "Documents" },
         { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
       ];
     }
     
+    // Menu complet pour les propriétaires
     return [
       { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
       { to: "/properties", icon: Building, label: t('properties'), tooltip: t('properties') },
@@ -52,7 +55,6 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
     ];
   }, [isTenant, t]);
 
-  // Simplified render function to improve memory usage
   const isActive = (path: string) => location.pathname === path;
   
   // Don't wrap with tooltips when not needed

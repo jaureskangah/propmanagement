@@ -25,11 +25,14 @@ const TenantDashboardPage = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Redirect non-tenants to owner dashboard
+  // Redirect non-tenants to owner dashboard - THIS IS CRITICAL
   if (!isTenant) {
+    console.log("User is not a tenant, redirecting to owner dashboard");
     return <Navigate to="/dashboard" replace />;
   }
 
+  // Only tenants should reach this point
+  console.log("Rendering tenant dashboard for authenticated tenant");
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />

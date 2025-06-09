@@ -36,18 +36,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Get initial session
     const getInitialSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (isMounted) {
-        if (session?.user) {
-          setUser(session.user);
-          checkTenantStatus(session.user.id);
-        } else {
-          setUser(null);
-          setIsTenant(false);
-          setTenantData(null);
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (isMounted) {
+          if (session?.user) {
+            setUser(session.user);
+            await checkTenantStatus(session.user.id);
+          } else {
+            setUser(null);
+            setIsTenant(false);
+            setTenantData(null);
+          }
+          setLoading(false);
         }
-        setLoading(false);
+      } catch (error) {
+        console.error("Error getting initial session:", error);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -61,10 +68,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            // Defer tenant check to avoid blocking the auth callback
-            setTimeout(() => {
+            // Check tenant status after signing in
+            setTimeout(async () => {
               if (isMounted) {
-                checkTenantStatus(session.user.id);
+                await checkTenantStatus(session.user.id);
               }
             }, 100);
           }
@@ -88,23 +95,55 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkTenantStatus = async (userId: string) => {
     try {
-      const { data, error } = await supabase.rpc('get_user_tenant_data', {
-        p_user_id: userId
-      });
+      console.log("Checking tenant status for user:", userId);
 
-      if (error) {
-        console.error("Error checking tenant status:", error);
+      // D'abord, vérifier le profil utilisateur
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('is_tenant_user')
+        .eq('id', userId)
+        .maybeSingle();
+
+      console.log("Profile data:", profileData);
+
+      // Si l'utilisateur n'est pas marqué comme tenant dans son profil, ce n'est pas un locataire
+      if (!profileData?.is_tenant_user) {
+        console.log("User is not marked as tenant in profile");
         setIsTenant(false);
         setTenantData(null);
         return;
       }
 
-      if (data && data.length > 0) {
-        console.log("User is a tenant:", data[0]);
+      // Vérifier s'il y a une entrée dans la table tenants avec tenant_profile_id correspondant
+      const { data: tenantRecord, error: tenantError } = await supabase
+        .from('tenants')
+        .select(`
+          id,
+          name,
+          email,
+          unit_number,
+          lease_start,
+          lease_end,
+          rent_amount,
+          property_id,
+          properties:property_id(name)
+        `)
+        .eq('tenant_profile_id', userId)
+        .maybeSingle();
+
+      if (tenantError) {
+        console.error("Error checking tenant record:", tenantError);
+        setIsTenant(false);
+        setTenantData(null);
+        return;
+      }
+
+      if (tenantRecord) {
+        console.log("User is a tenant:", tenantRecord);
         setIsTenant(true);
-        setTenantData(data[0]);
+        setTenantData(tenantRecord);
       } else {
-        console.log("User is not a tenant");
+        console.log("User is marked as tenant but no tenant record found");
         setIsTenant(false);
         setTenantData(null);
       }
@@ -163,8 +202,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await supabase.auth.signOut();
       
       console.log("Sign out successful");
+      
+      // Force redirect to auth page
+      window.location.href = '/auth';
     } catch (error) {
       console.error("Error signing out:", error);
+      // Force redirect even if there's an error
+      window.location.href = '/auth';
     } finally {
       setLoading(false);
     }
