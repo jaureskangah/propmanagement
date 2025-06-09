@@ -300,14 +300,14 @@ export const useTenantPage = () => {
         .from("tenant_invitations")
         .delete()
         .eq("tenant_id", selectedTenantData.id)
-        .select("*", { count: 'exact' });
+        .select();
         
       if (invitationsError) {
         console.error("❌ Erreur lors de la suppression des invitations:", invitationsError);
         throw new Error(`Erreur lors de la suppression des invitations: ${invitationsError.message}`);
       }
       
-      console.log(`✅ ${deletedInvitations || 0} invitations supprimées`);
+      console.log(`✅ ${deletedInvitations?.length || 0} invitations supprimées`);
       
       // ÉTAPE 5: Tentative de suppression du locataire
       console.log("🗑️ ÉTAPE 5: Suppression du locataire...");
@@ -316,7 +316,7 @@ export const useTenantPage = () => {
         .delete()
         .eq("id", selectedTenantData.id)
         .eq("user_id", user.id) // Double vérification de sécurité
-        .select("*", { count: 'exact' });
+        .select();
         
       console.log("📊 Résultat de la suppression:");
       console.log("  - Error:", tenantError);
@@ -331,9 +331,9 @@ export const useTenantPage = () => {
         throw new Error(`Erreur lors de la suppression du locataire: ${tenantError.message}`);
       }
       
-      console.log("📊 Nombre de locataires supprimés:", deletedCount);
+      console.log("📊 Nombre de locataires supprimés:", deletedData?.length || 0);
       
-      if (!deletedCount || deletedCount === 0) {
+      if (!deletedData || deletedData.length === 0) {
         console.error("❌ Aucun locataire supprimé - problème de permissions RLS ou autre");
         
         // DIAGNOSTIC SUPPLÉMENTAIRE: Vérifier les politiques RLS
