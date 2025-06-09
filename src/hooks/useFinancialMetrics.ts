@@ -12,9 +12,9 @@ export function useFinancialMetrics(propertyId: string | null, selectedYear: num
     data: financialData,
     isLoading,
     error,
-    refresh: refreshData
+    refetch: refreshData
   } = useQueryCache(
-    ['financial_metrics', propertyId, selectedYear],
+    ['financial_metrics', propertyId, selectedYear.toString()],
     async () => {
       if (!propertyId) return null;
 
