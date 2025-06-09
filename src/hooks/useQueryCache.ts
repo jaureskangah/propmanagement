@@ -4,6 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 interface QueryCacheOptions {
   staleTime?: number;
   cacheTime?: number;
+  enabled?: boolean;
   onSuccess?: (data: any) => void;
 }
 
@@ -19,6 +20,7 @@ export const useQueryCache = <T>(
     queryFn,
     staleTime: options.staleTime || 5 * 60 * 1000, // 5 minutes par défaut
     gcTime: options.cacheTime || 10 * 60 * 1000, // 10 minutes par défaut
+    enabled: options.enabled,
   });
 
   // Fonction pour invalider le cache
