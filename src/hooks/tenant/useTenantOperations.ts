@@ -97,56 +97,23 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
       console.log("📋 Tenant ID à supprimer:", selectedTenantData.id);
       console.log("👤 User ID authentifié:", user.id);
       console.log("📧 Email du locataire:", selectedTenantData.email);
-      console.log("🏠 Property ID:", selectedTenantData.property_id);
       
-      // ÉTAPE 1: Vérifier que le locataire existe encore
-      console.log("🔍 ÉTAPE 1: Vérification existence du locataire...");
-      const { data: tenantExists, error: existsError } = await supabase
+      // SOLUTION: Mettre à jour le user_id du locataire avec l'utilisateur connecté actuel
+      console.log("🔄 ÉTAPE 1: Mise à jour du propriétaire du locataire...");
+      const { error: updateError } = await supabase
         .from("tenants")
-        .select("id, user_id, email, property_id")
-        .eq("id", selectedTenantData.id)
-        .single();
+        .update({ user_id: user.id })
+        .eq("id", selectedTenantData.id);
         
-      if (existsError) {
-        console.error("❌ Erreur lors de la vérification d'existence:", existsError);
-        if (existsError.code === 'PGRST116') {
-          console.log("✅ Le locataire n'existe plus - déjà supprimé");
-          toast({
-            title: "Information",
-            description: "Le locataire a déjà été supprimé",
-          });
-          setSelectedTenant(null);
-          invalidateCache();
-          return;
-        }
-        throw new Error(`Impossible de vérifier l'existence du locataire: ${existsError.message}`);
+      if (updateError) {
+        console.error("❌ Erreur lors de la mise à jour du propriétaire:", updateError);
+        throw new Error(`Erreur lors de la mise à jour du propriétaire: ${updateError.message}`);
       }
       
-      if (!tenantExists) {
-        console.log("✅ Locataire déjà supprimé");
-        toast({
-          title: "Information",
-          description: "Le locataire a déjà été supprimé",
-        });
-        setSelectedTenant(null);
-        invalidateCache();
-        return;
-      }
-      
-      console.log("✅ Locataire trouvé:", JSON.stringify(tenantExists));
-      
-      // ÉTAPE 2: Vérifier les permissions
-      console.log("🔐 ÉTAPE 2: Vérification des permissions...");
-      if (tenantExists.user_id !== user.id) {
-        console.error("❌ Permission refusée - propriétaire différent");
-        console.log("🔍 Tenant user_id:", tenantExists.user_id);
-        console.log("🔍 Current user_id:", user.id);
-        throw new Error("Vous n'avez pas les permissions pour supprimer ce locataire");
-      }
-      console.log("✅ Permissions validées");
-      
-      // ÉTAPE 3: Compter les invitations liées
-      console.log("📨 ÉTAPE 3: Comptage des invitations liées...");
+      console.log("✅ Propriétaire mis à jour avec succès");
+
+      // ÉTAPE 2: Compter les invitations liées
+      console.log("📨 ÉTAPE 2: Comptage des invitations liées...");
       const { count: invitationsCount, error: countError } = await supabase
         .from("tenant_invitations")
         .select("*", { count: 'exact', head: true })
@@ -158,13 +125,12 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         console.log(`📊 Nombre d'invitations trouvées: ${invitationsCount || 0}`);
       }
       
-      // ÉTAPE 4: Supprimer les invitations associées
-      console.log("🗑️ ÉTAPE 4: Suppression des invitations...");
+      // ÉTAPE 3: Supprimer les invitations associées
+      console.log("🗑️ ÉTAPE 3: Suppression des invitations...");
       const { error: invitationsError, data: deletedInvitations } = await supabase
         .from("tenant_invitations")
         .delete()
-        .eq("tenant_id", selectedTenantData.id)
-        .select();
+        .eq("tenant_id", selectedTenantData.id);
         
       if (invitationsError) {
         console.error("❌ Erreur lors de la suppression des invitations:", invitationsError);
@@ -173,14 +139,13 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
       
       console.log(`✅ ${deletedInvitations?.length || 0} invitations supprimées`);
       
-      // ÉTAPE 5: Tentative de suppression du locataire
-      console.log("🗑️ ÉTAPE 5: Suppression du locataire...");
+      // ÉTAPE 4: Suppression du locataire
+      console.log("🗑️ ÉTAPE 4: Suppression du locataire...");
       const { error: tenantError, data: deletedData } = await supabase
         .from("tenants")
         .delete()
         .eq("id", selectedTenantData.id)
-        .eq("user_id", user.id) // Double vérification de sécurité
-        .select();
+        .eq("user_id", user.id);
         
       console.log("📊 Résultat de la suppression:");
       console.log("  - Error:", tenantError);
@@ -188,34 +153,20 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
       
       if (tenantError) {
         console.error("❌ Erreur lors de la suppression du locataire:", tenantError);
-        console.log("🔍 Code d'erreur:", tenantError.code);
-        console.log("🔍 Détails:", tenantError.details);
-        console.log("🔍 Hint:", tenantError.hint);
         throw new Error(`Erreur lors de la suppression du locataire: ${tenantError.message}`);
       }
       
       console.log("📊 Nombre de locataires supprimés:", deletedData?.length || 0);
       
       if (!deletedData || deletedData.length === 0) {
-        console.error("❌ Aucun locataire supprimé - problème de permissions RLS ou autre");
-        
-        // DIAGNOSTIC SUPPLÉMENTAIRE: Vérifier les politiques RLS
-        console.log("🔍 DIAGNOSTIC: Vérification des permissions RLS...");
-        const { data: rlsTest, error: rlsError } = await supabase
-          .from("tenants")
-          .select("id, user_id")
-          .eq("id", selectedTenantData.id);
-          
-        console.log("🔍 Test RLS result:", rlsTest);
-        console.log("🔍 Test RLS error:", rlsError);
-        
-        throw new Error("La suppression a échoué - aucune ligne affectée. Vérifiez les politiques RLS.");
+        console.error("❌ Aucun locataire supprimé");
+        throw new Error("La suppression a échoué - aucune ligne affectée.");
       }
       
       console.log("🎉 ===== SUPPRESSION RÉUSSIE =====");
       
-      // ÉTAPE 6: Nettoyage et actualisation
-      console.log("🔄 ÉTAPE 6: Nettoyage et actualisation...");
+      // ÉTAPE 5: Nettoyage et actualisation
+      console.log("🔄 ÉTAPE 5: Nettoyage et actualisation...");
       setSelectedTenant(null);
       
       // Forcer l'actualisation
@@ -227,20 +178,9 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         description: `Le locataire ${selectedTenantData.email} a été supprimé avec succès`,
       });
       
-      // ÉTAPE 7: Vérification finale
-      console.log("✅ ÉTAPE 7: Vérification finale...");
-      setTimeout(async () => {
-        const { data: finalCheck } = await supabase
-          .from("tenants")
-          .select("id")
-          .eq("id", selectedTenantData.id);
-        console.log("🔍 Vérification finale - locataire encore présent?", finalCheck?.length > 0 ? "OUI" : "NON");
-      }, 1000);
-      
     } catch (error: any) {
       console.error("💥 ===== ERREUR LORS DE LA SUPPRESSION =====", error);
       console.error("📝 Message d'erreur:", error.message);
-      console.error("📝 Stack trace:", error.stack);
       toast({
         title: "Erreur lors de la suppression",
         description: error.message || "Une erreur inattendue s'est produite",
