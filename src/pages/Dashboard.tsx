@@ -10,7 +10,7 @@ import { DateRange } from "@/components/dashboard/DashboardDateFilter";
 import { cn } from "@/lib/utils";
 
 const Dashboard = () => {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, isTenant } = useAuth();
   const { t } = useLocale();
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(),
@@ -26,11 +26,10 @@ const Dashboard = () => {
   useEffect(() => {
     console.log("Dashboard component mounted, auth state:", { 
       isAuthenticated, 
-      isTenant: user?.user_metadata?.is_tenant_user,
-      userName: user?.user_metadata?.first_name,
+      isTenant,
       loading 
     });
-  }, [isAuthenticated, user, loading]);
+  }, [isAuthenticated, isTenant, loading]);
 
   if (loading) {
     return (
@@ -45,8 +44,8 @@ const Dashboard = () => {
     return <Navigate to="/auth" replace />;
   }
   
-  // Vérifier si l'utilisateur est un locataire
-  if (user?.user_metadata?.is_tenant_user) {
+  // Rediriger les locataires vers leur dashboard spécifique
+  if (isTenant) {
     console.log("User is tenant, redirecting to tenant dashboard");
     return <Navigate to="/tenant/dashboard" replace />;
   }

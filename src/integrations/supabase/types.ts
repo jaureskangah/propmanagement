@@ -1052,8 +1052,22 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      get_user_tenant_data: {
+        Args: { p_user_id: string }
+        Returns: {
+          tenant_id: string
+          tenant_name: string
+          tenant_email: string
+          property_name: string
+          is_tenant: boolean
+        }[]
+      }
       has_role: {
         Args: { role: Database["public"]["Enums"]["app_role"] }
+        Returns: boolean
+      }
+      link_tenant_profile: {
+        Args: { p_tenant_id: string; p_user_id: string }
         Returns: boolean
       }
     }

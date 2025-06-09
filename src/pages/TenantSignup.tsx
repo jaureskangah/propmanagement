@@ -32,7 +32,7 @@ const TenantSignup = () => {
   const [loading, setLoading] = useState(false);
   const [tenantData, setTenantData] = useState<any>(null);
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
-  const [linkingStatus, setLinkingStatus] = useState<'idle' | 'linking' | 'verifying' | 'success' | 'failed'>('idle');
+  const [linkingStatus, setLinkingStatus] = useState<'idle' | 'linking' | 'success' | 'failed'>('idle');
 
   const form = useForm<TenantSignupValues>({
     resolver: zodResolver(tenantSignupSchema),
@@ -101,89 +101,19 @@ const TenantSignup = () => {
     console.log("Tenant ID:", tenantId);
     
     try {
-      // Étape 1: Attendre que les triggers Supabase s'exécutent
-      console.log("Step 1: Waiting for profile creation triggers...");
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Étape 2: Utiliser l'API service role pour contourner les problèmes RLS
-      console.log("Step 2: Linking tenant profile using service call...");
-      
-      // Faire un appel direct à la base de données sans restrictions RLS
-      const { data: currentTenant, error: fetchError } = await supabase
-        .from('tenants')
-        .select('id, tenant_profile_id, user_id')
-        .eq('id', tenantId)
-        .single();
-
-      if (fetchError) {
-        console.error("Error fetching tenant:", fetchError);
-        return false;
-      }
-
-      console.log("Current tenant data:", currentTenant);
-
-      // Vérifier si le tenant appartient bien au bon utilisateur (propriétaire)
-      if (!currentTenant.user_id) {
-        console.error("Tenant has no owner user_id");
-        return false;
-      }
-
-      // Utiliser le RPC (Remote Procedure Call) pour faire la mise à jour
-      // Cela nous permet de contourner les problèmes de permissions RLS
-      const { data: updateResult, error: updateError } = await supabase.rpc('link_tenant_profile', {
+      // Utiliser la fonction de base de données sécurisée pour faire la liaison
+      const { data: linkResult, error: linkError } = await supabase.rpc('link_tenant_profile', {
         p_tenant_id: tenantId,
         p_user_id: userId
       });
 
-      if (updateError) {
-        console.error("RPC call failed, trying direct update:", updateError);
-        
-        // Fallback: essayer une mise à jour directe mais en se connectant d'abord
-        // Créer une nouvelle session temporaire pour avoir les bonnes permissions
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: tenantData.email,
-          password: 'temp_password' // Ceci ne marchera pas, mais on va essayer une autre approche
-        });
-
-        // Approche alternative: faire la mise à jour sans restrictions
-        const { error: directUpdateError } = await supabase
-          .from('tenants')
-          .update({ 
-            tenant_profile_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', tenantId);
-
-        if (directUpdateError) {
-          console.error("Direct update also failed:", directUpdateError);
-          return false;
-        }
-
-        console.log("Direct update succeeded");
-      } else {
-        console.log("RPC update successful:", updateResult);
-      }
-
-      // Étape 3: Vérifier que la liaison a bien été effectuée
-      console.log("Step 3: Verifying the link was successful...");
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const { data: verification, error: verifyError } = await supabase
-        .from('tenants')
-        .select('id, tenant_profile_id, email, name')
-        .eq('id', tenantId)
-        .single();
-
-      if (verifyError) {
-        console.error("Verification failed:", verifyError);
+      if (linkError) {
+        console.error("Link error:", linkError);
         return false;
       }
 
-      console.log("Verification result:", verification);
-      
-      if (verification?.tenant_profile_id !== userId) {
-        console.error("Link verification failed - IDs don't match");
-        console.error("Expected:", userId, "Got:", verification?.tenant_profile_id);
+      if (!linkResult) {
+        console.error("Link failed - function returned false");
         return false;
       }
 
@@ -237,12 +167,18 @@ const TenantSignup = () => {
 
       console.log("User created successfully with ID:", signUpData.user.id);
 
-      // Au lieu de lier immédiatement, nous allons marquer l'invitation comme acceptée
-      // et laisser un processus en arrière-plan gérer la liaison
+      // Maintenant, lier le profil utilisateur au tenant
       setLinkingStatus('linking');
-      console.log("Marking invitation as accepted...");
+      console.log("Starting tenant linking process...");
 
-      // Mettre à jour l'invitation comme acceptée avec l'ID utilisateur
+      const linkSuccess = await linkTenantProfile(signUpData.user.id, tenantData.id);
+
+      if (!linkSuccess) {
+        console.error("Failed to link tenant profile");
+        throw new Error("Impossible de lier le profil au locataire");
+      }
+
+      // Marquer l'invitation comme acceptée
       const { error: updateError } = await supabase
         .from('tenant_invitations')
         .update({ 
@@ -253,8 +189,6 @@ const TenantSignup = () => {
 
       if (updateError) {
         console.error("Error updating invitation status:", updateError);
-      } else {
-        console.log("Invitation marked as accepted");
       }
 
       setLinkingStatus('success');
@@ -262,10 +196,10 @@ const TenantSignup = () => {
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé. Vous pouvez maintenant vous connecter.",
+        description: "Votre compte a été créé et lié. Vous pouvez maintenant vous connecter.",
       });
 
-      // Redirection vers la page de connexion au lieu du dashboard
+      // Redirection vers la page de connexion
       setTimeout(() => {
         window.location.href = '/auth?message=account_created';
       }, 2000);
@@ -320,13 +254,6 @@ const TenantSignup = () => {
           <div className="flex items-center space-x-2 text-blue-600">
             <Loader2 className="h-4 w-4 animate-spin" />
             <span className="text-sm">Finalisation du compte...</span>
-          </div>
-        );
-      case 'verifying':
-        return (
-          <div className="flex items-center space-x-2 text-orange-600">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-sm">Vérification...</span>
           </div>
         );
       case 'success':
@@ -437,9 +364,7 @@ const TenantSignup = () => {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {linkingStatus === 'linking' ? 'Liaison en cours...' : 
-                         linkingStatus === 'verifying' ? 'Vérification...' : 
-                         'Création du compte...'}
+                        {linkingStatus === 'linking' ? 'Liaison en cours...' : 'Création du compte...'}
                       </>
                     ) : linkingStatus === 'success' ? (
                       'Redirection...'

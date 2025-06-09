@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const TenantDashboardPage = () => {
-  const { isAuthenticated, loading, user } = useAuth();
+  const { isAuthenticated, loading, isTenant } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
   if (loading) {
@@ -23,7 +23,8 @@ const TenantDashboardPage = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  if (user && !user.user_metadata?.is_tenant_user) {
+  // Rediriger les propriétaires vers leur dashboard
+  if (!isTenant) {
     return <Navigate to="/dashboard" replace />;
   }
 
