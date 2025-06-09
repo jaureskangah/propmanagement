@@ -15,8 +15,8 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
     await updateTenant(selectedTenant, data);
   };
 
-  const handleDeleteTenantWithData = (selectedTenantData: any) => {
-    handleDeleteTenant(selectedTenantData);
+  const handleDeleteTenantWithData = async (selectedTenantData: any) => {
+    await handleDeleteTenant(selectedTenantData);
     setSelectedTenant(null);
   };
 
