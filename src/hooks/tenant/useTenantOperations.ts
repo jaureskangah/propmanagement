@@ -45,8 +45,8 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
     }
   };
 
-  const handleUpdateTenant = async (data: any, selectedTenantData: any) => {
-    if (!selectedTenantData) return;
+  const handleUpdateTenant = async (data: any) => {
+    if (!selectedTenant) return;
     
     try {
       const { error } = await supabase
@@ -54,7 +54,7 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         .update({
           ...data,
         })
-        .eq("id", selectedTenantData.id);
+        .eq("id", selectedTenant);
         
       if (error) {
         throw error;
