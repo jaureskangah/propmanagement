@@ -127,7 +127,7 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
       
       // ÉTAPE 3: Supprimer les invitations associées
       console.log("🗑️ ÉTAPE 3: Suppression des invitations...");
-      const { error: invitationsError, data: deletedInvitations } = await supabase
+      const { error: invitationsError } = await supabase
         .from("tenant_invitations")
         .delete()
         .eq("tenant_id", selectedTenantData.id);
@@ -137,8 +137,7 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         throw new Error(`Erreur lors de la suppression des invitations: ${invitationsError.message}`);
       }
       
-      const deletedInvitationsCount = deletedInvitations ? (Array.isArray(deletedInvitations) ? deletedInvitations.length : 1) : 0;
-      console.log(`✅ ${deletedInvitationsCount} invitations supprimées`);
+      console.log(`✅ Invitations supprimées avec succès`);
       
       // ÉTAPE 4: Suppression du locataire
       console.log("🗑️ ÉTAPE 4: Suppression du locataire...");
@@ -157,10 +156,9 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         throw new Error(`Erreur lors de la suppression du locataire: ${tenantError.message}`);
       }
       
-      const deletedTenantsCount = deletedData ? (Array.isArray(deletedData) ? deletedData.length : 1) : 0;
-      console.log("📊 Nombre de locataires supprimés:", deletedTenantsCount);
+      console.log("📊 Locataire supprimé avec succès");
       
-      if (!deletedData || (Array.isArray(deletedData) && deletedData.length === 0)) {
+      if (deletedData === null) {
         console.error("❌ Aucun locataire supprimé");
         throw new Error("La suppression a échoué - aucune ligne affectée.");
       }
