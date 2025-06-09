@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQueryCache } from "@/hooks/useQueryCache";
 import { useToast } from "@/hooks/use-toast";
@@ -26,11 +25,9 @@ export const useTenantPage = () => {
       return '';
     }
     
-    // Log pour débogage
     console.log("getPropertyName - properties data:", tenant.properties);
     console.log("getPropertyName - properties type:", typeof tenant.properties);
     
-    // Si properties est un objet direct avec une propriété name
     if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && tenant.properties !== null) {
       if ('name' in tenant.properties && typeof tenant.properties.name === 'string') {
         console.log("getPropertyName - Found name in object:", tenant.properties.name);
@@ -38,7 +35,6 @@ export const useTenantPage = () => {
       }
     }
     
-    // Si properties est un array avec un élément qui contient name
     if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
       const firstProperty = tenant.properties[0];
       if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
@@ -50,7 +46,7 @@ export const useTenantPage = () => {
     return '';
   };
 
-  const { data: tenants, isLoading, refetch } = useQueryCache<any[]>(
+  const { data: tenants, isLoading, refetch, invalidateCache } = useQueryCache<any[]>(
     ["tenants"],
     async () => {
       console.log("Fetching tenants data with cache optimization...");
@@ -166,7 +162,6 @@ export const useTenantPage = () => {
         throw error;
       }
       
-      // Invalidate cache for tenants to refresh data
       refetch();
       
       toast({
@@ -198,7 +193,6 @@ export const useTenantPage = () => {
         throw error;
       }
       
-      // Invalidate cache to refresh data
       refetch();
       
       toast({
@@ -247,8 +241,16 @@ export const useTenantPage = () => {
       
       console.log("Tenant deleted successfully");
       
-      // Invalidate cache to refresh data
-      refetch();
+      // Invalider complètement le cache et forcer une nouvelle requête
+      if (invalidateCache) {
+        invalidateCache();
+      }
+      
+      // Attendre un moment pour que la suppression soit propagée
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Forcer le refresh des données
+      await refetch();
       
       setSelectedTenant(null);
       setIsDeleteDialogOpen(false);
