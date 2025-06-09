@@ -137,7 +137,8 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         throw new Error(`Erreur lors de la suppression des invitations: ${invitationsError.message}`);
       }
       
-      console.log(`✅ ${deletedInvitations?.length ?? 0} invitations supprimées`);
+      const deletedInvitationsCount = deletedInvitations ? (Array.isArray(deletedInvitations) ? deletedInvitations.length : 1) : 0;
+      console.log(`✅ ${deletedInvitationsCount} invitations supprimées`);
       
       // ÉTAPE 4: Suppression du locataire
       console.log("🗑️ ÉTAPE 4: Suppression du locataire...");
@@ -156,7 +157,8 @@ export const useTenantOperations = (refetch: () => void, invalidateCache: () => 
         throw new Error(`Erreur lors de la suppression du locataire: ${tenantError.message}`);
       }
       
-      console.log("📊 Nombre de locataires supprimés:", deletedData ? (Array.isArray(deletedData) ? deletedData.length : 1) : 0);
+      const deletedTenantsCount = deletedData ? (Array.isArray(deletedData) ? deletedData.length : 1) : 0;
+      console.log("📊 Nombre de locataires supprimés:", deletedTenantsCount);
       
       if (!deletedData || (Array.isArray(deletedData) && deletedData.length === 0)) {
         console.error("❌ Aucun locataire supprimé");
