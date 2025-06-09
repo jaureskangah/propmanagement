@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQueryCache } from "@/hooks/useQueryCache";
 import { useToast } from "@/hooks/use-toast";
@@ -241,19 +242,13 @@ export const useTenantPage = () => {
       
       console.log("Tenant deleted successfully");
       
-      // Invalider complètement le cache et forcer une nouvelle requête
-      if (invalidateCache) {
-        invalidateCache();
-      }
-      
-      // Attendre un moment pour que la suppression soit propagée
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      // Forcer le refresh des données
-      await refetch();
-      
+      // Fermer les modales immédiatement
       setSelectedTenant(null);
       setIsDeleteDialogOpen(false);
+      
+      // Invalider le cache et forcer une nouvelle requête
+      invalidateCache();
+      await refetch();
       
       toast({
         title: "Success",
