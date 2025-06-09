@@ -94,75 +94,57 @@ const TenantSignup = () => {
     }
   };
 
-  const verifyTenantLinking = async (userId: string, tenantId: string, retryCount = 0): Promise<boolean> => {
-    console.log(`Verifying tenant linking (attempt ${retryCount + 1}):`, { userId, tenantId });
+  const linkTenantProfile = async (userId: string, tenantId: string): Promise<boolean> => {
+    console.log("Starting tenant profile linking:", { userId, tenantId });
     
     try {
-      const { data: linkedTenant, error } = await supabase
+      // Clear any existing linking first
+      const { error: clearError } = await supabase
         .from('tenants')
-        .select('tenant_profile_id')
-        .eq('id', tenantId)
-        .eq('tenant_profile_id', userId)
-        .single();
+        .update({ tenant_profile_id: null })
+        .eq('id', tenantId);
 
-      if (error) {
-        console.error("Error verifying linking:", error);
+      if (clearError) {
+        console.error("Error clearing existing link:", clearError);
+      }
+
+      // Wait a moment for the clear to propagate
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Now link the profile
+      const { error: linkError } = await supabase
+        .from('tenants')
+        .update({ 
+          tenant_profile_id: userId,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', tenantId);
+
+      if (linkError) {
+        console.error("Error linking tenant profile:", linkError);
         return false;
       }
 
-      const isLinked = linkedTenant && linkedTenant.tenant_profile_id === userId;
-      console.log("Linking verification result:", isLinked);
-      return isLinked;
+      // Verify the link was successful
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const { data: verification, error: verifyError } = await supabase
+        .from('tenants')
+        .select('tenant_profile_id')
+        .eq('id', tenantId)
+        .single();
+
+      if (verifyError || verification?.tenant_profile_id !== userId) {
+        console.error("Verification failed:", verifyError);
+        return false;
+      }
+
+      console.log("Tenant profile linked successfully");
+      return true;
     } catch (error) {
-      console.error("Exception during verification:", error);
+      console.error("Exception during linking:", error);
       return false;
     }
-  };
-
-  const retryTenantLinking = async (userId: string, tenantId: string, maxRetries = 3): Promise<boolean> => {
-    for (let attempt = 0; attempt < maxRetries; attempt++) {
-      console.log(`Linking attempt ${attempt + 1}/${maxRetries}`);
-      
-      try {
-        const { error: linkError } = await supabase
-          .from('tenants')
-          .update({ 
-            tenant_profile_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', tenantId);
-
-        if (linkError) {
-          console.error(`Linking attempt ${attempt + 1} failed:`, linkError);
-          if (attempt === maxRetries - 1) return false;
-          
-          // Wait before retry
-          await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
-          continue;
-        }
-
-        // Wait a bit for the update to propagate
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Verify the linking was successful
-        const isLinked = await verifyTenantLinking(userId, tenantId, attempt);
-        if (isLinked) {
-          console.log(`Linking successful on attempt ${attempt + 1}`);
-          return true;
-        }
-
-        console.log(`Linking verification failed on attempt ${attempt + 1}`);
-        if (attempt < maxRetries - 1) {
-          await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
-        }
-      } catch (error) {
-        console.error(`Exception during linking attempt ${attempt + 1}:`, error);
-        if (attempt === maxRetries - 1) return false;
-        await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)));
-      }
-    }
-    
-    return false;
   };
 
   const onSubmit = async (values: TenantSignupValues) => {
@@ -216,25 +198,36 @@ const TenantSignup = () => {
       console.log("Starting tenant linking process...");
       setLinkingStatus('verifying');
       
-      const linkingSuccess = await retryTenantLinking(signUpData.user.id, tenantData.id);
+      const linkingSuccess = await linkTenantProfile(signUpData.user.id, tenantData.id);
       
       if (!linkingSuccess) {
-        console.error("Failed to link tenant after multiple retries");
-        throw new Error('Impossible de lier le profil locataire après plusieurs tentatives');
+        console.error("Failed to link tenant profile");
+        setLinkingStatus('failed');
+        toast({
+          title: "Erreur de liaison",
+          description: "Le compte a été créé mais la liaison au profil locataire a échoué. Contactez le support.",
+          variant: "destructive",
+        });
+        return;
       }
 
-      console.log("Tenant linking successful!");
       setLinkingStatus('success');
+      console.log("Tenant linking successful!");
 
       // Mettre à jour l'invitation comme acceptée
       const { error: updateError } = await supabase
         .from('tenant_invitations')
-        .update({ status: 'accepted' })
+        .update({ 
+          status: 'accepted',
+          updated_at: new Date().toISOString() 
+        })
         .eq('token', invitationToken);
 
       if (updateError) {
         console.error("Error updating invitation status:", updateError);
         // Non bloquant, on continue
+      } else {
+        console.log("Invitation marked as accepted");
       }
 
       console.log("=== SIGNUP PROCESS COMPLETED SUCCESSFULLY ===");
@@ -257,8 +250,6 @@ const TenantSignup = () => {
       
       if (error.message.includes('already registered')) {
         errorMessage = "Un compte existe déjà avec cette adresse email.";
-      } else if (error.message.includes('lier le profil')) {
-        errorMessage = "Le compte a été créé mais n'a pas pu être lié au profil locataire. Contactez le support.";
       }
 
       toast({
@@ -364,7 +355,6 @@ const TenantSignup = () => {
                 </div>
               </div>
 
-              {/* Status de liaison */}
               {linkingStatus !== 'idle' && (
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                   {getLinkingStatusDisplay()}

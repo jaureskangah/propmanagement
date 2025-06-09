@@ -52,11 +52,11 @@ const Invitations = () => {
             properties (name)
           )
         `)
-        .eq('user_id', user?.id);
+        .eq('user_id', user?.id)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
 
-      // Transformer les données pour ajouter tenant_name et property_name
       const transformedData = data.map(invitation => ({
         ...invitation,
         tenant_name: invitation.tenants?.name || 'Unknown',
@@ -79,17 +79,37 @@ const Invitations = () => {
   useEffect(() => {
     if (user) {
       fetchInvitations();
+      
+      // Set up real-time subscription to get updates
+      const channel = supabase
+        .channel('tenant_invitations_changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'tenant_invitations',
+            filter: `user_id=eq.${user.id}`
+          },
+          (payload) => {
+            console.log('Invitation change detected:', payload);
+            fetchInvitations(); // Refresh data when changes occur
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     }
   }, [user]);
 
   const handleResendInvitation = async (invitation: Invitation) => {
-    // Ajouter l'ID de l'invitation à la liste des envois en cours
     setSendingInvitations(prev => new Set(prev).add(invitation.id));
     
     try {
       console.log("Resending invitation for:", invitation.email, "to tenant ID:", invitation.tenant_id);
       
-      // Générer un nouveau token et mettre à jour l'invitation
       const newToken = crypto.randomUUID();
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7);
@@ -107,7 +127,6 @@ const Invitations = () => {
       
       console.log("Invitation updated successfully, now sending email");
       
-      // Récupérer les données du locataire pour l'email
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select('name, email')
@@ -119,13 +138,11 @@ const Invitations = () => {
         throw new Error("Impossible de récupérer les données du locataire");
       }
       
-      // Afficher une notification d'envoi en cours
       toast({
         title: "Envoi en cours",
         description: `Envoi de l'invitation à ${invitation.email}...`,
       });
       
-      // Appeler la fonction Edge pour envoyer l'email
       try {
         console.log("Calling send-tenant-email edge function");
         const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
@@ -148,7 +165,6 @@ const Invitations = () => {
 
         if (emailError) {
           console.error("Error sending invitation email:", emailError);
-          console.error("Error details:", emailError.message, emailError.stack);
           
           toast({
             title: "Erreur d'envoi",
@@ -160,14 +176,12 @@ const Invitations = () => {
         
         console.log("Email sent successfully");
         
-        // Notification de succès
         toast({
           title: "Invitation envoyée avec succès",
           description: `L'invitation a été envoyée à ${invitation.email}`,
         });
       } catch (emailError: any) {
         console.error("Error in resend email process:", emailError);
-        console.error("Error details:", emailError.message, emailError.stack);
         
         toast({
           title: "Erreur d'envoi",
@@ -177,7 +191,6 @@ const Invitations = () => {
         return;
       }
 
-      // Rafraîchir la liste
       fetchInvitations();
     } catch (error) {
       console.error("Error resending invitation:", error);
@@ -187,7 +200,6 @@ const Invitations = () => {
         variant: "destructive",
       });
     } finally {
-      // Retirer l'ID de l'invitation de la liste des envois en cours
       setSendingInvitations(prev => {
         const newSet = new Set(prev);
         newSet.delete(invitation.id);
@@ -212,7 +224,6 @@ const Invitations = () => {
         description: "L'invitation a été annulée avec succès",
       });
 
-      // Rafraîchir la liste
       fetchInvitations();
     } catch (error) {
       console.error("Error cancelling invitation:", error);
