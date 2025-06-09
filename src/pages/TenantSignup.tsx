@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -101,43 +100,23 @@ const TenantSignup = () => {
     console.log("Tenant ID:", tenantId);
     
     try {
-      // Étape 1: Vérifier d'abord si le profil utilisateur existe
-      console.log("Step 1: Checking if user profile exists...");
-      const { data: existingProfile, error: profileCheckError } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .eq('id', userId)
-        .single();
+      // Étape 1: Attendre un peu pour que les triggers Supabase s'exécutent
+      console.log("Step 1: Waiting for user setup to complete...");
+      await new Promise(resolve => setTimeout(resolve, 3000));
 
-      if (profileCheckError) {
-        console.error("Error checking profile:", profileCheckError);
-        if (profileCheckError.code === 'PGRST116') {
-          console.log("Profile doesn't exist yet, waiting...");
-          // Attendre un peu que le profil soit créé par le trigger
-          await new Promise(resolve => setTimeout(resolve, 2000));
-          
-          // Réessayer
-          const { data: retryProfile, error: retryError } = await supabase
-            .from('profiles')
-            .select('id, email')
-            .eq('id', userId)
-            .single();
-            
-          if (retryError) {
-            console.error("Profile still doesn't exist after retry:", retryError);
-            return false;
-          }
-          
-          console.log("Profile found on retry:", retryProfile);
-        } else {
-          return false;
-        }
-      } else {
-        console.log("Profile exists:", existingProfile);
+      // Étape 2: Vérifier que l'utilisateur a été créé avec succès dans auth.users
+      console.log("Step 2: Verifying user authentication...");
+      const { data: authUser, error: authError } = await supabase.auth.getUser();
+      
+      if (authError || !authUser?.user || authUser.user.id !== userId) {
+        console.error("Auth verification failed:", authError);
+        return false;
       }
+      
+      console.log("User authenticated successfully:", authUser.user.id);
 
-      // Étape 2: Nettoyer toute liaison existante pour ce locataire
-      console.log("Step 2: Clearing any existing tenant profile links...");
+      // Étape 3: Nettoyer toute liaison existante pour ce locataire
+      console.log("Step 3: Clearing any existing tenant profile links...");
       const { error: clearError } = await supabase
         .from('tenants')
         .update({ tenant_profile_id: null })
@@ -145,14 +124,14 @@ const TenantSignup = () => {
 
       if (clearError) {
         console.error("Error clearing existing link:", clearError);
-        // Ne pas arrêter pour cette erreur
+        // Ne pas arrêter pour cette erreur, continuer
       }
 
       // Attendre un moment pour que la mise à jour se propage
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-      // Étape 3: Créer la nouvelle liaison
-      console.log("Step 3: Creating new tenant profile link...");
+      // Étape 4: Créer la nouvelle liaison
+      console.log("Step 4: Creating new tenant profile link...");
       const { data: updateResult, error: linkError } = await supabase
         .from('tenants')
         .update({ 
@@ -169,9 +148,9 @@ const TenantSignup = () => {
 
       console.log("Update result:", updateResult);
 
-      // Étape 4: Vérifier que la liaison a bien été effectuée
-      console.log("Step 4: Verifying the link was successful...");
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Étape 5: Vérifier que la liaison a bien été effectuée
+      console.log("Step 5: Verifying the link was successful...");
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       const { data: verification, error: verifyError } = await supabase
         .from('tenants')
@@ -242,12 +221,8 @@ const TenantSignup = () => {
 
       console.log("User created successfully with ID:", signUpData.user.id);
 
-      // Attendre que le profil soit créé par le trigger
-      setLinkingStatus('linking');
-      console.log("Waiting for profile creation...");
-      await new Promise(resolve => setTimeout(resolve, 3000));
-
       // Lier le profil du locataire
+      setLinkingStatus('linking');
       console.log("Starting tenant linking process...");
       setLinkingStatus('verifying');
       
