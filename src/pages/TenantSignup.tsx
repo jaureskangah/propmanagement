@@ -107,6 +107,9 @@ const TenantSignup = () => {
         p_user_id: userId
       });
 
+      console.log("Link result:", linkResult);
+      console.log("Link error:", linkError);
+
       if (linkError) {
         console.error("Link error:", linkError);
         return false;
@@ -171,6 +174,9 @@ const TenantSignup = () => {
       setLinkingStatus('linking');
       console.log("Starting tenant linking process...");
 
+      // Attendre un peu pour que l'utilisateur soit bien créé
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       const linkSuccess = await linkTenantProfile(signUpData.user.id, tenantData.id);
 
       if (!linkSuccess) {
@@ -196,12 +202,12 @@ const TenantSignup = () => {
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé et lié. Vous pouvez maintenant vous connecter.",
+        description: "Votre compte a été créé et lié. Redirection vers la connexion...",
       });
 
-      // Redirection vers la page de connexion
+      // Redirection vers la page de connexion avec un message
       setTimeout(() => {
-        window.location.href = '/auth?message=account_created';
+        window.location.href = '/auth?message=account_created&email=' + encodeURIComponent(tenantData.email);
       }, 2000);
 
     } catch (error: any) {

@@ -11,8 +11,18 @@ const TenantDashboardPage = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
   const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
+  React.useEffect(() => {
+    console.log("=== TENANT DASHBOARD ===");
+    console.log("TenantDashboard component mounted, auth state:", { 
+      isAuthenticated, 
+      isTenant,
+      loading 
+    });
+  }, [isAuthenticated, isTenant, loading]);
+
   // Show loading spinner while checking auth
   if (loading) {
+    console.log("TenantDashboard showing loading spinner");
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
@@ -22,17 +32,18 @@ const TenantDashboardPage = () => {
 
   // Redirect to auth if not authenticated
   if (!isAuthenticated) {
+    console.log("User not authenticated, redirecting to /auth");
     return <Navigate to="/auth" replace />;
   }
 
   // Redirect non-tenants to owner dashboard - THIS IS CRITICAL
   if (!isTenant) {
-    console.log("User is not a tenant, redirecting to owner dashboard");
+    console.log("🔄 User is not a tenant, redirecting to owner dashboard");
     return <Navigate to="/dashboard" replace />;
   }
 
   // Only tenants should reach this point
-  console.log("Rendering tenant dashboard for authenticated tenant");
+  console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />

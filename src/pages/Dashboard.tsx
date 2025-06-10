@@ -25,6 +25,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
+    console.log("=== OWNER DASHBOARD ===");
     console.log("Dashboard component mounted, auth state:", { 
       isAuthenticated, 
       isTenant,
@@ -34,6 +35,7 @@ const Dashboard = () => {
 
   // Show loading spinner while checking auth
   if (loading) {
+    console.log("Dashboard showing loading spinner");
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
@@ -49,12 +51,12 @@ const Dashboard = () => {
   
   // Redirect tenants to their dashboard - THIS IS CRITICAL
   if (isTenant) {
-    console.log("User is tenant, redirecting to tenant dashboard");
+    console.log("🔄 User is tenant, redirecting to tenant dashboard");
     return <Navigate to="/tenant/dashboard" replace />;
   }
 
   // Only property owners should reach this point
-  console.log("Rendering owner dashboard for property owner");
+  console.log("✅ Rendering owner dashboard for property owner");
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />

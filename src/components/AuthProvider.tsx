@@ -68,12 +68,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            // Check tenant status after signing in
+            // Attendre un peu pour que la liaison tenant soit terminée
             setTimeout(async () => {
               if (isMounted) {
                 await checkTenantStatus(session.user.id);
               }
-            }, 100);
+            }, 500); // Augmenté à 500ms pour laisser plus de temps
           }
         } else {
           setUser(null);
@@ -95,6 +95,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkTenantStatus = async (userId: string) => {
     try {
+      console.log("=== CHECKING TENANT STATUS ===");
       console.log("Checking tenant status for user:", userId);
 
       // D'abord, vérifier le profil utilisateur
@@ -105,6 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .maybeSingle();
 
       console.log("Profile data:", profileData);
+      console.log("Profile error:", profileError);
 
       // Si l'utilisateur n'est pas marqué comme tenant dans son profil, ce n'est pas un locataire
       if (!profileData?.is_tenant_user) {
@@ -131,6 +133,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('tenant_profile_id', userId)
         .maybeSingle();
 
+      console.log("Tenant record:", tenantRecord);
+      console.log("Tenant error:", tenantError);
+
       if (tenantError) {
         console.error("Error checking tenant record:", tenantError);
         setIsTenant(false);
@@ -139,11 +144,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (tenantRecord) {
-        console.log("User is a tenant:", tenantRecord);
+        console.log("✅ User is a tenant:", tenantRecord);
         setIsTenant(true);
         setTenantData(tenantRecord);
+        console.log("=== TENANT STATUS SET TO TRUE ===");
       } else {
-        console.log("User is marked as tenant but no tenant record found");
+        console.log("❌ User is marked as tenant but no tenant record found");
         setIsTenant(false);
         setTenantData(null);
       }
