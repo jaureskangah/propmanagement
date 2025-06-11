@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -95,27 +94,27 @@ const TenantSignup = () => {
     }
   };
 
-  const linkTenantProfile = async (userId: string, tenantId: string): Promise<boolean> => {
+  const linkTenantProfile = async (userId: string, userEmail: string, tenantId: string): Promise<boolean> => {
     console.log("=== STARTING TENANT PROFILE LINKING ===");
     console.log("User ID:", userId);
+    console.log("User Email:", userEmail);
     console.log("Tenant ID:", tenantId);
     
     try {
-      // Vérifier d'abord que l'email correspond
-      const { data: userCheck, error: userCheckError } = await supabase.auth.getUser();
+      // Vérifier que l'email correspond directement avec les paramètres passés
       const { data: tenantCheck, error: tenantCheckError } = await supabase
         .from('tenants')
         .select('id, name, email')
         .eq('id', tenantId)
         .single();
       
-      console.log("User check:", userCheck?.user?.email);
       console.log("Tenant check:", tenantCheck?.email);
+      console.log("Tenant check error:", tenantCheckError);
       
       // Vérification de sécurité : l'email doit correspondre
-      if (!userCheck?.user || !tenantCheck || userCheck.user.email !== tenantCheck.email) {
+      if (!tenantCheck || userEmail !== tenantCheck.email) {
         console.error("Email mismatch - security check failed");
-        console.error("User email:", userCheck?.user?.email);
+        console.error("User email:", userEmail);
         console.error("Tenant email:", tenantCheck?.email);
         return false;
       }
@@ -145,7 +144,7 @@ const TenantSignup = () => {
             updated_at: new Date().toISOString()
           })
           .eq('id', tenantId)
-          .eq('email', userCheck.user.email); // Sécurité supplémentaire
+          .eq('email', userEmail); // Sécurité supplémentaire
         
         console.log("Manual tenant update error:", tenantUpdateError);
         
@@ -160,9 +159,9 @@ const TenantSignup = () => {
           .upsert({
             id: userId,
             is_tenant_user: true,
-            email: userCheck.user.email,
-            first_name: userCheck.user.user_metadata?.first_name || tenantCheck.name.split(' ')[0] || '',
-            last_name: userCheck.user.user_metadata?.last_name || tenantCheck.name.split(' ').slice(1).join(' ') || ''
+            email: userEmail,
+            first_name: tenantCheck.name.split(' ')[0] || '',
+            last_name: tenantCheck.name.split(' ').slice(1).join(' ') || ''
           });
         
         console.log("Manual profile upsert error:", profileError);
@@ -189,7 +188,7 @@ const TenantSignup = () => {
             updated_at: new Date().toISOString()
           })
           .eq('id', tenantId)
-          .eq('email', userCheck.user.email); // Sécurité supplémentaire
+          .eq('email', userEmail); // Sécurité supplémentaire
         
         if (tenantUpdateError) {
           console.error("Failed to update tenant manually:", tenantUpdateError);
@@ -201,9 +200,9 @@ const TenantSignup = () => {
           .upsert({
             id: userId,
             is_tenant_user: true,
-            email: userCheck.user.email,
-            first_name: userCheck.user.user_metadata?.first_name || tenantCheck.name.split(' ')[0] || '',
-            last_name: userCheck.user.user_metadata?.last_name || tenantCheck.name.split(' ').slice(1).join(' ') || ''
+            email: userEmail,
+            first_name: tenantCheck.name.split(' ')[0] || '',
+            last_name: tenantCheck.name.split(' ').slice(1).join(' ') || ''
           });
         
         if (profileError) {
@@ -264,6 +263,7 @@ const TenantSignup = () => {
       }
 
       console.log("User created successfully with ID:", signUpData.user.id);
+      console.log("User email from signUpData:", signUpData.user.email);
 
       // Maintenant, lier le profil utilisateur au tenant
       setLinkingStatus('linking');
@@ -272,7 +272,12 @@ const TenantSignup = () => {
       // Attendre un peu pour que l'utilisateur soit bien créé
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const linkSuccess = await linkTenantProfile(signUpData.user.id, tenantData.id);
+      // Utiliser l'email du tenant plutôt que de récupérer l'utilisateur
+      const linkSuccess = await linkTenantProfile(
+        signUpData.user.id, 
+        tenantData.email, // Utiliser l'email du tenant directement
+        tenantData.id
+      );
 
       if (!linkSuccess) {
         console.error("Failed to link tenant profile");
