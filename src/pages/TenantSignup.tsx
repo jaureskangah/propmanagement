@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -100,33 +101,26 @@ const TenantSignup = () => {
     console.log("Tenant ID:", tenantId);
     
     try {
-      // D'abord, vérifier que le tenant et l'utilisateur existent
-      console.log("=== CHECKING IF TENANT AND USER EXIST ===");
-      
-      // Vérifier l'existence du tenant
+      // Vérifier d'abord que l'email correspond
+      const { data: userCheck, error: userCheckError } = await supabase.auth.getUser();
       const { data: tenantCheck, error: tenantCheckError } = await supabase
         .from('tenants')
         .select('id, name, email')
         .eq('id', tenantId)
         .single();
       
-      console.log("Tenant check result:", tenantCheck, tenantCheckError);
+      console.log("User check:", userCheck?.user?.email);
+      console.log("Tenant check:", tenantCheck?.email);
       
-      if (tenantCheckError || !tenantCheck) {
-        console.error("Tenant not found:", tenantCheckError);
+      // Vérification de sécurité : l'email doit correspondre
+      if (!userCheck?.user || !tenantCheck || userCheck.user.email !== tenantCheck.email) {
+        console.error("Email mismatch - security check failed");
+        console.error("User email:", userCheck?.user?.email);
+        console.error("Tenant email:", tenantCheck?.email);
         return false;
       }
       
-      // Vérifier l'existence de l'utilisateur dans auth.users
-      const { data: userCheck, error: userCheckError } = await supabase.auth.getUser();
-      console.log("Current user check:", userCheck, userCheckError);
-      
-      if (userCheckError || !userCheck.user || userCheck.user.id !== userId) {
-        console.error("User verification failed:", userCheckError);
-        return false;
-      }
-      
-      console.log("=== BOTH TENANT AND USER EXIST, PROCEEDING WITH LINKING ===");
+      console.log("✅ Email verification passed");
       
       // Utiliser la fonction de base de données sécurisée pour faire la liaison
       const { data: linkResult, error: linkError } = await supabase.rpc('link_tenant_profile', {
@@ -150,7 +144,8 @@ const TenantSignup = () => {
             tenant_profile_id: userId,
             updated_at: new Date().toISOString()
           })
-          .eq('id', tenantId);
+          .eq('id', tenantId)
+          .eq('email', userCheck.user.email); // Sécurité supplémentaire
         
         console.log("Manual tenant update error:", tenantUpdateError);
         
@@ -166,8 +161,8 @@ const TenantSignup = () => {
             id: userId,
             is_tenant_user: true,
             email: userCheck.user.email,
-            first_name: userCheck.user.user_metadata?.first_name || '',
-            last_name: userCheck.user.user_metadata?.last_name || ''
+            first_name: userCheck.user.user_metadata?.first_name || tenantCheck.name.split(' ')[0] || '',
+            last_name: userCheck.user.user_metadata?.last_name || tenantCheck.name.split(' ').slice(1).join(' ') || ''
           });
         
         console.log("Manual profile upsert error:", profileError);
@@ -193,7 +188,8 @@ const TenantSignup = () => {
             tenant_profile_id: userId,
             updated_at: new Date().toISOString()
           })
-          .eq('id', tenantId);
+          .eq('id', tenantId)
+          .eq('email', userCheck.user.email); // Sécurité supplémentaire
         
         if (tenantUpdateError) {
           console.error("Failed to update tenant manually:", tenantUpdateError);
@@ -206,8 +202,8 @@ const TenantSignup = () => {
             id: userId,
             is_tenant_user: true,
             email: userCheck.user.email,
-            first_name: userCheck.user.user_metadata?.first_name || '',
-            last_name: userCheck.user.user_metadata?.last_name || ''
+            first_name: userCheck.user.user_metadata?.first_name || tenantCheck.name.split(' ')[0] || '',
+            last_name: userCheck.user.user_metadata?.last_name || tenantCheck.name.split(' ').slice(1).join(' ') || ''
           });
         
         if (profileError) {
@@ -317,6 +313,8 @@ const TenantSignup = () => {
       
       if (error.message.includes('already registered')) {
         errorMessage = "Un compte existe déjà avec cette adresse email.";
+      } else if (error.message.includes('Email mismatch')) {
+        errorMessage = "Erreur de sécurité : l'email ne correspond pas.";
       }
 
       toast({
