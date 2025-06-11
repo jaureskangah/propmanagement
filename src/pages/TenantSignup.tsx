@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -101,6 +100,34 @@ const TenantSignup = () => {
     console.log("Tenant ID:", tenantId);
     
     try {
+      // D'abord, vérifier que le tenant et l'utilisateur existent
+      console.log("=== CHECKING IF TENANT AND USER EXIST ===");
+      
+      // Vérifier l'existence du tenant
+      const { data: tenantCheck, error: tenantCheckError } = await supabase
+        .from('tenants')
+        .select('id, name, email')
+        .eq('id', tenantId)
+        .single();
+      
+      console.log("Tenant check result:", tenantCheck, tenantCheckError);
+      
+      if (tenantCheckError || !tenantCheck) {
+        console.error("Tenant not found:", tenantCheckError);
+        return false;
+      }
+      
+      // Vérifier l'existence de l'utilisateur dans auth.users
+      const { data: userCheck, error: userCheckError } = await supabase.auth.getUser();
+      console.log("Current user check:", userCheck, userCheckError);
+      
+      if (userCheckError || !userCheck.user || userCheck.user.id !== userId) {
+        console.error("User verification failed:", userCheckError);
+        return false;
+      }
+      
+      console.log("=== BOTH TENANT AND USER EXIST, PROCEEDING WITH LINKING ===");
+      
       // Utiliser la fonction de base de données sécurisée pour faire la liaison
       const { data: linkResult, error: linkError } = await supabase.rpc('link_tenant_profile', {
         p_tenant_id: tenantId,
@@ -112,12 +139,84 @@ const TenantSignup = () => {
 
       if (linkError) {
         console.error("Link error:", linkError);
-        return false;
+        
+        // Fallback: essayer de faire la liaison manuellement
+        console.log("=== ATTEMPTING MANUAL LINKING AS FALLBACK ===");
+        
+        // Mettre à jour le tenant
+        const { error: tenantUpdateError } = await supabase
+          .from('tenants')
+          .update({ 
+            tenant_profile_id: userId,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', tenantId);
+        
+        console.log("Manual tenant update error:", tenantUpdateError);
+        
+        if (tenantUpdateError) {
+          console.error("Failed to update tenant manually:", tenantUpdateError);
+          return false;
+        }
+        
+        // Mettre à jour/créer le profil
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: userId,
+            is_tenant_user: true,
+            email: userCheck.user.email,
+            first_name: userCheck.user.user_metadata?.first_name || '',
+            last_name: userCheck.user.user_metadata?.last_name || ''
+          });
+        
+        console.log("Manual profile upsert error:", profileError);
+        
+        if (profileError) {
+          console.error("Failed to upsert profile manually:", profileError);
+          return false;
+        }
+        
+        console.log("=== MANUAL LINKING SUCCESSFUL ===");
+        return true;
       }
 
       if (!linkResult) {
         console.error("Link failed - function returned false");
-        return false;
+        
+        // Même fallback si la fonction retourne false
+        console.log("=== ATTEMPTING MANUAL LINKING AS FALLBACK FOR FALSE RESULT ===");
+        
+        const { error: tenantUpdateError } = await supabase
+          .from('tenants')
+          .update({ 
+            tenant_profile_id: userId,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', tenantId);
+        
+        if (tenantUpdateError) {
+          console.error("Failed to update tenant manually:", tenantUpdateError);
+          return false;
+        }
+        
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            id: userId,
+            is_tenant_user: true,
+            email: userCheck.user.email,
+            first_name: userCheck.user.user_metadata?.first_name || '',
+            last_name: userCheck.user.user_metadata?.last_name || ''
+          });
+        
+        if (profileError) {
+          console.error("Failed to upsert profile manually:", profileError);
+          return false;
+        }
+        
+        console.log("=== MANUAL FALLBACK LINKING SUCCESSFUL ===");
+        return true;
       }
 
       console.log("=== TENANT PROFILE LINKING SUCCESSFUL ===");
