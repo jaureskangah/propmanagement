@@ -1,303 +1,178 @@
 
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
+import { useState } from 'react';
+import { supabase } from '@/lib/supabase';
+import { useToast } from '@/hooks/use-toast';
 
-export const useInvitationService = (tenantId: string, onClose: () => void) => {
+export interface InvitationData {
+  email: string;
+  tenantId: string;
+}
+
+export const useInvitationService = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuth();
 
-  const sendInvitation = async (email: string) => {
-    if (!user) {
-      toast({
-        title: "Erreur",
-        description: "Vous devez être connecté pour envoyer des invitations",
-        variant: "destructive",
-      });
-      return false;
+  const checkExistingUser = async (email: string): Promise<{ exists: boolean; isLinked: boolean; tenant?: any }> => {
+    console.log("Checking existing user for email:", email);
+    
+    // Vérifier si un tenant existe déjà avec cet email
+    const { data: existingTenant, error: tenantError } = await supabase
+      .from('tenants')
+      .select('id, name, email, tenant_profile_id')
+      .eq('email', email)
+      .maybeSingle();
+
+    if (tenantError) {
+      console.error("Error checking existing tenant:", tenantError);
+      throw tenantError;
     }
 
+    if (existingTenant) {
+      const isLinked = existingTenant.tenant_profile_id !== null;
+      console.log("Found existing tenant:", existingTenant, "is linked:", isLinked);
+      return { exists: true, isLinked, tenant: existingTenant };
+    }
+
+    return { exists: false, isLinked: false };
+  };
+
+  const sendInvitation = async ({ email, tenantId }: InvitationData) => {
     setIsLoading(true);
-
+    
     try {
-      // Récupérer les données du locataire pour l'email
-      const { data: tenantData, error: tenantError } = await supabase
-        .from('tenants')
-        .select('name, email')
-        .eq('id', tenantId)
-        .single();
-
-      if (tenantError) {
-        console.error("Error fetching tenant data:", tenantError);
-        throw new Error("Impossible de récupérer les données du locataire");
+      console.log("Starting invitation process for:", email, "tenant:", tenantId);
+      
+      // Vérifier d'abord si un utilisateur/tenant existe déjà
+      const userCheck = await checkExistingUser(email);
+      
+      if (userCheck.exists) {
+        if (userCheck.isLinked) {
+          toast({
+            title: "Utilisateur déjà lié",
+            description: "Ce locataire a déjà un compte actif dans le système.",
+            variant: "destructive",
+          });
+          return { success: false, error: "User already linked" };
+        } else {
+          toast({
+            title: "Invitation déjà envoyée",
+            description: "Une invitation a déjà été envoyée à cette adresse email.",
+            variant: "destructive",
+          });
+          return { success: false, error: "Invitation already sent" };
+        }
       }
 
-      // Vérifier si une invitation active existe déjà pour ce locataire
-      const { data: existingInvites, error: checkError } = await supabase
+      // Vérifier s'il y a déjà une invitation en attente
+      const { data: existingInvitation, error: invitationCheckError } = await supabase
         .from('tenant_invitations')
-        .select('*')
-        .eq('tenant_id', tenantId)
+        .select('id, status, expires_at')
         .eq('email', email)
+        .eq('tenant_id', tenantId)
         .eq('status', 'pending')
         .gt('expires_at', new Date().toISOString())
         .maybeSingle();
-        
-      if (checkError) throw checkError;
-      
-      let invitationCreated = false;
-      let invitationId = '';
-      let invitationToken = '';
-      
-      // Si une invitation active existe, mettre à jour cette invitation au lieu d'en créer une nouvelle
-      if (existingInvites) {
-        const token = crypto.randomUUID();
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + 7);
-        
-        const { error: updateError } = await supabase
-          .from('tenant_invitations')
-          .update({
-            token,
-            expires_at: expiresAt.toISOString(),
-            status: 'pending'
-          })
-          .eq('id', existingInvites.id);
-          
-        if (updateError) throw updateError;
-        invitationCreated = true;
-        invitationId = existingInvites.id;
-        invitationToken = token;
-      } else {
-        // Sinon, créer une nouvelle invitation
-        const token = crypto.randomUUID();
-        const expiresAt = new Date();
-        expiresAt.setDate(expiresAt.getDate() + 7);
 
-        const { data: newInvite, error } = await supabase
-          .from('tenant_invitations')
-          .insert({
-            tenant_id: tenantId,
-            email,
-            token,
-            expires_at: expiresAt.toISOString(),
-            user_id: user.id,
-            status: 'pending'
-          })
-          .select()
-          .single();
-
-        if (error) throw error;
-        invitationCreated = true;
-        invitationId = newInvite.id;
-        invitationToken = newInvite.token;
+      if (invitationCheckError) {
+        console.error("Error checking existing invitation:", invitationCheckError);
+        throw invitationCheckError;
       }
 
-      // Si l'invitation a été créée/mise à jour avec succès, envoyer l'email
-      if (invitationCreated) {
-        console.log("Sending invitation email to:", email);
-        
-        // Notification d'envoi en cours
+      if (existingInvitation) {
         toast({
-          title: "Envoi en cours",
-          description: `Envoi de l'invitation à ${email}...`,
+          title: "Invitation déjà envoyée",
+          description: "Une invitation valide existe déjà pour cette adresse email.",
+          variant: "destructive",
         });
-        
-        try {
-          const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
-            body: {
-              tenantId: tenantId,
-              subject: "Invitation à rejoindre l'espace locataire",
-              content: `
-                <p>Bonjour ${tenantData.name},</p>
-                <p>Vous avez été invité(e) à rejoindre l'espace locataire de votre propriété.</p>
-                <p>Pour créer votre compte et accéder à vos informations, veuillez cliquer sur le lien ci-dessous :</p>
-                <p><a href="${window.location.origin}/tenant-signup?invitation=${invitationToken}">Créer mon compte</a></p>
-                <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités de l'espace locataire.</p>
-                <p>Cordialement,<br>Votre équipe de gestion immobilière</p>
-              `,
-              category: 'invitation'
-            }
-          });
-
-          console.log("Email function response:", emailData);
-
-          if (emailError) {
-            console.error("Error sending invitation email:", emailError);
-            
-            toast({
-              title: "Invitation créée",
-              description: "L'invitation a été créée mais l'email n'a pas pu être envoyé. Veuillez vérifier la configuration email.",
-              variant: "destructive",
-            });
-          } else {
-            console.log("Invitation email sent successfully");
-            
-            toast({
-              title: "Invitation envoyée avec succès",
-              description: `L'invitation a été envoyée à ${email}`,
-            });
-          }
-        } catch (emailError: any) {
-          console.error("Error in email sending process:", emailError);
-          console.error("Error details:", emailError.message, emailError.stack);
-          
-          toast({
-            title: "Invitation créée",
-            description: "L'invitation a été créée mais l'email n'a pas pu être envoyé automatiquement",
-            variant: "destructive",
-          });
-        }
+        return { success: false, error: "Active invitation exists" };
       }
 
-      onClose();
-      return true;
-    } catch (error: any) {
-      console.error("Error sending invitation:", error);
-      console.error("Error details:", error.message, error.stack);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'envoyer l'invitation. Veuillez réessayer.",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const cancelInvitation = async (invitationId: string) => {
-    setIsLoading(true);
-    try {
-      const { error } = await supabase
-        .from('tenant_invitations')
-        .update({ status: 'cancelled' })
-        .eq('id', invitationId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Invitation annulée",
-        description: "L'invitation a bien été annulée",
-      });
-
-      return true;
-    } catch (error: any) {
-      console.error("Error cancelling invitation:", error);
-      console.error("Error details:", error.message, error.stack);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'annuler l'invitation",
-        variant: "destructive",
-      });
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const resendInvitation = async (invitationId: string) => {
-    setIsLoading(true);
-    try {
-      // Récupérer les informations de l'invitation
-      const { data: invitation, error: inviteError } = await supabase
-        .from('tenant_invitations')
-        .select('tenant_id, email')
-        .eq('id', invitationId)
-        .single();
-
-      if (inviteError || !invitation) {
-        throw new Error("Invitation non trouvée");
-      }
-
-      // Récupérer les données du locataire
-      const { data: tenantData, error: tenantError } = await supabase
-        .from('tenants')
-        .select('name, email')
-        .eq('id', invitation.tenant_id)
-        .single();
-
-      if (tenantError) {
-        throw new Error("Impossible de récupérer les données du locataire");
-      }
-
-      const token = crypto.randomUUID();
+      // Générer un token unique pour l'invitation
+      const invitationToken = crypto.randomUUID();
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 7);
+      expiresAt.setDate(expiresAt.getDate() + 7); // Expire dans 7 jours
 
-      const { error } = await supabase
+      // Créer l'invitation
+      const { data: invitation, error: createError } = await supabase
         .from('tenant_invitations')
-        .update({
-          token,
+        .insert({
+          email,
+          tenant_id: tenantId,
+          token: invitationToken,
           expires_at: expiresAt.toISOString(),
+          user_id: (await supabase.auth.getUser()).data.user?.id || '',
           status: 'pending'
         })
-        .eq('id', invitationId);
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (createError) {
+        console.error("Error creating invitation:", createError);
+        throw createError;
+      }
 
-      // Envoyer l'email de nouveau
-      try {
-        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
-          body: {
-            tenantId: invitation.tenant_id,
-            subject: "Nouvelle invitation à rejoindre l'espace locataire",
-            content: `
-              <p>Bonjour ${tenantData.name},</p>
-              <p>Vous avez reçu une nouvelle invitation à rejoindre l'espace locataire de votre propriété.</p>
-              <p>Pour créer votre compte et accéder à vos informations, veuillez cliquer sur le lien ci-dessous :</p>
-              <p><a href="${window.location.origin}/tenant-signup?invitation=${token}">Créer mon compte</a></p>
-              <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités de l'espace locataire.</p>
-              <p>Cordialement,<br>Votre équipe de gestion immobilière</p>
-            `,
-            category: 'invitation'
-          }
-        });
+      console.log("Invitation created successfully:", invitation);
 
-        console.log("Email function response:", emailData);
+      // Construire l'URL d'invitation
+      const baseUrl = window.location.origin;
+      const invitationUrl = `${baseUrl}/tenant-signup?invitation=${invitationToken}`;
 
-        if (emailError) {
-          console.error("Error sending resend email:", emailError);
-          console.error("Error details:", emailError.message, emailError.stack);
-          
-          toast({
-            title: "Invitation mise à jour",
-            description: "L'invitation a été mise à jour mais l'email n'a pas pu être envoyé",
-            variant: "destructive",
-          });
-        } else {
-          console.log("Resend invitation email sent successfully");
-        }
-      } catch (emailError: any) {
-        console.error("Error in resend email process:", emailError);
-        console.error("Error details:", emailError.message, emailError.stack);
+      console.log("Invitation URL:", invitationUrl);
+
+      toast({
+        title: "Invitation envoyée",
+        description: `Invitation envoyée à ${email}. Le lien d'invitation: ${invitationUrl}`,
+      });
+
+      return { 
+        success: true, 
+        invitation,
+        invitationUrl 
+      };
+
+    } catch (error: any) {
+      console.error("Error sending invitation:", error);
+      
+      let errorMessage = "Une erreur s'est produite lors de l'envoi de l'invitation.";
+      
+      if (error.message?.includes('unique_tenant_email')) {
+        errorMessage = "Un locataire avec cette adresse email existe déjà.";
       }
 
       toast({
-        title: "Invitation renvoyée",
-        description: "L'invitation a été renvoyée avec succès",
-      });
-
-      return true;
-    } catch (error: any) {
-      console.error("Error resending invitation:", error);
-      console.error("Error details:", error.message, error.stack);
-      toast({
         title: "Erreur",
-        description: "Impossible de renvoyer l'invitation",
+        description: errorMessage,
         variant: "destructive",
       });
-      return false;
+
+      return { success: false, error: error.message };
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const resendInvitation = async (email: string, tenantId: string) => {
+    console.log("Resending invitation for:", email);
+    
+    // Marquer les anciennes invitations comme expirées
+    await supabase
+      .from('tenant_invitations')
+      .update({ 
+        status: 'expired',
+        updated_at: new Date().toISOString()
+      })
+      .eq('email', email)
+      .eq('tenant_id', tenantId)
+      .eq('status', 'pending');
+
+    // Envoyer une nouvelle invitation
+    return sendInvitation({ email, tenantId });
   };
 
   return {
-    isLoading,
     sendInvitation,
-    cancelInvitation,
-    resendInvitation
+    resendInvitation,
+    checkExistingUser,
+    isLoading
   };
 };

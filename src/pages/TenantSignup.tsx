@@ -94,6 +94,32 @@ const TenantSignup = () => {
     }
   };
 
+  const checkExistingUser = async (email: string): Promise<{ exists: boolean; userId?: string }> => {
+    try {
+      console.log("Checking if user already exists with email:", email);
+      
+      // Vérifier dans auth.users via l'API admin
+      const { data: users, error } = await supabase.auth.admin.listUsers();
+      
+      if (error) {
+        console.error("Error checking existing users:", error);
+        return { exists: false };
+      }
+
+      const existingUser = users.users.find(user => user.email === email);
+      
+      if (existingUser) {
+        console.log("Found existing user:", existingUser.id);
+        return { exists: true, userId: existingUser.id };
+      }
+
+      return { exists: false };
+    } catch (error) {
+      console.error("Error in checkExistingUser:", error);
+      return { exists: false };
+    }
+  };
+
   const linkTenantProfile = async (userId: string, userEmail: string, tenantId: string): Promise<boolean> => {
     console.log("=== STARTING TENANT PROFILE LINKING ===");
     console.log("User ID:", userId);
@@ -121,7 +147,7 @@ const TenantSignup = () => {
       
       console.log("✅ Email verification passed");
       
-      // Utiliser la fonction de base de données sécurisée pour faire la liaison
+      // Utiliser la fonction de base de données améliorée pour faire la liaison
       const { data: linkResult, error: linkError } = await supabase.rpc('link_tenant_profile', {
         p_tenant_id: tenantId,
         p_user_id: userId
@@ -132,86 +158,12 @@ const TenantSignup = () => {
 
       if (linkError) {
         console.error("Link error:", linkError);
-        
-        // Fallback: essayer de faire la liaison manuellement
-        console.log("=== ATTEMPTING MANUAL LINKING AS FALLBACK ===");
-        
-        // Mettre à jour le tenant
-        const { error: tenantUpdateError } = await supabase
-          .from('tenants')
-          .update({ 
-            tenant_profile_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', tenantId)
-          .eq('email', userEmail); // Sécurité supplémentaire
-        
-        console.log("Manual tenant update error:", tenantUpdateError);
-        
-        if (tenantUpdateError) {
-          console.error("Failed to update tenant manually:", tenantUpdateError);
-          return false;
-        }
-        
-        // Mettre à jour/créer le profil
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: userId,
-            is_tenant_user: true,
-            email: userEmail,
-            first_name: tenantCheck.name.split(' ')[0] || '',
-            last_name: tenantCheck.name.split(' ').slice(1).join(' ') || ''
-          });
-        
-        console.log("Manual profile upsert error:", profileError);
-        
-        if (profileError) {
-          console.error("Failed to upsert profile manually:", profileError);
-          return false;
-        }
-        
-        console.log("=== MANUAL LINKING SUCCESSFUL ===");
-        return true;
+        return false;
       }
 
       if (!linkResult) {
         console.error("Link failed - function returned false");
-        
-        // Même fallback si la fonction retourne false
-        console.log("=== ATTEMPTING MANUAL LINKING AS FALLBACK FOR FALSE RESULT ===");
-        
-        const { error: tenantUpdateError } = await supabase
-          .from('tenants')
-          .update({ 
-            tenant_profile_id: userId,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', tenantId)
-          .eq('email', userEmail); // Sécurité supplémentaire
-        
-        if (tenantUpdateError) {
-          console.error("Failed to update tenant manually:", tenantUpdateError);
-          return false;
-        }
-        
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .upsert({
-            id: userId,
-            is_tenant_user: true,
-            email: userEmail,
-            first_name: tenantCheck.name.split(' ')[0] || '',
-            last_name: tenantCheck.name.split(' ').slice(1).join(' ') || ''
-          });
-        
-        if (profileError) {
-          console.error("Failed to upsert profile manually:", profileError);
-          return false;
-        }
-        
-        console.log("=== MANUAL FALLBACK LINKING SUCCESSFUL ===");
-        return true;
+        return false;
       }
 
       console.log("=== TENANT PROFILE LINKING SUCCESSFUL ===");
@@ -239,45 +191,71 @@ const TenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP PROCESS ===");
       console.log("Creating account for tenant:", tenantData.id, "with email:", tenantData.email);
       
-      // Créer le compte utilisateur avec les métadonnées incluant le tenant_id
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email: tenantData.email,
-        password: values.password,
-        options: {
-          data: {
-            first_name: tenantData.name.split(' ')[0] || '',
-            last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
-            is_tenant_user: true,
-            tenant_id: tenantData.id,
+      // Vérifier d'abord si un utilisateur existe déjà avec cet email
+      const existingUserCheck = await checkExistingUser(tenantData.email);
+      
+      let userId: string;
+      let userEmail: string;
+
+      if (existingUserCheck.exists && existingUserCheck.userId) {
+        console.log("User already exists, using existing user for linking");
+        userId = existingUserCheck.userId;
+        userEmail = tenantData.email;
+        
+        toast({
+          title: "Compte existant détecté",
+          description: "Liaison avec le compte existant en cours...",
+        });
+      } else {
+        // Créer le compte utilisateur avec les métadonnées incluant le tenant_id
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: tenantData.email,
+          password: values.password,
+          options: {
+            data: {
+              first_name: tenantData.name.split(' ')[0] || '',
+              last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
+              is_tenant_user: true,
+              tenant_id: tenantData.id,
+            },
           },
-        },
-      });
+        });
 
-      if (signUpError) {
-        console.error("Signup error:", signUpError);
-        throw signUpError;
+        if (signUpError) {
+          console.error("Signup error:", signUpError);
+          
+          // Gérer le cas où l'utilisateur existe déjà
+          if (signUpError.message.includes('already registered')) {
+            console.log("User already registered, attempting to link existing user");
+            const existingUser = await checkExistingUser(tenantData.email);
+            if (existingUser.exists && existingUser.userId) {
+              userId = existingUser.userId;
+              userEmail = tenantData.email;
+            } else {
+              throw new Error("Impossible de récupérer l'utilisateur existant");
+            }
+          } else {
+            throw signUpError;
+          }
+        } else {
+          if (!signUpData.user) {
+            throw new Error('Aucune donnée utilisateur retournée');
+          }
+          
+          console.log("User created successfully with ID:", signUpData.user.id);
+          userId = signUpData.user.id;
+          userEmail = signUpData.user.email || tenantData.email;
+        }
       }
-
-      if (!signUpData.user) {
-        throw new Error('Aucune donnée utilisateur retournée');
-      }
-
-      console.log("User created successfully with ID:", signUpData.user.id);
-      console.log("User email from signUpData:", signUpData.user.email);
 
       // Maintenant, lier le profil utilisateur au tenant
       setLinkingStatus('linking');
       console.log("Starting tenant linking process...");
 
-      // Attendre un peu pour que l'utilisateur soit bien créé
+      // Attendre un peu pour que l'utilisateur soit bien créé/récupéré
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Utiliser l'email du tenant plutôt que de récupérer l'utilisateur
-      const linkSuccess = await linkTenantProfile(
-        signUpData.user.id, 
-        tenantData.email, // Utiliser l'email du tenant directement
-        tenantData.id
-      );
+      const linkSuccess = await linkTenantProfile(userId, userEmail, tenantData.id);
 
       if (!linkSuccess) {
         console.error("Failed to link tenant profile");
