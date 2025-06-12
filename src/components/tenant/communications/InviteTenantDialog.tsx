@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { InviteTenantForm } from "./invite/InviteTenantForm";
-import { useInvitationService } from "./invite/useInvitationService";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface InviteTenantDialogProps {
@@ -19,39 +18,25 @@ export const InviteTenantDialog = ({
   defaultEmail = ""
 }: InviteTenantDialogProps) => {
   const { t } = useLocale();
-  const [email, setEmail] = useState(defaultEmail);
-  const { isLoading, sendInvitation } = useInvitationService(tenantId, onClose);
 
-  useEffect(() => {
-    if (isOpen && defaultEmail) {
-      setEmail(defaultEmail);
-    }
-  }, [isOpen, defaultEmail]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const success = await sendInvitation(email);
-    if (success) {
-      setEmail("");
-    }
+  const handleSuccess = () => {
+    onClose();
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{t('inviteTenant')}</DialogTitle>
+          <DialogTitle>Inviter un locataire</DialogTitle>
           <DialogDescription>
-            {t('inviteTenantDescription')}
+            Envoyez une invitation pour créer un compte locataire
           </DialogDescription>
         </DialogHeader>
 
         <InviteTenantForm
-          email={email}
-          isLoading={isLoading}
-          onEmailChange={setEmail}
-          onSubmit={handleSubmit}
-          onClose={onClose}
+          tenantId={tenantId}
+          defaultEmail={defaultEmail}
+          onSuccess={handleSuccess}
         />
       </DialogContent>
     </Dialog>

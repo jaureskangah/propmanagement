@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -23,13 +24,23 @@ const tenantSignupSchema = z.object({
 
 type TenantSignupValues = z.infer<typeof tenantSignupSchema>;
 
+interface TenantData {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  properties?: {
+    name: string;
+  };
+}
+
 const TenantSignup = () => {
   const { isAuthenticated } = useAuth();
   const { t } = useLocale();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
-  const [tenantData, setTenantData] = useState<any>(null);
+  const [tenantData, setTenantData] = useState<TenantData | null>(null);
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
   const [linkingStatus, setLinkingStatus] = useState<'idle' | 'linking' | 'success' | 'failed'>('idle');
 
@@ -83,7 +94,7 @@ const TenantSignup = () => {
       }
 
       console.log("Invitation found:", invitation);
-      setTenantData(invitation.tenants);
+      setTenantData(invitation.tenants as TenantData);
     } catch (error) {
       console.error("Error fetching tenant data:", error);
       toast({
