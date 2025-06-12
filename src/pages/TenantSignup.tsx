@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -110,14 +109,14 @@ const TenantSignup = () => {
       console.log("Checking if user already exists with email:", email);
       
       // Vérifier dans auth.users via l'API admin
-      const { data: users, error } = await supabase.auth.admin.listUsers();
+      const { data, error } = await supabase.auth.admin.listUsers();
       
       if (error) {
         console.error("Error checking existing users:", error);
         return { exists: false };
       }
 
-      const existingUser = users.users.find(user => user.email === email);
+      const existingUser = data.users.find((user: any) => user.email === email);
       
       if (existingUser) {
         console.log("Found existing user:", existingUser.id);
