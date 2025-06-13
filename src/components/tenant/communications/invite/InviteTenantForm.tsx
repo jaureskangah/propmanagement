@@ -38,8 +38,11 @@ export const InviteTenantForm = ({ tenantId, defaultEmail, onSuccess }: InviteTe
       tenantId: tenantId,
     });
 
+    console.log("Invitation result:", result);
+
     if (result.success) {
-      // Fermer la dialog immédiatement après succès
+      console.log("Invitation sent successfully, closing dialog");
+      form.reset();
       onSuccess?.();
     }
   };
