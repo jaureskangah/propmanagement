@@ -10,6 +10,8 @@ export interface SearchFilters {
   property: string;
   status: string;
   rentRange: [number, number];
+  propertyId: string;
+  leaseStatus: string;
 }
 
 export const useTenantPage = () => {
@@ -19,6 +21,8 @@ export const useTenantPage = () => {
     property: "",
     status: "",
     rentRange: [0, 5000],
+    propertyId: "",
+    leaseStatus: "",
   });
   
   // Modal states
@@ -28,13 +32,22 @@ export const useTenantPage = () => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
   // Data hooks
-  const { tenants, isLoading } = useTenants();
+  const { data: tenants, isLoading, refetch } = useTenants();
   const { mutateAsync: addTenant } = useAddTenant();
   const { mutateAsync: updateTenant } = useUpdateTenant();
   const { mutateAsync: deleteTenant } = useDeleteTenant();
 
   // Computed values
   const selectedTenantData = tenants?.find((t: Tenant) => t.id === selectedTenant) || null;
+
+  // Helper function to get property name safely
+  const getPropertyName = (tenant: Tenant): string => {
+    if (!tenant.properties) return "";
+    if (Array.isArray(tenant.properties)) {
+      return tenant.properties[0]?.name || "";
+    }
+    return tenant.properties.name || "";
+  };
 
   // Filter tenants based on search query and filters
   const filteredTenants = tenants?.filter((tenant: Tenant) => {
@@ -43,8 +56,9 @@ export const useTenantPage = () => {
       tenant.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tenant.unit_number.toLowerCase().includes(searchQuery.toLowerCase());
 
+    const propertyName = getPropertyName(tenant);
     const matchesProperty = !searchFilters.property || 
-      tenant.properties?.name?.toLowerCase().includes(searchFilters.property.toLowerCase());
+      propertyName.toLowerCase().includes(searchFilters.property.toLowerCase());
 
     const matchesRentRange = 
       tenant.rent_amount >= searchFilters.rentRange[0] &&
@@ -57,12 +71,14 @@ export const useTenantPage = () => {
   const handleAddTenant = async (data: any) => {
     await addTenant(data);
     setIsAddModalOpen(false);
+    refetch();
   };
 
   const handleUpdateTenant = async (data: any) => {
     if (selectedTenant) {
       await updateTenant({ id: selectedTenant, ...data });
       setIsEditModalOpen(false);
+      refetch();
     }
   };
 
@@ -71,6 +87,7 @@ export const useTenantPage = () => {
       await deleteTenant(selectedTenant);
       setIsDeleteDialogOpen(false);
       setSelectedTenant(null);
+      refetch();
     }
   };
 
