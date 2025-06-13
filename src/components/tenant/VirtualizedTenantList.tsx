@@ -10,6 +10,7 @@ interface VirtualizedTenantListProps {
   onTenantSelect: (id: string) => void;
   onEditClick: (id: string) => void;
   onDeleteClick: (id: string) => void;
+  onInviteClick: (id: string) => void;
 }
 
 export const VirtualizedTenantList = ({
@@ -18,6 +19,7 @@ export const VirtualizedTenantList = ({
   onTenantSelect,
   onEditClick,
   onDeleteClick,
+  onInviteClick,
 }: VirtualizedTenantListProps) => {
   const [visibleCount, setVisibleCount] = useState(5);
   const listRef = useRef<HTMLDivElement>(null);
@@ -61,6 +63,7 @@ export const VirtualizedTenantList = ({
           onSelect={onTenantSelect}
           onEdit={onEditClick}
           onDelete={onDeleteClick}
+          onInvite={onInviteClick}
           index={index}
         />
       ))}
