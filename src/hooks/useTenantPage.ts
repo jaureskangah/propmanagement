@@ -31,11 +31,8 @@ export const useTenantPage = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
-  // Data hooks
-  const { data: tenants, isLoading, refetch } = useTenants();
-  const { mutateAsync: addTenant } = useAddTenant();
-  const { mutateAsync: updateTenant } = useUpdateTenant();
-  const { mutateAsync: deleteTenant } = useDeleteTenant();
+  // Data hooks - corrected to use the actual return structure
+  const { tenants, isLoading, addTenant, updateTenant, deleteTenant } = useTenants();
 
   // Computed values
   const selectedTenantData = tenants?.find((t: Tenant) => t.id === selectedTenant) || null;
@@ -67,27 +64,24 @@ export const useTenantPage = () => {
     return matchesSearch && matchesProperty && matchesRentRange;
   });
 
-  // Handlers
+  // Handlers - using mutateAsync from the mutations
   const handleAddTenant = async (data: any) => {
-    await addTenant(data);
+    await addTenant.mutateAsync(data);
     setIsAddModalOpen(false);
-    refetch();
   };
 
   const handleUpdateTenant = async (data: any) => {
     if (selectedTenant) {
-      await updateTenant({ id: selectedTenant, ...data });
+      await updateTenant.mutateAsync({ id: selectedTenant, ...data });
       setIsEditModalOpen(false);
-      refetch();
     }
   };
 
   const handleDeleteTenant = async () => {
     if (selectedTenant) {
-      await deleteTenant(selectedTenant);
+      await deleteTenant.mutateAsync(selectedTenant);
       setIsDeleteDialogOpen(false);
       setSelectedTenant(null);
-      refetch();
     }
   };
 

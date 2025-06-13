@@ -9,6 +9,7 @@ interface TenantListItemProps {
   onSelect: (id: string) => void;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  onInvite: (id: string) => void;
   index: number;
 }
 
@@ -18,6 +19,7 @@ export const TenantListItem = ({
   onSelect,
   onEdit,
   onDelete,
+  onInvite,
   index
 }: TenantListItemProps) => {
   const [isVisible, setIsVisible] = useState(index < 5);
@@ -42,9 +44,10 @@ export const TenantListItem = ({
       <TenantCard
         tenant={tenant}
         isSelected={isSelected}
-        onSelect={onSelect}
-        onEdit={onEdit}
-        onDelete={onDelete}
+        onSelect={() => onSelect(tenant.id)}
+        onEdit={() => onEdit(tenant.id)}
+        onDelete={() => onDelete(tenant.id)}
+        onInvite={() => onInvite(tenant.id)}
       />
     </div>
   );
