@@ -26,6 +26,7 @@ export const InviteTenantForm = ({ tenantId, defaultEmail, onSuccess }: InviteTe
   const { sendInvitation, isLoading } = useInvitationService();
   const { toast } = useToast();
   const [invitationUrl, setInvitationUrl] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const form = useForm<InviteFormValues>({
     resolver: zodResolver(inviteSchema),
@@ -44,7 +45,11 @@ export const InviteTenantForm = ({ tenantId, defaultEmail, onSuccess }: InviteTe
 
     if (result.success && result.invitationUrl) {
       setInvitationUrl(result.invitationUrl);
-      onSuccess?.();
+      setShowSuccess(true);
+      // Fermer la dialog après 2 secondes automatiquement
+      setTimeout(() => {
+        onSuccess?.();
+      }, 2000);
     }
   };
 
@@ -73,9 +78,16 @@ export const InviteTenantForm = ({ tenantId, defaultEmail, onSuccess }: InviteTe
     }
   };
 
+  const handleClose = () => {
+    setInvitationUrl(null);
+    setShowSuccess(false);
+    form.reset();
+    onSuccess?.();
+  };
+
   return (
     <div className="space-y-4">
-      {!invitationUrl ? (
+      {!showSuccess ? (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -135,14 +147,11 @@ export const InviteTenantForm = ({ tenantId, defaultEmail, onSuccess }: InviteTe
           </div>
           
           <Button 
-            onClick={() => {
-              setInvitationUrl(null);
-              form.reset();
-            }} 
-            variant="ghost" 
+            onClick={handleClose} 
+            variant="default" 
             className="w-full"
           >
-            Envoyer une nouvelle invitation
+            Fermer
           </Button>
         </div>
       )}

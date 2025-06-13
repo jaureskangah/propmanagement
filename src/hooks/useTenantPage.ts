@@ -1,9 +1,6 @@
 
 import { useState, useEffect } from "react";
 import { useTenants } from "./useTenants";
-import { useAddTenant } from "./useAddTenant";
-import { useUpdateTenant } from "./useUpdateTenant";
-import { useDeleteTenant } from "./useDeleteTenant";
 import type { Tenant } from "@/types/tenant";
 
 export interface SearchFilters {
@@ -31,7 +28,7 @@ export const useTenantPage = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
-  // Data hooks - corrected to use the actual return structure
+  // Data hooks
   const { tenants, isLoading, addTenant, updateTenant, deleteTenant } = useTenants();
 
   // Computed values
@@ -64,24 +61,36 @@ export const useTenantPage = () => {
     return matchesSearch && matchesProperty && matchesRentRange;
   });
 
-  // Handlers - using mutateAsync from the mutations
+  // Handlers
   const handleAddTenant = async (data: any) => {
-    await addTenant.mutateAsync(data);
-    setIsAddModalOpen(false);
+    try {
+      await addTenant.mutateAsync(data);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error("Error adding tenant:", error);
+    }
   };
 
   const handleUpdateTenant = async (data: any) => {
     if (selectedTenant) {
-      await updateTenant.mutateAsync({ id: selectedTenant, ...data });
-      setIsEditModalOpen(false);
+      try {
+        await updateTenant.mutateAsync({ id: selectedTenant, ...data });
+        setIsEditModalOpen(false);
+      } catch (error) {
+        console.error("Error updating tenant:", error);
+      }
     }
   };
 
   const handleDeleteTenant = async () => {
     if (selectedTenant) {
-      await deleteTenant.mutateAsync(selectedTenant);
-      setIsDeleteDialogOpen(false);
-      setSelectedTenant(null);
+      try {
+        await deleteTenant.mutateAsync(selectedTenant);
+        setIsDeleteDialogOpen(false);
+        setSelectedTenant(null);
+      } catch (error) {
+        console.error("Error deleting tenant:", error);
+      }
     }
   };
 
@@ -110,9 +119,9 @@ export const useTenantPage = () => {
     setIsInviteDialogOpen,
     
     // Data
-    tenants,
+    tenants: tenants || [],
     isLoading,
-    filteredTenants,
+    filteredTenants: filteredTenants || [],
     selectedTenantData,
     
     // Actions

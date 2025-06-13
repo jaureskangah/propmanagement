@@ -21,25 +21,28 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const isMobile = useIsMobile();
   const isTenantUser = user?.id === tenant.tenant_profile_id;
 
-  // Préchargement des données
+  // Préchargement des données avec des valeurs par défaut
   React.useEffect(() => {
     console.log("Préchargement des données du tenant:", tenant.id);
-    // Précharger les documents
-    queryClient.prefetchQuery({
-      queryKey: ["tenant_documents", tenant.id],
-      queryFn: async () => tenant.documents
-    });
-    // Précharger les paiements
-    queryClient.prefetchQuery({
-      queryKey: ["tenant_payments", tenant.id],
-      queryFn: async () => tenant.paymentHistory
-    });
-    // Précharger les demandes de maintenance
-    queryClient.prefetchQuery({
-      queryKey: ["tenant_maintenance", tenant.id],
-      queryFn: async () => tenant.maintenanceRequests
-    });
-  }, [tenant.id, queryClient]);
+    
+    // Précharger les documents avec une valeur par défaut
+    queryClient.setQueryData(
+      ["tenant_documents", tenant.id],
+      tenant.documents || []
+    );
+    
+    // Précharger les paiements avec une valeur par défaut
+    queryClient.setQueryData(
+      ["tenant_payments", tenant.id],
+      tenant.paymentHistory || []
+    );
+    
+    // Précharger les demandes de maintenance avec une valeur par défaut
+    queryClient.setQueryData(
+      ["tenant_maintenance", tenant.id],
+      tenant.maintenanceRequests || []
+    );
+  }, [tenant.id, tenant.documents, tenant.paymentHistory, tenant.maintenanceRequests, queryClient]);
 
   if (!tenant) {
     return (

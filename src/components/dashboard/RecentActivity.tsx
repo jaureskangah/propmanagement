@@ -13,8 +13,9 @@ export type { Activity } from "@/hooks/dashboard/activityTypes";
 
 export const RecentActivity = () => {
   const { t } = useLocale();
-  const [forceUpdateKey, setForceUpdateKey] = useState<number>(Date.now());
+  const [forceUpdateKey, setForceUpdateKey] = useState<number>(0);
   const resetInProgress = useRef(false);
+  const hasInitialized = useRef(false);
   
   const { 
     groupedActivities, 
@@ -24,17 +25,22 @@ export const RecentActivity = () => {
     refreshActivities
   } = useActivities();
 
-  // Force reload of activities when component mounts or forceUpdateKey changes
+  // Initialisation une seule fois au montage du composant
   useEffect(() => {
-    console.log("[RecentActivity] Composant monté ou rafraîchissement forcé, déclenchement du rafraîchissement");
-    refreshActivities();
-  }, [forceUpdateKey, refreshActivities]);
+    if (!hasInitialized.current) {
+      console.log("[RecentActivity] Initialisation du composant");
+      hasInitialized.current = true;
+      refreshActivities();
+    }
+  }, [refreshActivities]);
 
-  // Function to force a complete refresh of activities
-  const forceCompleteRefresh = () => {
-    console.log("[RecentActivity] Forçage d'un rafraîchissement complet");
-    setForceUpdateKey(Date.now());
-  };
+  // Rafraîchissement forcé uniquement quand la clé change
+  useEffect(() => {
+    if (forceUpdateKey > 0) {
+      console.log("[RecentActivity] Rafraîchissement forcé déclenché");
+      refreshActivities();
+    }
+  }, [forceUpdateKey, refreshActivities]);
 
   // Pour assurer la réactivité
   useEffect(() => {
@@ -49,16 +55,18 @@ export const RecentActivity = () => {
   const handleResetView = () => {
     console.log("[RecentActivity] Réinitialisation de la vue demandée");
     
-    // Marquer qu'une réinitialisation est en cours pour éviter les boucles
+    // Éviter les boucles multiples
+    if (resetInProgress.current) return;
+    
     resetInProgress.current = true;
     
     // Forcer un rafraîchissement complet
-    forceCompleteRefresh();
+    setForceUpdateKey(prev => prev + 1);
     
     // Notification
     toast.success(t('viewReset'));
     
-    // Après un délai, terminer la réinitialisation
+    // Terminer la réinitialisation après un délai
     setTimeout(() => {
       resetInProgress.current = false;
     }, 500);
