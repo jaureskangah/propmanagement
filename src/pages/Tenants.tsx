@@ -25,6 +25,8 @@ const Tenants = () => {
     setIsEditModalOpen,
     isDeleteDialogOpen,
     setIsDeleteDialogOpen,
+    isInviteDialogOpen,
+    setIsInviteDialogOpen,
     tenants,
     isLoading,
     filteredTenants,
@@ -32,6 +34,7 @@ const Tenants = () => {
     handleAddTenant,
     handleUpdateTenant,
     handleDeleteTenant,
+    handleInviteTenant,
   } = useTenantPage();
   
   const isMobile = useIsMobile();
@@ -77,6 +80,7 @@ const Tenants = () => {
                 setSelectedTenant(id);
                 setIsDeleteDialogOpen(true);
               }}
+              onInviteClick={handleInviteTenant}
               selectedTenantData={selectedTenantData}
             />
 
@@ -84,10 +88,12 @@ const Tenants = () => {
               isAddModalOpen={isAddModalOpen}
               isEditModalOpen={isEditModalOpen}
               isDeleteDialogOpen={isDeleteDialogOpen}
+              isInviteDialogOpen={isInviteDialogOpen}
               selectedTenantData={selectedTenantData}
               onAddClose={() => setIsAddModalOpen(false)}
               onEditClose={() => setIsEditModalOpen(false)}
               onDeleteClose={() => setIsDeleteDialogOpen(false)}
+              onInviteClose={() => setIsInviteDialogOpen(false)}
               onAddSubmit={handleAddTenant}
               onEditSubmit={handleUpdateTenant}
               onDeleteConfirm={handleDeleteTenant}

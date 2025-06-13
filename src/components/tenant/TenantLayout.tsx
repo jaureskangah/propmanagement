@@ -19,6 +19,7 @@ interface TenantLayoutProps {
   onTenantSelect: (id: string) => void;
   onEditClick: (id: string) => void;
   onDeleteClick: (id: string) => void;
+  onInviteClick: (id: string) => void;
   selectedTenantData: Tenant | null;
 }
 
@@ -32,6 +33,7 @@ export const TenantLayout = ({
   onTenantSelect,
   onEditClick,
   onDeleteClick,
+  onInviteClick,
   selectedTenantData,
 }: TenantLayoutProps) => {
   const isMobile = useIsMobile();
@@ -59,6 +61,7 @@ export const TenantLayout = ({
               onTenantSelect={onTenantSelect}
               onEditClick={onEditClick}
               onDeleteClick={onDeleteClick}
+              onInviteClick={onInviteClick}
             />
           </div>
         </div>

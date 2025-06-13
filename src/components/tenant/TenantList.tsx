@@ -1,7 +1,7 @@
 
-import { useEffect } from "react";
+import React from "react";
+import { TenantCard } from "./TenantCard";
 import { EmptyTenantState } from "./EmptyTenantState";
-import { VirtualizedTenantList } from "./VirtualizedTenantList";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantListProps {
@@ -10,6 +10,7 @@ interface TenantListProps {
   onTenantSelect: (id: string) => void;
   onEditClick: (id: string) => void;
   onDeleteClick: (id: string) => void;
+  onInviteClick: (id: string) => void;
 }
 
 export const TenantList = ({
@@ -18,23 +19,25 @@ export const TenantList = ({
   onTenantSelect,
   onEditClick,
   onDeleteClick,
+  onInviteClick,
 }: TenantListProps) => {
-  // Add debugging to help with performance optimization
-  useEffect(() => {
-    console.log(`TenantList rendering with ${tenants.length} tenants`);
-  }, [tenants.length]);
-  
   if (tenants.length === 0) {
     return <EmptyTenantState />;
   }
 
   return (
-    <VirtualizedTenantList
-      tenants={tenants}
-      selectedTenant={selectedTenant}
-      onTenantSelect={onTenantSelect}
-      onEditClick={onEditClick}
-      onDeleteClick={onDeleteClick}
-    />
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {tenants.map((tenant) => (
+        <TenantCard
+          key={tenant.id}
+          tenant={tenant}
+          isSelected={selectedTenant === tenant.id}
+          onClick={() => onTenantSelect(tenant.id)}
+          onEdit={() => onEditClick(tenant.id)}
+          onDelete={() => onDeleteClick(tenant.id)}
+          onInvite={() => onInviteClick(tenant.id)}
+        />
+      ))}
+    </div>
   );
 };
