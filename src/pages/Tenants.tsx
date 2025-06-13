@@ -70,7 +70,7 @@ const Tenants = () => {
               searchQuery={searchQuery}
               searchFilters={searchFilters}
               onSearchChange={setSearchQuery}
-              onFilterChange={setSearchFilters}
+              onFilterChange={(filters) => setSearchFilters(filters)}
               onTenantSelect={setSelectedTenant}
               onEditClick={(id) => {
                 setSelectedTenant(id);

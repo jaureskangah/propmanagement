@@ -32,7 +32,7 @@ export const TenantList = ({
           key={tenant.id}
           tenant={tenant}
           isSelected={selectedTenant === tenant.id}
-          onClick={() => onTenantSelect(tenant.id)}
+          onSelect={() => onTenantSelect(tenant.id)}
           onEdit={() => onEditClick(tenant.id)}
           onDelete={() => onDeleteClick(tenant.id)}
           onInvite={() => onInviteClick(tenant.id)}

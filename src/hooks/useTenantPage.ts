@@ -28,7 +28,7 @@ export const useTenantPage = () => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
   // Data hooks
-  const { data: tenants, isLoading, refetch } = useTenants();
+  const { tenants, isLoading } = useTenants();
   const { mutateAsync: addTenant } = useAddTenant();
   const { mutateAsync: updateTenant } = useUpdateTenant();
   const { mutateAsync: deleteTenant } = useDeleteTenant();
@@ -57,14 +57,12 @@ export const useTenantPage = () => {
   const handleAddTenant = async (data: any) => {
     await addTenant(data);
     setIsAddModalOpen(false);
-    refetch();
   };
 
   const handleUpdateTenant = async (data: any) => {
     if (selectedTenant) {
       await updateTenant({ id: selectedTenant, ...data });
       setIsEditModalOpen(false);
-      refetch();
     }
   };
 
@@ -73,7 +71,6 @@ export const useTenantPage = () => {
       await deleteTenant(selectedTenant);
       setIsDeleteDialogOpen(false);
       setSelectedTenant(null);
-      refetch();
     }
   };
 

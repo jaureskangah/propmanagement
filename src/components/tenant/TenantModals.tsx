@@ -16,9 +16,9 @@ interface TenantModalsProps {
   onEditClose: () => void;
   onDeleteClose: () => void;
   onInviteClose?: () => void;
-  onAddSubmit: (data: any) => void;
-  onEditSubmit: (data: any) => void;
-  onDeleteConfirm: () => void;
+  onAddSubmit: (data: any) => Promise<void>;
+  onEditSubmit: (data: any) => Promise<void>;
+  onDeleteConfirm: () => Promise<void>;
 }
 
 export const TenantModals = ({
@@ -55,7 +55,6 @@ export const TenantModals = ({
           <DeleteTenantDialog
             isOpen={isDeleteDialogOpen}
             onClose={onDeleteClose}
-            tenant={selectedTenantData}
             onConfirm={onDeleteConfirm}
           />
 
