@@ -66,6 +66,9 @@ export const TenantDocuments = ({
     }
   };
 
+  // Ensure documents is always an array
+  const safeDocuments = documents || [];
+
   return (
     <div className="space-y-6">
       <Card>
@@ -78,7 +81,7 @@ export const TenantDocuments = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {documents.length === 0 ? (
+            {safeDocuments.length === 0 ? (
               <div className="text-center py-8 border-2 border-dashed rounded-lg">
                 <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground">
@@ -86,7 +89,7 @@ export const TenantDocuments = ({
                 </p>
               </div>
             ) : (
-              documents.map((doc) => (
+              safeDocuments.map((doc) => (
                 <div
                   key={doc.id}
                   className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
