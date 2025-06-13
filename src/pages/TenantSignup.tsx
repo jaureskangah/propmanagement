@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -104,32 +105,6 @@ const TenantSignup = () => {
     }
   };
 
-  const checkExistingUser = async (email: string): Promise<{ exists: boolean; userId?: string }> => {
-    try {
-      console.log("Checking if user already exists with email:", email);
-      
-      // Vérifier dans auth.users via l'API admin
-      const { data, error } = await supabase.auth.admin.listUsers();
-      
-      if (error) {
-        console.error("Error checking existing users:", error);
-        return { exists: false };
-      }
-
-      const existingUser = data.users.find((user: any) => user.email === email);
-      
-      if (existingUser) {
-        console.log("Found existing user:", existingUser.id);
-        return { exists: true, userId: existingUser.id };
-      }
-
-      return { exists: false };
-    } catch (error) {
-      console.error("Error in checkExistingUser:", error);
-      return { exists: false };
-    }
-  };
-
   const linkTenantProfile = async (userId: string, userEmail: string, tenantId: string): Promise<boolean> => {
     console.log("=== STARTING TENANT PROFILE LINKING ===");
     console.log("User ID:", userId);
@@ -137,7 +112,7 @@ const TenantSignup = () => {
     console.log("Tenant ID:", tenantId);
     
     try {
-      // Vérifier que l'email correspond directement avec les paramètres passés
+      // Vérifier que l'email correspond
       const { data: tenantCheck, error: tenantCheckError } = await supabase
         .from('tenants')
         .select('id, name, email')
@@ -147,32 +122,42 @@ const TenantSignup = () => {
       console.log("Tenant check:", tenantCheck?.email);
       console.log("Tenant check error:", tenantCheckError);
       
-      // Vérification de sécurité : l'email doit correspondre
       if (!tenantCheck || userEmail !== tenantCheck.email) {
         console.error("Email mismatch - security check failed");
-        console.error("User email:", userEmail);
-        console.error("Tenant email:", tenantCheck?.email);
         return false;
       }
       
       console.log("✅ Email verification passed");
       
-      // Utiliser la fonction de base de données améliorée pour faire la liaison
-      const { data: linkResult, error: linkError } = await supabase.rpc('link_tenant_profile', {
-        p_tenant_id: tenantId,
-        p_user_id: userId
-      });
+      // Lier directement le tenant au profil utilisateur
+      const { error: updateError } = await supabase
+        .from('tenants')
+        .update({ 
+          tenant_profile_id: userId,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', tenantId)
+        .eq('email', userEmail);
 
-      console.log("Link result:", linkResult);
-      console.log("Link error:", linkError);
-
-      if (linkError) {
-        console.error("Link error:", linkError);
+      if (updateError) {
+        console.error("Error updating tenant:", updateError);
         return false;
       }
 
-      if (!linkResult) {
-        console.error("Link failed - function returned false");
+      // Créer ou mettre à jour le profil utilisateur
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          email: userEmail,
+          first_name: tenantCheck.name.split(' ')[0] || '',
+          last_name: tenantCheck.name.split(' ').slice(1).join(' ') || '',
+          is_tenant_user: true,
+          updated_at: new Date().toISOString()
+        });
+
+      if (profileError) {
+        console.error("Error creating/updating profile:", profileError);
         return false;
       }
 
@@ -201,71 +186,53 @@ const TenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP PROCESS ===");
       console.log("Creating account for tenant:", tenantData.id, "with email:", tenantData.email);
       
-      // Vérifier d'abord si un utilisateur existe déjà avec cet email
-      const existingUserCheck = await checkExistingUser(tenantData.email);
-      
-      let userId: string;
-      let userEmail: string;
-
-      if (existingUserCheck.exists && existingUserCheck.userId) {
-        console.log("User already exists, using existing user for linking");
-        userId = existingUserCheck.userId;
-        userEmail = tenantData.email;
-        
-        toast({
-          title: "Compte existant détecté",
-          description: "Liaison avec le compte existant en cours...",
-        });
-      } else {
-        // Créer le compte utilisateur avec les métadonnées incluant le tenant_id
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: tenantData.email,
-          password: values.password,
-          options: {
-            data: {
-              first_name: tenantData.name.split(' ')[0] || '',
-              last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
-              is_tenant_user: true,
-              tenant_id: tenantData.id,
-            },
+      // Créer le compte utilisateur directement
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email: tenantData.email,
+        password: values.password,
+        options: {
+          data: {
+            first_name: tenantData.name.split(' ')[0] || '',
+            last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
+            is_tenant_user: true,
+            tenant_id: tenantData.id,
           },
-        });
+        },
+      });
 
-        if (signUpError) {
-          console.error("Signup error:", signUpError);
-          
-          // Gérer le cas où l'utilisateur existe déjà
-          if (signUpError.message.includes('already registered')) {
-            console.log("User already registered, attempting to link existing user");
-            const existingUser = await checkExistingUser(tenantData.email);
-            if (existingUser.exists && existingUser.userId) {
-              userId = existingUser.userId;
-              userEmail = tenantData.email;
-            } else {
-              throw new Error("Impossible de récupérer l'utilisateur existant");
-            }
-          } else {
-            throw signUpError;
-          }
-        } else {
-          if (!signUpData.user) {
-            throw new Error('Aucune donnée utilisateur retournée');
-          }
-          
-          console.log("User created successfully with ID:", signUpData.user.id);
-          userId = signUpData.user.id;
-          userEmail = signUpData.user.email || tenantData.email;
+      if (signUpError) {
+        console.error("Signup error:", signUpError);
+        
+        if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered')) {
+          toast({
+            title: "Compte existant",
+            description: "Un compte existe déjà avec cette adresse email. Veuillez vous connecter.",
+            variant: "destructive",
+          });
+          return;
         }
+        
+        throw signUpError;
       }
 
-      // Maintenant, lier le profil utilisateur au tenant
+      if (!signUpData.user) {
+        throw new Error('Aucune donnée utilisateur retournée');
+      }
+      
+      console.log("User created successfully with ID:", signUpData.user.id);
+      
+      // Lier le profil utilisateur au tenant
       setLinkingStatus('linking');
       console.log("Starting tenant linking process...");
 
-      // Attendre un peu pour que l'utilisateur soit bien créé/récupéré
+      // Attendre un peu pour que l'utilisateur soit bien créé
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const linkSuccess = await linkTenantProfile(userId, userEmail, tenantData.id);
+      const linkSuccess = await linkTenantProfile(
+        signUpData.user.id, 
+        signUpData.user.email || tenantData.email, 
+        tenantData.id
+      );
 
       if (!linkSuccess) {
         console.error("Failed to link tenant profile");
@@ -306,8 +273,6 @@ const TenantSignup = () => {
       
       if (error.message.includes('already registered')) {
         errorMessage = "Un compte existe déjà avec cette adresse email.";
-      } else if (error.message.includes('Email mismatch')) {
-        errorMessage = "Erreur de sécurité : l'email ne correspond pas.";
       }
 
       toast({
