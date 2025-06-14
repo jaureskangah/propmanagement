@@ -30,11 +30,10 @@ export const useTenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // D'abord, vérifier si l'utilisateur existe déjà en listant tous les utilisateurs
-      const { data: existingUsers, error: searchError } = await supabase.auth.admin.listUsers();
-      const existingUser = existingUsers?.users?.find(u => u.email === tenantData.email);
+      // Check if user exists by email using getUserByEmail
+      const { data: existingUserData, error: getUserError } = await supabase.auth.admin.getUserByEmail(tenantData.email);
       
-      if (existingUser) {
+      if (!getUserError && existingUserData?.user) {
         console.log("User already exists, attempting direct login...");
         
         // Tentative de connexion directe
