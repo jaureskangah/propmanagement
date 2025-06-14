@@ -31,19 +31,29 @@ export const InviteTenantForm = ({ tenantId, defaultEmail, onSuccess }: InviteTe
   });
 
   const onSubmit = async (values: InviteFormValues) => {
+    console.log("=== STARTING INVITATION FORM SUBMISSION ===");
     console.log("Sending invitation to:", values.email, "for tenant:", tenantId);
     
-    const result = await sendInvitation({
-      email: values.email,
-      tenantId: tenantId,
-    });
+    try {
+      const result = await sendInvitation({
+        email: values.email,
+        tenantId: tenantId,
+      });
 
-    console.log("Invitation result:", result);
+      console.log("Invitation result:", result);
 
-    if (result.success) {
-      console.log("Invitation sent successfully, closing dialog");
-      form.reset();
-      onSuccess?.();
+      if (result.success) {
+        console.log("✅ Invitation sent successfully, closing dialog");
+        form.reset();
+        // Fermer la dialog immédiatement
+        if (onSuccess) {
+          onSuccess();
+        }
+      } else {
+        console.error("❌ Invitation failed:", result.error);
+      }
+    } catch (error) {
+      console.error("❌ Exception in form submission:", error);
     }
   };
 

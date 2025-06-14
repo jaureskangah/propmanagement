@@ -42,7 +42,7 @@ const TenantSignup = () => {
   const [loading, setLoading] = useState(false);
   const [tenantData, setTenantData] = useState<TenantData | null>(null);
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
-  const [linkingStatus, setLinkingStatus] = useState<'idle' | 'linking' | 'success' | 'failed'>('idle');
+  const [signupStatus, setSignupStatus] = useState<'idle' | 'creating' | 'linking' | 'success' | 'failed'>('idle');
 
   const form = useForm<TenantSignupValues>({
     resolver: zodResolver(tenantSignupSchema),
@@ -63,7 +63,8 @@ const TenantSignup = () => {
 
   const fetchTenantDataFromInvitation = async (token: string) => {
     try {
-      console.log("Fetching tenant data for invitation token:", token);
+      console.log("=== FETCHING TENANT DATA ===");
+      console.log("Invitation token:", token);
       
       // Rechercher l'invitation avec ce token
       const { data: invitation, error: invitationError } = await supabase
@@ -93,7 +94,7 @@ const TenantSignup = () => {
         return;
       }
 
-      console.log("Invitation found:", invitation);
+      console.log("✅ Invitation found:", invitation);
       setTenantData(invitation.tenants as TenantData);
     } catch (error) {
       console.error("Error fetching tenant data:", error);
@@ -102,70 +103,6 @@ const TenantSignup = () => {
         description: "Impossible de récupérer les informations du locataire.",
         variant: "destructive",
       });
-    }
-  };
-
-  const linkTenantProfile = async (userId: string, userEmail: string, tenantId: string): Promise<boolean> => {
-    console.log("=== STARTING TENANT PROFILE LINKING ===");
-    console.log("User ID:", userId);
-    console.log("User Email:", userEmail);
-    console.log("Tenant ID:", tenantId);
-    
-    try {
-      // Vérifier que l'email correspond
-      const { data: tenantCheck, error: tenantCheckError } = await supabase
-        .from('tenants')
-        .select('id, name, email')
-        .eq('id', tenantId)
-        .single();
-      
-      console.log("Tenant check:", tenantCheck?.email);
-      console.log("Tenant check error:", tenantCheckError);
-      
-      if (!tenantCheck || userEmail !== tenantCheck.email) {
-        console.error("Email mismatch - security check failed");
-        return false;
-      }
-      
-      console.log("✅ Email verification passed");
-      
-      // Lier directement le tenant au profil utilisateur
-      const { error: updateError } = await supabase
-        .from('tenants')
-        .update({ 
-          tenant_profile_id: userId,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', tenantId)
-        .eq('email', userEmail);
-
-      if (updateError) {
-        console.error("Error updating tenant:", updateError);
-        return false;
-      }
-
-      // Créer ou mettre à jour le profil utilisateur
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: userId,
-          email: userEmail,
-          first_name: tenantCheck.name.split(' ')[0] || '',
-          last_name: tenantCheck.name.split(' ').slice(1).join(' ') || '',
-          is_tenant_user: true,
-          updated_at: new Date().toISOString()
-        });
-
-      if (profileError) {
-        console.error("Error creating/updating profile:", profileError);
-        return false;
-      }
-
-      console.log("=== TENANT PROFILE LINKING SUCCESSFUL ===");
-      return true;
-    } catch (error) {
-      console.error("Exception during linking:", error);
-      return false;
     }
   };
 
@@ -180,13 +117,13 @@ const TenantSignup = () => {
     }
 
     setLoading(true);
-    setLinkingStatus('idle');
+    setSignupStatus('creating');
 
     try {
-      console.log("=== STARTING TENANT SIGNUP PROCESS ===");
-      console.log("Creating account for tenant:", tenantData.id, "with email:", tenantData.email);
+      console.log("=== STARTING SIMPLIFIED TENANT SIGNUP ===");
+      console.log("Creating account for:", tenantData.email);
       
-      // Créer le compte utilisateur directement
+      // 1. Créer le compte utilisateur
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -195,7 +132,6 @@ const TenantSignup = () => {
             first_name: tenantData.name.split(' ')[0] || '',
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
-            tenant_id: tenantData.id,
           },
         },
       });
@@ -219,28 +155,53 @@ const TenantSignup = () => {
         throw new Error('Aucune donnée utilisateur retournée');
       }
       
-      console.log("User created successfully with ID:", signUpData.user.id);
+      console.log("✅ User created successfully with ID:", signUpData.user.id);
       
-      // Lier le profil utilisateur au tenant
-      setLinkingStatus('linking');
-      console.log("Starting tenant linking process...");
+      // 2. Lier le tenant au profil utilisateur
+      setSignupStatus('linking');
+      console.log("Starting tenant profile linking...");
 
       // Attendre un peu pour que l'utilisateur soit bien créé
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      const linkSuccess = await linkTenantProfile(
-        signUpData.user.id, 
-        signUpData.user.email || tenantData.email, 
-        tenantData.id
-      );
+      // Mettre à jour le tenant avec le profile_id
+      const { error: updateTenantError } = await supabase
+        .from('tenants')
+        .update({ 
+          tenant_profile_id: signUpData.user.id,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', tenantData.id)
+        .eq('email', tenantData.email); // Sécurité supplémentaire
 
-      if (!linkSuccess) {
-        console.error("Failed to link tenant profile");
+      if (updateTenantError) {
+        console.error("Error updating tenant:", updateTenantError);
         throw new Error("Impossible de lier le profil au locataire");
       }
 
-      // Marquer l'invitation comme acceptée
-      const { error: updateError } = await supabase
+      console.log("✅ Tenant profile linked successfully");
+
+      // 3. Créer ou mettre à jour le profil utilisateur
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: signUpData.user.id,
+          email: tenantData.email,
+          first_name: tenantData.name.split(' ')[0] || '',
+          last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
+          is_tenant_user: true,
+          updated_at: new Date().toISOString()
+        });
+
+      if (profileError) {
+        console.error("Error creating/updating profile:", profileError);
+        // Ne pas faire échouer tout le processus pour ça
+      }
+
+      console.log("✅ Profile created/updated successfully");
+
+      // 4. Marquer l'invitation comme acceptée
+      const { error: updateInvitationError } = await supabase
         .from('tenant_invitations')
         .update({ 
           status: 'accepted',
@@ -248,26 +209,27 @@ const TenantSignup = () => {
         })
         .eq('token', invitationToken);
 
-      if (updateError) {
-        console.error("Error updating invitation status:", updateError);
+      if (updateInvitationError) {
+        console.error("Error updating invitation status:", updateInvitationError);
+        // Ne pas faire échouer tout le processus pour ça
       }
 
-      setLinkingStatus('success');
+      setSignupStatus('success');
       console.log("=== SIGNUP PROCESS COMPLETED SUCCESSFULLY ===");
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé et lié. Redirection vers la connexion...",
+        description: "Votre compte a été créé. Redirection vers la connexion...",
       });
 
-      // Redirection vers la page de connexion avec un message
+      // Redirection vers la page de connexion
       setTimeout(() => {
         window.location.href = '/auth?message=account_created&email=' + encodeURIComponent(tenantData.email);
       }, 2000);
 
     } catch (error: any) {
       console.error("=== SIGNUP PROCESS FAILED ===", error);
-      setLinkingStatus('failed');
+      setSignupStatus('failed');
       
       let errorMessage = "Une erreur s'est produite lors de la création du compte.";
       
@@ -308,13 +270,20 @@ const TenantSignup = () => {
     );
   }
 
-  const getLinkingStatusDisplay = () => {
-    switch (linkingStatus) {
+  const getStatusDisplay = () => {
+    switch (signupStatus) {
+      case 'creating':
+        return (
+          <div className="flex items-center space-x-2 text-blue-600">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span className="text-sm">Création du compte...</span>
+          </div>
+        );
       case 'linking':
         return (
           <div className="flex items-center space-x-2 text-blue-600">
             <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="text-sm">Finalisation du compte...</span>
+            <span className="text-sm">Liaison du profil...</span>
           </div>
         );
       case 'success':
@@ -371,9 +340,9 @@ const TenantSignup = () => {
                 </div>
               </div>
 
-              {linkingStatus !== 'idle' && (
+              {signupStatus !== 'idle' && (
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                  {getLinkingStatusDisplay()}
+                  {getStatusDisplay()}
                 </div>
               )}
 
@@ -420,14 +389,15 @@ const TenantSignup = () => {
                   <Button 
                     type="submit" 
                     className="w-full" 
-                    disabled={loading || linkingStatus === 'success'}
+                    disabled={loading || signupStatus === 'success'}
                   >
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        {linkingStatus === 'linking' ? 'Liaison en cours...' : 'Création du compte...'}
+                        {signupStatus === 'creating' ? 'Création...' : 
+                         signupStatus === 'linking' ? 'Liaison...' : 'Traitement...'}
                       </>
-                    ) : linkingStatus === 'success' ? (
+                    ) : signupStatus === 'success' ? (
                       'Redirection...'
                     ) : (
                       'Créer mon compte'

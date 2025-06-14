@@ -18,7 +18,7 @@ export const useInvitationService = () => {
     try {
       console.log("Starting invitation process for:", email, "tenant:", tenantId);
       
-      // Récupérer les données du locataire
+      // 1. Récupérer les données du locataire
       const { data: tenant, error: tenantError } = await supabase
         .from('tenants')
         .select('id, name, email, tenant_profile_id')
@@ -30,7 +30,9 @@ export const useInvitationService = () => {
         throw new Error("Locataire non trouvé");
       }
 
-      // Vérifier si le locataire est déjà lié à un profil
+      console.log("Tenant found:", tenant);
+
+      // 2. Vérifier si le locataire est déjà lié à un profil
       if (tenant.tenant_profile_id) {
         toast({
           title: "Utilisateur déjà lié",
@@ -40,36 +42,21 @@ export const useInvitationService = () => {
         return { success: false, error: "User already linked" };
       }
 
-      // Vérifier s'il y a déjà une invitation en attente
-      const { data: existingInvitation, error: invitationCheckError } = await supabase
+      // 3. Supprimer les anciennes invitations pour ce locataire
+      await supabase
         .from('tenant_invitations')
-        .select('id, status, expires_at')
+        .delete()
         .eq('email', email)
-        .eq('tenant_id', tenantId)
-        .eq('status', 'pending')
-        .gt('expires_at', new Date().toISOString())
-        .maybeSingle();
+        .eq('tenant_id', tenantId);
 
-      if (invitationCheckError) {
-        console.error("Error checking existing invitation:", invitationCheckError);
-        throw invitationCheckError;
-      }
+      console.log("Cleaned up old invitations");
 
-      if (existingInvitation) {
-        toast({
-          title: "Invitation déjà envoyée",
-          description: "Une invitation valide existe déjà pour cette adresse email.",
-          variant: "destructive",
-        });
-        return { success: false, error: "Active invitation exists" };
-      }
-
-      // Générer un token unique pour l'invitation
+      // 4. Générer un token unique pour l'invitation
       const invitationToken = crypto.randomUUID();
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7); // Expire dans 7 jours
 
-      // Créer l'invitation
+      // 5. Créer l'invitation
       const { data: invitation, error: createError } = await supabase
         .from('tenant_invitations')
         .insert({
@@ -90,35 +77,49 @@ export const useInvitationService = () => {
 
       console.log("Invitation created successfully:", invitation);
 
-      // Construire l'URL d'invitation
+      // 6. Construire l'URL d'invitation
       const baseUrl = window.location.origin;
       const invitationUrl = `${baseUrl}/tenant-signup?invitation=${invitationToken}`;
 
-      // Envoyer l'email via l'edge function
+      // 7. Envoyer l'email via l'edge function
       console.log("Sending invitation email via edge function");
-      const response = await supabase.functions.invoke('send-tenant-email', {
+      const { data: emailResult, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
         body: {
           tenantId: tenantId,
           subject: "Invitation à rejoindre le portail locataire",
           content: `
-            <h2>Bonjour ${tenant.name},</h2>
-            <p>Vous avez été invité(e) à rejoindre le portail locataire. Pour créer votre compte, veuillez cliquer sur le lien ci-dessous :</p>
-            <p><a href="${invitationUrl}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">Créer mon compte</a></p>
-            <p>Ou copiez et collez ce lien dans votre navigateur :</p>
-            <p>${invitationUrl}</p>
-            <p>Ce lien expirera dans 7 jours.</p>
-            <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités du portail locataire.</p>
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+              <h2 style="color: #333; text-align: center;">Invitation au portail locataire</h2>
+              <p>Bonjour <strong>${tenant.name}</strong>,</p>
+              <p>Vous avez été invité(e) à rejoindre le portail locataire. Pour créer votre compte, veuillez cliquer sur le bouton ci-dessous :</p>
+              <div style="text-align: center; margin: 30px 0;">
+                <a href="${invitationUrl}" 
+                   style="background-color: #4CAF50; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                  Créer mon compte
+                </a>
+              </div>
+              <p>Ou copiez et collez ce lien dans votre navigateur :</p>
+              <p style="background-color: #f5f5f5; padding: 10px; border-radius: 3px; word-break: break-all;">
+                ${invitationUrl}
+              </p>
+              <p><strong>Ce lien expirera dans 7 jours.</strong></p>
+              <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités du portail locataire.</p>
+              <hr style="border: 1px solid #eee; margin: 20px 0;" />
+              <p style="color: #888; font-size: 12px;">
+                Ce message a été envoyé automatiquement depuis notre système de gestion immobilière.
+              </p>
+            </div>
           `,
           category: 'invitation'
         }
       });
 
-      if (response.error) {
-        console.error("Error sending invitation email:", response.error);
+      if (emailError) {
+        console.error("Error sending invitation email:", emailError);
         throw new Error("Erreur lors de l'envoi de l'email d'invitation");
       }
 
-      console.log("Invitation email sent successfully");
+      console.log("Invitation email sent successfully:", emailResult);
 
       toast({
         title: "Invitation envoyée",
@@ -127,21 +128,16 @@ export const useInvitationService = () => {
 
       return { 
         success: true, 
-        invitation
+        invitation,
+        emailResult
       };
 
     } catch (error: any) {
-      console.error("Error sending invitation:", error);
+      console.error("Error in sendInvitation:", error);
       
-      let errorMessage = "Une erreur s'est produite lors de l'envoi de l'invitation.";
-      
-      if (error.message?.includes('unique_tenant_email')) {
-        errorMessage = "Un locataire avec cette adresse email existe déjà.";
-      }
-
       toast({
         title: "Erreur",
-        description: errorMessage,
+        description: error.message || "Une erreur s'est produite lors de l'envoi de l'invitation.",
         variant: "destructive",
       });
 
@@ -151,27 +147,8 @@ export const useInvitationService = () => {
     }
   };
 
-  const resendInvitation = async (email: string, tenantId: string) => {
-    console.log("Resending invitation for:", email);
-    
-    // Marquer les anciennes invitations comme expirées
-    await supabase
-      .from('tenant_invitations')
-      .update({ 
-        status: 'expired',
-        updated_at: new Date().toISOString()
-      })
-      .eq('email', email)
-      .eq('tenant_id', tenantId)
-      .eq('status', 'pending');
-
-    // Envoyer une nouvelle invitation
-    return sendInvitation({ email, tenantId });
-  };
-
   return {
     sendInvitation,
-    resendInvitation,
     isLoading
   };
 };
