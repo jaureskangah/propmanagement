@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -152,7 +151,7 @@ const TenantSignup = () => {
         }
       }
 
-      // Créer un nouveau compte avec confirmation automatique
+      // Créer un nouveau compte avec email confirmé automatiquement
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -161,10 +160,8 @@ const TenantSignup = () => {
             first_name: tenantData.name.split(' ')[0] || '',
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
-            email_confirmed_at: new Date().toISOString(), // Confirmer l'email automatiquement
+            email_confirm: true, // Marquer l'email comme confirmé
           },
-          // Ne pas envoyer d'email de confirmation
-          emailRedirectTo: undefined,
         },
       });
 
@@ -178,6 +175,19 @@ const TenantSignup = () => {
       }
       
       console.log("✅ User created successfully with ID:", signUpData.user.id);
+      
+      // Confirmer manuellement l'email si nécessaire
+      if (!signUpData.user.email_confirmed_at) {
+        console.log("Confirming email manually...");
+        const { error: confirmError } = await supabase.auth.admin.updateUserById(
+          signUpData.user.id,
+          { email_confirm: true }
+        );
+        
+        if (confirmError) {
+          console.error("Error confirming email:", confirmError);
+        }
+      }
       
       // Lier le tenant au profil utilisateur
       await linkTenantProfile(signUpData.user.id);
