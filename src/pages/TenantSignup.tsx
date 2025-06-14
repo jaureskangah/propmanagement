@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -122,11 +123,10 @@ const TenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // D'abord, vérifier si l'utilisateur existe déjà
-      const { data: existingUsers, error: searchError } = await supabase.auth.admin.listUsers();
-      const existingUser = existingUsers?.users?.find(u => u.email === tenantData.email);
+      // D'abord, vérifier si l'utilisateur existe déjà avec une requête directe
+      const { data: authData, error: getUserError } = await supabase.auth.admin.getUserByEmail(tenantData.email);
       
-      if (existingUser) {
+      if (authData?.user && !getUserError) {
         console.log("User already exists, attempting direct login...");
         
         // Tentative de connexion directe
