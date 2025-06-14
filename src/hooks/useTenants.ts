@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
@@ -87,8 +88,31 @@ export const useTenants = () => {
   const addTenant = useMutation({
     mutationFn: async (newTenant: any) => {
       console.log("Adding new tenant:", newTenant);
-      const { data, error } = await supabase.from("tenants").insert(newTenant);
-      if (error) throw error;
+      
+      // Get the current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        console.error("User not authenticated:", userError);
+        throw new Error("Vous devez être connecté pour ajouter un locataire");
+      }
+
+      // Add user_id to the tenant data
+      const tenantData = {
+        ...newTenant,
+        user_id: user.id
+      };
+
+      console.log("Tenant data with user_id:", tenantData);
+
+      const { data, error } = await supabase.from("tenants").insert(tenantData).select();
+      
+      if (error) {
+        console.error("Database error:", error);
+        throw error;
+      }
+      
+      console.log("Tenant added successfully:", data);
       return data;
     },
     onSuccess: () => {
