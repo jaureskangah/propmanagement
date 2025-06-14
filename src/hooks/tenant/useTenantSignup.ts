@@ -30,34 +30,21 @@ export const useTenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // Check if user exists by email using getUserByEmail
-      const { data: existingUserData, error: getUserError } = await supabase.auth.admin.getUserByEmail(tenantData.email);
-      
-      if (!getUserError && existingUserData?.user) {
-        console.log("User already exists, attempting direct login...");
-        
-        // Tentative de connexion directe
-        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-          email: tenantData.email,
-          password: values.password,
-        });
+      // Try to sign in first to check if user already exists
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: tenantData.email,
+        password: values.password,
+      });
 
-        if (signInError) {
-          console.error("Sign in failed:", signInError);
-          toast({
-            title: "Erreur de connexion",
-            description: "Le compte existe mais le mot de passe est incorrect. Veuillez réessayer.",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        if (signInData.user) {
-          await linkTenantProfile(signInData.user.id, tenantData, invitationToken);
-          return;
-        }
+      if (!signInError && signInData.user) {
+        console.log("User already exists and password is correct, proceeding with linking...");
+        await linkTenantProfile(signInData.user.id, tenantData, invitationToken);
+        return;
       }
 
+      // If sign in failed, try to create a new account
+      console.log("Creating new user account...");
+      
       // Créer un nouveau compte avec email confirmé automatiquement
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
@@ -74,6 +61,17 @@ export const useTenantSignup = () => {
 
       if (signUpError) {
         console.error("Signup error:", signUpError);
+        
+        // If user already exists but password was wrong
+        if (signUpError.message?.includes('already registered')) {
+          toast({
+            title: "Erreur de connexion",
+            description: "Un compte existe déjà avec cette adresse email mais le mot de passe est incorrect.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
         throw signUpError;
       }
 
@@ -105,7 +103,7 @@ export const useTenantSignup = () => {
       
       let errorMessage = "Une erreur s'est produite lors de la création du compte.";
       
-      if (error.message.includes('already registered')) {
+      if (error.message?.includes('already registered')) {
         errorMessage = "Un compte existe déjà avec cette adresse email.";
       }
 
