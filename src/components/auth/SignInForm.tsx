@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -26,11 +26,12 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLocale();
+  const [searchParams] = useSearchParams();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
+      email: searchParams.get('email') || '',
       password: '',
     },
   });
@@ -39,12 +40,20 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
     try {
       setLoading(true);
       
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log("=== ATTEMPTING SIGN IN ===");
+      console.log("Email:", values.email);
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Sign in error:", error);
+        throw error;
+      }
+
+      console.log("✅ Sign in successful:", data);
 
       toast({
         title: t('success'),
@@ -55,9 +64,14 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         onSuccess();
       }
 
-      navigate('/dashboard');
+      // Attendre un peu pour que l'auth state se mette à jour
+      setTimeout(() => {
+        navigate('/dashboard');
+      }, 500);
 
     } catch (error: any) {
+      console.error("Sign in failed:", error);
+      
       let errorMessage = t('signInError');
       
       if (error.message === 'Invalid login credentials') {
@@ -79,6 +93,14 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {searchParams.get('message') === 'account_created' && (
+          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-700">
+              ✅ Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.
+            </p>
+          </div>
+        )}
+        
         <FormField
           control={form.control}
           name="email"

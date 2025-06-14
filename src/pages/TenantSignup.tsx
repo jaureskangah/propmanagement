@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -122,7 +123,36 @@ const TenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // 1. Créer le compte utilisateur avec email_confirm automatique
+      // D'abord, vérifier si l'utilisateur existe déjà
+      const { data: existingUsers, error: searchError } = await supabase.auth.admin.listUsers();
+      const existingUser = existingUsers?.users?.find(u => u.email === tenantData.email);
+      
+      if (existingUser) {
+        console.log("User already exists, attempting direct login...");
+        
+        // Tentative de connexion directe
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email: tenantData.email,
+          password: values.password,
+        });
+
+        if (signInError) {
+          console.error("Sign in failed:", signInError);
+          toast({
+            title: "Erreur de connexion",
+            description: "Le compte existe mais le mot de passe est incorrect. Veuillez réessayer.",
+            variant: "destructive",
+          });
+          return;
+        }
+
+        if (signInData.user) {
+          await linkTenantProfile(signInData.user.id);
+          return;
+        }
+      }
+
+      // Créer un nouveau compte avec confirmation automatique
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -131,39 +161,15 @@ const TenantSignup = () => {
             first_name: tenantData.name.split(' ')[0] || '',
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
+            email_confirmed_at: new Date().toISOString(), // Confirmer l'email automatiquement
           },
-          emailRedirectTo: undefined, // Pas de redirection email nécessaire
+          // Ne pas envoyer d'email de confirmation
+          emailRedirectTo: undefined,
         },
       });
 
       if (signUpError) {
         console.error("Signup error:", signUpError);
-        
-        if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered')) {
-          // L'utilisateur existe déjà, essayons de nous connecter directement
-          console.log("User already exists, attempting to link profile...");
-          
-          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-            email: tenantData.email,
-            password: values.password,
-          });
-
-          if (signInError) {
-            toast({
-              title: "Compte existant",
-              description: "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec le bon mot de passe.",
-              variant: "destructive",
-            });
-            return;
-          }
-
-          // Si la connexion réussit, procéder avec la liaison
-          if (signInData.user) {
-            await linkTenantProfile(signInData.user.id);
-            return;
-          }
-        }
-        
         throw signUpError;
       }
 
@@ -173,7 +179,7 @@ const TenantSignup = () => {
       
       console.log("✅ User created successfully with ID:", signUpData.user.id);
       
-      // 2. Lier automatiquement le tenant au profil utilisateur
+      // Lier le tenant au profil utilisateur
       await linkTenantProfile(signUpData.user.id);
 
     } catch (error: any) {
@@ -254,11 +260,12 @@ const TenantSignup = () => {
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé. Vous pouvez maintenant vous connecter.",
+        description: "Votre compte a été créé et activé. Redirection vers la connexion...",
       });
 
-      // Redirection vers la page de connexion avec un message de succès
-      setTimeout(() => {
+      // Forcer la déconnexion et rediriger vers la page de connexion
+      setTimeout(async () => {
+        await supabase.auth.signOut();
         window.location.href = '/auth?message=account_created&email=' + encodeURIComponent(tenantData.email);
       }, 2000);
 
