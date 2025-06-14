@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useTenants } from "./useTenants";
+import { useDeleteTenant } from "./useDeleteTenant";
 import type { Tenant } from "@/types/tenant";
 
 export interface SearchFilters {
@@ -29,7 +30,8 @@ export const useTenantPage = () => {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
   // Data hooks
-  const { tenants, isLoading, addTenant, updateTenant, deleteTenant } = useTenants();
+  const { tenants, isLoading, addTenant, updateTenant } = useTenants();
+  const deleteTenantMutation = useDeleteTenant();
 
   // Computed values
   const selectedTenantData = tenants?.find((t: Tenant) => t.id === selectedTenant) || null;
@@ -85,7 +87,8 @@ export const useTenantPage = () => {
   const handleDeleteTenant = async () => {
     if (selectedTenant) {
       try {
-        await deleteTenant.mutateAsync(selectedTenant);
+        console.log("Initiating tenant deletion for:", selectedTenant);
+        await deleteTenantMutation.mutateAsync(selectedTenant);
         setIsDeleteDialogOpen(false);
         setSelectedTenant(null);
       } catch (error) {
@@ -129,5 +132,8 @@ export const useTenantPage = () => {
     handleUpdateTenant,
     handleDeleteTenant,
     handleInviteTenant,
+    
+    // Delete state
+    isDeleting: deleteTenantMutation.isPending,
   };
 };

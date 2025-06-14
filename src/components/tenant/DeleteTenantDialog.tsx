@@ -10,17 +10,20 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { Loader2 } from "lucide-react";
 
 interface DeleteTenantDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
+  isDeleting?: boolean;
 }
 
 export const DeleteTenantDialog = ({
   isOpen,
   onClose,
   onConfirm,
+  isDeleting = false,
 }: DeleteTenantDialogProps) => {
   const { t } = useLocale();
   
@@ -30,16 +33,26 @@ export const DeleteTenantDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('deleteWarning')}
+            Cette action est irréversible. Le locataire et toutes ses données associées seront supprimés définitivement.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+          <AlertDialogCancel disabled={isDeleting}>
+            {t('cancel')}
+          </AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             onClick={onConfirm}
+            disabled={isDeleting}
           >
-            {t('deleteTenant')}
+            {isDeleting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Suppression...
+              </>
+            ) : (
+              'Supprimer'
+            )}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -35,6 +35,7 @@ const Tenants = () => {
     handleUpdateTenant,
     handleDeleteTenant,
     handleInviteTenant,
+    isDeleting,
   } = useTenantPage();
   
   const isMobile = useIsMobile();
@@ -97,6 +98,7 @@ const Tenants = () => {
               onAddSubmit={handleAddTenant}
               onEditSubmit={handleUpdateTenant}
               onDeleteConfirm={handleDeleteTenant}
+              isDeleting={isDeleting}
             />
           </motion.div>
         </div>
