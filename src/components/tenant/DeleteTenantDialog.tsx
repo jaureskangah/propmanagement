@@ -15,7 +15,7 @@ import { Loader2 } from "lucide-react";
 interface DeleteTenantDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
   isDeleting?: boolean;
 }
 
@@ -26,6 +26,14 @@ export const DeleteTenantDialog = ({
   isDeleting = false,
 }: DeleteTenantDialogProps) => {
   const { t } = useLocale();
+  
+  const handleConfirm = async () => {
+    try {
+      await onConfirm();
+    } catch (error) {
+      console.error("Error confirming deletion:", error);
+    }
+  };
   
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
@@ -42,7 +50,7 @@ export const DeleteTenantDialog = ({
           </AlertDialogCancel>
           <AlertDialogAction
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            onClick={onConfirm}
+            onClick={handleConfirm}
             disabled={isDeleting}
           >
             {isDeleting ? (

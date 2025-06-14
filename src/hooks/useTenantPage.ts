@@ -64,27 +64,29 @@ export const useTenantPage = () => {
   });
 
   // Handlers
-  const handleAddTenant = async (data: any) => {
+  const handleAddTenant = async (data: any): Promise<void> => {
     try {
       await addTenant.mutateAsync(data);
       setIsAddModalOpen(false);
     } catch (error) {
       console.error("Error adding tenant:", error);
+      throw error;
     }
   };
 
-  const handleUpdateTenant = async (data: any) => {
+  const handleUpdateTenant = async (data: any): Promise<void> => {
     if (selectedTenant) {
       try {
         await updateTenant.mutateAsync({ id: selectedTenant, ...data });
         setIsEditModalOpen(false);
       } catch (error) {
         console.error("Error updating tenant:", error);
+        throw error;
       }
     }
   };
 
-  const handleDeleteTenant = async () => {
+  const handleDeleteTenant = async (): Promise<void> => {
     if (selectedTenant) {
       try {
         console.log("Initiating tenant deletion for:", selectedTenant);
@@ -93,6 +95,7 @@ export const useTenantPage = () => {
         setSelectedTenant(null);
       } catch (error) {
         console.error("Error deleting tenant:", error);
+        throw error;
       }
     }
   };

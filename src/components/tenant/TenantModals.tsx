@@ -16,9 +16,9 @@ interface TenantModalsProps {
   onEditClose: () => void;
   onDeleteClose: () => void;
   onInviteClose: () => void;
-  onAddSubmit: (data: any) => void;
-  onEditSubmit: (data: any) => void;
-  onDeleteConfirm: () => void;
+  onAddSubmit: (data: any) => Promise<void>;
+  onEditSubmit: (data: any) => Promise<void>;
+  onDeleteConfirm: () => Promise<void>;
   isDeleting?: boolean;
 }
 
@@ -66,7 +66,7 @@ export const TenantModals = ({
           isOpen={isInviteDialogOpen}
           onClose={onInviteClose}
           tenantId={selectedTenantData.id}
-          tenantEmail={selectedTenantData.email}
+          defaultEmail={selectedTenantData.email}
         />
       )}
     </>
