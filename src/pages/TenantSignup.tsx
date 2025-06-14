@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
@@ -120,10 +119,10 @@ const TenantSignup = () => {
     setSignupStatus('creating');
 
     try {
-      console.log("=== STARTING SIMPLIFIED TENANT SIGNUP ===");
+      console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // 1. Créer le compte utilisateur
+      // 1. Créer le compte utilisateur avec email_confirm automatique
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -133,6 +132,7 @@ const TenantSignup = () => {
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
           },
+          emailRedirectTo: undefined, // Pas de redirection email nécessaire
         },
       });
 
@@ -140,12 +140,28 @@ const TenantSignup = () => {
         console.error("Signup error:", signUpError);
         
         if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered')) {
-          toast({
-            title: "Compte existant",
-            description: "Un compte existe déjà avec cette adresse email. Veuillez vous connecter.",
-            variant: "destructive",
+          // L'utilisateur existe déjà, essayons de nous connecter directement
+          console.log("User already exists, attempting to link profile...");
+          
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email: tenantData.email,
+            password: values.password,
           });
-          return;
+
+          if (signInError) {
+            toast({
+              title: "Compte existant",
+              description: "Un compte existe déjà avec cette adresse email. Veuillez vous connecter avec le bon mot de passe.",
+              variant: "destructive",
+            });
+            return;
+          }
+
+          // Si la connexion réussit, procéder avec la liaison
+          if (signInData.user) {
+            await linkTenantProfile(signInData.user.id);
+            return;
+          }
         }
         
         throw signUpError;
@@ -157,75 +173,8 @@ const TenantSignup = () => {
       
       console.log("✅ User created successfully with ID:", signUpData.user.id);
       
-      // 2. Lier le tenant au profil utilisateur
-      setSignupStatus('linking');
-      console.log("Starting tenant profile linking...");
-
-      // Attendre un peu pour que l'utilisateur soit bien créé
-      await new Promise(resolve => setTimeout(resolve, 2000));
-
-      // Mettre à jour le tenant avec le profile_id
-      const { error: updateTenantError } = await supabase
-        .from('tenants')
-        .update({ 
-          tenant_profile_id: signUpData.user.id,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', tenantData.id)
-        .eq('email', tenantData.email); // Sécurité supplémentaire
-
-      if (updateTenantError) {
-        console.error("Error updating tenant:", updateTenantError);
-        throw new Error("Impossible de lier le profil au locataire");
-      }
-
-      console.log("✅ Tenant profile linked successfully");
-
-      // 3. Créer ou mettre à jour le profil utilisateur
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: signUpData.user.id,
-          email: tenantData.email,
-          first_name: tenantData.name.split(' ')[0] || '',
-          last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
-          is_tenant_user: true,
-          updated_at: new Date().toISOString()
-        });
-
-      if (profileError) {
-        console.error("Error creating/updating profile:", profileError);
-        // Ne pas faire échouer tout le processus pour ça
-      }
-
-      console.log("✅ Profile created/updated successfully");
-
-      // 4. Marquer l'invitation comme acceptée
-      const { error: updateInvitationError } = await supabase
-        .from('tenant_invitations')
-        .update({ 
-          status: 'accepted',
-          updated_at: new Date().toISOString()
-        })
-        .eq('token', invitationToken);
-
-      if (updateInvitationError) {
-        console.error("Error updating invitation status:", updateInvitationError);
-        // Ne pas faire échouer tout le processus pour ça
-      }
-
-      setSignupStatus('success');
-      console.log("=== SIGNUP PROCESS COMPLETED SUCCESSFULLY ===");
-
-      toast({
-        title: "Compte créé avec succès",
-        description: "Votre compte a été créé. Redirection vers la connexion...",
-      });
-
-      // Redirection vers la page de connexion
-      setTimeout(() => {
-        window.location.href = '/auth?message=account_created&email=' + encodeURIComponent(tenantData.email);
-      }, 2000);
+      // 2. Lier automatiquement le tenant au profil utilisateur
+      await linkTenantProfile(signUpData.user.id);
 
     } catch (error: any) {
       console.error("=== SIGNUP PROCESS FAILED ===", error);
@@ -244,6 +193,79 @@ const TenantSignup = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const linkTenantProfile = async (userId: string) => {
+    try {
+      setSignupStatus('linking');
+      console.log("Starting tenant profile linking for user:", userId);
+
+      // 1. Lier le tenant au profil utilisateur
+      const { error: updateTenantError } = await supabase
+        .from('tenants')
+        .update({ 
+          tenant_profile_id: userId,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', tenantData.id)
+        .eq('email', tenantData.email);
+
+      if (updateTenantError) {
+        console.error("Error updating tenant:", updateTenantError);
+        throw new Error("Impossible de lier le profil au locataire");
+      }
+
+      console.log("✅ Tenant profile linked successfully");
+
+      // 2. Créer ou mettre à jour le profil utilisateur
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: userId,
+          email: tenantData.email,
+          first_name: tenantData.name.split(' ')[0] || '',
+          last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
+          is_tenant_user: true,
+          updated_at: new Date().toISOString()
+        });
+
+      if (profileError) {
+        console.error("Error creating/updating profile:", profileError);
+      }
+
+      console.log("✅ Profile created/updated successfully");
+
+      // 3. Marquer l'invitation comme acceptée
+      const { error: updateInvitationError } = await supabase
+        .from('tenant_invitations')
+        .update({ 
+          status: 'accepted',
+          updated_at: new Date().toISOString()
+        })
+        .eq('token', invitationToken);
+
+      if (updateInvitationError) {
+        console.error("Error updating invitation status:", updateInvitationError);
+      }
+
+      setSignupStatus('success');
+      console.log("=== SIGNUP PROCESS COMPLETED SUCCESSFULLY ===");
+
+      toast({
+        title: "Compte créé avec succès",
+        description: "Votre compte a été créé. Vous pouvez maintenant vous connecter.",
+      });
+
+      // Redirection vers la page de connexion avec un message de succès
+      setTimeout(() => {
+        window.location.href = '/auth?message=account_created&email=' + encodeURIComponent(tenantData.email);
+      }, 2000);
+
+    } catch (error: any) {
+      console.error("=== LINKING PROCESS FAILED ===", error);
+      setSignupStatus('failed');
+      throw error;
     }
   };
 
