@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import AppSidebar from "@/components/AppSidebar";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { Mail, RefreshCw, X, CheckCircle2, Clock, AlertCircle, Sync } from "lucide-react";
+import { Mail, RefreshCw, X, CheckCircle2, Clock, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -461,7 +461,7 @@ const Invitations = () => {
                                 </>
                               ) : (
                                 <>
-                                  <Sync className="h-4 w-4 mr-1" />
+                                  <RefreshCw className="h-4 w-4 mr-1" />
                                   Sync
                                 </>
                               )}
