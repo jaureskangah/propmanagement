@@ -1,13 +1,12 @@
 
 import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import AppSidebar from "@/components/AppSidebar";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { DashboardContent } from "@/components/dashboard/DashboardContent";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DateRange } from "@/components/dashboard/DashboardDateFilter";
-import { cn } from "@/lib/utils";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import AnimatedLayout from "@/components/layout/AnimatedLayout";
 import { useState } from 'react';
 
 const Dashboard = () => {
@@ -17,7 +16,6 @@ const Dashboard = () => {
     startDate: new Date(),
     endDate: new Date()
   });
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const handleDateRangeChange = (newDateRange: DateRange) => {
     console.log("Dashboard page received date range:", newDateRange);
@@ -58,19 +56,13 @@ const Dashboard = () => {
   // Only property owners should reach this point
   console.log("✅ Rendering owner dashboard for property owner");
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
-        <DashboardHeader 
-          title={t('dashboard')}
-          onDateRangeChange={handleDateRangeChange}
-        />
-        <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
-      </div>
-    </div>
+    <AnimatedLayout isTenant={false}>
+      <DashboardHeader 
+        title={t('dashboard')}
+        onDateRangeChange={handleDateRangeChange}
+      />
+      <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
+    </AnimatedLayout>
   );
 };
 
