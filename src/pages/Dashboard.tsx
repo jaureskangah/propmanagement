@@ -49,8 +49,8 @@ const Dashboard = () => {
     return <Navigate to="/auth" replace />;
   }
   
-  // Redirect tenants to their dashboard - THIS IS CRITICAL
-  if (isTenant) {
+  // Redirect tenants to their dashboard - SEULEMENT si on est sûr du statut
+  if (isTenant && !loading) {
     console.log("🔄 User is tenant, redirecting to tenant dashboard");
     return <Navigate to="/tenant/dashboard" replace />;
   }

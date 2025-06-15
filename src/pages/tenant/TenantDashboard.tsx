@@ -36,8 +36,8 @@ const TenantDashboardPage = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Redirect non-tenants to owner dashboard - THIS IS CRITICAL
-  if (!isTenant) {
+  // Redirect non-tenants to owner dashboard - SEULEMENT si on est sûr du statut
+  if (!isTenant && !loading) {
     console.log("🔄 User is not a tenant, redirecting to owner dashboard");
     return <Navigate to="/dashboard" replace />;
   }

@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
@@ -67,8 +68,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            // Vérifier immédiatement le statut de locataire lors de la connexion
-            await checkTenantStatus(session.user.id);
+            // Utiliser setTimeout pour éviter le blocage
+            setTimeout(() => {
+              if (isMounted) {
+                checkTenantStatus(session.user.id);
+              }
+            }, 0);
           }
         } else {
           setUser(null);
