@@ -54,8 +54,8 @@ export const useTenantSignup = () => {
             first_name: tenantData.name.split(' ')[0] || '',
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
-            email_confirm: true,
           },
+          emailRedirectTo: undefined, // Éviter la redirection email
         },
       });
 
@@ -81,21 +81,46 @@ export const useTenantSignup = () => {
       
       console.log("✅ User created successfully with ID:", signUpData.user.id);
       
-      // Confirmer manuellement l'email si nécessaire
-      if (!signUpData.user.email_confirmed_at) {
-        console.log("Confirming email manually...");
-        const { error: confirmError } = await supabase.auth.admin.updateUserById(
-          signUpData.user.id,
-          { email_confirm: true }
-        );
+      // Si l'utilisateur a été créé mais n'est pas confirmé, on va forcer la connexion
+      if (!signUpData.session) {
+        console.log("No session returned, attempting direct sign in...");
         
-        if (confirmError) {
-          console.error("Error confirming email:", confirmError);
+        // Essayer de se connecter immédiatement après la création
+        const { data: directSignInData, error: directSignInError } = await supabase.auth.signInWithPassword({
+          email: tenantData.email,
+          password: values.password,
+        });
+
+        if (directSignInError) {
+          console.error("Direct sign in failed:", directSignInError);
+          
+          // Si la connexion échoue à cause de l'email non confirmé, on informe l'utilisateur
+          if (directSignInError.message?.includes('Email not confirmed')) {
+            toast({
+              title: "Compte créé",
+              description: "Votre compte a été créé. Un email de confirmation a été envoyé. Veuillez confirmer votre email avant de vous connecter.",
+              variant: "default",
+            });
+            
+            setTimeout(() => {
+              window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
+            }, 2000);
+            return;
+          }
+          
+          throw directSignInError;
         }
+
+        if (directSignInData.user) {
+          console.log("✅ Direct sign in successful");
+          await linkTenantProfile(directSignInData.user.id, tenantData, invitationToken);
+          return;
+        }
+      } else {
+        // Si on a une session immédiatement, procéder avec la liaison
+        console.log("✅ User signed up with immediate session");
+        await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
       }
-      
-      // Lier le tenant au profil utilisateur
-      await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
 
     } catch (error: any) {
       console.error("=== SIGNUP PROCESS FAILED ===", error);
@@ -105,6 +130,8 @@ export const useTenantSignup = () => {
       
       if (error.message?.includes('already registered')) {
         errorMessage = "Un compte existe déjà avec cette adresse email.";
+      } else if (error.message?.includes('Invalid login credentials')) {
+        errorMessage = "Impossible de créer le compte. Veuillez réessayer.";
       }
 
       toast({
@@ -175,13 +202,12 @@ export const useTenantSignup = () => {
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé et activé. Redirection vers la connexion...",
+        description: "Votre compte a été créé et activé. Redirection vers le tableau de bord...",
       });
 
-      // Forcer la déconnexion et rediriger vers la page de connexion
-      setTimeout(async () => {
-        await supabase.auth.signOut();
-        window.location.href = '/auth?message=account_created&email=' + encodeURIComponent(tenantData.email);
+      // Rediriger vers le dashboard tenant au lieu de forcer la déconnexion
+      setTimeout(() => {
+        window.location.href = '/tenant/dashboard';
       }, 2000);
 
     } catch (error: any) {
