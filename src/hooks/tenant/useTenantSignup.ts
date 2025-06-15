@@ -30,27 +30,7 @@ export const useTenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // D'abord, essayer de se connecter pour voir si l'utilisateur existe déjà
-      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-        email: tenantData.email,
-        password: values.password,
-      });
-
-      if (!signInError && signInData.user) {
-        console.log("✅ User already exists and signed in successfully");
-        await linkTenantProfile(signInData.user.id, tenantData, invitationToken);
-        return;
-      }
-
-      // Si la connexion échoue pour une raison autre que "credentials invalides", on arrête
-      if (signInError && !signInError.message.includes('Invalid login credentials')) {
-        console.error("Unexpected sign in error:", signInError);
-        throw signInError;
-      }
-
-      // Si les credentials sont invalides, essayer de créer un nouveau compte
-      console.log("User doesn't exist or wrong password, attempting to create new account...");
-      
+      // Créer directement un nouveau compte
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -65,18 +45,6 @@ export const useTenantSignup = () => {
 
       if (signUpError) {
         console.error("Signup error:", signUpError);
-        
-        // Si l'utilisateur existe déjà, essayer de se connecter avec un message d'erreur plus clair
-        if (signUpError.message?.includes('already registered')) {
-          toast({
-            title: "Compte existant",
-            description: "Un compte existe déjà avec cette adresse email. Vérifiez votre mot de passe ou contactez l'administrateur.",
-            variant: "destructive",
-          });
-          setSignupStatus('failed');
-          return;
-        }
-        
         throw signUpError;
       }
 
@@ -86,32 +54,8 @@ export const useTenantSignup = () => {
       
       console.log("✅ New user created successfully with ID:", signUpData.user.id);
       
-      // Avec la confirmation d'email désactivée, on devrait avoir une session immédiatement
-      if (signUpData.session) {
-        console.log("✅ Session available, proceeding with linking...");
-        await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
-        return;
-      }
-
-      // Si pas de session, essayer de se connecter directement
-      console.log("No session returned, attempting direct sign in...");
-      const { data: directSignInData, error: directSignInError } = await supabase.auth.signInWithPassword({
-        email: tenantData.email,
-        password: values.password,
-      });
-
-      if (directSignInError) {
-        console.error("Direct sign in failed:", directSignInError);
-        throw directSignInError;
-      }
-
-      if (directSignInData.user) {
-        console.log("✅ Direct sign in successful");
-        await linkTenantProfile(directSignInData.user.id, tenantData, invitationToken);
-        return;
-      }
-
-      throw new Error("Impossible de créer ou connecter l'utilisateur");
+      // Lier immédiatement le profil du locataire
+      await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
 
     } catch (error: any) {
       console.error("=== SIGNUP PROCESS FAILED ===", error);
@@ -120,9 +64,7 @@ export const useTenantSignup = () => {
       let errorMessage = "Une erreur s'est produite lors de la création du compte.";
       
       if (error.message?.includes('already registered')) {
-        errorMessage = "Un compte existe déjà avec cette adresse email. Vérifiez votre mot de passe.";
-      } else if (error.message?.includes('Invalid login credentials')) {
-        errorMessage = "Informations de connexion invalides. Vérifiez votre mot de passe.";
+        errorMessage = "Un compte existe déjà avec cette adresse email.";
       }
 
       toast({
@@ -157,23 +99,25 @@ export const useTenantSignup = () => {
 
       console.log("✅ Tenant profile linked successfully");
 
-      // 2. Créer ou mettre à jour le profil utilisateur
+      // 2. Créer le profil utilisateur
       const { error: profileError } = await supabase
         .from('profiles')
-        .upsert({
+        .insert({
           id: userId,
           email: tenantData.email,
           first_name: tenantData.name.split(' ')[0] || '',
           last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
           is_tenant_user: true,
+          created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         });
 
       if (profileError) {
-        console.error("Error creating/updating profile:", profileError);
+        console.error("Error creating profile:", profileError);
+        // Ne pas échouer si le profil existe déjà
       }
 
-      console.log("✅ Profile created/updated successfully");
+      console.log("✅ Profile created successfully");
 
       // 3. Marquer l'invitation comme acceptée
       const { error: updateInvitationError } = await supabase

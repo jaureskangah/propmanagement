@@ -68,12 +68,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            // Attendre un peu pour que la liaison tenant soit terminée
             setTimeout(async () => {
               if (isMounted) {
                 await checkTenantStatus(session.user.id);
               }
-            }, 500);
+            }, 100);
           }
         } else {
           setUser(null);
@@ -98,7 +97,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("=== CHECKING TENANT STATUS ===");
       console.log("Checking tenant status for user:", userId);
 
-      // D'abord, vérifier le profil utilisateur
+      // Vérifier le profil utilisateur
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('is_tenant_user, email, first_name, last_name')
@@ -106,9 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .maybeSingle();
 
       console.log("Profile data:", profileData);
-      console.log("Profile error:", profileError);
 
-      // Si l'utilisateur n'est pas marqué comme tenant dans son profil, ce n'est pas un locataire
       if (!profileData?.is_tenant_user) {
         console.log("User is not marked as tenant in profile");
         setIsTenant(false);
@@ -116,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      // Vérifier s'il y a une entrée dans la table tenants avec tenant_profile_id correspondant
+      // Vérifier s'il y a une entrée dans la table tenants
       const { data: tenantRecord, error: tenantError } = await supabase
         .from('tenants')
         .select(`
@@ -134,72 +131,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .maybeSingle();
 
       console.log("Tenant record:", tenantRecord);
-      console.log("Tenant error:", tenantError);
-
-      if (tenantError) {
-        console.error("Error checking tenant record:", tenantError);
-        setIsTenant(false);
-        setTenantData(null);
-        return;
-      }
 
       if (tenantRecord) {
         console.log("✅ User is a tenant:", tenantRecord);
         setIsTenant(true);
         setTenantData(tenantRecord);
-        console.log("=== TENANT STATUS SET TO TRUE ===");
       } else {
         console.log("❌ User is marked as tenant but no tenant record found");
-        
-        // Tentative de récupération automatique - chercher un tenant avec le même email
-        console.log("=== ATTEMPTING AUTOMATIC RECOVERY ===");
-        const userEmail = user?.email || profileData?.email;
-        
-        if (userEmail) {
-          const { data: tenantByEmail, error: emailError } = await supabase
-            .from('tenants')
-            .select(`
-              id,
-              name,
-              email,
-              unit_number,
-              lease_start,
-              lease_end,
-              rent_amount,
-              property_id,
-              properties:property_id(name)
-            `)
-            .eq('email', userEmail)
-            .is('tenant_profile_id', null)
-            .maybeSingle();
-          
-          console.log("Tenant found by email:", tenantByEmail);
-          
-          if (tenantByEmail && !emailError) {
-            console.log("=== FOUND UNLINKED TENANT, ATTEMPTING TO LINK ===");
-            
-            // Essayer de lier automatiquement
-            const { error: linkError } = await supabase
-              .from('tenants')
-              .update({ 
-                tenant_profile_id: userId,
-                updated_at: new Date().toISOString()
-              })
-              .eq('id', tenantByEmail.id);
-            
-            if (!linkError) {
-              console.log("✅ Successfully linked tenant automatically");
-              setIsTenant(true);
-              setTenantData(tenantByEmail);
-              return;
-            } else {
-              console.error("Failed to link tenant automatically:", linkError);
-            }
-          }
-        }
-        
-        // Si la récupération automatique échoue
-        console.log("❌ Could not recover tenant linkage automatically");
         setIsTenant(false);
         setTenantData(null);
       }

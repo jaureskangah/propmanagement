@@ -64,24 +64,22 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         onSuccess();
       }
 
-      // Attendre un peu pour que l'auth state se mette à jour
+      // Rediriger vers le bon dashboard selon le type d'utilisateur
       setTimeout(() => {
-        navigate('/dashboard');
+        window.location.href = '/dashboard';
       }, 500);
 
     } catch (error: any) {
       console.error("Sign in failed:", error);
       
-      let errorMessage = t('signInError');
+      let errorMessage = "Erreur de connexion. Vérifiez vos identifiants.";
       
       if (error.message === 'Invalid login credentials') {
-        errorMessage = t('invalidCredentials');
-      } else if (error.message === 'Email not confirmed') {
-        errorMessage = "Votre email n'a pas encore été confirmé. Veuillez vérifier votre boîte email et cliquer sur le lien de confirmation.";
+        errorMessage = "Email ou mot de passe incorrect.";
       }
 
       toast({
-        title: t('error'),
+        title: "Erreur",
         description: errorMessage,
         variant: 'destructive',
       });
@@ -97,14 +95,6 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-green-700">
               ✅ Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.
-            </p>
-          </div>
-        )}
-
-        {searchParams.get('message') === 'check_email' && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-700">
-              📧 Votre compte a été créé. Veuillez vérifier votre email et cliquer sur le lien de confirmation avant de vous connecter.
             </p>
           </div>
         )}
@@ -160,10 +150,10 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('signingIn')}
+              Connexion...
             </>
           ) : (
-            t('signIn')
+            'Se connecter'
           )}
         </Button>
       </form>
