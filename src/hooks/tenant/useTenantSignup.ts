@@ -45,7 +45,6 @@ export const useTenantSignup = () => {
       // If sign in failed, try to create a new account
       console.log("Creating new user account...");
       
-      // Créer un nouveau compte avec email confirmé automatiquement
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
         password: values.password,
@@ -55,14 +54,13 @@ export const useTenantSignup = () => {
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
           },
-          emailRedirectTo: undefined, // Éviter la redirection email
+          emailRedirectTo: undefined,
         },
       });
 
       if (signUpError) {
         console.error("Signup error:", signUpError);
         
-        // If user already exists but password was wrong
         if (signUpError.message?.includes('already registered')) {
           toast({
             title: "Erreur de connexion",
@@ -92,10 +90,14 @@ export const useTenantSignup = () => {
 
       if (confirmError) {
         console.error("Error confirming email:", confirmError);
-        // On continue même si la confirmation échoue, car l'utilisateur existe
+        // Si la confirmation échoue, continuer quand même
+        console.log("Continuing without automatic confirmation...");
       } else {
         console.log("✅ Email confirmed successfully");
       }
+
+      // Attendre un peu pour que la confirmation se propage
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       // Maintenant essayer de se connecter avec les identifiants
       console.log("Attempting sign in after email confirmation...");
@@ -107,17 +109,53 @@ export const useTenantSignup = () => {
       if (finalSignInError) {
         console.error("Final sign in failed:", finalSignInError);
         
-        // Informer l'utilisateur que le compte a été créé mais qu'il doit confirmer son email
-        toast({
-          title: "Compte créé",
-          description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
-          variant: "default",
-        });
+        // Si c'est un problème d'email non confirmé et qu'on n'a pas réussi la confirmation auto
+        if (finalSignInError.message?.includes('Email not confirmed') || 
+            finalSignInError.message?.includes('Invalid login credentials')) {
+          
+          if (confirmError) {
+            // La confirmation automatique a échoué, demander confirmation manuelle
+            toast({
+              title: "Compte créé",
+              description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
+              variant: "default",
+            });
+            
+            setTimeout(() => {
+              window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
+            }, 2000);
+            return;
+          } else {
+            // La confirmation auto a réussi mais la connexion échoue encore, réessayer une fois
+            console.log("Retrying sign in after delay...");
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            const { data: retrySignInData, error: retrySignInError } = await supabase.auth.signInWithPassword({
+              email: tenantData.email,
+              password: values.password,
+            });
+            
+            if (!retrySignInError && retrySignInData.user) {
+              console.log("✅ Retry sign in successful");
+              await linkTenantProfile(retrySignInData.user.id, tenantData, invitationToken);
+              return;
+            }
+            
+            // Si le retry échoue aussi, demander confirmation manuelle
+            toast({
+              title: "Compte créé",
+              description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
+              variant: "default",
+            });
+            
+            setTimeout(() => {
+              window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
+            }, 2000);
+            return;
+          }
+        }
         
-        setTimeout(() => {
-          window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
-        }, 2000);
-        return;
+        throw finalSignInError;
       }
 
       if (finalSignInData.user) {
@@ -209,7 +247,7 @@ export const useTenantSignup = () => {
         description: "Votre compte a été créé et activé. Redirection vers le tableau de bord...",
       });
 
-      // Rediriger vers le dashboard tenant au lieu de forcer la déconnexion
+      // Rediriger vers le dashboard tenant
       setTimeout(() => {
         window.location.href = '/tenant/dashboard';
       }, 2000);
