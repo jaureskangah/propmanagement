@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
@@ -47,8 +46,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
             setIsTenant(false);
             setTenantData(null);
+            setLoading(false);
           }
-          setLoading(false);
         }
       } catch (error) {
         console.error("Error getting initial session:", error);
@@ -68,19 +67,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            setTimeout(async () => {
-              if (isMounted) {
-                await checkTenantStatus(session.user.id);
-              }
-            }, 100);
+            // Vérifier immédiatement le statut de locataire lors de la connexion
+            await checkTenantStatus(session.user.id);
           }
         } else {
           setUser(null);
           setIsTenant(false);
           setTenantData(null);
+          setLoading(false);
         }
-        
-        setLoading(false);
       }
     );
 
@@ -110,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.log("User is not marked as tenant in profile");
         setIsTenant(false);
         setTenantData(null);
+        setLoading(false);
         return;
       }
 
@@ -145,6 +141,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error("Exception checking tenant status:", err);
       setIsTenant(false);
       setTenantData(null);
+    } finally {
+      setLoading(false);
     }
   };
 

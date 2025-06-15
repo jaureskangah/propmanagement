@@ -33,7 +33,7 @@ const Dashboard = () => {
     });
   }, [isAuthenticated, isTenant, loading]);
 
-  // Show loading spinner while checking auth
+  // Show loading spinner while checking auth OR while tenant status is being determined
   if (loading) {
     console.log("Dashboard showing loading spinner");
     return (
