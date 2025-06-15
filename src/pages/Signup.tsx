@@ -23,10 +23,10 @@ const Signup = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
-            {t('welcome')}
+            Créer un compte propriétaire
           </CardTitle>
           <CardDescription>
-            {t('authDescription')}
+            Gérez vos propriétés et locataires en toute simplicité
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -37,7 +37,7 @@ const Signup = () => {
               className="w-full"
             >
               <TabsList className="grid w-full grid-cols-1 mb-4">
-                <TabsTrigger value="signup">{t('signUpCta')}</TabsTrigger>
+                <TabsTrigger value="signup">Inscription propriétaire</TabsTrigger>
               </TabsList>
               <TabsContent value="signup" className="mt-0">
                 <SignUpForm onSuccess={() => {}} />

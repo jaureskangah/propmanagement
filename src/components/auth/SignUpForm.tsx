@@ -9,7 +9,6 @@ import { useToast } from '@/hooks/use-toast';
 import { NameFields } from './form/NameFields';
 import { EmailField } from './form/EmailField';
 import { PasswordFields } from './form/PasswordFields';
-import { TenantCheckbox } from './form/TenantCheckbox';
 import { SignUpFormValues, signUpFormSchema } from './signUpValidation';
 import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
@@ -33,7 +32,6 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       email: '',
       password: '',
       confirmPassword: '',
-      isTenant: false,
     },
   });
 
@@ -48,7 +46,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
           data: {
             first_name: values.firstName,
             last_name: values.lastName,
-            is_tenant_user: values.isTenant,
+            is_tenant_user: false, // Toujours propriétaire pour les inscriptions directes
           },
         },
       });
@@ -62,7 +60,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       toast({
         title: t('signUpSuccess'),
         description: data.session ? 
-          t('accountCreatedSuccess') : 
+          "Votre compte propriétaire a été créé avec succès !" : 
           t('verifyEmailPrompt'),
       });
 
@@ -97,7 +95,13 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         <NameFields form={form} disabled={loading} />
         <EmailField form={form} disabled={loading} />
         <PasswordFields form={form} disabled={loading} />
-        <TenantCheckbox form={form} disabled={loading} />
+        
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
+          <p className="text-sm text-blue-700">
+            ℹ️ En créant un compte, vous vous inscrivez en tant que propriétaire. 
+            Les locataires reçoivent une invitation par email.
+          </p>
+        </div>
         
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? (
@@ -106,7 +110,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
               {t('signingUp')}
             </>
           ) : (
-            t('signUp')
+            'Créer mon compte propriétaire'
           )}
         </Button>
       </form>
