@@ -73,7 +73,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               if (isMounted) {
                 checkTenantStatus(session.user.id);
               }
-            }, 0);
+            }, 100); // Délai légèrement plus long pour s'assurer que tout est en place
           }
         } else {
           setUser(null);
@@ -97,48 +97,57 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("=== CHECKING TENANT STATUS ===");
       console.log("Checking tenant status for user:", userId);
 
-      // Vérifier le profil utilisateur
-      const { data: profileData, error: profileError } = await supabase
+      // Optimisation : Faire une seule requête pour récupérer à la fois le profil et les données du locataire
+      const { data: userData, error: userError } = await supabase
         .from('profiles')
-        .select('is_tenant_user, email, first_name, last_name')
+        .select(`
+          is_tenant_user,
+          email,
+          first_name,
+          last_name,
+          tenants!tenants_tenant_profile_id_fkey(
+            id,
+            name,
+            email,
+            unit_number,
+            lease_start,
+            lease_end,
+            rent_amount,
+            property_id,
+            properties:property_id(name)
+          )
+        `)
         .eq('id', userId)
         .maybeSingle();
 
-      console.log("Profile data:", profileData);
+      console.log("User data with tenant info:", userData);
 
-      if (!profileData?.is_tenant_user) {
-        console.log("User is not marked as tenant in profile");
+      if (userError) {
+        console.error("Error fetching user data:", userError);
         setIsTenant(false);
         setTenantData(null);
         setLoading(false);
         return;
       }
 
-      // Vérifier s'il y a une entrée dans la table tenants
-      const { data: tenantRecord, error: tenantError } = await supabase
-        .from('tenants')
-        .select(`
-          id,
-          name,
-          email,
-          unit_number,
-          lease_start,
-          lease_end,
-          rent_amount,
-          property_id,
-          properties:property_id(name)
-        `)
-        .eq('tenant_profile_id', userId)
-        .maybeSingle();
+      if (!userData) {
+        console.log("No profile found for user");
+        setIsTenant(false);
+        setTenantData(null);
+        setLoading(false);
+        return;
+      }
 
-      console.log("Tenant record:", tenantRecord);
+      // Vérifier si l'utilisateur est marqué comme locataire ET a des données de locataire
+      const hasTenantData = userData.tenants && userData.tenants.length > 0;
+      const isMarkedAsTenant = userData.is_tenant_user;
 
-      if (tenantRecord) {
-        console.log("✅ User is a tenant:", tenantRecord);
+      if (isMarkedAsTenant && hasTenantData) {
+        console.log("✅ User is a tenant:", userData.tenants[0]);
         setIsTenant(true);
-        setTenantData(tenantRecord);
+        setTenantData(userData.tenants[0]);
       } else {
-        console.log("❌ User is marked as tenant but no tenant record found");
+        console.log("❌ User is not a tenant or no tenant data found");
         setIsTenant(false);
         setTenantData(null);
       }
