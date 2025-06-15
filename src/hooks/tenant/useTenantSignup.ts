@@ -81,45 +81,49 @@ export const useTenantSignup = () => {
       
       console.log("✅ User created successfully with ID:", signUpData.user.id);
       
-      // Si l'utilisateur a été créé mais n'est pas confirmé, on va forcer la connexion
-      if (!signUpData.session) {
-        console.log("No session returned, attempting direct sign in...");
-        
-        // Essayer de se connecter immédiatement après la création
-        const { data: directSignInData, error: directSignInError } = await supabase.auth.signInWithPassword({
-          email: tenantData.email,
-          password: values.password,
-        });
-
-        if (directSignInError) {
-          console.error("Direct sign in failed:", directSignInError);
-          
-          // Si la connexion échoue à cause de l'email non confirmé, on informe l'utilisateur
-          if (directSignInError.message?.includes('Email not confirmed')) {
-            toast({
-              title: "Compte créé",
-              description: "Votre compte a été créé. Un email de confirmation a été envoyé. Veuillez confirmer votre email avant de vous connecter.",
-              variant: "default",
-            });
-            
-            setTimeout(() => {
-              window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
-            }, 2000);
-            return;
-          }
-          
-          throw directSignInError;
+      // Confirmer automatiquement l'email de l'utilisateur
+      console.log("Confirming user email automatically...");
+      const { error: confirmError } = await supabase.auth.admin.updateUserById(
+        signUpData.user.id,
+        {
+          email_confirm: true
         }
+      );
 
-        if (directSignInData.user) {
-          console.log("✅ Direct sign in successful");
-          await linkTenantProfile(directSignInData.user.id, tenantData, invitationToken);
-          return;
-        }
+      if (confirmError) {
+        console.error("Error confirming email:", confirmError);
+        // On continue même si la confirmation échoue, car l'utilisateur existe
       } else {
-        // Si on a une session immédiatement, procéder avec la liaison
-        console.log("✅ User signed up with immediate session");
-        await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
+        console.log("✅ Email confirmed successfully");
+      }
+
+      // Maintenant essayer de se connecter avec les identifiants
+      console.log("Attempting sign in after email confirmation...");
+      const { data: finalSignInData, error: finalSignInError } = await supabase.auth.signInWithPassword({
+        email: tenantData.email,
+        password: values.password,
+      });
+
+      if (finalSignInError) {
+        console.error("Final sign in failed:", finalSignInError);
+        
+        // Informer l'utilisateur que le compte a été créé mais qu'il doit confirmer son email
+        toast({
+          title: "Compte créé",
+          description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
+          variant: "default",
+        });
+        
+        setTimeout(() => {
+          window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
+        }, 2000);
+        return;
+      }
+
+      if (finalSignInData.user) {
+        console.log("✅ Final sign in successful");
+        await linkTenantProfile(finalSignInData.user.id, tenantData, invitationToken);
+        return;
       }
 
     } catch (error: any) {
