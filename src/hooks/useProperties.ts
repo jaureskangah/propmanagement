@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
@@ -34,9 +35,39 @@ const fetchProperties = async () => {
   return data as Property[];
 };
 
+const ensureUserProfile = async (userData: any) => {
+  // Vérifier si le profil existe
+  const { data: existingProfile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", userData.user.id)
+    .maybeSingle();
+
+  if (!existingProfile) {
+    // Créer le profil s'il n'existe pas
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert({
+        id: userData.user.id,
+        email: userData.user.email || '',
+        first_name: userData.user.user_metadata?.first_name || '',
+        last_name: userData.user.user_metadata?.last_name || '',
+        is_tenant_user: false,
+      });
+
+    if (profileError) {
+      console.error("Error creating profile:", profileError);
+      throw new Error("Impossible de créer le profil utilisateur");
+    }
+  }
+};
+
 const createProperty = async (data: PropertyFormData): Promise<Property> => {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) throw userError;
+
+  // S'assurer que le profil utilisateur existe
+  await ensureUserProfile(userData);
 
   const { data: property, error } = await supabase
     .from("properties")
@@ -92,14 +123,15 @@ export function useProperties() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
       toast({
-        title: "Success",
-        description: "Property added successfully",
+        title: "Succès",
+        description: "Propriété ajoutée avec succès",
       });
     },
     onError: (error) => {
+      console.error("Error adding property:", error);
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Erreur",
+        description: error.message || "Erreur lors de l'ajout de la propriété",
         variant: "destructive",
       });
     },
@@ -110,14 +142,15 @@ export function useProperties() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["properties"] });
       toast({
-        title: "Success",
-        description: "Property updated successfully",
+        title: "Succès",
+        description: "Propriété mise à jour avec succès",
       });
     },
     onError: (error) => {
+      console.error("Error updating property:", error);
       toast({
-        title: "Error",
-        description: error.message,
+        title: "Erreur",
+        description: error.message || "Erreur lors de la mise à jour de la propriété",
         variant: "destructive",
       });
     },
