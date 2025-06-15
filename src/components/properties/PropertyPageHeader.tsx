@@ -6,6 +6,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/components/AuthProvider";
 
 interface PropertyPageHeaderProps {
   propertiesCount: number;
@@ -27,6 +28,7 @@ const PropertyPageHeader = ({
   setSearchQuery
 }: PropertyPageHeaderProps) => {
   const { t } = useLocale();
+  const { isTenant } = useAuth();
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
@@ -52,14 +54,16 @@ const PropertyPageHeader = ({
             {propertiesCount} {propertiesCount === 1 ? t('property') : t('properties')}
           </Badge>
           
-          <Button 
-            size="sm" 
-            className="flex items-center gap-1.5 font-sans shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300" 
-            onClick={() => setIsAddModalOpen(true)}
-          >
-            <Plus className="h-4 w-4" />
-            {t('addProperty')}
-          </Button>
+          {!isTenant && (
+            <Button 
+              size="sm" 
+              className="flex items-center gap-1.5 font-sans shadow-sm hover:shadow-md transition-all hover:-translate-y-1 duration-300" 
+              onClick={() => setIsAddModalOpen(true)}
+            >
+              <Plus className="h-4 w-4" />
+              {t('addProperty')}
+            </Button>
+          )}
         </div>
       </div>
       

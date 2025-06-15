@@ -1,7 +1,7 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
+import { useAuth } from "@/components/AuthProvider";
 
 export interface Property {
   id: string;
@@ -66,6 +66,17 @@ const createProperty = async (data: PropertyFormData): Promise<Property> => {
   const { data: userData, error: userError } = await supabase.auth.getUser();
   if (userError) throw userError;
 
+  // Vérifier que l'utilisateur n'est pas un locataire
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("is_tenant_user")
+    .eq("id", userData.user.id)
+    .maybeSingle();
+
+  if (profile?.is_tenant_user) {
+    throw new Error("Les locataires ne peuvent pas ajouter de propriétés");
+  }
+
   // S'assurer que le profil utilisateur existe
   await ensureUserProfile(userData);
 
@@ -112,6 +123,7 @@ const updateProperty = async ({ id, data }: { id: string; data: PropertyFormData
 
 export function useProperties() {
   const queryClient = useQueryClient();
+  const { isTenant } = useAuth();
 
   const { data: properties = [], isLoading, error } = useQuery({
     queryKey: ["properties"],
@@ -162,5 +174,6 @@ export function useProperties() {
     error: error?.message || "",
     addProperty: addProperty.mutate,
     updateProperty: updatePropertyMutation.mutate,
+    canAddProperty: !isTenant, // Nouvelle propriété pour indiquer si l'utilisateur peut ajouter des propriétés
   };
 }

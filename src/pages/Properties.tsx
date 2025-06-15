@@ -14,10 +14,12 @@ import { useMediaQuery } from "@/hooks/use-mobile";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
 import PropertyFinancialsSection from "@/components/properties/PropertyFinancialsSection";
+import { useAuth } from "@/components/AuthProvider";
 
 const Properties = () => {
   const { t } = useLocale();
-  const { properties, isLoading, error } = useProperties();
+  const { isTenant } = useAuth();
+  const { properties, isLoading, error, canAddProperty } = useProperties();
   const { selectedPropertyId, editingProperty, setEditingProperty, handleEdit, handleDelete, handleViewFinancials } = usePropertyActions();
   
   const [showFilters, setShowFilters] = useState(false);
@@ -74,7 +76,7 @@ const Properties = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <AppSidebar isTenant={isTenant} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
       <div className={cn(
         "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
         sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
@@ -130,13 +132,15 @@ const Properties = () => {
           )}
         </motion.div>
 
-        {/* Modals */}
-        <AddPropertyModal 
-          isOpen={isAddModalOpen} 
-          onClose={() => setIsAddModalOpen(false)} 
-        />
+        {/* Modals - seulement pour les propriétaires */}
+        {canAddProperty && (
+          <AddPropertyModal 
+            isOpen={isAddModalOpen} 
+            onClose={() => setIsAddModalOpen(false)} 
+          />
+        )}
         
-        {editingProperty && (
+        {editingProperty && !isTenant && (
           <EditPropertyModal 
             isOpen={!!editingProperty} 
             onClose={() => setEditingProperty(null)} 
