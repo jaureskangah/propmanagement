@@ -79,88 +79,45 @@ export const useTenantSignup = () => {
       
       console.log("✅ User created successfully with ID:", signUpData.user.id);
       
-      // Confirmer automatiquement l'email de l'utilisateur
-      console.log("Confirming user email automatically...");
-      const { error: confirmError } = await supabase.auth.admin.updateUserById(
-        signUpData.user.id,
-        {
-          email_confirm: true
-        }
-      );
-
-      if (confirmError) {
-        console.error("Error confirming email:", confirmError);
-        // Si la confirmation échoue, continuer quand même
-        console.log("Continuing without automatic confirmation...");
-      } else {
-        console.log("✅ Email confirmed successfully");
+      // Pour les utilisateurs invités, on procède directement sans confirmation d'email
+      // car ils sont déjà validés par le système d'invitation
+      if (signUpData.session) {
+        console.log("✅ Session available immediately, proceeding with linking...");
+        await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
+        return;
       }
 
-      // Attendre un peu pour que la confirmation se propage
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Maintenant essayer de se connecter avec les identifiants
-      console.log("Attempting sign in after email confirmation...");
-      const { data: finalSignInData, error: finalSignInError } = await supabase.auth.signInWithPassword({
+      console.log("No session returned, attempting direct sign in...");
+      const { data: directSignInData, error: directSignInError } = await supabase.auth.signInWithPassword({
         email: tenantData.email,
         password: values.password,
       });
 
-      if (finalSignInError) {
-        console.error("Final sign in failed:", finalSignInError);
+      if (directSignInError) {
+        console.error("Direct sign in failed:", directSignInError);
         
-        // Si c'est un problème d'email non confirmé et qu'on n'a pas réussi la confirmation auto
-        if (finalSignInError.message?.includes('Email not confirmed') || 
-            finalSignInError.message?.includes('Invalid login credentials')) {
+        // Si c'est un problème de confirmation d'email, informer l'utilisateur
+        if (directSignInError.message?.includes('Email not confirmed') || 
+            directSignInError.message?.includes('Invalid login credentials')) {
           
-          if (confirmError) {
-            // La confirmation automatique a échoué, demander confirmation manuelle
-            toast({
-              title: "Compte créé",
-              description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
-              variant: "default",
-            });
-            
-            setTimeout(() => {
-              window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
-            }, 2000);
-            return;
-          } else {
-            // La confirmation auto a réussi mais la connexion échoue encore, réessayer une fois
-            console.log("Retrying sign in after delay...");
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            
-            const { data: retrySignInData, error: retrySignInError } = await supabase.auth.signInWithPassword({
-              email: tenantData.email,
-              password: values.password,
-            });
-            
-            if (!retrySignInError && retrySignInData.user) {
-              console.log("✅ Retry sign in successful");
-              await linkTenantProfile(retrySignInData.user.id, tenantData, invitationToken);
-              return;
-            }
-            
-            // Si le retry échoue aussi, demander confirmation manuelle
-            toast({
-              title: "Compte créé",
-              description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
-              variant: "default",
-            });
-            
-            setTimeout(() => {
-              window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
-            }, 2000);
-            return;
-          }
+          toast({
+            title: "Compte créé",
+            description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
+            variant: "default",
+          });
+          
+          setTimeout(() => {
+            window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
+          }, 2000);
+          return;
         }
         
-        throw finalSignInError;
+        throw directSignInError;
       }
 
-      if (finalSignInData.user) {
-        console.log("✅ Final sign in successful");
-        await linkTenantProfile(finalSignInData.user.id, tenantData, invitationToken);
+      if (directSignInData.user) {
+        console.log("✅ Direct sign in successful");
+        await linkTenantProfile(directSignInData.user.id, tenantData, invitationToken);
         return;
       }
 
