@@ -5,9 +5,19 @@ import { cn } from "@/lib/utils";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
-import { HelpCircle, ChevronLeft } from "lucide-react";
+import { 
+  HelpCircle, 
+  ChevronLeft, 
+  LayoutDashboard, 
+  Building, 
+  Users, 
+  Mail, 
+  CreditCard, 
+  Wrench, 
+  Settings,
+  FileText
+} from "lucide-react";
 import { SidebarLogo } from "./SidebarLogo";
-import SidebarLinks from "./SidebarLinks";
 
 interface AnimatedSidebarProps {
   isTenant?: boolean;
@@ -90,21 +100,21 @@ const AnimatedSidebarLinks = ({ isTenant, isExpanded }: AnimatedSidebarLinksProp
   const links = React.useMemo(() => {
     if (isTenant) {
       return [
-        { to: "/tenant/dashboard", icon: require("lucide-react").LayoutDashboard, label: t('dashboard') },
-        { to: "/tenant/maintenance", icon: require("lucide-react").Wrench, label: t('maintenance') },
-        { to: "/tenant/documents", icon: require("lucide-react").FileText, label: "Documents" },
-        { to: "/settings", icon: require("lucide-react").Settings, label: t('settings') }
+        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard') },
+        { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance') },
+        { to: "/tenant/documents", icon: FileText, label: "Documents" },
+        { to: "/settings", icon: Settings, label: t('settings') }
       ];
     }
     
     return [
-      { to: "/dashboard", icon: require("lucide-react").LayoutDashboard, label: t('dashboard') },
-      { to: "/properties", icon: require("lucide-react").Building, label: t('properties') },
-      { to: "/tenants", icon: require("lucide-react").Users, label: t('tenants') },
-      { to: "/invitations", icon: require("lucide-react").Mail, label: t('invitations') },
-      { to: "/finances", icon: require("lucide-react").CreditCard, label: t('finances') },
-      { to: "/maintenance", icon: require("lucide-react").Wrench, label: t('maintenance') },
-      { to: "/settings", icon: require("lucide-react").Settings, label: t('settings') }
+      { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard') },
+      { to: "/properties", icon: Building, label: t('properties') },
+      { to: "/tenants", icon: Users, label: t('tenants') },
+      { to: "/invitations", icon: Mail, label: t('invitations') },
+      { to: "/finances", icon: CreditCard, label: t('finances') },
+      { to: "/maintenance", icon: Wrench, label: t('maintenance') },
+      { to: "/settings", icon: Settings, label: t('settings') }
     ];
   }, [isTenant, t]);
 
