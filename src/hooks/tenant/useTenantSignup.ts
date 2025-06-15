@@ -30,20 +30,26 @@ export const useTenantSignup = () => {
       console.log("=== STARTING TENANT SIGNUP ===");
       console.log("Creating account for:", tenantData.email);
       
-      // Try to sign in first to check if user already exists
+      // D'abord, essayer de se connecter pour voir si l'utilisateur existe déjà
       const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: tenantData.email,
         password: values.password,
       });
 
       if (!signInError && signInData.user) {
-        console.log("User already exists and password is correct, proceeding with linking...");
+        console.log("✅ User already exists and signed in successfully");
         await linkTenantProfile(signInData.user.id, tenantData, invitationToken);
         return;
       }
 
-      // If sign in failed, try to create a new account
-      console.log("Creating new user account...");
+      // Si la connexion échoue pour une raison autre que "credentials invalides", on arrête
+      if (signInError && !signInError.message.includes('Invalid login credentials')) {
+        console.error("Unexpected sign in error:", signInError);
+        throw signInError;
+      }
+
+      // Si les credentials sont invalides, essayer de créer un nouveau compte
+      console.log("User doesn't exist or wrong password, attempting to create new account...");
       
       const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
         email: tenantData.email,
@@ -54,19 +60,20 @@ export const useTenantSignup = () => {
             last_name: tenantData.name.split(' ').slice(1).join(' ') || '',
             is_tenant_user: true,
           },
-          emailRedirectTo: undefined,
         },
       });
 
       if (signUpError) {
         console.error("Signup error:", signUpError);
         
+        // Si l'utilisateur existe déjà, essayer de se connecter avec un message d'erreur plus clair
         if (signUpError.message?.includes('already registered')) {
           toast({
-            title: "Erreur de connexion",
-            description: "Un compte existe déjà avec cette adresse email mais le mot de passe est incorrect.",
+            title: "Compte existant",
+            description: "Un compte existe déjà avec cette adresse email. Vérifiez votre mot de passe ou contactez l'administrateur.",
             variant: "destructive",
           });
+          setSignupStatus('failed');
           return;
         }
         
@@ -77,16 +84,16 @@ export const useTenantSignup = () => {
         throw new Error('Aucune donnée utilisateur retournée');
       }
       
-      console.log("✅ User created successfully with ID:", signUpData.user.id);
+      console.log("✅ New user created successfully with ID:", signUpData.user.id);
       
-      // Pour les utilisateurs invités, on procède directement sans confirmation d'email
-      // car ils sont déjà validés par le système d'invitation
+      // Avec la confirmation d'email désactivée, on devrait avoir une session immédiatement
       if (signUpData.session) {
-        console.log("✅ Session available immediately, proceeding with linking...");
+        console.log("✅ Session available, proceeding with linking...");
         await linkTenantProfile(signUpData.user.id, tenantData, invitationToken);
         return;
       }
 
+      // Si pas de session, essayer de se connecter directement
       console.log("No session returned, attempting direct sign in...");
       const { data: directSignInData, error: directSignInError } = await supabase.auth.signInWithPassword({
         email: tenantData.email,
@@ -95,23 +102,6 @@ export const useTenantSignup = () => {
 
       if (directSignInError) {
         console.error("Direct sign in failed:", directSignInError);
-        
-        // Si c'est un problème de confirmation d'email, informer l'utilisateur
-        if (directSignInError.message?.includes('Email not confirmed') || 
-            directSignInError.message?.includes('Invalid login credentials')) {
-          
-          toast({
-            title: "Compte créé",
-            description: "Votre compte a été créé. Veuillez vérifier votre email et confirmer votre adresse avant de vous connecter.",
-            variant: "default",
-          });
-          
-          setTimeout(() => {
-            window.location.href = '/auth?message=check_email&email=' + encodeURIComponent(tenantData.email);
-          }, 2000);
-          return;
-        }
-        
         throw directSignInError;
       }
 
@@ -121,6 +111,8 @@ export const useTenantSignup = () => {
         return;
       }
 
+      throw new Error("Impossible de créer ou connecter l'utilisateur");
+
     } catch (error: any) {
       console.error("=== SIGNUP PROCESS FAILED ===", error);
       setSignupStatus('failed');
@@ -128,9 +120,9 @@ export const useTenantSignup = () => {
       let errorMessage = "Une erreur s'est produite lors de la création du compte.";
       
       if (error.message?.includes('already registered')) {
-        errorMessage = "Un compte existe déjà avec cette adresse email.";
+        errorMessage = "Un compte existe déjà avec cette adresse email. Vérifiez votre mot de passe.";
       } else if (error.message?.includes('Invalid login credentials')) {
-        errorMessage = "Impossible de créer le compte. Veuillez réessayer.";
+        errorMessage = "Informations de connexion invalides. Vérifiez votre mot de passe.";
       }
 
       toast({
