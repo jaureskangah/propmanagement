@@ -24,36 +24,31 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  // Get property name safely - improved logic
+  // Fonction simplifiée pour obtenir le nom de la propriété
   const getPropertyName = () => {
-    console.log("Tenant object:", tenant);
-    console.log("Tenant properties data:", tenant.properties);
-    console.log("Tenant property_id:", tenant.property_id);
+    console.log("TenantCard - Tenant object:", tenant);
+    console.log("TenantCard - Property data:", tenant.properties);
     
-    // Si properties existe et n'est pas null
-    if (tenant.properties) {
-      // Si c'est un tableau avec des éléments
-      if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
-        const firstProperty = tenant.properties[0];
-        console.log("First property from array:", firstProperty);
-        if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
-          return firstProperty.name;
-        }
+    if (tenant.properties && typeof tenant.properties === 'object') {
+      // Si c'est un objet direct avec name
+      if ('name' in tenant.properties && tenant.properties.name) {
+        console.log("TenantCard - Found property name:", tenant.properties.name);
+        return tenant.properties.name;
       }
       
-      // Si c'est un objet direct avec une propriété name
-      if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
-        console.log("Property name from object:", tenant.properties.name);
-        return tenant.properties.name;
+      // Si c'est un tableau et qu'il a des éléments
+      if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+        const propertyName = tenant.properties[0]?.name;
+        console.log("TenantCard - Found property name from array:", propertyName);
+        return propertyName || "Propriété sans nom";
       }
     }
     
-    console.log("No property found, returning default");
+    console.log("TenantCard - No property found");
     return "Sans propriété";
   };
 
   const propertyName = getPropertyName();
-  console.log("Final resolved property name:", propertyName);
 
   return (
     <Card 
@@ -89,14 +84,12 @@ export const TenantCard = ({
           </Badge>
         </div>
 
-        {propertyName && (
-          <div className="flex items-center gap-1 mb-2">
-            <MapPin className="h-3 w-3 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              {propertyName}
-            </p>
-          </div>
-        )}
+        <div className="flex items-center gap-1 mb-2">
+          <MapPin className="h-3 w-3 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground">
+            {propertyName}
+          </p>
+        </div>
 
         <div className="flex justify-between items-center mb-3">
           <span className="text-sm font-medium">
