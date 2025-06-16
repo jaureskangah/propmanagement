@@ -27,6 +27,33 @@ export const TenantCard = ({
 }: TenantCardProps) => {
   const [propertyName, setPropertyName] = useState<string>("Chargement...");
 
+  // Calculate lease status for gradient
+  const leaseEnded = new Date(tenant.lease_end) < new Date();
+  const leaseEnding = !leaseEnded && 
+    (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
+
+  // Get gradient based on lease status
+  const getBackgroundGradient = () => {
+    if (leaseEnded) {
+      return "from-red-500/10 to-red-600/10";
+    }
+    if (leaseEnding) {
+      return "from-amber-500/10 to-amber-600/10";
+    }
+    return "from-green-500/10 to-green-600/10";
+  };
+
+  // Get border color based on lease status
+  const getBorderColor = () => {
+    if (leaseEnded) {
+      return "border-red-200 dark:border-red-800";
+    }
+    if (leaseEnding) {
+      return "border-amber-200 dark:border-amber-800";
+    }
+    return "border-green-200 dark:border-green-800";
+  };
+
   // Récupération du nom de la propriété
   useEffect(() => {
     const getPropertyName = async () => {
@@ -80,7 +107,7 @@ export const TenantCard = ({
 
   return (
     <Card 
-      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[380px] ${
+      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[380px] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm bg-gradient-to-br ${getBackgroundGradient()} border ${getBorderColor()} ${
         isSelected ? 'ring-2 ring-primary' : ''
       }`}
       onClick={onSelect}
