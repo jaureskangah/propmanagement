@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { getGradientByType } from "./properties/utils/propertyCardUtils";
+import { BorderTrail } from "@/components/ui/border-trail";
 import PropertyCardImage from "./properties/card/PropertyCardImage";
 import PropertyCardHeader from "./properties/card/PropertyCardHeader";
 import PropertyCardDetails from "./properties/card/PropertyCardDetails";
@@ -27,11 +28,24 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   
   return (
     <Card className={cn(
-      "h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
+      "relative h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
       "hover:shadow-lg hover:scale-[1.01] group",
       "bg-gradient-to-br",
       getGradientByType(property.type)
     )}>
+      <BorderTrail
+        className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500"
+        size={80}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{
+          boxShadow: "0px 0px 40px 20px rgb(59 130 246 / 30%)"
+        }}
+      />
+      
       <PropertyCardImage 
         image={property.image}
         type={property.type}
