@@ -4,6 +4,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import AppSidebar from "@/components/AppSidebar";
+import { InvitationsHeader } from "@/components/invitations/InvitationsHeader";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Mail, RefreshCw, X, CheckCircle2, Clock, AlertCircle } from "lucide-react";
@@ -301,16 +302,11 @@ const Invitations = () => {
           transition={{ duration: 0.35 }}
           className="space-y-6"
         >
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight">Invitations</h1>
-              <p className="text-muted-foreground">Gérez les invitations envoyées aux locataires</p>
-            </div>
-            <Button onClick={fetchInvitations} variant="outline" size="sm" className="gap-1">
-              <RefreshCw className="h-4 w-4" />
-              <span>Actualiser</span>
-            </Button>
-          </div>
+          <InvitationsHeader 
+            invitationsCount={invitations.length}
+            onRefresh={fetchInvitations}
+            isLoading={isLoading}
+          />
 
           <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-4">
