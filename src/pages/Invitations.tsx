@@ -255,6 +255,42 @@ const Invitations = () => {
     }
   };
 
+  // Get gradient based on invitation status
+  const getBackgroundGradient = (invitation: Invitation) => {
+    if (isExpired(invitation) && invitation.status === 'pending') {
+      return "from-red-500/10 to-red-600/10";
+    }
+    
+    switch (invitation.status) {
+      case 'pending':
+        return "from-blue-500/10 to-blue-600/10";
+      case 'accepted':
+        return "from-green-500/10 to-green-600/10";
+      case 'cancelled':
+        return "from-red-500/10 to-red-600/10";
+      default:
+        return "from-gray-500/10 to-gray-600/10";
+    }
+  };
+
+  // Get border color based on invitation status
+  const getBorderColor = (invitation: Invitation) => {
+    if (isExpired(invitation) && invitation.status === 'pending') {
+      return "border-red-200 dark:border-red-800";
+    }
+    
+    switch (invitation.status) {
+      case 'pending':
+        return "border-blue-200 dark:border-blue-800";
+      case 'accepted':
+        return "border-green-200 dark:border-green-800";
+      case 'cancelled':
+        return "border-red-200 dark:border-red-800";
+      default:
+        return "border-gray-200 dark:border-gray-800";
+    }
+  };
+
   const getStatusBadge = (invitation: Invitation) => {
     if (isExpired(invitation) && invitation.status === 'pending') {
       return <Badge variant="outline" className="bg-gray-100 text-gray-700">Expirée</Badge>;
@@ -331,13 +367,16 @@ const Invitations = () => {
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                   {filteredInvitations().map((invitation) => (
-                    <Card key={invitation.id} className="overflow-hidden">
+                    <Card 
+                      key={invitation.id} 
+                      className={`overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm bg-gradient-to-br ${getBackgroundGradient(invitation)} border ${getBorderColor(invitation)}`}
+                    >
                       <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
                           <div>
-                            <CardTitle>{invitation.tenant_name}</CardTitle>
+                            <CardTitle className="text-lg">{invitation.tenant_name}</CardTitle>
                             <CardDescription className="mt-1">{invitation.email}</CardDescription>
                           </div>
                           {getStatusIcon(invitation)}
