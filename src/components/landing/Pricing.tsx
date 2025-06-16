@@ -39,7 +39,7 @@ export default function Pricing() {
       y: 0,
       transition: { 
         duration: 0.7,
-        ease: "easeOut"
+        ease: [0.4, 0, 0.6, 1] as const
       }
     }
   };
@@ -52,7 +52,7 @@ export default function Pricing() {
       boxShadow: "0 10px 15px -3px rgba(234, 56, 76, 0.4)",
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
+        ease: [0.4, 0, 0.6, 1] as const
       }
     },
     tap: { scale: 0.98 }
@@ -131,7 +131,7 @@ export default function Pricing() {
               <motion.span 
                 initial={{ x: 0 }}
                 whileHover={{ x: 3 }}
-                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                transition={{ type: "spring" as const, stiffness: 400, damping: 10 }}
               >
                 {t('comparePlans')}
               </motion.span>

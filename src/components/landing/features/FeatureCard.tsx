@@ -23,7 +23,7 @@ export function FeatureCard({ icon, title, description }: FeatureCardProps) {
       <motion.div 
         initial={{ scale: 1 }}
         whileHover={{ scale: 1.15, rotate: 5 }}
-        transition={{ type: "spring", stiffness: 300, damping: 10 }}
+        transition={{ type: "spring" as const, stiffness: 300, damping: 10 }}
         className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center mb-4"
       >
         {icon}
