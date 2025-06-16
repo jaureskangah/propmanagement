@@ -36,7 +36,6 @@ const Invitations = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('all');
   const [sendingInvitations, setSendingInvitations] = useState<Set<string>>(new Set());
-  const [syncingStatus, setSyncingStatus] = useState<Set<string>>(new Set());
   const { user } = useAuth();
   const { t } = useLocale();
   const { toast } = useToast();
@@ -50,7 +49,6 @@ const Invitations = () => {
           *,
           tenants:tenant_id (
             name,
-            tenant_profile_id,
             properties (name)
           )
         `)
@@ -75,68 +73,6 @@ const Invitations = () => {
       });
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  // Fonction pour synchroniser automatiquement le statut des invitations
-  const syncInvitationStatus = async (invitation: Invitation) => {
-    setSyncingStatus(prev => new Set(prev).add(invitation.id));
-    
-    try {
-      console.log("Syncing invitation status for:", invitation.email);
-      
-      // Vérifier si le locataire a un profil lié
-      const { data: tenantData, error: tenantError } = await supabase
-        .from('tenants')
-        .select('tenant_profile_id')
-        .eq('id', invitation.tenant_id)
-        .single();
-
-      if (tenantError) {
-        console.error("Error checking tenant profile:", tenantError);
-        return;
-      }
-
-      // Si le locataire a un profil lié, l'invitation devrait être acceptée
-      if (tenantData.tenant_profile_id && invitation.status === 'pending') {
-        console.log("Found linked profile, updating invitation status to accepted");
-        
-        const { error: updateError } = await supabase
-          .from('tenant_invitations')
-          .update({ 
-            status: 'accepted',
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', invitation.id);
-
-        if (updateError) {
-          console.error("Error updating invitation status:", updateError);
-          toast({
-            title: "Erreur de synchronisation",
-            description: "Impossible de mettre à jour le statut de l'invitation.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Statut synchronisé",
-            description: "Le statut de l'invitation a été mis à jour.",
-          });
-          fetchInvitations(); // Rafraîchir la liste
-        }
-      }
-    } catch (error) {
-      console.error("Error syncing invitation status:", error);
-      toast({
-        title: "Erreur",
-        description: "Erreur lors de la synchronisation du statut.",
-        variant: "destructive",
-      });
-    } finally {
-      setSyncingStatus(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(invitation.id);
-        return newSet;
-      });
     }
   };
 
@@ -437,7 +373,7 @@ const Invitations = () => {
                       </CardContent>
                       <CardFooter className="pt-2">
                         {invitation.status === 'pending' && !isExpired(invitation) && (
-                          <div className="flex justify-between w-full gap-2">
+                          <div className="flex justify-between w-full">
                             <Button 
                               variant="outline" 
                               size="sm"
@@ -446,25 +382,6 @@ const Invitations = () => {
                             >
                               <X className="h-4 w-4 mr-1" />
                               Annuler
-                            </Button>
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              className="text-orange-600 border-orange-200 hover:bg-orange-50"
-                              onClick={() => syncInvitationStatus(invitation)}
-                              disabled={syncingStatus.has(invitation.id)}
-                            >
-                              {syncingStatus.has(invitation.id) ? (
-                                <>
-                                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-orange-600 mr-1"></div>
-                                  Sync...
-                                </>
-                              ) : (
-                                <>
-                                  <RefreshCw className="h-4 w-4 mr-1" />
-                                  Sync
-                                </>
-                              )}
                             </Button>
                             <Button 
                               variant="outline" 

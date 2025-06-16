@@ -24,14 +24,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
 
   const item = {
     hidden: { opacity: 0, y: 20 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.8, 
-        ease: [0.4, 0, 0.2, 1] as const
-      } 
-    }
+    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
   };
 
   // Animation for decorative elements
@@ -144,7 +137,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
             whileInView={{ 
               scale: [0.96, 1.01, 1],
               opacity: [0.8, 1],
-              transition: { duration: 1.2, ease: [0.4, 0, 0.2, 1] as const }
+              transition: { duration: 1.2, ease: "easeOut" }
             }}
             className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden"
           >

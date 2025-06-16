@@ -47,7 +47,7 @@ export const PricingCard = ({
   return (
     <motion.div 
       whileHover={{ 
-        y: -8,
+        translateY: -8,
         transition: { duration: 0.3 }
       }}
       className="h-full"
@@ -71,7 +71,7 @@ export const PricingCard = ({
                 transition: { 
                   duration: 2,
                   repeat: Infinity,
-                  repeatType: "reverse" as const
+                  repeatType: "reverse" 
                 }
               }}
             >
@@ -96,7 +96,7 @@ export const PricingCard = ({
                 transition: { 
                   duration: popular ? 2 : 0,
                   repeat: popular ? Infinity : 0,
-                  repeatType: "reverse" as const
+                  repeatType: "reverse" 
                 }
               }}
             >

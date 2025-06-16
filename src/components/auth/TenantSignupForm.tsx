@@ -55,7 +55,6 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
       setLoading(true);
       console.log("=== TENANT SIGNUP PROCESS ===");
       console.log("Creating account for tenant:", tenantData.email);
-      console.log("Invitation token:", invitationToken);
 
       // 1. Créer le compte utilisateur
       const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -81,7 +80,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
 
       console.log("✅ User account created:", authData.user.id);
 
-      // 2. Lier le profil au locataire avec vérification
+      // 2. Lier le profil au locataire
       console.log("Linking tenant profile...");
       const { data: linkResult, error: linkError } = await supabase
         .rpc('link_tenant_profile', {
@@ -96,47 +95,21 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
 
       console.log("✅ Tenant profile linked successfully");
 
-      // 3. Mettre à jour le statut de l'invitation avec vérification détaillée
-      console.log("Updating invitation status for token:", invitationToken);
-      
-      // D'abord, vérifier si l'invitation existe
-      const { data: invitationCheck, error: checkError } = await supabase
+      // 3. Mettre à jour le statut de l'invitation
+      console.log("Updating invitation status...");
+      const { error: invitationError } = await supabase
         .from('tenant_invitations')
-        .select('id, status, email, tenant_id')
-        .eq('token', invitationToken)
-        .single();
+        .update({ 
+          status: 'accepted',
+          updated_at: new Date().toISOString()
+        })
+        .eq('token', invitationToken);
 
-      if (checkError) {
-        console.error("Error checking invitation:", checkError);
-        // Ne pas bloquer le processus, mais log l'erreur
-        toast({
-          title: "Avertissement",
-          description: "Le compte a été créé mais le statut de l'invitation n'a pas pu être vérifié.",
-          variant: "destructive",
-        });
+      if (invitationError) {
+        console.error("Error updating invitation status:", invitationError);
+        // Ne pas bloquer le processus pour cette erreur
       } else {
-        console.log("Found invitation:", invitationCheck);
-        
-        // Mettre à jour le statut
-        const { data: updateResult, error: updateError } = await supabase
-          .from('tenant_invitations')
-          .update({ 
-            status: 'accepted',
-            updated_at: new Date().toISOString()
-          })
-          .eq('token', invitationToken)
-          .select();
-
-        if (updateError) {
-          console.error("Error updating invitation status:", updateError);
-          toast({
-            title: "Avertissement",
-            description: "Le compte a été créé mais le statut de l'invitation n'a pas pu être mis à jour.",
-            variant: "destructive",
-          });
-        } else {
-          console.log("✅ Invitation status updated successfully:", updateResult);
-        }
+        console.log("✅ Invitation status updated to 'accepted'");
       }
 
       toast({
