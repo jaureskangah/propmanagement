@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
+import { MapPin } from "lucide-react";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantCardProps {
@@ -81,9 +82,12 @@ export const TenantCard = ({
         </div>
 
         {propertyName && (
-          <p className="text-sm text-muted-foreground mb-2">
-            📍 {propertyName}
-          </p>
+          <div className="flex items-center gap-1 mb-2">
+            <MapPin className="h-3 w-3 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground">
+              {propertyName}
+            </p>
+          </div>
         )}
 
         <div className="flex justify-between items-center mb-3">
