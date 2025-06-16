@@ -1,3 +1,4 @@
+
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
@@ -14,7 +15,7 @@ export const useTenants = () => {
         .from("tenants")
         .select(`
           *,
-          properties:property_id (
+          properties!inner (
             name,
             id,
             address
