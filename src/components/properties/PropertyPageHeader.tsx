@@ -51,7 +51,7 @@ const PropertyPageHeader = ({
         <div className="flex items-center justify-between lg:justify-end gap-4">
           <Badge variant="secondary" className="text-sm px-3 py-1.5 font-sans">
             <Info className="h-4 w-4 mr-1.5" />
-            {propertiesCount} {propertiesCount === 1 ? t('property') : t('properties')}
+            {propertiesCount} {propertiesCount === 1 ? t('totalProperties').slice(0, -1) : t('totalProperties')}
           </Badge>
           
           {!isTenant && (
