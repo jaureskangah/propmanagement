@@ -6,7 +6,7 @@ import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
 import { MapPin, Phone, Mail, DollarSign } from "lucide-react";
 import { supabase } from "@/lib/supabase";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
 
@@ -27,7 +27,7 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [propertyName, setPropertyName] = useState<string>("Chargement...");
 
   // Récupération du nom de la propriété
@@ -136,11 +136,19 @@ export const TenantCard = ({
           </span>
         </div>
 
+        {/* Lease period */}
+        <div className="mb-4 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Période de bail</div>
+          <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {formatDate(tenant.lease_start, locale)} - {formatDate(tenant.lease_end, locale)}
+          </div>
+        </div>
+
         {/* Rent amount - highlighted */}
         <div className="flex items-center gap-2 mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
           <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
           <span className="text-lg font-bold text-green-700 dark:text-green-300">
-            {formatCurrency(tenant.rent_amount)}/{t('perMonth')}
+            {formatCurrency(tenant.rent_amount)} / {t('perMonth')}
           </span>
         </div>
 
