@@ -28,8 +28,7 @@ const PropertyCardImage = ({ image, type, imageLoaded, setImageLoaded }: Propert
         src={image || getDefaultImageByType(type)}
         alt={`${type} - ${t('propertyImage')}`}
         className={cn(
-          "w-full h-full object-cover transition-all duration-500",
-          "group-hover:scale-110 group-hover:rotate-1",
+          "w-full h-full object-cover transition-opacity duration-500",
           imageLoaded ? "opacity-100" : "opacity-0"
         )}
         loading="lazy"

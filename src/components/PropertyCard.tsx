@@ -29,7 +29,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: Property
   return (
     <Card className={cn(
       "relative h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
-      "hover:shadow-lg hover:scale-[1.01] group",
+      "hover:shadow-2xl hover:-translate-y-2 group cursor-pointer",
       "bg-gradient-to-br",
       getGradientByType(property.type)
     )}>
