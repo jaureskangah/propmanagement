@@ -56,9 +56,12 @@ export const TenantCard = ({
       
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-3">
-          <div>
+          <div className="flex-1">
             <h3 className="font-semibold text-lg">{tenant.name}</h3>
             <p className="text-muted-foreground text-sm">{tenant.email}</p>
+            {tenant.phone && (
+              <p className="text-muted-foreground text-sm">{tenant.phone}</p>
+            )}
           </div>
           <Badge variant="secondary">
             Unit {tenant.unit_number}
@@ -67,7 +70,7 @@ export const TenantCard = ({
 
         {propertyName && (
           <p className="text-sm text-muted-foreground mb-2">
-            {propertyName}
+            📍 {propertyName}
           </p>
         )}
 
