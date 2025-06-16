@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
-import { MapPin } from "lucide-react";
+import { MapPin, Phone, Mail, DollarSign } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Tenant } from "@/types/tenant";
 
@@ -80,7 +80,7 @@ export const TenantCard = ({
 
   return (
     <Card 
-      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[360px] ${
+      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[380px] ${
         isSelected ? 'ring-2 ring-primary' : ''
       }`}
       onClick={onSelect}
@@ -98,33 +98,50 @@ export const TenantCard = ({
         }}
       />
       
-      <CardContent className="p-4">
-        <div className="flex justify-between items-start mb-3">
+      <CardContent className="p-6">
+        {/* Header with name and unit badge */}
+        <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <h3 className="font-semibold text-lg">{tenant.name}</h3>
-            <p className="text-muted-foreground text-sm">{tenant.email}</p>
-            {tenant.phone && (
-              <p className="text-muted-foreground text-sm">{tenant.phone}</p>
-            )}
+            <h3 className="font-bold text-xl text-gray-900 dark:text-white mb-1">
+              {tenant.name}
+            </h3>
           </div>
-          <Badge variant="secondary">
+          <Badge variant="secondary" className="ml-3 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold">
             Unité {tenant.unit_number}
           </Badge>
         </div>
 
-        <div className="flex items-center gap-1 mb-2">
-          <MapPin className="h-3 w-3 text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">
-            {propertyName}
-          </p>
+        {/* Contact information section */}
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+            <Mail className="h-4 w-4 text-gray-400" />
+            <span className="text-sm">{tenant.email}</span>
+          </div>
+          {tenant.phone && (
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+              <Phone className="h-4 w-4 text-gray-400" />
+              <span className="text-sm">{tenant.phone}</span>
+            </div>
+          )}
         </div>
 
-        <div className="flex justify-between items-center mb-3">
-          <span className="text-sm font-medium">
-            ${tenant.rent_amount.toLocaleString()}/month
+        {/* Property location */}
+        <div className="flex items-center gap-2 mb-4 p-2 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+          <MapPin className="h-4 w-4 text-gray-500" />
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            {propertyName}
           </span>
         </div>
 
+        {/* Rent amount - highlighted */}
+        <div className="flex items-center gap-2 mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+          <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
+          <span className="text-lg font-bold text-green-700 dark:text-green-300">
+            ${tenant.rent_amount.toLocaleString()}/mois
+          </span>
+        </div>
+
+        {/* Actions */}
         <div onClick={(e) => e.stopPropagation()}>
           <TenantActions
             onEdit={onEdit}
