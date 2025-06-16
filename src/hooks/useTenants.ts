@@ -56,11 +56,22 @@ export const useTenants = () => {
         throw error;
       }
 
+      console.log("Raw Supabase response:", data);
       console.log("Tenants data fetched successfully:", data);
       if (data && data.length > 0) {
-        console.log("First tenant full data:", JSON.stringify(data[0], null, 2));
-        console.log("First tenant properties specifically:", data[0]?.properties);
-        console.log("Property name from first tenant:", data[0]?.properties?.name);
+        console.log("=== DETAILED TENANT DATA DEBUG ===");
+        data.forEach((tenant, index) => {
+          console.log(`Tenant ${index + 1}:`, {
+            id: tenant.id,
+            name: tenant.name,
+            property_id: tenant.property_id,
+            properties: tenant.properties,
+            properties_type: typeof tenant.properties,
+            properties_isArray: Array.isArray(tenant.properties),
+            properties_keys: tenant.properties ? Object.keys(tenant.properties) : 'null'
+          });
+        });
+        console.log("=== END DEBUG ===");
       }
       return data;
     },
