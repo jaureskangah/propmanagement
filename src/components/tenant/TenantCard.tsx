@@ -23,16 +23,28 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  // Get property name safely
+  // Get property name safely - improved logic
   const getPropertyName = () => {
+    console.log("Tenant properties data:", tenant.properties);
+    
     if (!tenant.properties) return null;
+    
+    // If it's an array, get the first item
     if (Array.isArray(tenant.properties)) {
-      return tenant.properties[0]?.name || null;
+      const firstProperty = tenant.properties[0];
+      return firstProperty?.name || null;
     }
-    return tenant.properties.name || null;
+    
+    // If it's an object, get the name directly
+    if (typeof tenant.properties === 'object' && tenant.properties.name) {
+      return tenant.properties.name;
+    }
+    
+    return null;
   };
 
   const propertyName = getPropertyName();
+  console.log("Resolved property name:", propertyName);
 
   return (
     <Card 
