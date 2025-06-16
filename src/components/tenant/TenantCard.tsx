@@ -24,51 +24,34 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  // Fonction de débogage détaillée pour comprendre la structure des données
+  // Fonction robuste pour obtenir le nom de la propriété
   const getPropertyName = () => {
     console.log("=== TenantCard getPropertyName DEBUG ===");
     console.log("Tenant ID:", tenant.id);
     console.log("Tenant name:", tenant.name);
     console.log("Tenant property_id:", tenant.property_id);
     console.log("Tenant.properties raw:", tenant.properties);
-    console.log("Type of tenant.properties:", typeof tenant.properties);
-    console.log("Is Array:", Array.isArray(tenant.properties));
-    console.log("Is null:", tenant.properties === null);
-    console.log("Is undefined:", tenant.properties === undefined);
     
-    // Vérification très explicite
+    // Si pas de properties mais qu'on a un property_id, il y a un problème avec la requête
+    if (!tenant.properties && tenant.property_id) {
+      console.log("⚠️ No properties data but property_id exists - query issue");
+      return "Propriété non chargée";
+    }
+    
+    // Si pas de properties du tout
     if (!tenant.properties) {
-      console.log("❌ tenant.properties is falsy");
-      return "Sans propriété (properties falsy)";
+      console.log("❌ No properties and no property_id");
+      return "Sans propriété";
     }
     
-    if (typeof tenant.properties !== 'object') {
-      console.log("❌ tenant.properties is not an object");
-      return "Sans propriété (not object)";
-    }
-    
-    // Si c'est un objet direct avec name
-    if (!Array.isArray(tenant.properties) && 'name' in tenant.properties) {
+    // Si c'est un objet avec une propriété name
+    if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
       console.log("✅ Found property name in object:", tenant.properties.name);
       return tenant.properties.name || "Propriété sans nom";
     }
     
-    // Si c'est un tableau
-    if (Array.isArray(tenant.properties)) {
-      console.log("Properties is array, length:", tenant.properties.length);
-      if (tenant.properties.length > 0) {
-        const firstProperty = tenant.properties[0];
-        console.log("First property:", firstProperty);
-        if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
-          console.log("✅ Found property name in array:", firstProperty.name);
-          return firstProperty.name || "Propriété sans nom";
-        }
-      }
-      return "Sans propriété (array empty)";
-    }
-    
-    console.log("❌ Unknown properties structure");
-    return "Sans propriété (unknown structure)";
+    console.log("❌ Properties structure not recognized");
+    return "Erreur propriété";
   };
 
   const propertyName = getPropertyName();

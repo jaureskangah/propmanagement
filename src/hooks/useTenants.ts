@@ -15,7 +15,7 @@ export const useTenants = () => {
         .from("tenants")
         .select(`
           *,
-          properties!inner (
+          properties (
             name,
             id,
             address
