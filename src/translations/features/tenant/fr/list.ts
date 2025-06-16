@@ -24,7 +24,7 @@ export const frList: TenantListTranslations = {
   noResults: "Aucun résultat ne correspond à votre recherche",
   searchTenants: "Rechercher des locataires...",
   name: "Nom",
-  email: "Email",
+  email: "Courriel",
   phone: "Téléphone",
   lease: "Bail",
   rent: "Loyer",

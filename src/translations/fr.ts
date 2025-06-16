@@ -54,7 +54,7 @@ const translations: any = {
   securityDeposit: "Dépôt de garantie",
   deposited: "Déposé",
   notDeposited: "Non déposé",
-  emailProfileLabel: "Adresse e-mail",
+  emailProfileLabel: "Adresse courriel",
   phoneProfileLabel: "Numéro de téléphone",
   rentAmountLabel: "Montant du loyer",
   leaseStartProfileLabel: "Date de début du bail",
@@ -62,12 +62,13 @@ const translations: any = {
   depositStatusUpdated: "Statut du dépôt mis à jour",
   invite: "Inviter",
   inviteTenant: "Inviter un locataire",
+  perMonth: "mois",
   // Messages génériques
   error: 'Erreur',
   success: 'Succès',
   tenantAdded: 'Locataire ajouté avec succès',
   errorLoadingTenantData: 'Erreur lors du chargement des données du locataire',
-  invalidEmail: 'Adresse e-mail invalide',
+  invalidEmail: 'Adresse courriel invalide',
   invalidAmount: 'Montant invalide'
 };
 

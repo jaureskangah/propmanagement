@@ -6,6 +6,8 @@ import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
 import { MapPin, Phone, Mail, DollarSign } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { formatCurrency } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantCardProps {
@@ -25,6 +27,7 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
+  const { t } = useLocale();
   const [propertyName, setPropertyName] = useState<string>("Chargement...");
 
   // Récupération du nom de la propriété
@@ -107,7 +110,7 @@ export const TenantCard = ({
             </h3>
           </div>
           <Badge variant="secondary" className="ml-3 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold">
-            Unité {tenant.unit_number}
+            {t('list.unit')} {tenant.unit_number}
           </Badge>
         </div>
 
@@ -137,7 +140,7 @@ export const TenantCard = ({
         <div className="flex items-center gap-2 mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
           <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
           <span className="text-lg font-bold text-green-700 dark:text-green-300">
-            ${tenant.rent_amount.toLocaleString()}/mois
+            {formatCurrency(tenant.rent_amount)}/{t('perMonth')}
           </span>
         </div>
 
