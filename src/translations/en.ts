@@ -62,7 +62,6 @@ const translations: any = {
   depositStatusUpdated: "Deposit status updated",
   invite: "Invite",
   inviteTenant: "Invite Tenant",
-  perMonth: "month",
   // Add generic keys for error messages
   error: 'Error',
   success: 'Success',
