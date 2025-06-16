@@ -13,14 +13,6 @@ interface TenantInfoGridProps {
 export const TenantInfoGrid = ({ tenant }: TenantInfoGridProps) => {
   const { t } = useLocale();
   
-  const formatDate = (dateString: string) => {
-    try {
-      return format(new Date(dateString), "PPP");
-    } catch (error) {
-      return dateString;
-    }
-  };
-
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
     (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
@@ -43,18 +35,21 @@ export const TenantInfoGrid = ({ tenant }: TenantInfoGridProps) => {
       <InfoItem
         icon={<DollarSign className="h-4 w-4 text-primary/70" />}
         label={t('rentAmountLabel')}
-        value={`$${tenant.rent_amount}${t('perMonth')}`}
+        value={`$${tenant.rent_amount}`}
+        isAmount={true}
       />
       <InfoItem
         icon={<CalendarDays className="h-4 w-4 text-primary/70" />}
         label={t('leaseStartProfileLabel')}
-        value={formatDate(tenant.lease_start)}
+        value={tenant.lease_start}
+        isDate={true}
       />
       <InfoItem
         icon={<CalendarDays className="h-4 w-4 text-primary/70" />}
         label={t('leaseEndProfileLabel')}
-        value={formatDate(tenant.lease_end)}
+        value={tenant.lease_end}
         highlight={leaseEnded || leaseEnding}
+        isDate={true}
       />
     </div>
   );

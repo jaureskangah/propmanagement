@@ -3,6 +3,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale";
 
 interface InfoItemProps {
   icon: React.ReactNode;
@@ -11,19 +13,32 @@ interface InfoItemProps {
   highlight?: boolean;
   onClick?: () => void;
   isAmount?: boolean;
+  isDate?: boolean;
 }
 
-export const InfoItem = ({ icon, label, value, highlight = false, onClick, isAmount = false }: InfoItemProps) => {
+export const InfoItem = ({ icon, label, value, highlight = false, onClick, isAmount = false, isDate = false }: InfoItemProps) => {
   const isMobile = useIsMobile();
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   
-  // Format amount with proper translation
+  // Format amount with proper translation and spacing
   const formatValue = (val: string) => {
     if (isAmount && val.includes('$')) {
-      // Extract the amount and add proper translation
+      // Extract the amount and add proper translation with space
       const amount = val.replace(/[^\d]/g, '');
       return `$${amount} ${t('perMonth')}`;
     }
+    
+    if (isDate) {
+      try {
+        const date = new Date(val);
+        return format(date, "d MMMM yyyy", {
+          locale: language === 'fr' ? fr : undefined
+        });
+      } catch (error) {
+        return val;
+      }
+    }
+    
     return val;
   };
   
