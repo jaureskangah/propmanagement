@@ -40,6 +40,7 @@ export const enDashboardCore = {
   darkMode: "Dark mode",
   revenue: "Revenue",
   expenses: "Expenses",
+  pendingMaintenance: "Pending Maintenance",
 };
 
 export const frDashboardCore = {
@@ -83,4 +84,5 @@ export const frDashboardCore = {
   darkMode: "Mode sombre",
   revenue: "Revenus",
   expenses: "Dépenses",
+  pendingMaintenance: "Maintenance en Attente",
 };

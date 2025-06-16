@@ -32,7 +32,7 @@ export const frNavigation: NavigationTranslations = {
   freeTrial: "Essai gratuit",
   signIn: "Connexion",
   signOut: "Déconnexion",
-  dashboard: "Dashboard",
+  dashboard: "Tableau de Bord",
   language: "Langue",
   units: "Unités",
   metric: "Métrique",
