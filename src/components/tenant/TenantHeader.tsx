@@ -19,6 +19,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   // Logging pour débogage avancé
   console.log("TenantHeader - Tenant property data:", tenant.properties);
   console.log("TenantHeader - Properties type:", tenant.properties ? typeof tenant.properties : "undefined");
+  console.log("TenantHeader - Property ID:", tenant.property_id);
   
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
@@ -42,27 +43,35 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     return <CheckCircle className="h-4 w-4 mr-1" />;
   };
 
-  // Obtenir le nom de la propriété de manière sécurisée
+  // Obtenir le nom de la propriété de manière sécurisée - logique améliorée
   const getPropertyName = () => {
-    if (!tenant.properties) {
-      return t('noProperty');
-    }
+    console.log("TenantHeader - Getting property name...");
     
-    // Si properties est un objet avec une propriété name
-    if (typeof tenant.properties === 'object' && tenant.properties !== null && !Array.isArray(tenant.properties)) {
-      if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
+    // Si properties existe et n'est pas null
+    if (tenant.properties) {
+      // Si c'est un tableau avec des éléments
+      if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+        const firstProperty = tenant.properties[0];
+        console.log("TenantHeader - First property from array:", firstProperty);
+        if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
+          return firstProperty.name;
+        }
+      }
+      
+      // Si c'est un objet direct avec une propriété name
+      if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
+        console.log("TenantHeader - Property name from object:", tenant.properties.name);
         return tenant.properties.name;
       }
     }
     
-    // Si properties est un tableau avec un élément qui contient name
-    if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
-      const firstProperty = tenant.properties[0];
-      if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
-        return firstProperty.name;
-      }
+    // Si on a un property_id mais pas de données properties
+    if (tenant.property_id) {
+      console.log("TenantHeader - Has property_id but no properties data:", tenant.property_id);
+      return `Propriété ${tenant.property_id.slice(0, 8)}...`;
     }
     
+    console.log("TenantHeader - No property found");
     return t('noProperty');
   };
 

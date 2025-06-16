@@ -26,26 +26,40 @@ export const TenantCard = ({
 }: TenantCardProps) => {
   // Get property name safely - improved logic
   const getPropertyName = () => {
+    console.log("Tenant object:", tenant);
     console.log("Tenant properties data:", tenant.properties);
+    console.log("Tenant property_id:", tenant.property_id);
     
-    if (!tenant.properties) return null;
-    
-    // If it's an array, get the first item
-    if (Array.isArray(tenant.properties)) {
-      const firstProperty = tenant.properties[0];
-      return firstProperty?.name || null;
+    // Si properties existe et n'est pas null
+    if (tenant.properties) {
+      // Si c'est un tableau avec des éléments
+      if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+        const firstProperty = tenant.properties[0];
+        console.log("First property from array:", firstProperty);
+        if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
+          return firstProperty.name;
+        }
+      }
+      
+      // Si c'est un objet direct avec une propriété name
+      if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
+        console.log("Property name from object:", tenant.properties.name);
+        return tenant.properties.name;
+      }
     }
     
-    // If it's an object, get the name directly
-    if (typeof tenant.properties === 'object' && tenant.properties.name) {
-      return tenant.properties.name;
+    // Si on a un property_id mais pas de données properties, on peut essayer d'afficher l'ID temporairement
+    if (tenant.property_id) {
+      console.log("Has property_id but no properties data:", tenant.property_id);
+      return `Propriété ${tenant.property_id.slice(0, 8)}...`;
     }
     
+    console.log("No property found");
     return null;
   };
 
   const propertyName = getPropertyName();
-  console.log("Resolved property name:", propertyName);
+  console.log("Final resolved property name:", propertyName);
 
   return (
     <Card 
