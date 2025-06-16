@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -5,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import AppSidebar from "@/components/AppSidebar";
 import { InvitationsHeader } from "@/components/invitations/InvitationsHeader";
+import { BorderTrail } from "@/components/ui/border-trail";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Mail, RefreshCw, X, CheckCircle2, Clock, AlertCircle } from "lucide-react";
@@ -371,8 +373,21 @@ const Invitations = () => {
                   {filteredInvitations().map((invitation) => (
                     <Card 
                       key={invitation.id} 
-                      className={`overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm bg-gradient-to-br ${getBackgroundGradient(invitation)} border ${getBorderColor(invitation)}`}
+                      className={`relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm bg-gradient-to-br ${getBackgroundGradient(invitation)} border ${getBorderColor(invitation)}`}
                     >
+                      <BorderTrail
+                        className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500"
+                        size={60}
+                        transition={{
+                          duration: 6,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                        style={{
+                          boxShadow: "0px 0px 30px 15px rgb(59 130 246 / 20%)"
+                        }}
+                      />
+                      
                       <CardHeader className="pb-2">
                         <div className="flex justify-between items-start">
                           <div>
