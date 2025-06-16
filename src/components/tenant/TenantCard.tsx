@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
-import { MapPin, Phone, Mail, DollarSign } from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import type { Tenant } from "@/types/tenant";
 
@@ -130,14 +130,6 @@ export const TenantCard = ({
           <MapPin className="h-4 w-4 text-gray-500" />
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {propertyName}
-          </span>
-        </div>
-
-        {/* Rent amount - highlighted */}
-        <div className="flex items-center gap-2 mb-4 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-          <DollarSign className="h-5 w-5 text-green-600 dark:text-green-400" />
-          <span className="text-lg font-bold text-green-700 dark:text-green-300">
-            ${tenant.rent_amount.toLocaleString()}/mois
           </span>
         </div>
 
