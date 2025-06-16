@@ -45,7 +45,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   // Fonction robuste pour obtenir le nom de la propriété
   const getPropertyName = () => {
     if (!tenant.properties) {
-      return t('list.noProperty');
+      return "Sans propriété";
     }
     
     // Si properties est un objet avec une propriété name
@@ -68,7 +68,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
       return tenant.properties;
     }
     
-    return t('list.noProperty');
+    return "Sans propriété";
   };
 
   const handleInviteClick = () => {
@@ -99,7 +99,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
             </h2>
             <p className="text-muted-foreground flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              {getPropertyName()} - {t('list.unitLabel')} {tenant.unit_number}
+              {getPropertyName()} - Unité {tenant.unit_number}
             </p>
           </div>
           

@@ -43,7 +43,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     return <CheckCircle className="h-4 w-4 mr-1" />;
   };
 
-  // Obtenir le nom de la propriété de manière sécurisée - logique améliorée
+  // Obtenir le nom de la propriété de manière sécurisée - logique corrigée
   const getPropertyName = () => {
     console.log("TenantHeader - Getting property name...");
     
@@ -65,14 +65,8 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
       }
     }
     
-    // Si on a un property_id mais pas de données properties
-    if (tenant.property_id) {
-      console.log("TenantHeader - Has property_id but no properties data:", tenant.property_id);
-      return `Propriété ${tenant.property_id.slice(0, 8)}...`;
-    }
-    
-    console.log("TenantHeader - No property found");
-    return t('noProperty');
+    console.log("TenantHeader - No property found, returning default");
+    return "Sans propriété";
   };
 
   const handleInviteClick = () => {

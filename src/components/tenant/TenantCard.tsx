@@ -48,14 +48,8 @@ export const TenantCard = ({
       }
     }
     
-    // Si on a un property_id mais pas de données properties, on peut essayer d'afficher l'ID temporairement
-    if (tenant.property_id) {
-      console.log("Has property_id but no properties data:", tenant.property_id);
-      return `Propriété ${tenant.property_id.slice(0, 8)}...`;
-    }
-    
-    console.log("No property found");
-    return null;
+    console.log("No property found, returning default");
+    return "Sans propriété";
   };
 
   const propertyName = getPropertyName();
