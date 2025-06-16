@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { InvitationsHeader } from "@/components/invitations/InvitationsHeader";
 import { InvitationFilters } from "@/components/invitations/InvitationFilters";
@@ -21,6 +21,20 @@ const Invitations = () => {
     fetchInvitations
   } = useInvitationManagement();
 
+  const invitationsCount = useMemo(() => {
+    const isExpired = (invitation: any) => {
+      return new Date(invitation.expires_at) < new Date();
+    };
+
+    return {
+      all: invitations.length,
+      pending: invitations.filter(inv => inv.status === 'pending' && !isExpired(inv)).length,
+      expired: invitations.filter(inv => isExpired(inv) && inv.status === 'pending').length,
+      completed: invitations.filter(inv => inv.status === 'accepted').length,
+      cancelled: invitations.filter(inv => inv.status === 'cancelled').length,
+    };
+  }, [invitations]);
+
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
@@ -40,7 +54,11 @@ const Invitations = () => {
             isLoading={isLoading}
           />
 
-          <InvitationFilters activeTab={activeTab} onTabChange={setActiveTab}>
+          <InvitationFilters 
+            activeTab={activeTab} 
+            onTabChange={setActiveTab}
+            invitationsCount={invitationsCount}
+          >
             <InvitationsList
               invitations={invitations}
               isLoading={isLoading}
