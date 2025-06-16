@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
@@ -65,11 +64,31 @@ export const useTenants = () => {
             id: tenant.id,
             name: tenant.name,
             property_id: tenant.property_id,
+            unit_number: tenant.unit_number, // Ajoutons ceci pour comparaison
             properties: tenant.properties,
             properties_type: typeof tenant.properties,
             properties_isArray: Array.isArray(tenant.properties),
             properties_keys: tenant.properties ? Object.keys(tenant.properties) : 'null'
           });
+          
+          // Vérifions si property_id existe dans la table properties
+          if (tenant.property_id) {
+            console.log(`🔍 Tenant ${tenant.name} has property_id: ${tenant.property_id}`);
+            console.log("But properties data is:", tenant.properties);
+            
+            // Testons une requête directe pour cette property
+            supabase
+              .from("properties")
+              .select("*")
+              .eq("id", tenant.property_id)
+              .then(({ data: propData, error: propError }) => {
+                if (propError) {
+                  console.error(`❌ Error fetching property ${tenant.property_id}:`, propError);
+                } else {
+                  console.log(`✅ Direct property query for ${tenant.property_id}:`, propData);
+                }
+              });
+          }
         });
         console.log("=== END DEBUG ===");
       }

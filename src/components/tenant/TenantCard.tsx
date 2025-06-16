@@ -1,10 +1,11 @@
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
 import { MapPin } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantCardProps {
@@ -24,37 +25,57 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  // Fonction robuste pour obtenir le nom de la propriété
-  const getPropertyName = () => {
-    console.log("=== TenantCard getPropertyName DEBUG ===");
-    console.log("Tenant ID:", tenant.id);
-    console.log("Tenant name:", tenant.name);
-    console.log("Tenant property_id:", tenant.property_id);
-    console.log("Tenant.properties raw:", tenant.properties);
-    
-    // Si pas de properties mais qu'on a un property_id, il y a un problème avec la requête
-    if (!tenant.properties && tenant.property_id) {
-      console.log("⚠️ No properties data but property_id exists - query issue");
-      return "Propriété non chargée";
-    }
-    
-    // Si pas de properties du tout
-    if (!tenant.properties) {
-      console.log("❌ No properties and no property_id");
-      return "Sans propriété";
-    }
-    
-    // Si c'est un objet avec une propriété name
-    if (typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
-      console.log("✅ Found property name in object:", tenant.properties.name);
-      return tenant.properties.name || "Propriété sans nom";
-    }
-    
-    console.log("❌ Properties structure not recognized");
-    return "Erreur propriété";
-  };
+  const [propertyName, setPropertyName] = useState<string>("Chargement...");
 
-  const propertyName = getPropertyName();
+  // Récupération du nom de la propriété
+  useEffect(() => {
+    const getPropertyName = async () => {
+      console.log("=== TenantCard getPropertyName DEBUG ===");
+      console.log("Tenant ID:", tenant.id);
+      console.log("Tenant name:", tenant.name);
+      console.log("Tenant property_id:", tenant.property_id);
+      console.log("Tenant.properties raw:", tenant.properties);
+      
+      // Première tentative : utiliser les données de la jointure
+      if (tenant.properties && typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
+        console.log("✅ Found property name in joined data:", tenant.properties.name);
+        setPropertyName(tenant.properties.name || "Propriété sans nom");
+        return;
+      }
+      
+      // Deuxième tentative : requête directe si on a un property_id
+      if (tenant.property_id) {
+        console.log("🔍 Fetching property directly with ID:", tenant.property_id);
+        try {
+          const { data, error } = await supabase
+            .from("properties")
+            .select("name")
+            .eq("id", tenant.property_id)
+            .single();
+          
+          if (error) {
+            console.error("❌ Error fetching property:", error);
+            setPropertyName("Erreur propriété");
+          } else if (data && data.name) {
+            console.log("✅ Found property name via direct query:", data.name);
+            setPropertyName(data.name);
+          } else {
+            console.log("❌ No property found with this ID");
+            setPropertyName("Propriété introuvable");
+          }
+        } catch (err) {
+          console.error("❌ Exception fetching property:", err);
+          setPropertyName("Erreur propriété");
+        }
+      } else {
+        console.log("❌ No property_id");
+        setPropertyName("Sans propriété");
+      }
+    };
+
+    getPropertyName();
+  }, [tenant.property_id, tenant.properties]);
+
   console.log("Final property name for display:", propertyName);
 
   return (
