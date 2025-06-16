@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -128,7 +127,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
                 <SelectContent>
                   {PROPERTY_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {t(type.toLowerCase())}
+                      {type === "Commercial Space" ? t('commercialSpace') : t(type.toLowerCase())}
                     </SelectItem>
                   ))}
                 </SelectContent>
