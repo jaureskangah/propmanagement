@@ -39,7 +39,7 @@ export default function Pricing() {
       y: 0,
       transition: { 
         duration: 0.7,
-        ease: "easeOut"
+        ease: [0.4, 0, 0.2, 1] as const
       }
     }
   };
@@ -52,7 +52,7 @@ export default function Pricing() {
       boxShadow: "0 10px 15px -3px rgba(234, 56, 76, 0.4)",
       transition: {
         duration: 0.2,
-        ease: "easeInOut"
+        ease: [0.4, 0, 0.2, 1] as const
       }
     },
     tap: { scale: 0.98 }
