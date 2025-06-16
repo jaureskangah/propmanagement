@@ -91,7 +91,7 @@ export const TenantCard = ({
             )}
           </div>
           <Badge variant="secondary">
-            Unit {tenant.unit_number}
+            Unité {tenant.unit_number}
           </Badge>
         </div>
 
