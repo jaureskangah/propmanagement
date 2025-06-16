@@ -49,12 +49,25 @@ const translations: any = {
   ...frFinances,
   ...frVendors,
   documentGenerator: frDocumentGenerator,
-  // Ajout de clés génériques pour les messages d'erreur
+  // Traductions pour la page des locataires
+  searchTenants: "Rechercher des locataires...",
+  securityDeposit: "Dépôt de garantie",
+  deposited: "Déposé",
+  notDeposited: "Non déposé",
+  emailProfileLabel: "Adresse e-mail",
+  phoneProfileLabel: "Numéro de téléphone",
+  rentAmountLabel: "Montant du loyer",
+  leaseStartProfileLabel: "Date de début du bail",
+  leaseEndProfileLabel: "Date de fin du bail",
+  depositStatusUpdated: "Statut du dépôt mis à jour",
+  invite: "Inviter",
+  inviteTenant: "Inviter un locataire",
+  // Messages génériques
   error: 'Erreur',
   success: 'Succès',
   tenantAdded: 'Locataire ajouté avec succès',
   errorLoadingTenantData: 'Erreur lors du chargement des données du locataire',
-  invalidEmail: 'Adresse email invalide',
+  invalidEmail: 'Adresse e-mail invalide',
   invalidAmount: 'Montant invalide'
 };
 

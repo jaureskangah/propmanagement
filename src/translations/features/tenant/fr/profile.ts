@@ -1,10 +1,10 @@
 
 export const frProfile = {
-  emailProfileLabel: "Email",
-  phoneProfileLabel: "Téléphone",
+  emailProfileLabel: "Adresse e-mail",
+  phoneProfileLabel: "Numéro de téléphone",
   rentAmountLabel: "Montant du loyer",
-  leaseStartProfileLabel: "Début du bail",
-  leaseEndProfileLabel: "Fin du bail",
+  leaseStartProfileLabel: "Date de début du bail",
+  leaseEndProfileLabel: "Date de fin du bail",
   securityDeposit: "Dépôt de garantie",
   depositPaid: "Dépôt payé",
   depositNotPaid: "Dépôt non payé",
@@ -18,5 +18,7 @@ export const frProfile = {
   leaseActive: "Bail actif",
   leaseExpired: "Bail expiré",
   leaseExpiring: "Bail expirant bientôt",
-  notAvailable: "Non disponible"
+  notAvailable: "Non disponible",
+  deposited: "Déposé",
+  notDeposited: "Non déposé"
 };

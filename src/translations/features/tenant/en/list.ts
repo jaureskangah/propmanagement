@@ -53,5 +53,8 @@ export const enList: TenantListTranslations = {
   selectTenantToView: "Select a tenant to view details",
   noTenantsFiltered: "No tenants match the current filters",
   filterByStatus: "Filter by status",
-  allStatuses: "All statuses"
+  allStatuses: "All statuses",
+  leaseActive: "Active lease",
+  leaseExpiring: "Expiring soon",
+  leaseExpired: "Expired lease"
 };

@@ -53,5 +53,8 @@ export const frList: TenantListTranslations = {
   selectTenantToView: "Sélectionnez un locataire pour voir les détails",
   noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
   filterByStatus: "Filtrer par statut",
-  allStatuses: "Tous les statuts"
+  allStatuses: "Tous les statuts",
+  leaseActive: "Bail actif",
+  leaseExpiring: "Bail expirant bientôt",
+  leaseExpired: "Bail expiré"
 };

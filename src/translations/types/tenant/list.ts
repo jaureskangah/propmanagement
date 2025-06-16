@@ -52,4 +52,7 @@ export interface TenantListTranslations {
   noTenantsFiltered: string;
   filterByStatus: string;
   allStatuses: string;
+  leaseActive: string;
+  leaseExpiring: string;
+  leaseExpired: string;
 }
