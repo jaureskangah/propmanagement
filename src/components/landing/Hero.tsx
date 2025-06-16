@@ -2,7 +2,7 @@
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 interface HeroProps {
   onShowAuthModal: () => void;
@@ -11,7 +11,7 @@ interface HeroProps {
 export default function Hero({ onShowAuthModal }: HeroProps) {
   const { t } = useLocale();
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -22,9 +22,16 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
     }
   };
 
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.8, 
+        ease: [0.4, 0, 0.6, 1] as const
+      } 
+    }
   };
 
   // Animation for decorative elements
@@ -137,7 +144,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
             whileInView={{ 
               scale: [0.96, 1.01, 1],
               opacity: [0.8, 1],
-              transition: { duration: 1.2, ease: "easeOut" }
+              transition: { duration: 1.2, ease: [0.4, 0, 0.6, 1] as const }
             }}
             className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden"
           >

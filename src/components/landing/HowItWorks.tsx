@@ -1,7 +1,7 @@
 
 import { ArrowRight, ListChecks, Building2, MessageSquare, Search } from "lucide-react";
 import { useLocale } from "../providers/LocaleProvider";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 export default function HowItWorks() {
   const { t } = useLocale();
@@ -29,7 +29,7 @@ export default function HowItWorks() {
     }
   ];
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -40,12 +40,15 @@ export default function HowItWorks() {
     }
   };
 
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
+      transition: { 
+        duration: 0.6, 
+        ease: [0.4, 0, 0.6, 1] as const
+      }
     }
   };
 
@@ -106,7 +109,7 @@ export default function HowItWorks() {
                   whileHover={{ 
                     scale: 1.15, 
                     rotate: 5,
-                    transition: { type: "spring", stiffness: 300, damping: 10 }
+                    transition: { type: "spring" as const, stiffness: 300, damping: 10 }
                   }}
                 >
                   {step.icon}
@@ -129,7 +132,7 @@ export default function HowItWorks() {
                     transition: { 
                       duration: 2, 
                       repeat: Infinity, 
-                      repeatType: "reverse" 
+                      repeatType: "reverse" as const
                     }
                   }}
                   viewport={{ once: true }}

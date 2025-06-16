@@ -1,12 +1,36 @@
 
 import { Building2, Users, Wrench, Shield } from "lucide-react";
 import { useLocale } from "../providers/LocaleProvider";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { FeatureCard } from "./features/FeatureCard";
 import { containerVariants, itemVariants } from "./features/featuresAnimations";
 
 export default function Features() {
   const { t } = useLocale();
+
+  const titleVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        ease: [0.4, 0, 0.6, 1] as const
+      } 
+    }
+  };
+
+  const subtitleVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { 
+        duration: 0.6, 
+        ease: [0.4, 0, 0.6, 1] as const
+      } 
+    }
+  };
 
   return (
     <div id="everything-you-need" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
@@ -18,13 +42,13 @@ export default function Features() {
         variants={containerVariants}
       >
         <motion.h2 
-          variants={itemVariants}
+          variants={titleVariants}
           className="text-3xl md:text-4xl font-bold text-slate-900 mb-4"
         >
           {t('everythingYouNeed')}
         </motion.h2>
         <motion.p 
-          variants={itemVariants}
+          variants={subtitleVariants}
           className="text-slate-600 text-lg max-w-2xl mx-auto"
         >
           {t('featuresSubtitle')}

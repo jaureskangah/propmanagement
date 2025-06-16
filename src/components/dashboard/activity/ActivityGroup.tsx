@@ -1,5 +1,5 @@
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Activity } from "../RecentActivity";
 
 interface ActivityGroupProps {
@@ -9,7 +9,7 @@ interface ActivityGroupProps {
 
 export const ActivityGroup = ({ dateGroup, activities }: ActivityGroupProps) => {
   // Animation variants for container
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -20,13 +20,13 @@ export const ActivityGroup = ({ dateGroup, activities }: ActivityGroupProps) => 
   };
 
   // Animation variants for individual items
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { 
       opacity: 1, 
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 300,
         damping: 24
       }
@@ -34,7 +34,7 @@ export const ActivityGroup = ({ dateGroup, activities }: ActivityGroupProps) => 
   };
 
   // Animation variants for date headers
-  const headerVariants = {
+  const headerVariants: Variants = {
     hidden: { opacity: 0, x: -10 },
     show: { 
       opacity: 1, 
