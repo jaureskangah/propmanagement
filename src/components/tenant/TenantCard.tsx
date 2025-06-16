@@ -141,8 +141,8 @@ export const TenantCard = ({
           </span>
         </div>
 
-        {/* Actions */}
-        <div onClick={(e) => e.stopPropagation()}>
+        {/* Actions - centered */}
+        <div onClick={(e) => e.stopPropagation()} className="flex justify-center">
           <TenantActions
             onEdit={onEdit}
             onDelete={onDelete}
