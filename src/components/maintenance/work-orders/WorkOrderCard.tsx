@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { BorderTrail } from "@/components/ui/border-trail";
 import { WorkOrder } from "@/types/workOrder";
 import { ViewPhotosDialog } from "./components/ViewPhotosDialog";
 import { EditWorkOrderDialog } from "./EditWorkOrderDialog";
@@ -31,7 +32,20 @@ export const WorkOrderCard = ({ order, onUpdate, onDelete }: WorkOrderCardProps)
   } = useWorkOrderCard({ order, onUpdate, onDelete });
 
   return (
-    <Card className="h-full flex flex-col overflow-hidden">
+    <Card className="relative h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+      <BorderTrail
+        className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-500"
+        size={50}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{
+          boxShadow: "0px 0px 25px 12px rgb(249 115 22 / 20%)"
+        }}
+      />
+      
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between">
           <CardTitle className="text-lg line-clamp-2">{order.title}</CardTitle>

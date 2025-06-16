@@ -1,5 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BorderTrail } from "@/components/ui/border-trail";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BellRing, Repeat } from "lucide-react";
 import { RecurringTasksView } from "../recurring/RecurringTasksView";
@@ -20,7 +21,20 @@ export const RecurringReminderSection = ({
   
   return (
     <div className="lg:col-span-1 space-y-4">
-      <Card>
+      <Card className="relative">
+        <BorderTrail
+          className="bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-500"
+          size={55}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          style={{
+            boxShadow: "0px 0px 30px 15px rgb(99 102 241 / 20%)"
+          }}
+        />
+        
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <Repeat className="h-5 w-5" />
@@ -47,7 +61,20 @@ export const RecurringReminderSection = ({
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="relative">
+        <BorderTrail
+          className="bg-gradient-to-r from-rose-500 via-pink-500 to-fuchsia-500"
+          size={50}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          style={{
+            boxShadow: "0px 0px 25px 12px rgb(244 63 94 / 20%)"
+          }}
+        />
+        
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <BellRing className="h-5 w-5" />

@@ -3,6 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { TenantActions } from "./TenantActions";
+import { BorderTrail } from "@/components/ui/border-trail";
 import type { Tenant } from "@/types/tenant";
 import { formatDistanceToNow } from "date-fns";
 import { fr } from "date-fns/locale";
@@ -40,11 +41,24 @@ export const TenantCard = ({
 
   return (
     <Card 
-      className={`cursor-pointer transition-all hover:shadow-md ${
+      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
         isSelected ? 'ring-2 ring-primary' : ''
       }`}
       onClick={onSelect}
     >
+      <BorderTrail
+        className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500"
+        size={60}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{
+          boxShadow: "0px 0px 30px 15px rgb(59 130 246 / 20%)"
+        }}
+      />
+      
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div>

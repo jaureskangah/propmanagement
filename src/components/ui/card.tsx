@@ -1,3 +1,4 @@
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -9,7 +10,7 @@ const Card = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "glass-card rounded-xl animate-fade-in hover-lift",
+      "glass-card rounded-xl animate-fade-in transition-all duration-300 hover:shadow-2xl hover:-translate-y-2",
       className
     )}
     {...props}

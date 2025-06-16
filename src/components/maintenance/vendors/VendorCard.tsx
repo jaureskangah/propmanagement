@@ -1,6 +1,6 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BorderTrail } from "@/components/ui/border-trail";
 import { Users, Phone, Image, FileText, Star, Calendar, Clock, MapPin, ExternalLink, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Vendor } from "@/types/vendor";
@@ -59,7 +59,20 @@ export const VendorCard = ({
   };
 
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-md border-l-4 border-l-primary">
+    <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 border-l-4 border-l-primary">
+      <BorderTrail
+        className="bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500"
+        size={55}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        style={{
+          boxShadow: "0px 0px 30px 15px rgb(34 197 94 / 20%)"
+        }}
+      />
+      
       <CardHeader className="pb-2 bg-primary/5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg text-primary font-bold">{vendor.name}</CardTitle>
