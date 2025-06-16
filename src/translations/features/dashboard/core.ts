@@ -44,7 +44,7 @@ export const enDashboardCore = {
 };
 
 export const frDashboardCore = {
-  dashboard: "Tableau de Bord",
+  dashboard: "Tableau de bord",
   properties: "Propriétés",
   tenants: "Locataires",
   maintenance: "Maintenance",
