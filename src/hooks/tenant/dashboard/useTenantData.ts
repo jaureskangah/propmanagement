@@ -4,6 +4,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { formatDate, formatCurrency } from "@/lib/utils";
 
 export interface TenantData {
   id: string;
@@ -33,7 +34,7 @@ export const useTenantData = () => {
   const [hasError, setHasError] = useState(false);
   const { user, isTenant, tenantData } = useAuth();
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { t, language } = useLocale();
 
   useEffect(() => {
     if (!user) {

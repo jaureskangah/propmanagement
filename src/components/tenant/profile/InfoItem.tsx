@@ -2,6 +2,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface InfoItemProps {
   icon: React.ReactNode;
@@ -9,10 +10,22 @@ interface InfoItemProps {
   value: string;
   highlight?: boolean;
   onClick?: () => void;
+  isAmount?: boolean;
 }
 
-export const InfoItem = ({ icon, label, value, highlight = false, onClick }: InfoItemProps) => {
+export const InfoItem = ({ icon, label, value, highlight = false, onClick, isAmount = false }: InfoItemProps) => {
   const isMobile = useIsMobile();
+  const { t } = useLocale();
+  
+  // Format amount with proper translation
+  const formatValue = (val: string) => {
+    if (isAmount && val.includes('$')) {
+      // Extract the amount and add proper translation
+      const amount = val.replace(/[^\d]/g, '');
+      return `$${amount} ${t('perMonth')}`;
+    }
+    return val;
+  };
   
   return (
     <TooltipProvider>
@@ -30,12 +43,14 @@ export const InfoItem = ({ icon, label, value, highlight = false, onClick }: Inf
             <div className="mt-0.5 text-muted-foreground">{icon}</div>
             <div className="space-y-1 min-w-0">
               <p className="text-xs text-muted-foreground">{label}</p>
-              <p className={`text-sm font-medium truncate ${isMobile ? 'max-w-[250px]' : ''}`}>{value}</p>
+              <p className={`text-sm font-medium truncate ${isMobile ? 'max-w-[250px]' : ''}`}>
+                {formatValue(value)}
+              </p>
             </div>
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>{value}</p>
+          <p>{formatValue(value)}</p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

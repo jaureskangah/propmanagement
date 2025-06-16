@@ -62,6 +62,7 @@ const translations: any = {
   depositStatusUpdated: "Statut du dépôt mis à jour",
   invite: "Inviter",
   inviteTenant: "Inviter un locataire",
+  perMonth: "par mois",
   // Messages génériques
   error: 'Erreur',
   success: 'Succès',
