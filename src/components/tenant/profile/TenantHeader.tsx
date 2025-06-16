@@ -5,8 +5,9 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { InviteTenantDialog } from "../communications/InviteTenantDialog";
+import { supabase } from "@/lib/supabase";
 
 interface TenantHeaderProps {
   tenant: Tenant;
@@ -15,10 +16,56 @@ interface TenantHeaderProps {
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
+  const [propertyName, setPropertyName] = useState<string>("Chargement...");
   
-  // Debugging logs
-  console.log("TenantHeader - Tenant property data:", tenant.properties);
-  console.log("TenantHeader - Properties type:", tenant.properties ? typeof tenant.properties : "undefined");
+  // Récupération du nom de la propriété
+  useEffect(() => {
+    const getPropertyName = async () => {
+      console.log("=== TenantHeader getPropertyName DEBUG ===");
+      console.log("Tenant ID:", tenant.id);
+      console.log("Tenant name:", tenant.name);
+      console.log("Tenant property_id:", tenant.property_id);
+      console.log("Tenant.properties raw:", tenant.properties);
+      
+      // Première tentative : utiliser les données de la jointure
+      if (tenant.properties && typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
+        console.log("✅ Found property name in joined data:", tenant.properties.name);
+        setPropertyName(tenant.properties.name || "Propriété sans nom");
+        return;
+      }
+      
+      // Deuxième tentative : requête directe si on a un property_id
+      if (tenant.property_id) {
+        console.log("🔍 Fetching property directly with ID:", tenant.property_id);
+        try {
+          const { data, error } = await supabase
+            .from("properties")
+            .select("name")
+            .eq("id", tenant.property_id)
+            .single();
+          
+          if (error) {
+            console.error("❌ Error fetching property:", error);
+            setPropertyName("Erreur propriété");
+          } else if (data && data.name) {
+            console.log("✅ Found property name via direct query:", data.name);
+            setPropertyName(data.name);
+          } else {
+            console.log("❌ No property found with this ID");
+            setPropertyName("Propriété introuvable");
+          }
+        } catch (err) {
+          console.error("❌ Exception fetching property:", err);
+          setPropertyName("Erreur propriété");
+        }
+      } else {
+        console.log("❌ No property_id");
+        setPropertyName("Sans propriété");
+      }
+    };
+
+    getPropertyName();
+  }, [tenant.property_id, tenant.properties]);
   
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
@@ -40,35 +87,6 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     if (leaseEnded) return <XCircle className="h-4 w-4 mr-1" />;
     if (leaseEnding) return <AlertCircle className="h-4 w-4 mr-1" />;
     return <CheckCircle className="h-4 w-4 mr-1" />;
-  };
-
-  // Fonction robuste pour obtenir le nom de la propriété
-  const getPropertyName = () => {
-    if (!tenant.properties) {
-      return "Sans propriété";
-    }
-    
-    // Si properties est un objet avec une propriété name
-    if (typeof tenant.properties === 'object' && tenant.properties !== null && !Array.isArray(tenant.properties)) {
-      if ('name' in tenant.properties && typeof tenant.properties.name === 'string' && tenant.properties.name) {
-        return tenant.properties.name;
-      }
-    }
-    
-    // Si properties est un tableau avec un élément qui contient name
-    if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
-      const firstProperty = tenant.properties[0];
-      if (typeof firstProperty === 'object' && firstProperty !== null && 'name' in firstProperty) {
-        return firstProperty.name;
-      }
-    }
-    
-    // Si properties est une chaîne simple
-    if (typeof tenant.properties === 'string') {
-      return tenant.properties;
-    }
-    
-    return "Sans propriété";
   };
 
   const handleInviteClick = () => {
@@ -99,7 +117,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
             </h2>
             <p className="text-muted-foreground flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              {getPropertyName()} - Unité {tenant.unit_number}
+              {propertyName} - Unité {tenant.unit_number}
             </p>
           </div>
           
