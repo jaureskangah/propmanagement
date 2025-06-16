@@ -15,7 +15,7 @@ export const useTenants = () => {
         .from("tenants")
         .select(`
           *,
-          properties!inner (
+          properties (
             name,
             id,
             address
@@ -57,7 +57,10 @@ export const useTenants = () => {
       }
 
       console.log("Tenants data fetched successfully:", data);
-      console.log("First tenant properties data:", data?.[0]?.properties);
+      if (data && data.length > 0) {
+        console.log("First tenant full data:", JSON.stringify(data[0], null, 2));
+        console.log("First tenant properties specifically:", data[0]?.properties);
+      }
       return data;
     },
   });
