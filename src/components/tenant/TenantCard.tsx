@@ -5,9 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
 import type { Tenant } from "@/types/tenant";
-import { formatDistanceToNow } from "date-fns";
-import { fr } from "date-fns/locale";
-import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantCardProps {
   tenant: Tenant;
@@ -26,8 +23,6 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  const { language } = useLocale();
-  
   // Get property name safely
   const getPropertyName = () => {
     if (!tenant.properties) return null;
@@ -41,7 +36,7 @@ export const TenantCard = ({
 
   return (
     <Card 
-      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 ${
+      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[360px] ${
         isSelected ? 'ring-2 ring-primary' : ''
       }`}
       onClick={onSelect}
@@ -79,12 +74,6 @@ export const TenantCard = ({
         <div className="flex justify-between items-center mb-3">
           <span className="text-sm font-medium">
             ${tenant.rent_amount.toLocaleString()}/month
-          </span>
-          <span className="text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(tenant.lease_start), {
-              addSuffix: true,
-              locale: language === 'fr' ? fr : undefined
-            })}
           </span>
         </div>
 
