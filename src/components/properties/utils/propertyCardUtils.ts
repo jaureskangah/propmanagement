@@ -2,19 +2,17 @@
 export const getDefaultImageByType = (type: string) => {
   switch (type.toLowerCase()) {
     case 'apartment':
-      return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
+      return "/lovable-uploads/764448a6-e7d4-4afc-8852-1e793ef87ecc.png";
     case 'house':
-      return "https://images.unsplash.com/photo-1501854140801-50d01698950b";
-    case 'studio':
-      return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
+      return "/lovable-uploads/77cac7d4-5f08-42af-ab6d-3ba3d66765eb.png";
     case 'condo':
-      return "https://images.unsplash.com/photo-1721322800607-8c38375eef04";
+      return "/lovable-uploads/5098a03c-679f-48e7-b2f2-b88766bb39ff.png";
     case 'office':
-      return "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7";
+      return "/lovable-uploads/d934ba77-1c85-4e81-8f69-a88d38328ea8.png";
     case 'commercial space':
-      return "https://images.unsplash.com/photo-1473091534298-04dcbce3278c";
+      return "/lovable-uploads/a9cccba1-6d24-4f71-a555-8b8e3d8a02cd.png";
     default:
-      return "https://images.unsplash.com/photo-1506744038136-46273834b3fb";
+      return "/lovable-uploads/764448a6-e7d4-4afc-8852-1e793ef87ecc.png";
   }
 };
 
@@ -24,8 +22,6 @@ export const getGradientByType = (type: string) => {
       return "from-blue-500/10 to-blue-600/10";
     case 'house':
       return "from-green-500/10 to-green-600/10";
-    case 'studio':
-      return "from-purple-500/10 to-purple-600/10";
     case 'condo':
       return "from-indigo-500/10 to-indigo-600/10";
     case 'office':
@@ -43,8 +39,6 @@ export const getBadgeColorByType = (type: string) => {
       return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300";
     case 'house':
       return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300";
-    case 'studio':
-      return "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300";
     case 'condo':
       return "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300";
     case 'office':

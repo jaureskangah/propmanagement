@@ -1,3 +1,4 @@
+
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -12,7 +13,6 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 const PROPERTY_TYPES = [
   "Apartment",
   "House",
-  "Studio",
   "Condo",
   "Office",
   "Commercial Space"

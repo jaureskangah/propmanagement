@@ -33,7 +33,7 @@ const Properties = () => {
   const isMobile = useMediaQuery("(max-width: 768px)");
   
   // Définir les types de propriétés disponibles (Studio retiré)
-  const propertyTypes = ["All", "Apartment", "House", "Office", "Commercial", "Condo"] as const;
+  const propertyTypes = ["All", "Apartment", "House", "Office", "Commercial Space", "Condo"] as const;
 
   // Get the selected property object for financial display
   const selectedProperty = selectedPropertyId 
