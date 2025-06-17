@@ -2,13 +2,15 @@
 import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppSidebar from "@/components/AppSidebar";
-import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { DashboardContent } from "@/components/dashboard/DashboardContent";
+import { SimplifiedDashboardHeader } from "@/components/dashboard/SimplifiedDashboardHeader";
+import { SimplifiedDashboardContainer } from "@/components/dashboard/SimplifiedDashboardContainer";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DateRange } from "@/components/dashboard/DashboardDateFilter";
 import { cn } from "@/lib/utils";
 import { useState } from 'react';
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const Dashboard = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
@@ -18,6 +20,43 @@ const Dashboard = () => {
     endDate: new Date()
   });
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Fetch all required data
+  const { data: propertiesData = [] } = useQuery({
+    queryKey: ['properties'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('properties').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: maintenanceData = [] } = useQuery({
+    queryKey: ['maintenance_requests'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('maintenance_requests').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: tenantsData = [] } = useQuery({
+    queryKey: ['tenants'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('tenants').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: paymentsData = [] } = useQuery({
+    queryKey: ['tenant_payments'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('tenant_payments').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
 
   const handleDateRangeChange = (newDateRange: DateRange) => {
     console.log("Dashboard page received date range:", newDateRange);
@@ -64,11 +103,17 @@ const Dashboard = () => {
         "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
         sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
       )}>
-        <DashboardHeader 
+        <SimplifiedDashboardHeader 
           title={t('dashboard')}
           onDateRangeChange={handleDateRangeChange}
         />
-        <DashboardContent isLoading={false} metrics={{}} dateRange={dateRange} />
+        <SimplifiedDashboardContainer 
+          dateRange={dateRange}
+          propertiesData={propertiesData}
+          maintenanceData={maintenanceData}
+          tenantsData={tenantsData}
+          paymentsData={paymentsData}
+        />
       </div>
     </div>
   );
