@@ -1,7 +1,7 @@
 
 import { useMetricsData } from "@/hooks/dashboard/useMetricsData";
 import { NotificationBell } from "./NotificationBell";
-import { EnhancedMetricsGrid } from "./metrics/EnhancedMetricsGrid";
+import { MetricsGrid } from "./metrics/MetricsGrid";
 import { UnreadMessagesDialog } from "./notifications/UnreadMessagesDialog";
 import { DateRange } from "./DashboardDateFilter";
 
@@ -43,7 +43,7 @@ export const DashboardMetrics = ({
         unreadCount={totalNotificationCount} 
         maintenanceRequests={maintenanceRequests}
       />
-      <EnhancedMetricsGrid 
+      <MetricsGrid 
         metrics={metrics} 
         dateRange={dateRange}
       />
