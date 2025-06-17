@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from "@/components/AuthProvider";
-import { MaintenancePageContainer } from "@/components/maintenance/MaintenancePageContainer";
+import { SimplifiedMaintenanceContainer } from "@/components/maintenance/SimplifiedMaintenanceContainer";
 import { TenantUserContainer } from "@/components/maintenance/TenantUserContainer";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -46,7 +46,7 @@ const Maintenance = () => {
         {isTenantUser ? (
           <TenantUserContainer />
         ) : (
-          <MaintenancePageContainer />
+          <SimplifiedMaintenanceContainer />
         )}
       </div>
     </div>
