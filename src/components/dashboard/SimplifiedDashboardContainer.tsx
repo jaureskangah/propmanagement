@@ -52,13 +52,9 @@ export const SimplifiedDashboardContainer = ({
         (item.status === 'Pending' || item.status === 'pending')
       ).length : 0;
     
-    // Revenue count: Recent payments (last 30 days) as indicator of financial activity
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const recentPayments = Array.isArray(paymentsData) ? 
-      paymentsData.filter(payment => {
-        const paymentDate = new Date(payment.payment_date || payment.created_at);
-        return paymentDate >= thirtyDaysAgo;
-      }).length : 0;
+    // Revenue count: Total revenue amount (sum of all payments)
+    const totalRevenue = Array.isArray(paymentsData) ? 
+      paymentsData.reduce((sum, payment) => sum + (payment.amount || 0), 0) : 0;
     
     // Activities count: Recent activities (last 7 days)
     const recentActivities = (() => {
@@ -94,35 +90,59 @@ export const SimplifiedDashboardContainer = ({
     return {
       overview: overviewCount,
       priorities: urgentMaintenance,
-      revenue: recentPayments,
+      revenue: totalRevenue,
       activities: recentActivities
     };
   }, [propertiesData, maintenanceData, tenantsData, paymentsData]);
+
+  // Function to get contextual count for active tab
+  const getCountForTab = useMemo(() => {
+    return (tabValue: string) => {
+      if (tabValue !== activeTab) {
+        return undefined; // Don't show count for inactive tabs
+      }
+      
+      switch (tabValue) {
+        case 'overview':
+          return dynamicCounts.overview;
+        case 'priorities':
+          return dynamicCounts.priorities;
+        case 'revenue':
+          // Show revenue amount in thousands for better display
+          return dynamicCounts.revenue > 0 ? 
+            Math.round(dynamicCounts.revenue / 1000) : 0;
+        case 'activities':
+          return dynamicCounts.activities;
+        default:
+          return undefined;
+      }
+    };
+  }, [activeTab, dynamicCounts]);
 
   const navItems = [
     { 
       name: t('overview'), 
       value: "overview", 
       icon: BarChart3,
-      count: dynamicCounts.overview
+      count: getCountForTab('overview')
     },
     { 
       name: t('priorities'), 
       value: "priorities", 
       icon: AlertCircle,
-      count: dynamicCounts.priorities
+      count: getCountForTab('priorities')
     },
     { 
       name: t('revenue'), 
       value: "revenue", 
       icon: TrendingUp,
-      count: dynamicCounts.revenue
+      count: getCountForTab('revenue')
     },
     { 
       name: t('activities'), 
       value: "activities", 
       icon: Activity,
-      count: dynamicCounts.activities
+      count: getCountForTab('activities')
     },
   ];
 
