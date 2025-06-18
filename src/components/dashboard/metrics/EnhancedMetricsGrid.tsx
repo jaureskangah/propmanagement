@@ -15,7 +15,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useState, useEffect } from "react";
 import { Building2, Users, Wrench } from "lucide-react";
-import { StatsGrid, StatsCard } from "@/components/ui/stats";
+import { KPICard } from "@/components/ui/stats-4";
 import { SortableMetric } from "./SortableMetric";
 import { MetricsData } from "./types";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -66,6 +66,13 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
     }
   };
 
+  const generateChartData = (chartData: any[]) => {
+    return chartData?.map((item, index) => ({
+      date: `Day ${index + 1}`,
+      value: item.count || item.value || 0
+    })) || [];
+  };
+
   const getMetricData = (metricId: string) => {
     switch (metricId) {
       case 'properties':
@@ -73,24 +80,33 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           name: t('properties'),
           value: metrics.properties.total.toString(),
           change: metrics.properties.new > 0 ? `+${metrics.properties.new}` : undefined,
-          changeType: "positive" as const,
-          icon: <Building2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+          percentageChange: metrics.properties.new > 0 ? "↗" : undefined,
+          changeType: metrics.properties.new > 0 ? "positive" as const : "neutral" as const,
+          icon: <Building2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />,
+          chartData: generateChartData(metrics.properties.chartData),
+          color: "hsl(217 91% 60%)"
         };
       case 'tenants':
         return {
           name: t('tenants'),
           value: metrics.tenants.total.toString(),
-          change: metrics.tenants.occupancyRate ? `${Math.round(metrics.tenants.occupancyRate)}%` : undefined,
+          change: undefined,
+          percentageChange: metrics.tenants.occupancyRate ? `${Math.round(metrics.tenants.occupancyRate)}%` : undefined,
           changeType: "positive" as const,
-          icon: <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+          icon: <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />,
+          chartData: generateChartData(metrics.tenants.chartData),
+          color: "hsl(262 83% 58%)"
         };
       case 'maintenance':
         return {
           name: t('pendingMaintenance'),
           value: metrics.maintenance.pending.toString(),
-          change: metrics.maintenance.pending > 0 ? "En attente" : "Aucune",
+          change: undefined,
+          percentageChange: metrics.maintenance.pending > 0 ? "En attente" : "✓ Aucune",
           changeType: metrics.maintenance.pending > 0 ? "negative" as const : "positive" as const,
-          icon: <Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          icon: <Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />,
+          chartData: generateChartData(metrics.maintenance.chartData),
+          color: "hsl(43 96% 56%)"
         };
       default:
         return null;
@@ -107,23 +123,19 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
         items={metricOrder}
         strategy={rectSortingStrategy}
       >
-        <StatsGrid>
-          {metricOrder.map((metricId, index) => {
+        <dl className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 w-full">
+          {metricOrder.map((metricId) => {
             const metricData = getMetricData(metricId);
             
             if (!metricData) return null;
             
             return (
               <SortableMetric key={metricId} id={metricId}>
-                <StatsCard
-                  {...metricData}
-                  index={index}
-                  total={metricOrder.length}
-                />
+                <KPICard {...metricData} />
               </SortableMetric>
             );
           })}
-        </StatsGrid>
+        </dl>
       </SortableContext>
     </DndContext>
   );
