@@ -82,7 +82,6 @@ export const SimplifiedDashboardHeader = ({ title, onDateRangeChange }: Simplifi
             <LayoutDashboard className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">{title}</h1>
             <p className="text-muted-foreground mt-1">{welcomeMessage}</p>
           </div>
         </div>
