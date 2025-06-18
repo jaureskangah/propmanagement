@@ -1,6 +1,9 @@
 
 export const enDashboardCore = {
   dashboard: "Dashboard",
+  overview: "Overview",
+  priorities: "Priorities", 
+  activities: "Activities",
   properties: "Properties",
   tenants: "Tenants",
   maintenance: "Maintenance",
@@ -45,6 +48,9 @@ export const enDashboardCore = {
 
 export const frDashboardCore = {
   dashboard: "Tableau de bord",
+  overview: "Aperçu",
+  priorities: "Priorités",
+  activities: "Activités", 
   properties: "Propriétés",
   tenants: "Locataires",
   maintenance: "Maintenance",
