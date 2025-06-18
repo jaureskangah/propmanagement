@@ -35,12 +35,29 @@ export const useMetricsCalculation = (
     (req.status === "Pending" || req.status === "pending") && req.status !== "Resolved"
   ).length;
 
-  // Generate chart data
-  const tenantsChartData = generateMonthlyData(validTenantsData).map(m => ({ value: m.value || 0 }));
-  const propertiesChartData = generateMonthlyData(validPropertiesData).map(m => ({ 
-    value: m.value > 0 ? m.value : 0
+  // Generate chart data with proper monthly evolution
+  const tenantsMonthlyData = generateMonthlyData(validTenantsData);
+  const propertiesMonthlyData = generateMonthlyData(validPropertiesData);
+  const maintenanceMonthlyData = generateMonthlyData(validMaintenanceData);
+
+  // Format chart data for display
+  const tenantsChartData = tenantsMonthlyData.map(m => ({ 
+    date: m.monthName,
+    value: m.value,
+    month: m.monthName
   }));
-  const maintenanceChartData = generateMonthlyData(validMaintenanceData);
+  
+  const propertiesChartData = propertiesMonthlyData.map(m => ({ 
+    date: m.monthName,
+    value: m.value,
+    month: m.monthName
+  }));
+  
+  const maintenanceChartData = maintenanceMonthlyData.map(m => ({ 
+    date: m.monthName,
+    value: m.value,
+    month: m.monthName
+  }));
 
   return {
     globalOccupancyRate,

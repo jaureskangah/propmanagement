@@ -1,5 +1,5 @@
 
-import { subMonths, isWithinInterval } from "date-fns";
+import { subMonths, isWithinInterval, format } from "date-fns";
 import { DateRange } from "../DashboardDateFilter";
 
 export const generateMonthlyData = (data: any[], valueKey: string = 'amount') => {
@@ -8,7 +8,9 @@ export const generateMonthlyData = (data: any[], valueKey: string = 'amount') =>
     return {
       month: date.getMonth(),
       year: date.getFullYear(),
-      value: 0
+      monthName: format(date, 'MMM'),
+      value: 0,
+      date: format(date, 'yyyy-MM')
     };
   }).reverse();
 
@@ -18,7 +20,7 @@ export const generateMonthlyData = (data: any[], valueKey: string = 'amount') =>
       m.month === date.getMonth() && m.year === date.getFullYear()
     );
     if (monthIndex !== -1) {
-      last6Months[monthIndex].value += Number(item[valueKey] || 0);
+      last6Months[monthIndex].value += Number(item[valueKey] || 1);
     }
   });
 

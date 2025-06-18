@@ -66,10 +66,10 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
     }
   };
 
-  const generateChartData = (chartData: any[]) => {
-    return chartData?.map((item, index) => ({
-      date: `Day ${index + 1}`,
-      value: item.count || item.value || 0
+  const formatChartDataForDisplay = (chartData: any[]) => {
+    return chartData?.map((item) => ({
+      date: item.date || item.month || `Mois ${chartData.indexOf(item) + 1}`,
+      value: item.value || 0
     })) || [];
   };
 
@@ -83,7 +83,7 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           percentageChange: metrics.properties.new > 0 ? "↗ Nouvelles" : "→ Stable",
           changeType: metrics.properties.new > 0 ? "positive" as const : "neutral" as const,
           icon: <Building2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />,
-          chartData: generateChartData(metrics.properties.chartData),
+          chartData: formatChartDataForDisplay(metrics.properties.chartData),
           color: "hsl(217 91% 60%)"
         };
       case 'tenants':
@@ -105,7 +105,7 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           percentageChange: `${arrow} ${occupancyRate}% occupé`,
           changeType: tenantChange > 0 ? "positive" as const : tenantChange < 0 ? "negative" as const : "neutral" as const,
           icon: <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />,
-          chartData: generateChartData(metrics.tenants.chartData),
+          chartData: formatChartDataForDisplay(metrics.tenants.chartData),
           color: "hsl(262 83% 58%)"
         };
       case 'maintenance':
@@ -122,7 +122,7 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           percentageChange: currentPending === 0 ? "✓ Aucune" : maintenanceChange < 0 ? "↓ Amélioration" : "⚠️ En attente",
           changeType: currentPending === 0 ? "positive" as const : maintenanceChange < 0 ? "positive" as const : "negative" as const,
           icon: <Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />,
-          chartData: generateChartData(metrics.maintenance.chartData),
+          chartData: formatChartDataForDisplay(metrics.maintenance.chartData),
           color: "hsl(43 96% 56%)"
         };
       default:
