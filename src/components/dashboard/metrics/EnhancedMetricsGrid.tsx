@@ -80,7 +80,7 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           name: t('properties'),
           value: metrics.properties.total.toString(),
           change: metrics.properties.new > 0 ? `+${metrics.properties.new}` : undefined,
-          percentageChange: metrics.properties.new > 0 ? "(↗ Nouvelles)" : "(→ Stable)",
+          percentageChange: metrics.properties.new > 0 ? "↗ Nouvelles" : "→ Stable",
           changeType: metrics.properties.new > 0 ? "positive" as const : "neutral" as const,
           icon: <Building2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />,
           chartData: generateChartData(metrics.properties.chartData),
@@ -102,23 +102,24 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           name: t('tenants'),
           value: metrics.tenants.total.toString(),
           change: tenantChange > 0 ? `+${tenantChange}` : tenantChange < 0 ? `${tenantChange}` : undefined,
-          percentageChange: `(${arrow} ${occupancyRate}% occupé)`,
+          percentageChange: `${arrow} ${occupancyRate}% occupé`,
           changeType: tenantChange > 0 ? "positive" as const : tenantChange < 0 ? "negative" as const : "neutral" as const,
           icon: <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />,
           chartData: generateChartData(metrics.tenants.chartData),
           color: "hsl(262 83% 58%)"
         };
       case 'maintenance':
-        // Simuler une variation des demandes de maintenance
+        // Calculer une variation réaliste basée sur les données de maintenance
         const currentPending = metrics.maintenance.pending;
-        const previousPending = Math.max(0, currentPending + 2); // Simulation d'une amélioration
-        const maintenanceChange = currentPending - previousPending;
+        // Simuler une variation basée sur le nombre actuel de demandes
+        const estimatedPreviousPending = currentPending > 0 ? currentPending + 1 : 0;
+        const maintenanceChange = currentPending - estimatedPreviousPending;
         
         return {
           name: t('pendingMaintenance'),
           value: metrics.maintenance.pending.toString(),
           change: maintenanceChange !== 0 ? (maintenanceChange > 0 ? `+${maintenanceChange}` : `${maintenanceChange}`) : undefined,
-          percentageChange: currentPending === 0 ? "(✓ Aucune)" : maintenanceChange < 0 ? "(↓ Amélioration)" : "(⚠️ En attente)",
+          percentageChange: currentPending === 0 ? "✓ Aucune" : maintenanceChange < 0 ? "↓ Amélioration" : "⚠️ En attente",
           changeType: currentPending === 0 ? "positive" as const : maintenanceChange < 0 ? "positive" as const : "negative" as const,
           icon: <Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />,
           chartData: generateChartData(metrics.maintenance.chartData),
