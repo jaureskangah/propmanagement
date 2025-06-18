@@ -99,16 +99,6 @@ export const SimplifiedDashboardContainer = ({
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Simple Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-          {t('dashboard')}
-        </h1>
-        <p className="text-muted-foreground mt-2">
-          {t('dashboardDescription', { fallback: 'Vue d\'ensemble de votre activité immobilière' })}
-        </p>
-      </div>
-
       {/* TubelightNavBar */}
       <TubelightNavBar
         items={navItems}
