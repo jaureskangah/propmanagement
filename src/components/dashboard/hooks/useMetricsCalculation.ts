@@ -13,16 +13,16 @@ export const useMetricsCalculation = (
   const validMaintenanceData = Array.isArray(maintenanceData) ? maintenanceData : [];
   const validTenantsData = Array.isArray(tenantsData) ? tenantsData : [];
 
-  // Filter data by date range
+  // Filter data by date range for trend calculations
   const filteredMaintenanceData = filterDataByDateRange(validMaintenanceData, dateRange);
   const filteredTenantsData = filterDataByDateRange(validTenantsData, dateRange);
 
-  // Calculate occupancy data
+  // Calculate occupancy data using ALL tenants (not filtered by date)
   const {
     globalOccupancyRate,
     totalUnits,
     occupiedUnits
-  } = calculateOccupancyData(validPropertiesData, filteredTenantsData, dateRange);
+  } = calculateOccupancyData(validPropertiesData, validTenantsData, dateRange);
 
   // Calculate new properties this month
   const newPropertiesThisMonth = filterDataByDateRange(validPropertiesData, {
