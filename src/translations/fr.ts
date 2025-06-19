@@ -23,6 +23,9 @@ import { frToasts } from './features/toasts';
 import { frFinances } from './features/finances';
 import { frVendors } from './features/maintenance/vendors';
 import frDocumentGenerator from './features/documents/fr';
+import { frDocuments } from './features/tenant/fr/documents';
+import { frPayments } from './features/tenant/fr/payments';
+import { frMaintenance as frMaintenanceTenant } from './features/tenant/fr/maintenance';
 
 // Créer un objet de traduction unique qui résout les conflits
 const translations: any = {
@@ -49,6 +52,10 @@ const translations: any = {
   ...frFinances,
   ...frVendors,
   documentGenerator: frDocumentGenerator,
+  // Add translations at root level for direct access
+  documents: frDocuments,
+  payments: frPayments,
+  maintenance: frMaintenanceTenant,
   // Traductions pour la page des locataires
   searchTenants: "Rechercher des locataires...",
   securityDeposit: "Dépôt de garantie",
