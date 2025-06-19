@@ -52,13 +52,13 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       count: getCountForTab('documents')
     },
     { 
-      name: t('payments'), 
+      name: t('payments.payments'), 
       value: "payments", 
       icon: CreditCard,
       count: getCountForTab('payments')
     },
     { 
-      name: t('maintenance'), 
+      name: t('maintenance.maintenance'), 
       value: "maintenance", 
       icon: Wrench,
       count: getCountForTab('maintenance')

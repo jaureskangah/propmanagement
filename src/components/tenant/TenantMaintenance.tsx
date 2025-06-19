@@ -11,6 +11,7 @@ import { DeleteMaintenanceDialog } from "./maintenance/DeleteMaintenanceDialog";
 import { formatDate } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface TenantMaintenanceProps {
   requests: MaintenanceRequest[];
@@ -28,6 +29,7 @@ export const TenantMaintenance = ({
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const { t } = useLocale();
+  const queryClient = useQueryClient();
 
   const handleEditClick = async (request: MaintenanceRequest) => {
     if (!request.tenant_notified) {
@@ -46,17 +48,26 @@ export const TenantMaintenance = ({
   };
 
   const handleMaintenanceAdded = () => {
+    // Invalider les queries pour forcer le rechargement des données
+    queryClient.invalidateQueries({ queryKey: ["tenants"] });
+    queryClient.invalidateQueries({ queryKey: ["tenant_maintenance", tenantId] });
     onMaintenanceUpdate();
     setIsAddDialogOpen(false);
   };
 
   const handleMaintenanceUpdated = () => {
+    // Invalider les queries pour forcer le rechargement des données
+    queryClient.invalidateQueries({ queryKey: ["tenants"] });
+    queryClient.invalidateQueries({ queryKey: ["tenant_maintenance", tenantId] });
     onMaintenanceUpdate();
     setIsEditDialogOpen(false);
     setSelectedRequest(null);
   };
 
   const handleMaintenanceDeleted = () => {
+    // Invalider les queries pour forcer le rechargement des données
+    queryClient.invalidateQueries({ queryKey: ["tenants"] });
+    queryClient.invalidateQueries({ queryKey: ["tenant_maintenance", tenantId] });
     onMaintenanceUpdate();
     setIsDeleteDialogOpen(false);
     setSelectedRequest(null);
@@ -65,20 +76,20 @@ export const TenantMaintenance = ({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">{t('maintenanceRequests')}</CardTitle>
+        <CardTitle className="text-lg">{t('maintenance.maintenanceRequests')}</CardTitle>
         <Button 
           onClick={() => setIsAddDialogOpen(true)}
           className="bg-[#ea384c] hover:bg-[#ea384c]/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          {t('newMaintenanceRequest')}
+          {t('maintenance.newMaintenanceRequest')}
         </Button>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {requests.length === 0 ? (
             <p className="text-muted-foreground text-center py-4">
-              {t('noMaintenanceRequests')}
+              {t('maintenance.noMaintenanceRequests')}
             </p>
           ) : (
             requests.map((request) => (
@@ -93,7 +104,7 @@ export const TenantMaintenance = ({
                   <div>
                     <p className="font-medium">{request.issue}</p>
                     <p className="text-sm text-muted-foreground">
-                      {t('createdOn')} {formatDate(request.created_at)}
+                      {t('maintenance.createdOn')} {formatDate(request.created_at)}
                     </p>
                   </div>
                 </div>
@@ -106,7 +117,7 @@ export const TenantMaintenance = ({
                         : "bg-yellow-500 hover:bg-yellow-600"
                     }
                   >
-                    {t(request.status.toLowerCase())}
+                    {t(`maintenance.${request.status.toLowerCase()}`)}
                   </Badge>
                   <div className="flex gap-2">
                     <Button
@@ -122,7 +133,7 @@ export const TenantMaintenance = ({
                       onClick={() => handleDeleteClick(request)}
                       className="text-red-500 hover:text-red-600"
                     >
-                      {t('deleteMaintenanceRequest')}
+                      {t('maintenance.deleteMaintenanceRequest')}
                     </Button>
                   </div>
                 </div>

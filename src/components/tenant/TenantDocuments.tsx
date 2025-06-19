@@ -51,16 +51,16 @@ export const TenantDocuments = ({
       }
 
       toast({
-        title: "Document deleted",
-        description: "The document has been successfully deleted",
+        title: t('documents.success'),
+        description: t('documents.documentDeleted'),
       });
 
       onDocumentUpdate();
     } catch (error) {
       console.error('Delete error:', error);
       toast({
-        title: "Error",
-        description: "An error occurred while deleting the document",
+        title: t('documents.error'),
+        description: t('documents.error'),
         variant: "destructive",
       });
     }
@@ -75,7 +75,7 @@ export const TenantDocuments = ({
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-blue-600" />
-            <CardTitle className="text-lg">{t('uploadedDocuments')}</CardTitle>
+            <CardTitle className="text-lg">{t('documents.uploadedDocuments')}</CardTitle>
           </div>
           <DocumentUpload tenantId={tenantId} onUploadComplete={onDocumentUpdate} />
         </CardHeader>
@@ -85,7 +85,7 @@ export const TenantDocuments = ({
               <div className="text-center py-8 border-2 border-dashed rounded-lg">
                 <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
                 <p className="text-sm text-muted-foreground">
-                  {t('noDocuments')}
+                  {t('documents.noDocuments')}
                 </p>
               </div>
             ) : (
@@ -110,7 +110,7 @@ export const TenantDocuments = ({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDownload(doc.file_url!, doc.name)}
-                      title="Download document"
+                      title={t('documents.downloadDocument')}
                       className="hover:text-blue-600 hover:bg-blue-50"
                     >
                       <Download className="h-4 w-4" />
@@ -119,7 +119,7 @@ export const TenantDocuments = ({
                       variant="ghost"
                       size="icon"
                       asChild
-                      title="Open in new tab"
+                      title={t('documents.openDocument')}
                       className="hover:text-blue-600 hover:bg-blue-50"
                     >
                       <a 
@@ -135,7 +135,7 @@ export const TenantDocuments = ({
                       size="icon"
                       onClick={() => handleDelete(doc.id, doc.name)}
                       className="hover:text-red-600 hover:bg-red-50"
-                      title="Delete document"
+                      title={t('documents.confirmDeleteDocument')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
