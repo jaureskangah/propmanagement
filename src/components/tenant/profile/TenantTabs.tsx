@@ -24,50 +24,26 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
   const [activeTab, setActiveTab] = useState('documents');
   const isMobile = useIsMobile();
 
-  // Calculate contextual counts for each tab
-  const getCountForTab = (tabValue: string) => {
-    if (tabValue !== activeTab) {
-      return undefined; // Don't show count for inactive tabs
-    }
-    
-    switch (tabValue) {
-      case 'documents':
-        return tenant.documents?.length || 0;
-      case 'payments':
-        return tenant.paymentHistory?.length || 0;
-      case 'maintenance':
-        return tenant.maintenanceRequests?.length || 0;
-      case 'documentGenerator':
-        return undefined; // No count needed for generator
-      default:
-        return undefined;
-    }
-  };
-
   const navItems = [
     { 
       name: t('documents'), 
       value: "documents", 
-      icon: Files,
-      count: getCountForTab('documents')
+      icon: Files
     },
     { 
       name: t('payments.payments'), 
       value: "payments", 
-      icon: CreditCard,
-      count: getCountForTab('payments')
+      icon: CreditCard
     },
     { 
       name: t('maintenance.maintenance'), 
       value: "maintenance", 
-      icon: Wrench,
-      count: getCountForTab('maintenance')
+      icon: Wrench
     },
     { 
       name: t('documentGenerator.documentGenerator'), 
       value: "documentGenerator", 
-      icon: FileText,
-      count: getCountForTab('documentGenerator')
+      icon: FileText
     },
   ];
 
