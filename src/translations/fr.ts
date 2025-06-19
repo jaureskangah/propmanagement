@@ -52,6 +52,7 @@ const translations: any = {
   ...frFinances,
   ...frVendors,
   documentGenerator: frDocumentGenerator,
+  documents: frDocuments,
   // Add translations at root level for direct access
   payments: frPayments,
   maintenance: frMaintenanceTenant,
@@ -77,8 +78,6 @@ const translations: any = {
   invalidEmail: 'Adresse e-mail invalide',
   invalidAmount: 'Montant invalide',
   cancel: 'Annuler',
-  // Force documents with capital D to override any conflicts
-  documents: "Documents",
 };
 
 export default translations;

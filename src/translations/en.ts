@@ -23,6 +23,7 @@ import { enToasts } from './features/toasts';
 import { enFinances } from './features/finances';
 import { enVendors } from './features/maintenance/vendors';
 import enDocumentGenerator from './features/documents/en';
+import { enDocuments } from './features/tenant/en/documents';
 
 // Créer un objet de traduction unique qui résout les conflits
 const translations: any = {
@@ -49,6 +50,7 @@ const translations: any = {
   ...enFinances,
   ...enVendors,
   documentGenerator: enDocumentGenerator,
+  documents: enDocuments,
   // Translations for tenant page
   searchTenants: "Search tenants...",
   securityDeposit: "Security Deposit",
@@ -70,8 +72,6 @@ const translations: any = {
   errorLoadingTenantData: 'Error loading tenant data',
   invalidEmail: 'Invalid email address',
   invalidAmount: 'Invalid amount',
-  // Force documents with capital D to override any conflicts
-  documents: "Documents",
 };
 
 export default translations;
