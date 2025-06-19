@@ -22,4 +22,5 @@ export interface NavigationTranslations {
   costs: string;
   getSupport: string;
   invitations: string;
+  documents: string;
 }

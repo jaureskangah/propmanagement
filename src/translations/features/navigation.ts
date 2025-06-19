@@ -24,6 +24,7 @@ export const enNavigation: NavigationTranslations = {
   costs: "Costs",
   getSupport: "Get Support",
   invitations: "Invitations",
+  documents: "Documents",
 };
 
 export const frNavigation: NavigationTranslations = {
@@ -49,4 +50,5 @@ export const frNavigation: NavigationTranslations = {
   costs: "Coûts",
   getSupport: "Obtenir de l'aide",
   invitations: "Invitations",
+  documents: "Documents",
 };

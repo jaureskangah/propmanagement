@@ -38,7 +38,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
         { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-        { to: "/tenant/documents", icon: FileText, label: "Documents", tooltip: "Documents" },
+        { to: "/tenant/documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
         { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
       ];
     }
