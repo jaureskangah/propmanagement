@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +22,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
+import { fr, enUS } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { paymentSchema, PaymentFormValues } from "./schema/paymentSchema";
 import { supabase } from "@/lib/supabase";
@@ -38,7 +38,7 @@ interface PaymentFormProps {
 export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -48,6 +48,9 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
       payment_date: new Date(),
     },
   });
+
+  // Get appropriate locale for date-fns
+  const dateFnsLocale = language === 'fr' ? fr : enUS;
 
   const onSubmit = async (values: PaymentFormValues) => {
     console.log("Submitting payment:", values);
@@ -158,7 +161,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
                       )}
                     >
                       {field.value ? (
-                        format(field.value, "PPP")
+                        format(field.value, "PPP", { locale: dateFnsLocale })
                       ) : (
                         <span>{t('payments.pickDate')}</span>
                       )}
@@ -172,6 +175,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
                     selected={field.value}
                     onSelect={field.onChange}
                     initialFocus
+                    locale={dateFnsLocale}
                   />
                 </PopoverContent>
               </Popover>
@@ -186,7 +190,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
             variant="outline"
             onClick={onCancel}
           >
-            {t('cancel')}
+            {t('payments.cancel')}
           </Button>
           <Button
             type="submit"
