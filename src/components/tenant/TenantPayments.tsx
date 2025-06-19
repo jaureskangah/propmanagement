@@ -8,6 +8,7 @@ import { DeletePaymentDialog } from "./payments/DeletePaymentDialog";
 import { PaymentsHeader } from "./payments/PaymentsHeader";
 import { PaymentsLoadingState } from "./payments/PaymentsLoadingState";
 import { PaymentsErrorState } from "./payments/PaymentsErrorState";
+import { PaymentsEmptyState } from "./payments/PaymentsEmptyState";
 import { PaymentsList } from "./payments/PaymentsList";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTenantPayments } from "@/hooks/useTenantPayments";
@@ -31,7 +32,10 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
   // Use the custom hook to fetch payments directly
   const { data: payments = [], isLoading, error } = useTenantPayments(tenantId);
 
-  console.log("Rendering TenantPayments with payments:", payments);
+  console.log("TenantPayments - Rendering with tenantId:", tenantId);
+  console.log("TenantPayments - Payments data:", payments);
+  console.log("TenantPayments - IsLoading:", isLoading);
+  console.log("TenantPayments - Error:", error);
 
   const handleEditClick = (payment: TenantPayment) => {
     setSelectedPayment(payment);
@@ -90,16 +94,20 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
       <PaymentsHeader onAddPayment={() => setIsAddPaymentOpen(true)} />
       <CardContent>
         <div className="space-y-4">
-          <PaymentsList
-            payments={payments}
-            displayedPayments={displayedPayments}
-            hasMorePayments={hasMorePayments}
-            showAllPayments={showAllPayments}
-            hiddenPaymentsCount={hiddenPaymentsCount}
-            onEditClick={handleEditClick}
-            onDeleteClick={handleDeleteClick}
-            onToggleShowAll={() => setShowAllPayments(!showAllPayments)}
-          />
+          {payments.length === 0 ? (
+            <PaymentsEmptyState />
+          ) : (
+            <PaymentsList
+              payments={payments}
+              displayedPayments={displayedPayments}
+              hasMorePayments={hasMorePayments}
+              showAllPayments={showAllPayments}
+              hiddenPaymentsCount={hiddenPaymentsCount}
+              onEditClick={handleEditClick}
+              onDeleteClick={handleDeleteClick}
+              onToggleShowAll={() => setShowAllPayments(!showAllPayments)}
+            />
+          )}
         </div>
       </CardContent>
 

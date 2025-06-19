@@ -20,7 +20,6 @@ interface PaymentsListProps {
 }
 
 export const PaymentsList = ({
-  payments,
   displayedPayments,
   hasMorePayments,
   showAllPayments,
@@ -30,17 +29,6 @@ export const PaymentsList = ({
   onToggleShowAll,
 }: PaymentsListProps) => {
   const { t } = useLocale();
-
-  if (payments.length === 0) {
-    return (
-      <div className="text-center py-8 border-2 border-dashed rounded-lg">
-        <DollarSign className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">
-          {t('payments.noPayments')}
-        </p>
-      </div>
-    );
-  }
 
   return (
     <>
