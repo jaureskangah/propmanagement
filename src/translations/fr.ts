@@ -53,7 +53,6 @@ const translations: any = {
   ...frVendors,
   documentGenerator: frDocumentGenerator,
   // Add translations at root level for direct access
-  documents: frDocuments,
   payments: frPayments,
   maintenance: frMaintenanceTenant,
   // Traductions pour la page des locataires
