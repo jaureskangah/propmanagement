@@ -12,7 +12,7 @@ interface PropertyFinancialsProps {
   selectedYear?: number;
 }
 
-const PropertyFinancials = ({ propertyId, selectedYear = new Date().getFullYear() }: PropertyFinancialsProps) => {
+const PropertyFinancials = ({ propertyId, selectedYear }: PropertyFinancialsProps) => {
   const { t } = useLocale();
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
@@ -78,7 +78,7 @@ const PropertyFinancials = ({ propertyId, selectedYear = new Date().getFullYear(
 
   return (
     <div className="space-y-6">
-      <FinancialMetrics propertyId={propertyId} selectedYear={selectedYear} />
+      <FinancialMetrics propertyId={propertyId} />
       <ChartsSection propertyId={propertyId} />
       <DataTables
         propertyId={propertyId}

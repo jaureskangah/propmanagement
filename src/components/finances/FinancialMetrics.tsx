@@ -4,22 +4,29 @@ import { FinancialMetricCard } from "./metrics/FinancialMetricCard";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
 import { NoPropertySelected } from "./metrics/NoPropertySelected";
 import { ErrorState } from "./metrics/ErrorState";
+import { YearFilter } from "./YearFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DollarSign, Home, BanknoteIcon, TrendingDown } from "lucide-react";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrencyFrench } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useState } from "react";
 
 interface FinancialMetricsProps {
   propertyId: string | null;
-  selectedYear: number;
+  selectedYear?: number;
 }
 
-const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) => {
+const FinancialMetrics = ({ propertyId, selectedYear: initialYear }: FinancialMetricsProps) => {
   const { t } = useLocale();
+  const [selectedYear, setSelectedYear] = useState(initialYear || new Date().getFullYear());
   const { data, isLoading, error, refetch } = useFinancialMetricsData(propertyId, selectedYear);
 
   const handleRetry = () => {
     refetch();
+  };
+
+  const handleYearChange = (year: number) => {
+    setSelectedYear(year);
   };
 
   if (isLoading) {
@@ -42,7 +49,7 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
   const metrics = [
     {
       title: t('totalIncome'),
-      value: formatCurrency(data.totalIncome),
+      value: formatCurrencyFrench(data.totalIncome),
       trend: data.incomeTrend,
       icon: <DollarSign className="h-5 w-5" />,
       chartColor: '#22C55E',
@@ -51,7 +58,7 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
     },
     {
       title: t('totalExpenses'),
-      value: formatCurrency(data.totalExpenses),
+      value: formatCurrencyFrench(data.totalExpenses),
       trend: data.expensesTrend,
       isNegativeBetter: true,
       icon: <TrendingDown className="h-5 w-5" />,
@@ -61,7 +68,7 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
     },
     {
       title: t('occupancyRate'),
-      value: `${data.occupancyRate.toFixed(1)}%`,
+      value: `${Math.round(data.occupancyRate)}%`,
       trend: data.occupancyRateTrend,
       format: "percent" as const,
       icon: <Home className="h-5 w-5" />,
@@ -70,7 +77,7 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
     },
     {
       title: t('unpaidRent'),
-      value: formatCurrency(data.unpaidRent),
+      value: formatCurrencyFrench(data.unpaidRent),
       trend: data.unpaidRentTrend,
       isNegativeBetter: true,
       icon: <BanknoteIcon className="h-5 w-5" />,
@@ -82,19 +89,25 @@ const FinancialMetrics = ({ propertyId, selectedYear }: FinancialMetricsProps) =
 
   return (
     <div className="space-y-6">
-      {/* Enhanced header section */}
+      {/* Enhanced header section with year filter */}
       <motion.div
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="text-center mb-8"
+        className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8"
       >
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent mb-2">
-          {t('financialOverview')}
-        </h2>
-        <p className="text-slate-600 dark:text-slate-400 text-sm">
-          {t('selectedYear')}: {selectedYear}
-        </p>
+        <div className="text-center sm:text-left">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent mb-2">
+            {t('financialOverview')}
+          </h2>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <YearFilter 
+            selectedYear={selectedYear} 
+            onYearChange={handleYearChange}
+          />
+        </div>
       </motion.div>
 
       {/* Enhanced metrics grid with staggered animations */}

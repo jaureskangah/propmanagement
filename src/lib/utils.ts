@@ -52,3 +52,19 @@ export function formatCurrency(amount: number | string): string {
     maximumFractionDigits: 2
   }).format(numericAmount);
 }
+
+export function formatCurrencyFrench(amount: number | string): string {
+  // Convertir le montant en nombre si c'est une chaîne
+  const numericAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+  
+  // Vérifier si le montant est un nombre entier
+  const isWholeNumber = Math.floor(numericAmount) === numericAmount;
+  
+  // Utiliser l'API Intl.NumberFormat pour formater le montant avec espaces
+  return new Intl.NumberFormat('fr-CA', { 
+    style: 'currency', 
+    currency: 'CAD',
+    minimumFractionDigits: isWholeNumber ? 0 : 2,
+    maximumFractionDigits: 2
+  }).format(numericAmount).replace(/\s/g, ' '); // Assurer les espaces corrects
+}
