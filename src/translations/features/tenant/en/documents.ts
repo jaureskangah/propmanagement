@@ -77,4 +77,3 @@ export const enDocuments: TenantDocumentsTranslations = {
   manageDocumentsDescription: "Upload and manage important documents for your tenancy",
   uploadedDocuments: "Uploaded Documents"
 };
-
