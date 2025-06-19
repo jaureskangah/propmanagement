@@ -2,9 +2,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { TenantPayment } from "@/types/tenant";
+import { useEffect } from "react";
 
 export const useTenantPayments = (tenantId: string) => {
-  return useQuery({
+  const query = useQuery({
     queryKey: ["tenant_payments", tenantId],
     queryFn: async () => {
       console.log("useTenantPayments - Fetching payments for tenant:", tenantId);
@@ -32,5 +33,39 @@ export const useTenantPayments = (tenantId: string) => {
       return data as TenantPayment[];
     },
     enabled: !!tenantId,
+    staleTime: 0, // Toujours refetch pour éviter les données obsolètes
+    refetchOnWindowFocus: true,
   });
+
+  // Configuration de la synchronisation temps réel
+  useEffect(() => {
+    if (!tenantId) return;
+
+    console.log("Setting up realtime subscription for tenant payments:", tenantId);
+    
+    const channel = supabase
+      .channel(`tenant_payments_${tenantId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tenant_payments',
+          filter: `tenant_id=eq.${tenantId}`
+        },
+        (payload) => {
+          console.log("Realtime update for tenant payments:", payload);
+          // Invalider et refetch les données
+          query.refetch();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log("Cleaning up realtime subscription for tenant payments");
+      supabase.removeChannel(channel);
+    };
+  }, [tenantId, query]);
+
+  return query;
 };

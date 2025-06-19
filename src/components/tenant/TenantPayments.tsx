@@ -16,7 +16,6 @@ import { useTenantPayments } from "@/hooks/useTenantPayments";
 const INITIAL_PAYMENTS_LIMIT = 5;
 
 interface TenantPaymentsProps {
-  payments: TenantPayment[]; // Keep for compatibility but will be overridden
   tenantId: string;
   onPaymentUpdate: () => void;
 }
@@ -29,8 +28,8 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
   const [selectedPayment, setSelectedPayment] = useState<TenantPayment | null>(null);
   const [showAllPayments, setShowAllPayments] = useState(false);
 
-  // Use the custom hook to fetch payments directly
-  const { data: payments = [], isLoading, error } = useTenantPayments(tenantId);
+  // Utiliser uniquement useTenantPayments comme source de vérité
+  const { data: payments = [], isLoading, error, refetch } = useTenantPayments(tenantId);
 
   console.log("TenantPayments - Rendering with tenantId:", tenantId);
   console.log("TenantPayments - Payments data:", payments);
@@ -47,16 +46,22 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
     setIsDeletePaymentOpen(true);
   };
 
-  const handlePaymentAdded = () => {
-    // Invalider les queries pour forcer le rechargement des données
+  const handlePaymentAdded = async () => {
+    console.log("Payment added - refreshing data");
+    // Refetch immédiatement les paiements
+    await refetch();
+    // Invalider les queries pour forcer le rechargement
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
     queryClient.invalidateQueries({ queryKey: ["tenant_payments", tenantId] });
     onPaymentUpdate();
     setIsAddPaymentOpen(false);
   };
 
-  const handlePaymentUpdated = () => {
-    // Invalider les queries pour forcer le rechargement des données
+  const handlePaymentUpdated = async () => {
+    console.log("Payment updated - refreshing data");
+    // Refetch immédiatement les paiements
+    await refetch();
+    // Invalider les queries pour forcer le rechargement
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
     queryClient.invalidateQueries({ queryKey: ["tenant_payments", tenantId] });
     onPaymentUpdate();
@@ -64,8 +69,11 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
     setSelectedPayment(null);
   };
 
-  const handlePaymentDeleted = () => {
-    // Invalider les queries pour forcer le rechargement des données
+  const handlePaymentDeleted = async () => {
+    console.log("Payment deleted - refreshing data");
+    // Refetch immédiatement les paiements
+    await refetch();
+    // Invalider les queries pour forcer le rechargement
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
     queryClient.invalidateQueries({ queryKey: ["tenant_payments", tenantId] });
     onPaymentUpdate();
@@ -73,7 +81,7 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
     setSelectedPayment(null);
   };
 
-  // Calculate displayed payments based on showAllPayments state
+  // Calculer les paiements affichés en fonction de l'état showAllPayments
   const sortedPayments = payments.sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime());
   const displayedPayments = showAllPayments 
     ? sortedPayments 
@@ -86,6 +94,7 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
   }
 
   if (error) {
+    console.error("Error in TenantPayments:", error);
     return <PaymentsErrorState />;
   }
 

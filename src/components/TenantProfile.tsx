@@ -21,28 +21,25 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const isMobile = useIsMobile();
   const isTenantUser = user?.id === tenant.tenant_profile_id;
 
-  // Préchargement des données avec des valeurs par défaut
+  // Préchargement sélectif - ne pas précharger les paiements pour éviter les conflits
   React.useEffect(() => {
     console.log("Préchargement des données du tenant:", tenant.id);
     
-    // Précharger les documents avec une valeur par défaut
+    // Précharger seulement les documents avec une valeur par défaut
     queryClient.setQueryData(
       ["tenant_documents", tenant.id],
       tenant.documents || []
     );
     
-    // Précharger les paiements avec une valeur par défaut
-    queryClient.setQueryData(
-      ["tenant_payments", tenant.id],
-      tenant.paymentHistory || []
-    );
-    
-    // Précharger les demandes de maintenance avec une valeur par défaut
+    // Précharger seulement les demandes de maintenance avec une valeur par défaut
     queryClient.setQueryData(
       ["tenant_maintenance", tenant.id],
       tenant.maintenanceRequests || []
     );
-  }, [tenant.id, tenant.documents, tenant.paymentHistory, tenant.maintenanceRequests, queryClient]);
+    
+    // NE PAS précharger les paiements - laisser useTenantPayments les gérer
+    console.log("Préchargement terminé - paiements gérés par useTenantPayments");
+  }, [tenant.id, tenant.documents, tenant.maintenanceRequests, queryClient]);
 
   if (!tenant) {
     return (
@@ -57,6 +54,7 @@ const TenantProfile = ({ tenant }: TenantProfileProps) => {
   const handleDataUpdate = () => {
     console.log("Invalidating tenant queries");
     queryClient.invalidateQueries({ queryKey: ["tenants"] });
+    queryClient.invalidateQueries({ queryKey: ["tenant_payments", tenant.id] });
   };
 
   if (user && !isTenantUser && user.email === tenant.email) {
