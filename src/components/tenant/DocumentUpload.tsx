@@ -71,7 +71,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        alert(t("fileSizeLimit"));
+        alert(t("documents.fileSizeLimit"));
         return;
       }
       setSelectedFile(file);
@@ -92,7 +92,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
         <div className="text-sm p-3 border border-yellow-300 bg-yellow-50 rounded-md text-yellow-700 flex items-start gap-2">
           <Info className="h-5 w-5 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium">{t("storageBucketMissing")}</p>
+            <p className="font-medium">{t("documents.storageBucketMissing")}</p>
             <p className="mt-1">The document storage system needs to be configured. Please contact your administrator.</p>
           </div>
         </div>
@@ -123,7 +123,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
           
           {uploadStatus === 'error' && errorMessage && errorMessage !== "storageBucketMissing" && (
             <div className="text-sm p-3 border border-red-300 bg-red-50 rounded-md text-red-700">
-              {t(errorMessage) || errorMessage}
+              {t(`documents.${errorMessage}`) || errorMessage}
             </div>
           )}
           
@@ -141,7 +141,7 @@ export const DocumentUpload = ({ tenantId, onUploadComplete }: DocumentUploadPro
       )}
 
       <div className="text-xs text-center text-muted-foreground">
-        {t("supportedFormats")}
+        {t("documents.supportedFormats")}
       </div>
     </div>
   );
