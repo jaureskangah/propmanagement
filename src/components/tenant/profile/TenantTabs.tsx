@@ -85,7 +85,6 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       case 'payments':
         return (
           <TenantPayments 
-            payments={tenant.paymentHistory || []} 
             tenantId={tenant.id}
             onPaymentUpdate={handleDataUpdate}
           />
