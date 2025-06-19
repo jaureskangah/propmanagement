@@ -25,4 +25,9 @@ export const enPayments: TenantPaymentsTranslations = {
   showMore: "Show More",
   showLess: "Show Less",
   showMorePayments: "Show {count} more payments",
+  pickDate: "Pick a date",
+  add: "Add",
+  adding: "Adding...",
+  paymentAddedSuccess: "The payment has been recorded successfully",
+  cancel: "Cancel"
 };

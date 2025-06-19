@@ -76,7 +76,8 @@ const translations: any = {
   tenantAdded: 'Locataire ajouté avec succès',
   errorLoadingTenantData: 'Erreur lors du chargement des données du locataire',
   invalidEmail: 'Adresse e-mail invalide',
-  invalidAmount: 'Montant invalide'
+  invalidAmount: 'Montant invalide',
+  cancel: 'Annuler'
 };
 
 export default translations;

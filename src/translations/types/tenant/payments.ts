@@ -23,4 +23,9 @@ export interface TenantPaymentsTranslations {
   showMore: string;
   showLess: string;
   showMorePayments: string;
+  pickDate: string;
+  add: string;
+  adding: string;
+  paymentAddedSuccess: string;
+  cancel: string;
 }

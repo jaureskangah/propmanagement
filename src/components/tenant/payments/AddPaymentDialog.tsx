@@ -1,6 +1,7 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { PaymentForm } from "./PaymentForm";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface AddPaymentDialogProps {
   open: boolean;
@@ -15,11 +16,13 @@ export const AddPaymentDialog = ({
   tenantId,
   onPaymentAdded,
 }: AddPaymentDialogProps) => {
+  const { t } = useLocale();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Payment</DialogTitle>
+          <DialogTitle>{t('payments.addPayment')}</DialogTitle>
         </DialogHeader>
 
         <PaymentForm 
