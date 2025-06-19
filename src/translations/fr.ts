@@ -77,7 +77,9 @@ const translations: any = {
   errorLoadingTenantData: 'Erreur lors du chargement des données du locataire',
   invalidEmail: 'Adresse e-mail invalide',
   invalidAmount: 'Montant invalide',
-  cancel: 'Annuler'
+  cancel: 'Annuler',
+  // Force documents with capital D to override any conflicts
+  documents: "Documents",
 };
 
 export default translations;

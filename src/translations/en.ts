@@ -69,7 +69,9 @@ const translations: any = {
   tenantAdded: 'Tenant added successfully',
   errorLoadingTenantData: 'Error loading tenant data',
   invalidEmail: 'Invalid email address',
-  invalidAmount: 'Invalid amount'
+  invalidAmount: 'Invalid amount',
+  // Force documents with capital D to override any conflicts
+  documents: "Documents",
 };
 
 export default translations;
