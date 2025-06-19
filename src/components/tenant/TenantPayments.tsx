@@ -12,20 +12,24 @@ import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTenantPayments } from "@/hooks/useTenantPayments";
 
 interface TenantPaymentsProps {
-  payments: TenantPayment[];
+  payments: TenantPayment[]; // Keep for compatibility but will be overridden
   tenantId: string;
   onPaymentUpdate: () => void;
 }
 
-export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPaymentsProps) => {
+export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProps) => {
   const { t } = useLocale();
   const queryClient = useQueryClient();
   const [isAddPaymentOpen, setIsAddPaymentOpen] = useState(false);
   const [isEditPaymentOpen, setIsEditPaymentOpen] = useState(false);
   const [isDeletePaymentOpen, setIsDeletePaymentOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<TenantPayment | null>(null);
+
+  // Use the custom hook to fetch payments directly
+  const { data: payments = [], isLoading, error } = useTenantPayments(tenantId);
 
   console.log("Rendering TenantPayments with payments:", payments);
 
@@ -64,6 +68,42 @@ export const TenantPayments = ({ payments, tenantId, onPaymentUpdate }: TenantPa
     setIsDeletePaymentOpen(false);
     setSelectedPayment(null);
   };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-green-600" />
+            <CardTitle className="text-lg">{t('payments.payments')}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center items-center h-32">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-green-600" />
+            <CardTitle className="text-lg">{t('payments.payments')}</CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8 text-red-600">
+            <p>Erreur lors du chargement des paiements</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
