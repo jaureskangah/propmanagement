@@ -20,4 +20,7 @@ export interface TenantPaymentsTranslations {
   paymentUpdated: string;
   paymentError: string;
   selectPaymentStatus: string;
+  showMore: string;
+  showLess: string;
+  showMorePayments: string;
 }

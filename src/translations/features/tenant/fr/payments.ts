@@ -22,4 +22,7 @@ export const frPayments: TenantPaymentsTranslations = {
   paymentUpdated: "Paiement mis à jour avec succès",
   paymentError: "Une erreur est survenue lors du traitement du paiement",
   selectPaymentStatus: "Sélectionner un statut",
+  showMore: "Voir Plus",
+  showLess: "Voir Moins",
+  showMorePayments: "Voir {count} paiements de plus",
 };

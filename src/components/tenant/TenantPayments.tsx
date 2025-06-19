@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Plus, DollarSign } from "lucide-react";
+import { Plus, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TenantPayment } from "@/types/tenant";
@@ -13,6 +13,8 @@ import { enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTenantPayments } from "@/hooks/useTenantPayments";
+
+const INITIAL_PAYMENTS_LIMIT = 5;
 
 interface TenantPaymentsProps {
   payments: TenantPayment[]; // Keep for compatibility but will be overridden
@@ -27,6 +29,7 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
   const [isEditPaymentOpen, setIsEditPaymentOpen] = useState(false);
   const [isDeletePaymentOpen, setIsDeletePaymentOpen] = useState(false);
   const [selectedPayment, setSelectedPayment] = useState<TenantPayment | null>(null);
+  const [showAllPayments, setShowAllPayments] = useState(false);
 
   // Use the custom hook to fetch payments directly
   const { data: payments = [], isLoading, error } = useTenantPayments(tenantId);
@@ -68,6 +71,14 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
     setIsDeletePaymentOpen(false);
     setSelectedPayment(null);
   };
+
+  // Calculate displayed payments based on showAllPayments state
+  const sortedPayments = payments.sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime());
+  const displayedPayments = showAllPayments 
+    ? sortedPayments 
+    : sortedPayments.slice(0, INITIAL_PAYMENTS_LIMIT);
+  const hasMorePayments = payments.length > INITIAL_PAYMENTS_LIMIT;
+  const hiddenPaymentsCount = payments.length - INITIAL_PAYMENTS_LIMIT;
 
   if (isLoading) {
     return (
@@ -130,9 +141,8 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
               </p>
             </div>
           ) : (
-            payments
-              .sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime())
-              .map((payment) => (
+            <>
+              {displayedPayments.map((payment) => (
                 <div
                   key={payment.id}
                   className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
@@ -170,7 +180,30 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
                     </Button>
                   </div>
                 </div>
-              ))
+              ))}
+              
+              {hasMorePayments && (
+                <div className="flex justify-center pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setShowAllPayments(!showAllPayments)}
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    {showAllPayments ? (
+                      <>
+                        <ChevronUp className="h-4 w-4" />
+                        {t('payments.showLess')}
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="h-4 w-4" />
+                        {t('payments.showMorePayments').replace('{count}', hiddenPaymentsCount.toString())}
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
           )}
         </div>
       </CardContent>
