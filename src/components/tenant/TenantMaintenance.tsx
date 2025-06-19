@@ -45,6 +45,23 @@ export const TenantMaintenance = ({
     setIsDeleteDialogOpen(true);
   };
 
+  const handleMaintenanceAdded = () => {
+    onMaintenanceUpdate();
+    setIsAddDialogOpen(false);
+  };
+
+  const handleMaintenanceUpdated = () => {
+    onMaintenanceUpdate();
+    setIsEditDialogOpen(false);
+    setSelectedRequest(null);
+  };
+
+  const handleMaintenanceDeleted = () => {
+    onMaintenanceUpdate();
+    setIsDeleteDialogOpen(false);
+    setSelectedRequest(null);
+  };
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -119,7 +136,7 @@ export const TenantMaintenance = ({
         isOpen={isAddDialogOpen}
         onClose={() => setIsAddDialogOpen(false)}
         tenantId={tenantId}
-        onSuccess={onMaintenanceUpdate}
+        onSuccess={handleMaintenanceAdded}
       />
 
       {selectedRequest && (
@@ -131,7 +148,7 @@ export const TenantMaintenance = ({
               setSelectedRequest(null);
             }}
             request={selectedRequest}
-            onSuccess={onMaintenanceUpdate}
+            onSuccess={handleMaintenanceUpdated}
           />
 
           <DeleteMaintenanceDialog
@@ -141,7 +158,7 @@ export const TenantMaintenance = ({
               setSelectedRequest(null);
             }}
             request={selectedRequest}
-            onSuccess={onMaintenanceUpdate}
+            onSuccess={handleMaintenanceDeleted}
           />
         </>
       )}

@@ -2,7 +2,7 @@
 import type { TenantMaintenanceTranslations } from '../../../types/tenant/maintenance';
 
 export const frMaintenance: TenantMaintenanceTranslations = {
-  maintenanceRequests: "Demandes de maintenance",
+  maintenanceRequests: "Demandes de Maintenance",
   newMaintenanceRequest: "Nouvelle demande de maintenance",
   maintenanceRequestTitlePlaceholder: "ex: Fuite d'eau dans la salle de bain",
   maintenanceDescriptionPlaceholder: "Décrivez le problème de maintenance en détail...",

@@ -48,7 +48,7 @@ export const frDocuments: TenantDocumentsTranslations = {
   uncategorized: "Non catégorisé",
   order: "Ordre",
   dragFilesHere: "Glissez vos fichiers ici",
-  orClickToUpload: "ou cliquez pour parcourir",
+  orClickToUpload: "ou cliquez pour téléverser",
   dropFilesHere: "Déposez vos fichiers ici",
   supportedFormats: "Formats supportés: PDF, DOC, DOCX, JPG, PNG",
   uploadingFile: "Téléversement du fichier...",
@@ -75,5 +75,5 @@ export const frDocuments: TenantDocumentsTranslations = {
   showFilters: "Afficher les filtres",
   uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location",
   manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location",
-  uploadedDocuments: "Documents chargés"
+  uploadedDocuments: "Documents téléversés"
 };
