@@ -1,16 +1,14 @@
 
 import { useState } from "react";
-import { Plus, DollarSign, ChevronDown, ChevronUp } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { TenantPayment } from "@/types/tenant";
-import { PaymentStatus } from "./payments/PaymentStatus";
 import { AddPaymentDialog } from "./payments/AddPaymentDialog";
 import { EditPaymentDialog } from "./payments/EditPaymentDialog";
 import { DeletePaymentDialog } from "./payments/DeletePaymentDialog";
-import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { PaymentsHeader } from "./payments/PaymentsHeader";
+import { PaymentsLoadingState } from "./payments/PaymentsLoadingState";
+import { PaymentsErrorState } from "./payments/PaymentsErrorState";
+import { PaymentsList } from "./payments/PaymentsList";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTenantPayments } from "@/hooks/useTenantPayments";
 
@@ -23,7 +21,6 @@ interface TenantPaymentsProps {
 }
 
 export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProps) => {
-  const { t } = useLocale();
   const queryClient = useQueryClient();
   const [isAddPaymentOpen, setIsAddPaymentOpen] = useState(false);
   const [isEditPaymentOpen, setIsEditPaymentOpen] = useState(false);
@@ -81,130 +78,28 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
   const hiddenPaymentsCount = payments.length - INITIAL_PAYMENTS_LIMIT;
 
   if (isLoading) {
-    return (
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-lg">{t('payments.payments')}</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center items-center h-32">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <PaymentsLoadingState />;
   }
 
   if (error) {
-    return (
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 text-green-600" />
-            <CardTitle className="text-lg">{t('payments.payments')}</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="text-center py-8 text-red-600">
-            <p>Erreur lors du chargement des paiements</p>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <PaymentsErrorState />;
   }
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          <DollarSign className="h-5 w-5 text-green-600" />
-          <CardTitle className="text-lg">{t('payments.payments')}</CardTitle>
-        </div>
-        <Button 
-          onClick={() => setIsAddPaymentOpen(true)}
-          className="bg-green-600 hover:bg-green-700"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {t('payments.addPayment')}
-        </Button>
-      </CardHeader>
+      <PaymentsHeader onAddPayment={() => setIsAddPaymentOpen(true)} />
       <CardContent>
         <div className="space-y-4">
-          {payments.length === 0 ? (
-            <div className="text-center py-8 border-2 border-dashed rounded-lg">
-              <DollarSign className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground">
-                {t('payments.noPayments')}
-              </p>
-            </div>
-          ) : (
-            <>
-              {displayedPayments.map((payment) => (
-                <div
-                  key={payment.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-green-100 text-green-700">
-                      <DollarSign className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium">${payment.amount}</span>
-                        <PaymentStatus status={payment.status} />
-                      </div>
-                      <span className="text-sm text-muted-foreground">
-                        {format(new Date(payment.payment_date), 'MMMM dd, yyyy', { locale: enUS })}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEditClick(payment)}
-                      className="hover:text-blue-600 hover:border-blue-600"
-                    >
-                      {t('payments.editPayment')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDeleteClick(payment)}
-                      className="text-red-500 hover:text-red-600 hover:border-red-600"
-                    >
-                      {t('payments.deletePayment')}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-              
-              {hasMorePayments && (
-                <div className="flex justify-center pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowAllPayments(!showAllPayments)}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-                  >
-                    {showAllPayments ? (
-                      <>
-                        <ChevronUp className="h-4 w-4" />
-                        {t('payments.showLess')}
-                      </>
-                    ) : (
-                      <>
-                        <ChevronDown className="h-4 w-4" />
-                        {t('payments.showMorePayments').replace('{count}', hiddenPaymentsCount.toString())}
-                      </>
-                    )}
-                  </Button>
-                </div>
-              )}
-            </>
-          )}
+          <PaymentsList
+            payments={payments}
+            displayedPayments={displayedPayments}
+            hasMorePayments={hasMorePayments}
+            showAllPayments={showAllPayments}
+            hiddenPaymentsCount={hiddenPaymentsCount}
+            onEditClick={handleEditClick}
+            onDeleteClick={handleDeleteClick}
+            onToggleShowAll={() => setShowAllPayments(!showAllPayments)}
+          />
         </div>
       </CardContent>
 
