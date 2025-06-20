@@ -12,6 +12,9 @@ import { TenantMaintenance } from "@/components/tenant/TenantMaintenance";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useTenantPayments } from "@/hooks/useTenantPayments";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface TenantTabsProps {
   tenant: Tenant;
@@ -24,15 +27,60 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
   const [activeTab, setActiveTab] = useState('documents');
   const isMobile = useIsMobile();
 
-  // Calculate counts for each tab
+  // Utiliser les mêmes hooks que les composants enfants pour obtenir les compteurs réels
+  const { data: paymentsData = [] } = useTenantPayments(tenant.id);
+  
+  // Hook pour les documents du tenant
+  const { data: documentsData = [] } = useQuery({
+    queryKey: ["tenant_documents", tenant.id],
+    queryFn: async () => {
+      if (!tenant.id) return [];
+      
+      const { data, error } = await supabase
+        .from('tenant_documents')
+        .select('*')
+        .eq('tenant_id', tenant.id);
+
+      if (error) {
+        console.error("Error fetching tenant documents:", error);
+        return [];
+      }
+      
+      return data || [];
+    },
+    enabled: !!tenant.id,
+  });
+
+  // Hook pour les demandes de maintenance du tenant
+  const { data: maintenanceData = [] } = useQuery({
+    queryKey: ["tenant_maintenance", tenant.id],
+    queryFn: async () => {
+      if (!tenant.id) return [];
+      
+      const { data, error } = await supabase
+        .from('maintenance_requests')
+        .select('*')
+        .eq('tenant_id', tenant.id);
+
+      if (error) {
+        console.error("Error fetching tenant maintenance:", error);
+        return [];
+      }
+      
+      return data || [];
+    },
+    enabled: !!tenant.id,
+  });
+
+  // Calculate counts using real data from hooks
   const getCountForTab = (tabValue: string) => {
     switch (tabValue) {
       case 'documents':
-        return tenant.documents?.length || 0;
+        return documentsData.length;
       case 'payments':
-        return tenant.paymentHistory?.length || 0;
+        return paymentsData.length;
       case 'maintenance':
-        return tenant.maintenanceRequests?.length || 0;
+        return maintenanceData.length;
       case 'documentGenerator':
         return undefined; // No count needed for generator
       default:
