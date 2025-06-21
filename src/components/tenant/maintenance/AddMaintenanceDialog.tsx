@@ -49,58 +49,98 @@ export const AddMaintenanceDialog = ({
       return;
     }
 
+    if (!tenantId) {
+      toast({
+        title: t('error'),
+        description: "ID du locataire manquant",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
     
     try {
-      // Get current user's tenant ID
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("Not authenticated");
+      console.log("Starting maintenance request creation for tenant:", tenantId);
+      
+      // Get current user to determine if request is from tenant or admin
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData.user) {
+        throw new Error("Non authentifié");
+      }
 
-      const { data: tenantData, error: tenantError } = await supabase
+      console.log("Current user:", userData.user.id);
+
+      // Check if current user is the tenant themselves
+      const { data: tenantCheck, error: tenantCheckError } = await supabase
         .from("tenants")
-        .select("id")
-        .eq("tenant_profile_id", userData.user.id)
+        .select("tenant_profile_id")
+        .eq("id", tenantId)
         .single();
 
-      if (tenantError || !tenantData) throw new Error("Tenant not found");
+      if (tenantCheckError) {
+        console.error("Error checking tenant:", tenantCheckError);
+        throw new Error("Locataire introuvable");
+      }
+
+      const isFromTenant = tenantCheck.tenant_profile_id === userData.user.id;
+      console.log("Is request from tenant:", isFromTenant);
 
       // Upload photos if any
       const photoUrls: string[] = [];
       
       if (photos.length > 0) {
+        console.log("Uploading", photos.length, "photos");
+        
         for (const photo of photos) {
           const fileExt = photo.name.split('.').pop();
-          const fileName = `${Math.random()}.${fileExt}`;
-          const filePath = `${tenantData.id}/${fileName}`;
+          const fileName = `maintenance_${Date.now()}_${Math.random()}.${fileExt}`;
+          const filePath = `maintenance/${tenantId}/${fileName}`;
+          
+          console.log("Uploading photo to:", filePath);
           
           const { error: uploadError } = await supabase.storage
             .from('tenant_documents')
             .upload(filePath, photo);
             
-          if (uploadError) throw uploadError;
+          if (uploadError) {
+            console.error("Upload error:", uploadError);
+            throw new Error(`Erreur lors de l'upload: ${uploadError.message}`);
+          }
           
           const { data: { publicUrl } } = supabase.storage
             .from('tenant_documents')
             .getPublicUrl(filePath);
             
           photoUrls.push(publicUrl);
+          console.log("Photo uploaded successfully:", publicUrl);
         }
       }
 
-      const { error } = await supabase
-        .from("maintenance_requests")
-        .insert({
-          tenant_id: tenantData.id,
-          title: title.trim(),
-          description: description.trim(),
-          issue: title.trim(),
-          priority,
-          photos: photoUrls,
-          status: "Pending",
-          is_from_tenant: true
-        });
+      // Insert maintenance request
+      const maintenanceData = {
+        tenant_id: tenantId,
+        title: title.trim(),
+        description: description.trim(),
+        issue: title.trim(),
+        priority,
+        photos: photoUrls,
+        status: "Pending",
+        is_from_tenant: isFromTenant
+      };
 
-      if (error) throw error;
+      console.log("Inserting maintenance request:", maintenanceData);
+
+      const { error: insertError } = await supabase
+        .from("maintenance_requests")
+        .insert(maintenanceData);
+
+      if (insertError) {
+        console.error("Insert error:", insertError);
+        throw new Error(`Erreur lors de la création: ${insertError.message}`);
+      }
+
+      console.log("Maintenance request created successfully");
 
       toast({
         title: t('success'),
@@ -115,7 +155,7 @@ export const AddMaintenanceDialog = ({
       console.error("Error adding maintenance request:", error);
       toast({
         title: t('error'),
-        description: t('errorSubmittingRequest'),
+        description: error.message || t('errorSubmittingRequest'),
         variant: "destructive",
       });
     } finally {
