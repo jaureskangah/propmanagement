@@ -51,7 +51,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
     enabled: !!tenant.id,
   });
 
-  // Hook pour les demandes de maintenance du tenant
+  // Hook pour les demandes de maintenance du tenant - données fraîches
   const { data: maintenanceData = [] } = useQuery({
     queryKey: ["tenant_maintenance", tenant.id],
     queryFn: async () => {
@@ -60,7 +60,8 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       const { data, error } = await supabase
         .from('maintenance_requests')
         .select('*')
-        .eq('tenant_id', tenant.id);
+        .eq('tenant_id', tenant.id)
+        .order('created_at', { ascending: false });
 
       if (error) {
         console.error("Error fetching tenant maintenance:", error);
@@ -136,9 +137,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       case 'maintenance':
         return (
           <TenantMaintenance 
-            requests={tenant.maintenanceRequests ? [...tenant.maintenanceRequests].sort((a, b) => 
-              new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-            ) : []}
+            requests={maintenanceData}
             tenantId={tenant.id}
             onMaintenanceUpdate={handleDataUpdate}
           />

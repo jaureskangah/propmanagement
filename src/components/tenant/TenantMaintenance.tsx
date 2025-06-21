@@ -102,7 +102,7 @@ export const TenantMaintenance = ({
                 <div className="flex items-center gap-3">
                   <Wrench className="h-5 w-5 text-[#ea384c]" />
                   <div>
-                    <p className="font-medium">{request.issue}</p>
+                    <p className="font-medium">{request.title || request.issue}</p>
                     <p className="text-sm text-muted-foreground">
                       {t('maintenance.createdOn')} {formatDate(request.created_at)}
                     </p>
