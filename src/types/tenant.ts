@@ -48,6 +48,7 @@ export interface TenantPayment {
 
 export interface MaintenanceRequest {
   id: string;
+  title: string;
   issue: string;
   status: string;
   created_at: string;
