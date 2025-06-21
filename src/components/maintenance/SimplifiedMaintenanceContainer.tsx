@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
 import { BarChart3, AlertCircle, CheckSquare, Users, DollarSign } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -9,6 +9,8 @@ import { MaintenanceTasksSection } from "./sections/MaintenanceTasksSection";
 import { MaintenanceVendorsSection } from "./sections/MaintenanceVendorsSection";
 import { MaintenanceFinancesSection } from "./sections/MaintenanceFinancesSection";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 export const SimplifiedMaintenanceContainer = () => {
   const { t } = useLocale();
@@ -21,36 +23,156 @@ export const SimplifiedMaintenanceContainer = () => {
     localStorage.setItem('maintenanceActiveTab', activeTab);
   }, [activeTab]);
 
+  // Fetch maintenance requests
+  const { data: maintenanceRequests = [] } = useQuery({
+    queryKey: ['maintenance_requests'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('maintenance_requests')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching maintenance requests:", error);
+        return [];
+      }
+      return data || [];
+    },
+  });
+
+  // Fetch maintenance tasks
+  const { data: maintenanceTasks = [] } = useQuery({
+    queryKey: ['maintenance_tasks'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('maintenance_tasks')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching maintenance tasks:", error);
+        return [];
+      }
+      return data || [];
+    },
+  });
+
+  // Fetch vendors
+  const { data: vendors = [] } = useQuery({
+    queryKey: ['vendors'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vendors')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching vendors:", error);
+        return [];
+      }
+      return data || [];
+    },
+  });
+
+  // Fetch maintenance expenses (last 30 days)
+  const { data: maintenanceExpenses = [] } = useQuery({
+    queryKey: ['maintenance_expenses'],
+    queryFn: async () => {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const { data, error } = await supabase
+        .from('maintenance_expenses')
+        .select('*')
+        .gte('date', thirtyDaysAgo.toISOString().split('T')[0])
+        .order('date', { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching maintenance expenses:", error);
+        return [];
+      }
+      return data || [];
+    },
+  });
+
+  // Calculate dynamic counts based on real data
+  const dynamicCounts = useMemo(() => {
+    // Overview count: Total maintenance requests
+    const overviewCount = maintenanceRequests.length;
+    
+    // Requests count: Pending requests
+    const requestsCount = maintenanceRequests.filter(req => 
+      req.status === 'Pending' || req.status === 'pending'
+    ).length;
+    
+    // Tasks count: Incomplete tasks
+    const tasksCount = maintenanceTasks.filter(task => 
+      !task.completed && task.status !== 'completed'
+    ).length;
+    
+    // Vendors count: Total active vendors
+    const vendorsCount = vendors.length;
+    
+    // Finances count: Recent expenses (last 30 days)
+    const financesCount = maintenanceExpenses.length;
+
+    return {
+      overview: overviewCount,
+      requests: requestsCount,
+      tasks: tasksCount,
+      vendors: vendorsCount,
+      finances: financesCount
+    };
+  }, [maintenanceRequests, maintenanceTasks, vendors, maintenanceExpenses]);
+
+  // Function to get contextual count for active tab
+  const getCountForTab = (tabValue: string) => {
+    switch (tabValue) {
+      case 'overview':
+        return dynamicCounts.overview;
+      case 'requests':
+        return dynamicCounts.requests;
+      case 'tasks':
+        return dynamicCounts.tasks;
+      case 'vendors':
+        return dynamicCounts.vendors;
+      case 'finances':
+        return dynamicCounts.finances;
+      default:
+        return undefined;
+    }
+  };
+
   const navItems = [
     { 
       name: "Vue d'ensemble", 
       value: "overview", 
       icon: BarChart3,
-      count: 0 // Will be populated with actual data
+      count: getCountForTab('overview')
     },
     { 
       name: "Demandes", 
       value: "requests", 
       icon: AlertCircle,
-      count: 0 // Will be populated with pending requests count
+      count: getCountForTab('requests')
     },
     { 
       name: "Tâches", 
       value: "tasks", 
       icon: CheckSquare,
-      count: 0 // Will be populated with active tasks count
+      count: getCountForTab('tasks')
     },
     { 
       name: "Prestataires", 
       value: "vendors", 
       icon: Users,
-      count: 0 // Will be populated with active vendors count
+      count: getCountForTab('vendors')
     },
     { 
       name: "Finances", 
       value: "finances", 
       icon: DollarSign,
-      count: 0 // Will be populated with recent expenses count
+      count: getCountForTab('finances')
     },
   ];
 
