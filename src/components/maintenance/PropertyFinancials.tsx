@@ -25,6 +25,22 @@ export const PropertyFinancials = ({
 
   const { expenses, maintenance, rentData } = useFinancialData(propertyId, selectedYear);
 
+  // Combine all expenses for allExpenses prop
+  const allExpenses = [
+    ...expenses.map(expense => ({
+      amount: expense.amount || 0,
+      date: expense.date,
+      category: expense.category || 'Maintenance',
+      type: 'expense' as const
+    })),
+    ...maintenance.map(intervention => ({
+      amount: intervention.cost || 0,
+      date: intervention.date,
+      category: 'Intervention',
+      type: 'intervention' as const
+    }))
+  ];
+
   return (
     <div className="space-y-6">
       <MetricsCards
@@ -36,7 +52,7 @@ export const PropertyFinancials = ({
         <DataTables 
           propertyId={propertyId} 
           expenses={expenses} 
-          maintenance={maintenance} 
+          allExpenses={allExpenses}
         />
       </div>
     </div>

@@ -76,6 +76,22 @@ const PropertyFinancials = ({ propertyId, selectedYear }: PropertyFinancialsProp
     return <div className="py-4 text-red-500">Erreur lors du chargement des données</div>;
   }
 
+  // Combine all expenses for allExpenses prop
+  const allExpenses = [
+    ...expenses.map(expense => ({
+      amount: expense.amount || 0,
+      date: expense.date,
+      category: expense.category || 'Maintenance',
+      type: 'expense' as const
+    })),
+    ...maintenance.map(intervention => ({
+      amount: intervention.cost || 0,
+      date: intervention.date,
+      category: 'Intervention',
+      type: 'intervention' as const
+    }))
+  ];
+
   return (
     <div className="space-y-6">
       <FinancialMetrics propertyId={propertyId} />
@@ -83,7 +99,7 @@ const PropertyFinancials = ({ propertyId, selectedYear }: PropertyFinancialsProp
       <DataTables
         propertyId={propertyId}
         expenses={expenses}
-        maintenance={maintenance}
+        allExpenses={allExpenses}
       />
     </div>
   );

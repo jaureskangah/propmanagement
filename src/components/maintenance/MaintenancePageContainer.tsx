@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { MaintenanceMetricsSection } from "./metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "./tabs/MaintenanceTabs";
@@ -15,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useTaskAddition } from "./tasks/hooks/useTaskAddition";
 import { useNavigate } from "react-router-dom";
-import { AddExpenseDialog } from "./financials/dialogs/AddExpenseDialog";
 
 export const MaintenancePageContainer = () => {
   const { t } = useLocale();
@@ -24,7 +24,6 @@ export const MaintenancePageContainer = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const { toast } = useToast();
   const { handleAddTask } = useTaskAddition();
   const navigate = useNavigate();
@@ -130,11 +129,6 @@ export const MaintenancePageContainer = () => {
     console.log("Create task clicked in MaintenancePageContainer");
     setIsAddTaskOpen(true);
   };
-  
-  const handleAddExpense = () => {
-    console.log("Add expense clicked in MaintenancePageContainer");
-    setIsAddExpenseOpen(true);
-  };
 
   const handleAddTaskFromDialog = async (newTask: NewTask): Promise<any> => {
     console.log("Task to be added:", newTask);
@@ -210,22 +204,13 @@ export const MaintenancePageContainer = () => {
         selectedYear={selectedYear}
       />
       
-      <div className="flex justify-between items-center">
+      <div className="flex justify-start items-center">
         <Button 
           onClick={handleCreateTask}
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="h-4 w-4 mr-2" />
           {t('addTask')}
-        </Button>
-        
-        <Button 
-          onClick={handleAddExpense}
-          variant="outline"
-          className="border-primary text-primary hover:bg-primary/10"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          {t('addExpense') || "Ajouter une dépense"}
         </Button>
       </div>
 
@@ -270,12 +255,6 @@ export const MaintenancePageContainer = () => {
         isOpen={isAddTaskOpen}
         onClose={() => setIsAddTaskOpen(false)}
         initialPropertyId={selectedPropertyId}
-      />
-      
-      <AddExpenseDialog
-        isOpen={isAddExpenseOpen}
-        onClose={() => setIsAddExpenseOpen(false)}
-        propertyId={selectedPropertyId}
       />
     </div>
   );
