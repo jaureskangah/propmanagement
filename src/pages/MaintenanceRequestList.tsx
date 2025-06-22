@@ -19,54 +19,84 @@ const MaintenanceRequestList = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isTenantUser = user?.user_metadata?.is_tenant_user;
   
-  // Fetch maintenance requests with flat tenant data
+  // Fetch maintenance requests with tenant data using a more reliable approach
   const { data: requests = [], refetch } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: async () => {
       console.log("Starting maintenance requests fetch...");
       
-      const { data, error } = await supabase
+      // First, get maintenance requests
+      const { data: maintenanceData, error: maintenanceError } = await supabase
         .from('maintenance_requests')
-        .select(`
-          *,
-          tenants!maintenance_requests_tenant_id_fkey (
-            name,
-            unit_number,
-            properties (
-              name
-            )
-          )
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
       
-      if (error) {
-        console.error("Error fetching maintenance requests:", error);
-        throw error;
+      if (maintenanceError) {
+        console.error("Error fetching maintenance requests:", maintenanceError);
+        throw maintenanceError;
       }
       
-      console.log("Raw data from Supabase:", data);
+      console.log("Raw maintenance data:", maintenanceData);
       
-      // Transform the data to include flat tenant fields for easier access
-      const transformedData = data?.map(request => ({
-        ...request,
-        tenant_name: request.tenants?.name,
-        property_name: request.tenants?.properties?.name,
-        tenant_unit_number: request.tenants?.unit_number
-      }));
+      if (!maintenanceData || maintenanceData.length === 0) {
+        return [];
+      }
       
-      // Log the structure of the first item to debug
-      if (transformedData && transformedData.length > 0) {
-        console.log("First transformed request structure:", {
-          id: transformedData[0].id,
-          issue: transformedData[0].issue,
-          tenant_id: transformedData[0].tenant_id,
-          tenant_name: transformedData[0].tenant_name,
-          property_name: transformedData[0].property_name,
-          tenant_unit_number: transformedData[0].tenant_unit_number,
-          description: transformedData[0].description
+      // Get unique tenant IDs
+      const tenantIds = [...new Set(maintenanceData.map(req => req.tenant_id).filter(Boolean))];
+      console.log("Tenant IDs to fetch:", tenantIds);
+      
+      // Fetch tenant data separately
+      const { data: tenantsData, error: tenantsError } = await supabase
+        .from('tenants')
+        .select(`
+          id,
+          name,
+          unit_number,
+          properties (
+            name
+          )
+        `)
+        .in('id', tenantIds);
+      
+      if (tenantsError) {
+        console.error("Error fetching tenants:", tenantsError);
+        // Continue without tenant data rather than failing completely
+      }
+      
+      console.log("Tenants data:", tenantsData);
+      
+      // Create a lookup map for tenant data
+      const tenantLookup = {};
+      if (tenantsData) {
+        tenantsData.forEach(tenant => {
+          tenantLookup[tenant.id] = tenant;
         });
       }
       
+      console.log("Tenant lookup:", tenantLookup);
+      
+      // Transform the data to include flat tenant fields
+      const transformedData = maintenanceData.map(request => {
+        const tenant = tenantLookup[request.tenant_id];
+        const result = {
+          ...request,
+          tenant_name: tenant?.name || null,
+          property_name: tenant?.properties?.name || null,
+          tenant_unit_number: tenant?.unit_number || null
+        };
+        
+        console.log(`Transformed request ${request.id}:`, {
+          tenant_id: request.tenant_id,
+          tenant_name: result.tenant_name,
+          property_name: result.property_name,
+          tenant_unit_number: result.tenant_unit_number
+        });
+        
+        return result;
+      });
+      
+      console.log("Final transformed data:", transformedData);
       return transformedData;
     },
   });
