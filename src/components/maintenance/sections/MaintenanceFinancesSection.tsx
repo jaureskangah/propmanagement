@@ -1,13 +1,11 @@
 
 import React, { useState, useEffect } from "react";
 import { SimplifiedExpensesView } from "../financials/SimplifiedExpensesView";
-import { AddExpenseDialog } from "../financials/dialogs/AddExpenseDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 
 export const MaintenanceFinancesSection = () => {
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   const [currentPropertyId, setCurrentPropertyId] = useState<string>("");
   const { toast } = useToast();
 
@@ -60,11 +58,6 @@ export const MaintenanceFinancesSection = () => {
 
   const savedYear = localStorage.getItem('selectedYear') ? 
     parseInt(localStorage.getItem('selectedYear') || '') : new Date().getFullYear();
-
-  const handleExpenseAdded = () => {
-    console.log("Dépense ajoutée avec succès, fermeture du dialogue");
-    setIsAddExpenseOpen(false);
-  };
 
   const handlePropertySelect = (propertyId: string) => {
     setCurrentPropertyId(propertyId);
@@ -123,16 +116,6 @@ export const MaintenanceFinancesSection = () => {
         <SimplifiedExpensesView 
           propertyId={currentPropertyId}
           selectedYear={savedYear}
-        />
-      )}
-
-      {/* Add Expense Dialog */}
-      {currentPropertyId && (
-        <AddExpenseDialog
-          isOpen={isAddExpenseOpen}
-          onClose={() => setIsAddExpenseOpen(false)}
-          propertyId={currentPropertyId}
-          onSuccess={handleExpenseAdded}
         />
       )}
     </div>
