@@ -18,15 +18,15 @@ export const MaintenanceTasksSection = () => {
   const [propertyId, setPropertyId] = useState<string>("");
   const [isLoadingProperty, setIsLoadingProperty] = useState(true);
 
-  // Récupérer la première propriété de l'utilisateur
+  // Fetch user's first property
   useEffect(() => {
     const fetchUserProperty = async () => {
       try {
-        console.log("Fetching user's first property...");
+        console.log("MaintenanceTasksSection - Fetching user's first property...");
         
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          console.log("No user found");
+          console.log("MaintenanceTasksSection - No user found");
           setIsLoadingProperty(false);
           return;
         }
@@ -39,25 +39,21 @@ export const MaintenanceTasksSection = () => {
           .limit(1);
 
         if (error) {
-          console.error("Error fetching user property:", error);
-          // Fallback to the saved property ID if available
+          console.error("MaintenanceTasksSection - Error fetching user property:", error);
           const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
           setPropertyId(savedPropertyId);
         } else if (properties && properties.length > 0) {
           const firstProperty = properties[0];
-          console.log("Found user's first property:", firstProperty);
+          console.log("MaintenanceTasksSection - Found user's first property:", firstProperty);
           setPropertyId(firstProperty.id);
-          // Update localStorage with the correct property ID
           localStorage.setItem('selectedPropertyId', firstProperty.id);
         } else {
-          console.log("No properties found for user");
-          // Try to use saved property ID as fallback
+          console.log("MaintenanceTasksSection - No properties found for user");
           const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
           setPropertyId(savedPropertyId);
         }
       } catch (error) {
-        console.error("Exception fetching user property:", error);
-        // Fallback to saved property ID
+        console.error("MaintenanceTasksSection - Exception fetching user property:", error);
         const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
         setPropertyId(savedPropertyId);
       } finally {
@@ -70,13 +66,12 @@ export const MaintenanceTasksSection = () => {
 
   const handleAddTaskFromDialog = async (newTask: NewTask): Promise<any> => {
     try {
-      // Ensure we use the correct property ID
       const taskWithCorrectProperty = {
         ...newTask,
         property_id: propertyId || newTask.property_id
       };
       
-      console.log("Adding task with property ID:", taskWithCorrectProperty.property_id);
+      console.log("MaintenanceTasksSection - Adding task with property ID:", taskWithCorrectProperty.property_id);
       
       const result = await handleAddTask(taskWithCorrectProperty);
       toast({
@@ -85,7 +80,7 @@ export const MaintenanceTasksSection = () => {
       });
       return result;
     } catch (error) {
-      console.error("Error adding task:", error);
+      console.error("MaintenanceTasksSection - Error adding task:", error);
       toast({
         title: t('error'),
         description: t('errorAddingTask'),
@@ -95,10 +90,6 @@ export const MaintenanceTasksSection = () => {
     }
   };
 
-  // Debug logs
-  console.log("MaintenanceTasksSection - Property ID:", propertyId);
-  console.log("MaintenanceTasksSection - Is Loading Property:", isLoadingProperty);
-
   if (isLoadingProperty) {
     return (
       <div className="space-y-6">
@@ -107,21 +98,6 @@ export const MaintenanceTasksSection = () => {
             <h2 className="text-2xl font-semibold">Tâches de maintenance</h2>
             <p className="text-muted-foreground">
               Chargement des propriétés...
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!propertyId) {
-    return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="text-2xl font-semibold">Tâches de maintenance</h2>
-            <p className="text-muted-foreground text-orange-600">
-              Aucune propriété trouvée. Veuillez d'abord créer une propriété.
             </p>
           </div>
         </div>
@@ -148,7 +124,7 @@ export const MaintenanceTasksSection = () => {
         </Button>
       </div>
 
-      {/* Tasks List */}
+      {/* Tasks List - Show even if no property selected */}
       <MaintenanceTasks propertyId={propertyId} />
 
       {/* Add Task Dialog */}
