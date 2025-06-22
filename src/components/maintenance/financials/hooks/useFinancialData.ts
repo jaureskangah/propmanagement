@@ -1,52 +1,52 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useEffect } from "react";
 
 export const useFinancialData = (propertyId: string, selectedYear: number) => {
-  useEffect(() => {
-    console.log("useFinancialData - params:", { propertyId, selectedYear });
-  }, [propertyId, selectedYear]);
+  console.log("useFinancialData appelé avec propertyId:", propertyId, "et année:", selectedYear);
 
-  // Fetch expenses data from maintenance_expenses
-  const { data: expenses = [], refetch: refetchExpenses } = useQuery({
+  const { data: expenses = [], isLoading: expensesLoading, refetch: refetchExpenses } = useQuery({
     queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
-      const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
-      const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
-      
-      console.log("Fetching expenses for property:", propertyId, "in date range:", startOfYear, "to", endOfYear);
-      
-      try {
-        const { data, error } = await supabase
-          .from("maintenance_expenses")
-          .select("*")
-          .eq("property_id", propertyId)
-          .gte("date", startOfYear)
-          .lte("date", endOfYear)
-          .order("date", { ascending: false });
-  
-        if (error) throw error;
-  
-        console.log("Fetched expenses:", data);
-        return data || [];
-      } catch (error) {
-        console.error("Error in expenses query:", error);
+      if (!propertyId) {
+        console.log("Pas de propertyId, retour d'un tableau vide");
         return [];
       }
+
+      console.log("Récupération des dépenses pour propertyId:", propertyId);
+      const { data, error } = await supabase
+        .from("maintenance_expenses")
+        .select(`
+          *,
+          vendors (
+            name
+          )
+        `)
+        .eq("property_id", propertyId)
+        .gte("date", `${selectedYear}-01-01`)
+        .lte("date", `${selectedYear}-12-31`)
+        .order("date", { ascending: false });
+
+      if (error) {
+        console.error("Erreur lors de la récupération des dépenses:", error);
+        throw error;
+      }
+
+      console.log("Dépenses récupérées:", data?.length || 0, "éléments");
+      return data || [];
     },
-    enabled: !!propertyId
+    enabled: !!propertyId,
   });
 
-  // Fetch maintenance interventions from vendor_interventions
-  const { data: maintenance = [], refetch: refetchMaintenance } = useQuery({
+  const { data: maintenance = [], isLoading: maintenanceLoading, refetch: refetchMaintenance } = useQuery({
     queryKey: ["vendor_interventions", propertyId, selectedYear],
     queryFn: async () => {
-      const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
-      const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
-      
-      console.log("Fetching interventions for property:", propertyId, "in date range:", startOfYear, "to", endOfYear);
-      
+      if (!propertyId) {
+        console.log("Pas de propertyId pour les interventions, retour d'un tableau vide");
+        return [];
+      }
+
+      console.log("Récupération des interventions pour propertyId:", propertyId);
       const { data, error } = await supabase
         .from("vendor_interventions")
         .select(`
@@ -54,66 +54,68 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
           vendors (
             name,
             specialty
-          ),
-          properties (
-            name
           )
         `)
         .eq("property_id", propertyId)
-        .gte("date", startOfYear)
-        .lte("date", endOfYear)
+        .gte("date", `${selectedYear}-01-01`)
+        .lte("date", `${selectedYear}-12-31`)
         .order("date", { ascending: false });
 
       if (error) {
-        console.error("Error fetching interventions:", error);
+        console.error("Erreur lors de la récupération des interventions:", error);
         throw error;
       }
 
-      console.log("Fetched interventions:", data);
+      console.log("Interventions récupérées:", data?.length || 0, "éléments");
       return data || [];
     },
-    enabled: !!propertyId
+    enabled: !!propertyId,
   });
 
-  // Fetch rent payments
-  const { data: rentData = [] } = useQuery({
-    queryKey: ["property_rent_payments", propertyId, selectedYear],
+  const { data: rentData = [], isLoading: rentLoading, refetch: refetchRent } = useQuery({
+    queryKey: ["tenant_payments", propertyId, selectedYear],
     queryFn: async () => {
-      try {
-        const { data: tenants, error: tenantsError } = await supabase
-          .from("tenants")
-          .select("id")
-          .eq("property_id", propertyId);
-          
-        if (tenantsError) throw tenantsError;
-        if (!tenants?.length) return [];
-        
-        const tenantIds = tenants.map(t => t.id);
-        const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
-        const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
-        
-        const { data: payments, error: paymentsError } = await supabase
-          .from("tenant_payments")
-          .select("*")
-          .in("tenant_id", tenantIds)
-          .gte("payment_date", startOfYear)
-          .lte("payment_date", endOfYear);
-
-        if (paymentsError) throw paymentsError;
-        return payments || [];
-      } catch (error) {
-        console.error("Error fetching rent payments:", error);
+      if (!propertyId) {
         return [];
       }
+
+      const { data, error } = await supabase
+        .from("tenant_payments")
+        .select(`
+          *,
+          tenants!inner (
+            property_id
+          )
+        `)
+        .eq("tenants.property_id", propertyId)
+        .gte("payment_date", `${selectedYear}-01-01`)
+        .lte("payment_date", `${selectedYear}-12-31`)
+        .order("payment_date", { ascending: false });
+
+      if (error) {
+        console.error("Erreur lors de la récupération des paiements:", error);
+        throw error;
+      }
+
+      return data || [];
     },
-    enabled: !!propertyId
+    enabled: !!propertyId,
   });
 
-  // Function to refresh all data
-  const refreshData = () => {
-    refetchExpenses();
-    refetchMaintenance();
+  const refetch = async () => {
+    console.log("Rafraîchissement de toutes les données financières");
+    await Promise.all([
+      refetchExpenses(),
+      refetchMaintenance(),
+      refetchRent()
+    ]);
   };
 
-  return { expenses, maintenance, rentData, refreshData };
+  return {
+    expenses,
+    maintenance,
+    rentData,
+    isLoading: expensesLoading || maintenanceLoading || rentLoading,
+    refetch
+  };
 };

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Dialog,
@@ -47,6 +46,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     vendor_id: ""
   });
 
+  console.log("AddExpenseDialog rendu avec propertyId:", propertyId);
+
   // Fetch vendors for the dropdown
   const { data: vendors = [] } = useQuery({
     queryKey: ["vendors"],
@@ -73,49 +74,93 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     "Autre"
   ];
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!date || !formData.category || !formData.amount) {
+  const validateForm = () => {
+    if (!date) {
       toast({
-        title: "Erreur",
-        description: "Veuillez remplir tous les champs obligatoires",
+        title: "Erreur de validation",
+        description: "Veuillez sélectionner une date",
         variant: "destructive",
       });
+      return false;
+    }
+    
+    if (!formData.category) {
+      toast({
+        title: "Erreur de validation",
+        description: "Veuillez sélectionner une catégorie",
+        variant: "destructive",
+      });
+      return false;
+    }
+    
+    if (!formData.amount || parseFloat(formData.amount) <= 0) {
+      toast({
+        title: "Erreur de validation",
+        description: "Veuillez saisir un montant valide",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (!propertyId) {
+      toast({
+        title: "Erreur de validation",
+        description: "Propriété non sélectionnée",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
       return;
     }
 
     setIsLoading(true);
-    console.log("Adding expense with data:", {
-      ...formData,
-      date: date.toISOString().split('T')[0],
-      property_id: propertyId
-    });
-
+    
     try {
+      // Récupérer l'utilisateur actuel
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError || !userData.user) {
+        throw new Error("Utilisateur non authentifié");
+      }
+
+      const expenseData = {
+        property_id: propertyId,
+        category: formData.category,
+        amount: parseFloat(formData.amount),
+        description: formData.description || null,
+        date: date!.toISOString().split('T')[0],
+        vendor_id: formData.vendor_id === "none" || !formData.vendor_id ? null : formData.vendor_id,
+        user_id: userData.user.id
+      };
+
+      console.log("Insertion de la dépense avec les données:", expenseData);
+
       const { data, error } = await supabase
         .from("maintenance_expenses")
-        .insert({
-          property_id: propertyId,
-          category: formData.category,
-          amount: parseFloat(formData.amount),
-          description: formData.description || null,
-          date: date.toISOString().split('T')[0],
-          vendor_id: formData.vendor_id === "none" ? null : formData.vendor_id || null,
-          user_id: (await supabase.auth.getUser()).data.user?.id
-        })
+        .insert(expenseData)
         .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Erreur lors de l'insertion:", error);
+        throw error;
+      }
 
-      console.log("Expense added successfully:", data);
+      console.log("Dépense ajoutée avec succès:", data);
 
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ 
-        queryKey: ["maintenance_expenses", propertyId] 
-      });
-      queryClient.invalidateQueries({ 
-        queryKey: ["all_expenses", propertyId] 
-      });
+      // Invalider plusieurs queries pour rafraîchir les données
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] }),
+        queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] }),
+        queryClient.invalidateQueries({ queryKey: ["all_expenses", propertyId] }),
+        queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] }),
+      ]);
 
       toast({
         title: "Succès",
@@ -131,15 +176,17 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       });
       setDate(undefined);
       
+      // Fermer le dialogue et appeler onSuccess
       if (onSuccess) {
         onSuccess();
       }
       onClose();
-    } catch (error) {
-      console.error("Error adding expense:", error);
+      
+    } catch (error: any) {
+      console.error("Erreur lors de l'ajout de la dépense:", error);
       toast({
         title: "Erreur",
-        description: "Impossible d'ajouter la dépense",
+        description: error.message || "Impossible d'ajouter la dépense",
         variant: "destructive",
       });
     } finally {
@@ -155,7 +202,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) {
+        onClose();
+      }
+    }}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Ajouter une dépense</DialogTitle>

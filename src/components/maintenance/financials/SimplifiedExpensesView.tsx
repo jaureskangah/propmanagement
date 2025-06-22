@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFinancialData } from "./hooks/useFinancialData";
 import { DollarSign, FileText, Wrench, Calendar } from "lucide-react";
@@ -15,7 +15,20 @@ export const SimplifiedExpensesView = ({
   propertyId,
   selectedYear 
 }: SimplifiedExpensesViewProps) => {
-  const { expenses, maintenance } = useFinancialData(propertyId, selectedYear);
+  const { expenses, maintenance, refetch } = useFinancialData(propertyId, selectedYear);
+
+  // Écouter l'événement personnalisé pour rafraîchir les données
+  useEffect(() => {
+    const handleExpenseAdded = () => {
+      console.log("Événement expenseAdded reçu, rafraîchissement des données");
+      refetch();
+    };
+
+    window.addEventListener('expenseAdded', handleExpenseAdded);
+    return () => {
+      window.removeEventListener('expenseAdded', handleExpenseAdded);
+    };
+  }, [refetch]);
 
   // Combine all expenses from maintenance_expenses and vendor_interventions
   const allExpenses = [
