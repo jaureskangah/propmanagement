@@ -51,12 +51,45 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     onClick();
   };
 
-  // Get a truncated version of the description
-  const truncatedDescription = request.description 
-    ? request.description.length > 100 
-      ? `${request.description.substring(0, 100)}...` 
-      : request.description
-    : "";
+  // Function to get secondary info to display (tenant info or description)
+  const getSecondaryInfo = () => {
+    // Priority 1: Tenant information if available
+    if (request.tenants) {
+      const tenantInfo = [];
+      
+      // Add tenant name
+      if (request.tenants.name) {
+        tenantInfo.push(request.tenants.name);
+      }
+      
+      // Add property and unit info
+      const locationParts = [];
+      if (request.tenants.properties?.name) {
+        locationParts.push(request.tenants.properties.name);
+      }
+      if (request.tenants.unit_number) {
+        locationParts.push(`${t("unit")} ${request.tenants.unit_number}`);
+      }
+      
+      if (locationParts.length > 0) {
+        tenantInfo.push(locationParts.join(', '));
+      }
+      
+      return tenantInfo.join(' - ');
+    }
+    
+    // Priority 2: Description if different from issue title
+    if (request.description && request.description.trim() !== request.issue.trim()) {
+      return request.description.length > 100 
+        ? `${request.description.substring(0, 100)}...` 
+        : request.description;
+    }
+    
+    // Priority 3: Show creation date info if no other info available
+    return `${t("createdOn")} ${formatDate(request.created_at)}`;
+  };
+
+  const secondaryInfo = getSecondaryInfo();
 
   return (
     <Card
@@ -78,16 +111,9 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
               <AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />
             )}
           </div>
-          {truncatedDescription && (
-            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-              {truncatedDescription}
-            </p>
-          )}
-          {request.tenants && (
-            <p className="text-sm text-muted-foreground">
-              {t("from")} {request.tenants.name} - 
-              {request.tenants.properties?.name && ` ${request.tenants.properties.name}, `}
-              {request.tenants.unit_number && `${t("unit")} ${request.tenants.unit_number}`}
+          {secondaryInfo && (
+            <p className="text-sm text-muted-foreground mt-1">
+              {secondaryInfo}
             </p>
           )}
           <p className="text-sm text-muted-foreground">
