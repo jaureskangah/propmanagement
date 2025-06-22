@@ -25,7 +25,16 @@ const MaintenanceRequestList = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('maintenance_requests')
-        .select('*, tenants(name, properties(name), unit_number)')
+        .select(`
+          *,
+          tenants!inner (
+            name,
+            unit_number,
+            properties (
+              name
+            )
+          )
+        `)
         .order('created_at', { ascending: false });
       
       if (error) throw error;

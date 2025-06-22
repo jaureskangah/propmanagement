@@ -53,16 +53,16 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
 
   // Function to get secondary info to display (tenant info or description)
   const getSecondaryInfo = () => {
-    // Priority 1: Tenant information if available
+    // Priority 1: Tenant information if available (using the flat structure from the query)
     if (request.tenants) {
       const tenantInfo = [];
       
-      // Add tenant name
+      // Add tenant name (direct access since it's a flat structure)
       if (request.tenants.name) {
         tenantInfo.push(request.tenants.name);
       }
       
-      // Add property and unit info
+      // Add property and unit info (direct access since it's a flat structure)
       const locationParts = [];
       if (request.tenants.properties?.name) {
         locationParts.push(request.tenants.properties.name);
@@ -85,8 +85,8 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
         : request.description;
     }
     
-    // Priority 3: Show creation date info if no other info available
-    return `${t("createdOn")} ${formatDate(request.created_at)}`;
+    // Priority 3: Return null to avoid showing creation date twice
+    return null;
   };
 
   const secondaryInfo = getSecondaryInfo();
