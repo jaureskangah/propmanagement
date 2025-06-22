@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Dialog,
@@ -52,9 +53,15 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
   const { data: vendors = [] } = useQuery({
     queryKey: ["vendors"],
     queryFn: async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        throw new Error("User not authenticated");
+      }
+
       const { data, error } = await supabase
         .from("vendors")
         .select("id, name")
+        .eq('user_id', userData.user.id)
         .order("name");
       
       if (error) throw error;
@@ -114,6 +121,16 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     return true;
   };
 
+  const resetForm = () => {
+    setFormData({
+      category: "",
+      amount: "",
+      description: "",
+      vendor_id: ""
+    });
+    setDate(undefined);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -130,13 +147,18 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         throw new Error("Utilisateur non authentifié");
       }
 
+      // Préparer les données avec une gestion propre du vendor_id
+      const vendorId = formData.vendor_id && formData.vendor_id !== "none" && formData.vendor_id !== "" 
+        ? formData.vendor_id 
+        : null;
+
       const expenseData = {
         property_id: propertyId,
         category: formData.category,
         amount: parseFloat(formData.amount),
         description: formData.description || null,
         date: date!.toISOString().split('T')[0],
-        vendor_id: formData.vendor_id === "none" || !formData.vendor_id ? null : formData.vendor_id,
+        vendor_id: vendorId,
         user_id: userData.user.id
       };
 
@@ -154,12 +176,15 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
       console.log("Dépense ajoutée avec succès:", data);
 
-      // Invalider plusieurs queries pour rafraîchir les données
+      // Invalider les queries avec les bonnes clés
+      const currentYear = new Date().getFullYear();
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["maintenance_expenses"] }),
         queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] }),
-        queryClient.invalidateQueries({ queryKey: ["all_expenses", propertyId] }),
+        queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId, currentYear] }),
         queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] }),
+        queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId, currentYear] }),
+        queryClient.invalidateQueries({ queryKey: ["tenant_payments", propertyId] }),
+        queryClient.invalidateQueries({ queryKey: ["tenant_payments", propertyId, currentYear] }),
       ]);
 
       toast({
@@ -167,20 +192,13 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
         description: "Dépense ajoutée avec succès",
       });
 
-      // Reset form
-      setFormData({
-        category: "",
-        amount: "",
-        description: "",
-        vendor_id: ""
-      });
-      setDate(undefined);
+      // Reset form et fermer
+      resetForm();
       
-      // Fermer le dialogue et appeler onSuccess
+      // Appeler onSuccess puis fermer le dialogue
       if (onSuccess) {
         onSuccess();
       }
-      onClose();
       
     } catch (error: any) {
       console.error("Erreur lors de l'ajout de la dépense:", error);
@@ -201,10 +219,17 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     }));
   };
 
+  const handleClose = () => {
+    if (!isLoading) {
+      resetForm();
+      onClose();
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => {
-      if (!open) {
-        onClose();
+      if (!open && !isLoading) {
+        handleClose();
       }
     }}>
       <DialogContent className="sm:max-w-[425px]">
@@ -218,6 +243,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
             <Select
               value={formData.category}
               onValueChange={(value) => handleInputChange("category", value)}
+              disabled={isLoading}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionner une catégorie" />
@@ -242,6 +268,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
               value={formData.amount}
               onChange={(e) => handleInputChange("amount", e.target.value)}
               placeholder="0.00"
+              disabled={isLoading}
             />
           </div>
 
@@ -255,6 +282,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                     "w-full justify-start text-left font-normal",
                     !date && "text-muted-foreground"
                   )}
+                  disabled={isLoading}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date ? format(date, "PPP", { locale: fr }) : "Sélectionner une date"}
@@ -276,6 +304,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
             <Select
               value={formData.vendor_id}
               onValueChange={(value) => handleInputChange("vendor_id", value)}
+              disabled={isLoading}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Sélectionner un fournisseur" />
@@ -299,11 +328,17 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
               onChange={(e) => handleInputChange("description", e.target.value)}
               placeholder="Description de la dépense..."
               rows={3}
+              disabled={isLoading}
             />
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={handleClose}
+              disabled={isLoading}
+            >
               Annuler
             </Button>
             <Button type="submit" disabled={isLoading}>

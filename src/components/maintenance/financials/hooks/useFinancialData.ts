@@ -13,7 +13,7 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         return [];
       }
 
-      console.log("Récupération des dépenses pour propertyId:", propertyId);
+      console.log("Récupération des dépenses pour propertyId:", propertyId, "année:", selectedYear);
       const { data, error } = await supabase
         .from("maintenance_expenses")
         .select(`
@@ -32,7 +32,7 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         throw error;
       }
 
-      console.log("Dépenses récupérées:", data?.length || 0, "éléments");
+      console.log("Dépenses récupérées:", data?.length || 0, "éléments pour l'année", selectedYear);
       return data || [];
     },
     enabled: !!propertyId,
@@ -46,7 +46,7 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         return [];
       }
 
-      console.log("Récupération des interventions pour propertyId:", propertyId);
+      console.log("Récupération des interventions pour propertyId:", propertyId, "année:", selectedYear);
       const { data, error } = await supabase
         .from("vendor_interventions")
         .select(`
@@ -66,7 +66,7 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         throw error;
       }
 
-      console.log("Interventions récupérées:", data?.length || 0, "éléments");
+      console.log("Interventions récupérées:", data?.length || 0, "éléments pour l'année", selectedYear);
       return data || [];
     },
     enabled: !!propertyId,
@@ -79,6 +79,8 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         return [];
       }
 
+      console.log("Récupération des paiements pour propertyId:", propertyId, "année:", selectedYear);
+      
       const { data, error } = await supabase
         .from("tenant_payments")
         .select(`
@@ -97,13 +99,14 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         throw error;
       }
 
+      console.log("Paiements récupérés:", data?.length || 0, "éléments pour l'année", selectedYear);
       return data || [];
     },
     enabled: !!propertyId,
   });
 
   const refetch = async () => {
-    console.log("Rafraîchissement de toutes les données financières");
+    console.log("Rafraîchissement de toutes les données financières pour", propertyId, selectedYear);
     await Promise.all([
       refetchExpenses(),
       refetchMaintenance(),
