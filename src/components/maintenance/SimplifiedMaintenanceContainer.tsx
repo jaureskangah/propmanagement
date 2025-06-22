@@ -17,10 +17,20 @@ export const SimplifiedMaintenanceContainer = () => {
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem('maintenanceActiveTab') || 'overview';
   });
+  const [hasError, setHasError] = useState(false);
 
   // Save active tab to localStorage
   useEffect(() => {
-    localStorage.setItem('maintenanceActiveTab', activeTab);
+    try {
+      localStorage.setItem('maintenanceActiveTab', activeTab);
+    } catch (error) {
+      console.error("SimplifiedMaintenanceContainer - Error saving active tab:", error);
+    }
+  }, [activeTab]);
+
+  // Reset error state when tab changes
+  useEffect(() => {
+    setHasError(false);
   }, [activeTab]);
 
   // Fetch maintenance requests with error handling
@@ -229,9 +239,34 @@ export const SimplifiedMaintenanceContainer = () => {
       }
     } catch (error) {
       console.error("SimplifiedMaintenanceContainer - Error rendering section:", activeTab, error);
+      setHasError(true);
       return (
         <div className="text-center py-8">
           <p className="text-muted-foreground">Erreur lors du chargement de la section.</p>
+          <button 
+            onClick={() => setHasError(false)} 
+            className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
+          >
+            Réessayer
+          </button>
+        </div>
+      );
+    }
+  };
+
+  if (hasError) {
+    return (
+      <div className="space-y-6 font-sans">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            {t('maintenance')}
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Gérez toutes vos activités de maintenance depuis un seul endroit
+          </p>
+        </div>
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Une erreur s'est produite lors du chargement.</p>
           <button 
             onClick={() => window.location.reload()} 
             className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90"
@@ -239,9 +274,9 @@ export const SimplifiedMaintenanceContainer = () => {
             Recharger la page
           </button>
         </div>
-      );
-    }
-  };
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 font-sans">

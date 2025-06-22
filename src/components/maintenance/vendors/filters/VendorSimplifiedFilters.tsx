@@ -48,14 +48,14 @@ export const VendorSimplifiedFilters = ({
         </div>
 
         <Select
-          value={selectedSpecialty || ""}
-          onValueChange={(value) => setSelectedSpecialty(value === "" ? null : value)}
+          value={selectedSpecialty || "all"}
+          onValueChange={(value) => setSelectedSpecialty(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="Toutes spécialités" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Toutes spécialités</SelectItem>
+            <SelectItem value="all">Toutes spécialités</SelectItem>
             {specialties.map(specialty => (
               <SelectItem key={specialty} value={specialty}>
                 {specialty}
@@ -65,14 +65,14 @@ export const VendorSimplifiedFilters = ({
         </Select>
 
         <Select
-          value={selectedRating || ""}
-          onValueChange={(value) => setSelectedRating(value === "" ? null : value)}
+          value={selectedRating || "all"}
+          onValueChange={(value) => setSelectedRating(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Toutes notes" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Toutes notes</SelectItem>
+            <SelectItem value="all">Toutes notes</SelectItem>
             <SelectItem value="4">4+ étoiles</SelectItem>
             <SelectItem value="3">3+ étoiles</SelectItem>
             <SelectItem value="2">2+ étoiles</SelectItem>
