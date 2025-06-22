@@ -14,7 +14,13 @@ interface MaintenanceRequestItemProps {
 export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestItemProps) => {
   const { t, language } = useLocale();
   
-  console.log("MaintenanceRequestItem received request:", request);
+  console.log("MaintenanceRequestItem received request:", {
+    id: request.id,
+    issue: request.issue,
+    description: request.description,
+    tenants: request.tenants,
+    tenant_id: request.tenant_id
+  });
   
   const cardStyle = request.priority === "Urgent" 
     ? "border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:hover:bg-red-900/30" 
@@ -55,10 +61,14 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
 
   // Function to get secondary info to display (tenant info or description)
   const getSecondaryInfo = () => {
-    console.log("Tenant data structure:", request.tenants);
+    console.log("Getting secondary info for request:", {
+      tenants: request.tenants,
+      description: request.description,
+      issue: request.issue
+    });
     
     // Priority 1: Tenant information if available
-    if (request.tenants) {
+    if (request.tenants && typeof request.tenants === 'object') {
       const tenantInfo = [];
       
       // Add tenant name
@@ -80,19 +90,24 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       }
       
       if (tenantInfo.length > 0) {
+        console.log("Returning tenant info:", tenantInfo.join(' - '));
         return tenantInfo.join(' - ');
       }
     }
     
-    // Priority 2: Description if different from issue title
-    if (request.description && request.description.trim() !== request.issue.trim()) {
-      return request.description.length > 100 
+    // Priority 2: Description if available and different from issue title
+    if (request.description && request.description.trim() !== request.issue.trim() && request.description.trim() !== '') {
+      const desc = request.description.length > 100 
         ? `${request.description.substring(0, 100)}...` 
         : request.description;
+      console.log("Returning description:", desc);
+      return desc;
     }
     
-    // Priority 3: Show creation date if no other info available
-    return `${t("createdOn")} ${formatDate(request.created_at)}`;
+    // Priority 3: Show creation date as fallback
+    const fallback = `${t("createdOn")} ${formatDate(request.created_at)}`;
+    console.log("Returning fallback date:", fallback);
+    return fallback;
   };
 
   const secondaryInfo = getSecondaryInfo();

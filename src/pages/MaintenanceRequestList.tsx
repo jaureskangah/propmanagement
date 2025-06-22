@@ -23,6 +23,8 @@ const MaintenanceRequestList = () => {
   const { data: requests = [], refetch } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: async () => {
+      console.log("Starting maintenance requests fetch...");
+      
       const { data, error } = await supabase
         .from('maintenance_requests')
         .select(`
@@ -37,8 +39,24 @@ const MaintenanceRequestList = () => {
         `)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
-      console.log("Fetched maintenance requests with structure:", data);
+      if (error) {
+        console.error("Error fetching maintenance requests:", error);
+        throw error;
+      }
+      
+      console.log("Raw data from Supabase:", data);
+      
+      // Log the structure of the first item to debug
+      if (data && data.length > 0) {
+        console.log("First request structure:", {
+          id: data[0].id,
+          issue: data[0].issue,
+          tenant_id: data[0].tenant_id,
+          tenants: data[0].tenants,
+          description: data[0].description
+        });
+      }
+      
       return data;
     },
   });
