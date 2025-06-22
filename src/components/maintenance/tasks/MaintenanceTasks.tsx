@@ -20,6 +20,12 @@ export const MaintenanceTasks = ({ propertyId }: MaintenanceTasksProps) => {
     handleDeleteTask,
   } = useMaintenanceTasks(propertyId);
 
+  // Debug logs pour diagnostiquer le problème
+  console.log("MaintenanceTasks - Property ID:", propertyId);
+  console.log("MaintenanceTasks - Tasks:", tasks);
+  console.log("MaintenanceTasks - Is Loading:", isLoading);
+  console.log("MaintenanceTasks - Tasks count:", tasks?.length || 0);
+
   if (isLoading) {
     return (
       <div className="space-y-4">

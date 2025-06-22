@@ -4,6 +4,8 @@ import { supabase } from "@/lib/supabase";
 import { Task } from "../../types";
 
 export const useTasksQuery = (propertyId: string | undefined = undefined) => {
+  console.log("useTasksQuery - Property ID:", propertyId);
+  
   const result = useQuery({
     queryKey: ['maintenance_tasks', propertyId],
     queryFn: async () => {
@@ -22,10 +24,11 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
         const { data, error } = await query.order('date');
         
         if (error) {
+          console.error("Error fetching tasks:", error);
           throw new Error(error.message);
         }
         
-        console.log(`Fetched ${data?.length || 0} tasks`);
+        console.log(`Fetched ${data?.length || 0} tasks for property ${propertyId}:`, data);
         
         // Sort tasks with uncompleted ones first
         const sortedTasks = data.sort((a, b) => {
@@ -45,6 +48,7 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
           return dateA - dateB;
         });
         
+        console.log("Sorted tasks:", sortedTasks);
         return sortedTasks as Task[];
       } catch (error) {
         console.error("Error fetching tasks:", error);
@@ -56,6 +60,13 @@ export const useTasksQuery = (propertyId: string | undefined = undefined) => {
     gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes (replaced cacheTime)
     refetchOnWindowFocus: false, // Don't refetch when window is focused
     refetchInterval: false, // Disable automatic periodic refetching
+  });
+
+  console.log("useTasksQuery result:", {
+    data: result.data,
+    isLoading: result.isLoading,
+    error: result.error,
+    dataLength: result.data?.length || 0
   });
 
   // Return structured data with additional helper methods

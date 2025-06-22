@@ -1,14 +1,16 @@
 
 import { supabase } from "@/lib/supabase";
 import { Task, NewTask } from "../../types";
-import { QueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { formatLocalDateForStorage } from "../../utils/dateUtils";
 
 export const useTaskAddition = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const handleAddTask = async (newTask: NewTask): Promise<Task> => {
     console.log("Adding task with data:", newTask);
+    console.log("Property ID being used:", newTask.property_id);
+    
     try {
       // Check if we received a formatted date string from AddTaskDialog
       let formattedDate: string;
@@ -69,10 +71,11 @@ export const useTaskAddition = () => {
       }
       
       console.log("Task inserted successfully:", data);
+      console.log("Invalidating cache for property:", newTask.property_id);
       
       // Immediately invalidate the tasks query to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      queryClient.invalidateQueries({ queryKey: ['maintenance_tasks', newTask.property_id] });
       
       // Parse the date string back to a Date object for the returned Task
       const parsedDate = new Date(formattedDate + 'T00:00:00');
@@ -147,9 +150,17 @@ export const useTaskAddition = () => {
       
       console.log("Multiple tasks inserted successfully:", data);
       
+      // Get unique property IDs for cache invalidation
+      const propertyIds = [...new Set(newTasks.map(task => task.property_id))];
+      console.log("Invalidating cache for properties:", propertyIds);
+      
       // Immediately invalidate the tasks query to ensure fresh data
       queryClient.invalidateQueries({ queryKey: ['maintenance_tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+      propertyIds.forEach(propertyId => {
+        if (propertyId) {
+          queryClient.invalidateQueries({ queryKey: ['maintenance_tasks', propertyId] });
+        }
+      });
       
       // Transform the returned data to Task objects with correct dates
       return data.map((task: any) => {
