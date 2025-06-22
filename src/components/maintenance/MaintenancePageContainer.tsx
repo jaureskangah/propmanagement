@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { MaintenanceMetricsSection } from "./metrics/MaintenanceMetricsSection";
 import { MaintenanceTabs } from "./tabs/MaintenanceTabs";
@@ -220,8 +219,6 @@ export const MaintenancePageContainer = () => {
           {t('addTask')}
         </Button>
         
-        <Button 
-          onClick={handleAddExp
         <Button 
           onClick={handleAddExpense}
           variant="outline"
