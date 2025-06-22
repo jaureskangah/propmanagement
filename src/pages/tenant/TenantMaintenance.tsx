@@ -11,13 +11,16 @@ import { useAuth } from "@/components/AuthProvider";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "@/components/sidebar/ModernSidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-const TenantMaintenance = () => {
+const TenantMaintenanceContent = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useLocale();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { open } = useSidebar();
+  const isMobile = useIsMobile();
   
   // Activer les notifications en temps réel
   useRealtimeNotifications();
@@ -85,14 +88,20 @@ const TenantMaintenance = () => {
   }
 
   return (
+    <div className={cn(
+      "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
+      !isMobile && (open ? "md:ml-[270px]" : "md:ml-[80px]")
+    )}>
+      <TenantMaintenanceView />
+    </div>
+  );
+};
+
+const TenantMaintenance = () => {
+  return (
     <div className="flex">
-      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
-        <TenantMaintenanceView />
-      </div>
+      <AppSidebar isTenant={true} />
+      <TenantMaintenanceContent />
     </div>
   );
 };

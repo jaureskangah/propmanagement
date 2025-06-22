@@ -6,10 +6,32 @@ import { TenantDashboard } from "@/components/tenant/TenantDashboard";
 import { useAuth } from '@/components/AuthProvider';
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { useSidebar } from "@/components/sidebar/ModernSidebar";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+const TenantDashboardContent = () => {
+  const { open } = useSidebar();
+  const isMobile = useIsMobile();
+
+  return (
+    <main className={cn(
+      "pt-16 md:pt-8 transition-all duration-300",
+      !isMobile && (open ? "md:ml-[270px]" : "md:ml-[80px]")
+    )}>
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="pb-8"
+      >
+        <TenantDashboard />
+      </motion.div>
+    </main>
+  );
+};
 
 const TenantDashboardPage = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
   React.useEffect(() => {
     console.log("=== TENANT DASHBOARD ===");
@@ -46,20 +68,8 @@ const TenantDashboardPage = () => {
   console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <main className={cn(
-        "pt-16 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="pb-8"
-        >
-          <TenantDashboard />
-        </motion.div>
-      </main>
+      <AppSidebar isTenant={true} />
+      <TenantDashboardContent />
     </div>
   );
 };
