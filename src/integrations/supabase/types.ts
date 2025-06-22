@@ -240,6 +240,7 @@ export type Database = {
           unit_number: string | null
           updated_at: string
           user_id: string
+          vendor_id: string | null
         }
         Insert: {
           amount: number
@@ -253,6 +254,7 @@ export type Database = {
           unit_number?: string | null
           updated_at?: string
           user_id: string
+          vendor_id?: string | null
         }
         Update: {
           amount?: number
@@ -266,6 +268,7 @@ export type Database = {
           unit_number?: string | null
           updated_at?: string
           user_id?: string
+          vendor_id?: string | null
         }
         Relationships: [
           {
@@ -287,6 +290,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "maintenance_expenses_vendor_id_fkey"
+            columns: ["vendor_id"]
+            isOneToOne: false
+            referencedRelation: "vendors"
             referencedColumns: ["id"]
           },
         ]
