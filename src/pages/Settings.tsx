@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Navigate } from "react-router-dom";
@@ -15,7 +14,6 @@ import { Loader2, Save } from "lucide-react";
 
 const Settings = () => {
   const { user, isAuthenticated, loading } = useAuth();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState({
     first_name: '',
@@ -126,15 +124,8 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar 
-        isTenant={isTenantUser} 
-        isCollapsed={sidebarCollapsed} 
-        setIsCollapsed={setSidebarCollapsed} 
-      />
-      <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar isTenant={isTenantUser} />
+      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}

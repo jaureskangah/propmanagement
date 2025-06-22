@@ -8,7 +8,6 @@ import { TenantModals } from "@/components/tenant/TenantModals";
 import { TenantsHeader } from "@/components/tenant/TenantsHeader";
 import { TenantsLoading } from "@/components/tenant/TenantsLoading";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 const Tenants = () => {
@@ -39,7 +38,6 @@ const Tenants = () => {
   } = useTenantPage();
   
   const isMobile = useIsMobile();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   if (isLoading) {
     return <TenantsLoading />;
@@ -48,11 +46,8 @@ const Tenants = () => {
   return (
     <TooltipProvider>
       <div className="min-h-screen bg-background">
-        <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-        <div className={cn(
-          "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-          sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-        )}>
+        <AppSidebar />
+        <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}

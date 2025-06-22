@@ -12,7 +12,6 @@ import { AddPropertyModal } from "@/components/AddPropertyModal";
 import { EditPropertyModal } from "@/components/EditPropertyModal";
 import { useMediaQuery } from "@/hooks/use-mobile";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
 import PropertyFinancialsSection from "@/components/properties/PropertyFinancialsSection";
 import { useAuth } from "@/components/AuthProvider";
 
@@ -28,7 +27,6 @@ const Properties = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<string | null>(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   const isMobile = useMediaQuery("(max-width: 768px)");
   
@@ -76,11 +74,8 @@ const Properties = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isTenant={isTenant} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar isTenant={isTenant} />
+      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

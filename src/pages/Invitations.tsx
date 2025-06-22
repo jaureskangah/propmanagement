@@ -6,10 +6,8 @@ import { InvitationFilters } from "@/components/invitations/InvitationFilters";
 import { InvitationsList } from "@/components/invitations/InvitationsList";
 import { useInvitationManagement } from "@/hooks/invitations/useInvitationManagement";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 const Invitations = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('all');
   
   const {
@@ -37,11 +35,8 @@ const Invitations = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar />
+      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
