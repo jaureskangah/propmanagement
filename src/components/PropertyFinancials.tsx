@@ -1,15 +1,11 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { MetricsCards } from "./maintenance/financials/MetricsCards";
 import { DataTables } from "./maintenance/financials/DataTables";
 import { ChartsSection } from "./maintenance/financials/ChartsSection";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { AddExpenseDialog } from "./maintenance/financials/dialogs/AddExpenseDialog";
-import { useToast } from "@/hooks/use-toast";
 
 interface PropertyFinancialsProps {
   propertyId: string;
@@ -18,8 +14,6 @@ interface PropertyFinancialsProps {
 
 const PropertyFinancials = ({ propertyId, selectedYear }: PropertyFinancialsProps) => {
   const { t } = useLocale();
-  const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
-  const { toast } = useToast();
   
   console.log("Rendering PropertyFinancials for property:", propertyId);
 
@@ -99,46 +93,8 @@ const PropertyFinancials = ({ propertyId, selectedYear }: PropertyFinancialsProp
     }))
   ];
 
-  const handleOpenAddExpense = () => {
-    if (!propertyId) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez sélectionner une propriété avant d'ajouter une dépense",
-        variant: "destructive",
-      });
-      return;
-    }
-    setIsAddExpenseOpen(true);
-  };
-
-  const handleExpenseAdded = () => {
-    setIsAddExpenseOpen(false);
-    toast({
-      title: "Succès",
-      description: "Dépense ajoutée avec succès",
-    });
-  };
-
   return (
     <div className="space-y-6">
-      {/* Section Header with Add Expense Button */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-semibold">Dépenses</h2>
-          <p className="text-muted-foreground">
-            Suivez et gérez toutes vos dépenses de maintenance
-          </p>
-        </div>
-        <Button 
-          onClick={handleOpenAddExpense}
-          className="bg-primary hover:bg-primary/90"
-          disabled={!propertyId}
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Ajouter une dépense
-        </Button>
-      </div>
-
       <MetricsCards
         expenses={expenses}
         maintenance={maintenance}
@@ -150,16 +106,6 @@ const PropertyFinancials = ({ propertyId, selectedYear }: PropertyFinancialsProp
         expenses={expenses}
         allExpenses={allExpenses}
       />
-
-      {/* Add Expense Dialog */}
-      {propertyId && (
-        <AddExpenseDialog
-          isOpen={isAddExpenseOpen}
-          onClose={() => setIsAddExpenseOpen(false)}
-          propertyId={propertyId}
-          onSuccess={handleExpenseAdded}
-        />
-      )}
     </div>
   );
 };
