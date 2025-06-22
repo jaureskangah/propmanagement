@@ -11,7 +11,7 @@ import { useSidebar } from "@/components/sidebar/ModernSidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const InvitationsContent = () => {
-  const [activeTab, set] = useState('all');
+  const [activeTab, setActiveTab] = useState('all');
   const { open } = useSidebar();
   const isMobile = useIsMobile();
   
