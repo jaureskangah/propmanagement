@@ -30,7 +30,6 @@ export const MaintenancePageContainer = () => {
   const { handleAddTask } = useTaskAddition();
   const navigate = useNavigate();
   
-  // Get saved property and year from localStorage or use defaults
   const savedPropertyId = localStorage.getItem('selectedPropertyId') || "property-1";
   const savedYear = localStorage.getItem('selectedYear') ? 
     parseInt(localStorage.getItem('selectedYear') || '') : new Date().getFullYear();
@@ -38,7 +37,6 @@ export const MaintenancePageContainer = () => {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>(savedPropertyId);
   const [selectedYear, setSelectedYear] = useState<number>(savedYear);
   
-  // Ajoutons un useEffect pour vérifier la valeur de selectedPropertyId
   useEffect(() => {
     console.log("MaintenancePageContainer - selectedPropertyId:", selectedPropertyId);
     console.log("MaintenancePageContainer - selectedYear:", selectedYear);
@@ -48,19 +46,27 @@ export const MaintenancePageContainer = () => {
     }
   }, [selectedPropertyId, selectedYear]);
   
-  // Save selections to localStorage when they change
   useEffect(() => {
     localStorage.setItem('selectedPropertyId', selectedPropertyId);
     localStorage.setItem('selectedYear', selectedYear.toString());
   }, [selectedPropertyId, selectedYear]);
   
-  // Fetch maintenance requests
+  // Fetch maintenance requests with tenant data for consistency
   const { data: requests = [], isLoading } = useQuery({
-    queryKey: ['maintenance_requests'],
+    queryKey: ['maintenance_requests_container'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('maintenance_requests')
-        .select('*')
+        .select(`
+          *,
+          tenants (
+            name,
+            unit_number,
+            properties (
+              name
+            )
+          )
+        `)
         .order('created_at', { ascending: false });
       
       if (error) throw error;
@@ -118,7 +124,6 @@ export const MaintenancePageContainer = () => {
     request.status !== "Resolved" && request.status !== "Cancelled"
   );
 
-  // Calculate urgent requests count
   const urgentRequests = requests.filter(r => r.priority === "Urgent").length;
 
   return (
@@ -184,7 +189,6 @@ export const MaintenancePageContainer = () => {
             selectedYear={selectedYear}
             filteredRequests={filteredRequests}
             onRequestClick={() => {
-              // Navigate to the requests list instead of opening the dialog here
               navigate('/maintenance-requests');
             }}
             onViewAllRequests={handleViewAllRequests}
