@@ -19,7 +19,7 @@ const MaintenanceRequestList = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isTenantUser = user?.user_metadata?.is_tenant_user;
   
-  // Fetch maintenance requests
+  // Fetch maintenance requests with flat tenant data
   const { data: requests = [], refetch } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: async () => {
@@ -29,7 +29,7 @@ const MaintenanceRequestList = () => {
         .from('maintenance_requests')
         .select(`
           *,
-          tenants (
+          tenants!maintenance_requests_tenant_id_fkey (
             name,
             unit_number,
             properties (
@@ -46,18 +46,28 @@ const MaintenanceRequestList = () => {
       
       console.log("Raw data from Supabase:", data);
       
+      // Transform the data to include flat tenant fields for easier access
+      const transformedData = data?.map(request => ({
+        ...request,
+        tenant_name: request.tenants?.name,
+        property_name: request.tenants?.properties?.name,
+        tenant_unit_number: request.tenants?.unit_number
+      }));
+      
       // Log the structure of the first item to debug
-      if (data && data.length > 0) {
-        console.log("First request structure:", {
-          id: data[0].id,
-          issue: data[0].issue,
-          tenant_id: data[0].tenant_id,
-          tenants: data[0].tenants,
-          description: data[0].description
+      if (transformedData && transformedData.length > 0) {
+        console.log("First transformed request structure:", {
+          id: transformedData[0].id,
+          issue: transformedData[0].issue,
+          tenant_id: transformedData[0].tenant_id,
+          tenant_name: transformedData[0].tenant_name,
+          property_name: transformedData[0].property_name,
+          tenant_unit_number: transformedData[0].tenant_unit_number,
+          description: transformedData[0].description
         });
       }
       
-      return data;
+      return transformedData;
     },
   });
 

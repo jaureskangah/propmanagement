@@ -7,7 +7,11 @@ import { MaintenanceRequest } from "../types";
 import { Card } from "@/components/ui/card";
 
 interface MaintenanceRequestItemProps {
-  request: MaintenanceRequest;
+  request: MaintenanceRequest & {
+    tenant_name?: string;
+    property_name?: string;
+    tenant_unit_number?: string;
+  };
   onClick: () => void;
 }
 
@@ -18,6 +22,9 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     id: request.id,
     issue: request.issue,
     description: request.description,
+    tenant_name: (request as any).tenant_name,
+    property_name: (request as any).property_name,
+    tenant_unit_number: (request as any).tenant_unit_number,
     tenants: request.tenants,
     tenant_id: request.tenant_id
   });
@@ -62,12 +69,46 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
   // Function to get secondary info to display (tenant info or description)
   const getSecondaryInfo = () => {
     console.log("Getting secondary info for request:", {
-      tenants: request.tenants,
+      tenant_name: (request as any).tenant_name,
+      property_name: (request as any).property_name,
+      tenant_unit_number: (request as any).tenant_unit_number,
       description: request.description,
       issue: request.issue
     });
     
-    // Priority 1: Tenant information if available
+    // Priority 1: Tenant information from flat structure
+    const flatTenantName = (request as any).tenant_name;
+    const flatPropertyName = (request as any).property_name;
+    const flatUnitNumber = (request as any).tenant_unit_number;
+    
+    if (flatTenantName || flatPropertyName) {
+      const tenantInfo = [];
+      
+      // Add tenant name
+      if (flatTenantName) {
+        tenantInfo.push(flatTenantName);
+      }
+      
+      // Add property and unit info
+      const locationParts = [];
+      if (flatPropertyName) {
+        locationParts.push(flatPropertyName);
+      }
+      if (flatUnitNumber) {
+        locationParts.push(`${t("unit")} ${flatUnitNumber}`);
+      }
+      
+      if (locationParts.length > 0) {
+        tenantInfo.push(locationParts.join(', '));
+      }
+      
+      if (tenantInfo.length > 0) {
+        console.log("Returning flat tenant info:", tenantInfo.join(' - '));
+        return tenantInfo.join(' - ');
+      }
+    }
+    
+    // Priority 2: Try nested tenant structure (fallback)
     if (request.tenants && typeof request.tenants === 'object') {
       const tenantInfo = [];
       
@@ -90,12 +131,12 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       }
       
       if (tenantInfo.length > 0) {
-        console.log("Returning tenant info:", tenantInfo.join(' - '));
+        console.log("Returning nested tenant info:", tenantInfo.join(' - '));
         return tenantInfo.join(' - ');
       }
     }
     
-    // Priority 2: Description if available and different from issue title
+    // Priority 3: Description if available and different from issue title
     if (request.description && request.description.trim() !== request.issue.trim() && request.description.trim() !== '') {
       const desc = request.description.length > 100 
         ? `${request.description.substring(0, 100)}...` 
@@ -104,7 +145,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       return desc;
     }
     
-    // Priority 3: Show creation date as fallback
+    // Priority 4: Show creation date as fallback
     const fallback = `${t("createdOn")} ${formatDate(request.created_at)}`;
     console.log("Returning fallback date:", fallback);
     return fallback;
