@@ -2,13 +2,13 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { PropertyFinancials } from "../PropertyFinancials";
+import { SimplifiedExpensesView } from "../financials/SimplifiedExpensesView";
 import { AddExpenseDialog } from "../financials/dialogs/AddExpenseDialog";
 
 export const MaintenanceFinancesSection = () => {
   const [isAddExpenseOpen, setIsAddExpenseOpen] = useState(false);
   
-  const savedPropertyId = localStorage.getItem('selectedPropertyId') || "property-1";
+  const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
   const savedYear = localStorage.getItem('selectedYear') ? 
     parseInt(localStorage.getItem('selectedYear') || '') : new Date().getFullYear();
 
@@ -17,23 +17,22 @@ export const MaintenanceFinancesSection = () => {
       {/* Section Header with Actions */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-semibold">Finances et dépenses</h2>
+          <h2 className="text-2xl font-semibold">Dépenses</h2>
           <p className="text-muted-foreground">
-            Suivez les coûts et dépenses de maintenance
+            Suivez et gérez toutes vos dépenses de maintenance
           </p>
         </div>
         <Button 
           onClick={() => setIsAddExpenseOpen(true)}
-          variant="outline"
-          className="border-primary text-primary hover:bg-primary/10"
+          className="bg-primary hover:bg-primary/90"
         >
           <Plus className="h-4 w-4 mr-2" />
           Nouvelle dépense
         </Button>
       </div>
 
-      {/* Financial Data */}
-      <PropertyFinancials 
+      {/* Simplified Expenses View */}
+      <SimplifiedExpensesView 
         propertyId={savedPropertyId}
         selectedYear={savedYear}
       />

@@ -214,7 +214,7 @@ export const SimplifiedMaintenanceContainer = () => {
       count: getCountForTab('vendors')
     },
     { 
-      name: "Finances", 
+      name: "Dépenses", 
       value: "finances", 
       icon: DollarSign,
       count: getCountForTab('finances')
