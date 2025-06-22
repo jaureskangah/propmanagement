@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { MaintenanceRequest } from "../types";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,8 @@ export const MaintenanceRequests = ({ onViewAllRequests }: MaintenanceRequestsPr
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
-  // Fetch maintenance requests with tenant data - same logic as working component
-  const { data: requests = [], isLoading, refetch } = useQuery({
+  // Fetch maintenance requests with tenant data
+  const { data: allRequests = [], isLoading, refetch } = useQuery({
     queryKey: ['maintenance_requests_tab'],
     queryFn: async () => {
       console.log("Fetching maintenance requests with tenant data for tab...");
@@ -38,8 +38,7 @@ export const MaintenanceRequests = ({ onViewAllRequests }: MaintenanceRequestsPr
             )
           )
         `)
-        .order('created_at', { ascending: false })
-        .limit(5);
+        .order('created_at', { ascending: false });
       
       if (error) {
         console.error("Error fetching maintenance requests:", error);
@@ -50,6 +49,10 @@ export const MaintenanceRequests = ({ onViewAllRequests }: MaintenanceRequestsPr
       return data || [];
     },
   });
+
+  // Show only first 5 requests
+  const displayedRequests = allRequests.slice(0, 5);
+  const remainingCount = allRequests.length - 5;
 
   const handleRequestClick = (request: MaintenanceRequest) => {
     console.log("Opening request dialog for:", request);
@@ -71,30 +74,36 @@ export const MaintenanceRequests = ({ onViewAllRequests }: MaintenanceRequestsPr
   return (
     <>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>{t('maintenanceRequests')}</CardTitle>
-          <Button onClick={onViewAllRequests} variant="outline">
-            {t('viewAllRequests')}
-          </Button>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">
               Chargement...
             </div>
-          ) : requests.length === 0 ? (
+          ) : displayedRequests.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               {t('noMaintenanceRequests')}
             </div>
           ) : (
             <div className="space-y-4">
-              {requests.map((request) => (
+              {displayedRequests.map((request) => (
                 <MaintenanceRequestItem 
                   key={request.id}
                   request={request}
                   onClick={() => handleRequestClick(request)}
                 />
               ))}
+              
+              {remainingCount > 0 && (
+                <div className="pt-4 border-t">
+                  <Button 
+                    onClick={onViewAllRequests} 
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Voir {remainingCount} autre{remainingCount > 1 ? 's' : ''} demande{remainingCount > 1 ? 's' : ''}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>

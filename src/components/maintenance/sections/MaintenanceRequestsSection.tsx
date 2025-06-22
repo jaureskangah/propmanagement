@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { MaintenanceRequestItem } from "../request/MaintenanceRequestItem";
 import { MaintenanceRequestDialog } from "../request/MaintenanceRequestDialog";
 import { MaintenanceRequest } from "../types";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const MaintenanceRequestsSection = () => {
   const { t } = useLocale();
@@ -17,8 +17,8 @@ export const MaintenanceRequestsSection = () => {
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  // Fetch maintenance requests with tenant data using the same logic as MaintenanceRequestList
-  const { data: requests = [], isLoading, refetch } = useQuery({
+  // Fetch maintenance requests with tenant data
+  const { data: allRequests = [], isLoading, refetch } = useQuery({
     queryKey: ['maintenance_requests_section'],
     queryFn: async () => {
       console.log("Fetching maintenance requests with tenant data for section...");
@@ -35,8 +35,7 @@ export const MaintenanceRequestsSection = () => {
             )
           )
         `)
-        .order('created_at', { ascending: false })
-        .limit(5); // Limit to show only recent requests in section
+        .order('created_at', { ascending: false });
       
       if (error) {
         console.error("Error fetching maintenance requests:", error);
@@ -48,7 +47,11 @@ export const MaintenanceRequestsSection = () => {
     },
   });
 
-  const handleViewAllRequests = () => {
+  // Show only first 5 requests
+  const displayedRequests = allRequests.slice(0, 5);
+  const remainingCount = allRequests.length - 5;
+
+  const handleViewMoreRequests = () => {
     navigate('/maintenance-requests');
   };
 
@@ -88,32 +91,38 @@ export const MaintenanceRequestsSection = () => {
         </Button>
       </div>
 
-      {/* Requests List using the working MaintenanceRequestItem */}
+      {/* Requests List */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>{t('maintenanceRequests')}</CardTitle>
-          <Button onClick={handleViewAllRequests} variant="outline">
-            {t('viewAllRequests')}
-          </Button>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">
               Chargement...
             </div>
-          ) : requests.length === 0 ? (
+          ) : displayedRequests.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               {t('noMaintenanceRequests')}
             </div>
           ) : (
             <div className="space-y-4">
-              {requests.map((request) => (
+              {displayedRequests.map((request) => (
                 <MaintenanceRequestItem 
                   key={request.id}
                   request={request}
                   onClick={() => handleRequestClick(request)}
                 />
               ))}
+              
+              {remainingCount > 0 && (
+                <div className="pt-4 border-t">
+                  <Button 
+                    onClick={handleViewMoreRequests} 
+                    variant="outline"
+                    className="w-full"
+                  >
+                    Voir {remainingCount} autre{remainingCount > 1 ? 's' : ''} demande{remainingCount > 1 ? 's' : ''}
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </CardContent>
