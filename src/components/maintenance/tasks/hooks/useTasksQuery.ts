@@ -5,7 +5,7 @@ import { Task } from "../../types";
 
 export const useTasksQuery = (propertyId: string | undefined = undefined) => {
   const result = useQuery({
-    queryKey: ['tasks', propertyId],
+    queryKey: ['maintenance_tasks', propertyId],
     queryFn: async () => {
       try {
         console.log("Fetching tasks for property:", propertyId);

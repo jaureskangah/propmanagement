@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 interface LocaleContextProps {
@@ -135,6 +136,7 @@ const translations = {
     errorAddingTask: "Erreur lors de l'ajout de la tâche.",
     task: "Tâche",
     tasks: "Tâches",
+    noTasks: "Aucune tâche trouvée",
     title: "Titre",
     assignee: "Assigné à",
     dueDate: "Date d'échéance",
@@ -307,6 +309,7 @@ const translations = {
     errorAddingTask: "Error adding task.",
     task: "Task",
     tasks: "Tasks",
+    noTasks: "No tasks found",
     title: "Title",
     assignee: "Assignee",
     dueDate: "Due Date",
