@@ -1,153 +1,394 @@
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
-import { Language, UnitSystem, Translations } from '@/translations/types';
-import translations from '@/translations/en';
-import frTranslations from '@/translations/fr';
-import { toast } from "@/hooks/use-toast";
-
-interface LocaleContextType {
-  language: Language;
+interface LocaleContextProps {
   locale: string;
-  setLanguage: (lang: Language) => void;
-  unitSystem: UnitSystem;
-  setUnitSystem: (system: UnitSystem) => void;
-  t: (key: string, params?: Record<string, string>) => string;
+  setLocale: (locale: string) => void;
+  t: (key: string, args?: any) => string;
+  language: string;
 }
 
-const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
+const LocaleContext = createContext<LocaleContextProps | undefined>(undefined);
 
-const translationsMap: Record<Language, Translations> = {
-  en: translations as unknown as Translations,
-  fr: frTranslations as unknown as Translations
-};
+interface LocaleProviderProps {
+  children: React.ReactNode;
+  defaultLocale?: string;
+}
 
-const LANGUAGE_STORAGE_KEY = 'app-language';
-const UNIT_SYSTEM_STORAGE_KEY = 'app-unit-system';
-
-const getInitialLanguage = (): Language => {
-  try {
-    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    if (savedLanguage === 'fr' || savedLanguage === 'en') {
-      return savedLanguage;
-    }
-    const browserLang = navigator.language.split('-')[0];
-    const defaultLang: Language = browserLang === 'fr' ? 'fr' : 'en';
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, defaultLang);
-    return defaultLang;
-  } catch (error) {
-    console.error('Error getting initial language:', error);
-    return 'en';
+const translations = {
+  fr: {
+    welcome: "Bienvenue",
+    login: "Se connecter",
+    logout: "Déconnexion",
+    dashboard: "Tableau de bord",
+    properties: "Propriétés",
+    tenants: "Locataires",
+    maintenance: "Maintenance",
+    financials: "Finances",
+    settings: "Paramètres",
+    addProperty: "Ajouter une propriété",
+    editProperty: "Modifier la propriété",
+    deleteProperty: "Supprimer la propriété",
+    propertyName: "Nom de la propriété",
+    propertyAddress: "Adresse de la propriété",
+    propertyType: "Type de propriété",
+    propertyDetails: "Détails de la propriété",
+    save: "Enregistrer",
+    cancel: "Annuler",
+    deleteConfirmation: "Êtes-vous sûr de vouloir supprimer cette propriété ?",
+    propertyAdded: "Propriété ajoutée avec succès!",
+    propertyUpdated: "Propriété mise à jour avec succès!",
+    propertyDeleted: "Propriété supprimée avec succès!",
+    addTenant: "Ajouter un locataire",
+    editTenant: "Modifier le locataire",
+    deleteTenant: "Supprimer le locataire",
+    tenantName: "Nom du locataire",
+    tenantEmail: "Email du locataire",
+    tenantPhone: "Téléphone du locataire",
+    tenantDetails: "Détails du locataire",
+    tenantAdded: "Locataire ajouté avec succès!",
+    tenantUpdated: "Locataire mis à jour avec succès!",
+    tenantDeleted: "Locataire supprimé avec succès!",
+    noProperties: "Aucune propriété disponible.",
+    noTenants: "Aucun locataire disponible.",
+    maintenanceRequests: "Demandes de maintenance",
+    noMaintenanceRequests: "Aucune demande de maintenance.",
+    addMaintenanceRequest: "Ajouter une demande de maintenance",
+    editMaintenanceRequest: "Modifier la demande de maintenance",
+    deleteMaintenanceRequest: "Supprimer la demande de maintenance",
+    maintenanceRequestDetails: "Détails de la demande de maintenance",
+    maintenanceRequestAdded: "Demande de maintenance ajoutée avec succès!",
+    maintenanceRequestUpdated: "Demande de maintenance mise à jour avec succès!",
+    maintenanceRequestDeleted: "Demande de maintenance supprimée avec succès!",
+    issue: "Problème",
+    description: "Description",
+    priority: "Priorité",
+    status: "Statut",
+    selectPriority: "Sélectionner la priorité",
+    selectStatus: "Sélectionner le statut",
+    pending: "En attente",
+    inProgress: "En cours",
+    resolved: "Résolue",
+    high: "Haute",
+    medium: "Moyenne",
+    low: "Basse",
+    urgent: "Urgente",
+    financialRecords: "Dossiers financiers",
+    addFinancialRecord: "Ajouter un dossier financier",
+    editFinancialRecord: "Modifier le dossier financier",
+    deleteFinancialRecord: "Supprimer le dossier financier",
+    financialRecordDetails: "Détails du dossier financier",
+    financialRecordAdded: "Dossier financier ajouté avec succès!",
+    financialRecordUpdated: "Dossier financier mis à jour avec succès!",
+    financialRecordDeleted: "Dossier financier supprimé avec succès!",
+    date: "Date",
+    amount: "Montant",
+    type: "Type",
+    selectType: "Sélectionner le type",
+    income: "Revenu",
+    expense: "Dépense",
+    category: "Catégorie",
+    selectCategory: "Sélectionner la catégorie",
+    notes: "Remarques",
+    noFinancialRecords: "Aucun dossier financier disponible.",
+    leaseStartDate: "Date de début du bail",
+    leaseEndDate: "Date de fin du bail",
+    monthlyRent: "Loyer mensuel",
+    deposit: "Dépôt",
+    unit: "Unité",
+    utilitiesIncluded: "Services inclus",
+    petsAllowed: "Animaux autorisés",
+    tenantAgreement: "Contrat de location",
+    tenantPortalAccess: "Accès au portail locataire",
+    tenantAddedSuccess: "Locataire ajouté avec succès.",
+    tenantUpdatedSuccess: "Locataire mis à jour avec succès.",
+    tenantDeletedSuccess: "Locataire supprimé avec succès.",
+    propertyAddedSuccess: "Propriété ajoutée avec succès.",
+    propertyUpdatedSuccess: "Propriété mise à jour avec succès.",
+    propertyDeletedSuccess: "Propriété supprimée avec succès.",
+    maintenanceRequestAddedSuccess: "Demande de maintenance ajoutée avec succès.",
+    maintenanceRequestUpdatedSuccess: "Demande de maintenance mise à jour avec succès.",
+    maintenanceRequestDeletedSuccess: "Demande de maintenance supprimée avec succès.",
+    financialRecordAddedSuccess: "Dossier financier ajouté avec succès.",
+    financialRecordUpdatedSuccess: "Dossier financier mis à jour avec succès.",
+    financialRecordDeletedSuccess: "Dossier financier supprimé avec succès.",
+    error: "Erreur",
+    success: "Succès",
+    confirm: "Confirmer",
+    viewAll: "Voir tout",
+    view: "Voir",
+    edit: "Modifier",
+    delete: "Supprimer",
+    details: "Détails",
+    photos: "Photos",
+    history: "Historique",
+    feedback: "Commentaires",
+    messages: "Messages",
+    close: "Fermer",
+    created: "Créé",
+    updated: "Mis à jour",
+    noDescriptionProvided: "Aucune description fournie.",
+    addTask: "Ajouter une tâche",
+    taskAdded: "Tâche ajoutée avec succès!",
+    errorAddingTask: "Erreur lors de l'ajout de la tâche.",
+    task: "Tâche",
+    tasks: "Tâches",
+    title: "Titre",
+    assignee: "Assigné à",
+    dueDate: "Date d'échéance",
+    markAsComplete: "Marquer comme terminé",
+    completed: "Terminé",
+    incomplete: "Incomplet",
+    all: "Tous",
+    vendors: "Fournisseurs",
+    addVendor: "Ajouter un fournisseur",
+    vendorName: "Nom du fournisseur",
+    vendorContact: "Contact du fournisseur",
+    vendorPhone: "Téléphone du fournisseur",
+    vendorEmail: "Email du fournisseur",
+    vendorAddress: "Adresse du fournisseur",
+    vendorServices: "Services offerts",
+    saveVendor: "Enregistrer le fournisseur",
+    vendorAdded: "Fournisseur ajouté avec succès!",
+    vendorUpdated: "Fournisseur mis à jour avec succès!",
+    vendorDeleted: "Fournisseur supprimé avec succès!",
+    editVendor: "Modifier le fournisseur",
+    deleteVendor: "Supprimer le fournisseur",
+    noVendors: "Aucun fournisseur disponible.",
+    addExpense: "Ajouter une dépense",
+    expenseAdded: "Dépense ajoutée avec succès!",
+    errorAddingExpense: "Erreur lors de l'ajout de la dépense.",
+    amountPaid: "Montant payé",
+    paymentDate: "Date de paiement",
+    paymentMethod: "Méthode de paiement",
+    selectPaymentMethod: "Sélectionner la méthode de paiement",
+    cash: "Espèces",
+    creditCard: "Carte de crédit",
+    bankTransfer: "Virement bancaire",
+    check: "Chèque",
+    other: "Autre",
+    invoiceNumber: "Numéro de facture",
+    uploadInvoice: "Télécharger la facture",
+    noTenantAssociated: "Aucun locataire associé.",
+    errorLoadingMessages: "Erreur lors du chargement des messages.",
+    notificationSent: "Notification envoyée",
+    tenantNotified: "Locataire notifié",
+    notificationFailed: "Échec de la notification",
+    failedToSendNotification: "Échec de l'envoi de la notification",
+    notifyTenantAboutUpdate: "Notifier le locataire de la mise à jour",
+    maintenanceRequestDetails: "Détails de la demande de maintenance", 
+    updateRequest: "Mettre à jour la demande",
+  },
+  en: {
+    welcome: "Welcome",
+    login: "Login",
+    logout: "Logout",
+    dashboard: "Dashboard",
+    properties: "Properties",
+    tenants: "Tenants",
+    maintenance: "Maintenance",
+    financials: "Financials",
+    settings: "Settings",
+    addProperty: "Add Property",
+    editProperty: "Edit Property",
+    deleteProperty: "Delete Property",
+    propertyName: "Property Name",
+    propertyAddress: "Property Address",
+    propertyType: "Property Type",
+    propertyDetails: "Property Details",
+    save: "Save",
+    cancel: "Cancel",
+    deleteConfirmation: "Are you sure you want to delete this property?",
+    propertyAdded: "Property added successfully!",
+    propertyUpdated: "Property updated successfully!",
+    propertyDeleted: "Property deleted successfully!",
+    addTenant: "Add Tenant",
+    editTenant: "Edit Tenant",
+    deleteTenant: "Delete Tenant",
+    tenantName: "Tenant Name",
+    tenantEmail: "Tenant Email",
+    tenantPhone: "Tenant Phone",
+    tenantDetails: "Tenant Details",
+    tenantAdded: "Tenant added successfully!",
+    tenantUpdated: "Tenant updated successfully!",
+    tenantDeleted: "Tenant deleted successfully!",
+    noProperties: "No properties available.",
+    noTenants: "No tenants available.",
+    maintenanceRequests: "Maintenance Requests",
+    noMaintenanceRequests: "No maintenance requests.",
+    addMaintenanceRequest: "Add Maintenance Request",
+    editMaintenanceRequest: "Edit Maintenance Request",
+    deleteMaintenanceRequest: "Delete Maintenance Request",
+    maintenanceRequestDetails: "Maintenance Request Details",
+    maintenanceRequestAdded: "Maintenance request added successfully!",
+    maintenanceRequestUpdated: "Maintenance request updated successfully!",
+    maintenanceRequestDeleted: "Maintenance request deleted successfully!",
+    issue: "Issue",
+    description: "Description",
+    priority: "Priority",
+    status: "Status",
+    selectPriority: "Select Priority",
+    selectStatus: "Select Status",
+    pending: "Pending",
+    inProgress: "In Progress",
+    resolved: "Resolved",
+    high: "High",
+    medium: "Medium",
+    low: "Low",
+    urgent: "Urgent",
+    financialRecords: "Financial Records",
+    addFinancialRecord: "Add Financial Record",
+    editFinancialRecord: "Edit Financial Record",
+    deleteFinancialRecord: "Delete Financial Record",
+    financialRecordDetails: "Financial Record Details",
+    financialRecordAdded: "Financial record added successfully!",
+    financialRecordUpdated: "Financial record updated successfully!",
+    financialRecordDeleted: "Financial record deleted successfully!",
+    date: "Date",
+    amount: "Amount",
+    type: "Type",
+    selectType: "Select Type",
+    income: "Income",
+    expense: "Expense",
+    category: "Category",
+    selectCategory: "Select Category",
+    notes: "Notes",
+    noFinancialRecords: "No financial records available.",
+    leaseStartDate: "Lease Start Date",
+    leaseEndDate: "Lease End Date",
+    monthlyRent: "Monthly Rent",
+    deposit: "Deposit",
+    unit: "Unit",
+    utilitiesIncluded: "Utilities Included",
+    petsAllowed: "Pets Allowed",
+    tenantAgreement: "Tenant Agreement",
+    tenantPortalAccess: "Tenant Portal Access",
+    tenantAddedSuccess: "Tenant added successfully.",
+    tenantUpdatedSuccess: "Tenant updated successfully.",
+    tenantDeletedSuccess: "Tenant deleted successfully.",
+    propertyAddedSuccess: "Property added successfully.",
+    propertyUpdatedSuccess: "Property updated successfully.",
+    propertyDeletedSuccess: "Property deleted successfully.",
+    maintenanceRequestAddedSuccess: "Maintenance request added successfully.",
+    maintenanceRequestUpdatedSuccess: "Maintenance request updated successfully.",
+    maintenanceRequestDeletedSuccess: "Maintenance request deleted successfully.",
+    financialRecordAddedSuccess: "Financial record added successfully.",
+    financialRecordUpdatedSuccess: "Financial record updated successfully.",
+    financialRecordDeletedSuccess: "Financial record deleted successfully.",
+    error: "Error",
+    success: "Success",
+    confirm: "Confirm",
+    viewAll: "View All",
+    view: "View",
+    edit: "Edit",
+    delete: "Delete",
+    details: "Details",
+    photos: "Photos",
+    history: "History",
+    feedback: "Feedback",
+    messages: "Messages",
+    close: "Close",
+    created: "Created",
+    updated: "Updated",
+    noDescriptionProvided: "No description provided.",
+    addTask: "Add Task",
+    taskAdded: "Task added successfully!",
+    errorAddingTask: "Error adding task.",
+    task: "Task",
+    tasks: "Tasks",
+    title: "Title",
+    assignee: "Assignee",
+    dueDate: "Due Date",
+    markAsComplete: "Mark as Complete",
+    completed: "Completed",
+    incomplete: "Incomplete",
+    all: "All",
+    vendors: "Vendors",
+    addVendor: "Add Vendor",
+    vendorName: "Vendor Name",
+    vendorContact: "Vendor Contact",
+    vendorPhone: "Vendor Phone",
+    vendorEmail: "Vendor Email",
+    vendorAddress: "Vendor Address",
+    vendorServices: "Vendor Services",
+    saveVendor: "Save Vendor",
+    vendorAdded: "Vendor added successfully!",
+    vendorUpdated: "Vendor updated successfully!",
+    vendorDeleted: "Vendor deleted successfully!",
+    editVendor: "Edit Vendor",
+    deleteVendor: "Delete Vendor",
+    noVendors: "No vendors available.",
+    addExpense: "Add Expense",
+    expenseAdded: "Expense added successfully!",
+    errorAddingExpense: "Error adding expense.",
+    amountPaid: "Amount Paid",
+    paymentDate: "Payment Date",
+    paymentMethod: "Payment Method",
+    selectPaymentMethod: "Select Payment Method",
+    cash: "Cash",
+    creditCard: "Credit Card",
+    bankTransfer: "Bank Transfer",
+    check: "Check",
+    other: "Other",
+    invoiceNumber: "Invoice Number",
+    uploadInvoice: "Upload Invoice",
+    noTenantAssociated: "No tenant associated.",
+    errorLoadingMessages: "Error loading messages.",
+    notificationSent: "Notification sent",
+    tenantNotified: "Tenant notified",
+    notificationFailed: "Notification failed",
+    failedToSendNotification: "Failed to send notification",
+    notifyTenantAboutUpdate: "Notify tenant about update",
+    maintenanceRequestDetails: "Maintenance request details",
+    updateRequest: "Update request",
   }
 };
 
-export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>(getInitialLanguage);
-  const [updateKey, setUpdateKey] = useState(0);
-  const [unitSystem, setUnitSystemState] = useState<UnitSystem>(() => {
-    try {
-      const savedUnitSystem = localStorage.getItem(UNIT_SYSTEM_STORAGE_KEY);
-      return (savedUnitSystem === 'metric' || savedUnitSystem === 'imperial') ? savedUnitSystem : 'metric';
-    } catch {
-      return 'metric';
-    }
-  });
-
-  const setLanguage = (newLanguage: Language) => {
-    try {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, newLanguage);
-      setLanguageState(newLanguage);
-      setUpdateKey(prevKey => prevKey + 1);
-      
-      toast({
-        title: "Langue modifiée",
-        description: newLanguage === 'fr' ? "La langue a été changée en français" : "Language has been changed to English",
-      });
-    } catch (error) {
-      console.error('Error setting language:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de changer la langue",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const setUnitSystem = (newUnitSystem: UnitSystem) => {
-    try {
-      localStorage.setItem(UNIT_SYSTEM_STORAGE_KEY, newUnitSystem);
-      setUnitSystemState(newUnitSystem);
-    } catch (error) {
-      console.error('Error setting unit system:', error);
-    }
-  };
+export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children, defaultLocale = 'fr' }) => {
+  const [locale, setLocale] = useState<string>(defaultLocale);
+  const [language, setLanguage] = useState<string>(defaultLocale);
 
   useEffect(() => {
-    document.documentElement.lang = language;
-  }, [language]);
+    const storedLocale = localStorage.getItem('locale') || defaultLocale;
+    setLocale(storedLocale);
+    setLanguage(storedLocale);
+  }, [defaultLocale]);
 
-  const t = (key: string, params?: Record<string, string>): string => {
-    const currentTranslations = translationsMap[language] || {};
-    
-    const keys = key.split('.');
-    let translation: any = currentTranslations;
-    
-    // Debug dashboard translation 
-    if (key === 'dashboard') {
-      console.log('Dashboard translation called, current language:', language);
-      console.log('Translation value:', translation['dashboard']);
+  useEffect(() => {
+    localStorage.setItem('locale', locale);
+    setLanguage(locale);
+  }, [locale]);
+
+  const t = useCallback((key: string, args?: any): string => {
+    let translation = translations[locale as keyof typeof translations]?.[key] || key;
+
+    if (args) {
+      Object.keys(args).forEach(argKey => {
+        const regex = new RegExp(`\\{${argKey}\\}`, 'g');
+        translation = translation.replace(regex, args[argKey]);
+      });
     }
-    
-    for (const k of keys) {
-      if (translation && typeof translation === 'object' && k in translation) {
-        translation = translation[k];
-      } else {
-        console.warn(`Missing translation for key: ${key} in language: ${language}`);
-        return key;
-      }
-    }
-    
-    if (typeof translation !== 'string') {
-      console.warn(`Unexpected object for translation key: ${key}`);
-      return key;
-    }
-    
-    if (params) {
-      let resultStr = translation as string;
-      for (const [paramKey, paramValue] of Object.entries(params)) {
-        resultStr = resultStr.replace(new RegExp(`{${paramKey}}`, 'g'), paramValue);
-      }
-      return resultStr;
-    }
-    
+
     return translation;
-  };
+  }, [locale]);
 
-  const locale = language;
-
-  const value = {
-    language,
+  const contextValue: LocaleContextProps = {
     locale,
-    setLanguage,
-    unitSystem,
-    setUnitSystem,
-    t
+    setLocale,
+    t,
+    language,
   };
 
   return (
-    <LocaleContext.Provider value={value}>
-      {React.Children.map(children, child =>
-        React.isValidElement(child)
-          ? React.cloneElement(child, { key: updateKey })
-          : child
-      )}
+    <LocaleContext.Provider value={contextValue}>
+      {children}
     </LocaleContext.Provider>
   );
 };
 
-export const useLocale = () => {
+export const useLocale = (): LocaleContextProps => {
   const context = useContext(LocaleContext);
-  if (context === undefined) {
-    throw new Error('useLocale must be used within a LocaleProvider');
+  if (!context) {
+    throw new Error("useLocale must be used within a LocaleProvider");
   }
   return context;
 };
