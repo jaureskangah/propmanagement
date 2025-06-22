@@ -10,9 +10,8 @@ import { TenantsLoading } from "@/components/tenant/TenantsLoading";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { useSidebar } from "@/components/sidebar/ModernSidebar";
 
-const TenantsContent = () => {
+const Tenants = () => {
   const {
     selectedTenant,
     setSelectedTenant,
@@ -40,75 +39,69 @@ const TenantsContent = () => {
   } = useTenantPage();
   
   const isMobile = useIsMobile();
-  const { open } = useSidebar();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   if (isLoading) {
     return <TenantsLoading />;
   }
 
   return (
-    <div className={cn(
-      "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-      !isMobile && (open ? "md:ml-[270px]" : "md:ml-[80px]")
-    )}>
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35 }}
-        className="space-y-6"
-      >
-        <TenantsHeader 
-          tenantCount={tenants?.length || 0}
-          onAddClick={() => setIsAddModalOpen(true)}
-          isMobile={isMobile}
-        />
-        
-        <TenantLayout
-          filteredTenants={filteredTenants || []}
-          selectedTenant={selectedTenant}
-          searchQuery={searchQuery}
-          searchFilters={searchFilters}
-          onSearchChange={setSearchQuery}
-          onFilterChange={(filters) => setSearchFilters(filters)}
-          onTenantSelect={setSelectedTenant}
-          onEditClick={(id) => {
-            setSelectedTenant(id);
-            setIsEditModalOpen(true);
-          }}
-          onDeleteClick={(id) => {
-            setSelectedTenant(id);
-            setIsDeleteDialogOpen(true);
-          }}
-          onInviteClick={handleInviteTenant}
-          selectedTenantData={selectedTenantData}
-        />
-
-        <TenantModals
-          isAddModalOpen={isAddModalOpen}
-          isEditModalOpen={isEditModalOpen}
-          isDeleteDialogOpen={isDeleteDialogOpen}
-          isInviteDialogOpen={isInviteDialogOpen}
-          selectedTenantData={selectedTenantData}
-          onAddClose={() => setIsAddModalOpen(false)}
-          onEditClose={() => setIsEditModalOpen(false)}
-          onDeleteClose={() => setIsDeleteDialogOpen(false)}
-          onInviteClose={() => setIsInviteDialogOpen(false)}
-          onAddSubmit={handleAddTenant}
-          onEditSubmit={handleUpdateTenant}
-          onDeleteConfirm={handleDeleteTenant}
-          isDeleting={isDeleting}
-        />
-      </motion.div>
-    </div>
-  );
-};
-
-const Tenants = () => {
-  return (
     <TooltipProvider>
       <div className="min-h-screen bg-background">
-        <AppSidebar />
-        <TenantsContent />
+        <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+        <div className={cn(
+          "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+          sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+        )}>
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35 }}
+            className="space-y-6"
+          >
+            <TenantsHeader 
+              tenantCount={tenants?.length || 0}
+              onAddClick={() => setIsAddModalOpen(true)}
+              isMobile={isMobile}
+            />
+            
+            <TenantLayout
+              filteredTenants={filteredTenants || []}
+              selectedTenant={selectedTenant}
+              searchQuery={searchQuery}
+              searchFilters={searchFilters}
+              onSearchChange={setSearchQuery}
+              onFilterChange={(filters) => setSearchFilters(filters)}
+              onTenantSelect={setSelectedTenant}
+              onEditClick={(id) => {
+                setSelectedTenant(id);
+                setIsEditModalOpen(true);
+              }}
+              onDeleteClick={(id) => {
+                setSelectedTenant(id);
+                setIsDeleteDialogOpen(true);
+              }}
+              onInviteClick={handleInviteTenant}
+              selectedTenantData={selectedTenantData}
+            />
+
+            <TenantModals
+              isAddModalOpen={isAddModalOpen}
+              isEditModalOpen={isEditModalOpen}
+              isDeleteDialogOpen={isDeleteDialogOpen}
+              isInviteDialogOpen={isInviteDialogOpen}
+              selectedTenantData={selectedTenantData}
+              onAddClose={() => setIsAddModalOpen(false)}
+              onEditClose={() => setIsEditModalOpen(false)}
+              onDeleteClose={() => setIsDeleteDialogOpen(false)}
+              onInviteClose={() => setIsInviteDialogOpen(false)}
+              onAddSubmit={handleAddTenant}
+              onEditSubmit={handleUpdateTenant}
+              onDeleteConfirm={handleDeleteTenant}
+              isDeleting={isDeleting}
+            />
+          </motion.div>
+        </div>
       </div>
     </TooltipProvider>
   );

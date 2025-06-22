@@ -12,10 +12,8 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { MessageSquareOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/components/sidebar/ModernSidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-const TenantCommunicationsContentWrapper = () => {
+const TenantCommunications = () => {
   const {
     tenantId,
     communications,
@@ -28,8 +26,7 @@ const TenantCommunicationsContentWrapper = () => {
   const { t } = useLocale();
   const { toast } = useToast();
   const { handleToggleStatus, handleDeleteCommunication } = useCommunicationActions(tenantId || undefined);
-  const { open } = useSidebar();
-  const isMobile = useIsMobile();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Activer les notifications en temps réel
   useRealtimeNotifications();
@@ -66,49 +63,43 @@ const TenantCommunicationsContentWrapper = () => {
   const noOpFunction = () => {};
 
   return (
-    <div className={cn(
-      "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
-      !isMobile && (open ? "md:ml-[270px]" : "md:ml-[80px]")
-    )}>
-      {isLoading ? (
-        <div className="flex flex-col justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-          <p className="mt-4 text-muted-foreground">{t('loadingCommunications')}</p>
-        </div>
-      ) : !tenantId ? (
-        <UnlinkedTenantMessage />
-      ) : communications.length === 0 ? (
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-          <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
-          <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
-          <p className="text-muted-foreground text-center mt-2 max-w-md">
-            {t('startSendingMessages')}
-          </p>
-        </motion.div>
-      ) : (
-        <TenantCommunicationsContent
-          communications={communications}
-          onCreateCommunication={handleCreateCommunication}
-          onCommunicationUpdate={refreshCommunications}
-          onToggleStatus={handleToggleStatusAndRefresh}
-          onDeleteCommunication={handleDeleteAndRefresh}
-          tenant={tenant}
-          isTenant={true} // Ajouter cette prop pour indiquer que c'est un locataire
-        />
-      )}
-    </div>
-  );
-};
-
-const TenantCommunications = () => {
-  return (
     <div className="flex">
-      <AppSidebar isTenant={true} />
-      <TenantCommunicationsContentWrapper />
+      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
+        {isLoading ? (
+          <div className="flex flex-col justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+            <p className="mt-4 text-muted-foreground">{t('loadingCommunications')}</p>
+          </div>
+        ) : !tenantId ? (
+          <UnlinkedTenantMessage />
+        ) : communications.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+            <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
+            <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
+            <p className="text-muted-foreground text-center mt-2 max-w-md">
+              {t('startSendingMessages')}
+            </p>
+          </motion.div>
+        ) : (
+          <TenantCommunicationsContent
+            communications={communications}
+            onCreateCommunication={handleCreateCommunication}
+            onCommunicationUpdate={refreshCommunications}
+            onToggleStatus={handleToggleStatusAndRefresh}
+            onDeleteCommunication={handleDeleteAndRefresh}
+            tenant={tenant}
+            isTenant={true} // Ajouter cette prop pour indiquer que c'est un locataire
+          />
+        )}
+      </div>
     </div>
   );
 };

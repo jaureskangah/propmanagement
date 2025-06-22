@@ -11,9 +11,8 @@ import { useDocumentState } from "./hooks/useDocumentState";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { useSidebar } from "@/components/sidebar/ModernSidebar";
 
-const DocumentsPageContent = () => {
+const DocumentsPage = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const { 
@@ -40,8 +39,9 @@ const DocumentsPageContent = () => {
   const [selectedDocument, setSelectedDocument] = useState<TenantDocument | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
   const isMobile = useIsMobile();
-  const { open } = useSidebar();
   
+  // Pour contrôler le sidebar
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Gestion des swipes
@@ -60,7 +60,8 @@ const DocumentsPageContent = () => {
     const handleTouchEnd = () => {
       // Détection du swipe vers la droite
       if (touchEndX - touchStartX > 100) {
-        // Logic handled by sidebar hover now
+        // Contraction du sidebar
+        setSidebarCollapsed(true);
       }
     };
     
@@ -93,64 +94,58 @@ const DocumentsPageContent = () => {
   };
 
   return (
-    <div 
-      ref={containerRef} 
-      className={cn(
-        "flex-1 overflow-auto pt-24 md:pt-0 transition-all duration-300",
-        !isMobile && (open ? "md:ml-[270px]" : "md:ml-[80px]")
-      )}
-    >
-      <div className="container mx-auto p-4 md:p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="space-y-6 max-w-[1200px] mx-auto"
-        >
-          <DocumentsHeader 
-            tenant={tenant} 
-            onDocumentUpdate={handleDocumentUpdate}
-          />
-          
-          <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
-            <DocumentsTabs
-              documents={documents}
-              filteredDocuments={filteredDocuments}
-              isLoading={isLoading}
-              tenant={tenant}
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              selectedDocType={selectedDocType}
-              setSelectedDocType={setSelectedDocType}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-              sortBy={sortBy}
-              setSortBy={setSortBy}
-              sortOrder={sortOrder}
-              setSortOrder={setSortOrder}
-              onViewDocument={handleViewDocument}
-              onDeleteDocument={handleDeleteDocument}
-              onDocumentUpdate={handleDocumentUpdate}
-              error={error}
-            />
-          </div>
-        </motion.div>
-      </div>
-      
-      <DocumentViewerDialog 
-        document={selectedDocument}
-        open={viewerOpen}
-        onOpenChange={setViewerOpen}
-      />
-    </div>
-  );
-};
-
-const DocumentsPage = () => {
-  return (
     <div className="flex min-h-screen bg-background">
-      <AppSidebar isTenant={true} />
-      <DocumentsPageContent />
+      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div 
+        ref={containerRef} 
+        className={cn(
+          "flex-1 overflow-auto pt-24 md:pt-0 transition-all duration-300",
+          sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+        )}
+      >
+        <div className="container mx-auto p-4 md:p-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-6 max-w-[1200px] mx-auto"
+          >
+            <DocumentsHeader 
+              tenant={tenant} 
+              onDocumentUpdate={handleDocumentUpdate}
+            />
+            
+            <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
+              <DocumentsTabs
+                documents={documents}
+                filteredDocuments={filteredDocuments}
+                isLoading={isLoading}
+                tenant={tenant}
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                selectedDocType={selectedDocType}
+                setSelectedDocType={setSelectedDocType}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                onViewDocument={handleViewDocument}
+                onDeleteDocument={handleDeleteDocument}
+                onDocumentUpdate={handleDocumentUpdate}
+                error={error}
+              />
+            </div>
+          </motion.div>
+        </div>
+        
+        <DocumentViewerDialog 
+          document={selectedDocument}
+          open={viewerOpen}
+          onOpenChange={setViewerOpen}
+        />
+      </div>
     </div>
   );
 };

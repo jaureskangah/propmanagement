@@ -11,17 +11,15 @@ import { cn } from "@/lib/utils";
 import { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useSidebar } from "@/components/sidebar/ModernSidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-const DashboardContent = () => {
+const Dashboard = () => {
+  const { isAuthenticated, loading, isTenant } = useAuth();
   const { t } = useLocale();
-  const { open } = useSidebar();
-  const isMobile = useIsMobile();
   const [dateRange, setDateRange] = useState<DateRange>({
     startDate: new Date(),
     endDate: new Date()
   });
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Fetch all required data
   const { data: propertiesData = [] } = useQuery({
@@ -65,29 +63,6 @@ const DashboardContent = () => {
     setDateRange(newDateRange);
   };
 
-  return (
-    <div className={cn(
-      "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-      !isMobile && (open ? "md:ml-[270px]" : "md:ml-[80px]")
-    )}>
-      <SimplifiedDashboardHeader 
-        title={t('dashboard')}
-        onDateRangeChange={handleDateRangeChange}
-      />
-      <SimplifiedDashboardContainer 
-        dateRange={dateRange}
-        propertiesData={propertiesData}
-        maintenanceData={maintenanceData}
-        tenantsData={tenantsData}
-        paymentsData={paymentsData}
-      />
-    </div>
-  );
-};
-
-const Dashboard = () => {
-  const { isAuthenticated, loading, isTenant } = useAuth();
-
   useEffect(() => {
     console.log("=== OWNER DASHBOARD ===");
     console.log("Dashboard component mounted, auth state:", { 
@@ -123,9 +98,23 @@ const Dashboard = () => {
   console.log("✅ Rendering owner dashboard for property owner");
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar>
-        <DashboardContent />
-      </AppSidebar>
+      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <div className={cn(
+        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
+        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+      )}>
+        <SimplifiedDashboardHeader 
+          title={t('dashboard')}
+          onDateRangeChange={handleDateRangeChange}
+        />
+        <SimplifiedDashboardContainer 
+          dateRange={dateRange}
+          propertiesData={propertiesData}
+          maintenanceData={maintenanceData}
+          tenantsData={tenantsData}
+          paymentsData={paymentsData}
+        />
+      </div>
     </div>
   );
 };
