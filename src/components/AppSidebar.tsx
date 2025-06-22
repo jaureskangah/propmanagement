@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { HelpCircle } from "lucide-react";
 import { Button } from "./ui/button";
@@ -16,10 +15,6 @@ import {
 
 interface AppSidebarProps {
   isTenant?: boolean;
-  isCollapsed?: boolean;
-  setIsCollapsed?: (collapsed: boolean) => void;
-  isMobileOpen?: boolean;
-  setIsMobileOpen?: (open: boolean) => void;
 }
 
 const SidebarContent = ({ 
@@ -74,23 +69,10 @@ const SidebarContent = ({
 };
 
 const AppSidebar = ({ 
-  isTenant = false,
-  isCollapsed: externalIsCollapsed,
-  setIsCollapsed: externalSetIsCollapsed,
-  isMobileOpen: externalIsMobileOpen,
-  setIsMobileOpen: externalSetIsMobileOpen
+  isTenant = false
 }: AppSidebarProps) => {
-  const [internalIsCollapsed, setInternalIsCollapsed] = useState(false);
-  const [internalIsMobileOpen, setInternalIsMobileOpen] = useState(false);
-  
-  const isCollapsed = externalIsCollapsed !== undefined ? externalIsCollapsed : internalIsCollapsed;
-  const setIsCollapsed = externalSetIsCollapsed || setInternalIsCollapsed;
-  
-  const isMobileOpen = externalIsMobileOpen !== undefined ? externalIsMobileOpen : internalIsMobileOpen;
-  const setIsMobileOpen = externalSetIsMobileOpen || setInternalIsMobileOpen;
-
   return (
-    <ModernSidebar open={!isCollapsed} setOpen={(open) => setIsCollapsed(!open)}>
+    <ModernSidebar>
       <SidebarContent isTenant={isTenant} />
     </ModernSidebar>
   );

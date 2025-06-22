@@ -1,5 +1,5 @@
 
-import React, { useState, createContext, useContext } from "react";
+import React, { useState, createContext, useContext, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
@@ -104,6 +104,15 @@ export const DesktopSidebar = ({
 }) => {
   const { open, setOpen, animate } = useSidebar();
   
+  // Add debounced hover handlers to prevent rapid state changes
+  const handleMouseEnter = useCallback(() => {
+    setOpen(true);
+  }, [setOpen]);
+
+  const handleMouseLeave = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
+  
   return (
     <motion.div
       className={cn(
@@ -114,11 +123,11 @@ export const DesktopSidebar = ({
         width: animate ? (open ? "270px" : "80px") : "270px",
       }}
       transition={{
-        duration: 0.3,
+        duration: 0.2,
         ease: "easeInOut",
       }}
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {children}
     </motion.div>
