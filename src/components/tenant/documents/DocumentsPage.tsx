@@ -10,7 +10,6 @@ import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { useDocumentState } from "./hooks/useDocumentState";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 
 const DocumentsPage = () => {
   const { user } = useAuth();
@@ -40,8 +39,6 @@ const DocumentsPage = () => {
   const [viewerOpen, setViewerOpen] = useState(false);
   const isMobile = useIsMobile();
   
-  // Pour contrôler le sidebar
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
   // Gestion des swipes
@@ -60,8 +57,7 @@ const DocumentsPage = () => {
     const handleTouchEnd = () => {
       // Détection du swipe vers la droite
       if (touchEndX - touchStartX > 100) {
-        // Contraction du sidebar
-        setSidebarCollapsed(true);
+        // The sidebar now handles its own state internally
       }
     };
     
@@ -95,15 +91,12 @@ const DocumentsPage = () => {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <AppSidebar isTenant={true} />
       <div 
         ref={containerRef} 
-        className={cn(
-          "flex-1 overflow-auto pt-24 md:pt-0 transition-all duration-300",
-          sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-        )}
+        className="flex-1 overflow-auto ml-20 p-4 md:p-6 pt-24 md:pt-8 transition-all duration-300"
       >
-        <div className="container mx-auto p-4 md:p-6">
+        <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

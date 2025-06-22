@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications";
@@ -64,7 +63,7 @@ const TenantCommunications = () => {
 
   return (
     <div className="flex">
-      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
+      <AppSidebar isTenant={true} />
       <div className={cn(
         "flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300",
         sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"

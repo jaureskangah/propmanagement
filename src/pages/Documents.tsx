@@ -8,22 +8,17 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { History, FileText } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
 
 const Documents = () => {
   const { t } = useLocale();
   const navigate = useNavigate();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isMobile = useIsMobile();
 
   return (
     <div className="flex min-h-screen bg-background">
-      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "flex-1 overflow-auto pt-20 md:pt-0 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
-        <div className="container mx-auto p-4 md:p-6">
+      <AppSidebar />
+      <div className="flex-1 overflow-auto ml-20 p-4 md:p-6 pt-24 md:pt-8 transition-all duration-300">
+        <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -47,7 +42,7 @@ const Documents = () => {
                 <Button 
                   variant="outline"
                   onClick={() => navigate('/document-history')}
-                  className="flex items-center gap-2 w-full lg:w-auto"
+                  className="flex items-color gap-2 w-full lg:w-auto"
                 >
                   <History className="h-4 w-4" />
                   {t('documentGenerator.documentHistory')}

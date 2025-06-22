@@ -9,14 +9,13 @@ import { FileText } from "lucide-react";
 
 const TenantDocuments = () => {
   const { t } = useLocale();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isMobile = useIsMobile();
 
   return (
     <div className="flex min-h-screen bg-background">
-      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className="flex-1 overflow-auto pt-20 md:pt-0 md:ml-[270px] md:w-[calc(100%-270px)]">
-        <div className="container mx-auto p-4 md:p-6">
+      <AppSidebar isTenant={true} />
+      <div className="flex-1 overflow-auto ml-20 p-4 md:p-6 pt-24 md:pt-8 transition-all duration-300">
+        <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
@@ -9,14 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import AppSidebar from '@/components/AppSidebar';
 import { useAuth } from '@/components/AuthProvider';
-import { cn } from '@/lib/utils';
 
 const MaintenanceRequestList = () => {
   const { t } = useLocale();
   const { user } = useAuth();
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isTenantUser = user?.user_metadata?.is_tenant_user;
   
   // Fetch maintenance requests with tenant data using correct Supabase syntax
@@ -72,11 +69,8 @@ const MaintenanceRequestList = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isTenant={isTenantUser} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "p-3 sm:p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar isTenant={isTenantUser} />
+      <div className="ml-20 p-3 sm:p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>{t('maintenanceRequests')}</CardTitle>

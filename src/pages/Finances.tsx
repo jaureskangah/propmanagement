@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +11,6 @@ import FinancialMetrics from "@/components/finances/FinancialMetrics";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import RevenueExpenseChart from "@/components/finances/RevenueExpenseChart";
 import { YearFilter } from "@/components/finances/YearFilter";
-import { cn } from "@/lib/utils";
 import { FileBarChart, Loader2 } from "lucide-react";
 
 // Storage key for localStorage
@@ -24,7 +22,6 @@ const Finances = () => {
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const { t } = useLocale();
   const isMobile = useIsMobile();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   
   // Fetch properties
   const { data: properties, isLoading: isLoadingProperties } = useQuery({
@@ -77,11 +74,8 @@ const Finances = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar />
+      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
