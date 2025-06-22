@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useFinancialData } from "./hooks/useFinancialData";
 import { DollarSign, FileText, Wrench, Calendar } from "lucide-react";
 import { DataTables } from "./DataTables";
+import { formatCurrency } from "@/lib/utils";
 
 interface SimplifiedExpensesViewProps {
   propertyId: string;
@@ -16,21 +17,39 @@ export const SimplifiedExpensesView = ({
 }: SimplifiedExpensesViewProps) => {
   const { expenses, maintenance } = useFinancialData(propertyId, selectedYear);
 
+  // Combine all expenses from maintenance_expenses and vendor_interventions
+  const allExpenses = [
+    ...expenses.map(expense => ({
+      amount: expense.amount || 0,
+      date: expense.date,
+      category: expense.category || 'Maintenance',
+      type: 'expense' as const
+    })),
+    ...maintenance.map(intervention => ({
+      amount: intervention.cost || 0,
+      date: intervention.date,
+      category: 'Intervention',
+      type: 'intervention' as const
+    }))
+  ];
+
   // Calculate simplified metrics focused on expenses
-  const totalExpenses = expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
+  const totalExpenses = allExpenses.reduce((sum, item) => sum + item.amount, 0);
   const totalInterventions = maintenance.length;
   const monthlyAverage = totalExpenses / 12;
-  const recentExpenses = expenses.filter(expense => {
-    const expenseDate = new Date(expense.date);
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    return expenseDate >= thirtyDaysAgo;
-  }).length;
+  
+  // Calculate current month expenses (sum of amounts, not count)
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const currentMonthExpenses = allExpenses.filter(item => {
+    const itemDate = new Date(item.date);
+    return itemDate.getMonth() === currentMonth && itemDate.getFullYear() === currentYear;
+  }).reduce((sum, item) => sum + item.amount, 0);
 
   const metrics = [
     {
       title: "Dépenses totales",
-      value: `${totalExpenses.toLocaleString('fr-FR')} €`,
+      value: formatCurrency(totalExpenses),
       icon: <DollarSign className="h-5 w-5" />,
       description: "Total des dépenses",
       color: "text-blue-600",
@@ -38,7 +57,7 @@ export const SimplifiedExpensesView = ({
     },
     {
       title: "Moyenne mensuelle",
-      value: `${monthlyAverage.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} €`,
+      value: formatCurrency(monthlyAverage),
       icon: <Calendar className="h-5 w-5" />,
       description: "Dépenses par mois",
       color: "text-green-600",
@@ -54,9 +73,9 @@ export const SimplifiedExpensesView = ({
     },
     {
       title: "Ce mois-ci",
-      value: recentExpenses.toString(),
+      value: formatCurrency(currentMonthExpenses),
       icon: <FileText className="h-5 w-5" />,
-      description: "Dépenses récentes",
+      description: "Dépenses ce mois",
       color: "text-orange-600",
       bgColor: "bg-orange-50",
     },
@@ -107,6 +126,7 @@ export const SimplifiedExpensesView = ({
         propertyId={propertyId}
         expenses={expenses}
         maintenance={maintenance}
+        allExpenses={allExpenses}
       />
     </div>
   );

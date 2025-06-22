@@ -8,8 +8,8 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
     console.log("useFinancialData - params:", { propertyId, selectedYear });
   }, [propertyId, selectedYear]);
 
-  // Fetch expenses data
-  const { data: expenses = [] } = useQuery({
+  // Fetch expenses data from maintenance_expenses
+  const { data: expenses = [], refetch: refetchExpenses } = useQuery({
     queryKey: ["maintenance_expenses", propertyId, selectedYear],
     queryFn: async () => {
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
@@ -38,12 +38,14 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
     enabled: !!propertyId
   });
 
-  // Fetch maintenance interventions
-  const { data: maintenance = [] } = useQuery({
+  // Fetch maintenance interventions from vendor_interventions
+  const { data: maintenance = [], refetch: refetchMaintenance } = useQuery({
     queryKey: ["vendor_interventions", propertyId, selectedYear],
     queryFn: async () => {
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
+      
+      console.log("Fetching interventions for property:", propertyId, "in date range:", startOfYear, "to", endOfYear);
       
       const { data, error } = await supabase
         .from("vendor_interventions")
@@ -62,8 +64,12 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
         .lte("date", endOfYear)
         .order("date", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching interventions:", error);
+        throw error;
+      }
 
+      console.log("Fetched interventions:", data);
       return data || [];
     },
     enabled: !!propertyId
@@ -103,5 +109,11 @@ export const useFinancialData = (propertyId: string, selectedYear: number) => {
     enabled: !!propertyId
   });
 
-  return { expenses, maintenance, rentData };
+  // Function to refresh all data
+  const refreshData = () => {
+    refetchExpenses();
+    refetchMaintenance();
+  };
+
+  return { expenses, maintenance, rentData, refreshData };
 };
