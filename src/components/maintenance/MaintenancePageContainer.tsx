@@ -30,24 +30,77 @@ export const MaintenancePageContainer = () => {
   const { handleAddTask } = useTaskAddition();
   const navigate = useNavigate();
   
-  const savedPropertyId = localStorage.getItem('selectedPropertyId') || "property-1";
+  // État pour la propriété sélectionnée
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
+  const [isLoadingProperty, setIsLoadingProperty] = useState(true);
+  
   const savedYear = localStorage.getItem('selectedYear') ? 
     parseInt(localStorage.getItem('selectedYear') || '') : new Date().getFullYear();
-  
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string>(savedPropertyId);
   const [selectedYear, setSelectedYear] = useState<number>(savedYear);
+
+  // Récupérer la première propriété de l'utilisateur
+  useEffect(() => {
+    const fetchUserProperty = async () => {
+      try {
+        console.log("MaintenancePageContainer - Fetching user's first property...");
+        
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          console.log("MaintenancePageContainer - No user found");
+          setIsLoadingProperty(false);
+          return;
+        }
+
+        const { data: properties, error } = await supabase
+          .from('properties')
+          .select('id, name')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true })
+          .limit(1);
+
+        if (error) {
+          console.error("MaintenancePageContainer - Error fetching user property:", error);
+          // Fallback to the saved property ID if available
+          const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
+          setSelectedPropertyId(savedPropertyId);
+        } else if (properties && properties.length > 0) {
+          const firstProperty = properties[0];
+          console.log("MaintenancePageContainer - Found user's first property:", firstProperty);
+          setSelectedPropertyId(firstProperty.id);
+          // Update localStorage with the correct property ID
+          localStorage.setItem('selectedPropertyId', firstProperty.id);
+        } else {
+          console.log("MaintenancePageContainer - No properties found for user");
+          // Try to use saved property ID as fallback
+          const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
+          setSelectedPropertyId(savedPropertyId);
+        }
+      } catch (error) {
+        console.error("MaintenancePageContainer - Exception fetching user property:", error);
+        // Fallback to saved property ID
+        const savedPropertyId = localStorage.getItem('selectedPropertyId') || "";
+        setSelectedPropertyId(savedPropertyId);
+      } finally {
+        setIsLoadingProperty(false);
+      }
+    };
+
+    fetchUserProperty();
+  }, []);
   
   useEffect(() => {
     console.log("MaintenancePageContainer - selectedPropertyId:", selectedPropertyId);
     console.log("MaintenancePageContainer - selectedYear:", selectedYear);
     
-    if (!selectedPropertyId) {
+    if (!selectedPropertyId && !isLoadingProperty) {
       console.warn("Warning: selectedPropertyId est vide dans MaintenancePageContainer");
     }
-  }, [selectedPropertyId, selectedYear]);
+  }, [selectedPropertyId, selectedYear, isLoadingProperty]);
   
   useEffect(() => {
-    localStorage.setItem('selectedPropertyId', selectedPropertyId);
+    if (selectedPropertyId) {
+      localStorage.setItem('selectedPropertyId', selectedPropertyId);
+    }
     localStorage.setItem('selectedYear', selectedYear.toString());
   }, [selectedPropertyId, selectedYear]);
   
@@ -91,7 +144,13 @@ export const MaintenancePageContainer = () => {
   const handleAddTaskFromDialog = async (newTask: NewTask): Promise<any> => {
     console.log("Task to be added:", newTask);
     try {
-      const result = await handleAddTask(newTask);
+      // Ensure we use the correct property ID
+      const taskWithCorrectProperty = {
+        ...newTask,
+        property_id: selectedPropertyId || newTask.property_id
+      };
+      
+      const result = await handleAddTask(taskWithCorrectProperty);
       console.log("Task added successfully:", result);
       toast({
         title: t('success'),
@@ -125,6 +184,16 @@ export const MaintenancePageContainer = () => {
   );
 
   const urgentRequests = requests.filter(r => r.priority === "Urgent").length;
+
+  if (isLoadingProperty) {
+    return (
+      <div className="space-y-6 font-sans">
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Chargement des propriétés...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 font-sans">
