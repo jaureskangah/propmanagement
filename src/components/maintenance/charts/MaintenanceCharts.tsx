@@ -43,6 +43,12 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
   // Gardons la variable d'état mais n'affichons plus les boutons de bascule
   const [expensesView, setExpensesView] = useState<'bar' | 'area'>('area');
   
+  // Only filter when both propertyId and selectedYear are provided AND different from defaults
+  const shouldFilter = propertyId && 
+                      selectedYear && 
+                      propertyId !== "property-1" && 
+                      selectedYear !== new Date().getFullYear();
+  
   // Function to toggle metrics visibility
   const toggleMetric = (metricKey: string) => {
     setActiveMetrics(current => 
@@ -62,6 +68,22 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
     queryKey: ['maintenance_requests_chart', propertyId, selectedYear],
     queryFn: async () => {
       console.log("Fetching maintenance requests chart data for property:", propertyId, "and year:", selectedYear);
+      
+      // If filtering is disabled, fetch all maintenance requests
+      if (!shouldFilter) {
+        const { data, error } = await supabase
+          .from('maintenance_requests')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          console.error("Error fetching all maintenance requests:", error);
+          throw error;
+        }
+        
+        console.log(`Fetched ${data?.length || 0} maintenance requests (no filtering)`);
+        return data || [];
+      }
       
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
@@ -113,6 +135,44 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
       const startOfYear = new Date(selectedYear, 0, 1).toISOString().split('T')[0];
       const endOfYear = new Date(selectedYear, 11, 31).toISOString().split('T')[0];
       
+      // If filtering is disabled, fetch all expenses
+      if (!shouldFilter) {
+        // Fetch all maintenance expenses
+        const { data: expenses, error: expensesError } = await supabase
+          .from('maintenance_expenses')
+          .select('*')
+          .gte('date', startOfYear)
+          .lte('date', endOfYear);
+          
+        if (expensesError) {
+          console.error("Error fetching all maintenance expenses:", expensesError);
+          throw expensesError;
+        }
+        
+        // Fetch all vendor interventions
+        const { data: interventions, error: interventionsError } = await supabase
+          .from('vendor_interventions')
+          .select('*')
+          .gte('date', startOfYear)
+          .lte('date', endOfYear);
+          
+        if (interventionsError) {
+          console.error("Error fetching all vendor interventions:", interventionsError);
+          throw interventionsError;
+        }
+        
+        const allExpenses = [
+          ...(expenses || []),
+          ...(interventions || []).map(i => ({
+            date: i.date,
+            amount: i.cost || 0
+          }))
+        ];
+        
+        console.log(`Fetched ${allExpenses.length} expense items (no filtering)`);
+        return allExpenses;
+      }
+      
       // Fetch maintenance expenses for the property
       const { data: expenses, error: expensesError } = await supabase
         .from('maintenance_expenses')
@@ -152,7 +212,7 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
     },
   });
   
-  const isLoading = isLoadingRequests || isLoadingExpenses;
+  const isLoading = (isLoadingRequests || isLoadingExpenses) && shouldFilter;
   const error = requestsError || expensesError;
 
   // Handle refetching data
@@ -182,8 +242,8 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
       // Increment request count
       monthlyData[monthIndex].requests += 1;
       
-      // Increment completed count if resolved
-      if (request.status === 'Resolved') {
+      // Increment completed count if resolved (handle both 'Resolved' and case variants)
+      if (request.status === 'Resolved' || request.status === 'resolved') {
         monthlyData[monthIndex].completed += 1;
       }
       
