@@ -189,6 +189,7 @@ const translations = {
     urgentMaintenanceRequests: "Demandes Urgentes",
     maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
     maintenanceExpenses: "Dépenses de Maintenance",
+    noTasks: "Aucune tâche disponible",
   },
   en: {
     welcome: "Welcome",
@@ -361,6 +362,7 @@ const translations = {
     urgentMaintenanceRequests: "Urgent Maintenance Requests",
     maintenanceExpensesTrends: "Maintenance Expenses Trends",
     maintenanceExpenses: "Maintenance Expenses",
+    noTasks: "No tasks available",
   }
 };
 
