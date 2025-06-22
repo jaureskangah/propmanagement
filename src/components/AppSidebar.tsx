@@ -15,6 +15,7 @@ import {
 
 interface AppSidebarProps {
   isTenant?: boolean;
+  children?: React.ReactNode;
 }
 
 const SidebarContent = ({ 
@@ -69,11 +70,13 @@ const SidebarContent = ({
 };
 
 const AppSidebar = ({ 
-  isTenant = false
+  isTenant = false,
+  children
 }: AppSidebarProps) => {
   return (
     <ModernSidebar>
       <SidebarContent isTenant={isTenant} />
+      {children}
     </ModernSidebar>
   );
 };

@@ -123,8 +123,9 @@ const Dashboard = () => {
   console.log("✅ Rendering owner dashboard for property owner");
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <DashboardContent />
+      <AppSidebar>
+        <DashboardContent />
+      </AppSidebar>
     </div>
   );
 };
