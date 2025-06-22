@@ -1,7 +1,8 @@
 
 import React from "react";
 import { VendorListHeader } from "./header/VendorListHeader";
-import { VendorTabs } from "./tabs/VendorTabs";
+import { VendorSimplifiedTabs } from "./tabs/VendorSimplifiedTabs";
+import { VendorSimplifiedFilters } from "./filters/VendorSimplifiedFilters";
 import { VendorDialogs } from "./dialogs/VendorDialogs";
 import { useVendorList } from "./hooks/useVendorList";
 
@@ -23,16 +24,11 @@ export const VendorList = () => {
     setReviewDialogOpen,
     selectedVendorForReview,
     setSelectedVendorForReview,
-    showAvailableOnly,
-    setShowAvailableOnly,
-    selectedAvailability,
-    setSelectedAvailability,
     
     // Data
     vendors,
     specialties,
     filteredVendors,
-    emergencyContacts,
     reviews,
     
     // Actions
@@ -47,24 +43,21 @@ export const VendorList = () => {
     <div className="space-y-6">
       <VendorListHeader onAddVendor={() => setDialogOpen(true)} />
 
-      <VendorTabs
-        vendors={vendors}
-        emergencyContacts={emergencyContacts}
-        reviews={reviews}
-        filteredVendors={filteredVendors}
-        specialties={specialties}
-        selectedSpecialty={selectedSpecialty}
+      <VendorSimplifiedFilters
         searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedSpecialty={selectedSpecialty}
+        setSelectedSpecialty={setSelectedSpecialty}
         selectedRating={selectedRating}
+        setSelectedRating={setSelectedRating}
         showEmergencyOnly={showEmergencyOnly}
-        showAvailableOnly={showAvailableOnly}
-        selectedAvailability={selectedAvailability}
-        onSpecialtyChange={setSelectedSpecialty}
-        onSearchChange={setSearchQuery}
-        onRatingChange={setSelectedRating}
-        onEmergencyChange={setShowEmergencyOnly}
-        onAvailableChange={setShowAvailableOnly}
-        onAvailabilityChange={setSelectedAvailability}
+        setShowEmergencyOnly={setShowEmergencyOnly}
+        specialties={specialties}
+      />
+
+      <VendorSimplifiedTabs
+        vendors={filteredVendors}
+        reviews={reviews}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onReview={handleOpenReviewDialog}
