@@ -1,32 +1,30 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useSupabaseError } from "../useSupabaseError";
-import { useToast } from "@/components/ui/use-toast";
-import { TableName } from "./types";
+import { useToast } from "@/hooks/use-toast";
 
-export function useSupabaseDelete<T extends TableName>(
-  table: T,
-  options: {
-    onSuccess?: () => void;
-    successMessage?: string;
-  } = {}
+interface UseSupabaseDeleteOptions {
+  onSuccess?: () => void;
+  successMessage?: string;
+  queryKeysToInvalidate?: string[][];
+}
+
+export function useSupabaseDelete(
+  tableName: string,
+  options: UseSupabaseDeleteOptions = {}
 ) {
   const queryClient = useQueryClient();
-  const { handleError } = useSupabaseError();
   const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      try {
-        const { error } = await supabase
-          .from(table)
-          .delete()
-          .match({ id } as any);
+      const { error } = await supabase
+        .from(tableName)
+        .delete()
+        .eq('id', id);
 
-        if (error) throw error;
-      } catch (error) {
-        handleError(error);
+      if (error) {
+        console.error(`Error deleting from ${tableName}:`, error);
         throw error;
       }
     },
@@ -42,7 +40,23 @@ export function useSupabaseDelete<T extends TableName>(
         options.onSuccess();
       }
 
-      queryClient.invalidateQueries({ queryKey: [table] });
+      // Invalidate specified query keys or default ones
+      if (options.queryKeysToInvalidate) {
+        options.queryKeysToInvalidate.forEach(queryKey => {
+          queryClient.invalidateQueries({ queryKey });
+        });
+      } else {
+        // Default invalidation for the table
+        queryClient.invalidateQueries({ queryKey: [tableName] });
+      }
+    },
+    onError: (error: any) => {
+      console.error(`Delete error for ${tableName}:`, error);
+      toast({
+        title: "Erreur",
+        description: `Erreur lors de la suppression: ${error.message}`,
+        variant: "destructive",
+      });
     },
   });
 }
