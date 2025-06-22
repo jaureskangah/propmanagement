@@ -6,8 +6,7 @@ import { SimplifiedMaintenanceContainer } from "@/components/maintenance/Simplif
 import { TenantUserContainer } from "@/components/maintenance/TenantUserContainer";
 import { cn } from "@/lib/utils";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { useSidebar } from "@/components/sidebar/ModernSidebar";
 
 const Maintenance = () => {
   const { user } = useAuth();
@@ -17,20 +16,7 @@ const Maintenance = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   return (
-    <div className="min-h-screen bg-background">
-      {isMobile && (
-        <div className="fixed top-2 left-2 z-50">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            className="bg-white/80 backdrop-blur-sm shadow-sm"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-      )}
-      
+    <div className="min-h-screen bg-background flex w-full">
       <AppSidebar 
         isTenant={isTenantUser} 
         isCollapsed={sidebarCollapsed} 
@@ -40,8 +26,8 @@ const Maintenance = () => {
       />
       
       <div className={cn(
-        "p-3 sm:p-6 md:p-8 pt-16 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
+        "flex-1 p-3 sm:p-6 md:p-8 pt-16 md:pt-8 transition-all duration-300",
+        sidebarCollapsed || isMobile ? "md:ml-[80px]" : "md:ml-[270px]"
       )}>
         {isTenantUser ? (
           <TenantUserContainer />
