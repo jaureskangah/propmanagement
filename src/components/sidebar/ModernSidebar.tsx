@@ -74,11 +74,22 @@ export const ModernSidebar = ({
   );
 };
 
-export const SidebarBody = (props: React.ComponentProps<typeof motion.div>) => {
+export const SidebarBody = ({ 
+  className, 
+  children, 
+  ...props 
+}: { 
+  className?: string; 
+  children: React.ReactNode; 
+}) => {
   return (
     <>
-      <DesktopSidebar {...props} />
-      <MobileSidebar {...(props as React.ComponentProps<"div">)} />
+      <DesktopSidebar className={className} {...props}>
+        {children}
+      </DesktopSidebar>
+      <MobileSidebar className={className} {...props}>
+        {children}
+      </MobileSidebar>
     </>
   );
 };
@@ -87,7 +98,10 @@ export const DesktopSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<typeof motion.div>) => {
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
   const { open, setOpen, animate } = useSidebar();
   
   return (
@@ -105,7 +119,6 @@ export const DesktopSidebar = ({
       }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      {...props}
     >
       {children}
     </motion.div>
@@ -116,7 +129,10 @@ export const MobileSidebar = ({
   className,
   children,
   ...props
-}: React.ComponentProps<"div">) => {
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) => {
   const { open, setOpen } = useSidebar();
   
   return (
@@ -156,7 +172,6 @@ export const MobileSidebar = ({
                 "fixed left-0 top-0 h-full w-[85vw] max-w-[350px] bg-sidebar-background border-r border-sidebar-border z-50 flex flex-col",
                 className
               )}
-              {...props}
             >
               <div className="absolute right-4 top-4 z-50">
                 <button
@@ -182,7 +197,6 @@ export const SidebarLink = ({
   className,
   isActive = false,
   onClick,
-  ...props
 }: {
   href?: string;
   icon: React.ReactNode;
@@ -190,7 +204,7 @@ export const SidebarLink = ({
   className?: string;
   isActive?: boolean;
   onClick?: () => void;
-} & React.ComponentProps<"a">) => {
+}) => {
   const { open, animate } = useSidebar();
   
   const linkContent = (
@@ -204,7 +218,6 @@ export const SidebarLink = ({
         className
       )}
       onClick={onClick}
-      {...props}
     >
       <div className="h-5 w-5 flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
         {icon}
