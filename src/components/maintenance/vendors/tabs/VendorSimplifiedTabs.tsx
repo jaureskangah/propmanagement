@@ -3,7 +3,6 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VendorMainList } from "../main/VendorMainList";
 import { VendorReviewList } from "../reviews/VendorReviewList";
-import { InterventionHistory } from "../interventions/InterventionHistory";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Vendor, VendorReview } from "@/types/vendor";
 
@@ -31,7 +30,6 @@ export const VendorSimplifiedTabs = ({
       <TabsList>
         <TabsTrigger value="vendors">Prestataires</TabsTrigger>
         <TabsTrigger value="reviews">Évaluations</TabsTrigger>
-        <TabsTrigger value="history">Historique</TabsTrigger>
       </TabsList>
 
       <TabsContent value="vendors">
@@ -48,10 +46,6 @@ export const VendorSimplifiedTabs = ({
           reviews={reviews}
           onRefresh={refetchReviews}
         />
-      </TabsContent>
-
-      <TabsContent value="history">
-        <InterventionHistory />
       </TabsContent>
     </Tabs>
   );
