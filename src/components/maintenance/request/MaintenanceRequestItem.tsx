@@ -1,4 +1,3 @@
-
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Wrench, AlertTriangle } from "lucide-react";
@@ -68,18 +67,16 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
 
   // Function to get secondary info to display (tenant info or description)
   const getSecondaryInfo = () => {
-    console.log("Getting secondary info for request:", {
-      tenant_name: (request as any).tenant_name,
-      property_name: (request as any).property_name,
-      tenant_unit_number: (request as any).tenant_unit_number,
-      description: request.description,
-      issue: request.issue
-    });
-    
-    // Priority 1: Tenant information from flat structure
+    // Priority 1: Use flat tenant data first (this is what we actually receive)
     const flatTenantName = (request as any).tenant_name;
     const flatPropertyName = (request as any).property_name;
     const flatUnitNumber = (request as any).tenant_unit_number;
+    
+    console.log("Checking flat tenant data:", {
+      tenant_name: flatTenantName,
+      property_name: flatPropertyName,
+      tenant_unit_number: flatUnitNumber
+    });
     
     if (flatTenantName || flatPropertyName) {
       const tenantInfo = [];
@@ -103,12 +100,12 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       }
       
       if (tenantInfo.length > 0) {
-        console.log("Returning flat tenant info:", tenantInfo.join(' - '));
+        console.log("Returning tenant info:", tenantInfo.join(' - '));
         return tenantInfo.join(' - ');
       }
     }
     
-    // Priority 2: Try nested tenant structure (fallback)
+    // Priority 2: Fallback to nested structure (in case transformation didn't work)
     if (request.tenants && typeof request.tenants === 'object') {
       const tenantInfo = [];
       
