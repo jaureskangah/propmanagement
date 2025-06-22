@@ -19,85 +19,34 @@ const MaintenanceRequestList = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const isTenantUser = user?.user_metadata?.is_tenant_user;
   
-  // Fetch maintenance requests with tenant data using a more reliable approach
+  // Fetch maintenance requests with tenant data using correct Supabase syntax
   const { data: requests = [], refetch } = useQuery({
     queryKey: ['maintenance_requests'],
     queryFn: async () => {
-      console.log("Starting maintenance requests fetch...");
+      console.log("Fetching maintenance requests with tenant data...");
       
-      // First, get maintenance requests
-      const { data: maintenanceData, error: maintenanceError } = await supabase
+      const { data, error } = await supabase
         .from('maintenance_requests')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (maintenanceError) {
-        console.error("Error fetching maintenance requests:", maintenanceError);
-        throw maintenanceError;
-      }
-      
-      console.log("Raw maintenance data:", maintenanceData);
-      
-      if (!maintenanceData || maintenanceData.length === 0) {
-        return [];
-      }
-      
-      // Get unique tenant IDs
-      const tenantIds = [...new Set(maintenanceData.map(req => req.tenant_id).filter(Boolean))];
-      console.log("Tenant IDs to fetch:", tenantIds);
-      
-      // Fetch tenant data separately
-      const { data: tenantsData, error: tenantsError } = await supabase
-        .from('tenants')
         .select(`
-          id,
-          name,
-          unit_number,
-          properties (
-            name
+          *,
+          tenants (
+            name,
+            unit_number,
+            properties (
+              name
+            )
           )
         `)
-        .in('id', tenantIds);
+        .order('created_at', { ascending: false });
       
-      if (tenantsError) {
-        console.error("Error fetching tenants:", tenantsError);
-        // Continue without tenant data rather than failing completely
+      if (error) {
+        console.error("Error fetching maintenance requests:", error);
+        throw error;
       }
       
-      console.log("Tenants data:", tenantsData);
+      console.log("Fetched data with tenants:", data);
       
-      // Create a lookup map for tenant data
-      const tenantLookup = {};
-      if (tenantsData) {
-        tenantsData.forEach(tenant => {
-          tenantLookup[tenant.id] = tenant;
-        });
-      }
-      
-      console.log("Tenant lookup:", tenantLookup);
-      
-      // Transform the data to include flat tenant fields
-      const transformedData = maintenanceData.map(request => {
-        const tenant = tenantLookup[request.tenant_id];
-        const result = {
-          ...request,
-          tenant_name: tenant?.name || null,
-          property_name: tenant?.properties?.name || null,
-          tenant_unit_number: tenant?.unit_number || null
-        };
-        
-        console.log(`Transformed request ${request.id}:`, {
-          tenant_id: request.tenant_id,
-          tenant_name: result.tenant_name,
-          property_name: result.property_name,
-          tenant_unit_number: result.tenant_unit_number
-        });
-        
-        return result;
-      });
-      
-      console.log("Final transformed data:", transformedData);
-      return transformedData;
+      return data || [];
     },
   });
 

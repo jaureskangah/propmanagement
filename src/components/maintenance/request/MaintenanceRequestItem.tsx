@@ -1,3 +1,4 @@
+
 import { formatDate } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Wrench, AlertTriangle } from "lucide-react";
@@ -6,11 +7,7 @@ import { MaintenanceRequest } from "../types";
 import { Card } from "@/components/ui/card";
 
 interface MaintenanceRequestItemProps {
-  request: MaintenanceRequest & {
-    tenant_name?: string;
-    property_name?: string;
-    tenant_unit_number?: string;
-  };
+  request: MaintenanceRequest;
   onClick: () => void;
 }
 
@@ -21,9 +18,6 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     id: request.id,
     issue: request.issue,
     description: request.description,
-    tenant_name: (request as any).tenant_name,
-    property_name: (request as any).property_name,
-    tenant_unit_number: (request as any).tenant_unit_number,
     tenants: request.tenants,
     tenant_id: request.tenant_id
   });
@@ -67,32 +61,23 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
 
   // Function to get secondary info to display (tenant info or description)
   const getSecondaryInfo = () => {
-    // Priority 1: Use flat tenant data first (this is what we actually receive)
-    const flatTenantName = (request as any).tenant_name;
-    const flatPropertyName = (request as any).property_name;
-    const flatUnitNumber = (request as any).tenant_unit_number;
-    
-    console.log("Checking flat tenant data:", {
-      tenant_name: flatTenantName,
-      property_name: flatPropertyName,
-      tenant_unit_number: flatUnitNumber
-    });
-    
-    if (flatTenantName || flatPropertyName) {
+    // Check if we have tenant data from the nested structure
+    if (request.tenants && typeof request.tenants === 'object') {
+      const tenant = request.tenants;
       const tenantInfo = [];
       
       // Add tenant name
-      if (flatTenantName) {
-        tenantInfo.push(flatTenantName);
+      if (tenant.name) {
+        tenantInfo.push(tenant.name);
       }
       
       // Add property and unit info
       const locationParts = [];
-      if (flatPropertyName) {
-        locationParts.push(flatPropertyName);
+      if (tenant.properties?.name) {
+        locationParts.push(tenant.properties.name);
       }
-      if (flatUnitNumber) {
-        locationParts.push(`${t("unit")} ${flatUnitNumber}`);
+      if (tenant.unit_number) {
+        locationParts.push(`${t("unit")} ${tenant.unit_number}`);
       }
       
       if (locationParts.length > 0) {
@@ -105,35 +90,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       }
     }
     
-    // Priority 2: Fallback to nested structure (in case transformation didn't work)
-    if (request.tenants && typeof request.tenants === 'object') {
-      const tenantInfo = [];
-      
-      // Add tenant name
-      if (request.tenants.name) {
-        tenantInfo.push(request.tenants.name);
-      }
-      
-      // Add property and unit info
-      const locationParts = [];
-      if (request.tenants.properties?.name) {
-        locationParts.push(request.tenants.properties.name);
-      }
-      if (request.tenants.unit_number) {
-        locationParts.push(`${t("unit")} ${request.tenants.unit_number}`);
-      }
-      
-      if (locationParts.length > 0) {
-        tenantInfo.push(locationParts.join(', '));
-      }
-      
-      if (tenantInfo.length > 0) {
-        console.log("Returning nested tenant info:", tenantInfo.join(' - '));
-        return tenantInfo.join(' - ');
-      }
-    }
-    
-    // Priority 3: Description if available and different from issue title
+    // Fallback to description if available and different from issue title
     if (request.description && request.description.trim() !== request.issue.trim() && request.description.trim() !== '') {
       const desc = request.description.length > 100 
         ? `${request.description.substring(0, 100)}...` 
@@ -142,7 +99,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
       return desc;
     }
     
-    // Priority 4: Show creation date as fallback
+    // Final fallback: Show creation date
     const fallback = `${t("createdOn")} ${formatDate(request.created_at)}`;
     console.log("Returning fallback date:", fallback);
     return fallback;
