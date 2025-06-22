@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 interface LocaleContextProps {
@@ -5,6 +6,9 @@ interface LocaleContextProps {
   setLocale: (locale: string) => void;
   t: (key: string, args?: any) => string;
   language: string;
+  setLanguage: (language: string) => void;
+  unitSystem: 'metric' | 'imperial';
+  setUnitSystem: (system: 'metric' | 'imperial') => void;
 }
 
 const LocaleContext = createContext<LocaleContextProps | undefined>(undefined);
@@ -175,7 +179,6 @@ const translations = {
     notificationFailed: "Échec de la notification",
     failedToSendNotification: "Échec de l'envoi de la notification",
     notifyTenantAboutUpdate: "Notifier le locataire de la mise à jour",
-    maintenanceRequestDetails: "Détails de la demande de maintenance", 
     updateRequest: "Mettre à jour la demande",
   },
   en: {
@@ -346,17 +349,21 @@ const translations = {
 export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children, defaultLocale = 'fr' }) => {
   const [locale, setLocale] = useState<string>(defaultLocale);
   const [language, setLanguage] = useState<string>(defaultLocale);
+  const [unitSystem, setUnitSystem] = useState<'metric' | 'imperial'>('metric');
 
   useEffect(() => {
     const storedLocale = localStorage.getItem('locale') || defaultLocale;
+    const storedUnitSystem = localStorage.getItem('unitSystem') as 'metric' | 'imperial' || 'metric';
     setLocale(storedLocale);
     setLanguage(storedLocale);
+    setUnitSystem(storedUnitSystem);
   }, [defaultLocale]);
 
   useEffect(() => {
     localStorage.setItem('locale', locale);
+    localStorage.setItem('unitSystem', unitSystem);
     setLanguage(locale);
-  }, [locale]);
+  }, [locale, unitSystem]);
 
   const t = useCallback((key: string, args?: any): string => {
     let translation = translations[locale as keyof typeof translations]?.[key] || key;
@@ -376,6 +383,9 @@ export const LocaleProvider: React.FC<LocaleProviderProps> = ({ children, defaul
     setLocale,
     t,
     language,
+    setLanguage: setLocale,
+    unitSystem,
+    setUnitSystem,
   };
 
   return (
