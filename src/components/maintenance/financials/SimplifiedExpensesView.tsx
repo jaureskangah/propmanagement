@@ -138,7 +138,6 @@ export const SimplifiedExpensesView = ({
       <DataTables 
         propertyId={propertyId}
         expenses={expenses}
-        maintenance={maintenance}
         allExpenses={allExpenses}
       />
     </div>
