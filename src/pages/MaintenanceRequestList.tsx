@@ -27,7 +27,7 @@ const MaintenanceRequestList = () => {
         .from('maintenance_requests')
         .select(`
           *,
-          tenants!inner (
+          tenants (
             name,
             unit_number,
             properties (
@@ -38,7 +38,7 @@ const MaintenanceRequestList = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      console.log("Fetched maintenance requests:", data);
+      console.log("Fetched maintenance requests with structure:", data);
       return data;
     },
   });

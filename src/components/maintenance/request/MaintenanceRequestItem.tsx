@@ -14,6 +14,8 @@ interface MaintenanceRequestItemProps {
 export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestItemProps) => {
   const { t, language } = useLocale();
   
+  console.log("MaintenanceRequestItem received request:", request);
+  
   const cardStyle = request.priority === "Urgent" 
     ? "border-red-300 bg-red-50 hover:bg-red-100 dark:border-red-800 dark:bg-red-900/20 dark:hover:bg-red-900/30" 
     : "border hover:bg-gray-50 dark:hover:bg-gray-800";
@@ -53,16 +55,18 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
 
   // Function to get secondary info to display (tenant info or description)
   const getSecondaryInfo = () => {
-    // Priority 1: Tenant information if available (using the flat structure from the query)
+    console.log("Tenant data structure:", request.tenants);
+    
+    // Priority 1: Tenant information if available
     if (request.tenants) {
       const tenantInfo = [];
       
-      // Add tenant name (direct access since it's a flat structure)
+      // Add tenant name
       if (request.tenants.name) {
         tenantInfo.push(request.tenants.name);
       }
       
-      // Add property and unit info (direct access since it's a flat structure)
+      // Add property and unit info
       const locationParts = [];
       if (request.tenants.properties?.name) {
         locationParts.push(request.tenants.properties.name);
@@ -75,7 +79,9 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
         tenantInfo.push(locationParts.join(', '));
       }
       
-      return tenantInfo.join(' - ');
+      if (tenantInfo.length > 0) {
+        return tenantInfo.join(' - ');
+      }
     }
     
     // Priority 2: Description if different from issue title
@@ -85,8 +91,8 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
         : request.description;
     }
     
-    // Priority 3: Return null to avoid showing creation date twice
-    return null;
+    // Priority 3: Show creation date if no other info available
+    return `${t("createdOn")} ${formatDate(request.created_at)}`;
   };
 
   const secondaryInfo = getSecondaryInfo();
@@ -111,13 +117,8 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
               <AlertTriangle className="h-4 w-4 text-red-500 animate-pulse" />
             )}
           </div>
-          {secondaryInfo && (
-            <p className="text-sm text-muted-foreground mt-1">
-              {secondaryInfo}
-            </p>
-          )}
-          <p className="text-sm text-muted-foreground">
-            {t("createdOn")} {formatDate(request.created_at)}
+          <p className="text-sm text-muted-foreground mt-1">
+            {secondaryInfo}
           </p>
         </div>
       </div>
