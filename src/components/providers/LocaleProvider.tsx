@@ -180,6 +180,15 @@ const translations = {
     notifyTenantAboutUpdate: "Notifier le locataire de la mise à jour",
     updateRequest: "Mettre à jour la demande",
     noPhotosAvailable: "Aucune photo disponible",
+    totalRequests: "Demandes Totales",
+    pendingRequests: "Demandes En Attente",
+    resolvedRequests: "Demandes Résolues",
+    maintenanceRequestsTrends: "Tendances des Demandes de Maintenance",
+    totalMaintenanceRequests: "Nombre Total de Demandes",
+    completedMaintenanceRequests: "Demandes Terminées",
+    urgentMaintenanceRequests: "Demandes Urgentes",
+    maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
+    maintenanceExpenses: "Dépenses de Maintenance",
   },
   en: {
     welcome: "Welcome",
@@ -343,6 +352,15 @@ const translations = {
     notifyTenantAboutUpdate: "Notify tenant about update",
     updateRequest: "Update request",
     noPhotosAvailable: "No photos available",
+    totalRequests: "Total Requests",
+    pendingRequests: "Pending Requests",
+    resolvedRequests: "Resolved Requests",
+    maintenanceRequestsTrends: "Maintenance Requests Trends",
+    totalMaintenanceRequests: "Total Maintenance Requests",
+    completedMaintenanceRequests: "Completed Maintenance Requests",
+    urgentMaintenanceRequests: "Urgent Maintenance Requests",
+    maintenanceExpensesTrends: "Maintenance Expenses Trends",
+    maintenanceExpenses: "Maintenance Expenses",
   }
 };
 
