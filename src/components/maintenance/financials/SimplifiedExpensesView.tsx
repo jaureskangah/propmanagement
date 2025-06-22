@@ -1,10 +1,11 @@
 
 import React, { useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useFinancialData } from "./hooks/useFinancialData";
 import { DollarSign, FileText, Wrench, Calendar } from "lucide-react";
 import { DataTables } from "./DataTables";
 import { formatCurrency } from "@/lib/utils";
+import { ModernMetricCard } from "./components/ModernMetricCard";
 
 interface SimplifiedExpensesViewProps {
   propertyId: string;
@@ -65,32 +66,28 @@ export const SimplifiedExpensesView = ({
       value: formatCurrency(totalExpenses),
       icon: <DollarSign className="h-5 w-5" />,
       description: "Total des dépenses",
-      color: "text-blue-600",
-      bgColor: "bg-blue-50",
+      chartColor: "#3B82F6",
     },
     {
       title: "Moyenne mensuelle",
       value: formatCurrency(monthlyAverage),
       icon: <Calendar className="h-5 w-5" />,
       description: "Dépenses par mois",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
+      chartColor: "#22C55E",
     },
     {
       title: "Interventions",
       value: totalInterventions.toString(),
       icon: <Wrench className="h-5 w-5" />,
       description: "Nombre d'interventions",
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
+      chartColor: "#8B5CF6",
     },
     {
       title: "Ce mois-ci",
       value: formatCurrency(currentMonthExpenses),
       icon: <FileText className="h-5 w-5" />,
       description: "Dépenses ce mois",
-      color: "text-orange-600",
-      bgColor: "bg-orange-50",
+      chartColor: "#F59E0B",
     },
   ];
 
@@ -108,29 +105,18 @@ export const SimplifiedExpensesView = ({
 
   return (
     <div className="space-y-6">
-      {/* Metrics Cards */}
+      {/* Modern Metrics Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {metrics.map((metric) => (
-          <Card key={metric.title} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-2">
-                <div className={`p-2 rounded-lg ${metric.bgColor}`}>
-                  <div className={metric.color}>
-                    {metric.icon}
-                  </div>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {metric.title}
-                  </p>
-                  <p className="text-2xl font-bold">{metric.value}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {metric.description}
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {metrics.map((metric, index) => (
+          <ModernMetricCard
+            key={metric.title}
+            title={metric.title}
+            value={metric.value}
+            description={metric.description}
+            icon={metric.icon}
+            chartColor={metric.chartColor}
+            index={index}
+          />
         ))}
       </div>
 
