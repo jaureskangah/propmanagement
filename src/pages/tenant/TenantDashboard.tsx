@@ -5,11 +5,9 @@ import AppSidebar from "@/components/AppSidebar";
 import { TenantDashboard } from "@/components/tenant/TenantDashboard";
 import { useAuth } from '@/components/AuthProvider';
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 const TenantDashboardPage = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
-  const [sidebarCollapsed, setSidebarCollapsed] = React.useState(false);
 
   React.useEffect(() => {
     console.log("=== TENANT DASHBOARD ===");
@@ -36,21 +34,17 @@ const TenantDashboardPage = () => {
     return <Navigate to="/auth" replace />;
   }
 
-  // Redirect non-tenants to owner dashboard - SEULEMENT si on est sûr du statut
+  // Redirect non-tenants to owner dashboard
   if (!isTenant && !loading) {
     console.log("🔄 User is not a tenant, redirecting to owner dashboard");
     return <Navigate to="/dashboard" replace />;
   }
 
-  // Only tenants should reach this point
   console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isTenant={true} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <main className={cn(
-        "pt-16 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar isTenant={true} />
+      <main className="ml-20 pt-16 md:pt-8 transition-all duration-300">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

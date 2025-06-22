@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from '@/components/AuthProvider';
@@ -11,11 +10,8 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar isTenant={isTenantUser} isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className={cn(
-        "p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300",
-        sidebarCollapsed ? "md:ml-[80px]" : "md:ml-[270px]"
-      )}>
+      <AppSidebar isTenant={isTenantUser} />
+      <div className="ml-20 md:ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <h1 className="text-3xl font-bold mb-8">Profile Page</h1>
         {/* Contenu du profil */}
       </div>

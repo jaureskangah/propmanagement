@@ -1,0 +1,229 @@
+
+.modern-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 80px;
+  background: linear-gradient(180deg, #ffffff 0%, #fafafa 100%);
+  border-right: 1px solid #e5e7eb;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.modern-sidebar:hover {
+  width: 270px;
+}
+
+/* Logo Section */
+.modern-sidebar-logo {
+  display: flex;
+  align-items: center;
+  padding: 24px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid #f3f4f6;
+  min-height: 80px;
+}
+
+.logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  transition: transform 0.3s ease;
+}
+
+.modern-sidebar:hover .logo-icon {
+  transform: scale(1.1);
+}
+
+.logo-text {
+  margin-left: 16px;
+  font-weight: 700;
+  font-size: 18px;
+  color: #1f2937;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-20px);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: 0.1s;
+}
+
+.modern-sidebar:hover .logo-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Navigation */
+.modern-sidebar-nav {
+  flex: 1;
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modern-sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #6b7280;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.modern-sidebar-item:hover {
+  background: linear-gradient(135deg, #fef2f2 0%, #fde8e8 100%);
+  color: #ea384c;
+  transform: translateX(4px);
+}
+
+.modern-sidebar-item.active {
+  background: linear-gradient(135deg, #ea384c 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(234, 56, 76, 0.3);
+}
+
+.modern-sidebar-item.active:hover {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+}
+
+.item-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  transition: transform 0.3s ease;
+}
+
+.modern-sidebar-item:hover .item-icon {
+  transform: scale(1.1);
+}
+
+.item-text {
+  margin-left: 16px;
+  font-weight: 500;
+  font-size: 14px;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition-delay: calc(0.05s + var(--item-index, 0) * 0.02s);
+}
+
+.modern-sidebar:hover .item-text {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Footer */
+.modern-sidebar-footer {
+  padding: 20px 16px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.support-button {
+  font-size: 14px;
+}
+
+/* Progressive text reveal animation */
+@keyframes slideInText {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .modern-sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  
+  .modern-sidebar.mobile-open {
+    transform: translateX(0);
+    width: 270px;
+  }
+  
+  .modern-sidebar.mobile-open .item-text,
+  .modern-sidebar.mobile-open .logo-text {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .modern-sidebar {
+    background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+    border-right-color: #374151;
+  }
+  
+  .modern-sidebar-logo {
+    border-bottom-color: #374151;
+  }
+  
+  .logo-text {
+    color: #f9fafb;
+  }
+  
+  .modern-sidebar-item {
+    color: #d1d5db;
+  }
+  
+  .modern-sidebar-item:hover {
+    background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+    color: #ea384c;
+  }
+  
+  .modern-sidebar-footer {
+    border-top-color: #374151;
+  }
+}
+
+/* High-end premium feel enhancements */
+.modern-sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ea384c, #dc2626, #ea384c);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* Smooth backdrop for premium feel */
+.modern-sidebar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+  pointer-events: none;
+}

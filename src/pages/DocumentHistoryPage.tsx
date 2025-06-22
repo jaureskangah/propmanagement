@@ -7,12 +7,11 @@ import { motion } from "framer-motion";
 
 const DocumentHistoryPage = () => {
   const { t } = useLocale();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <div className="flex h-screen bg-background">
-      <AppSidebar isCollapsed={sidebarCollapsed} setIsCollapsed={setSidebarCollapsed} />
-      <div className="flex-1 overflow-auto">
+      <AppSidebar />
+      <div className="flex-1 overflow-auto ml-20">
         <div className="container mx-auto p-4 md:p-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
