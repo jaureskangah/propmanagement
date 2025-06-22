@@ -21,12 +21,18 @@ export const MaintenanceMetricsSection = ({
   propertyId,
   selectedYear,
 }: MaintenanceMetricsSectionProps) => {
+  // Only filter when both propertyId and selectedYear are provided AND different from defaults
+  const shouldFilter = propertyId && 
+                      selectedYear && 
+                      propertyId !== "property-1" && 
+                      selectedYear !== new Date().getFullYear();
+
   // Query to fetch filtered maintenance data based on propertyId and selectedYear
   const { data: filteredMetrics, isLoading } = useQuery({
     queryKey: ['maintenance_metrics', propertyId, selectedYear],
     queryFn: async () => {
-      // If no propertyId or selectedYear, return default metrics
-      if (!propertyId || !selectedYear) {
+      // If filtering is disabled, return the metrics passed from parent
+      if (!shouldFilter) {
         return {
           total: initialTotal,
           pending: initialPending,
@@ -92,7 +98,7 @@ export const MaintenanceMetricsSection = ({
         };
       }
     },
-    enabled: !!propertyId && !!selectedYear,
+    enabled: true, // Always enabled but logic inside determines filtering
   });
 
   const [metrics, setMetrics] = useState({
@@ -154,8 +160,8 @@ export const MaintenanceMetricsSection = ({
     };
   }, []);
 
-  // Use filtered metrics when available
-  const displayMetrics = (propertyId && selectedYear && filteredMetrics)
+  // Use filtered metrics when filtering is active, otherwise use passed metrics
+  const displayMetrics = (shouldFilter && filteredMetrics)
     ? {
         total: filteredMetrics.total,
         pending: filteredMetrics.pending,
@@ -175,7 +181,7 @@ export const MaintenanceMetricsSection = ({
         resolved={displayMetrics.resolved}
         propertyId={propertyId}
         selectedYear={selectedYear}
-        isLoading={isLoading}
+        isLoading={isLoading && shouldFilter}
       />
     </div>
   );
