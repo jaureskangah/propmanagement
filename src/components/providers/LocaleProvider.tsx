@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 interface LocaleContextProps {
@@ -180,6 +179,7 @@ const translations = {
     failedToSendNotification: "Échec de l'envoi de la notification",
     notifyTenantAboutUpdate: "Notifier le locataire de la mise à jour",
     updateRequest: "Mettre à jour la demande",
+    noPhotosAvailable: "Aucune photo disponible",
   },
   en: {
     welcome: "Welcome",
@@ -341,8 +341,8 @@ const translations = {
     notificationFailed: "Notification failed",
     failedToSendNotification: "Failed to send notification",
     notifyTenantAboutUpdate: "Notify tenant about update",
-    maintenanceRequestDetails: "Maintenance request details",
     updateRequest: "Update request",
+    noPhotosAvailable: "No photos available",
   }
 };
 
