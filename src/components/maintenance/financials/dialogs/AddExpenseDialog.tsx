@@ -100,7 +100,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
           amount: parseFloat(formData.amount),
           description: formData.description || null,
           date: date.toISOString().split('T')[0],
-          vendor_id: formData.vendor_id || null,
+          vendor_id: formData.vendor_id === "none" ? null : formData.vendor_id || null,
           user_id: (await supabase.auth.getUser()).data.user?.id
         })
         .select();
@@ -112,6 +112,9 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       // Invalidate queries to refresh data
       queryClient.invalidateQueries({ 
         queryKey: ["maintenance_expenses", propertyId] 
+      });
+      queryClient.invalidateQueries({ 
+        queryKey: ["all_expenses", propertyId] 
       });
 
       toast({
@@ -227,7 +230,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                 <SelectValue placeholder="Sélectionner un fournisseur" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Aucun fournisseur</SelectItem>
+                <SelectItem value="none">Aucun fournisseur</SelectItem>
                 {vendors.map((vendor) => (
                   <SelectItem key={vendor.id} value={vendor.id}>
                     {vendor.name}
