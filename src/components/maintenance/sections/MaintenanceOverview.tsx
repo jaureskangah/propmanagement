@@ -26,7 +26,10 @@ export const MaintenanceOverview = () => {
   });
 
   const totalRequests = requests.length;
-  const pendingRequests = requests.filter(r => r.status === "Pending").length;
+  // Updated to handle both 'Pending' and 'pending' variants
+  const pendingRequests = requests.filter(r => 
+    r.status === "Pending" || r.status === "pending"
+  ).length;
   const resolvedRequests = requests.filter(r => r.status === "Resolved").length;
   const urgentRequests = requests.filter(r => r.priority === "Urgent").length;
 

@@ -74,9 +74,11 @@ export const MaintenanceMetricsSection = ({
 
         console.log(`Found ${requests.length} maintenance requests for the selected filters`);
         
-        // Calculate metrics
+        // Calculate metrics with both 'Pending' and 'pending' variants
         const total = requests.length;
-        const pending = requests.filter(r => r.status === 'Pending').length;
+        const pending = requests.filter(r => 
+          r.status === 'Pending' || r.status === 'pending'
+        ).length;
         const resolved = requests.filter(r => r.status === 'Resolved').length;
         
         return { total, pending, resolved };
@@ -130,7 +132,10 @@ export const MaintenanceMetricsSection = ({
           }
 
           const total = requests.length;
-          const pending = requests.filter(r => r.status === 'Pending').length;
+          // Updated to handle both 'Pending' and 'pending' variants
+          const pending = requests.filter(r => 
+            r.status === 'Pending' || r.status === 'pending'
+          ).length;
           const resolved = requests.filter(r => r.status === 'Resolved').length;
           const urgent = requests.filter(r => r.priority === 'Urgent').length;
 
