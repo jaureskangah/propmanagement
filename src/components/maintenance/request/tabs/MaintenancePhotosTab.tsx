@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface MaintenancePhotosTabProps {
   photos: string[];
@@ -9,11 +10,12 @@ interface MaintenancePhotosTabProps {
 
 export const MaintenancePhotosTab = ({ photos }: MaintenancePhotosTabProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const { t } = useLocale();
 
   if (!photos || photos.length === 0) {
     return (
       <div className="flex items-center justify-center h-40 bg-gray-50 rounded-md">
-        <p className="text-gray-500">No photos available</p>
+        <p className="text-gray-500">{t('noPhotosAvailable')}</p>
       </div>
     );
   }

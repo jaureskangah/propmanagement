@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ViewPhotosDialogProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface ViewPhotosDialogProps {
 
 export const ViewPhotosDialog = ({ isOpen, onClose, photos }: ViewPhotosDialogProps) => {
   const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+  const { t } = useLocale();
 
   const handleImageLoad = (index: number) => {
     setLoadedImages(prev => ({
@@ -19,6 +21,21 @@ export const ViewPhotosDialog = ({ isOpen, onClose, photos }: ViewPhotosDialogPr
       [index]: true
     }));
   };
+
+  if (!photos || photos.length === 0) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-md animate-fade-in">
+          <DialogHeader>
+            <DialogTitle>Photos de la tâche</DialogTitle>
+          </DialogHeader>
+          <div className="flex items-center justify-center h-40 bg-gray-50 rounded-md">
+            <p className="text-gray-500">{t('noPhotosAvailable')}</p>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
