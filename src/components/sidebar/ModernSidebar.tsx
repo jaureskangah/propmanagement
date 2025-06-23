@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Settings,
@@ -23,6 +23,7 @@ export interface ModernSidebarProps {
 
 const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useLocale();
   
   // Links différents selon le type d'utilisateur
@@ -56,7 +57,12 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const handleLogoClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Navigate to landing page logic can be added here
+    try {
+      navigate('/', { replace: true });
+    } catch (error) {
+      console.error('Navigation error:', error);
+      window.location.href = '/';
+    }
   };
 
   return (
