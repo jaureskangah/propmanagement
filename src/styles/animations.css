@@ -14,7 +14,7 @@
   animation: fadeIn 0.3s ease-out forwards;
 }
 
-/* Amélioration des animations */
+/* Amélioration des animations - optimisées pour les performances */
 @keyframes slideUpFade {
   from {
     opacity: 0;
@@ -30,7 +30,33 @@
   animation: slideUpFade 0.5s ease-out forwards;
 }
 
-/* Animations pour les graphiques */
+/* Animation fade-in optimisée pour Hero */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 0; /* État initial */
+}
+
+/* Animation hover optimisée */
+.hover-lift {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+/* Animations pour les graphiques - optimisées */
 @keyframes growFromLeft {
   from {
     opacity: 0;
@@ -45,22 +71,18 @@
 }
 
 .animate-grow-from-left {
-  animation: growFromLeft 1s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
+  animation: growFromLeft 0.8s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
 }
 
-/* Animation de pulse améliorée pour les points dans les graphiques */
+/* Animation de pulse optimisée */
 @keyframes enhancedPulse {
-  0% {
+  0%, 100% {
     transform: scale(1);
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
   }
   50% {
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
   }
 }
 
@@ -68,24 +90,7 @@
   animation: enhancedPulse 1.5s infinite;
 }
 
-/* Animation de mise en évidence pour la série sélectionnée */
-@keyframes highlightSeries {
-  0% {
-    filter: brightness(1);
-  }
-  50% {
-    filter: brightness(1.2);
-  }
-  100% {
-    filter: brightness(1);
-  }
-}
-
-.highlight-series {
-  animation: highlightSeries 2s ease-in-out infinite;
-}
-
-/* Animation pour les barres de graphique */
+/* Animation pour les barres - performance optimisée */
 @keyframes barGrow {
   from {
     transform: scaleY(0);
@@ -98,37 +103,50 @@
 }
 
 .animate-bar-grow {
-  animation: barGrow 0.8s ease-out forwards;
+  animation: barGrow 0.6s ease-out forwards;
 }
 
-/* Animation pour les lignes de graphique */
-@keyframes drawLine {
-  from {
-    stroke-dashoffset: 1000;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.animate-draw-line {
-  stroke-dasharray: 1000;
-  animation: drawLine 1.5s ease-out forwards;
-}
-
-/* Animation de flottement pour les graphiques */
+/* Animation de flottement légère */
 @keyframes float {
-  0% {
+  0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-5px);
-  }
-  100% {
-    transform: translateY(0px);
+    transform: translateY(-3px);
   }
 }
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+/* Réduction des animations pour les utilisateurs qui préfèrent moins de mouvement */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-up-fade,
+  .animate-grow-from-left,
+  .animate-bar-grow {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  
+  .hover-lift:hover {
+    transform: none;
+  }
+  
+  .animate-float {
+    animation: none;
+  }
+}
+
+/* Optimisation pour les petits écrans */
+@media (max-width: 768px) {
+  .animate-fade-in {
+    animation-duration: 0.4s;
+  }
+  
+  .animate-slide-up-fade {
+    animation-duration: 0.3s;
+  }
 }

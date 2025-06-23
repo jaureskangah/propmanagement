@@ -12,37 +12,45 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     outDir: "dist",
-    // Disable sourcemaps in all modes to reduce memory usage
     sourcemap: false,
-    // Set a hard limit on chunk size
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
         manualChunks: {
-          // Create smaller, more numerous chunks
-          vendor: ['react', 'react-dom'],
-          ui1: ['@radix-ui/react-tooltip'],
-          ui2: ['@radix-ui/react-dialog'],
-          ui3: ['class-variance-authority'],
-          utils1: ['date-fns'],
-          utils2: ['clsx', 'tailwind-merge'],
+          // Séparer les vendors principaux
+          'react-vendor': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
+          
+          // UI components séparés
+          'ui-core': ['@radix-ui/react-dialog', '@radix-ui/react-tooltip'],
+          'ui-forms': ['@radix-ui/react-select', '@radix-ui/react-checkbox'],
+          'ui-motion': ['framer-motion'],
+          
+          // Utilitaires
+          'utils': ['clsx', 'tailwind-merge', 'class-variance-authority'],
+          'date-utils': ['date-fns'],
+          
+          // Landing page components (lazy loaded)
+          'landing': [
+            'src/components/landing/HowItWorks.tsx',
+            'src/components/landing/Pricing.tsx',
+            'src/components/landing/FAQ.tsx',
+            'src/components/landing/Contact.tsx',
+            'src/components/landing/CallToAction.tsx'
+          ]
         },
-        // Limit chunk size to improve memory usage
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
       },
     },
-    // Optimize build to use less memory
     minify: mode !== 'development',
     cssCodeSplit: true,
-    assetsInlineLimit: 4096,
-    // Don't emit large files
+    assetsInlineLimit: 2048, // Plus petit pour éviter les gros bundles
     emptyOutDir: true,
   },
   plugins: [
     react({
-      // Using proper SWC options - tsDecorators is a valid option
       tsDecorators: true,
     }),
     mode === 'development' &&
@@ -54,13 +62,15 @@ export default defineConfig(({ mode }) => ({
     },
   },
   optimizeDeps: {
-    // Exclude heavy packages from optimization
     exclude: ['framer-motion'],
+    include: ['react', 'react-dom', 'react-router-dom'],
   },
-  // Set a low memory budget for the build
   esbuild: {
     logLimit: 0,
     legalComments: 'none',
     treeShaking: true,
+    minifyIdentifiers: mode !== 'development',
+    minifySyntax: mode !== 'development',
+    minifyWhitespace: mode !== 'development',
   }
 }));
