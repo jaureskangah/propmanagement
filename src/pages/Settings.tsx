@@ -5,13 +5,21 @@ import { Navigate } from "react-router-dom";
 import AppSidebar from "@/components/AppSidebar";
 import { motion } from "framer-motion";
 import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
-import { ProfileFormSection } from "@/components/settings/ProfileFormSection";
+import { ProfileSection } from "@/components/settings/ProfileSection";
+import { SecuritySection } from "@/components/settings/SecuritySection";
+import { AppearanceSection } from "@/components/settings/AppearanceSection";
+import { NotificationsSection } from "@/components/settings/NotificationsSection";
+import { LanguageSection } from "@/components/settings/LanguageSection";
 import { TenantUserCard } from "@/components/settings/TenantUserCard";
-import { useSettingsData } from "@/hooks/useSettingsData";
+import { useProfileData } from "@/hooks/useProfileData";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
+import { useThemeSettings } from "@/hooks/useThemeSettings";
 
 const Settings = () => {
   const { user, isAuthenticated, loading } = useAuth();
-  const { profile, setProfile, isLoading, handleSave } = useSettingsData();
+  const { profile, isLoading: profileLoading, updateProfile, refetch } = useProfileData();
+  const { updatePreference, isLoading: preferencesLoading } = useNotificationPreferences(profile);
+  const { theme, mounted, toggleTheme } = useThemeSettings();
 
   // Check if user is a tenant and redirect appropriately
   const isTenantUser = user?.user_metadata?.is_tenant_user;
@@ -40,15 +48,70 @@ const Settings = () => {
         >
           <SettingsPageHeader userEmail={user?.email} />
 
-          <ProfileFormSection
-            profile={profile}
-            onProfileChange={setProfile}
-            onSave={handleSave}
-            isLoading={isLoading}
-            isTenantUser={isTenantUser}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+            >
+              <ProfileSection
+                profile={profile}
+                isLoading={profileLoading}
+                userEmail={user?.email}
+                onProfileUpdate={refetch}
+              />
+            </motion.div>
 
-          {isTenantUser && <TenantUserCard />}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.2 }}
+            >
+              <SecuritySection />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.3 }}
+            >
+              <AppearanceSection
+                theme={theme}
+                onThemeChange={toggleTheme}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.4 }}
+            >
+              <NotificationsSection
+                profile={profile}
+                isLoading={preferencesLoading}
+                onUpdatePreference={updatePreference}
+              />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="lg:col-span-2"
+            >
+              <LanguageSection />
+            </motion.div>
+          </div>
+
+          {isTenantUser && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.6 }}
+            >
+              <TenantUserCard />
+            </motion.div>
+          )}
         </motion.div>
       </div>
     </div>

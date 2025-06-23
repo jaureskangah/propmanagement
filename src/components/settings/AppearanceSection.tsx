@@ -3,8 +3,6 @@ import { Moon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 
 interface AppearanceSectionProps {
   theme: string | undefined;
@@ -13,29 +11,13 @@ interface AppearanceSectionProps {
 
 export function AppearanceSection({ theme, onThemeChange }: AppearanceSectionProps) {
   const { t } = useLocale();
-  const [mounted, setMounted] = useState(false);
-  const { theme: currentTheme } = useTheme();
-  
-  // Only show the switch UI after mounting to avoid hydration issues
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  // For debugging
-  useEffect(() => {
-    if (mounted) {
-      console.log("AppearanceSection - Current theme:", theme);
-      console.log("AppearanceSection - From useTheme:", currentTheme);
-    }
-  }, [theme, currentTheme, mounted]);
   
   const handleThemeChange = (checked: boolean) => {
-    console.log("AppearanceSection - Switch toggled to:", checked ? "dark" : "light");
     onThemeChange(checked);
   };
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-md overflow-hidden border-border dark:border-gray-800 dark-card-gradient">
+    <Card className="transition-all duration-300 hover:shadow-md overflow-hidden border-border dark:border-gray-800 h-fit">
       <div className="h-1 bg-gradient-to-r from-indigo-500 to-blue-600" />
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 dark:text-white">
@@ -54,13 +36,11 @@ export function AppearanceSection({ theme, onThemeChange }: AppearanceSectionPro
             <p className="font-medium dark:text-white">{t('darkTheme')}</p>
             <p className="text-sm text-muted-foreground mt-1 dark:text-gray-400">{t('darkThemeDescription')}</p>
           </div>
-          {mounted && (
-            <Switch 
-              className="mt-1"
-              checked={theme === "dark"}
-              onCheckedChange={handleThemeChange}
-            />
-          )}
+          <Switch 
+            className="mt-1"
+            checked={theme === "dark"}
+            onCheckedChange={handleThemeChange}
+          />
         </div>
       </CardContent>
     </Card>

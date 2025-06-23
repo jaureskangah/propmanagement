@@ -17,7 +17,7 @@ export function ProfileSection({ profile, isLoading, userEmail, onProfileUpdate 
   const { t } = useLocale();
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-md overflow-hidden border-border">
+    <Card className="transition-all duration-300 hover:shadow-md overflow-hidden border-border h-fit">
       <div className="h-1 bg-blue-500" />
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2">
@@ -32,12 +32,12 @@ export function ProfileSection({ profile, isLoading, userEmail, onProfileUpdate 
       </CardHeader>
       <CardContent className="space-y-4">
         {isLoading ? (
-          <div className="flex justify-center">
+          <div className="flex justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin" />
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
               <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/50">
                 <p className="font-medium text-sm text-muted-foreground">{t('firstName')}</p>
                 <p className="font-semibold mt-1">
@@ -55,7 +55,7 @@ export function ProfileSection({ profile, isLoading, userEmail, onProfileUpdate 
               <p className="font-medium text-sm text-muted-foreground">{t('email')}</p>
               <p className="font-semibold mt-1">{userEmail}</p>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end pt-2">
               <EditProfileDialog
                 initialData={{
                   first_name: profile?.first_name || '',
