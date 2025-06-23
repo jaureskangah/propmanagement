@@ -15,7 +15,7 @@ const Maintenance = () => {
     <div className="min-h-screen bg-background">
       <AppSidebar isTenant={isTenantUser} />
       
-      <div className="ml-20 md:ml-20 transition-all duration-300">
+      <div className="ml-20 p-4 md:p-6 pt-24 md:pt-8 transition-all duration-300">
         {isTenantUser ? (
           <TenantUserContainer />
         ) : (

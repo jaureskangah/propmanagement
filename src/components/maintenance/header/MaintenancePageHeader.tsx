@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { Wrench, Info, Search, Filter } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -53,7 +52,7 @@ const MaintenancePageHeader = ({
             <Wrench className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               {t('maintenanceManagement')}
             </h1>
             <p className="text-muted-foreground mt-1">
@@ -102,4 +101,3 @@ const MaintenancePageHeader = ({
 };
 
 export default MaintenancePageHeader;
-
