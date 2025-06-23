@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Navigate } from "react-router-dom";
@@ -11,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Save } from "lucide-react";
+import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
 
 const Settings = () => {
   const { user, isAuthenticated, loading } = useAuth();
@@ -132,12 +134,7 @@ const Settings = () => {
           transition={{ duration: 0.35 }}
           className="space-y-6 max-w-4xl"
         >
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Paramètres</h1>
-            <p className="text-muted-foreground">
-              Gérez vos informations personnelles et les paramètres de votre compte
-            </p>
-          </div>
+          <SettingsPageHeader userEmail={user?.email} />
 
           <Card>
             <CardHeader>
