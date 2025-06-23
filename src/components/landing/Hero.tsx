@@ -2,7 +2,7 @@
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 
 interface HeroProps {
   onShowAuthModal: () => void;
@@ -11,153 +11,95 @@ interface HeroProps {
 export default function Hero({ onShowAuthModal }: HeroProps) {
   const { t } = useLocale();
 
-  const container: Variants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
-  };
-
-  const item: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    show: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.8, 
-        ease: [0.4, 0, 0.6, 1] as const
-      } 
-    }
-  };
-
-  // Animation for decorative elements
-  const decorCircleAnimation = {
-    initial: { scale: 0.8, opacity: 0.5 },
+  // Animation simple et élégante
+  const fadeInUp = {
+    initial: { opacity: 0, y: 30 },
     animate: { 
-      scale: [0.8, 1.1, 0.9, 1],
-      opacity: [0.5, 0.7, 0.6, 0.8],
-      transition: { 
-        duration: 8,
-        repeat: Infinity,
-        repeatType: "reverse" as const
-      }
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" }
     }
   };
 
-  const decorCircleAnimation2 = {
-    initial: "initial",
-    animate: "animate",
-    variants: {
-      initial: { scale: 0.8, opacity: 0.5 },
-      animate: { 
-        scale: [0.8, 1.1, 0.9, 1],
-        opacity: [0.5, 0.7, 0.6, 0.8],
-        transition: { 
-          duration: 8,
-          delay: 1.5,
-          repeat: Infinity,
-          repeatType: "reverse" as const
-        }
+  const staggerContainer = {
+    animate: {
+      transition: {
+        staggerChildren: 0.2
       }
     }
   };
 
   return (
-    <motion.section
-      initial="hidden"
-      animate="show"
-      variants={container}
-      className="relative pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden"
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-white via-red-50 to-white" />
+    <section className="relative pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden">
+      {/* Gradient de fond simple et élégant */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white via-red-50/30 to-blue-50/20" />
       
-      {/* Animated decorative circles */}
-      <motion.div 
-        initial={decorCircleAnimation.initial}
-        animate={decorCircleAnimation.animate}
-        className="absolute top-10 right-10 w-64 h-64 rounded-full bg-gradient-to-r from-pink-100 to-red-100 opacity-30 blur-3xl" 
-      />
-      <motion.div 
-        {...decorCircleAnimation2}
-        className="absolute bottom-10 left-10 w-72 h-72 rounded-full bg-gradient-to-r from-blue-100 to-purple-100 opacity-30 blur-3xl" 
-      />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <motion.div 
+          className="max-w-4xl mx-auto text-center"
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+        >
+          {/* Titre principal */}
           <motion.h1 
-            variants={item}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6"
+            variants={fadeInUp}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-tight"
           >
             {t('heroTitle')}
           </motion.h1>
           
+          {/* Sous-titre simplifié */}
           <motion.p 
-            variants={item}
-            className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed"
+            variants={fadeInUp}
+            className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             {t('heroSubtitle')}
           </motion.p>
           
+          {/* Boutons d'action */}
           <motion.div 
-            variants={item}
+            variants={fadeInUp}
             className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
           >
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <Button
+              size="lg"
+              onClick={onShowAuthModal}
+              className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 transform hover:scale-105"
             >
-              <Button
-                size="lg"
-                onClick={onShowAuthModal}
-                className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6"
-              >
-                {t('heroGetStarted')}
-              </Button>
-            </motion.div>
+              {t('heroGetStarted')}
+            </Button>
             
-            <motion.div
-              whileHover={{ scale: 1.05, borderColor: "#ea384c" }}
-              whileTap={{ scale: 0.95 }}
+            <Button
+              variant="ghost"
+              size="lg"
+              onClick={() => {
+                document
+                  .getElementById("everything-you-need")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="text-gray-600 hover:text-[#ea384c] transition-colors duration-200 group"
             >
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => {
-                  document
-                    .getElementById("everything-you-need")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }}
-                className="group border-gray-300 hover:border-[#ea384c] hover:text-[#ea384c] transition-colors rounded-full px-8 py-6"
-              >
-                {t('learnMore')}
-                <ChevronDown className="h-4 w-4 group-hover:animate-bounce" />
-              </Button>
-            </motion.div>
+              {t('learnMore')}
+              <ChevronDown className="h-4 w-4 ml-1 group-hover:animate-bounce" />
+            </Button>
           </motion.div>
           
+          {/* Image du dashboard avec animation subtile */}
           <motion.div 
-            variants={item}
-            whileInView={{ 
-              scale: [0.96, 1.01, 1],
-              opacity: [0.8, 1],
-              transition: { duration: 1.2, ease: [0.4, 0, 0.6, 1] as const }
-            }}
-            className="w-full max-w-6xl mx-auto bg-white/70 backdrop-blur-md rounded-2xl shadow-xl overflow-hidden"
+            variants={fadeInUp}
+            className="w-full max-w-5xl mx-auto"
           >
-            <motion.img 
-              src="/lovable-uploads/4accfe08-d5fd-46dd-bd29-9b1d6db1687f.png"
-              alt="PropManagement Dashboard Canada" 
-              className="w-full h-auto rounded-2xl"
-              whileHover={{ scale: 1.02 }}
-              transition={{ duration: 0.5 }}
-            />
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-white/20">
+              <img 
+                src="/lovable-uploads/4accfe08-d5fd-46dd-bd29-9b1d6db1687f.png"
+                alt="PropManagement Dashboard Canada" 
+                className="w-full h-auto"
+              />
+            </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
-    </motion.section>
+    </section>
   );
 }

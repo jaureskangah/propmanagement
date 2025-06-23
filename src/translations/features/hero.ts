@@ -2,15 +2,15 @@
 import { HeroTranslations } from '../types';
 
 export const enHero: HeroTranslations = {
-  heroTitle: "Simplified Property Management in Canada",
-  heroSubtitle: "Complete solution for Canadian properties, compliant with provincial laws. Perfect for small property owners and managers from coast to coast.",
-  heroGetStarted: "Get Started Now",
+  heroTitle: "Property Management Made Simple",
+  heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
+  heroGetStarted: "Get Started Free",
   learnMore: "Learn More"
 };
 
 export const frHero: HeroTranslations = {
-  heroTitle: "La Gestion Immobilière Simplifiée au Canada",
-  heroSubtitle: "Solution complète pour gérer vos propriétés canadiennes. Idéal pour les petits propriétaires et gestionnaires immobiliers de la côte atlantique à la côte pacifique.",
-  heroGetStarted: "Commencer maintenant",
+  heroTitle: "Gestion Immobilière Simplifiée",
+  heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
+  heroGetStarted: "Commencer Gratuitement",
   learnMore: "En savoir plus"
 };
