@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from "react";
-import { MaintenanceMetrics } from "../MaintenanceMetrics";
+import { ModernMaintenanceMetrics } from "./ModernMaintenanceMetrics";
 import { supabase } from "@/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 
@@ -175,7 +174,7 @@ export const MaintenanceMetricsSection = ({
 
   return (
     <div className="w-full mb-6">
-      <MaintenanceMetrics
+      <ModernMaintenanceMetrics
         total={displayMetrics.total}
         pending={displayMetrics.pending}
         resolved={displayMetrics.resolved}
