@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect, useMemo } from "react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
-import { BarChart3, AlertCircle, CheckSquare, Users, DollarSign } from "lucide-react";
+import { BarChart3, AlertCircle, CheckSquare, Users, DollarSign, Wrench } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MaintenanceOverview } from "./sections/MaintenanceOverview";
 import { MaintenanceRequestsSection } from "./sections/MaintenanceRequestsSection";
@@ -258,9 +257,12 @@ export const SimplifiedMaintenanceContainer = () => {
     return (
       <div className="space-y-6 font-sans">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-            {t('maintenance')}
-          </h1>
+          <div className="flex items-center gap-3">
+            <Wrench className="h-8 w-8 text-primary" />
+            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+              {t('maintenance')}
+            </h1>
+          </div>
           <p className="text-muted-foreground mt-2">
             Gérez toutes vos activités de maintenance depuis un seul endroit
           </p>
@@ -280,11 +282,14 @@ export const SimplifiedMaintenanceContainer = () => {
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Simple Header */}
+      {/* Header with Icon */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-          {t('maintenance')}
-        </h1>
+        <div className="flex items-center gap-3">
+          <Wrench className="h-8 w-8 text-primary" />
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+            {t('maintenance')}
+          </h1>
+        </div>
         <p className="text-muted-foreground mt-2">
           Gérez toutes vos activités de maintenance depuis un seul endroit
         </p>
