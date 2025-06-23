@@ -11,21 +11,13 @@ interface HeroProps {
 export default function Hero({ onShowAuthModal }: HeroProps) {
   const { t } = useLocale();
 
-  // Animation simple et élégante
+  // Animation simple et élégante avec des valeurs d'easing compatibles
   const fadeInUp = {
     initial: { opacity: 0, y: 30 },
     animate: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" }
-    }
-  };
-
-  const staggerContainer = {
-    animate: {
-      transition: {
-        staggerChildren: 0.2
-      }
+      transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }
     }
   };
 
@@ -35,15 +27,12 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
       <div className="absolute inset-0 bg-gradient-to-br from-white via-red-50/30 to-blue-50/20" />
       
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <motion.div 
-          className="max-w-4xl mx-auto text-center"
-          variants={staggerContainer}
-          initial="initial"
-          animate="animate"
-        >
+        <div className="max-w-4xl mx-auto text-center">
           {/* Titre principal */}
           <motion.h1 
             variants={fadeInUp}
+            initial="initial"
+            animate="animate"
             className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-tight"
           >
             {t('heroTitle')}
@@ -52,6 +41,9 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
           {/* Sous-titre simplifié */}
           <motion.p 
             variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+            transition={{ delay: 0.2 }}
             className="text-xl md:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             {t('heroSubtitle')}
@@ -60,6 +52,9 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
           {/* Boutons d'action */}
           <motion.div 
             variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+            transition={{ delay: 0.4 }}
             className="flex flex-col sm:flex-row justify-center gap-4 mb-12"
           >
             <Button
@@ -70,24 +65,25 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
               {t('heroGetStarted')}
             </Button>
             
-            <Button
-              variant="ghost"
-              size="lg"
+            <button
               onClick={() => {
                 document
                   .getElementById("everything-you-need")
                   ?.scrollIntoView({ behavior: "smooth" });
               }}
-              className="text-gray-600 hover:text-[#ea384c] transition-colors duration-200 group"
+              className="text-gray-600 hover:text-[#ea384c] transition-colors duration-200 group flex items-center justify-center gap-2 px-6 py-3"
             >
               {t('learnMore')}
-              <ChevronDown className="h-4 w-4 ml-1 group-hover:animate-bounce" />
-            </Button>
+              <ChevronDown className="h-4 w-4 group-hover:animate-bounce" />
+            </button>
           </motion.div>
           
           {/* Image du dashboard avec animation subtile */}
           <motion.div 
             variants={fadeInUp}
+            initial="initial"
+            animate="animate"
+            transition={{ delay: 0.6 }}
             className="w-full max-w-5xl mx-auto"
           >
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-2xl overflow-hidden border border-white/20">
@@ -98,7 +94,7 @@ export default function Hero({ onShowAuthModal }: HeroProps) {
               />
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
