@@ -6,6 +6,10 @@ import { LanguageSection } from "@/components/settings/LanguageSection";
 import { AppearanceSection } from "@/components/settings/AppearanceSection";
 import { NotificationsSection } from "@/components/settings/NotificationsSection";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useAuth } from "@/components/AuthProvider";
+import { useProfileData } from "@/hooks/useProfileData";
+import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
+import { useThemeSettings } from "@/hooks/useThemeSettings";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
 
 interface TenantSettingsSectionProps {
@@ -18,6 +22,24 @@ export const TenantSettingsSection = ({
   onSettingsUpdate
 }: TenantSettingsSectionProps) => {
   const { t } = useLocale();
+  const { user } = useAuth();
+  const { profile, isLoading: profileLoading, refetch: refetchProfile } = useProfileData();
+  const { isLoading: notificationLoading, updatePreference } = useNotificationPreferences(profile);
+  const { theme, toggleTheme } = useThemeSettings();
+
+  const handleProfileUpdate = () => {
+    refetchProfile();
+    onSettingsUpdate();
+  };
+
+  const handlePreferenceUpdate = async (type: 'push_notifications' | 'email_updates', value: boolean) => {
+    await updatePreference(type, value);
+    onSettingsUpdate();
+  };
+
+  const handleThemeChange = (isDark: boolean) => {
+    toggleTheme(isDark);
+  };
 
   return (
     <motion.div
@@ -39,7 +61,12 @@ export const TenantSettingsSection = ({
               <CardDescription>Vos informations personnelles</CardDescription>
             </CardHeader>
             <CardContent>
-              <ProfileSection />
+              <ProfileSection 
+                profile={profile}
+                isLoading={profileLoading}
+                userEmail={user?.email}
+                onProfileUpdate={handleProfileUpdate}
+              />
             </CardContent>
           </Card>
 
@@ -61,7 +88,10 @@ export const TenantSettingsSection = ({
               <CardDescription>Personnalisez l'apparence de l'interface</CardDescription>
             </CardHeader>
             <CardContent>
-              <AppearanceSection />
+              <AppearanceSection 
+                theme={theme}
+                onThemeChange={handleThemeChange}
+              />
             </CardContent>
           </Card>
 
@@ -72,7 +102,11 @@ export const TenantSettingsSection = ({
               <CardDescription>Gérez vos préférences de notification</CardDescription>
             </CardHeader>
             <CardContent>
-              <NotificationsSection />
+              <NotificationsSection 
+                profile={profile}
+                isLoading={notificationLoading}
+                onUpdatePreference={handlePreferenceUpdate}
+              />
             </CardContent>
           </Card>
         </div>
