@@ -43,20 +43,21 @@ export const TenantOverview = ({
     req.status === 'Pending' || req.status === 'pending'
   ).length;
 
-  const getPropertyName = () => {
-    console.log("=== TenantOverview getPropertyName DEBUG ===");
+  const getPropertyDisplayName = () => {
+    console.log("=== TenantOverview getPropertyDisplayName DEBUG ===");
     console.log("Tenant ID:", tenant.id);
     console.log("Tenant name:", tenant.name);
-    console.log("Tenant property_id:", tenant.property_id);
-    console.log("Tenant.properties:", tenant.properties);
+    console.log("Property ID:", tenant.property_id);
+    console.log("Properties object:", tenant.properties);
+    console.log("Property name from object:", tenant.properties?.name);
     
-    // Vérifier si on a des données de propriété
-    if (tenant.properties && tenant.properties.name) {
-      console.log("✅ Found property name:", tenant.properties.name);
+    // Logique simple : vérifier si on a un nom de propriété
+    if (tenant.properties?.name) {
+      console.log("✅ Property name found:", tenant.properties.name);
       return tenant.properties.name;
     }
     
-    console.log("❌ No property name found, returning default");
+    console.log("❌ No property name available");
     return "Propriété inconnue";
   };
 
@@ -73,7 +74,7 @@ export const TenantOverview = ({
         </h1>
         <p className="text-gray-600 flex items-center justify-center gap-2">
           <Building className="h-4 w-4" />
-          {getPropertyName()} - {t('unitLabel')} {tenant.unit_number}
+          {getPropertyDisplayName()} - {t('unitLabel')} {tenant.unit_number}
         </p>
       </motion.div>
 
