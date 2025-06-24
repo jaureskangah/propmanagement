@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building, Calendar, AlertTriangle, MessageSquare, CheckCircle, XCircle } from "lucide-react";
+import { Building, Calendar, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { formatDate } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -43,10 +43,6 @@ export const TenantOverview = ({
     req.status === 'Pending' || req.status === 'pending'
   ).length;
 
-  const unreadMessages = communications.filter(comm => 
-    comm.status === 'unread' && !comm.is_from_tenant
-  ).length;
-
   const getPropertyName = () => {
     if (tenant?.properties) {
       if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
@@ -72,12 +68,12 @@ export const TenantOverview = ({
         </h1>
         <p className="text-gray-600 flex items-center justify-center gap-2">
           <Building className="h-4 w-4" />
-          {getPropertyName()} - {t('unit')} {tenant.unit_number}
+          {getPropertyName()} - {t('unitLabel')} {tenant.unit_number}
         </p>
       </motion.div>
 
-      {/* Status Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Status Cards Grid - Changed to 2 columns */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lease Status Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -142,44 +138,13 @@ export const TenantOverview = ({
             </CardContent>
           </Card>
         </motion.div>
-
-        {/* Communications Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-blue-500/5" />
-            <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <MessageSquare className="h-5 w-5 text-green-600" />
-                {t('messages')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="relative">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900">{unreadMessages}</span>
-                <Badge variant={unreadMessages > 0 ? "default" : "secondary"}>
-                  {unreadMessages > 0 ? t('unread') : t('upToDate')}
-                </Badge>
-              </div>
-              <p className="text-sm text-gray-600 mt-2">
-                {unreadMessages > 0 
-                  ? `${unreadMessages} ${t('unreadMessages').toLowerCase()}`
-                  : t('noNewMessages')
-                }
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
       </div>
 
       {/* Recent Activity */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
+        transition={{ delay: 0.3 }}
       >
         <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
           <CardHeader>
@@ -200,22 +165,8 @@ export const TenantOverview = ({
                   </Badge>
                 </div>
               ))}
-              
-              {/* Recent communications */}
-              {communications.slice(0, 2).map((comm, index) => (
-                <div key={comm.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
-                  <MessageSquare className="h-4 w-4 text-blue-500" />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{comm.subject}</p>
-                    <p className="text-xs text-gray-500">{formatDate(comm.created_at)}</p>
-                  </div>
-                  <Badge variant={comm.status === 'unread' ? "default" : "secondary"} className="text-xs">
-                    {t(comm.status)}
-                  </Badge>
-                </div>
-              ))}
 
-              {maintenanceRequests.length === 0 && communications.length === 0 && (
+              {maintenanceRequests.length === 0 && (
                 <p className="text-center text-gray-500 py-4">{t('noRecentActivity')}</p>
               )}
             </div>

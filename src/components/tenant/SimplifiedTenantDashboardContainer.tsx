@@ -1,12 +1,12 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
-import { Home, Wrench, FileText, MessageSquare } from "lucide-react";
+import { Home, Wrench, FileText, Settings } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { TenantOverview } from "./sections/TenantOverview";
 import { TenantMaintenanceSection } from "./sections/TenantMaintenanceSection";
 import { TenantDocumentsSection } from "./sections/TenantDocumentsSection";
-import { TenantCommunicationsSection } from "./sections/TenantCommunicationsSection";
+import { TenantSettingsSection } from "./sections/TenantSettingsSection";
 import { motion } from "framer-motion";
 import type { Communication, MaintenanceRequest, TenantDocument } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
@@ -50,19 +50,14 @@ export const SimplifiedTenantDashboardContainer = ({
     
     // Documents: Total documents
     const documentsCount = documents.length;
-    
-    // Communications: Unread messages
-    const unreadComms = communications.filter(comm => 
-      comm.status === 'unread' && !comm.is_from_tenant
-    ).length;
 
     return {
       overview: overviewCount,
       maintenance: pendingMaintenance,
       documents: documentsCount,
-      communications: unreadComms
+      settings: 0 // No count needed for settings
     };
-  }, [leaseStatus, maintenanceRequests, documents, communications]);
+  }, [leaseStatus, maintenanceRequests, documents]);
 
   // Function to get contextual count for active tab
   const getCountForTab = useMemo(() => {
@@ -78,8 +73,8 @@ export const SimplifiedTenantDashboardContainer = ({
           return dynamicCounts.maintenance;
         case 'documents':
           return dynamicCounts.documents;
-        case 'communications':
-          return dynamicCounts.communications;
+        case 'settings':
+          return undefined; // No count for settings
         default:
           return undefined;
       }
@@ -106,10 +101,10 @@ export const SimplifiedTenantDashboardContainer = ({
       count: getCountForTab('documents')
     },
     { 
-      name: t('communications'), 
-      value: "communications", 
-      icon: MessageSquare,
-      count: getCountForTab('communications')
+      name: t('settings'), 
+      value: "settings", 
+      icon: Settings,
+      count: getCountForTab('settings')
     },
   ];
 
@@ -141,13 +136,11 @@ export const SimplifiedTenantDashboardContainer = ({
             tenant={tenant}
           />
         );
-      case 'communications':
+      case 'settings':
         return (
-          <TenantCommunicationsSection 
-            communications={communications}
-            tenantId={tenant.id}
-            onCommunicationUpdate={refreshDashboard}
+          <TenantSettingsSection 
             tenant={tenant}
+            onSettingsUpdate={refreshDashboard}
           />
         );
       default:
