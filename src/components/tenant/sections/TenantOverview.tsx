@@ -44,15 +44,20 @@ export const TenantOverview = ({
   ).length;
 
   const getPropertyName = () => {
-    if (tenant?.properties) {
-      if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
-        return tenant.properties[0].name;
-      }
-      if (typeof tenant.properties === 'object' && 'name' in tenant.properties) {
-        return tenant.properties.name;
-      }
+    console.log("=== TenantOverview getPropertyName DEBUG ===");
+    console.log("Tenant ID:", tenant.id);
+    console.log("Tenant name:", tenant.name);
+    console.log("Tenant property_id:", tenant.property_id);
+    console.log("Tenant.properties:", tenant.properties);
+    
+    // Vérifier si on a des données de propriété
+    if (tenant.properties && tenant.properties.name) {
+      console.log("✅ Found property name:", tenant.properties.name);
+      return tenant.properties.name;
     }
-    return "Sans propriété";
+    
+    console.log("❌ No property name found, returning default");
+    return "Propriété non trouvée";
   };
 
   return (
