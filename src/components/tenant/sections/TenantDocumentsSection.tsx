@@ -17,6 +17,22 @@ export const TenantDocumentsSection = ({
   onDocumentUpdate,
   tenant
 }: TenantDocumentsSectionProps) => {
+  // Convert TenantData to format expected by TenantDocuments
+  const tenantForDocuments = {
+    ...tenant,
+    phone: null,
+    user_id: '',
+    created_at: '',
+    updated_at: '',
+    tenant_profile_id: null,
+    documents: [],
+    paymentHistory: [],
+    maintenanceRequests: [],
+    communications: [],
+    security_deposit: null,
+    notes: null
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -28,7 +44,7 @@ export const TenantDocumentsSection = ({
           documents={documents}
           tenantId={tenantId}
           onDocumentUpdate={onDocumentUpdate}
-          tenant={tenant}
+          tenant={tenantForDocuments}
         />
       </div>
     </motion.div>

@@ -237,7 +237,6 @@ const translations = {
     leaseEndDate: "Date de fin du bail",
     monthlyRent: "Loyer mensuel",
     deposit: "Dépôt",
-    unit: "Unité",
     utilitiesIncluded: "Services inclus",
     petsAllowed: "Animaux autorisés",
     tenantAgreement: "Contrat de location",
@@ -330,6 +329,11 @@ const translations = {
     urgentMaintenanceRequests: "Demandes Urgentes",
     maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
     maintenanceExpenses: "Dépenses de Maintenance",
+    
+    // Communication translations
+    communications: "Communications",
+    documents: "Documents",
+    read: "Lu",
   },
   en: {
     // Hero translations
@@ -550,7 +554,6 @@ const translations = {
     leaseEndDate: "Lease End Date",
     monthlyRent: "Monthly Rent",
     deposit: "Deposit",
-    unit: "Unit",
     utilitiesIncluded: "Utilities Included",
     petsAllowed: "Pets Allowed",
     tenantAgreement: "Tenant Agreement",
@@ -643,6 +646,11 @@ const translations = {
     urgentMaintenanceRequests: "Urgent Maintenance Requests",
     maintenanceExpensesTrends: "Maintenance Expenses Trends",
     maintenanceExpenses: "Maintenance Expenses",
+    
+    // Communication translations
+    communications: "Communications",
+    documents: "Documents",
+    read: "Read",
   }
 };
 
