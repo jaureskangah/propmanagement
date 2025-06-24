@@ -57,7 +57,7 @@ export const useTenantData = () => {
     }
 
     try {
-      console.log("=== FETCHING TENANT DATA WITH JOIN ===");
+      console.log("=== FETCHING TENANT DATA WITH SEPARATE QUERIES ===");
       console.log("User ID:", user.id);
       console.log("User email:", user.email);
       
@@ -81,8 +81,8 @@ export const useTenantData = () => {
         return;
       }
       
-      // REQUÊTE UNIQUE avec JOIN pour récupérer tenant ET propriété
-      const { data: tenantWithProperty, error: tenantError } = await supabase
+      // PREMIÈRE REQUÊTE : Récupérer les données du tenant
+      const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select(`
           id, 
@@ -92,14 +92,13 @@ export const useTenantData = () => {
           lease_start, 
           lease_end, 
           rent_amount,
-          property_id,
-          properties:property_id(name)
+          property_id
         `)
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
 
-      console.log("=== TENANT WITH PROPERTY QUERY RESULT ===");
-      console.log("Data:", tenantWithProperty);
+      console.log("=== TENANT DATA QUERY RESULT ===");
+      console.log("Data:", tenantData);
       console.log("Error:", tenantError);
 
       if (tenantError) {
@@ -109,7 +108,7 @@ export const useTenantData = () => {
         return;
       }
 
-      if (!tenantWithProperty) {
+      if (!tenantData) {
         console.log("No tenant data found for user:", user.id);
         setTenant(null);
         
@@ -121,49 +120,43 @@ export const useTenantData = () => {
         return;
       }
 
+      // DEUXIÈME REQUÊTE : Récupérer les données de la propriété si property_id existe
+      let propertyData: { name: string } | null = null;
+      
+      if (tenantData.property_id) {
+        console.log("=== FETCHING PROPERTY DATA ===");
+        console.log("Property ID:", tenantData.property_id);
+        
+        const { data: property, error: propertyError } = await supabase
+          .from('properties')
+          .select('name')
+          .eq('id', tenantData.property_id)
+          .maybeSingle();
+
+        console.log("Property query result:", property);
+        console.log("Property query error:", propertyError);
+
+        if (propertyError) {
+          console.error("Error fetching property data:", propertyError);
+          // Ne pas arrêter le processus, juste continuer sans données de propriété
+        } else if (property && property.name) {
+          propertyData = { name: property.name };
+          console.log("✅ Successfully fetched property name:", property.name);
+        } else {
+          console.log("❌ No property found with ID:", tenantData.property_id);
+        }
+      } else {
+        console.log("No property_id in tenant data");
+      }
+
       // Construire le nom d'affichage
       const displayName = profileData?.first_name && profileData?.last_name 
         ? `${profileData.first_name} ${profileData.last_name}` 
-        : tenantWithProperty.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
+        : tenantData.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
-      // Traiter les données de propriété de manière simple et sûre
-      let propertyData: { name: string } | null = null;
-      
-      if (tenantWithProperty.properties) {
-        console.log("Raw properties data:", tenantWithProperty.properties);
-        console.log("Type of properties:", typeof tenantWithProperty.properties);
-        console.log("Is array:", Array.isArray(tenantWithProperty.properties));
-        
-        try {
-          let propertyName: string | null = null;
-          
-          if (Array.isArray(tenantWithProperty.properties)) {
-            // Si c'est un tableau, prendre le premier élément
-            const firstProperty = tenantWithProperty.properties[0];
-            if (firstProperty && typeof firstProperty === 'object') {
-              propertyName = (firstProperty as any)?.name || null;
-            }
-          } else if (typeof tenantWithProperty.properties === 'object') {
-            // Si c'est un objet
-            propertyName = (tenantWithProperty.properties as any)?.name || null;
-          }
-          
-          if (propertyName && typeof propertyName === 'string') {
-            propertyData = { name: propertyName };
-            console.log("✅ Successfully extracted property name:", propertyName);
-          } else {
-            console.log("❌ Could not extract property name from:", tenantWithProperty.properties);
-          }
-        } catch (error) {
-          console.error("Error processing property data:", error);
-        }
-      } else {
-        console.log("No properties data in result");
-      }
-      
-      // Construire l'objet final directement à partir du résultat JOIN
+      // Construire l'objet final
       const finalTenantData: TenantData = {
-        ...tenantWithProperty,
+        ...tenantData,
         name: displayName,
         firstName: profileData?.first_name || user?.user_metadata?.first_name,
         lastName: profileData?.last_name || user?.user_metadata?.last_name,
@@ -171,7 +164,7 @@ export const useTenantData = () => {
         properties: propertyData
       };
 
-      console.log("=== FINAL TENANT DATA WITH JOIN ===");
+      console.log("=== FINAL TENANT DATA WITH SEPARATE QUERIES ===");
       console.log("Tenant ID:", finalTenantData.id);
       console.log("Property ID:", finalTenantData.property_id);
       console.log("Properties object:", finalTenantData.properties);
