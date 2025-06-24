@@ -130,13 +130,18 @@ export const useTenantData = () => {
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenantRecord.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
         
-        const finalTenantData = {
+        // Handle properties data - extract first element from array if it exists
+        const propertyData = Array.isArray(tenantRecord.properties) && tenantRecord.properties.length > 0
+          ? tenantRecord.properties[0]
+          : null;
+        
+        const finalTenantData: TenantData = {
           ...tenantRecord,
           name: displayName,
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          properties: tenantRecord.properties
+          properties: propertyData
         };
 
         console.log("Final tenant data with property:", finalTenantData);
