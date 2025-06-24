@@ -44,20 +44,19 @@ export const TenantOverview = ({
   ).length;
 
   const getPropertyDisplayName = () => {
-    console.log("=== TenantOverview getPropertyDisplayName DEBUG ===");
+    console.log("=== TenantOverview getPropertyDisplayName SIMPLIFIED ===");
     console.log("Tenant ID:", tenant.id);
-    console.log("Tenant name:", tenant.name);
     console.log("Property ID:", tenant.property_id);
-    console.log("Properties object:", tenant.properties);
-    console.log("Property name from object:", tenant.properties?.name);
+    console.log("Properties object from JOIN:", tenant.properties);
+    console.log("Property name from JOIN:", tenant.properties?.name);
     
-    // Logique simple : vérifier si on a un nom de propriété
+    // Logique simplifiée : utiliser directement les données du JOIN
     if (tenant.properties?.name) {
-      console.log("✅ Property name found:", tenant.properties.name);
+      console.log("✅ Property name found from JOIN:", tenant.properties.name);
       return tenant.properties.name;
     }
     
-    console.log("❌ No property name available");
+    console.log("❌ No property name available from JOIN");
     return "Propriété inconnue";
   };
 

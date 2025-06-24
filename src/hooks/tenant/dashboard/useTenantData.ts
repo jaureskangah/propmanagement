@@ -27,7 +27,7 @@ export const useTenantData = () => {
   const [tenant, setTenant] = useState<TenantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const { user, isTenant, tenantData } = useAuth();
+  const { user, isTenant } = useAuth();
   const { toast } = useToast();
   const { t, language } = useLocale();
 
@@ -46,20 +46,9 @@ export const useTenantData = () => {
       return;
     }
 
-    // Si on a déjà les données du locataire dans AuthProvider, on les utilise
-    if (tenantData) {
-      console.log("Using tenant data from AuthProvider:", tenantData);
-      setTenant({
-        ...tenantData,
-        fullName: tenantData.name
-      });
-      setIsLoading(false);
-      return;
-    }
-
-    // Sinon, on essaie de récupérer les données
+    // Toujours récupérer les données fraîches depuis la base de données
     fetchTenantData();
-  }, [user?.id, isTenant, tenantData]);
+  }, [user?.id, isTenant]);
 
   const fetchTenantData = async () => {
     if (!user?.id) {
@@ -68,7 +57,7 @@ export const useTenantData = () => {
     }
 
     try {
-      console.log("=== FETCHING TENANT DATA ===");
+      console.log("=== FETCHING TENANT DATA WITH JOIN ===");
       console.log("User ID:", user.id);
       console.log("User email:", user.email);
       
@@ -92,8 +81,8 @@ export const useTenantData = () => {
         return;
       }
       
-      // ÉTAPE 1: Récupérer les données du locataire (requête simple)
-      const { data: tenantRecord, error: tenantError } = await supabase
+      // REQUÊTE UNIQUE avec JOIN pour récupérer tenant ET propriété
+      const { data: tenantWithProperty, error: tenantError } = await supabase
         .from('tenants')
         .select(`
           id, 
@@ -103,12 +92,15 @@ export const useTenantData = () => {
           lease_start, 
           lease_end, 
           rent_amount,
-          property_id
+          property_id,
+          properties:property_id(name)
         `)
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
 
-      console.log("Tenant record result:", tenantRecord, tenantError);
+      console.log("=== TENANT WITH PROPERTY QUERY RESULT ===");
+      console.log("Data:", tenantWithProperty);
+      console.log("Error:", tenantError);
 
       if (tenantError) {
         console.error("Error fetching tenant data:", tenantError);
@@ -117,7 +109,7 @@ export const useTenantData = () => {
         return;
       }
 
-      if (!tenantRecord) {
+      if (!tenantWithProperty) {
         console.log("No tenant data found for user:", user.id);
         setTenant(null);
         
@@ -129,51 +121,28 @@ export const useTenantData = () => {
         return;
       }
 
-      // ÉTAPE 2: Si le locataire est lié à une propriété, récupérer les données de la propriété
-      let propertyData: { name: string } | null = null;
-      
-      if (tenantRecord.property_id) {
-        console.log("Fetching property data for property_id:", tenantRecord.property_id);
-        
-        const { data: property, error: propertyError } = await supabase
-          .from('properties')
-          .select('name')
-          .eq('id', tenantRecord.property_id)
-          .maybeSingle();
-
-        console.log("Property data result:", property, propertyError);
-        
-        if (propertyError) {
-          console.error("Error fetching property data:", propertyError);
-        } else if (property) {
-          propertyData = { name: property.name };
-          console.log("✅ Property data found:", propertyData);
-        } else {
-          console.log("❌ No property found for ID:", tenantRecord.property_id);
-        }
-      } else {
-        console.log("No property_id linked to tenant");
-      }
-
-      // ÉTAPE 3: Construire l'objet final avec la logique simple
+      // Construire le nom d'affichage
       const displayName = profileData?.first_name && profileData?.last_name 
         ? `${profileData.first_name} ${profileData.last_name}` 
-        : tenantRecord.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
+        : tenantWithProperty.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
+      // Construire l'objet final directement à partir du résultat JOIN
       const finalTenantData: TenantData = {
-        ...tenantRecord,
+        ...tenantWithProperty,
         name: displayName,
         firstName: profileData?.first_name || user?.user_metadata?.first_name,
         lastName: profileData?.last_name || user?.user_metadata?.last_name,
         fullName: displayName,
-        properties: propertyData
+        // Les données de propriété sont déjà incluses dans le JOIN
+        properties: tenantWithProperty.properties
       };
 
-      console.log("=== FINAL TENANT DATA ===");
+      console.log("=== FINAL TENANT DATA WITH JOIN ===");
+      console.log("Tenant ID:", finalTenantData.id);
       console.log("Property ID:", finalTenantData.property_id);
-      console.log("Property data:", finalTenantData.properties);
+      console.log("Properties object:", finalTenantData.properties);
       console.log("Property name:", finalTenantData.properties?.name);
-      console.log("Complete tenant data:", finalTenantData);
+      console.log("Complete final data:", finalTenantData);
       
       setTenant(finalTenantData);
       
