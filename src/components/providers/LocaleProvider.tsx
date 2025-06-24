@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
 interface LocaleContextProps {
@@ -20,6 +19,30 @@ interface LocaleProviderProps {
 
 const translations = {
   fr: {
+    // Hero translations
+    heroTitle: "Gestion Immobilière Simplifiée",
+    heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
+    heroGetStarted: "Commencer Gratuitement",
+    learnMore: "En savoir plus",
+    
+    // Features translations
+    everythingYouNeed: "Tout ce dont vous avez besoin",
+    featuresSubtitle: "Des outils puissants pour simplifier la gestion de vos propriétés",
+    propertyManagement: "Gestion de Propriétés",
+    propertyManagementDesc: "Organisez et suivez toutes vos propriétés en un seul endroit",
+    tenantManagement: "Gestion de Locataires",
+    tenantManagementDesc: "Gérez les informations, les baux et la communication avec vos locataires",
+    maintenance: "Maintenance",
+    maintenanceDesc: "Suivez les demandes de maintenance et coordonnez les réparations",
+    security: "Sécurité",
+    securityDesc: "Vos données sont protégées avec un chiffrement de niveau bancaire",
+    
+    // CTA translations
+    readyToStart: "Prêt à simplifier votre gestion ?",
+    joinOthers: "Rejoignez des milliers de propriétaires qui nous font confiance",
+    ctaStartFree: "Essayer gratuitement",
+    
+    // Existing translations
     welcome: "Bienvenue",
     login: "Se connecter",
     logout: "Déconnexion",
@@ -193,6 +216,30 @@ const translations = {
     maintenanceExpenses: "Dépenses de Maintenance",
   },
   en: {
+    // Hero translations
+    heroTitle: "Property Management Made Simple",
+    heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
+    heroGetStarted: "Get Started Free",
+    learnMore: "Learn More",
+    
+    // Features translations
+    everythingYouNeed: "Everything You Need",
+    featuresSubtitle: "Powerful tools to simplify your property management",
+    propertyManagement: "Property Management",
+    propertyManagementDesc: "Organize and track all your properties in one place",
+    tenantManagement: "Tenant Management",
+    tenantManagementDesc: "Manage tenant information, leases, and communication",
+    maintenance: "Maintenance",
+    maintenanceDesc: "Track maintenance requests and coordinate repairs",
+    security: "Security",
+    securityDesc: "Your data is protected with bank-level encryption",
+    
+    // CTA translations
+    readyToStart: "Ready to Simplify Your Management?",
+    joinOthers: "Join thousands of property owners who trust our solution",
+    ctaStartFree: "Try For Free",
+    
+    // Existing translations
     welcome: "Welcome",
     login: "Login",
     logout: "Logout",
