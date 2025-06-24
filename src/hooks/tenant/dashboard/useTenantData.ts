@@ -126,6 +126,21 @@ export const useTenantData = () => {
         ? `${profileData.first_name} ${profileData.last_name}` 
         : tenantWithProperty.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
+      // Traiter les données de propriété correctement
+      let propertyData: { name: string } | null = null;
+      if (tenantWithProperty.properties) {
+        // Si c'est un tableau, prendre le premier élément
+        if (Array.isArray(tenantWithProperty.properties)) {
+          const firstProperty = tenantWithProperty.properties[0];
+          if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
+            propertyData = { name: String(firstProperty.name) };
+          }
+        } else if (typeof tenantWithProperty.properties === 'object' && 'name' in tenantWithProperty.properties) {
+          // Si c'est déjà un objet avec une propriété name
+          propertyData = { name: String(tenantWithProperty.properties.name) };
+        }
+      }
+      
       // Construire l'objet final directement à partir du résultat JOIN
       const finalTenantData: TenantData = {
         ...tenantWithProperty,
@@ -133,8 +148,8 @@ export const useTenantData = () => {
         firstName: profileData?.first_name || user?.user_metadata?.first_name,
         lastName: profileData?.last_name || user?.user_metadata?.last_name,
         fullName: displayName,
-        // Les données de propriété sont déjà incluses dans le JOIN
-        properties: tenantWithProperty.properties
+        // Utiliser les données de propriété traitées
+        properties: propertyData
       };
 
       console.log("=== FINAL TENANT DATA WITH JOIN ===");
