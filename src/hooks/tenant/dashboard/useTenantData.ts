@@ -126,26 +126,39 @@ export const useTenantData = () => {
         ? `${profileData.first_name} ${profileData.last_name}` 
         : tenantWithProperty.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
-      // Traiter les données de propriété correctement
+      // Traiter les données de propriété de manière simple et sûre
       let propertyData: { name: string } | null = null;
+      
       if (tenantWithProperty.properties) {
-        // Si c'est un tableau, prendre le premier élément
-        if (Array.isArray(tenantWithProperty.properties)) {
-          const firstProperty = tenantWithProperty.properties[0];
-          if (firstProperty && typeof firstProperty === 'object') {
-            // Utiliser une assertion de type sûre
-            const propertyObj = firstProperty as Record<string, any>;
-            if ('name' in propertyObj) {
-              propertyData = { name: String(propertyObj.name) };
+        console.log("Raw properties data:", tenantWithProperty.properties);
+        console.log("Type of properties:", typeof tenantWithProperty.properties);
+        console.log("Is array:", Array.isArray(tenantWithProperty.properties));
+        
+        try {
+          let propertyName: string | null = null;
+          
+          if (Array.isArray(tenantWithProperty.properties)) {
+            // Si c'est un tableau, prendre le premier élément
+            const firstProperty = tenantWithProperty.properties[0];
+            if (firstProperty && typeof firstProperty === 'object') {
+              propertyName = (firstProperty as any)?.name || null;
             }
+          } else if (typeof tenantWithProperty.properties === 'object') {
+            // Si c'est un objet
+            propertyName = (tenantWithProperty.properties as any)?.name || null;
           }
-        } else if (typeof tenantWithProperty.properties === 'object') {
-          // Si c'est déjà un objet avec une propriété name
-          const propertyObj = tenantWithProperty.properties as Record<string, any>;
-          if ('name' in propertyObj) {
-            propertyData = { name: String(propertyObj.name) };
+          
+          if (propertyName && typeof propertyName === 'string') {
+            propertyData = { name: propertyName };
+            console.log("✅ Successfully extracted property name:", propertyName);
+          } else {
+            console.log("❌ Could not extract property name from:", tenantWithProperty.properties);
           }
+        } catch (error) {
+          console.error("Error processing property data:", error);
         }
+      } else {
+        console.log("No properties data in result");
       }
       
       // Construire l'objet final directement à partir du résultat JOIN
@@ -155,7 +168,6 @@ export const useTenantData = () => {
         firstName: profileData?.first_name || user?.user_metadata?.first_name,
         lastName: profileData?.last_name || user?.user_metadata?.last_name,
         fullName: displayName,
-        // Utiliser les données de propriété traitées
         properties: propertyData
       };
 
