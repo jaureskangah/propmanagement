@@ -2,6 +2,7 @@
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
+import { FlickeringGrid } from "@/components/ui/flickering-grid";
 
 interface HeroProps {
   onShowAuthModal: () => void;
@@ -12,10 +13,18 @@ export default function OptimizedHero({ onShowAuthModal }: HeroProps) {
 
   return (
     <section className="relative pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden">
-      {/* Gradient de fond simple et élégant */}
+      {/* Background gradient avec FlickeringGrid */}
       <div className="absolute inset-0 bg-gradient-to-br from-white via-red-50/30 to-blue-50/20" />
+      <FlickeringGrid
+        className="absolute inset-0 z-0"
+        squareSize={3}
+        gridGap={8}
+        color="#ea384c"
+        maxOpacity={0.15}
+        flickerChance={0.08}
+      />
       
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Titre principal avec animation CSS pure */}
           <h1 className="animate-fade-in text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6 leading-tight">
