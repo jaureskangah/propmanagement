@@ -83,6 +83,26 @@ const translations = {
     userTraining: "Sessions de formation",
     dailyBackup: "Sauvegarde automatique des données",
     
+    // Additional tenant dashboard translations
+    overview: "Aperçu",
+    leaseStatus: "Statut du bail",
+    leaseStart: "Début du bail",
+    leaseEnd: "Fin du bail",
+    daysRemaining: "Jours restants",
+    allGood: "Tout va bien",
+    noMaintenanceIssues: "Aucun problème de maintenance",
+    unread: "Non lu",
+    upToDate: "À jour",
+    unreadMessages: "Messages non lus",
+    noNewMessages: "Aucun nouveau message",
+    recentActivity: "Activité récente",
+    noRecentActivity: "Aucune activité récente",
+    unit: "Unité",
+    unitLabel: "Unité",
+    leaseActive: "Bail actif",
+    leaseExpiring: "Bail expirant",
+    leaseExpired: "Bail expiré",
+    
     // FAQ translations
     frequentlyAskedQuestions: "Questions fréquemment posées",
     findAnswers: "Trouvez des réponses aux questions courantes",
@@ -375,6 +395,26 @@ const translations = {
     advancedFinancialReports: "Advanced financial reports",
     userTraining: "User training sessions",
     dailyBackup: "Automatic data backup",
+    
+    // Additional tenant dashboard translations
+    overview: "Overview",
+    leaseStatus: "Lease Status",
+    leaseStart: "Lease Start",
+    leaseEnd: "Lease End",
+    daysRemaining: "Days Remaining",
+    allGood: "All Good",
+    noMaintenanceIssues: "No maintenance issues",
+    unread: "Unread",
+    upToDate: "Up to Date",
+    unreadMessages: "Unread messages",
+    noNewMessages: "No new messages",
+    recentActivity: "Recent Activity",
+    noRecentActivity: "No recent activity",
+    unit: "Unit",
+    unitLabel: "Unit",
+    leaseActive: "Lease Active",
+    leaseExpiring: "Lease Expiring",
+    leaseExpired: "Lease Expired",
     
     // FAQ translations
     frequentlyAskedQuestions: "Frequently Asked Questions",

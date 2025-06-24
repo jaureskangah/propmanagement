@@ -1,0 +1,227 @@
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Building, Calendar, AlertTriangle, MessageSquare, CheckCircle, XCircle } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { formatDate } from "@/lib/utils";
+import { motion } from "framer-motion";
+import type { Communication, MaintenanceRequest } from "@/types/tenant";
+import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
+
+interface TenantOverviewProps {
+  tenant: TenantData;
+  leaseStatus: { daysLeft: number; status: 'active' | 'expiring' | 'expired' };
+  maintenanceRequests: MaintenanceRequest[];
+  communications: Communication[];
+}
+
+export const TenantOverview = ({
+  tenant,
+  leaseStatus,
+  maintenanceRequests,
+  communications
+}: TenantOverviewProps) => {
+  const { t } = useLocale();
+
+  const getLeaseStatusColor = () => {
+    switch (leaseStatus.status) {
+      case 'expired': return 'bg-red-500/10 text-red-700 border-red-200';
+      case 'expiring': return 'bg-orange-500/10 text-orange-700 border-orange-200';
+      default: return 'bg-green-500/10 text-green-700 border-green-200';
+    }
+  };
+
+  const getLeaseStatusIcon = () => {
+    switch (leaseStatus.status) {
+      case 'expired': return <XCircle className="h-5 w-5" />;
+      case 'expiring': return <AlertTriangle className="h-5 w-5" />;
+      default: return <CheckCircle className="h-5 w-5" />;
+    }
+  };
+
+  const pendingRequests = maintenanceRequests.filter(req => 
+    req.status === 'Pending' || req.status === 'pending'
+  ).length;
+
+  const unreadMessages = communications.filter(comm => 
+    comm.status === 'unread' && !comm.is_from_tenant
+  ).length;
+
+  const getPropertyName = () => {
+    if (tenant?.properties) {
+      if (Array.isArray(tenant.properties) && tenant.properties.length > 0) {
+        return tenant.properties[0].name;
+      }
+      if (typeof tenant.properties === 'object' && 'name' in tenant.properties) {
+        return tenant.properties.name;
+      }
+    }
+    return "Sans propriété";
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Welcome Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center py-8 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl border border-gray-100 shadow-sm"
+      >
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          {t('welcome')}, {tenant.name || `${tenant.firstName} ${tenant.lastName}`}
+        </h1>
+        <p className="text-gray-600 flex items-center justify-center gap-2">
+          <Building className="h-4 w-4" />
+          {getPropertyName()} - {t('unit')} {tenant.unit_number}
+        </p>
+      </motion.div>
+
+      {/* Status Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Lease Status Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+            <CardHeader className="relative">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Calendar className="h-5 w-5 text-blue-600" />
+                {t('leaseStatus')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="relative space-y-3">
+              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${getLeaseStatusColor()}`}>
+                {getLeaseStatusIcon()}
+                <span className="font-medium">
+                  {leaseStatus.status === 'expired' ? t('leaseExpired') :
+                   leaseStatus.status === 'expiring' ? t('leaseExpiring') :
+                   t('leaseActive')}
+                </span>
+              </div>
+              <div className="space-y-1 text-sm text-gray-600">
+                <p><strong>{t('leaseStart')}:</strong> {formatDate(tenant.lease_start)}</p>
+                <p><strong>{t('leaseEnd')}:</strong> {formatDate(tenant.lease_end)}</p>
+                {leaseStatus.status !== 'expired' && (
+                  <p><strong>{t('daysRemaining')}:</strong> {leaseStatus.daysLeft} jours</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Maintenance Status Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5" />
+            <CardHeader className="relative">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <AlertTriangle className="h-5 w-5 text-orange-600" />
+                {t('maintenance')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="relative">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-bold text-gray-900">{pendingRequests}</span>
+                <Badge variant={pendingRequests > 0 ? "destructive" : "secondary"}>
+                  {pendingRequests > 0 ? t('pending') : t('allGood')}
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                {pendingRequests > 0 
+                  ? `${pendingRequests} ${t('pendingRequests').toLowerCase()}`
+                  : t('noMaintenanceIssues')
+                }
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Communications Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-blue-500/5" />
+            <CardHeader className="relative">
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <MessageSquare className="h-5 w-5 text-green-600" />
+                {t('messages')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="relative">
+              <div className="flex items-center justify-between">
+                <span className="text-2xl font-bold text-gray-900">{unreadMessages}</span>
+                <Badge variant={unreadMessages > 0 ? "default" : "secondary"}>
+                  {unreadMessages > 0 ? t('unread') : t('upToDate')}
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                {unreadMessages > 0 
+                  ? `${unreadMessages} ${t('unreadMessages').toLowerCase()}`
+                  : t('noNewMessages')
+                }
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+
+      {/* Recent Activity */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+      >
+        <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
+          <CardHeader>
+            <CardTitle className="text-lg">{t('recentActivity')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {/* Recent maintenance requests */}
+              {maintenanceRequests.slice(0, 3).map((request, index) => (
+                <div key={request.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                  <AlertTriangle className="h-4 w-4 text-orange-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{request.title || request.issue}</p>
+                    <p className="text-xs text-gray-500">{formatDate(request.created_at)}</p>
+                  </div>
+                  <Badge variant="secondary" className="text-xs">
+                    {t(request.status.toLowerCase())}
+                  </Badge>
+                </div>
+              ))}
+              
+              {/* Recent communications */}
+              {communications.slice(0, 2).map((comm, index) => (
+                <div key={comm.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                  <MessageSquare className="h-4 w-4 text-blue-500" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">{comm.subject}</p>
+                    <p className="text-xs text-gray-500">{formatDate(comm.created_at)}</p>
+                  </div>
+                  <Badge variant={comm.status === 'unread' ? "default" : "secondary"} className="text-xs">
+                    {t(comm.status)}
+                  </Badge>
+                </div>
+              ))}
+
+              {maintenanceRequests.length === 0 && communications.length === 0 && (
+                <p className="text-center text-gray-500 py-4">{t('noRecentActivity')}</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </div>
+  );
+};
