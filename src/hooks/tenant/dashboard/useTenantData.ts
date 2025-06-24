@@ -97,7 +97,7 @@ export const useTenantData = () => {
         return;
       }
       
-      // Récupérer les données du locataire avec une vraie jointure
+      // Récupérer les données du locataire avec une vraie jointure LEFT JOIN
       const { data: tenantRecord, error } = await supabase
         .from('tenants')
         .select(`
@@ -108,7 +108,8 @@ export const useTenantData = () => {
           lease_start, 
           lease_end, 
           rent_amount,
-          property_id
+          property_id,
+          properties!left(name)
         `)
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
@@ -125,30 +126,6 @@ export const useTenantData = () => {
       if (tenantRecord) {
         console.log("Tenant data found:", tenantRecord);
         
-        // Récupérer séparément les données de la propriété si on a un property_id
-        let propertyData = null;
-        if (tenantRecord.property_id) {
-          console.log("Fetching property data for property_id:", tenantRecord.property_id);
-          const { data: propertyRecord, error: propertyError } = await supabase
-            .from('properties')
-            .select('name')
-            .eq('id', tenantRecord.property_id)
-            .maybeSingle();
-
-          console.log("Property query result:", propertyRecord, propertyError);
-
-          if (propertyError) {
-            console.error("Error fetching property:", propertyError);
-          } else if (propertyRecord) {
-            console.log("Property found:", propertyRecord);
-            propertyData = { name: propertyRecord.name };
-          } else {
-            console.log("No property found for ID:", tenantRecord.property_id);
-          }
-        } else {
-          console.log("No property_id in tenant record");
-        }
-        
         const displayName = profileData?.first_name && profileData?.last_name 
           ? `${profileData.first_name} ${profileData.last_name}` 
           : tenantRecord.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
@@ -159,7 +136,7 @@ export const useTenantData = () => {
           firstName: profileData?.first_name || user?.user_metadata?.first_name,
           lastName: profileData?.last_name || user?.user_metadata?.last_name,
           fullName: displayName,
-          properties: propertyData
+          properties: tenantRecord.properties
         };
 
         console.log("Final tenant data with property:", finalTenantData);

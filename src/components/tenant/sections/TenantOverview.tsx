@@ -57,7 +57,7 @@ export const TenantOverview = ({
     }
     
     console.log("❌ No property name found, returning default");
-    return "Propriété non trouvée";
+    return "Propriété inconnue";
   };
 
   return (
