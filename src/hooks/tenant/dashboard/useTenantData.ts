@@ -132,12 +132,19 @@ export const useTenantData = () => {
         // Si c'est un tableau, prendre le premier élément
         if (Array.isArray(tenantWithProperty.properties)) {
           const firstProperty = tenantWithProperty.properties[0];
-          if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
-            propertyData = { name: String(firstProperty.name) };
+          if (firstProperty && typeof firstProperty === 'object') {
+            // Utiliser une assertion de type sûre
+            const propertyObj = firstProperty as Record<string, any>;
+            if ('name' in propertyObj) {
+              propertyData = { name: String(propertyObj.name) };
+            }
           }
-        } else if (typeof tenantWithProperty.properties === 'object' && 'name' in tenantWithProperty.properties) {
+        } else if (typeof tenantWithProperty.properties === 'object') {
           // Si c'est déjà un objet avec une propriété name
-          propertyData = { name: String(tenantWithProperty.properties.name) };
+          const propertyObj = tenantWithProperty.properties as Record<string, any>;
+          if ('name' in propertyObj) {
+            propertyData = { name: String(propertyObj.name) };
+          }
         }
       }
       
