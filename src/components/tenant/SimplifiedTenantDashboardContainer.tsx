@@ -20,6 +20,23 @@ interface SimplifiedTenantDashboardContainerProps {
   refreshDashboard: () => void;
 }
 
+// Helper function to format days counter
+const formatDaysCounter = (daysLeft: number, status: 'active' | 'expiring' | 'expired'): string | undefined => {
+  if (status === 'expired') {
+    return undefined; // Don't show counter for expired leases
+  }
+  
+  if (status === 'active' && daysLeft > 0) {
+    return `${daysLeft}j`;
+  }
+  
+  if (status === 'expiring' && daysLeft > 0) {
+    return `${daysLeft}j`;
+  }
+  
+  return undefined;
+};
+
 export const SimplifiedTenantDashboardContainer = ({ 
   tenant,
   communications,
@@ -40,8 +57,14 @@ export const SimplifiedTenantDashboardContainer = ({
 
   // Calculate dynamic counts based on real data
   const dynamicCounts = useMemo(() => {
-    // Overview: Days left on lease or active status
-    const overviewCount = leaseStatus.status === 'active' ? leaseStatus.daysLeft : 0;
+    console.log("=== CALCULATING DYNAMIC COUNTS ===");
+    console.log("Lease status:", leaseStatus);
+    console.log("Days left:", leaseStatus.daysLeft);
+    console.log("Status:", leaseStatus.status);
+    
+    // Overview: Format days left with "j" suffix for active/expiring leases
+    const overviewCount = formatDaysCounter(leaseStatus.daysLeft, leaseStatus.status);
+    console.log("Overview count formatted:", overviewCount);
     
     // Maintenance: Pending requests
     const pendingMaintenance = maintenanceRequests.filter(req => 
@@ -55,7 +78,7 @@ export const SimplifiedTenantDashboardContainer = ({
       overview: overviewCount,
       maintenance: pendingMaintenance,
       documents: documentsCount,
-      settings: 0 // No count needed for settings
+      settings: undefined // No count needed for settings
     };
   }, [leaseStatus, maintenanceRequests, documents]);
 
@@ -68,7 +91,7 @@ export const SimplifiedTenantDashboardContainer = ({
       
       switch (tabValue) {
         case 'overview':
-          return dynamicCounts.overview > 0 ? dynamicCounts.overview : undefined;
+          return dynamicCounts.overview;
         case 'maintenance':
           return dynamicCounts.maintenance;
         case 'documents':

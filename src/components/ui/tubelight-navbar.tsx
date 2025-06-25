@@ -10,7 +10,7 @@ interface NavItem {
   name: string
   value: string
   icon?: LucideIcon
-  count?: number
+  count?: number | string
 }
 
 interface TubelightNavBarProps {
