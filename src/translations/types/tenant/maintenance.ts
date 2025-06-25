@@ -93,4 +93,14 @@ export type TenantMaintenanceTranslations = {
   pendingMaintenance: string;
   recentMaintenanceRequests: string;
   viewAllRequests: string;
+  // Additional stats keys
+  totalRequests: string;
+  pendingRequests: string;
+  resolvedRequests: string;
+  // Additional utility keys
+  allGood: string;
+  noMaintenanceIssues: string;
+  recentActivity: string;
+  noRecentActivity: string;
+  overview: string;
 }

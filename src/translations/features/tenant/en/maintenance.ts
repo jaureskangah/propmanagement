@@ -90,8 +90,19 @@ export const enMaintenance: TenantMaintenanceTranslations = {
   noTenantAssociated: "No tenant associated with this request",
   errorLoadingMessages: "Error loading messages",
   createNewRequestToSee: "Create a new maintenance request to see it here.",
-  // Adding the missing translations
+  maintenanceUpdates: "Maintenance Updates",
+  newUpdates: "new update(s)",
   pendingMaintenance: "Pending Maintenance",
   recentMaintenanceRequests: "Recent Maintenance Requests",
-  viewAllRequests: "View All Requests"
+  viewAllRequests: "View All Requests",
+  // Additional stats keys
+  totalRequests: "Total Requests",
+  pendingRequests: "Pending Requests",
+  resolvedRequests: "Resolved Requests",
+  // Additional utility keys
+  allGood: "All Good",
+  noMaintenanceIssues: "No maintenance issues",
+  recentActivity: "Recent Activity",
+  noRecentActivity: "No recent activity",
+  overview: "Overview"
 };

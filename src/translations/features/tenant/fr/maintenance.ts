@@ -94,5 +94,15 @@ export const frMaintenance: TenantMaintenanceTranslations = {
   newUpdates: "nouvelle(s) mise(s) à jour",
   pendingMaintenance: "Maintenance en attente",
   recentMaintenanceRequests: "Demandes de maintenance récentes",
-  viewAllRequests: "Voir toutes les demandes"
+  viewAllRequests: "Voir toutes les demandes",
+  // Additional stats keys
+  totalRequests: "Total des demandes",
+  pendingRequests: "Demandes en attente",
+  resolvedRequests: "Demandes résolues",
+  // Additional utility keys
+  allGood: "Tout va bien",
+  noMaintenanceIssues: "Aucun problème de maintenance",
+  recentActivity: "Activité récente",
+  noRecentActivity: "Aucune activité récente",
+  overview: "Aperçu"
 };

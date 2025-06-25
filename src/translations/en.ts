@@ -27,6 +27,8 @@ import { enDocuments } from './features/tenant/en/documents';
 
 // Import tenant dashboard translations
 import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard';
+// Import tenant maintenance translations
+import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
 
 // Créer un objet de traduction unique qui résout les conflits
 const translations: any = {
@@ -56,6 +58,8 @@ const translations: any = {
   ...enTenantDashboard,
   documentGenerator: enDocumentGenerator,
   documents: enDocuments,
+  // Add tenant maintenance translations at root level for direct access
+  maintenance: enMaintenanceTenant,
   // Translations for tenant page
   searchTenants: "Search tenants...",
   securityDeposit: "Security Deposit",
@@ -83,6 +87,19 @@ const translations: any = {
   darkMode: "Dark Mode",
   customizeDashboard: "Customize Dashboard",
   customizeDashboardDescription: "Choose which widgets to display and their order",
+  // Missing maintenance stats keys
+  totalRequests: "Total Requests",
+  pendingRequests: "Pending Requests",
+  resolvedRequests: "Resolved Requests",
+  // Missing tenant connection key
+  notLinkedToTenant: "You are not linked to any tenant account",
+  // Additional maintenance keys
+  loading: "Loading",
+  authenticationRequired: "Authentication Required",
+  pleaseSignIn: "Please sign in to continue",
+  accessDenied: "Access Denied",
+  tenantsOnly: "This section is for tenants only",
+  loadingMaintenanceInfo: "Loading maintenance information...",
 };
 
 export default translations;
