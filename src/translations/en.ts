@@ -87,10 +87,15 @@ const translations: any = {
   darkMode: "Dark Mode",
   customizeDashboard: "Customize Dashboard",
   customizeDashboardDescription: "Choose which widgets to display and their order",
-  // Missing maintenance stats keys
+  // Maintenance-specific keys from tenant maintenance - expose at root level
+  maintenanceRequests: "Maintenance Requests",
+  newMaintenanceRequest: "New Maintenance Request",
+  searchMaintenanceRequests: "Search maintenance requests...",
   totalRequests: "Total Requests",
   pendingRequests: "Pending Requests",
   resolvedRequests: "Resolved Requests",
+  noMaintenanceRequests: "No maintenance requests found",
+  createNewRequestToSee: "Create a new maintenance request to see it here.",
   // Missing tenant connection key
   notLinkedToTenant: "You are not linked to any tenant account",
   // Additional maintenance keys
@@ -151,7 +156,11 @@ const translations: any = {
   showLess: "Show Less",
   refresh: "Refresh",
   reload: "Reload",
-  retry: "Retry"
+  retry: "Retry",
+  // Additional maintenance keys
+  newRequest: "New Request",
+  andMoreRequests: "and {count} more",
+  manageMaintenanceRequests: "Manage and track your maintenance requests"
 };
 
 export default translations;

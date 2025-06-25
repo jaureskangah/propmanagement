@@ -89,10 +89,15 @@ const translations: any = {
   darkMode: "Mode Sombre",
   customizeDashboard: "Personnaliser le Tableau de Bord",
   customizeDashboardDescription: "Choisissez les widgets à afficher et leur ordre",
-  // Missing maintenance stats keys
+  // Maintenance-specific keys from tenant maintenance - expose at root level
+  maintenanceRequests: "Demandes de maintenance",
+  newMaintenanceRequest: "Nouvelle demande de maintenance",
+  searchMaintenanceRequests: "Rechercher des demandes de maintenance...",
   totalRequests: "Total des demandes",
   pendingRequests: "Demandes en attente",
   resolvedRequests: "Demandes résolues",
+  noMaintenanceRequests: "Aucune demande de maintenance trouvée",
+  createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici.",
   // Missing tenant connection key
   notLinkedToTenant: "Vous n'êtes lié à aucun compte locataire",
   // Additional maintenance keys
@@ -152,7 +157,11 @@ const translations: any = {
   showLess: "Voir moins",
   refresh: "Actualiser",
   reload: "Recharger",
-  retry: "Réessayer"
+  retry: "Réessayer",
+  // Additional maintenance keys
+  newRequest: "Nouvelle demande",
+  andMoreRequests: "et {count} de plus",
+  manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance"
 };
 
 export default translations;
