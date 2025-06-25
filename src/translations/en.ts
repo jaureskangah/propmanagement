@@ -25,6 +25,9 @@ import { enVendors } from './features/maintenance/vendors';
 import enDocumentGenerator from './features/documents/en';
 import { enDocuments } from './features/tenant/en/documents';
 
+// Import tenant dashboard translations
+import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard';
+
 // Créer un objet de traduction unique qui résout les conflits
 const translations: any = {
   ...enAdmin,
@@ -49,6 +52,8 @@ const translations: any = {
   ...enToasts,
   ...enFinances,
   ...enVendors,
+  // Tenant dashboard translations (override with tenant-specific ones)
+  ...enTenantDashboard,
   documentGenerator: enDocumentGenerator,
   documents: enDocuments,
   // Translations for tenant page
@@ -72,6 +77,12 @@ const translations: any = {
   errorLoadingTenantData: 'Error loading tenant data',
   invalidEmail: 'Invalid email address',
   invalidAmount: 'Invalid amount',
+  // Missing tenant dashboard keys
+  welcomeTenant: "Welcome, {name}",
+  manageApartmentInfo: "Manage your apartment information and communications",
+  darkMode: "Dark Mode",
+  customizeDashboard: "Customize Dashboard",
+  customizeDashboardDescription: "Choose which widgets to display and their order",
 };
 
 export default translations;

@@ -103,6 +103,13 @@ const translations = {
     leaseExpiring: "Bail expirant",
     leaseExpired: "Bail expiré",
     
+    // Missing tenant dashboard keys - ADDED
+    welcomeTenant: "Bienvenue, {name}",
+    manageApartmentInfo: "Gérez les informations et communications de votre appartement",
+    darkMode: "Mode Sombre",
+    customizeDashboard: "Personnaliser le Tableau de Bord",
+    customizeDashboardDescription: "Choisissez les widgets à afficher et leur ordre",
+    
     // FAQ translations
     frequentlyAskedQuestions: "Questions fréquemment posées",
     findAnswers: "Trouvez des réponses aux questions courantes",
@@ -419,6 +426,13 @@ const translations = {
     leaseActive: "Lease Active",
     leaseExpiring: "Lease Expiring",
     leaseExpired: "Lease Expired",
+    
+    // Missing tenant dashboard keys - ADDED
+    welcomeTenant: "Welcome, {name}",
+    manageApartmentInfo: "Manage your apartment information and communications",
+    darkMode: "Dark Mode",
+    customizeDashboard: "Customize Dashboard",
+    customizeDashboardDescription: "Choose which widgets to display and their order",
     
     // FAQ translations
     frequentlyAskedQuestions: "Frequently Asked Questions",

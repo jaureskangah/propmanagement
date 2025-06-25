@@ -27,6 +27,9 @@ import { frDocuments } from './features/tenant/fr/documents';
 import { frPayments } from './features/tenant/fr/payments';
 import { frMaintenance as frMaintenanceTenant } from './features/tenant/fr/maintenance';
 
+// Import tenant dashboard translations
+import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
+
 // Créer un objet de traduction unique qui résout les conflits
 const translations: any = {
   ...frAdmin,
@@ -51,6 +54,8 @@ const translations: any = {
   ...frToasts,
   ...frFinances,
   ...frVendors,
+  // Tenant dashboard translations (override with tenant-specific ones)
+  ...frTenantDashboard,
   documentGenerator: frDocumentGenerator,
   documents: frDocuments,
   // Add translations at root level for direct access
@@ -78,6 +83,12 @@ const translations: any = {
   invalidEmail: 'Adresse e-mail invalide',
   invalidAmount: 'Montant invalide',
   cancel: 'Annuler',
+  // Missing tenant dashboard keys
+  welcomeTenant: "Bienvenue, {name}",
+  manageApartmentInfo: "Gérez les informations et communications de votre appartement",
+  darkMode: "Mode Sombre",
+  customizeDashboard: "Personnaliser le Tableau de Bord",
+  customizeDashboardDescription: "Choisissez les widgets à afficher et leur ordre",
 };
 
 export default translations;
