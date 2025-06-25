@@ -126,6 +126,23 @@ export const useTenantData = () => {
         ? `${profileData.first_name} ${profileData.last_name}` 
         : tenantData.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
+      // Gérer les données de propriété - s'assurer qu'on a le bon format
+      let propertyData: { name: string } | null = null;
+      
+      if (tenantData.properties) {
+        // Si c'est un tableau, prendre le premier élément
+        if (Array.isArray(tenantData.properties)) {
+          const firstProperty = tenantData.properties[0];
+          if (firstProperty && typeof firstProperty === 'object' && 'name' in firstProperty) {
+            propertyData = { name: String(firstProperty.name || "") };
+          }
+        } 
+        // Si c'est déjà un objet
+        else if (typeof tenantData.properties === 'object' && 'name' in tenantData.properties) {
+          propertyData = { name: String(tenantData.properties.name || "") };
+        }
+      }
+      
       // Construire l'objet final
       const finalTenantData: TenantData = {
         ...tenantData,
@@ -133,7 +150,7 @@ export const useTenantData = () => {
         firstName: profileData?.first_name || user?.user_metadata?.first_name,
         lastName: profileData?.last_name || user?.user_metadata?.last_name,
         fullName: displayName,
-        properties: tenantData.properties
+        properties: propertyData
       };
 
       console.log("=== FINAL TENANT DATA WITH SINGLE QUERY ===");
