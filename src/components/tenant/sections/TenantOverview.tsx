@@ -44,20 +44,20 @@ export const TenantOverview = ({
   ).length;
 
   const getPropertyDisplayName = () => {
-    console.log("=== TenantOverview getPropertyDisplayName SIMPLIFIED ===");
+    console.log("=== TenantOverview getPropertyDisplayName ===");
     console.log("Tenant ID:", tenant.id);
     console.log("Property ID:", tenant.property_id);
-    console.log("Properties object from JOIN:", tenant.properties);
-    console.log("Property name from JOIN:", tenant.properties?.name);
+    console.log("Properties object:", tenant.properties);
+    console.log("Property name:", tenant.properties?.name);
     
-    // Logique simplifiée : utiliser directement les données du JOIN
+    // Maintenant que la politique RLS est correcte, les données devraient être disponibles
     if (tenant.properties?.name) {
-      console.log("✅ Property name found from JOIN:", tenant.properties.name);
+      console.log("✅ Property name found:", tenant.properties.name);
       return tenant.properties.name;
     }
     
-    console.log("❌ No property name available from JOIN");
-    return "Propriété inconnue";
+    console.log("❌ No property name available");
+    return "Propriété non disponible";
   };
 
   return (

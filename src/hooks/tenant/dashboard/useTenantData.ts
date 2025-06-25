@@ -57,7 +57,7 @@ export const useTenantData = () => {
     }
 
     try {
-      console.log("=== FETCHING TENANT DATA WITH SEPARATE QUERIES ===");
+      console.log("=== FETCHING TENANT DATA WITH SINGLE QUERY ===");
       console.log("User ID:", user.id);
       console.log("User email:", user.email);
       
@@ -81,7 +81,7 @@ export const useTenantData = () => {
         return;
       }
       
-      // PREMIÈRE REQUÊTE : Récupérer les données du tenant
+      // REQUÊTE UNIQUE : Récupérer les données du tenant avec la propriété en JOIN
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select(`
@@ -92,12 +92,13 @@ export const useTenantData = () => {
           lease_start, 
           lease_end, 
           rent_amount,
-          property_id
+          property_id,
+          properties:property_id(name)
         `)
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
 
-      console.log("=== TENANT DATA QUERY RESULT ===");
+      console.log("=== SINGLE QUERY RESULT ===");
       console.log("Data:", tenantData);
       console.log("Error:", tenantError);
 
@@ -120,35 +121,6 @@ export const useTenantData = () => {
         return;
       }
 
-      // DEUXIÈME REQUÊTE : Récupérer les données de la propriété si property_id existe
-      let propertyData: { name: string } | null = null;
-      
-      if (tenantData.property_id) {
-        console.log("=== FETCHING PROPERTY DATA ===");
-        console.log("Property ID:", tenantData.property_id);
-        
-        const { data: property, error: propertyError } = await supabase
-          .from('properties')
-          .select('name')
-          .eq('id', tenantData.property_id)
-          .maybeSingle();
-
-        console.log("Property query result:", property);
-        console.log("Property query error:", propertyError);
-
-        if (propertyError) {
-          console.error("Error fetching property data:", propertyError);
-          // Ne pas arrêter le processus, juste continuer sans données de propriété
-        } else if (property && property.name) {
-          propertyData = { name: property.name };
-          console.log("✅ Successfully fetched property name:", property.name);
-        } else {
-          console.log("❌ No property found with ID:", tenantData.property_id);
-        }
-      } else {
-        console.log("No property_id in tenant data");
-      }
-
       // Construire le nom d'affichage
       const displayName = profileData?.first_name && profileData?.last_name 
         ? `${profileData.first_name} ${profileData.last_name}` 
@@ -161,10 +133,10 @@ export const useTenantData = () => {
         firstName: profileData?.first_name || user?.user_metadata?.first_name,
         lastName: profileData?.last_name || user?.user_metadata?.last_name,
         fullName: displayName,
-        properties: propertyData
+        properties: tenantData.properties
       };
 
-      console.log("=== FINAL TENANT DATA WITH SEPARATE QUERIES ===");
+      console.log("=== FINAL TENANT DATA WITH SINGLE QUERY ===");
       console.log("Tenant ID:", finalTenantData.id);
       console.log("Property ID:", finalTenantData.property_id);
       console.log("Properties object:", finalTenantData.properties);
