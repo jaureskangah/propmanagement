@@ -29,6 +29,8 @@ import { enDocuments } from './features/tenant/en/documents';
 import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard';
 // Import tenant maintenance translations
 import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
+// Import tenant maintenance translations
+import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
 
 // Créer un objet de traduction unique qui résout les conflits
 const translations: any = {
@@ -100,6 +102,58 @@ const translations: any = {
   accessDenied: "Access Denied",
   tenantsOnly: "This section is for tenants only",
   loadingMaintenanceInfo: "Loading maintenance information...",
+  // Missing generic keys used throughout the app
+  edit: "Edit",
+  delete: "Delete",
+  title: "Title",
+  description: "Description",
+  cancel: "Cancel",
+  save: "Save",
+  update: "Update",
+  create: "Create",
+  close: "Close",
+  confirm: "Confirm",
+  // Validation and error messages
+  pleaseSelectPriority: "Please select a priority",
+  pleaseSelectStatus: "Please select a status",
+  pleaseProvideDescription: "Please provide a description",
+  pleaseFillAllFields: "Please fill all required fields",
+  // Maintenance-specific error messages
+  tenantIdMissing: "Tenant ID is missing",
+  notAuthenticated: "Not authenticated",
+  tenantNotFound: "Tenant not found",
+  errorCreatingRequest: "Error creating maintenance request",
+  // Additional form and validation keys
+  required: "Required",
+  optional: "Optional",
+  selectOption: "Select an option",
+  noOptionsAvailable: "No options available",
+  // Status and priority translations
+  status: "Status",
+  priority: "Priority",
+  pending: "Pending",
+  inProgress: "In Progress",
+  resolved: "Resolved",
+  completed: "Completed",
+  cancelled: "Cancelled",
+  low: "Low",
+  medium: "Medium",
+  high: "High",
+  urgent: "Urgent",
+  // Time and date
+  created: "Created",
+  updated: "Updated",
+  createdAt: "Created at",
+  updatedAt: "Updated at",
+  createdOn: "Created on",
+  // Common actions
+  viewDetails: "View Details",
+  viewAll: "View All",
+  showMore: "Show More",
+  showLess: "Show Less",
+  refresh: "Refresh",
+  reload: "Reload",
+  retry: "Retry"
 };
 
 export default translations;

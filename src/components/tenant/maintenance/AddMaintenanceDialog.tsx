@@ -52,7 +52,7 @@ export const AddMaintenanceDialog = ({
     if (!tenantId) {
       toast({
         title: t('error'),
-        description: "ID du locataire manquant",
+        description: t('tenantIdMissing'),
         variant: "destructive",
       });
       return;
@@ -66,7 +66,7 @@ export const AddMaintenanceDialog = ({
       // Get current user to determine if request is from tenant or admin
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError || !userData.user) {
-        throw new Error("Non authentifié");
+        throw new Error(t('notAuthenticated'));
       }
 
       console.log("Current user:", userData.user.id);
@@ -80,7 +80,7 @@ export const AddMaintenanceDialog = ({
 
       if (tenantCheckError) {
         console.error("Error checking tenant:", tenantCheckError);
-        throw new Error("Locataire introuvable");
+        throw new Error(t('tenantNotFound'));
       }
 
       const isFromTenant = tenantCheck.tenant_profile_id === userData.user.id;
@@ -105,7 +105,7 @@ export const AddMaintenanceDialog = ({
             
           if (uploadError) {
             console.error("Upload error:", uploadError);
-            throw new Error(`Erreur lors de l'upload: ${uploadError.message}`);
+            throw new Error(`${t('error')}: ${uploadError.message}`);
           }
           
           const { data: { publicUrl } } = supabase.storage
@@ -137,7 +137,7 @@ export const AddMaintenanceDialog = ({
 
       if (insertError) {
         console.error("Insert error:", insertError);
-        throw new Error(`Erreur lors de la création: ${insertError.message}`);
+        throw new Error(`${t('errorCreatingRequest')}: ${insertError.message}`);
       }
 
       console.log("Maintenance request created successfully");

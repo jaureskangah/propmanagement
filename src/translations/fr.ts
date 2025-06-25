@@ -89,6 +89,70 @@ const translations: any = {
   darkMode: "Mode Sombre",
   customizeDashboard: "Personnaliser le Tableau de Bord",
   customizeDashboardDescription: "Choisissez les widgets à afficher et leur ordre",
+  // Missing maintenance stats keys
+  totalRequests: "Total des demandes",
+  pendingRequests: "Demandes en attente",
+  resolvedRequests: "Demandes résolues",
+  // Missing tenant connection key
+  notLinkedToTenant: "Vous n'êtes lié à aucun compte locataire",
+  // Additional maintenance keys
+  loading: "Chargement",
+  authenticationRequired: "Authentification requise",
+  pleaseSignIn: "Veuillez vous connecter pour continuer",
+  accessDenied: "Accès refusé",
+  tenantsOnly: "Cette section est réservée aux locataires",
+  loadingMaintenanceInfo: "Chargement des informations de maintenance...",
+  // Missing generic keys used throughout the app
+  edit: "Modifier",
+  delete: "Supprimer",
+  title: "Titre",
+  description: "Description",
+  save: "Enregistrer",
+  update: "Mettre à jour",
+  create: "Créer",
+  close: "Fermer",
+  confirm: "Confirmer",
+  // Validation and error messages
+  pleaseSelectPriority: "Veuillez sélectionner une priorité",
+  pleaseSelectStatus: "Veuillez sélectionner un statut",
+  pleaseProvideDescription: "Veuillez fournir une description",
+  pleaseFillAllFields: "Veuillez remplir tous les champs obligatoires",
+  // Maintenance-specific error messages
+  tenantIdMissing: "ID du locataire manquant",
+  notAuthenticated: "Non authentifié",
+  tenantNotFound: "Locataire introuvable",
+  errorCreatingRequest: "Erreur lors de la création de la demande de maintenance",
+  // Additional form and validation keys
+  required: "Obligatoire",
+  optional: "Optionnel",
+  selectOption: "Sélectionner une option",
+  noOptionsAvailable: "Aucune option disponible",
+  // Status and priority translations
+  status: "Statut",
+  priority: "Priorité",
+  pending: "En attente",
+  inProgress: "En cours",
+  resolved: "Résolu",
+  completed: "Terminé",
+  cancelled: "Annulé",
+  low: "Faible",
+  medium: "Moyen",
+  high: "Élevé",
+  urgent: "Urgent",
+  // Time and date
+  created: "Créé",
+  updated: "Mis à jour",
+  createdAt: "Créé le",
+  updatedAt: "Mis à jour le",
+  createdOn: "Créé le",
+  // Common actions
+  viewDetails: "Voir les détails",
+  viewAll: "Voir tout",
+  showMore: "Voir plus",
+  showLess: "Voir moins",
+  refresh: "Actualiser",
+  reload: "Recharger",
+  retry: "Réessayer"
 };
 
 export default translations;
