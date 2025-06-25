@@ -62,22 +62,7 @@ export const TenantOverview = ({
 
   return (
     <div className="space-y-6">
-      {/* Welcome Header */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center py-8 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl border border-gray-100 shadow-sm"
-      >
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          {t('welcome')}, {tenant.name || `${tenant.firstName} ${tenant.lastName}`}
-        </h1>
-        <p className="text-gray-600 flex items-center justify-center gap-2">
-          <Building className="h-4 w-4" />
-          {getPropertyDisplayName()} - {t('unitLabel')} {tenant.unit_number}
-        </p>
-      </motion.div>
-
-      {/* Status Cards Grid - Changed to 2 columns */}
+      {/* Status Cards Grid - 2 columns */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lease Status Card */}
         <motion.div
