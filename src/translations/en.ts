@@ -27,9 +27,7 @@ import { enDocuments } from './features/tenant/en/documents';
 
 // Import tenant dashboard translations
 import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard';
-// Import tenant maintenance translations
-import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
-// Import tenant maintenance translations
+// Import tenant maintenance translations - remove duplicate import
 import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
 
 // Créer un objet de traduction unique qui résout les conflits
