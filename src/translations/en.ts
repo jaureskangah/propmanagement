@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -91,6 +92,7 @@ const translations: any = {
   newMaintenanceRequest: "New Maintenance Request",
   maintenanceRequestTitlePlaceholder: "e.g., Water leak in bathroom",
   maintenanceDescriptionPlaceholder: "Describe the maintenance issue in detail...",
+  editMaintenanceRequest: "Edit Maintenance Request",
   searchMaintenanceRequests: "Search maintenance requests...",
   totalRequests: "Total Requests",
   pendingRequests: "Pending Requests",
@@ -130,6 +132,8 @@ const translations: any = {
   errorCreatingRequest: "Error creating maintenance request",
   maintenanceRequestSubmitted: "Maintenance request submitted successfully",
   errorSubmittingRequest: "Error submitting maintenance request",
+  maintenanceRequestUpdated: "Maintenance request updated successfully",
+  errorUpdatingRequest: "Error updating maintenance request",
   // Additional form and validation keys
   required: "Required",
   optional: "Optional",
@@ -170,7 +174,9 @@ const translations: any = {
   photos: "Photos",
   photosSelected: "photo(s) selected",
   submitRequest: "Submit Request",
-  submitting: "Submitting..."
+  submitting: "Submitting...",
+  updateRequest: "Update Request",
+  updating: "Updating..."
 };
 
 export default translations;

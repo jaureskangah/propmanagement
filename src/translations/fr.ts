@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -93,6 +94,7 @@ const translations: any = {
   newMaintenanceRequest: "Nouvelle demande de maintenance",
   maintenanceRequestTitlePlaceholder: "ex: Fuite d'eau dans la salle de bain",
   maintenanceDescriptionPlaceholder: "Décrivez le problème de maintenance en détail...",
+  editMaintenanceRequest: "Modifier la demande de maintenance",
   searchMaintenanceRequests: "Rechercher des demandes de maintenance...",
   totalRequests: "Total des demandes",
   pendingRequests: "Demandes en attente",
@@ -131,6 +133,8 @@ const translations: any = {
   errorCreatingRequest: "Erreur lors de la création de la demande de maintenance",
   maintenanceRequestSubmitted: "Demande de maintenance soumise avec succès",
   errorSubmittingRequest: "Erreur lors de la soumission de la demande",
+  maintenanceRequestUpdated: "Demande de maintenance mise à jour avec succès",
+  errorUpdatingRequest: "Erreur lors de la mise à jour de la demande",
   // Additional form and validation keys
   required: "Obligatoire",
   optional: "Optionnel",
@@ -171,7 +175,9 @@ const translations: any = {
   photos: "Photos",
   photosSelected: "photo(s) sélectionnée(s)",
   submitRequest: "Soumettre la demande",
-  submitting: "Soumission..."
+  submitting: "Soumission...",
+  updateRequest: "Mettre à jour la demande",
+  updating: "Mise à jour..."
 };
 
 export default translations;
