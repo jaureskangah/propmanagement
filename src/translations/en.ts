@@ -1,3 +1,4 @@
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -134,7 +135,6 @@ const translations = {
   
   // Tenant Dashboard essentials
   overview: "Overview",
-  documents: "Documents",
   settings: "Settings",
   welcomeTenant: "Welcome, {name}",
   welcomeGeneric: "Welcome to your dashboard",
@@ -206,11 +206,6 @@ const translations = {
   noRecentActivity: "No recent activity",
   noMaintenanceIssues: "No maintenance issues",
   allGood: "All Good",
-  
-  // Documents
-  noDocuments: "No documents available",
-  viewAllDocuments: "View All Documents",
-  andMoreDocuments: "and {count} more documents",
   
   // Communications
   communications: "Communications",
@@ -299,7 +294,7 @@ const translations = {
   loadingMaintenanceInfo: "Loading maintenance information...",
   notLinkedToTenant: "You are not linked to a tenant profile",
   
-  // Documents section - enhanced
+  // Documents section - complete translations
   documents: "Documents",
   uploadedDocuments: "Uploaded Documents",
   dragFilesHere: "Drag your files here",
@@ -391,7 +386,10 @@ const translations = {
   documentHistoryDescription: "View and manage your previously generated documents",
   dateGenerated: "Date Generated",
   documentCategory: "Category",
-  documentActions: "Actions"
+  documentActions: "Actions",
+  
+  // Support
+  getSupport: "Get Support"
 };
 
 export default translations;
