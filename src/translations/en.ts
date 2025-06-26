@@ -184,16 +184,29 @@ const translations = {
   pleaseSelectStatus: "Please select a status",
   pleaseProvideDescription: "Please provide a description",
   
-  // Lease information
+  // Lease information - NOUVELLES TRADUCTIONS AJOUTÉES
   lease: {
     start: "Lease Start",
     end: "Lease End"
   },
+  leaseStatus: "Lease Status",
   leaseStatusActive: "Active Lease",
   leaseStatusExpiringDays: "Expires in {days} days",
   leaseStatusExpired: "Expired {days} days ago",
+  leaseActive: "Active Lease",
+  leaseExpiring: "Lease Expiring",
+  leaseExpired: "Lease Expired",
+  leaseStart: "Lease Start",
+  leaseEnd: "Lease End",
   daysLeft: "{days} days left",
   daysAgo: "{days} days ago",
+  daysRemaining: "Days Remaining",
+  
+  // Recent Activity - NOUVELLES TRADUCTIONS AJOUTÉES
+  recentActivity: "Recent Activity",
+  noRecentActivity: "No recent activity",
+  noMaintenanceIssues: "No maintenance issues",
+  allGood: "All Good",
   
   // Documents
   noDocuments: "No documents available",
@@ -243,7 +256,26 @@ const translations = {
   directMessaging: "Direct Messaging",
   noMessages: "No messages yet",
   fromProperty: "From Property",
-  typeYourMessage: "Type your message here..."
+  typeYourMessage: "Type your message here...",
+
+  // Tenant search - NOUVELLES TRADUCTIONS AJOUTÉES
+  searchTenants: "Search tenants...",
+  filters: "Filters",
+
+  // Dashboard customization - NOUVELLES TRADUCTIONS AJOUTÉES
+  dashboardCustomization: "Dashboard Customization",
+  customizeDescription: "Customize which sections are visible on your dashboard",
+  visibleSections: "Visible Sections",
+  metricsOverview: "Metrics Overview",
+  prioritySection: "Priority Section",
+  revenueChart: "Revenue Chart",
+
+  // Additional tenant feedback - NOUVELLES TRADUCTIONS AJOUTÉES
+  rating: "Rating",
+  comments: "Comments",
+  feedbackPlaceholder: "Please share your feedback about the maintenance work...",
+  submit: "Submit",
+  submitting: "Submitting..."
 };
 
 export default translations;

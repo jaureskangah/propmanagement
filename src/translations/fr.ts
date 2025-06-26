@@ -184,16 +184,29 @@ const translations = {
   pleaseSelectStatus: "Veuillez sélectionner un statut",
   pleaseProvideDescription: "Veuillez fournir une description",
   
-  // Lease information
+  // Lease information - NOUVELLES TRADUCTIONS AJOUTÉES
   lease: {
     start: "Début du bail",
     end: "Fin du bail"
   },
+  leaseStatus: "Statut du bail",
   leaseStatusActive: "Bail actif",
   leaseStatusExpiringDays: "Expire dans {days} jours",
   leaseStatusExpired: "Expiré il y a {days} jours",
+  leaseActive: "Bail actif",
+  leaseExpiring: "Bail expirant",
+  leaseExpired: "Bail expiré",
+  leaseStart: "Début du bail",
+  leaseEnd: "Fin du bail",
   daysLeft: "{days} jours restants",
   daysAgo: "il y a {days} jours",
+  daysRemaining: "Jours restants",
+  
+  // Recent Activity - NOUVELLES TRADUCTIONS AJOUTÉES
+  recentActivity: "Activité récente",
+  noRecentActivity: "Aucune activité récente",
+  noMaintenanceIssues: "Aucun problème de maintenance",
+  allGood: "Tout va bien",
   
   // Documents
   noDocuments: "Aucun document disponible",
@@ -243,7 +256,26 @@ const translations = {
   directMessaging: "Messagerie directe",
   noMessages: "Aucun message pour le moment",
   fromProperty: "De la propriété",
-  typeYourMessage: "Tapez votre message ici..."
+  typeYourMessage: "Tapez votre message ici...",
+
+  // Tenant search - NOUVELLES TRADUCTIONS AJOUTÉES
+  searchTenants: "Rechercher des locataires...",
+  filters: "Filtres",
+
+  // Dashboard customization - NOUVELLES TRADUCTIONS AJOUTÉES
+  dashboardCustomization: "Personnalisation du tableau de bord",
+  customizeDescription: "Personnalisez les sections visibles sur votre tableau de bord",
+  visibleSections: "Sections visibles",
+  metricsOverview: "Aperçu des métriques",
+  prioritySection: "Section prioritaire",
+  revenueChart: "Graphique des revenus",
+
+  // Additional tenant feedback - NOUVELLES TRADUCTIONS AJOUTÉES
+  rating: "Évaluation",
+  comments: "Commentaires",
+  feedbackPlaceholder: "Veuillez partager vos commentaires sur les travaux de maintenance...",
+  submit: "Soumettre",
+  submitting: "Envoi en cours..."
 };
 
 export default translations;
