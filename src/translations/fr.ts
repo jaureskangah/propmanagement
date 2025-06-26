@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -29,22 +30,22 @@ import { frMaintenance as frMaintenanceTenant } from './features/tenant/fr/maint
 // Import tenant dashboard translations
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
 
-// Core translations object with direct key definitions to avoid import conflicts
+// Core translations object with essential keys to prevent crashes
 const translations: any = {
-  // Landing page - Hero section (direct definitions to ensure availability)
+  // Critical landing page keys (defined first to ensure availability)
   heroTitle: "Gestion Immobilière Simplifiée",
   heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
   heroGetStarted: "Commencer Gratuitement",
   learnMore: "En savoir plus",
   
-  // Navigation - Essential keys (direct definitions)
+  // Navigation essentials
   features: "Fonctionnalités",
   pricing: "Tarification",
   dashboard: "Tableau de bord",
   login: "Se connecter",
   signOut: "Se déconnecter",
   
-  // Footer translations (direct definitions)
+  // Footer essentials
   companyName: "PropManagement",
   companyDescription: "Simplifier la gestion immobilière pour les propriétaires et les gestionnaires",
   product: "Produit",
@@ -59,23 +60,22 @@ const translations: any = {
   cookiePolicy: "Politique des cookies",
   allRightsReserved: "Tous droits réservés",
   
-  // Features section (direct definitions)
+  // Features section essentials
   everythingYouNeed: "Tout ce dont vous avez besoin",
   featuresSubtitle: "Des outils complets conçus pour la gestion immobilière canadienne",
   propertyManagement: "Gestion de propriétés",
   propertyManagementDesc: "Gérez toutes vos propriétés depuis un tableau de bord central",
   tenantManagement: "Gestion des locataires",
   tenantManagementDesc: "Suivez les locataires, les baux et les communications",
-  maintenance: "Maintenance",
   maintenanceDesc: "Planifier et suivre les demandes de maintenance efficacement",
   securityDesc: "Vos données sont protégées avec une sécurité de niveau entreprise",
   
-  // CTA section (direct definitions)
+  // CTA section essentials
   readyToStart: "Prêt à simplifier votre gestion ?",
   joinOthers: "Rejoignez des milliers de propriétaires qui nous font confiance",
   ctaStartFree: "Essayer gratuitement",
   
-  // Now merge with imported translations (existing imports will override if conflicts)
+  // Now merge with imported translations (will override duplicates)
   ...frAdmin,
   ...frAuth,
   ...frCommon,
@@ -87,7 +87,6 @@ const translations: any = {
   ...frFooter,
   ...frHero,
   ...frHowItWorks,
-  ...frMaintenance,
   ...frModal,
   ...frNavigation,
   ...frPricing,
@@ -98,15 +97,18 @@ const translations: any = {
   ...frToasts,
   ...frFinances,
   ...frVendors,
-  // Tenant dashboard translations (override with tenant-specific ones)
+  ...frMaintenance,
+  
+  // Tenant-specific overrides
   ...frTenantDashboard,
   documentGenerator: frDocumentGenerator,
   documents: frDocuments,
+  
   // Add translations at root level for direct access
   payments: frPayments,
   maintenance: frMaintenanceTenant,
   
-  // all other translation keys
+  // Additional common translations
   searchTenants: "Rechercher des locataires...",
   securityDeposit: "Dépôt de garantie",
   deposited: "Déposé",

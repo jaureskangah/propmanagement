@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -29,22 +30,22 @@ import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard
 // Import tenant maintenance translations - remove duplicate import
 import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
 
-// Core translations object with direct key definitions to avoid import conflicts
+// Core translations object with essential keys to prevent crashes
 const translations: any = {
-  // Landing page - Hero section (direct definitions to ensure availability)
+  // Critical landing page keys (defined first to ensure availability)
   heroTitle: "Property Management Made Simple",
   heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
   heroGetStarted: "Get Started Free",
   learnMore: "Learn More",
   
-  // Navigation - Essential keys (direct definitions)
+  // Navigation essentials
   features: "Features",
   pricing: "Pricing",
   dashboard: "Dashboard",
   login: "Sign In",
   signOut: "Sign Out",
   
-  // Footer translations (direct definitions)
+  // Footer essentials
   companyName: "PropManagement",
   companyDescription: "Simplifying property management for landlords and property managers",
   product: "Product",
@@ -59,23 +60,22 @@ const translations: any = {
   cookiePolicy: "Cookie Policy",
   allRightsReserved: "All rights reserved",
   
-  // Features section (direct definitions)
+  // Features section essentials
   everythingYouNeed: "Everything You Need",
   featuresSubtitle: "Comprehensive tools designed for Canadian property management",
   propertyManagement: "Property Management",
   propertyManagementDesc: "Manage all your properties from one central dashboard",
   tenantManagement: "Tenant Management",
   tenantManagementDesc: "Keep track of tenants, leases, and communications",
-  maintenance: "Maintenance",
   maintenanceDesc: "Schedule and track maintenance requests efficiently",
   securityDesc: "Your data is protected with enterprise-grade security",
   
-  // CTA section (direct definitions)
+  // CTA section essentials
   readyToStart: "Ready to Simplify Your Management?",
   joinOthers: "Join thousands of property owners who trust our solution",
   ctaStartFree: "Try For Free",
   
-  // Now merge with imported translations (existing imports will override if conflicts)
+  // Now merge with imported translations (will override duplicates)
   ...enAdmin,
   ...enAuth,
   ...enCommon,
@@ -87,7 +87,6 @@ const translations: any = {
   ...enFooter,
   ...enHero,
   ...enHowItWorks,
-  ...enMaintenance,
   ...enModal,
   ...enNavigation,
   ...enPricing,
@@ -98,14 +97,17 @@ const translations: any = {
   ...enToasts,
   ...enFinances,
   ...enVendors,
-  // Tenant dashboard translations (override with tenant-specific ones)
+  ...enMaintenance,
+  
+  // Tenant-specific overrides
   ...enTenantDashboard,
   documentGenerator: enDocumentGenerator,
   documents: enDocuments,
+  
   // Add tenant maintenance translations at root level for direct access
   maintenance: enMaintenanceTenant,
   
-  // Translations for tenant page
+  // Additional common translations
   searchTenants: "Search tenants...",
   securityDeposit: "Security Deposit",
   deposited: "Deposited",
@@ -119,20 +121,17 @@ const translations: any = {
   invite: "Invite",
   inviteTenant: "Invite Tenant",
   perMonth: "per month",
-  // Add generic keys for error messages
   error: 'Error',
   success: 'Success',
   tenantAdded: 'Tenant added successfully',
   errorLoadingTenantData: 'Error loading tenant data',
   invalidEmail: 'Invalid email address',
   invalidAmount: 'Invalid amount',
-  // Missing tenant dashboard keys
   welcomeTenant: "Welcome, {name}",
   manageApartmentInfo: "Manage your apartment information and communications",
   darkMode: "Dark Mode",
   customizeDashboard: "Customize Dashboard",
   customizeDashboardDescription: "Choose which widgets to display and their order",
-  // Maintenance-specific keys from tenant maintenance - expose at root level
   maintenanceRequests: "Maintenance Requests",
   newMaintenanceRequest: "New Maintenance Request",
   maintenanceRequestTitlePlaceholder: "e.g., Water leak in bathroom",
@@ -145,16 +144,13 @@ const translations: any = {
   noMaintenanceRequests: "No maintenance requests found",
   createNewRequestToSee: "Create a new maintenance request to see it here.",
   deleteMaintenanceRequest: "Delete Maintenance Request",
-  // Missing tenant connection key
   notLinkedToTenant: "You are not linked to any tenant account",
-  // Additional maintenance keys
   loading: "Loading",
   authenticationRequired: "Authentication Required",
   pleaseSignIn: "Please sign in to continue",
   accessDenied: "Access Denied",
   tenantsOnly: "This section is for tenants only",
   loadingMaintenanceInfo: "Loading maintenance information...",
-  // Missing generic keys used throughout the app
   edit: "Edit",
   delete: "Delete",
   title: "Title",
@@ -165,12 +161,10 @@ const translations: any = {
   create: "Create",
   close: "Close",
   confirm: "Confirm",
-  // Validation and error messages
   pleaseSelectPriority: "Please select a priority",
   pleaseSelectStatus: "Please select a status",
   pleaseProvideDescription: "Please provide a description",
   pleaseFillAllFields: "Please fill all required fields",
-  // Maintenance-specific error messages
   tenantIdMissing: "Tenant ID is missing",
   notAuthenticated: "Not authenticated",
   tenantNotFound: "Tenant not found",
@@ -179,13 +173,11 @@ const translations: any = {
   errorSubmittingRequest: "Error submitting maintenance request",
   maintenanceRequestUpdated: "Maintenance request updated successfully",
   errorUpdatingRequest: "Error updating maintenance request",
-  // Additional form and validation keys
   required: "Required",
   optional: "Optional",
   selectOption: "Select an option",
   noOptionsAvailable: "No options available",
   selectPriority: "Select priority",
-  // Status and priority translations
   status: "Status",
   priority: "Priority",
   pending: "Pending",
@@ -197,13 +189,11 @@ const translations: any = {
   medium: "Medium",
   high: "High",
   urgent: "Urgent",
-  // Time and date
   created: "Created",
   updated: "Updated",
   createdAt: "Created at",
   updatedAt: "Updated at",
   createdOn: "Created on",
-  // Common actions
   viewDetails: "View Details",
   viewAll: "View All",
   showMore: "Show More",
@@ -211,36 +201,25 @@ const translations: any = {
   refresh: "Refresh",
   reload: "Reload",
   retry: "Retry",
-  // Additional maintenance keys
   newRequest: "New Request",
   andMoreRequests: "and {count} more",
   manageMaintenanceRequests: "Manage and track your maintenance requests",
-  // Photos and submission
   photos: "Photos",
   photosSelected: "photo(s) selected",
   submitRequest: "Submit Request",
   submitting: "Submitting...",
   updateRequest: "Update Request",
   updating: "Updating...",
-  // Missing keys used in MaintenanceWidget
   newUpdate: "new update",
   newUpdates: "new updates",
-  
-  // Add parameterized translations
   leaseStatusExpiringDays: "Expires in {days} days",
   leaseStatusExpired: "Expired {days} days ago",
   daysLeft: "{days} days left",
   daysAgo: "{days} days ago",
   andMoreMessages: "and {count} more messages",
   andMoreDocuments: "and {count} more documents",
-  
-  // Generic welcome for when no name is available
   welcomeGeneric: "Welcome to your dashboard",
-  
-  // Light mode translation
   lightMode: "Light Mode",
-  
-  // Additional missing keys
   viewAllDocuments: "View All Documents",
   noDocuments: "No documents available",
   noCommunications: "No communications",
@@ -252,16 +231,12 @@ const translations: any = {
   paymentHistory: "Payment History",
   paid: "Paid",
   overdue: "Overdue",
-  
-  // Unit and lease related
   unitLabel: "Unit",
   lease: {
     start: "Lease Start",
     end: "Lease End"
   },
   leaseStatusActive: "Active Lease",
-  
-  // Overview section
   overview: "Overview"
 };
 
