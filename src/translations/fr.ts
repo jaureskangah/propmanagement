@@ -275,7 +275,31 @@ const translations = {
   comments: "Commentaires",
   feedbackPlaceholder: "Veuillez partager vos commentaires sur les travaux de maintenance...",
   submit: "Soumettre",
-  submitting: "Envoi en cours..."
+  submitting: "Envoi en cours...",
+
+  // Maintenance page specific translations - NOUVELLES TRADUCTIONS AJOUTÉES
+  maintenanceRequestTitlePlaceholder: "ex. Fuite d'eau dans la salle de bain",
+  maintenanceDescriptionPlaceholder: "Décrivez le problème de maintenance en détail...",
+  submitRequest: "Soumettre la demande",
+  updateRequest: "Mettre à jour la demande",
+  newMaintenanceRequest: "Nouvelle demande de maintenance",
+  editMaintenanceRequest: "Modifier la demande de maintenance",
+  selectPriority: "Sélectionner la priorité",
+  selectStatus: "Sélectionner le statut",
+  maintenanceRequestSubmitted: "Demande de maintenance soumise avec succès",
+  maintenanceRequestUpdated: "Demande de maintenance mise à jour avec succès",
+  errorSubmittingRequest: "Erreur lors de la soumission de la demande",
+  errorUpdatingRequest: "Erreur lors de la mise à jour de la demande",
+  maintenanceTitle: "Maintenance",
+  manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance",
+  
+  // Auth and access translations - NOUVELLES TRADUCTIONS AJOUTÉES
+  authenticationRequired: "Authentification requise",
+  pleaseSignIn: "Veuillez vous connecter pour continuer",
+  accessDenied: "Accès refusé",
+  tenantsOnly: "Cette page est réservée aux locataires",
+  loadingMaintenanceInfo: "Chargement des informations de maintenance...",
+  notLinkedToTenant: "Vous n'êtes pas lié à un profil de locataire"
 };
 
 export default translations;

@@ -275,7 +275,31 @@ const translations = {
   comments: "Comments",
   feedbackPlaceholder: "Please share your feedback about the maintenance work...",
   submit: "Submit",
-  submitting: "Submitting..."
+  submitting: "Submitting...",
+
+  // Maintenance page specific translations - NOUVELLES TRADUCTIONS AJOUTÉES
+  maintenanceRequestTitlePlaceholder: "e.g., Water leak in bathroom",
+  maintenanceDescriptionPlaceholder: "Describe the maintenance issue in detail...",
+  submitRequest: "Submit Request",
+  updateRequest: "Update Request",
+  newMaintenanceRequest: "New Maintenance Request",
+  editMaintenanceRequest: "Edit Maintenance Request",
+  selectPriority: "Select priority",
+  selectStatus: "Select status",
+  maintenanceRequestSubmitted: "Maintenance request submitted successfully",
+  maintenanceRequestUpdated: "Maintenance request updated successfully",
+  errorSubmittingRequest: "Error submitting maintenance request",
+  errorUpdatingRequest: "Error updating maintenance request",
+  maintenanceTitle: "Maintenance",
+  manageMaintenanceRequests: "Manage and track your maintenance requests",
+  
+  // Auth and access translations - NOUVELLES TRADUCTIONS AJOUTÉES
+  authenticationRequired: "Authentication Required",
+  pleaseSignIn: "Please sign in to continue",
+  accessDenied: "Access Denied",
+  tenantsOnly: "This page is for tenants only",
+  loadingMaintenanceInfo: "Loading maintenance information...",
+  notLinkedToTenant: "You are not linked to a tenant profile"
 };
 
 export default translations;
