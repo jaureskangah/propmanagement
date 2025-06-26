@@ -1,3 +1,5 @@
+
+
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -60,6 +62,35 @@ const translations: any = {
   // Add translations at root level for direct access
   payments: frPayments,
   maintenance: frMaintenanceTenant,
+  
+  // Landing page - Hero section
+  heroTitle: "Gestion Immobilière Simplifiée",
+  heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
+  heroGetStarted: "Commencer Gratuitement",
+  learnMore: "En savoir plus",
+  
+  // Footer translations
+  companyName: "PropManagement",
+  companyDescription: "Simplifier la gestion immobilière pour les propriétaires et les gestionnaires",
+  product: "Produit",
+  company: "Entreprise",
+  legal: "Légal",
+  features: "Fonctionnalités",
+  pricing: "Tarification",
+  security: "Sécurité",
+  aboutUs: "À propos",
+  careers: "Carrières",
+  contact: "Contact",
+  privacyPolicy: "Politique de confidentialité",
+  termsOfService: "Conditions d'utilisation",
+  cookiePolicy: "Politique des cookies",
+  allRightsReserved: "Tous droits réservés",
+  
+  // Navigation
+  dashboard: "Tableau de bord",
+  login: "Se connecter",
+  signOut: "Se déconnecter",
+  
   // Traductions pour la page des locataires
   searchTenants: "Rechercher des locataires...",
   securityDeposit: "Dépôt de garantie",
@@ -182,12 +213,10 @@ const translations: any = {
   newUpdates: "nouvelles mises à jour",
   
   // Add parameterized translations
-  welcomeTenant: "Bienvenue, {name}",
   leaseStatusExpiringDays: "Expire dans {days} jours",
   leaseStatusExpired: "Expiré il y a {days} jours",
   daysLeft: "{days} jours restants",
   daysAgo: "il y a {days} jours",
-  andMoreRequests: "et {count} de plus",
   andMoreMessages: "et {count} messages de plus",
   andMoreDocuments: "et {count} documents de plus",
   
@@ -216,7 +245,11 @@ const translations: any = {
     start: "Début du bail",
     end: "Fin du bail"
   },
-  leaseStatusActive: "Bail actif"
+  leaseStatusActive: "Bail actif",
+  
+  // Overview section
+  overview: "Aperçu"
 };
 
 export default translations;
+
