@@ -1,5 +1,3 @@
-
-
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -31,8 +29,53 @@ import { enDashboard as enTenantDashboard } from './features/tenant/en/dashboard
 // Import tenant maintenance translations - remove duplicate import
 import { enMaintenance as enMaintenanceTenant } from './features/tenant/en/maintenance';
 
-// Créer un objet de traduction unique qui résout les conflits
+// Core translations object with direct key definitions to avoid import conflicts
 const translations: any = {
+  // Landing page - Hero section (direct definitions to ensure availability)
+  heroTitle: "Property Management Made Simple",
+  heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
+  heroGetStarted: "Get Started Free",
+  learnMore: "Learn More",
+  
+  // Navigation - Essential keys (direct definitions)
+  features: "Features",
+  pricing: "Pricing",
+  dashboard: "Dashboard",
+  login: "Sign In",
+  signOut: "Sign Out",
+  
+  // Footer translations (direct definitions)
+  companyName: "PropManagement",
+  companyDescription: "Simplifying property management for landlords and property managers",
+  product: "Product",
+  company: "Company",
+  legal: "Legal",
+  security: "Security",
+  aboutUs: "About Us",
+  careers: "Careers",
+  contact: "Contact",
+  privacyPolicy: "Privacy Policy",
+  termsOfService: "Terms of Service",
+  cookiePolicy: "Cookie Policy",
+  allRightsReserved: "All rights reserved",
+  
+  // Features section (direct definitions)
+  everythingYouNeed: "Everything You Need",
+  featuresSubtitle: "Comprehensive tools designed for Canadian property management",
+  propertyManagement: "Property Management",
+  propertyManagementDesc: "Manage all your properties from one central dashboard",
+  tenantManagement: "Tenant Management",
+  tenantManagementDesc: "Keep track of tenants, leases, and communications",
+  maintenance: "Maintenance",
+  maintenanceDesc: "Schedule and track maintenance requests efficiently",
+  securityDesc: "Your data is protected with enterprise-grade security",
+  
+  // CTA section (direct definitions)
+  readyToStart: "Ready to Simplify Your Management?",
+  joinOthers: "Join thousands of property owners who trust our solution",
+  ctaStartFree: "Try For Free",
+  
+  // Now merge with imported translations (existing imports will override if conflicts)
   ...enAdmin,
   ...enAuth,
   ...enCommon,
@@ -61,34 +104,6 @@ const translations: any = {
   documents: enDocuments,
   // Add tenant maintenance translations at root level for direct access
   maintenance: enMaintenanceTenant,
-  
-  // Landing page - Hero section
-  heroTitle: "Property Management Made Simple",
-  heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
-  heroGetStarted: "Get Started Free",
-  learnMore: "Learn More",
-  
-  // Footer translations
-  companyName: "PropManagement",
-  companyDescription: "Simplifying property management for landlords and property managers",
-  product: "Product",
-  company: "Company",
-  legal: "Legal",
-  features: "Features",
-  pricing: "Pricing",
-  security: "Security",
-  aboutUs: "About Us",
-  careers: "Careers",
-  contact: "Contact",
-  privacyPolicy: "Privacy Policy",
-  termsOfService: "Terms of Service",
-  cookiePolicy: "Cookie Policy",
-  allRightsReserved: "All rights reserved",
-  
-  // Navigation
-  dashboard: "Dashboard",
-  login: "Sign In",
-  signOut: "Sign Out",
   
   // Translations for tenant page
   searchTenants: "Search tenants...",
@@ -251,4 +266,3 @@ const translations: any = {
 };
 
 export default translations;
-

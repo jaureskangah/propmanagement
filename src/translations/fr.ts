@@ -1,5 +1,3 @@
-
-
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -31,8 +29,53 @@ import { frMaintenance as frMaintenanceTenant } from './features/tenant/fr/maint
 // Import tenant dashboard translations
 import { frDashboard as frTenantDashboard } from './features/tenant/fr/dashboard';
 
-// Créer un objet de traduction unique qui résout les conflits
+// Core translations object with direct key definitions to avoid import conflicts
 const translations: any = {
+  // Landing page - Hero section (direct definitions to ensure availability)
+  heroTitle: "Gestion Immobilière Simplifiée",
+  heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
+  heroGetStarted: "Commencer Gratuitement",
+  learnMore: "En savoir plus",
+  
+  // Navigation - Essential keys (direct definitions)
+  features: "Fonctionnalités",
+  pricing: "Tarification",
+  dashboard: "Tableau de bord",
+  login: "Se connecter",
+  signOut: "Se déconnecter",
+  
+  // Footer translations (direct definitions)
+  companyName: "PropManagement",
+  companyDescription: "Simplifier la gestion immobilière pour les propriétaires et les gestionnaires",
+  product: "Produit",
+  company: "Entreprise",
+  legal: "Légal",
+  security: "Sécurité",
+  aboutUs: "À propos",
+  careers: "Carrières",
+  contact: "Contact",
+  privacyPolicy: "Politique de confidentialité",
+  termsOfService: "Conditions d'utilisation",
+  cookiePolicy: "Politique des cookies",
+  allRightsReserved: "Tous droits réservés",
+  
+  // Features section (direct definitions)
+  everythingYouNeed: "Tout ce dont vous avez besoin",
+  featuresSubtitle: "Des outils complets conçus pour la gestion immobilière canadienne",
+  propertyManagement: "Gestion de propriétés",
+  propertyManagementDesc: "Gérez toutes vos propriétés depuis un tableau de bord central",
+  tenantManagement: "Gestion des locataires",
+  tenantManagementDesc: "Suivez les locataires, les baux et les communications",
+  maintenance: "Maintenance",
+  maintenanceDesc: "Planifier et suivre les demandes de maintenance efficacement",
+  securityDesc: "Vos données sont protégées avec une sécurité de niveau entreprise",
+  
+  // CTA section (direct definitions)
+  readyToStart: "Prêt à simplifier votre gestion ?",
+  joinOthers: "Rejoignez des milliers de propriétaires qui nous font confiance",
+  ctaStartFree: "Essayer gratuitement",
+  
+  // Now merge with imported translations (existing imports will override if conflicts)
   ...frAdmin,
   ...frAuth,
   ...frCommon,
@@ -63,35 +106,7 @@ const translations: any = {
   payments: frPayments,
   maintenance: frMaintenanceTenant,
   
-  // Landing page - Hero section
-  heroTitle: "Gestion Immobilière Simplifiée",
-  heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
-  heroGetStarted: "Commencer Gratuitement",
-  learnMore: "En savoir plus",
-  
-  // Footer translations
-  companyName: "PropManagement",
-  companyDescription: "Simplifier la gestion immobilière pour les propriétaires et les gestionnaires",
-  product: "Produit",
-  company: "Entreprise",
-  legal: "Légal",
-  features: "Fonctionnalités",
-  pricing: "Tarification",
-  security: "Sécurité",
-  aboutUs: "À propos",
-  careers: "Carrières",
-  contact: "Contact",
-  privacyPolicy: "Politique de confidentialité",
-  termsOfService: "Conditions d'utilisation",
-  cookiePolicy: "Politique des cookies",
-  allRightsReserved: "Tous droits réservés",
-  
-  // Navigation
-  dashboard: "Tableau de bord",
-  login: "Se connecter",
-  signOut: "Se déconnecter",
-  
-  // Traductions pour la page des locataires
+  // all other translation keys
   searchTenants: "Rechercher des locataires...",
   securityDeposit: "Dépôt de garantie",
   deposited: "Déposé",
@@ -105,7 +120,6 @@ const translations: any = {
   invite: "Inviter",
   inviteTenant: "Inviter un locataire",
   perMonth: "par mois",
-  // Messages génériques
   error: 'Erreur',
   success: 'Succès',
   tenantAdded: 'Locataire ajouté avec succès',
@@ -113,13 +127,11 @@ const translations: any = {
   invalidEmail: 'Adresse e-mail invalide',
   invalidAmount: 'Montant invalide',
   cancel: 'Annuler',
-  // Missing tenant dashboard keys
   welcomeTenant: "Bienvenue, {name}",
   manageApartmentInfo: "Gérez les informations et communications de votre appartement",
   darkMode: "Mode Sombre",
   customizeDashboard: "Personnaliser le Tableau de Bord",
   customizeDashboardDescription: "Choisissez les widgets à afficher et leur ordre",
-  // Maintenance-specific keys from tenant maintenance - expose at root level
   maintenanceRequests: "Demandes de maintenance",
   newMaintenanceRequest: "Nouvelle demande de maintenance",
   maintenanceRequestTitlePlaceholder: "ex: Fuite d'eau dans la salle de bain",
@@ -132,16 +144,13 @@ const translations: any = {
   noMaintenanceRequests: "Aucune demande de maintenance trouvée",
   createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici.",
   deleteMaintenanceRequest: "Supprimer la demande de maintenance",
-  // Missing tenant connection key
   notLinkedToTenant: "Vous n'êtes lié à aucun compte locataire",
-  // Additional maintenance keys
   loading: "Chargement",
   authenticationRequired: "Authentification requise",
   pleaseSignIn: "Veuillez vous connecter pour continuer",
   accessDenied: "Accès refusé",
   tenantsOnly: "Cette section est réservée aux locataires",
   loadingMaintenanceInfo: "Chargement des informations de maintenance...",
-  // Missing generic keys used throughout the app
   edit: "Modifier",
   delete: "Supprimer",
   title: "Titre",
@@ -151,12 +160,10 @@ const translations: any = {
   create: "Créer",
   close: "Fermer",
   confirm: "Confirmer",
-  // Validation and error messages
   pleaseSelectPriority: "Veuillez sélectionner une priorité",
   pleaseSelectStatus: "Veuillez sélectionner un statut",
   pleaseProvideDescription: "Veuillez fournir une description",
   pleaseFillAllFields: "Veuillez remplir tous les champs obligatoires",
-  // Maintenance-specific error messages
   tenantIdMissing: "ID du locataire manquant",
   notAuthenticated: "Non authentifié",
   tenantNotFound: "Locataire introuvable",
@@ -165,13 +172,11 @@ const translations: any = {
   errorSubmittingRequest: "Erreur lors de la soumission de la demande",
   maintenanceRequestUpdated: "Demande de maintenance mise à jour avec succès",
   errorUpdatingRequest: "Erreur lors de la mise à jour de la demande",
-  // Additional form and validation keys
   required: "Obligatoire",
   optional: "Optionnel",
   selectOption: "Sélectionner une option",
   noOptionsAvailable: "Aucune option disponible",
   selectPriority: "Sélectionner la priorité",
-  // Status and priority translations
   status: "Statut",
   priority: "Priorité",
   pending: "En attente",
@@ -183,13 +188,11 @@ const translations: any = {
   medium: "Moyen",
   high: "Élevé",
   urgent: "Urgent",
-  // Time and date
   created: "Créé",
   updated: "Mis à jour",
   createdAt: "Créé le",
   updatedAt: "Mis à jour le",
   createdOn: "Créé le",
-  // Common actions
   viewDetails: "Voir les détails",
   viewAll: "Voir tout",
   showMore: "Voir plus",
@@ -197,36 +200,25 @@ const translations: any = {
   refresh: "Actualiser",
   reload: "Recharger",
   retry: "Réessayer",
-  // Additional maintenance keys
   newRequest: "Nouvelle demande",
   andMoreRequests: "et {count} de plus",
   manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance",
-  // Photos and submission
   photos: "Photos",
   photosSelected: "photo(s) sélectionnée(s)",
   submitRequest: "Soumettre la demande",
   submitting: "Soumission...",
   updateRequest: "Mettre à jour la demande",
   updating: "Mise à jour...",
-  // Missing keys used in MaintenanceWidget
   newUpdate: "nouvelle mise à jour",
   newUpdates: "nouvelles mises à jour",
-  
-  // Add parameterized translations
   leaseStatusExpiringDays: "Expire dans {days} jours",
   leaseStatusExpired: "Expiré il y a {days} jours",
   daysLeft: "{days} jours restants",
   daysAgo: "il y a {days} jours",
   andMoreMessages: "et {count} messages de plus",
   andMoreDocuments: "et {count} documents de plus",
-  
-  // Generic welcome for when no name is available
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
-  
-  // Light mode translation
   lightMode: "Mode Clair",
-  
-  // Additional missing keys
   viewAllDocuments: "Voir tous les documents",
   noDocuments: "Aucun document disponible",
   noCommunications: "Aucune communication",
@@ -238,18 +230,13 @@ const translations: any = {
   paymentHistory: "Historique des paiements",
   paid: "Payé",
   overdue: "En retard",
-  
-  // Unit and lease related
   unitLabel: "Unité",
   lease: {
     start: "Début du bail",
     end: "Fin du bail"
   },
   leaseStatusActive: "Bail actif",
-  
-  // Overview section
   overview: "Aperçu"
 };
 
 export default translations;
-

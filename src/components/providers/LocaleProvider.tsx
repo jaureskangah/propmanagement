@@ -22,6 +22,44 @@ const translations = {
   fr: frTranslations,
 };
 
+// Fallback translations for critical landing page keys
+const fallbackTranslations = {
+  en: {
+    heroTitle: "Property Management Made Simple",
+    heroSubtitle: "The complete solution for Canadian property owners",
+    heroGetStarted: "Get Started Free",
+    learnMore: "Learn More",
+    features: "Features",
+    pricing: "Pricing",
+    dashboard: "Dashboard",
+    login: "Sign In",
+    signOut: "Sign Out",
+    companyName: "PropManagement",
+    companyDescription: "Simplifying property management",
+    everythingYouNeed: "Everything You Need",
+    featuresSubtitle: "Comprehensive property management tools",
+    readyToStart: "Ready to Get Started?",
+    ctaStartFree: "Try For Free"
+  },
+  fr: {
+    heroTitle: "Gestion Immobilière Simplifiée",
+    heroSubtitle: "La solution complète pour les propriétaires canadiens",
+    heroGetStarted: "Commencer Gratuitement",
+    learnMore: "En savoir plus",
+    features: "Fonctionnalités",
+    pricing: "Tarification",
+    dashboard: "Tableau de bord",
+    login: "Se connecter",
+    signOut: "Se déconnecter",
+    companyName: "PropManagement",
+    companyDescription: "Simplifier la gestion immobilière",
+    everythingYouNeed: "Tout ce dont vous avez besoin",
+    featuresSubtitle: "Outils complets de gestion immobilière",
+    readyToStart: "Prêt à commencer ?",
+    ctaStartFree: "Essayer gratuitement"
+  }
+};
+
 export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   const [language, setLanguage] = useState<Language>(() => {
     const saved = localStorage.getItem('preferred-language');
@@ -44,7 +82,14 @@ export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   }, [unitSystem]);
 
   const t = (key: string, params?: Record<string, string> | { fallback?: string }) => {
+    // First try to get translation from main translations
     let translation = translations[language][key];
+    
+    // If not found, try fallback translations for critical keys
+    if (!translation && fallbackTranslations[language][key]) {
+      translation = fallbackTranslations[language][key];
+      console.log(`🔄 Using fallback translation for key: "${key}"`);
+    }
     
     if (!translation) {
       console.warn(`🚨 Missing translation for key: "${key}" in language: ${language}`);
@@ -58,6 +103,12 @@ export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
       if (params && 'fallback' in params) {
         return params.fallback || key;
       }
+      
+      // Use fallback from fallbackTranslations if available
+      if (fallbackTranslations[language][key]) {
+        return fallbackTranslations[language][key];
+      }
+      
       return key;
     }
     
