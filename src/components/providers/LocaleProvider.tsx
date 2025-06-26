@@ -1,7 +1,5 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import enTranslations from '@/translations/en';
-import frTranslations from '@/translations/fr';
 
 type Language = 'en' | 'fr';
 type UnitSystem = 'metric' | 'imperial';
@@ -17,96 +15,167 @@ interface LocaleContextType {
 
 const LocaleContext = createContext<LocaleContextType | undefined>(undefined);
 
+// Traductions complètes intégrées directement dans le composant
 const translations = {
-  en: enTranslations,
-  fr: frTranslations,
-};
-
-// Fallback translations for critical landing page keys
-const fallbackTranslations = {
   en: {
+    // Critical landing page keys
     heroTitle: "Property Management Made Simple",
-    heroSubtitle: "The complete solution for Canadian property owners",
+    heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
     heroGetStarted: "Get Started Free",
     learnMore: "Learn More",
+    
+    // Navigation essentials
     features: "Features",
     pricing: "Pricing",
     dashboard: "Dashboard",
     login: "Sign In",
     signOut: "Sign Out",
+    
+    // Footer essentials
     companyName: "PropManagement",
-    companyDescription: "Simplifying property management",
+    companyDescription: "Simplifying property management for landlords and property managers",
+    product: "Product",
+    company: "Company",
+    legal: "Legal",
+    security: "Security",
+    aboutUs: "About Us",
+    careers: "Careers",
+    contact: "Contact",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    cookiePolicy: "Cookie Policy",
+    allRightsReserved: "All rights reserved",
+    
+    // Features section essentials
     everythingYouNeed: "Everything You Need",
-    featuresSubtitle: "Comprehensive property management tools",
-    readyToStart: "Ready to Get Started?",
-    ctaStartFree: "Try For Free"
+    featuresSubtitle: "Comprehensive tools designed for Canadian property management",
+    propertyManagement: "Property Management",
+    propertyManagementDesc: "Manage all your properties from one central dashboard",
+    tenantManagement: "Tenant Management",
+    tenantManagementDesc: "Keep track of tenants, leases, and communications",
+    maintenance: "Maintenance",
+    maintenanceDesc: "Schedule and track maintenance requests efficiently",
+    securityDesc: "Your data is protected with enterprise-grade security",
+    
+    // CTA section essentials
+    readyToStart: "Ready to Simplify Your Management?",
+    joinOthers: "Join thousands of property owners who trust our solution",
+    ctaStartFree: "Try For Free",
+    
+    // Common translations
+    error: 'Error',
+    success: 'Success',
+    loading: "Loading",
+    cancel: 'Cancel',
+    save: "Save",
+    edit: "Edit",
+    delete: "Delete",
+    close: "Close",
+    confirm: "Confirm",
   },
   fr: {
+    // Critical landing page keys
     heroTitle: "Gestion Immobilière Simplifiée",
-    heroSubtitle: "La solution complète pour les propriétaires canadiens",
+    heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
     heroGetStarted: "Commencer Gratuitement",
     learnMore: "En savoir plus",
+    
+    // Navigation essentials
     features: "Fonctionnalités",
     pricing: "Tarification",
     dashboard: "Tableau de bord",
     login: "Se connecter",
     signOut: "Se déconnecter",
+    
+    // Footer essentials
     companyName: "PropManagement",
-    companyDescription: "Simplifier la gestion immobilière",
+    companyDescription: "Simplifier la gestion immobilière pour les propriétaires et les gestionnaires",
+    product: "Produit",
+    company: "Entreprise",
+    legal: "Légal",
+    security: "Sécurité",
+    aboutUs: "À propos",
+    careers: "Carrières",
+    contact: "Contact",
+    privacyPolicy: "Politique de confidentialité",
+    termsOfService: "Conditions d'utilisation",
+    cookiePolicy: "Politique des cookies",
+    allRightsReserved: "Tous droits réservés",
+    
+    // Features section essentials
     everythingYouNeed: "Tout ce dont vous avez besoin",
-    featuresSubtitle: "Outils complets de gestion immobilière",
-    readyToStart: "Prêt à commencer ?",
-    ctaStartFree: "Essayer gratuitement"
+    featuresSubtitle: "Des outils complets conçus pour la gestion immobilière canadienne",
+    propertyManagement: "Gestion de propriétés",
+    propertyManagementDesc: "Gérez toutes vos propriétés depuis un tableau de bord central",
+    tenantManagement: "Gestion des locataires",
+    tenantManagementDesc: "Suivez les locataires, les baux et les communications",
+    maintenance: "Maintenance",
+    maintenanceDesc: "Planifier et suivre les demandes de maintenance efficacement",
+    securityDesc: "Vos données sont protégées avec une sécurité de niveau entreprise",
+    
+    // CTA section essentials
+    readyToStart: "Prêt à simplifier votre gestion ?",
+    joinOthers: "Rejoignez des milliers de propriétaires qui nous font confiance",
+    ctaStartFree: "Essayer gratuitement",
+    
+    // Common translations
+    error: 'Erreur',
+    success: 'Succès',
+    loading: "Chargement",
+    cancel: 'Annuler',
+    save: "Enregistrer",
+    edit: "Modifier",
+    delete: "Supprimer",
+    close: "Fermer",
+    confirm: "Confirmer",
   }
 };
 
 export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   const [language, setLanguage] = useState<Language>(() => {
-    const saved = localStorage.getItem('preferred-language');
-    return (saved === 'en' || saved === 'fr') ? saved : 'en';
+    try {
+      const saved = localStorage.getItem('preferred-language');
+      return (saved === 'en' || saved === 'fr') ? saved : 'en';
+    } catch {
+      return 'en';
+    }
   });
 
   const [unitSystem, setUnitSystem] = useState<UnitSystem>(() => {
-    const saved = localStorage.getItem('preferred-unit-system');
-    return (saved === 'metric' || saved === 'imperial') ? saved : 'metric';
+    try {
+      const saved = localStorage.getItem('preferred-unit-system');
+      return (saved === 'metric' || saved === 'imperial') ? saved : 'metric';
+    } catch {
+      return 'metric';
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem('preferred-language', language);
-    console.log('🌐 Language changed to:', language);
-    console.log('🔍 Available translations keys:', Object.keys(translations[language]).slice(0, 10));
+    try {
+      localStorage.setItem('preferred-language', language);
+      console.log('🌐 Language changed to:', language);
+    } catch (error) {
+      console.warn('Failed to save language preference:', error);
+    }
   }, [language]);
 
   useEffect(() => {
-    localStorage.setItem('preferred-unit-system', unitSystem);
+    try {
+      localStorage.setItem('preferred-unit-system', unitSystem);
+    } catch (error) {
+      console.warn('Failed to save unit system preference:', error);
+    }
   }, [unitSystem]);
 
   const t = (key: string, params?: Record<string, string> | { fallback?: string }) => {
-    // First try to get translation from main translations
     let translation = translations[language][key];
-    
-    // If not found, try fallback translations for critical keys
-    if (!translation && fallbackTranslations[language][key]) {
-      translation = fallbackTranslations[language][key];
-      console.log(`🔄 Using fallback translation for key: "${key}"`);
-    }
     
     if (!translation) {
       console.warn(`🚨 Missing translation for key: "${key}" in language: ${language}`);
-      console.log('📋 Available keys starting with same prefix:', 
-        Object.keys(translations[language])
-          .filter(k => k.startsWith(key.split(/[A-Z]/)[0]))
-          .slice(0, 5)
-      );
       
       // Check if params has fallback property
       if (params && 'fallback' in params) {
         return params.fallback || key;
-      }
-      
-      // Use fallback from fallbackTranslations if available
-      if (fallbackTranslations[language][key]) {
-        return fallbackTranslations[language][key];
       }
       
       return key;
