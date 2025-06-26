@@ -1,4 +1,5 @@
 
+
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -176,7 +177,11 @@ const translations: any = {
   submitRequest: "Submit Request",
   submitting: "Submitting...",
   updateRequest: "Update Request",
-  updating: "Updating..."
+  updating: "Updating...",
+  // Missing keys used in MaintenanceWidget
+  newUpdate: "new update",
+  newUpdates: "new updates"
 };
 
 export default translations;
+

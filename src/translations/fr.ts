@@ -1,4 +1,5 @@
 
+
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -177,7 +178,11 @@ const translations: any = {
   submitRequest: "Soumettre la demande",
   submitting: "Soumission...",
   updateRequest: "Mettre à jour la demande",
-  updating: "Mise à jour..."
+  updating: "Mise à jour...",
+  // Missing keys used in MaintenanceWidget
+  newUpdate: "nouvelle mise à jour",
+  newUpdates: "nouvelles mises à jour"
 };
 
 export default translations;
+
