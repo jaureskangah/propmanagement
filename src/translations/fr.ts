@@ -184,7 +184,7 @@ const translations = {
   pleaseSelectStatus: "Veuillez sélectionner un statut",
   pleaseProvideDescription: "Veuillez fournir une description",
   
-  // Lease information - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Lease information
   lease: {
     start: "Début du bail",
     end: "Fin du bail"
@@ -202,7 +202,7 @@ const translations = {
   daysAgo: "il y a {days} jours",
   daysRemaining: "Jours restants",
   
-  // Recent Activity - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Recent Activity
   recentActivity: "Activité récente",
   noRecentActivity: "Aucune activité récente",
   noMaintenanceIssues: "Aucun problème de maintenance",
@@ -237,7 +237,7 @@ const translations = {
   lightMode: "Mode Clair",
   darkMode: "Mode Sombre",
 
-  // Financial metrics - nouvelles traductions ajoutées
+  // Financial metrics
   totalIncome: "Revenus totaux",
   allTimeIncome: "Revenus totaux de toutes les propriétés",
   totalExpenses: "Dépenses totales",
@@ -248,7 +248,7 @@ const translations = {
   unpaidRentDescription: "Paiements de loyer en souffrance",
   financialOverview: "Aperçu financier",
 
-  // Direct messaging - nouvelles traductions ajoutées
+  // Direct messaging
   messageCantBeEmpty: "Le message ne peut pas être vide",
   maintenanceIssue: "Problème de maintenance",
   messageSent: "Message envoyé avec succès",
@@ -258,11 +258,11 @@ const translations = {
   fromProperty: "De la propriété",
   typeYourMessage: "Tapez votre message ici...",
 
-  // Tenant search - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Tenant search
   searchTenants: "Rechercher des locataires...",
   filters: "Filtres",
 
-  // Dashboard customization - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Dashboard customization
   dashboardCustomization: "Personnalisation du tableau de bord",
   customizeDescription: "Personnalisez les sections visibles sur votre tableau de bord",
   visibleSections: "Sections visibles",
@@ -270,19 +270,18 @@ const translations = {
   prioritySection: "Section prioritaire",
   revenueChart: "Graphique des revenus",
 
-  // Additional tenant feedback - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Additional tenant feedback
   rating: "Évaluation",
   comments: "Commentaires",
   feedbackPlaceholder: "Veuillez partager vos commentaires sur les travaux de maintenance...",
   submit: "Soumettre",
   submitting: "Envoi en cours...",
 
-  // Maintenance page specific translations - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Maintenance page specific translations
   maintenanceRequestTitlePlaceholder: "ex. Fuite d'eau dans la salle de bain",
   maintenanceDescriptionPlaceholder: "Décrivez le problème de maintenance en détail...",
   submitRequest: "Soumettre la demande",
   updateRequest: "Mettre à jour la demande",
-  newMaintenanceRequest: "Nouvelle demande de maintenance",
   editMaintenanceRequest: "Modifier la demande de maintenance",
   selectPriority: "Sélectionner la priorité",
   selectStatus: "Sélectionner le statut",
@@ -293,7 +292,7 @@ const translations = {
   maintenanceTitle: "Maintenance",
   manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance",
   
-  // Auth and access translations - NOUVELLES TRADUCTIONS AJOUTÉES
+  // Auth and access translations
   authenticationRequired: "Authentification requise",
   pleaseSignIn: "Veuillez vous connecter pour continuer",
   accessDenied: "Accès refusé",
