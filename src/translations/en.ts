@@ -1,3 +1,4 @@
+
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -181,12 +182,10 @@ const translations: any = {
   newUpdates: "new updates",
   
   // Add parameterized translations
-  welcomeTenant: "Welcome, {name}",
   leaseStatusExpiringDays: "Expires in {days} days",
   leaseStatusExpired: "Expired {days} days ago",
   daysLeft: "{days} days left",
   daysAgo: "{days} days ago",
-  andMoreRequests: "and {count} more",
   andMoreMessages: "and {count} more messages",
   andMoreDocuments: "and {count} more documents",
   
@@ -215,7 +214,10 @@ const translations: any = {
     start: "Lease Start",
     end: "Lease End"
   },
-  leaseStatusActive: "Active Lease"
+  leaseStatusActive: "Active Lease",
+  
+  // Overview section
+  overview: "Overview"
 };
 
 export default translations;
