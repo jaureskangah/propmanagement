@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -13,242 +13,122 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 interface AddMaintenanceDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onSuccess: () => void;
   tenantId: string;
+  onSuccess: () => void;
 }
 
 export const AddMaintenanceDialog = ({
   isOpen,
   onClose,
+  tenantId,
   onSuccess,
-  tenantId
 }: AddMaintenanceDialogProps) => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [issue, setIssue] = useState("");
   const [priority, setPriority] = useState("Medium");
-  const [photos, setPhotos] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { t } = useLocale();
 
-  const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setPriority("Medium");
-    setPhotos([]);
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim() || !description.trim()) {
+    if (!issue.trim()) {
       toast({
-        title: t('error'),
-        description: t('pleaseFillAllFields'),
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!tenantId) {
-      toast({
-        title: t('error'),
-        description: t('tenantIdMissing'),
+        title: t('error', { fallback: 'Error' }),
+        description: t('pleaseFillAllFields', { fallback: 'Please fill all required fields' }),
         variant: "destructive",
       });
       return;
     }
 
     setIsSubmitting(true);
-    
-    try {
-      console.log("Starting maintenance request creation for tenant:", tenantId);
-      
-      // Get current user to determine if request is from tenant or admin
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      if (userError || !userData.user) {
-        throw new Error(t('notAuthenticated'));
-      }
-
-      console.log("Current user:", userData.user.id);
-
-      // Check if current user is the tenant themselves
-      const { data: tenantCheck, error: tenantCheckError } = await supabase
-        .from("tenants")
-        .select("tenant_profile_id")
-        .eq("id", tenantId)
-        .single();
-
-      if (tenantCheckError) {
-        console.error("Error checking tenant:", tenantCheckError);
-        throw new Error(t('tenantNotFound'));
-      }
-
-      const isFromTenant = tenantCheck.tenant_profile_id === userData.user.id;
-      console.log("Is request from tenant:", isFromTenant);
-
-      // Upload photos if any
-      const photoUrls: string[] = [];
-      
-      if (photos.length > 0) {
-        console.log("Uploading", photos.length, "photos");
-        
-        for (const photo of photos) {
-          const fileExt = photo.name.split('.').pop();
-          const fileName = `maintenance_${Date.now()}_${Math.random()}.${fileExt}`;
-          const filePath = `maintenance/${tenantId}/${fileName}`;
-          
-          console.log("Uploading photo to:", filePath);
-          
-          const { error: uploadError } = await supabase.storage
-            .from('tenant_documents')
-            .upload(filePath, photo);
-            
-          if (uploadError) {
-            console.error("Upload error:", uploadError);
-            throw new Error(`${t('error')}: ${uploadError.message}`);
-          }
-          
-          const { data: { publicUrl } } = supabase.storage
-            .from('tenant_documents')
-            .getPublicUrl(filePath);
-            
-          photoUrls.push(publicUrl);
-          console.log("Photo uploaded successfully:", publicUrl);
+    const { error } = await supabase
+      .from("maintenance_requests")
+      .insert([
+        {
+          tenant_id: tenantId,
+          title: title.trim() || issue.substring(0, 50) + "...",
+          issue: issue.trim(),
+          priority,
+          status: "Pending"
         }
-      }
+      ]);
 
-      // Insert maintenance request
-      const maintenanceData = {
-        tenant_id: tenantId,
-        title: title.trim(),
-        description: description.trim(),
-        issue: title.trim(),
-        priority,
-        photos: photoUrls,
-        status: "Pending",
-        is_from_tenant: isFromTenant
-      };
+    setIsSubmitting(false);
 
-      console.log("Inserting maintenance request:", maintenanceData);
-
-      const { error: insertError } = await supabase
-        .from("maintenance_requests")
-        .insert(maintenanceData);
-
-      if (insertError) {
-        console.error("Insert error:", insertError);
-        throw new Error(`${t('errorCreatingRequest')}: ${insertError.message}`);
-      }
-
-      console.log("Maintenance request created successfully");
-
+    if (error) {
+      console.error("Error creating maintenance request:", error);
       toast({
-        title: t('success'),
-        description: t('maintenanceRequestSubmitted'),
-      });
-
-      // Reset form and close dialog
-      resetForm();
-      onSuccess();
-      onClose();
-    } catch (error: any) {
-      console.error("Error adding maintenance request:", error);
-      toast({
-        title: t('error'),
-        description: error.message || t('errorSubmittingRequest'),
+        title: t('error', { fallback: 'Error' }),
+        description: t('errorSubmittingRequest', { fallback: 'Error submitting maintenance request' }),
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
+      return;
     }
-  };
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setPhotos(Array.from(e.target.files));
-    }
+    toast({
+      title: t('success', { fallback: 'Success' }),
+      description: t('maintenanceRequestSubmitted', { fallback: 'Maintenance request submitted successfully' }),
+    });
+    
+    setTitle("");
+    setIssue("");
+    setPriority("Medium");
+    onSuccess();
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => {
-      if (!open) {
-        resetForm();
-        onClose();
-      }
-    }}>
-      <DialogContent>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{t('newMaintenanceRequest')}</DialogTitle>
+          <DialogTitle>{t('newMaintenanceRequest', { fallback: 'New Maintenance Request' })}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">{t('title')}</Label>
+            <Label htmlFor="title">{t('title', { fallback: 'Title' })}</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder={t('maintenanceRequestTitlePlaceholder')}
-              required
+              placeholder={t('maintenanceRequestTitlePlaceholder', { fallback: 'e.g., Water leak in bathroom' })}
             />
           </div>
-          
           <div className="space-y-2">
-            <Label htmlFor="description">{t('description')}</Label>
+            <Label htmlFor="issue">{t('description', { fallback: 'Description' })} *</Label>
             <Textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder={t('maintenanceDescriptionPlaceholder')}
+              id="issue"
+              value={issue}
+              onChange={(e) => setIssue(e.target.value)}
+              placeholder={t('maintenanceDescriptionPlaceholder', { fallback: 'Describe the maintenance issue in detail...' })}
               className="min-h-[100px]"
               required
             />
           </div>
-
           <div className="space-y-2">
-            <Label htmlFor="priority">{t('priority')}</Label>
+            <Label htmlFor="priority">{t('priority', { fallback: 'Priority' })}</Label>
             <Select value={priority} onValueChange={setPriority}>
               <SelectTrigger>
-                <SelectValue placeholder={t('selectPriority')} />
+                <SelectValue placeholder={t('selectPriority', { fallback: 'Select priority' })} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Low">{t('low')}</SelectItem>
-                <SelectItem value="Medium">{t('medium')}</SelectItem>
-                <SelectItem value="High">{t('high')}</SelectItem>
-                <SelectItem value="Urgent">{t('urgent')}</SelectItem>
+                <SelectItem value="Low">{t('low', { fallback: 'Low' })}</SelectItem>
+                <SelectItem value="Medium">{t('medium', { fallback: 'Medium' })}</SelectItem>
+                <SelectItem value="High">{t('high', { fallback: 'High' })}</SelectItem>
+                <SelectItem value="Urgent">{t('urgent', { fallback: 'Urgent' })}</SelectItem>
               </SelectContent>
             </Select>
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="photos">{t('photos')}</Label>
-            <Input
-              id="photos"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handlePhotoChange}
-              className="cursor-pointer"
-            />
-            {photos.length > 0 && (
-              <p className="text-sm text-muted-foreground">
-                {photos.length} {t('photosSelected')}
-              </p>
-            )}
-          </div>
-
           <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={() => {
-              resetForm();
-              onClose();
-            }}>
-              {t('cancel')}
+            <Button type="button" variant="outline" onClick={onClose}>
+              {t('cancel', { fallback: 'Cancel' })}
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting}
               className="bg-[#ea384c] hover:bg-[#ea384c]/90"
             >
-              {isSubmitting ? t('submitting') : t('submitRequest')}
+              {isSubmitting ? t('submitting', { fallback: 'Submitting...' }) : t('submitRequest', { fallback: 'Submit Request' })}
             </Button>
           </div>
         </form>
