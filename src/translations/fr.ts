@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -92,6 +91,8 @@ const translations: any = {
   // Maintenance-specific keys from tenant maintenance - expose at root level
   maintenanceRequests: "Demandes de maintenance",
   newMaintenanceRequest: "Nouvelle demande de maintenance",
+  maintenanceRequestTitlePlaceholder: "ex: Fuite d'eau dans la salle de bain",
+  maintenanceDescriptionPlaceholder: "Décrivez le problème de maintenance en détail...",
   searchMaintenanceRequests: "Rechercher des demandes de maintenance...",
   totalRequests: "Total des demandes",
   pendingRequests: "Demandes en attente",
@@ -128,11 +129,14 @@ const translations: any = {
   notAuthenticated: "Non authentifié",
   tenantNotFound: "Locataire introuvable",
   errorCreatingRequest: "Erreur lors de la création de la demande de maintenance",
+  maintenanceRequestSubmitted: "Demande de maintenance soumise avec succès",
+  errorSubmittingRequest: "Erreur lors de la soumission de la demande",
   // Additional form and validation keys
   required: "Obligatoire",
   optional: "Optionnel",
   selectOption: "Sélectionner une option",
   noOptionsAvailable: "Aucune option disponible",
+  selectPriority: "Sélectionner la priorité",
   // Status and priority translations
   status: "Statut",
   priority: "Priorité",
@@ -162,7 +166,12 @@ const translations: any = {
   // Additional maintenance keys
   newRequest: "Nouvelle demande",
   andMoreRequests: "et {count} de plus",
-  manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance"
+  manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance",
+  // Photos and submission
+  photos: "Photos",
+  photosSelected: "photo(s) sélectionnée(s)",
+  submitRequest: "Soumettre la demande",
+  submitting: "Soumission..."
 };
 
 export default translations;

@@ -1,4 +1,3 @@
-
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -90,6 +89,8 @@ const translations: any = {
   // Maintenance-specific keys from tenant maintenance - expose at root level
   maintenanceRequests: "Maintenance Requests",
   newMaintenanceRequest: "New Maintenance Request",
+  maintenanceRequestTitlePlaceholder: "e.g., Water leak in bathroom",
+  maintenanceDescriptionPlaceholder: "Describe the maintenance issue in detail...",
   searchMaintenanceRequests: "Search maintenance requests...",
   totalRequests: "Total Requests",
   pendingRequests: "Pending Requests",
@@ -127,11 +128,14 @@ const translations: any = {
   notAuthenticated: "Not authenticated",
   tenantNotFound: "Tenant not found",
   errorCreatingRequest: "Error creating maintenance request",
+  maintenanceRequestSubmitted: "Maintenance request submitted successfully",
+  errorSubmittingRequest: "Error submitting maintenance request",
   // Additional form and validation keys
   required: "Required",
   optional: "Optional",
   selectOption: "Select an option",
   noOptionsAvailable: "No options available",
+  selectPriority: "Select priority",
   // Status and priority translations
   status: "Status",
   priority: "Priority",
@@ -161,7 +165,12 @@ const translations: any = {
   // Additional maintenance keys
   newRequest: "New Request",
   andMoreRequests: "and {count} more",
-  manageMaintenanceRequests: "Manage and track your maintenance requests"
+  manageMaintenanceRequests: "Manage and track your maintenance requests",
+  // Photos and submission
+  photos: "Photos",
+  photosSelected: "photo(s) selected",
+  submitRequest: "Submit Request",
+  submitting: "Submitting..."
 };
 
 export default translations;
