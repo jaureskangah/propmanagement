@@ -1,5 +1,3 @@
-
-
 import { Translations } from './types';
 import { frAdmin } from './features/admin';
 import { frAuth } from './features/auth';
@@ -181,7 +179,44 @@ const translations: any = {
   updating: "Mise à jour...",
   // Missing keys used in MaintenanceWidget
   newUpdate: "nouvelle mise à jour",
-  newUpdates: "nouvelles mises à jour"
+  newUpdates: "nouvelles mises à jour",
+  
+  // Add parameterized translations
+  welcomeTenant: "Bienvenue, {name}",
+  leaseStatusExpiringDays: "Expire dans {days} jours",
+  leaseStatusExpired: "Expiré il y a {days} jours",
+  daysLeft: "{days} jours restants",
+  daysAgo: "il y a {days} jours",
+  andMoreRequests: "et {count} de plus",
+  andMoreMessages: "et {count} messages de plus",
+  andMoreDocuments: "et {count} documents de plus",
+  
+  // Generic welcome for when no name is available
+  welcomeGeneric: "Bienvenue sur votre tableau de bord",
+  
+  // Light mode translation
+  lightMode: "Mode Clair",
+  
+  // Additional missing keys
+  viewAllDocuments: "Voir tous les documents",
+  noDocuments: "Aucun document disponible",
+  noCommunications: "Aucune communication",
+  allMessages: "Tous les messages",
+  newMessage: "Nouveau message",
+  sentByYou: "Envoyé par vous",
+  noPaymentHistory: "Aucun historique de paiement disponible",
+  amount: "Montant",
+  paymentHistory: "Historique des paiements",
+  paid: "Payé",
+  overdue: "En retard",
+  
+  // Unit and lease related
+  unitLabel: "Unité",
+  lease: {
+    start: "Début du bail",
+    end: "Fin du bail"
+  },
+  leaseStatusActive: "Bail actif"
 };
 
 export default translations;

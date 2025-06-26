@@ -1,5 +1,3 @@
-
-
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -180,7 +178,44 @@ const translations: any = {
   updating: "Updating...",
   // Missing keys used in MaintenanceWidget
   newUpdate: "new update",
-  newUpdates: "new updates"
+  newUpdates: "new updates",
+  
+  // Add parameterized translations
+  welcomeTenant: "Welcome, {name}",
+  leaseStatusExpiringDays: "Expires in {days} days",
+  leaseStatusExpired: "Expired {days} days ago",
+  daysLeft: "{days} days left",
+  daysAgo: "{days} days ago",
+  andMoreRequests: "and {count} more",
+  andMoreMessages: "and {count} more messages",
+  andMoreDocuments: "and {count} more documents",
+  
+  // Generic welcome for when no name is available
+  welcomeGeneric: "Welcome to your dashboard",
+  
+  // Light mode translation
+  lightMode: "Light Mode",
+  
+  // Additional missing keys
+  viewAllDocuments: "View All Documents",
+  noDocuments: "No documents available",
+  noCommunications: "No communications",
+  allMessages: "All Messages",
+  newMessage: "New Message",
+  sentByYou: "Sent by you",
+  noPaymentHistory: "No payment history available",
+  amount: "Amount",
+  paymentHistory: "Payment History",
+  paid: "Paid",
+  overdue: "Overdue",
+  
+  // Unit and lease related
+  unitLabel: "Unit",
+  lease: {
+    start: "Lease Start",
+    end: "Lease End"
+  },
+  leaseStatusActive: "Active Lease"
 };
 
 export default translations;
