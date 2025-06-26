@@ -222,7 +222,28 @@ const translations = {
   
   // Theme
   lightMode: "Light Mode",
-  darkMode: "Dark Mode"
+  darkMode: "Dark Mode",
+
+  // Financial metrics - nouvelles traductions ajoutées
+  totalIncome: "Total Income",
+  allTimeIncome: "Total income from all properties",
+  totalExpenses: "Total Expenses", 
+  allTimeExpenses: "Total expenses for all properties",
+  occupancyRate: "Occupancy Rate",
+  occupancyRateDescription: "Percentage of occupied units",
+  unpaidRent: "Unpaid Rent",
+  unpaidRentDescription: "Outstanding rent payments",
+  financialOverview: "Financial Overview",
+
+  // Direct messaging - nouvelles traductions ajoutées
+  messageCantBeEmpty: "Message cannot be empty",
+  maintenanceIssue: "Maintenance Issue",
+  messageSent: "Message sent successfully",
+  errorSendingMessage: "Error sending message",
+  directMessaging: "Direct Messaging",
+  noMessages: "No messages yet",
+  fromProperty: "From Property",
+  typeYourMessage: "Type your message here..."
 };
 
 export default translations;
