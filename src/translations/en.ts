@@ -96,6 +96,7 @@ const translations: any = {
   resolvedRequests: "Resolved Requests",
   noMaintenanceRequests: "No maintenance requests found",
   createNewRequestToSee: "Create a new maintenance request to see it here.",
+  deleteMaintenanceRequest: "Delete Maintenance Request",
   // Missing tenant connection key
   notLinkedToTenant: "You are not linked to any tenant account",
   // Additional maintenance keys
