@@ -1,5 +1,3 @@
-
-
 import { Translations } from './types';
 import { enAdmin } from './features/admin';
 import { enAuth } from './features/auth';
@@ -61,35 +59,6 @@ const translations: any = {
   documents: enDocuments,
   // Add tenant maintenance translations at root level for direct access
   maintenance: enMaintenanceTenant,
-  
-  // Landing page - Hero section
-  heroTitle: "Property Management Made Simple",
-  heroSubtitle: "The complete solution for Canadian property owners. Manage tenants, maintenance, and finances all in one place.",
-  heroGetStarted: "Get Started Free",
-  learnMore: "Learn More",
-  
-  // Footer translations
-  companyName: "PropManagement",
-  companyDescription: "Simplifying property management for landlords and property managers",
-  product: "Product",
-  company: "Company",
-  legal: "Legal",
-  features: "Features",
-  pricing: "Pricing",
-  security: "Security",
-  aboutUs: "About Us",
-  careers: "Careers",
-  contact: "Contact",
-  privacyPolicy: "Privacy Policy",
-  termsOfService: "Terms of Service",
-  cookiePolicy: "Cookie Policy",
-  allRightsReserved: "All rights reserved",
-  
-  // Navigation
-  dashboard: "Dashboard",
-  login: "Sign In",
-  signOut: "Sign Out",
-  
   // Translations for tenant page
   searchTenants: "Search tenants...",
   securityDeposit: "Security Deposit",
@@ -212,10 +181,12 @@ const translations: any = {
   newUpdates: "new updates",
   
   // Add parameterized translations
+  welcomeTenant: "Welcome, {name}",
   leaseStatusExpiringDays: "Expires in {days} days",
   leaseStatusExpired: "Expired {days} days ago",
   daysLeft: "{days} days left",
   daysAgo: "{days} days ago",
+  andMoreRequests: "and {count} more",
   andMoreMessages: "and {count} more messages",
   andMoreDocuments: "and {count} more documents",
   
@@ -244,11 +215,7 @@ const translations: any = {
     start: "Lease Start",
     end: "Lease End"
   },
-  leaseStatusActive: "Active Lease",
-  
-  // Overview section
-  overview: "Overview"
+  leaseStatusActive: "Active Lease"
 };
 
 export default translations;
-
