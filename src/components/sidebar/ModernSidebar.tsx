@@ -30,21 +30,21 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const links = React.useMemo(() => {
     if (isTenant) {
       return [
-        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard') },
-        { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance') },
-        { to: "/tenant/documents", icon: FileText, label: t('documents') },
-        { to: "/settings", icon: Settings, label: t('settings') }
+        { to: "/tenant/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard') },
+        { to: "/tenant/maintenance", icon: Wrench, label: String(t('maintenance') || 'Maintenance') },
+        { to: "/tenant/documents", icon: FileText, label: String(t('documents.documents') || 'Documents') },
+        { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
       ];
     }
     
     return [
-      { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard') },
-      { to: "/properties", icon: Building, label: t('properties') },
-      { to: "/tenants", icon: Users, label: t('tenants') },
-      { to: "/invitations", icon: Mail, label: t('invitations') },
-      { to: "/finances", icon: CreditCard, label: t('finances') },
-      { to: "/maintenance", icon: Wrench, label: t('maintenance') },
-      { to: "/settings", icon: Settings, label: t('settings') }
+      { to: "/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard') },
+      { to: "/properties", icon: Building, label: String(t('properties') || 'Properties') },
+      { to: "/tenants", icon: Users, label: String(t('tenants') || 'Tenants') },
+      { to: "/invitations", icon: Mail, label: String(t('invitations') || 'Invitations') },
+      { to: "/finances", icon: CreditCard, label: String(t('finances') || 'Finances') },
+      { to: "/maintenance", icon: Wrench, label: String(t('maintenance') || 'Maintenance') },
+      { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
     ];
   }, [isTenant, t]);
 
@@ -112,7 +112,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
             <HelpCircle className="h-4 w-4" />
           </div>
           <div className="item-text">
-            <span>{t('getSupport')}</span>
+            <span>{String(t('getSupport') || 'Get Support')}</span>
           </div>
         </button>
       </div>

@@ -32,7 +32,13 @@ export const useTenantData = () => {
   const { t, language } = useLocale();
 
   useEffect(() => {
+    console.log("=== USETENANTDATA EFFECT TRIGGERED ===");
+    console.log("User:", user);
+    console.log("isTenant:", isTenant);
+    console.log("User ID:", user?.id);
+
     if (!user) {
+      console.log("No user found, setting tenant to null");
       setTenant(null);
       setIsLoading(false);
       return;
@@ -46,12 +52,14 @@ export const useTenantData = () => {
       return;
     }
 
+    console.log("User is a tenant, fetching tenant data...");
     // Toujours récupérer les données fraîches depuis la base de données
     fetchTenantData();
   }, [user?.id, isTenant]);
 
   const fetchTenantData = async () => {
     if (!user?.id) {
+      console.log("No user ID, stopping fetch");
       setIsLoading(false);
       return;
     }
@@ -65,23 +73,26 @@ export const useTenantData = () => {
       setHasError(false);
 
       // Récupérer les données du profil
-      const { data: profileData } = await supabase
+      console.log("Step 1: Fetching profile data...");
+      const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('first_name, last_name, is_tenant_user')
         .eq('id', user.id)
         .maybeSingle();
         
       console.log("Profile data:", profileData);
+      console.log("Profile error:", profileError);
       
       // Vérifier que l'utilisateur est bien un locataire
       if (!profileData?.is_tenant_user) {
-        console.log("User is not a tenant user");
+        console.log("User is not a tenant user according to profile");
         setTenant(null);
         setIsLoading(false);
         return;
       }
       
       // REQUÊTE UNIQUE : Récupérer les données du tenant avec la propriété en JOIN
+      console.log("Step 2: Fetching tenant data with property...");
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select(`
@@ -129,10 +140,14 @@ export const useTenantData = () => {
       // Gérer les données de propriété - s'assurer qu'on a le bon format
       let propertyData: { name: string } | null = null;
       
+      console.log("Step 3: Processing property data...");
+      console.log("Raw properties data:", tenantData.properties);
+      
       if (tenantData.properties) {
         // Si c'est un tableau, prendre le premier élément
         if (Array.isArray(tenantData.properties)) {
           const firstProperty = tenantData.properties[0];
+          console.log("Property is array, first element:", firstProperty);
           if (firstProperty && typeof firstProperty === 'object' && firstProperty !== null) {
             // Type assertion sécurisée après vérification
             const propertyObj = firstProperty as Record<string, any>;
@@ -144,11 +159,14 @@ export const useTenantData = () => {
         // Si c'est déjà un objet
         else if (typeof tenantData.properties === 'object' && tenantData.properties !== null) {
           const propertyObj = tenantData.properties as Record<string, any>;
+          console.log("Property is object:", propertyObj);
           if ('name' in propertyObj) {
             propertyData = { name: String(propertyObj.name || "") };
           }
         }
       }
+      
+      console.log("Processed property data:", propertyData);
       
       // Construire l'objet final
       const finalTenantData: TenantData = {
@@ -168,9 +186,10 @@ export const useTenantData = () => {
       console.log("Complete final data:", finalTenantData);
       
       setTenant(finalTenantData);
+      console.log("Tenant data set successfully");
       
     } catch (error) {
-      console.error('Error fetching tenant data:', error);
+      console.error('EXCEPTION in fetchTenantData:', error);
       setHasError(true);
       setTenant(null);
       
@@ -180,9 +199,15 @@ export const useTenantData = () => {
         variant: "destructive",
       });
     } finally {
+      console.log("Setting loading to false");
       setIsLoading(false);
     }
   };
+
+  console.log("=== USETENANTDATA HOOK STATE ===");
+  console.log("tenant:", tenant);
+  console.log("isLoading:", isLoading);
+  console.log("hasError:", hasError);
 
   return {
     tenant,

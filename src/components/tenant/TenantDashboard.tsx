@@ -13,30 +13,43 @@ import { RefreshCw, AlertTriangle } from 'lucide-react';
 export const TenantDashboard = () => {
   const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard } = useTenantDashboard();
 
+  console.log("=== TENANT DASHBOARD RENDER ===");
   console.log("TenantDashboard - tenant:", tenant);
   console.log("TenantDashboard - isLoading:", isLoading);
+  console.log("TenantDashboard - communications:", communications?.length || 0);
+  console.log("TenantDashboard - maintenanceRequests:", maintenanceRequests?.length || 0);
+  console.log("TenantDashboard - documents:", documents?.length || 0);
+  console.log("TenantDashboard - leaseStatus:", leaseStatus);
 
   // Add error boundary for loading issues
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   useEffect(() => {
     if (isLoading) {
+      console.log("Setting up loading timeout...");
       const timer = setTimeout(() => {
+        console.log("Loading timeout triggered");
         setLoadingTimeout(true);
       }, 15000); // 15 seconds timeout
 
-      return () => clearTimeout(timer);
+      return () => {
+        console.log("Clearing loading timeout");
+        clearTimeout(timer);
+      };
     } else {
+      console.log("Clearing loading timeout state");
       setLoadingTimeout(false);
     }
   }, [isLoading]);
 
   if (isLoading && !loadingTimeout) {
+    console.log("Showing loading state");
     return <DashboardLoading />;
   }
 
   // Show error state if loading takes too long
   if (isLoading && loadingTimeout) {
+    console.log("Showing timeout error state");
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
@@ -78,9 +91,11 @@ export const TenantDashboard = () => {
   }
 
   if (!tenant) {
+    console.log("No tenant found, showing NoTenantProfile");
     return <NoTenantProfile />;
   }
 
+  console.log("Rendering full tenant dashboard");
   return (
     <div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-6 max-w-7xl">
       <DashboardHeader 

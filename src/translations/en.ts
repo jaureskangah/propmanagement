@@ -1,5 +1,4 @@
 
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -8,12 +7,18 @@ const translations = {
   heroGetStarted: "Get Started Free",
   learnMore: "Learn More",
   
-  // Navigation essentials
-  features: "Features",
-  pricing: "Pricing",
+  // Navigation essentials - MUST BE AT ROOT LEVEL
   dashboard: "Dashboard",
+  features: "Features",
+  pricing: "Pricing", 
   login: "Sign In",
   signOut: "Sign Out",
+  properties: "Properties",
+  tenants: "Tenants",
+  maintenance: "Maintenance",
+  settings: "Settings",
+  invitations: "Invitations",
+  finances: "Finances",
   
   // Footer essentials
   companyName: "PropManagement",
@@ -37,7 +42,6 @@ const translations = {
   propertyManagementDesc: "Manage all your properties from one central dashboard",
   tenantManagement: "Tenant Management",
   tenantManagementDesc: "Keep track of tenants, leases, and communications",
-  maintenance: "Maintenance",
   maintenanceDesc: "Schedule and track maintenance requests efficiently",
   securityDesc: "Your data is protected with enterprise-grade security",
   
@@ -136,7 +140,6 @@ const translations = {
   
   // Tenant Dashboard essentials
   overview: "Overview",
-  settings: "Settings",
   welcomeTenant: "Welcome, {name}",
   welcomeGeneric: "Welcome to your dashboard",
   manageApartmentInfo: "Manage your apartment information and communications",
@@ -398,4 +401,3 @@ const translations = {
 };
 
 export default translations;
-
