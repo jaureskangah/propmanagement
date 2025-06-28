@@ -18,7 +18,6 @@ const translations = {
   settings: "Settings",
   invitations: "Invitations",
   finances: "Finances",
-  documents: "Documents",
   
   // Footer essentials
   companyName: "PropManagement",

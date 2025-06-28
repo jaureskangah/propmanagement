@@ -12,7 +12,6 @@ const translations = {
   dashboard: "Tableau de bord",
   login: "Se connecter",
   signOut: "Se déconnecter",
-  documents: "Documents",
   
   // Footer essentials
   companyName: "PropManagement",
