@@ -12,6 +12,13 @@ const translations = {
   dashboard: "Tableau de bord",
   login: "Se connecter",
   signOut: "Se déconnecter",
+  maintenance: "Maintenance",
+  settings: "Paramètres",
+  invitations: "Invitations",
+  finances: "Finances",
+  properties: "Propriétés",
+  tenants: "Locataires",
+  documentsLabel: "Documents", // Simple label for sidebar
   
   // Footer essentials
   companyName: "PropManagement",

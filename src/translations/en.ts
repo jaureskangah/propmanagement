@@ -18,6 +18,7 @@ const translations = {
   settings: "Settings",
   invitations: "Invitations",
   finances: "Finances",
+  documentsLabel: "Documents", // Simple label for sidebar
   
   // Footer essentials
   companyName: "PropManagement",
