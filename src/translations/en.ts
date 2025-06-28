@@ -1,4 +1,3 @@
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -19,6 +18,7 @@ const translations = {
   settings: "Settings",
   invitations: "Invitations",
   finances: "Finances",
+  documents: "Documents",
   
   // Footer essentials
   companyName: "PropManagement",

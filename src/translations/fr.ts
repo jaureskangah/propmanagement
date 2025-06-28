@@ -1,5 +1,3 @@
-
-
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -14,6 +12,7 @@ const translations = {
   dashboard: "Tableau de bord",
   login: "Se connecter",
   signOut: "Se déconnecter",
+  documents: "Documents",
   
   // Footer essentials
   companyName: "PropManagement",
@@ -398,4 +397,3 @@ const translations = {
 };
 
 export default translations;
-

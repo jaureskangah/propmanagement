@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
@@ -32,7 +31,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard') },
         { to: "/tenant/maintenance", icon: Wrench, label: String(t('maintenance') || 'Maintenance') },
-        { to: "/tenant/documents", icon: FileText, label: String(t('documents.documents') || 'Documents') },
+        { to: "/tenant/documents", icon: FileText, label: String(t('documents', { fallback: 'Documents' }) || 'Documents') },
         { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
       ];
     }
