@@ -12,6 +12,7 @@ import { RefreshCw, AlertTriangle } from 'lucide-react';
 
 export const TenantDashboard = () => {
   const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard } = useTenantDashboard();
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   console.log("=== TENANT DASHBOARD RENDER ===");
   console.log("TenantDashboard - tenant:", tenant);
@@ -21,16 +22,14 @@ export const TenantDashboard = () => {
   console.log("TenantDashboard - documents:", documents?.length || 0);
   console.log("TenantDashboard - leaseStatus:", leaseStatus);
 
-  // Add error boundary for loading issues
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-
+  // Timeout for loading state
   useEffect(() => {
     if (isLoading) {
       console.log("Setting up loading timeout...");
       const timer = setTimeout(() => {
         console.log("Loading timeout triggered");
         setLoadingTimeout(true);
-      }, 15000); // 15 seconds timeout
+      }, 10000); // Reduced to 10 seconds
 
       return () => {
         console.log("Clearing loading timeout");
@@ -42,13 +41,14 @@ export const TenantDashboard = () => {
     }
   }, [isLoading]);
 
+  // Show loading state only for a reasonable time
   if (isLoading && !loadingTimeout) {
     console.log("Showing loading state");
     return <DashboardLoading />;
   }
 
   // Show error state if loading takes too long
-  if (isLoading && loadingTimeout) {
+  if (loadingTimeout) {
     console.log("Showing timeout error state");
     return (
       <div className="container mx-auto px-4 py-8">
@@ -90,6 +90,7 @@ export const TenantDashboard = () => {
     );
   }
 
+  // Show no tenant profile if tenant is null/undefined
   if (!tenant) {
     console.log("No tenant found, showing NoTenantProfile");
     return <NoTenantProfile />;
