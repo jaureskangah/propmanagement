@@ -1,3 +1,4 @@
+
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -42,7 +43,6 @@ const translations = {
   propertyManagementDesc: "Gérez toutes vos propriétés depuis un tableau de bord central",
   tenantManagement: "Gestion des locataires",
   tenantManagementDesc: "Suivez les locataires, les baux et les communications",
-  maintenance: "Maintenance",
   maintenanceDesc: "Planifier et suivre les demandes de maintenance efficacement",
   securityDesc: "Vos données sont protégées avec une sécurité de niveau entreprise",
   
@@ -141,7 +141,6 @@ const translations = {
   
   // Tenant Dashboard essentials
   overview: "Aperçu",
-  settings: "Paramètres",
   welcomeTenant: "Bienvenue, {name}",
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
   manageApartmentInfo: "Gérez les informations et communications de votre appartement",
