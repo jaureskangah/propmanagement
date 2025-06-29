@@ -4,7 +4,6 @@ import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { formatDate, formatCurrency } from "@/lib/utils";
 
 export interface TenantData {
   id: string;
@@ -33,9 +32,9 @@ export const useTenantData = () => {
 
   useEffect(() => {
     console.log("=== USETENANTDATA EFFECT TRIGGERED ===");
-    console.log("User:", user);
-    console.log("isTenant:", isTenant);
+    console.log("User:", !!user);
     console.log("User ID:", user?.id);
+    console.log("isTenant:", isTenant);
 
     if (!user) {
       console.log("No user found, setting tenant to null");
@@ -53,7 +52,6 @@ export const useTenantData = () => {
     }
 
     console.log("User is a tenant, fetching tenant data...");
-    // Toujours récupérer les données fraîches depuis la base de données
     fetchTenantData();
   }, [user?.id, isTenant]);
 
@@ -65,14 +63,13 @@ export const useTenantData = () => {
     }
 
     try {
-      console.log("=== FETCHING TENANT DATA WITH SINGLE QUERY ===");
+      console.log("=== FETCHING TENANT DATA ===");
       console.log("User ID:", user.id);
-      console.log("User email:", user.email);
       
       setIsLoading(true);
       setHasError(false);
 
-      // Récupérer les données du profil
+      // Étape 1: Récupérer les données du profil
       console.log("Step 1: Fetching profile data...");
       const { data: profileData, error: profileError } = await supabase
         .from('profiles')
@@ -81,17 +78,21 @@ export const useTenantData = () => {
         .maybeSingle();
         
       console.log("Profile data:", profileData);
-      console.log("Profile error:", profileError);
+      
+      if (profileError) {
+        console.error("Profile error:", profileError);
+        // Continuer même en cas d'erreur de profil
+      }
       
       // Vérifier que l'utilisateur est bien un locataire
-      if (!profileData?.is_tenant_user) {
+      if (profileData && !profileData.is_tenant_user) {
         console.log("User is not a tenant user according to profile");
         setTenant(null);
         setIsLoading(false);
         return;
       }
       
-      // REQUÊTE UNIQUE : Récupérer les données du tenant avec la propriété en JOIN
+      // Étape 2: Récupérer les données du tenant avec la propriété
       console.log("Step 2: Fetching tenant data with property...");
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
@@ -109,26 +110,20 @@ export const useTenantData = () => {
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
 
-      console.log("=== SINGLE QUERY RESULT ===");
-      console.log("Data:", tenantData);
-      console.log("Error:", tenantError);
+      console.log("Tenant query result:", { data: tenantData, error: tenantError });
 
       if (tenantError) {
         console.error("Error fetching tenant data:", tenantError);
         setHasError(true);
         setTenant(null);
+        setIsLoading(false);
         return;
       }
 
       if (!tenantData) {
         console.log("No tenant data found for user:", user.id);
         setTenant(null);
-        
-        toast({
-          title: "Profil locataire non trouvé",
-          description: "Aucun profil locataire n'a été trouvé pour votre compte. Contactez votre gestionnaire.",
-          variant: "destructive",
-        });
+        setIsLoading(false);
         return;
       }
 
@@ -137,36 +132,25 @@ export const useTenantData = () => {
         ? `${profileData.first_name} ${profileData.last_name}` 
         : tenantData.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
-      // Gérer les données de propriété - s'assurer qu'on a le bon format
+      // Gérer les données de propriété
       let propertyData: { name: string } | null = null;
       
-      console.log("Step 3: Processing property data...");
-      console.log("Raw properties data:", tenantData.properties);
-      
       if (tenantData.properties) {
-        // Si c'est un tableau, prendre le premier élément
         if (Array.isArray(tenantData.properties)) {
           const firstProperty = tenantData.properties[0];
-          console.log("Property is array, first element:", firstProperty);
           if (firstProperty && typeof firstProperty === 'object' && firstProperty !== null) {
-            // Type assertion sécurisée après vérification
             const propertyObj = firstProperty as Record<string, any>;
             if ('name' in propertyObj) {
               propertyData = { name: String(propertyObj.name || "") };
             }
           }
-        } 
-        // Si c'est déjà un objet
-        else if (typeof tenantData.properties === 'object' && tenantData.properties !== null) {
+        } else if (typeof tenantData.properties === 'object' && tenantData.properties !== null) {
           const propertyObj = tenantData.properties as Record<string, any>;
-          console.log("Property is object:", propertyObj);
           if ('name' in propertyObj) {
             propertyData = { name: String(propertyObj.name || "") };
           }
         }
       }
-      
-      console.log("Processed property data:", propertyData);
       
       // Construire l'objet final
       const finalTenantData: TenantData = {
@@ -178,26 +162,16 @@ export const useTenantData = () => {
         properties: propertyData
       };
 
-      console.log("=== FINAL TENANT DATA WITH SINGLE QUERY ===");
-      console.log("Tenant ID:", finalTenantData.id);
-      console.log("Property ID:", finalTenantData.property_id);
-      console.log("Properties object:", finalTenantData.properties);
-      console.log("Property name:", finalTenantData.properties?.name);
-      console.log("Complete final data:", finalTenantData);
+      console.log("=== FINAL TENANT DATA READY ===");
+      console.log("Setting tenant data:", finalTenantData);
       
       setTenant(finalTenantData);
-      console.log("Tenant data set successfully");
+      setHasError(false);
       
     } catch (error) {
       console.error('EXCEPTION in fetchTenantData:', error);
       setHasError(true);
       setTenant(null);
-      
-      toast({
-        title: "Erreur",
-        description: "Impossible de récupérer les données locataire. Veuillez réessayer.",
-        variant: "destructive",
-      });
     } finally {
       console.log("Setting loading to false");
       setIsLoading(false);
@@ -205,7 +179,7 @@ export const useTenantData = () => {
   };
 
   console.log("=== USETENANTDATA HOOK STATE ===");
-  console.log("tenant:", tenant);
+  console.log("tenant exists:", !!tenant);
   console.log("isLoading:", isLoading);
   console.log("hasError:", hasError);
 

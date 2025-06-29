@@ -14,42 +14,41 @@ export const TenantDashboard = () => {
   const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard } = useTenantDashboard();
   const [loadingTimeout, setLoadingTimeout] = useState(false);
 
-  console.log("=== TENANT DASHBOARD RENDER ===");
-  console.log("TenantDashboard - tenant:", tenant);
+  console.log("=== TENANT DASHBOARD RENDER DEBUG ===");
+  console.log("TenantDashboard - tenant exists:", !!tenant);
+  console.log("TenantDashboard - tenant ID:", tenant?.id);
   console.log("TenantDashboard - isLoading:", isLoading);
-  console.log("TenantDashboard - communications:", communications?.length || 0);
-  console.log("TenantDashboard - maintenanceRequests:", maintenanceRequests?.length || 0);
-  console.log("TenantDashboard - documents:", documents?.length || 0);
-  console.log("TenantDashboard - leaseStatus:", leaseStatus);
+  console.log("TenantDashboard - loadingTimeout:", loadingTimeout);
+  console.log("TenantDashboard - will render dashboard:", !isLoading && !!tenant);
 
-  // Timeout for loading state
+  // Timeout réduit pour un meilleur UX
   useEffect(() => {
     if (isLoading) {
-      console.log("Setting up loading timeout...");
+      console.log("Setting up loading timeout (8 seconds)...");
       const timer = setTimeout(() => {
-        console.log("Loading timeout triggered");
+        console.log("Loading timeout triggered after 8 seconds");
         setLoadingTimeout(true);
-      }, 10000); // Reduced to 10 seconds
+      }, 8000); // Réduit à 8 secondes
 
       return () => {
         console.log("Clearing loading timeout");
         clearTimeout(timer);
       };
     } else {
-      console.log("Clearing loading timeout state");
+      console.log("Not loading, clearing timeout state");
       setLoadingTimeout(false);
     }
   }, [isLoading]);
 
-  // Show loading state only for a reasonable time
-  if (isLoading && !loadingTimeout) {
-    console.log("Showing loading state");
+  // CORRECTION: Afficher le loading seulement si vraiment nécessaire
+  if (isLoading && !loadingTimeout && !tenant) {
+    console.log("RENDER: Showing loading state");
     return <DashboardLoading />;
   }
 
-  // Show error state if loading takes too long
-  if (loadingTimeout) {
-    console.log("Showing timeout error state");
+  // Afficher l'erreur de timeout seulement si on a vraiment attendu trop longtemps
+  if (loadingTimeout && !tenant) {
+    console.log("RENDER: Showing timeout error state");
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
@@ -69,6 +68,7 @@ export const TenantDashboard = () => {
               <div className="text-center">
                 <Button 
                   onClick={() => {
+                    console.log("User clicked retry button");
                     setLoadingTimeout(false);
                     refreshDashboard();
                   }}
@@ -90,41 +90,48 @@ export const TenantDashboard = () => {
     );
   }
 
-  // Show no tenant profile if tenant is null/undefined
-  if (!tenant) {
-    console.log("No tenant found, showing NoTenantProfile");
+  // CORRECTION: Afficher NoTenantProfile seulement si on n'est pas en train de charger
+  if (!tenant && !isLoading) {
+    console.log("RENDER: No tenant found, showing NoTenantProfile");
     return <NoTenantProfile />;
   }
 
-  console.log("Rendering full tenant dashboard");
-  return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-6 max-w-7xl">
-      <DashboardHeader 
-        tenantName={tenant.name || ""}
-        firstName={tenant.firstName}
-        lastName={tenant.lastName}
-        refreshDashboard={refreshDashboard}
-        onOrderChange={() => {}} // Not needed in simplified version
-        onVisibilityChange={() => {}} // Not needed in simplified version
-        currentOrder={[]}
-        hiddenSections={[]}
-      />
-      
-      <motion.div 
-        className="space-y-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        <SimplifiedTenantDashboardContainer 
-          tenant={tenant}
-          communications={communications}
-          maintenanceRequests={maintenanceRequests}
-          documents={documents}
-          leaseStatus={leaseStatus}
+  // CORRECTION: Afficher le dashboard dès que le tenant est disponible
+  if (tenant) {
+    console.log("RENDER: Rendering full tenant dashboard");
+    return (
+      <div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-6 max-w-7xl">
+        <DashboardHeader 
+          tenantName={tenant.name || ""}
+          firstName={tenant.firstName}
+          lastName={tenant.lastName}
           refreshDashboard={refreshDashboard}
+          onOrderChange={() => {}} // Not needed in simplified version
+          onVisibilityChange={() => {}} // Not needed in simplified version
+          currentOrder={[]}
+          hiddenSections={[]}
         />
-      </motion.div>
-    </div>
-  );
+        
+        <motion.div 
+          className="space-y-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <SimplifiedTenantDashboardContainer 
+            tenant={tenant}
+            communications={communications}
+            maintenanceRequests={maintenanceRequests}
+            documents={documents}
+            leaseStatus={leaseStatus}
+            refreshDashboard={refreshDashboard}
+          />
+        </motion.div>
+      </div>
+    );
+  }
+
+  // Fallback - ne devrait jamais être atteint
+  console.log("RENDER: Fallback loading state");
+  return <DashboardLoading />;
 };
