@@ -91,7 +91,7 @@ export const SimplifiedTenantDashboardContainer = ({
     
     console.log("Final unified counts:", counts);
     return counts;
-  }, [leaseStatus.daysLeft, leaseStatus.status, maintenanceRequests, documents]); // Dépendances stables
+  }, [leaseStatus.daysLeft, leaseStatus.status, maintenanceRequests, documents]);
 
   // Memoized function to get contextual count for active tab
   const getCountForTab = useMemo(() => {
@@ -116,32 +116,40 @@ export const SimplifiedTenantDashboardContainer = ({
   }, [activeTab, dynamicCounts]);
 
   // Memoized nav items to prevent recreation on every render
-  const navItems = useMemo(() => [
-    { 
-      name: t('overview'), 
-      value: "overview", 
-      icon: Home,
-      count: getCountForTab('overview')
-    },
-    { 
-      name: t('maintenance'), 
-      value: "maintenance", 
-      icon: Wrench,
-      count: getCountForTab('maintenance')
-    },
-    { 
-      name: t('documents'), 
-      value: "documents", 
-      icon: FileText,
-      count: getCountForTab('documents')
-    },
-    { 
-      name: t('settings'), 
-      value: "settings", 
-      icon: Settings,
-      count: getCountForTab('settings')
-    },
-  ], [t, getCountForTab]);
+  const navItems = useMemo(() => {
+    // Safely get translation strings
+    const overviewText = typeof t === 'function' ? t('overview') : 'Aperçu';
+    const maintenanceText = typeof t === 'function' ? t('maintenance') : 'Maintenance';
+    const documentsText = typeof t === 'function' ? t('documents') : 'Documents';
+    const settingsText = typeof t === 'function' ? t('settings') : 'Paramètres';
+
+    return [
+      { 
+        name: overviewText, 
+        value: "overview", 
+        icon: Home,
+        count: getCountForTab('overview')
+      },
+      { 
+        name: maintenanceText, 
+        value: "maintenance", 
+        icon: Wrench,
+        count: getCountForTab('maintenance')
+      },
+      { 
+        name: documentsText, 
+        value: "documents", 
+        icon: FileText,
+        count: getCountForTab('documents')
+      },
+      { 
+        name: settingsText, 
+        value: "settings", 
+        icon: Settings,
+        count: getCountForTab('settings')
+      },
+    ];
+  }, [getCountForTab]);
 
   const renderActiveSection = () => {
     switch (activeTab) {

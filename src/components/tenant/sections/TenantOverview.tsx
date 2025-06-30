@@ -24,6 +24,16 @@ export const TenantOverview = ({
 }: TenantOverviewProps) => {
   const { t } = useLocale();
 
+  // Safely get translation strings with fallbacks
+  const getTranslation = (key: string, fallback: string) => {
+    try {
+      return typeof t === 'function' ? t(key) : fallback;
+    } catch (error) {
+      console.warn(`Translation error for key: ${key}`, error);
+      return fallback;
+    }
+  };
+
   const getLeaseStatusColor = () => {
     switch (leaseStatus.status) {
       case 'expired': return 'bg-red-500/10 text-red-700 border-red-200';
@@ -69,6 +79,14 @@ export const TenantOverview = ({
     return "Propriété non disponible";
   };
 
+  const getLeaseStatusText = () => {
+    switch (leaseStatus.status) {
+      case 'expired': return getTranslation('leaseExpired', 'Bail expiré');
+      case 'expiring': return getTranslation('leaseExpiring', 'Bail bientôt expiré');
+      default: return getTranslation('leaseActive', 'Bail actif');
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Status Cards Grid - 2 columns */}
@@ -84,23 +102,21 @@ export const TenantOverview = ({
             <CardHeader className="relative">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <Calendar className="h-5 w-5 text-blue-600" />
-                {t('leaseStatus')}
+                {getTranslation('leaseStatus', 'Statut du bail')}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative space-y-3">
               <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${getLeaseStatusColor()}`}>
                 {getLeaseStatusIcon()}
                 <span className="font-medium">
-                  {leaseStatus.status === 'expired' ? t('leaseExpired') :
-                   leaseStatus.status === 'expiring' ? t('leaseExpiring') :
-                   t('leaseActive')}
+                  {getLeaseStatusText()}
                 </span>
               </div>
               <div className="space-y-1 text-sm text-gray-600">
-                <p><strong>{t('leaseStart')}:</strong> {formatDate(tenant.lease_start)}</p>
-                <p><strong>{t('leaseEnd')}:</strong> {formatDate(tenant.lease_end)}</p>
+                <p><strong>{getTranslation('leaseStart', 'Début du bail')}:</strong> {formatDate(tenant.lease_start)}</p>
+                <p><strong>{getTranslation('leaseEnd', 'Fin du bail')}:</strong> {formatDate(tenant.lease_end)}</p>
                 {leaseStatus.status !== 'expired' && (
-                  <p><strong>{t('daysRemaining')}:</strong> {leaseStatus.daysLeft} jours</p>
+                  <p><strong>{getTranslation('daysRemaining', 'Jours restants')}:</strong> {leaseStatus.daysLeft} jours</p>
                 )}
               </div>
             </CardContent>
@@ -118,20 +134,20 @@ export const TenantOverview = ({
             <CardHeader className="relative">
               <CardTitle className="flex items-center gap-2 text-lg">
                 <AlertTriangle className="h-5 w-5 text-orange-600" />
-                {t('maintenance')}
+                {getTranslation('maintenance', 'Maintenance')}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative">
               <div className="flex items-center justify-between">
                 <span className="text-2xl font-bold text-gray-900">{pendingRequests}</span>
                 <Badge variant={pendingRequests > 0 ? "destructive" : "secondary"}>
-                  {pendingRequests > 0 ? t('pending') : t('allGood')}
+                  {pendingRequests > 0 ? getTranslation('pending', 'En attente') : getTranslation('allGood', 'Tout va bien')}
                 </Badge>
               </div>
               <p className="text-sm text-gray-600 mt-2">
                 {pendingRequests > 0 
-                  ? `${pendingRequests} ${t('pendingRequests').toLowerCase()}`
-                  : t('noMaintenanceIssues')
+                  ? `${pendingRequests} ${getTranslation('pendingRequests', 'demandes en attente').toLowerCase()}`
+                  : getTranslation('noMaintenanceIssues', 'Aucun problème de maintenance')
                 }
               </p>
             </CardContent>
@@ -147,7 +163,7 @@ export const TenantOverview = ({
       >
         <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
           <CardHeader>
-            <CardTitle className="text-lg">{t('recentActivity')}</CardTitle>
+            <CardTitle className="text-lg">{getTranslation('recentActivity', 'Activité récente')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -166,7 +182,7 @@ export const TenantOverview = ({
               ))}
 
               {maintenanceRequests.length === 0 && (
-                <p className="text-center text-gray-500 py-4">{t('noRecentActivity')}</p>
+                <p className="text-center text-gray-500 py-4">{getTranslation('noRecentActivity', 'Aucune activité récente')}</p>
               )}
             </div>
           </CardContent>
