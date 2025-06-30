@@ -2,11 +2,13 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
 import { Home, Wrench, FileText, Settings } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useSafeTranslation } from "@/hooks/useSafeTranslation";
 import { TenantOverview } from "./sections/TenantOverview";
 import { TenantMaintenanceSection } from "./sections/TenantMaintenanceSection";
 import { TenantDocumentsSection } from "./sections/TenantDocumentsSection";
 import { TenantSettingsSection } from "./sections/TenantSettingsSection";
+import { ErrorBoundary } from "@/components/common/ErrorBoundary";
+import { ProgressiveLoader } from "./dashboard/ProgressiveLoader";
 import { motion } from "framer-motion";
 import type { Communication, MaintenanceRequest, TenantDocument } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
@@ -23,7 +25,7 @@ interface SimplifiedTenantDashboardContainerProps {
 // Helper function to format days counter
 const formatDaysCounter = (daysLeft: number, status: 'active' | 'expiring' | 'expired'): string | undefined => {
   if (status === 'expired') {
-    return undefined; // Don't show counter for expired leases
+    return undefined;
   }
   
   if (status === 'active' && daysLeft > 0) {
@@ -56,59 +58,76 @@ export const SimplifiedTenantDashboardContainer = ({
   leaseStatus,
   refreshDashboard
 }: SimplifiedTenantDashboardContainerProps) => {
-  const { t } = useLocale();
+  const { t } = useSafeTranslation();
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem('tenantDashboardActiveTab') || 'overview';
+    try {
+      return localStorage.getItem('tenantDashboardActiveTab') || 'overview';
+    } catch {
+      return 'overview';
+    }
   });
 
-  // Save active tab to localStorage
+  // Save active tab to localStorage with error handling
   useEffect(() => {
-    localStorage.setItem('tenantDashboardActiveTab', activeTab);
+    try {
+      localStorage.setItem('tenantDashboardActiveTab', activeTab);
+    } catch (error) {
+      console.warn('Failed to save active tab to localStorage:', error);
+    }
   }, [activeTab]);
 
   // Memoize dynamic counts to prevent recalculations and ensure consistency
   const dynamicCounts = useMemo(() => {
     console.log("=== CALCULATING UNIFIED DYNAMIC COUNTS ===");
     console.log("Maintenance requests:", maintenanceRequests?.length || 0);
-    console.log("Maintenance requests statuses:", maintenanceRequests?.map(r => ({ id: r.id, status: r.status })) || []);
     
-    // Overview: Format days left with "j" suffix for active/expiring leases
-    const overviewCount = formatDaysCounter(leaseStatus.daysLeft, leaseStatus.status);
-    
-    // Maintenance: Use centralized calculation for consistency
-    const pendingMaintenance = calculatePendingMaintenance(maintenanceRequests || []);
-    console.log("Calculated pending maintenance:", pendingMaintenance);
-    
-    // Documents: Total documents
-    const documentsCount = documents?.length || 0;
+    try {
+      // Overview: Format days left with "j" suffix for active/expiring leases
+      const overviewCount = formatDaysCounter(leaseStatus.daysLeft, leaseStatus.status);
+      
+      // Maintenance: Use centralized calculation for consistency
+      const pendingMaintenance = calculatePendingMaintenance(maintenanceRequests || []);
+      console.log("Calculated pending maintenance:", pendingMaintenance);
+      
+      // Documents: Total documents
+      const documentsCount = documents?.length || 0;
 
-    const counts = {
-      overview: overviewCount,
-      maintenance: pendingMaintenance,
-      documents: documentsCount,
-      settings: undefined // No count needed for settings
-    };
-    
-    console.log("Final unified counts:", counts);
-    return counts;
+      const counts = {
+        overview: overviewCount,
+        maintenance: pendingMaintenance,
+        documents: documentsCount,
+        settings: undefined
+      };
+      
+      console.log("Final unified counts:", counts);
+      return counts;
+    } catch (error) {
+      console.error("Error calculating dynamic counts:", error);
+      return {
+        overview: undefined,
+        maintenance: 0,
+        documents: 0,
+        settings: undefined
+      };
+    }
   }, [leaseStatus.daysLeft, leaseStatus.status, maintenanceRequests, documents]);
 
   // Memoized function to get contextual count for active tab
   const getCountForTab = useMemo(() => {
     return (tabValue: string) => {
       if (tabValue !== activeTab) {
-        return undefined; // Don't show count for inactive tabs
+        return undefined;
       }
       
       switch (tabValue) {
         case 'overview':
           return dynamicCounts.overview;
         case 'maintenance':
-          return dynamicCounts.maintenance || undefined; // Convert 0 to undefined for cleaner display
+          return dynamicCounts.maintenance || undefined;
         case 'documents':
           return dynamicCounts.documents || undefined;
         case 'settings':
-          return undefined; // No count for settings
+          return undefined;
         default:
           return undefined;
       }
@@ -117,107 +136,132 @@ export const SimplifiedTenantDashboardContainer = ({
 
   // Memoized nav items to prevent recreation on every render
   const navItems = useMemo(() => {
-    // Safely get translation strings
-    const overviewText = typeof t === 'function' ? t('overview') : 'Aperçu';
-    const maintenanceText = typeof t === 'function' ? t('maintenance') : 'Maintenance';
-    const documentsText = typeof t === 'function' ? t('documents') : 'Documents';
-    const settingsText = typeof t === 'function' ? t('settings') : 'Paramètres';
-
-    return [
-      { 
-        name: overviewText, 
-        value: "overview", 
-        icon: Home,
-        count: getCountForTab('overview')
-      },
-      { 
-        name: maintenanceText, 
-        value: "maintenance", 
-        icon: Wrench,
-        count: getCountForTab('maintenance')
-      },
-      { 
-        name: documentsText, 
-        value: "documents", 
-        icon: FileText,
-        count: getCountForTab('documents')
-      },
-      { 
-        name: settingsText, 
-        value: "settings", 
-        icon: Settings,
-        count: getCountForTab('settings')
-      },
-    ];
-  }, [getCountForTab]);
+    try {
+      return [
+        { 
+          name: t('overview', 'Aperçu'), 
+          value: "overview", 
+          icon: Home,
+          count: getCountForTab('overview')
+        },
+        { 
+          name: t('maintenance', 'Maintenance'), 
+          value: "maintenance", 
+          icon: Wrench,
+          count: getCountForTab('maintenance')
+        },
+        { 
+          name: t('documents', 'Documents'), 
+          value: "documents", 
+          icon: FileText,
+          count: getCountForTab('documents')
+        },
+        { 
+          name: t('settings', 'Paramètres'), 
+          value: "settings", 
+          icon: Settings,
+          count: getCountForTab('settings')
+        },
+      ];
+    } catch (error) {
+      console.error("Error creating nav items:", error);
+      return [
+        { name: 'Aperçu', value: "overview", icon: Home, count: undefined },
+        { name: 'Maintenance', value: "maintenance", icon: Wrench, count: undefined },
+        { name: 'Documents', value: "documents", icon: FileText, count: undefined },
+        { name: 'Paramètres', value: "settings", icon: Settings, count: undefined },
+      ];
+    }
+  }, [getCountForTab, t]);
 
   const renderActiveSection = () => {
+    const sectionProps = {
+      tenant,
+      communications: communications || [],
+      maintenanceRequests: maintenanceRequests || [],
+      documents: documents || [],
+      leaseStatus,
+      refreshDashboard
+    };
+
     switch (activeTab) {
       case 'overview':
         return (
-          <TenantOverview 
-            tenant={tenant}
-            leaseStatus={leaseStatus}
-            maintenanceRequests={maintenanceRequests || []}
-            communications={communications || []}
-          />
+          <ErrorBoundary>
+            <TenantOverview 
+              tenant={tenant}
+              leaseStatus={leaseStatus}
+              maintenanceRequests={maintenanceRequests || []}
+              communications={communications || []}
+            />
+          </ErrorBoundary>
         );
       case 'maintenance':
         return (
-          <TenantMaintenanceSection 
-            requests={maintenanceRequests || []}
-            tenantId={tenant.id}
-            onMaintenanceUpdate={refreshDashboard}
-          />
+          <ErrorBoundary>
+            <TenantMaintenanceSection 
+              requests={maintenanceRequests || []}
+              tenantId={tenant.id}
+              onMaintenanceUpdate={refreshDashboard}
+            />
+          </ErrorBoundary>
         );
       case 'documents':
         return (
-          <TenantDocumentsSection 
-            documents={documents || []}
-            tenantId={tenant.id}
-            onDocumentUpdate={refreshDashboard}
-            tenant={tenant}
-          />
+          <ErrorBoundary>
+            <TenantDocumentsSection 
+              documents={documents || []}
+              tenantId={tenant.id}
+              onDocumentUpdate={refreshDashboard}
+              tenant={tenant}
+            />
+          </ErrorBoundary>
         );
       case 'settings':
         return (
-          <TenantSettingsSection 
-            tenant={tenant}
-            onSettingsUpdate={refreshDashboard}
-          />
+          <ErrorBoundary>
+            <TenantSettingsSection 
+              tenant={tenant}
+              onSettingsUpdate={refreshDashboard}
+            />
+          </ErrorBoundary>
         );
       default:
         return (
-          <TenantOverview 
-            tenant={tenant}
-            leaseStatus={leaseStatus}
-            maintenanceRequests={maintenanceRequests || []}
-            communications={communications || []}
-          />
+          <ErrorBoundary>
+            <TenantOverview 
+              tenant={tenant}
+              leaseStatus={leaseStatus}
+              maintenanceRequests={maintenanceRequests || []}
+              communications={communications || []}
+            />
+          </ErrorBoundary>
         );
     }
   };
 
   return (
     <div className="space-y-6 font-sans">
-      {/* TubelightNavBar */}
-      <TubelightNavBar
-        items={navItems}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        className="mb-8"
-      />
+      <ErrorBoundary>
+        <TubelightNavBar
+          items={navItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          className="mb-8"
+        />
+      </ErrorBoundary>
 
-      {/* Active Section Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-        className="min-h-[500px]"
-      >
-        {renderActiveSection()}
-      </motion.div>
+      <ProgressiveLoader delay={100}>
+        <motion.div
+          key={activeTab}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="min-h-[500px]"
+        >
+          {renderActiveSection()}
+        </motion.div>
+      </ProgressiveLoader>
     </div>
   );
 };

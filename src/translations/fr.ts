@@ -1,5 +1,3 @@
-
-
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -401,8 +399,19 @@ const translations = {
   hideFilters: "Masquer les filtres",
   showFilters: "Afficher les filtres",
   uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location",
-  manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location"
+  manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location",
+
+  // Additional error handling translations
+  dataIncomplete: "Données incomplètes",
+  tenantDataIncomplete: "Les données de votre profil locataire sont incomplètes.",
+  headerError: "Erreur lors du chargement de l'en-tête",
+  dashboardError: "Erreur lors du chargement du tableau de bord",
+  retry: "Réessayer",
+  errorOccurred: "Une erreur s'est produite",
+  loadingData: "Chargement des données...",
+  retryingAutomatically: "Tentative de récupération automatique...",
+  reloadPage: "Recharger la page",
+  errorDetails: "Détails de l'erreur"
 };
 
 export default translations;
-
