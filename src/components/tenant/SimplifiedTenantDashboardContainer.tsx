@@ -37,6 +37,14 @@ const formatDaysCounter = (daysLeft: number, status: 'active' | 'expiring' | 'ex
   return undefined;
 };
 
+// Centralized function to calculate pending maintenance requests
+const calculatePendingMaintenance = (requests: MaintenanceRequest[]): number => {
+  return requests.filter(req => {
+    const status = req.status?.toLowerCase();
+    return status === 'pending' || status === 'in progress' || status === 'en attente' || status === 'en cours';
+  }).length;
+};
+
 export const SimplifiedTenantDashboardContainer = ({ 
   tenant,
   communications,
@@ -55,34 +63,34 @@ export const SimplifiedTenantDashboardContainer = ({
     localStorage.setItem('tenantDashboardActiveTab', activeTab);
   }, [activeTab]);
 
-  // Calculate dynamic counts based on real data
+  // Memoize dynamic counts to prevent recalculations and ensure consistency
   const dynamicCounts = useMemo(() => {
-    console.log("=== CALCULATING DYNAMIC COUNTS ===");
-    console.log("Lease status:", leaseStatus);
-    console.log("Days left:", leaseStatus.daysLeft);
-    console.log("Status:", leaseStatus.status);
+    console.log("=== CALCULATING UNIFIED DYNAMIC COUNTS ===");
+    console.log("Maintenance requests:", maintenanceRequests.length);
+    console.log("Maintenance requests statuses:", maintenanceRequests.map(r => ({ id: r.id, status: r.status })));
     
     // Overview: Format days left with "j" suffix for active/expiring leases
     const overviewCount = formatDaysCounter(leaseStatus.daysLeft, leaseStatus.status);
-    console.log("Overview count formatted:", overviewCount);
     
-    // Maintenance: Pending requests
-    const pendingMaintenance = maintenanceRequests.filter(req => 
-      req.status === 'Pending' || req.status === 'pending' || req.status === 'In Progress'
-    ).length;
+    // Maintenance: Use centralized calculation for consistency
+    const pendingMaintenance = calculatePendingMaintenance(maintenanceRequests);
+    console.log("Calculated pending maintenance:", pendingMaintenance);
     
     // Documents: Total documents
     const documentsCount = documents.length;
 
-    return {
+    const counts = {
       overview: overviewCount,
       maintenance: pendingMaintenance,
       documents: documentsCount,
       settings: undefined // No count needed for settings
     };
+    
+    console.log("Final unified counts:", counts);
+    return counts;
   }, [leaseStatus, maintenanceRequests, documents]);
 
-  // Function to get contextual count for active tab
+  // Memoized function to get contextual count for active tab
   const getCountForTab = useMemo(() => {
     return (tabValue: string) => {
       if (tabValue !== activeTab) {
@@ -93,9 +101,9 @@ export const SimplifiedTenantDashboardContainer = ({
         case 'overview':
           return dynamicCounts.overview;
         case 'maintenance':
-          return dynamicCounts.maintenance;
+          return dynamicCounts.maintenance || undefined; // Convert 0 to undefined for cleaner display
         case 'documents':
-          return dynamicCounts.documents;
+          return dynamicCounts.documents || undefined;
         case 'settings':
           return undefined; // No count for settings
         default:
@@ -104,7 +112,8 @@ export const SimplifiedTenantDashboardContainer = ({
     };
   }, [activeTab, dynamicCounts]);
 
-  const navItems = [
+  // Memoized nav items to prevent recreation on every render
+  const navItems = useMemo(() => [
     { 
       name: t('overview'), 
       value: "overview", 
@@ -129,7 +138,7 @@ export const SimplifiedTenantDashboardContainer = ({
       icon: Settings,
       count: getCountForTab('settings')
     },
-  ];
+  ], [t, getCountForTab]);
 
   const renderActiveSection = () => {
     switch (activeTab) {

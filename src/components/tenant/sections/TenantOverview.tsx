@@ -5,6 +5,7 @@ import { Building, Calendar, AlertTriangle, CheckCircle, XCircle } from "lucide-
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { formatDate } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useMemo } from "react";
 import type { Communication, MaintenanceRequest } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
 
@@ -39,9 +40,18 @@ export const TenantOverview = ({
     }
   };
 
-  const pendingRequests = maintenanceRequests.filter(req => 
-    req.status === 'Pending' || req.status === 'pending'
-  ).length;
+  // Memoized calculation to ensure consistency with container
+  const pendingRequests = useMemo(() => {
+    const pending = maintenanceRequests.filter(req => {
+      const status = req.status?.toLowerCase();
+      return status === 'pending' || status === 'in progress' || status === 'en attente' || status === 'en cours';
+    }).length;
+    
+    console.log("TenantOverview - Calculated pending requests:", pending);
+    console.log("TenantOverview - Request statuses:", maintenanceRequests.map(r => r.status));
+    
+    return pending;
+  }, [maintenanceRequests]);
 
   const getPropertyDisplayName = () => {
     console.log("=== TenantOverview getPropertyDisplayName ===");
@@ -50,7 +60,6 @@ export const TenantOverview = ({
     console.log("Properties object:", tenant.properties);
     console.log("Property name:", tenant.properties?.name);
     
-    // Maintenant que la politique RLS est correcte, les données devraient être disponibles
     if (tenant.properties?.name) {
       console.log("✅ Property name found:", tenant.properties.name);
       return tenant.properties.name;
@@ -151,7 +160,7 @@ export const TenantOverview = ({
                     <p className="text-xs text-gray-500">{formatDate(request.created_at)}</p>
                   </div>
                   <Badge variant="secondary" className="text-xs">
-                    {t(request.status.toLowerCase())}
+                    {request.status}
                   </Badge>
                 </div>
               ))}

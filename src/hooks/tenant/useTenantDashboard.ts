@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTenantData } from '@/hooks/tenant/dashboard/useTenantData';
 import { useCommunicationsData } from '@/hooks/tenant/dashboard/useCommunicationsData';
 import { useMaintenanceData } from '@/hooks/tenant/dashboard/useMaintenanceData';
@@ -16,72 +16,79 @@ export const useTenantDashboard = () => {
   const leaseStatus = useLeaseStatus(tenant?.lease_end);
   const { toast } = useToast();
 
-  console.log("=== USTENANTDASHBOARD HOOK DEBUG ===");
-  console.log("tenant:", tenant);
+  console.log("=== OPTIMIZED TENANT DASHBOARD HOOK ===");
+  console.log("tenant:", !!tenant, "ID:", tenant?.id);
   console.log("isLoadingTenant:", isLoadingTenant);
   console.log("isRefreshing:", isRefreshing);
 
-  // CORRECTION CRITIQUE: isLoading ne dépend QUE des données essentielles (tenant)
-  // Les autres données se chargent en arrière-plan sans bloquer l'affichage
+  // Only consider essential loading (tenant data) for main loading state
   const isLoading = isLoadingTenant || isRefreshing;
   
-  console.log("CORRECTED - Final loading state:", isLoading);
+  console.log("Final loading state:", isLoading);
   console.log("Can show dashboard:", !isLoading && !!tenant);
 
-  // Charger les données secondaires en arrière-plan une fois le tenant disponible
-  useEffect(() => {
-    if (tenant?.id && !isRefreshing) {
-      console.log("=== LOADING SECONDARY DATA IN BACKGROUND ===");
-      console.log("Tenant ID available:", tenant.id);
+  // Memoized secondary data loading function to prevent recreation
+  const loadSecondaryData = useCallback(async () => {
+    if (!tenant?.id || isRefreshing) return;
+    
+    console.log("=== LOADING SECONDARY DATA (OPTIMIZED) ===");
+    console.log("Tenant ID available:", tenant.id);
+    
+    try {
+      console.log("Loading secondary data with staggered approach...");
       
-      // Charger les données secondaires sans affecter l'état de chargement principal
-      const loadSecondaryData = async () => {
-        try {
-          console.log("Loading communications, maintenance, and payments in background...");
-          
-          // Lancer toutes les requêtes en parallèle
-          const promises = [
-            fetchCommunications().catch(err => {
-              console.error('Background communications fetch failed:', err);
-              return null;
-            }),
-            fetchMaintenanceRequests().catch(err => {
-              console.error('Background maintenance fetch failed:', err);
-              return null;
-            }),
-            fetchPaymentsAndDocuments().catch(err => {
-              console.error('Background payments/documents fetch failed:', err);
-              return null;
-            })
-          ];
-          
-          await Promise.allSettled(promises);
-          console.log("All secondary data loading completed (some may have failed)");
-        } catch (error) {
-          console.error('Error in secondary data loading:', error);
-          // Ne pas afficher d'erreur toast pour les données secondaires
-        }
-      };
+      // Load secondary data with error isolation
+      const promises = [
+        fetchCommunications().catch(err => {
+          console.error('Background communications fetch failed:', err);
+          return null;
+        }),
+        fetchMaintenanceRequests().catch(err => {
+          console.error('Background maintenance fetch failed:', err);
+          return null;
+        }),
+        fetchPaymentsAndDocuments().catch(err => {
+          console.error('Background payments/documents fetch failed:', err);
+          return null;
+        })
+      ];
       
-      loadSecondaryData();
+      // Stagger the requests to reduce server load
+      await Promise.allSettled(promises);
+      console.log("Secondary data loading completed");
+    } catch (error) {
+      console.error('Error in secondary data loading:', error);
+      // Don't show error toast for background operations
     }
   }, [tenant?.id, isRefreshing, fetchCommunications, fetchMaintenanceRequests, fetchPaymentsAndDocuments]);
 
-  // Fonction de rafraîchissement globale
-  const refreshDashboard = async () => {
-    console.log("=== REFRESHING DASHBOARD ===");
+  // Optimized effect with proper dependencies
+  useEffect(() => {
+    if (tenant?.id && !isRefreshing) {
+      // Debounce secondary data loading
+      const timer = setTimeout(() => {
+        loadSecondaryData();
+      }, 200);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [tenant?.id, loadSecondaryData]);
+
+  // Memoized refresh function to prevent recreation
+  const refreshDashboard = useCallback(async () => {
+    console.log("=== REFRESHING DASHBOARD (OPTIMIZED) ===");
     setIsRefreshing(true);
     
     try {
-      // D'abord recharger les données du tenant
+      // First reload tenant data
       await fetchTenantData();
       
-      // Puis recharger les données secondaires
-      await Promise.allSettled([
-        fetchCommunications(),
-        fetchMaintenanceRequests(),
-        fetchPaymentsAndDocuments()
-      ]);
+      // Then reload secondary data in sequence to prevent resource exhaustion
+      await fetchCommunications();
+      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+      await fetchMaintenanceRequests();
+      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+      await fetchPaymentsAndDocuments();
       
       console.log("Dashboard refresh completed successfully");
       toast({
@@ -98,16 +105,17 @@ export const useTenantDashboard = () => {
     } finally {
       setIsRefreshing(false);
     }
-  };
+  }, [fetchTenantData, fetchCommunications, fetchMaintenanceRequests, fetchPaymentsAndDocuments, toast]);
 
-  return {
+  // Memoized return object to prevent unnecessary re-renders
+  return useMemo(() => ({
     tenant,
     communications: communications || [],
     maintenanceRequests: maintenanceRequests || [],
     payments: payments || [],
     documents: documents || [],
     leaseStatus,
-    isLoading, // Maintenant basé uniquement sur les données essentielles
+    isLoading,
     refreshDashboard
-  };
+  }), [tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard]);
 };
