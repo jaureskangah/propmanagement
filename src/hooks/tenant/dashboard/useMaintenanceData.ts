@@ -12,16 +12,26 @@ export const useMaintenanceData = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   
-  // Add ref to prevent multiple simultaneous requests
+  // Utiliser des refs pour éviter les re-créations de fonctions
   const isRequestInProgress = useRef(false);
   const retryCount = useRef(0);
   const maxRetries = 3;
+  const lastFetchTime = useRef(0);
 
+  // Fonction stable avec useCallback pour éviter les re-créations
   const fetchMaintenanceRequests = useCallback(async () => {
     if (!user || isRequestInProgress.current) {
       console.log("MaintenanceData - Skipping fetch: no user or request in progress");
       return;
     }
+
+    // Éviter les appels trop fréquents (moins de 1 seconde d'intervalle)
+    const now = Date.now();
+    if (now - lastFetchTime.current < 1000) {
+      console.log("MaintenanceData - Skipping fetch: too frequent");
+      return;
+    }
+    lastFetchTime.current = now;
     
     isRequestInProgress.current = true;
     setIsLoading(true);
@@ -52,7 +62,7 @@ export const useMaintenanceData = () => {
       
       // Add timeout to prevent hanging requests
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // Réduire le timeout
       
       const { data, error } = await supabase
         .from('maintenance_requests')
@@ -93,11 +103,11 @@ export const useMaintenanceData = () => {
         // Implement exponential backoff for network errors
         if (retryCount.current < maxRetries) {
           retryCount.current++;
-          const delay = Math.pow(2, retryCount.current) * 1000; // 2s, 4s, 8s
+          const delay = Math.pow(2, retryCount.current) * 2000; // 4s, 8s, 16s
           console.log(`MaintenanceData - Retrying in ${delay}ms (attempt ${retryCount.current}/${maxRetries})`);
           
           setTimeout(() => {
-            if (user) { // Check user still exists before retry
+            if (user && !isRequestInProgress.current) { // Vérifier que pas déjà en cours
               fetchMaintenanceRequests();
             }
           }, delay);
@@ -118,21 +128,21 @@ export const useMaintenanceData = () => {
       setIsLoading(false);
       isRequestInProgress.current = false;
     }
-  }, [user, toast]);
+  }, [user, toast]); // Dépendances minimales et stables
 
-  // Debounced effect to prevent excessive API calls
+  // Effect simplifié sans dépendance sur fetchMaintenanceRequests
   useEffect(() => {
     if (!user) return;
     
-    // Debounce the initial fetch
+    // Debounce l'appel initial
     const debounceTimeout = setTimeout(() => {
       fetchMaintenanceRequests();
-    }, 100);
+    }, 300); // Augmenter le debounce
     
     return () => clearTimeout(debounceTimeout);
-  }, [user?.id, fetchMaintenanceRequests]);
+  }, [user?.id]); // Dépendance uniquement sur user.id
 
-  // Simplified realtime subscription with error handling
+  // Realtime subscription simplifiée
   useEffect(() => {
     if (!user) return;
     
@@ -148,15 +158,12 @@ export const useMaintenanceData = () => {
         (payload) => {
           console.log('MaintenanceData - Realtime update:', payload.eventType);
           
-          // Only refresh if this is relevant to current tenant
-          if (payload.new && 'tenant_id' in payload.new) {
-            // Debounce realtime updates to prevent spam
-            setTimeout(() => {
-              if (!isRequestInProgress.current) {
-                fetchMaintenanceRequests();
-              }
-            }, 500);
-          }
+          // Debounce realtime updates plus agressivement
+          setTimeout(() => {
+            if (!isRequestInProgress.current) {
+              fetchMaintenanceRequests();
+            }
+          }, 1000);
         }
       )
       .subscribe((status) => {
@@ -170,7 +177,7 @@ export const useMaintenanceData = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user, fetchMaintenanceRequests]);
+  }, [user?.id]); // Dépendance uniquement sur user.id
 
   return {
     maintenanceRequests,

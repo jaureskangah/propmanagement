@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import { TenantPayment, TenantDocument } from "@/types/tenant";
 import { useAuth } from "@/components/AuthProvider";
@@ -10,7 +10,11 @@ export const usePaymentsAndDocuments = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
-  const fetchPayments = async (tenantId: string) => {
+  // Utiliser des refs pour éviter les appels multiples
+  const isRequestInProgress = useRef(false);
+  const lastFetchTime = useRef(0);
+
+  const fetchPayments = useCallback(async (tenantId: string) => {
     try {
       console.log("Fetching payments for tenant:", tenantId);
       const { data, error } = await supabase
@@ -27,9 +31,9 @@ export const usePaymentsAndDocuments = () => {
       console.error('Error fetching payments:', error);
       setPayments([]);
     }
-  };
+  }, []);
 
-  const fetchDocuments = async (tenantId: string) => {
+  const fetchDocuments = useCallback(async (tenantId: string) => {
     try {
       console.log("Fetching documents for tenant:", tenantId);
       const { data, error } = await supabase
@@ -46,12 +50,22 @@ export const usePaymentsAndDocuments = () => {
       console.error('Error fetching documents:', error);
       setDocuments([]);
     }
-  };
+  }, []);
 
-  const fetchPaymentsAndDocuments = async () => {
-    if (!user) return;
+  const fetchPaymentsAndDocuments = useCallback(async () => {
+    if (!user || isRequestInProgress.current) return;
+
+    // Éviter les appels trop fréquents
+    const now = Date.now();
+    if (now - lastFetchTime.current < 1000) {
+      console.log("PaymentsAndDocuments - Skipping fetch: too frequent");
+      return;
+    }
+    lastFetchTime.current = now;
     
+    isRequestInProgress.current = true;
     setIsLoading(true);
+    
     try {
       console.log("Fetching tenant data for user:", user.id);
       
@@ -66,7 +80,6 @@ export const usePaymentsAndDocuments = () => {
         console.error('Error fetching tenant data:', tenantError);
         setPayments([]);
         setDocuments([]);
-        setIsLoading(false);
         return;
       }
 
@@ -75,26 +88,36 @@ export const usePaymentsAndDocuments = () => {
         console.log('No tenant found for user:', user.id);
         setPayments([]);
         setDocuments([]);
-        setIsLoading(false);
         return;
       }
       
       console.log("Found tenant ID:", tenantId);
-      await Promise.all([fetchPayments(tenantId), fetchDocuments(tenantId)]);
+      
+      // Fetch payments and documents with small delays
+      await fetchPayments(tenantId);
+      await new Promise(resolve => setTimeout(resolve, 100));
+      await fetchDocuments(tenantId);
+      
     } catch (error) {
       console.error('Error in fetchPaymentsAndDocuments:', error);
       setPayments([]);
       setDocuments([]);
     } finally {
       setIsLoading(false);
+      isRequestInProgress.current = false;
     }
-  };
+  }, [user, fetchPayments, fetchDocuments]);
 
   useEffect(() => {
     if (user) {
-      fetchPaymentsAndDocuments();
+      // Debounce l'appel initial
+      const debounceTimeout = setTimeout(() => {
+        fetchPaymentsAndDocuments();
+      }, 400); // Délai plus long pour éviter les conflits
+      
+      return () => clearTimeout(debounceTimeout);
     }
-  }, [user]);
+  }, [user?.id]); // Dépendance uniquement sur user.id
 
   return {
     payments,

@@ -37,10 +37,13 @@ const formatDaysCounter = (daysLeft: number, status: 'active' | 'expiring' | 'ex
   return undefined;
 };
 
-// Centralized function to calculate pending maintenance requests
+// Centralized and memoized function to calculate pending maintenance requests
 const calculatePendingMaintenance = (requests: MaintenanceRequest[]): number => {
+  if (!Array.isArray(requests) || requests.length === 0) return 0;
+  
   return requests.filter(req => {
-    const status = req.status?.toLowerCase();
+    if (!req.status) return false;
+    const status = req.status.toLowerCase();
     return status === 'pending' || status === 'in progress' || status === 'en attente' || status === 'en cours';
   }).length;
 };
@@ -66,18 +69,18 @@ export const SimplifiedTenantDashboardContainer = ({
   // Memoize dynamic counts to prevent recalculations and ensure consistency
   const dynamicCounts = useMemo(() => {
     console.log("=== CALCULATING UNIFIED DYNAMIC COUNTS ===");
-    console.log("Maintenance requests:", maintenanceRequests.length);
-    console.log("Maintenance requests statuses:", maintenanceRequests.map(r => ({ id: r.id, status: r.status })));
+    console.log("Maintenance requests:", maintenanceRequests?.length || 0);
+    console.log("Maintenance requests statuses:", maintenanceRequests?.map(r => ({ id: r.id, status: r.status })) || []);
     
     // Overview: Format days left with "j" suffix for active/expiring leases
     const overviewCount = formatDaysCounter(leaseStatus.daysLeft, leaseStatus.status);
     
     // Maintenance: Use centralized calculation for consistency
-    const pendingMaintenance = calculatePendingMaintenance(maintenanceRequests);
+    const pendingMaintenance = calculatePendingMaintenance(maintenanceRequests || []);
     console.log("Calculated pending maintenance:", pendingMaintenance);
     
     // Documents: Total documents
-    const documentsCount = documents.length;
+    const documentsCount = documents?.length || 0;
 
     const counts = {
       overview: overviewCount,
@@ -88,7 +91,7 @@ export const SimplifiedTenantDashboardContainer = ({
     
     console.log("Final unified counts:", counts);
     return counts;
-  }, [leaseStatus, maintenanceRequests, documents]);
+  }, [leaseStatus.daysLeft, leaseStatus.status, maintenanceRequests, documents]); // Dépendances stables
 
   // Memoized function to get contextual count for active tab
   const getCountForTab = useMemo(() => {
@@ -147,14 +150,14 @@ export const SimplifiedTenantDashboardContainer = ({
           <TenantOverview 
             tenant={tenant}
             leaseStatus={leaseStatus}
-            maintenanceRequests={maintenanceRequests}
-            communications={communications}
+            maintenanceRequests={maintenanceRequests || []}
+            communications={communications || []}
           />
         );
       case 'maintenance':
         return (
           <TenantMaintenanceSection 
-            requests={maintenanceRequests}
+            requests={maintenanceRequests || []}
             tenantId={tenant.id}
             onMaintenanceUpdate={refreshDashboard}
           />
@@ -162,7 +165,7 @@ export const SimplifiedTenantDashboardContainer = ({
       case 'documents':
         return (
           <TenantDocumentsSection 
-            documents={documents}
+            documents={documents || []}
             tenantId={tenant.id}
             onDocumentUpdate={refreshDashboard}
             tenant={tenant}
@@ -180,8 +183,8 @@ export const SimplifiedTenantDashboardContainer = ({
           <TenantOverview 
             tenant={tenant}
             leaseStatus={leaseStatus}
-            maintenanceRequests={maintenanceRequests}
-            communications={communications}
+            maintenanceRequests={maintenanceRequests || []}
+            communications={communications || []}
           />
         );
     }

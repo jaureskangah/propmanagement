@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useTenantData } from '@/hooks/tenant/dashboard/useTenantData';
 import { useCommunicationsData } from '@/hooks/tenant/dashboard/useCommunicationsData';
 import { useMaintenanceData } from '@/hooks/tenant/dashboard/useMaintenanceData';
@@ -16,6 +16,10 @@ export const useTenantDashboard = () => {
   const leaseStatus = useLeaseStatus(tenant?.lease_end);
   const { toast } = useToast();
 
+  // Utiliser des refs pour éviter les re-créations
+  const isSecondaryDataLoading = useRef(false);
+  const lastSecondaryDataLoad = useRef(0);
+
   console.log("=== OPTIMIZED TENANT DASHBOARD HOOK ===");
   console.log("tenant:", !!tenant, "ID:", tenant?.id);
   console.log("isLoadingTenant:", isLoadingTenant);
@@ -27,54 +31,68 @@ export const useTenantDashboard = () => {
   console.log("Final loading state:", isLoading);
   console.log("Can show dashboard:", !isLoading && !!tenant);
 
-  // Memoized secondary data loading function to prevent recreation
+  // Fonction stable pour charger les données secondaires
   const loadSecondaryData = useCallback(async () => {
-    if (!tenant?.id || isRefreshing) return;
+    if (!tenant?.id || isRefreshing || isSecondaryDataLoading.current) return;
+    
+    // Éviter les appels trop fréquents
+    const now = Date.now();
+    if (now - lastSecondaryDataLoad.current < 2000) {
+      console.log("Secondary data load skipped - too frequent");
+      return;
+    }
+    lastSecondaryDataLoad.current = now;
     
     console.log("=== LOADING SECONDARY DATA (OPTIMIZED) ===");
     console.log("Tenant ID available:", tenant.id);
     
+    isSecondaryDataLoading.current = true;
+    
     try {
       console.log("Loading secondary data with staggered approach...");
       
-      // Load secondary data with error isolation
+      // Load secondary data with error isolation and delays
       const promises = [
         fetchCommunications().catch(err => {
           console.error('Background communications fetch failed:', err);
           return null;
         }),
-        fetchMaintenanceRequests().catch(err => {
-          console.error('Background maintenance fetch failed:', err);
-          return null;
-        }),
-        fetchPaymentsAndDocuments().catch(err => {
-          console.error('Background payments/documents fetch failed:', err);
-          return null;
-        })
+        new Promise(resolve => setTimeout(resolve, 200)).then(() => 
+          fetchMaintenanceRequests().catch(err => {
+            console.error('Background maintenance fetch failed:', err);
+            return null;
+          })
+        ),
+        new Promise(resolve => setTimeout(resolve, 400)).then(() =>
+          fetchPaymentsAndDocuments().catch(err => {
+            console.error('Background payments/documents fetch failed:', err);
+            return null;
+          })
+        )
       ];
       
-      // Stagger the requests to reduce server load
       await Promise.allSettled(promises);
-      console.log("Secondary data loading completed");
+      console.log("All secondary data loading completed (some may have failed)");
     } catch (error) {
       console.error('Error in secondary data loading:', error);
-      // Don't show error toast for background operations
+    } finally {
+      isSecondaryDataLoading.current = false;
     }
   }, [tenant?.id, isRefreshing, fetchCommunications, fetchMaintenanceRequests, fetchPaymentsAndDocuments]);
 
-  // Optimized effect with proper dependencies
+  // Effect optimisé avec dépendances stables
   useEffect(() => {
     if (tenant?.id && !isRefreshing) {
-      // Debounce secondary data loading
+      // Debounce secondary data loading plus agressivement
       const timer = setTimeout(() => {
         loadSecondaryData();
-      }, 200);
+      }, 500);
       
       return () => clearTimeout(timer);
     }
-  }, [tenant?.id, loadSecondaryData]);
+  }, [tenant?.id, isRefreshing]); // Retirer loadSecondaryData des dépendances
 
-  // Memoized refresh function to prevent recreation
+  // Fonction de refresh stable
   const refreshDashboard = useCallback(async () => {
     console.log("=== REFRESHING DASHBOARD (OPTIMIZED) ===");
     setIsRefreshing(true);
@@ -83,11 +101,11 @@ export const useTenantDashboard = () => {
       // First reload tenant data
       await fetchTenantData();
       
-      // Then reload secondary data in sequence to prevent resource exhaustion
+      // Then reload secondary data with longer delays
       await fetchCommunications();
-      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+      await new Promise(resolve => setTimeout(resolve, 300));
       await fetchMaintenanceRequests();
-      await new Promise(resolve => setTimeout(resolve, 100)); // Small delay
+      await new Promise(resolve => setTimeout(resolve, 300));
       await fetchPaymentsAndDocuments();
       
       console.log("Dashboard refresh completed successfully");
