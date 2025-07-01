@@ -39,10 +39,11 @@ export const DashboardMetrics = ({
 
   return (
     <div className="relative">
-      <NotificationBell 
+      {/* Notification bell removed from dashboard overview */}
+      {/* <NotificationBell 
         unreadCount={totalNotificationCount} 
         maintenanceRequests={maintenanceRequests}
-      />
+      /> */}
       <EnhancedMetricsGrid 
         metrics={metrics} 
         dateRange={dateRange}
