@@ -1,36 +1,17 @@
+
 import { enCommon } from './common';
-import { enDashboardActivity, enDashboardCore, enDashboardDates, enDashboardStatus, enDashboardNotifications } from './dashboard';
+import { enDashboard } from './dashboard';
 import { enFinances } from './finances';
-import { enInvitations } from './invitations';
 import { enMaintenance } from './maintenance';
-import { enOnboarding } from './onboarding';
-import { enProperties } from './properties';
-import { enPropertySettings } from './property-settings';
-import { enShared } from './shared';
-import { enTasks } from './tasks';
-import { enTenants } from './tenants';
-import { enUserManagement } from './user-management';
 import { enAuth } from './auth';
 import { enLease } from './tenant/en/lease';
 import { enDashboard as enTenantDashboard } from './tenant/en/dashboard';
 
 export const en = {
   ...enCommon,
-  ...enDashboardActivity,
-  ...enDashboardCore,
-  ...enDashboardDates,
-  ...enDashboardStatus,
-  ...enDashboardNotifications,
+  ...enDashboard,
   ...enFinances,
-  ...enInvitations,
   ...enMaintenance,
-  ...enOnboarding,
-  ...enProperties,
-  ...enPropertySettings,
-  ...enShared,
-  ...enTasks,
-  ...enTenants,
-  ...enUserManagement,
   ...enAuth,
   
   // Lease translations
@@ -50,4 +31,5 @@ export const en = {
   emailAndApp: "Email and App",
   emailOnly: "Email only",
   appOnly: "App only",
+  leaseStatus: "Lease Status",
 };
