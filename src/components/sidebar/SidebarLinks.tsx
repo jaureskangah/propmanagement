@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
@@ -13,10 +14,17 @@ import {
   Mail,
 } from "lucide-react";
 import { useAuth } from "@/components/AuthProvider";
+import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
-export const SidebarLinks = () => {
+interface SidebarLinksProps {
+  isTenant?: boolean;
+  collapsed?: boolean;
+  tooltipEnabled?: boolean;
+}
+
+export const SidebarLinks = ({ isTenant = false, collapsed = false, tooltipEnabled = false }: SidebarLinksProps) => {
   const { t } = useLocale();
-  const { isTenant } = useAuth();
 
   const navigationItems = [
     {
@@ -40,7 +48,7 @@ export const SidebarLinks = () => {
     {
       title: t('maintenanceRequests'),
       icon: MessageSquare,
-      href: '/maintenance',
+      href: '/maintenance-requests',
       badge: null,
     },
     {
@@ -82,19 +90,26 @@ export const SidebarLinks = () => {
   return (
     <>
       {navigationItems.map((item) => (
-        <a
+        <Link
           key={item.title}
-          href={item.href}
-          className="flex items-center space-x-2 text-sm font-medium hover:text-accent-foreground"
+          to={item.href}
+          className={cn(
+            "flex items-center space-x-2 text-sm font-medium hover:text-accent-foreground p-2 rounded-md hover:bg-accent",
+            collapsed && "justify-center"
+          )}
         >
           <item.icon className="h-4 w-4" />
-          <span>{item.title}</span>
-          {item.badge && (
-            <span className="ml-auto rounded-sm bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
-              {item.badge}
-            </span>
+          {!collapsed && (
+            <>
+              <span>{item.title}</span>
+              {item.badge && (
+                <span className="ml-auto rounded-sm bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+                  {item.badge}
+                </span>
+              )}
+            </>
           )}
-        </a>
+        </Link>
       ))}
     </>
   );

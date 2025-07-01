@@ -4,13 +4,12 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider, useAuth } from './components/AuthProvider';
-import { AppLayout } from './components/layout/AppLayout';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
 import PropertyDetails from './pages/PropertyDetails';
 import AddProperty from './pages/AddProperty';
 import EditProperty from './pages/EditProperty';
-import MaintenanceRequests from './pages/MaintenanceRequests';
+import Maintenance from './pages/Maintenance';
 import MaintenanceRequestDetails from './pages/MaintenanceRequestDetails';
 import AddMaintenanceRequest from './pages/AddMaintenanceRequest';
 import EditMaintenanceRequest from './pages/EditMaintenanceRequest';
@@ -24,6 +23,7 @@ import { TenantDashboard } from './components/tenant/TenantDashboard';
 import TenantList from './pages/TenantList';
 import { LocaleProvider } from './components/providers/LocaleProvider';
 import RentReminders from './pages/RentReminders';
+import AppSidebar from './components/AppSidebar';
 
 const queryClient = new QueryClient();
 
@@ -82,7 +82,7 @@ function App() {
                   <Route path="/maintenance-requests" element={
                     <ProtectedRoute>
                       <AppLayout>
-                        <MaintenanceRequests />
+                        <Maintenance />
                       </AppLayout>
                     </ProtectedRoute>
                   } />
@@ -172,6 +172,20 @@ function App() {
         </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+// Simple AppLayout component for routes that need sidebar
+function AppLayout({ children }: { children: React.ReactNode }) {
+  const { isTenant } = useAuth();
+  
+  return (
+    <div className="flex min-h-screen">
+      <AppSidebar isTenant={isTenant} />
+      <main className="flex-1 overflow-auto">
+        {children}
+      </main>
+    </div>
   );
 }
 

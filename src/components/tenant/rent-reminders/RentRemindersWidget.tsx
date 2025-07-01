@@ -43,7 +43,18 @@ export const RentRemindersWidget = () => {
 
       if (error) throw error;
 
-      setRecentReminders(data || []);
+      // Transform the data to match our interface
+      const transformedData = (data || []).map(item => ({
+        id: item.id,
+        target_month: item.target_month,
+        status: item.status,
+        created_at: item.created_at,
+        tenants: {
+          name: Array.isArray(item.tenants) ? item.tenants[0]?.name || 'Unknown' : item.tenants?.name || 'Unknown'
+        }
+      }));
+
+      setRecentReminders(transformedData);
     } catch (error) {
       console.error('Error fetching recent reminders:', error);
     } finally {
