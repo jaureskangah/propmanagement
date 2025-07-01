@@ -50,7 +50,7 @@ export const RentRemindersWidget = () => {
         status: item.status,
         created_at: item.created_at,
         tenants: {
-          name: Array.isArray(item.tenants) ? item.tenants[0]?.name || 'Unknown' : item.tenants?.name || 'Unknown'
+          name: (item.tenants as any)?.name || 'Unknown'
         }
       }));
 
