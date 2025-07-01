@@ -553,6 +553,53 @@ export type Database = {
           },
         ]
       }
+      rent_payment_reminders: {
+        Row: {
+          created_at: string
+          email_sent: boolean | null
+          id: string
+          reminder_date: string
+          reminder_type: string
+          sent_at: string
+          status: string
+          target_month: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email_sent?: boolean | null
+          id?: string
+          reminder_date: string
+          reminder_type?: string
+          sent_at?: string
+          status?: string
+          target_month: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email_sent?: boolean | null
+          id?: string
+          reminder_date?: string
+          reminder_type?: string
+          sent_at?: string
+          status?: string
+          target_month?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rent_payment_reminders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tenant_communications: {
         Row: {
           attachments: string[] | null
@@ -743,6 +790,7 @@ export type Database = {
       tenants: {
         Row: {
           created_at: string
+          disable_reminders: boolean | null
           email: string
           id: string
           lease_end: string
@@ -760,6 +808,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          disable_reminders?: boolean | null
           email: string
           id?: string
           lease_end: string
@@ -777,6 +826,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          disable_reminders?: boolean | null
           email?: string
           id?: string
           lease_end?: string

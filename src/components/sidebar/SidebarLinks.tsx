@@ -1,113 +1,101 @@
-
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
-import {
-  LayoutDashboard,
-  Settings,
-  Building,
-  Users,
-  FileText,
-  MessageSquare,
-  Wrench,
-  CreditCard,
-  Mail
-} from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider
-} from "@/components/ui/tooltip";
+  Home,
+  LayoutDashboard,
+  Settings,
+  Users,
+  Building,
+  Calendar,
+  File,
+  CreditCard,
+  MessageSquare,
+  Mail,
+} from "lucide-react";
+import { useAuth } from "@/components/AuthProvider";
 
-export interface SidebarLinksProps {
-  isTenant?: boolean;
-  tooltipEnabled?: boolean;
-  collapsed?: boolean;
-}
-
-const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = false }: SidebarLinksProps) => {
-  const location = useLocation();
+export const SidebarLinks = () => {
   const { t } = useLocale();
-  
-  // Links différents selon le type d'utilisateur
-  const links = React.useMemo(() => {
-    if (isTenant) {
-      // Menu limité pour les locataires
-      return [
-        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
-        { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-        { to: "/tenant/documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
-        { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
-      ];
-    }
-    
-    // Menu complet pour les propriétaires
-    return [
-      { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
-      { to: "/properties", icon: Building, label: t('properties'), tooltip: t('properties') },
-      { to: "/tenants", icon: Users, label: t('tenants'), tooltip: t('tenants') },
-      { to: "/invitations", icon: Mail, label: t('invitations'), tooltip: t('invitations') },
-      { to: "/finances", icon: CreditCard, label: t('finances'), tooltip: t('finances') },
-      { to: "/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-      { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
-    ];
-  }, [isTenant, t]);
+  const { isTenant } = useAuth();
 
-  const isActive = (path: string) => location.pathname === path;
-  
-  // Don't wrap with tooltips when not needed
-  if (!tooltipEnabled) {
-    return (
-      <div className="space-y-2">
-        {links.map((link) => {
-          const Icon = link.icon;
-          return (
-            <Link
-              key={link.to}
-              to={link.to}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
-                isActive(link.to) ? "bg-muted font-medium" : ""
-              }`}
-            >
-              <Icon className="h-5 w-5" />
-              <span>{link.label}</span>
-            </Link>
-          );
-        })}
-      </div>
-    );
+  const navigationItems = [
+    {
+      title: t('dashboard'),
+      icon: Home,
+      href: '/',
+      badge: null,
+    },
+    {
+      title: t('properties'),
+      icon: Building,
+      href: '/properties',
+      badge: null,
+    },
+    {
+      title: t('tenants'),
+      icon: Users,
+      href: '/tenants',
+      badge: null,
+    },
+    {
+      title: t('maintenanceRequests'),
+      icon: MessageSquare,
+      href: '/maintenance',
+      badge: null,
+    },
+    {
+      title: t('leases'),
+      icon: File,
+      href: '/leases',
+      badge: null,
+    },
+    {
+      title: t('payments'),
+      icon: CreditCard,
+      href: '/payments',
+      badge: null,
+    },
+    {
+      title: t('rentReminders'),
+      icon: Mail,
+      href: '/rent-reminders',
+      badge: null,
+    },
+    {
+      title: t('calendar'),
+      icon: Calendar,
+      href: '/calendar',
+      badge: null,
+    },
+    {
+      title: t('settings'),
+      icon: Settings,
+      href: '/settings',
+      badge: null,
+    },
+  ];
+
+  if (isTenant) {
+    return null;
   }
-  
-  // For tooltips, wrap the entire component with TooltipProvider
+
   return (
-    <TooltipProvider>
-      <div className="space-y-2">
-        {links.map((link) => {
-          const Icon = link.icon;
-          return (
-            <Tooltip key={link.to}>
-              <TooltipTrigger asChild>
-                <Link
-                  to={link.to}
-                  className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
-                    isActive(link.to) ? "bg-muted font-medium" : ""
-                  } ${collapsed ? "justify-center px-2" : ""}`}
-                >
-                  <Icon className="h-5 w-5" />
-                  {!collapsed && <span>{link.label}</span>}
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">
-                <p>{link.tooltip}</p>
-              </TooltipContent>
-            </Tooltip>
-          );
-        })}
-      </div>
-    </TooltipProvider>
+    <>
+      {navigationItems.map((item) => (
+        <a
+          key={item.title}
+          href={item.href}
+          className="flex items-center space-x-2 text-sm font-medium hover:text-accent-foreground"
+        >
+          <item.icon className="h-4 w-4" />
+          <span>{item.title}</span>
+          {item.badge && (
+            <span className="ml-auto rounded-sm bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">
+              {item.badge}
+            </span>
+          )}
+        </a>
+      ))}
+    </>
   );
 };
-
-export default SidebarLinks;
