@@ -53,7 +53,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
   const onSubmit = async (values: TenantSignupFormValues) => {
     try {
       setLoading(true);
-      console.log("=== TENANT SIGNUP PROCESS ===");
+      console.log("=== TENANT SIGNUP PROCESS - IMPROVED ===");
       console.log("Creating account for tenant:", tenantData.email);
 
       // 1. Créer le compte utilisateur
@@ -66,6 +66,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
             last_name: values.lastName,
             is_tenant_user: true,
           },
+          emailRedirectTo: `${window.location.origin}/tenant/dashboard`
         },
       });
 
@@ -80,16 +81,14 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
 
       console.log("✅ User account created:", authData.user.id);
 
-      // 2. Lier le profil au locataire
-      console.log("Linking tenant profile...");
-      const { data: linkResult, error: linkError } = await supabase
-        .rpc('link_tenant_profile', {
-          p_tenant_id: tenantData.id,
-          p_user_id: authData.user.id
-        });
+      // 2. Créer une transaction pour garantir la cohérence
+      const { error: transactionError } = await supabase.rpc('link_tenant_profile', {
+        p_tenant_id: tenantData.id,
+        p_user_id: authData.user.id
+      });
 
-      if (linkError) {
-        console.error("Error linking tenant profile:", linkError);
+      if (transactionError) {
+        console.error("Error linking tenant profile:", transactionError);
         throw new Error("Erreur lors de la liaison du profil locataire");
       }
 
@@ -99,10 +98,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
       console.log("Updating invitation status...");
       const { error: invitationError } = await supabase
         .from('tenant_invitations')
-        .update({ 
-          status: 'accepted',
-          updated_at: new Date().toISOString()
-        })
+        .update({ status: 'accepted' })
         .eq('token', invitationToken);
 
       if (invitationError) {
@@ -112,13 +108,30 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
         console.log("✅ Invitation status updated to 'accepted'");
       }
 
+      // 4. Vérifier que la liaison a bien fonctionné
+      const { data: verificationData, error: verificationError } = await supabase
+        .from('tenants')
+        .select('tenant_profile_id')
+        .eq('id', tenantData.id)
+        .single();
+
+      if (verificationError || !verificationData?.tenant_profile_id) {
+        console.error("❌ Verification failed - tenant profile not linked properly");
+        throw new Error("La liaison du profil locataire a échoué");
+      }
+
+      console.log("✅ Verification successful - tenant profile linked:", verificationData.tenant_profile_id);
+
       toast({
         title: "Compte créé avec succès !",
-        description: "Bienvenue dans votre espace locataire.",
+        description: "Bienvenue dans votre espace locataire. Redirection en cours...",
       });
 
-      // 4. Appeler onSuccess
-      onSuccess();
+      // 5. Redirection après un délai
+      setTimeout(() => {
+        console.log("Redirecting to tenant dashboard...");
+        window.location.href = '/tenant/dashboard';
+      }, 2000);
 
     } catch (error: any) {
       console.error("Error in tenant signup:", error);
@@ -129,6 +142,8 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
         errorMessage = "Cette adresse email est déjà utilisée.";
       } else if (error.message?.includes('weak password')) {
         errorMessage = "Le mot de passe n'est pas assez fort.";
+      } else if (error.message?.includes('liaison')) {
+        errorMessage = "Erreur lors de la liaison du profil. Veuillez contacter l'administrateur.";
       }
 
       toast({

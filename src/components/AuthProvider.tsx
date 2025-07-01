@@ -63,19 +63,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       async (event, session) => {
         if (!isMounted) return;
 
-        console.log("Auth state changed:", event);
+        console.log("=== AUTH STATE CHANGE - IMPROVED ===");
+        console.log("Event:", event);
+        console.log("Session exists:", !!session);
+        console.log("User ID:", session?.user?.id);
         
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            // Utiliser setTimeout pour éviter le blocage
+            // Utiliser setTimeout pour éviter le blocage avec plus de délai
             setTimeout(() => {
               if (isMounted) {
+                console.log("Checking tenant status after sign in...");
                 checkTenantStatus(session.user.id);
               }
-            }, 100); // Délai légèrement plus long pour s'assurer que tout est en place
+            }, 500); // Délai plus long pour s'assurer que tout est en place
           }
         } else {
+          console.log("No session, clearing user data");
           setUser(null);
           setIsTenant(false);
           setTenantData(null);
@@ -94,10 +99,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkTenantStatus = async (userId: string) => {
     try {
-      console.log("=== CHECKING TENANT STATUS ===");
+      console.log("=== CHECKING TENANT STATUS - IMPROVED ===");
       console.log("Checking tenant status for user:", userId);
 
-      // Optimisation : Faire une seule requête pour récupérer à la fois le profil et les données du locataire
+      // Requête optimisée avec plus de détails
       const { data: userData, error: userError } = await supabase
         .from('profiles')
         .select(`
@@ -120,18 +125,50 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('id', userId)
         .maybeSingle();
 
-      console.log("User data with tenant info:", userData);
+      console.log("=== TENANT CHECK RESULTS ===");
+      console.log("User data:", userData);
+      console.log("Query error:", userError);
 
       if (userError) {
-        console.error("Error fetching user data:", userError);
-        setIsTenant(false);
-        setTenantData(null);
+        console.error("❌ Error fetching user data:", userError);
+        
+        // Essayer une approche de récupération directe
+        console.log("🔄 Attempting direct tenant lookup...");
+        const { data: directTenantData, error: directError } = await supabase
+          .from('tenants')
+          .select(`
+            id,
+            name,
+            email,
+            unit_number,
+            lease_start,
+            lease_end,
+            rent_amount,
+            property_id,
+            properties:property_id(name)
+          `)
+          .eq('tenant_profile_id', userId)
+          .maybeSingle();
+
+        console.log("Direct tenant lookup result:", directTenantData);
+        console.log("Direct tenant lookup error:", directError);
+
+        if (directTenantData) {
+          console.log("✅ Found tenant via direct lookup!");
+          setIsTenant(true);
+          setTenantData(directTenantData);
+        } else {
+          console.log("❌ No tenant found via direct lookup either");
+          setIsTenant(false);
+          setTenantData(null);
+        }
+        
         setLoading(false);
         return;
       }
 
       if (!userData) {
-        console.log("No profile found for user");
+        console.log("❌ No profile found for user");
         setIsTenant(false);
         setTenantData(null);
         setLoading(false);
@@ -142,17 +179,51 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const hasTenantData = userData.tenants && userData.tenants.length > 0;
       const isMarkedAsTenant = userData.is_tenant_user;
 
+      console.log("=== TENANT STATUS ANALYSIS ===");
+      console.log("Is marked as tenant user:", isMarkedAsTenant);
+      console.log("Has tenant data:", hasTenantData);
+      console.log("Tenant data:", userData.tenants);
+
       if (isMarkedAsTenant && hasTenantData) {
-        console.log("✅ User is a tenant:", userData.tenants[0]);
+        console.log("✅ User is confirmed as a tenant:", userData.tenants[0]);
         setIsTenant(true);
         setTenantData(userData.tenants[0]);
+      } else if (isMarkedAsTenant && !hasTenantData) {
+        console.log("⚠️ User marked as tenant but no tenant data found - attempting recovery");
+        
+        // Tentative de récupération
+        const { data: recoveryData, error: recoveryError } = await supabase
+          .from('tenants')
+          .select(`
+            id,
+            name,
+            email,
+            unit_number,
+            lease_start,
+            lease_end,
+            rent_amount,
+            property_id,
+            properties:property_id(name)
+          `)
+          .eq('tenant_profile_id', userId)
+          .maybeSingle();
+
+        if (recoveryData) {
+          console.log("✅ Recovery successful - found tenant data!");
+          setIsTenant(true);
+          setTenantData(recoveryData);
+        } else {
+          console.log("❌ Recovery failed - no tenant data found");
+          setIsTenant(false);
+          setTenantData(null);
+        }
       } else {
         console.log("❌ User is not a tenant or no tenant data found");
         setIsTenant(false);
         setTenantData(null);
       }
     } catch (err) {
-      console.error("Exception checking tenant status:", err);
+      console.error("❌ Exception checking tenant status:", err);
       setIsTenant(false);
       setTenantData(null);
     } finally {
