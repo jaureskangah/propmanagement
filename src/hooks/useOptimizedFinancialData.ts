@@ -1,26 +1,21 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
-import { useAuth } from "@/components/AuthProvider";
 
-export const useOptimizedFinancialData = (selectedPropertyId: string | null) => {
-  const { user } = useAuth();
-
-  const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
-    queryKey: ['properties', user?.id],
+export const useOptimizedFinancialData = (propertyId: string | null) => {
+  const { data: properties, isLoading: isLoadingProperties } = useQuery({
+    queryKey: ["properties"],
     queryFn: async () => {
-      if (!user?.id) return [];
-      
       const { data, error } = await supabase
-        .from('properties')
-        .select('id, name, address')
-        .eq('user_id', user.id)
-        .order('name');
-
+        .from("properties")
+        .select("*")
+        .order("name");
+      
       if (error) throw error;
       return data || [];
     },
-    enabled: !!user?.id,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache
+    gcTime: 10 * 60 * 1000, // 10 minutes garbage collection
   });
 
   return {

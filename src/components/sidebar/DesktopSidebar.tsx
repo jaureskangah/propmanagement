@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { HelpCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { SidebarLinks } from "./SidebarLinks";
+import SidebarLinks from "./SidebarLinks";
 import { SidebarLogo } from "./SidebarLogo";
 import { SidebarToggle } from "./SidebarToggle";
 import {

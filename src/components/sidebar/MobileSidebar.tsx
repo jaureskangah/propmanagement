@@ -3,7 +3,7 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { HelpCircle } from "lucide-react";
 import { SidebarLogo } from "./SidebarLogo";
-import { SidebarLinks } from "./SidebarLinks";
+import SidebarLinks from "./SidebarLinks";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
   Tooltip,

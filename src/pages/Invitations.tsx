@@ -1,5 +1,6 @@
 
 import React, { useState, useMemo } from "react";
+import AppSidebar from "@/components/AppSidebar";
 import { InvitationsHeader } from "@/components/invitations/InvitationsHeader";
 import { InvitationFilters } from "@/components/invitations/InvitationFilters";
 import { InvitationsList } from "@/components/invitations/InvitationsList";
@@ -34,7 +35,8 @@ const Invitations = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="p-6 md:p-8">
+      <AppSidebar />
+      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
