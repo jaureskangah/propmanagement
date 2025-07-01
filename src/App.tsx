@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider, useAuth } from './components/AuthProvider';
 import { AppLayout } from './components/layout/AppLayout';
@@ -17,23 +18,25 @@ import Tenants from './pages/Tenants';
 import TenantDetails from './pages/TenantDetails';
 import AddTenant from './pages/AddTenant';
 import EditTenant from './pages/EditTenant';
-import Auth from './pages/Auth';
+import AuthPage from './pages/AuthPage';
 import TenantSignup from './pages/TenantSignup';
-import TenantDashboard from './components/tenant/TenantDashboard';
+import { TenantDashboard } from './components/tenant/TenantDashboard';
 import TenantList from './pages/TenantList';
-import LocaleProvider from './components/providers/LocaleProvider';
+import { LocaleProvider } from './components/providers/LocaleProvider';
 import RentReminders from './pages/RentReminders';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClient>
+    <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
           <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
             <LocaleProvider>
               <div className="min-h-screen bg-background">
                 <Routes>
-                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/auth" element={<AuthPage />} />
                   <Route path="/tenant/signup/:token" element={<TenantSignup />} />
                   
                   <Route path="/" element={
@@ -168,7 +171,7 @@ function App() {
           </ThemeProvider>
         </BrowserRouter>
       </AuthProvider>
-    </QueryClient>
+    </QueryClientProvider>
   );
 }
 
