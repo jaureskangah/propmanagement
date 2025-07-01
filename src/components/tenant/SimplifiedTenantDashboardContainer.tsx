@@ -1,12 +1,13 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
-import { Home, Wrench, FileText, Settings } from "lucide-react";
+import { Home, Wrench, FileText, Settings, Calendar } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/useSafeTranslation";
 import { TenantOverview } from "./sections/TenantOverview";
 import { TenantMaintenanceSection } from "./sections/TenantMaintenanceSection";
 import { TenantDocumentsSection } from "./sections/TenantDocumentsSection";
 import { TenantSettingsSection } from "./sections/TenantSettingsSection";
+import { TenantLeaseStatusSection } from "./sections/TenantLeaseStatusSection";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { ProgressiveLoader } from "./dashboard/ProgressiveLoader";
 import { motion } from "framer-motion";
@@ -92,10 +93,14 @@ export const SimplifiedTenantDashboardContainer = ({
       // Documents: Total documents
       const documentsCount = documents?.length || 0;
 
+      // Lease: Show count for expiring status
+      const leaseCount = leaseStatus.status === 'expiring' ? leaseStatus.daysLeft : undefined;
+
       const counts = {
         overview: overviewCount,
         maintenance: pendingMaintenance,
         documents: documentsCount,
+        lease: leaseCount,
         settings: undefined
       };
       
@@ -107,6 +112,7 @@ export const SimplifiedTenantDashboardContainer = ({
         overview: undefined,
         maintenance: 0,
         documents: 0,
+        lease: undefined,
         settings: undefined
       };
     }
@@ -126,6 +132,8 @@ export const SimplifiedTenantDashboardContainer = ({
           return dynamicCounts.maintenance || undefined;
         case 'documents':
           return dynamicCounts.documents || undefined;
+        case 'lease':
+          return dynamicCounts.lease || undefined;
         case 'settings':
           return undefined;
         default:
@@ -134,10 +142,14 @@ export const SimplifiedTenantDashboardContainer = ({
     };
   }, [activeTab, dynamicCounts]);
 
+  // Show lease tab only if tenant has lease data and status is concerning
+  const showLeaseTab = tenant.lease_start && tenant.lease_end && 
+                      (leaseStatus.status === 'expiring' || leaseStatus.status === 'expired');
+
   // Memoized nav items to prevent recreation on every render
   const navItems = useMemo(() => {
     try {
-      return [
+      const baseItems = [
         { 
           name: t('overview', 'Aperçu'), 
           value: "overview", 
@@ -156,13 +168,27 @@ export const SimplifiedTenantDashboardContainer = ({
           icon: FileText,
           count: getCountForTab('documents')
         },
-        { 
-          name: t('settings', 'Paramètres'), 
-          value: "settings", 
-          icon: Settings,
-          count: getCountForTab('settings')
-        },
       ];
+
+      // Add lease tab if needed
+      if (showLeaseTab) {
+        baseItems.splice(1, 0, {
+          name: t('leaseStatus', 'Bail'), 
+          value: "lease", 
+          icon: Calendar,
+          count: getCountForTab('lease')
+        });
+      }
+
+      // Add settings tab
+      baseItems.push({
+        name: t('settings', 'Paramètres'), 
+        value: "settings", 
+        icon: Settings,
+        count: getCountForTab('settings')
+      });
+
+      return baseItems;
     } catch (error) {
       console.error("Error creating nav items:", error);
       return [
@@ -172,18 +198,9 @@ export const SimplifiedTenantDashboardContainer = ({
         { name: 'Paramètres', value: "settings", icon: Settings, count: undefined },
       ];
     }
-  }, [getCountForTab, t]);
+  }, [getCountForTab, t, showLeaseTab]);
 
   const renderActiveSection = () => {
-    const sectionProps = {
-      tenant,
-      communications: communications || [],
-      maintenanceRequests: maintenanceRequests || [],
-      documents: documents || [],
-      leaseStatus,
-      refreshDashboard
-    };
-
     switch (activeTab) {
       case 'overview':
         return (
@@ -214,6 +231,15 @@ export const SimplifiedTenantDashboardContainer = ({
               tenantId={tenant.id}
               onDocumentUpdate={refreshDashboard}
               tenant={tenant}
+            />
+          </ErrorBoundary>
+        );
+      case 'lease':
+        return (
+          <ErrorBoundary>
+            <TenantLeaseStatusSection 
+              tenant={tenant}
+              leaseStatus={leaseStatus}
             />
           </ErrorBoundary>
         );
