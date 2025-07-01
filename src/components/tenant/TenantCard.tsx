@@ -107,7 +107,7 @@ export const TenantCard = ({
 
   return (
     <Card 
-      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-[380px] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm bg-gradient-to-br ${getBackgroundGradient()} border ${getBorderColor()} ${
+      className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 w-full max-w-[400px] bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm bg-gradient-to-br ${getBackgroundGradient()} border ${getBorderColor()} ${
         isSelected ? 'ring-2 ring-primary' : ''
       }`}
       onClick={onSelect}
