@@ -23,6 +23,7 @@ import TenantDocuments from './pages/tenant/TenantDocuments';
 import NotFound from './pages/NotFound';
 import AppSidebar from './components/AppSidebar';
 import Finances from './pages/Finances';
+import Invitations from './pages/Invitations';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/tenant/signup/:token" element={<TenantSignup />} />
+        <Route path="/tenant-signup" element={<TenantSignup />} />
         
         {/* Dashboard routes */}
         <Route path="/" element={
@@ -196,10 +198,7 @@ function App() {
         <Route path="/invitations" element={
           <ProtectedRoute>
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Invitations</h1>
-                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
-              </div>
+              <Invitations />
             </AppLayout>
           </ProtectedRoute>
         } />

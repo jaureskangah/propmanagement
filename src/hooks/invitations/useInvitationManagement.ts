@@ -62,8 +62,6 @@ export const useInvitationManagement = () => {
     setSendingInvitations(prev => new Set(prev).add(invitation.id));
     
     try {
-      console.log("Resending invitation for:", invitation.email, "to tenant ID:", invitation.tenant_id);
-      
       const newToken = crypto.randomUUID();
       const expiresAt = new Date();
       expiresAt.setDate(expiresAt.getDate() + 7);
@@ -79,64 +77,34 @@ export const useInvitationManagement = () => {
 
       if (error) throw error;
       
-      console.log("Invitation updated successfully, now sending email");
-      
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select('name, email')
         .eq('id', invitation.tenant_id)
         .single();
 
-      if (tenantError) {
-        console.error("Error fetching tenant data:", tenantError);
-        throw new Error("Impossible de récupérer les données du locataire");
-      }
+      if (tenantError) throw new Error("Impossible de récupérer les données du locataire");
       
       toast({
         title: "Envoi en cours",
         description: `Envoi de l'invitation à ${invitation.email}...`,
       });
       
-      try {
-        console.log("Calling send-tenant-email edge function");
-        const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
-          body: {
-            tenantId: invitation.tenant_id,
-            subject: "Nouvelle invitation à rejoindre l'espace locataire",
-            content: `
-              <p>Bonjour ${tenantData.name},</p>
-              <p>Vous avez reçu une nouvelle invitation à rejoindre l'espace locataire de votre propriété.</p>
-              <p>Pour créer votre compte et accéder à vos informations, veuillez cliquer sur le lien ci-dessous :</p>
-              <p><a href="${window.location.origin}/tenant-signup?invitation=${newToken}">Créer mon compte</a></p>
-              <p>Une fois votre compte créé, vous pourrez accéder à toutes les fonctionnalités de l'espace locataire.</p>
-              <p>Cordialement,<br>Votre équipe de gestion immobilière</p>
-            `,
-            category: 'invitation'
-          }
-        });
-
-        console.log("Email function response:", emailData);
-
-        if (emailError) {
-          console.error("Error sending invitation email:", emailError);
-          
-          toast({
-            title: "Erreur d'envoi",
-            description: "L'invitation a été mise à jour mais l'email n'a pas pu être envoyé automatiquement",
-            variant: "destructive",
-          });
-          return;
+      const { data: emailData, error: emailError } = await supabase.functions.invoke('send-tenant-email', {
+        body: {
+          tenantId: invitation.tenant_id,
+          subject: "Nouvelle invitation à rejoindre l'espace locataire",
+          content: `
+            <p>Bonjour ${tenantData.name},</p>
+            <p>Vous avez reçu une nouvelle invitation à rejoindre l'espace locataire.</p>
+            <p><a href="${window.location.origin}/tenant-signup?invitation=${newToken}">Créer mon compte</a></p>
+            <p>Cordialement</p>
+          `,
+          category: 'invitation'
         }
-        
-        console.log("Email sent successfully");
-        
-        toast({
-          title: "Invitation envoyée avec succès",
-          description: `L'invitation a été envoyée à ${invitation.email}`,
-        });
-      } catch (emailError: any) {
-        console.error("Error in resend email process:", emailError);
-        
+      });
+
+      if (emailError) {
         toast({
           title: "Erreur d'envoi",
           description: "L'invitation a été mise à jour mais l'email n'a pas pu être envoyé",
@@ -144,13 +112,18 @@ export const useInvitationManagement = () => {
         });
         return;
       }
+      
+      toast({
+        title: "Invitation envoyée",
+        description: `L'invitation a été envoyée à ${invitation.email}`,
+      });
 
       fetchInvitations();
     } catch (error) {
       console.error("Error resending invitation:", error);
       toast({
         title: "Erreur",
-        description: "Impossible de renvoyer l'invitation. Veuillez réessayer.",
+        description: "Impossible de renvoyer l'invitation",
         variant: "destructive",
       });
     } finally {
@@ -166,9 +139,7 @@ export const useInvitationManagement = () => {
     try {
       const { error } = await supabase
         .from('tenant_invitations')
-        .update({
-          status: 'cancelled'
-        })
+        .update({ status: 'cancelled' })
         .eq('id', invitation.id);
 
       if (error) throw error;
@@ -183,7 +154,7 @@ export const useInvitationManagement = () => {
       console.error("Error cancelling invitation:", error);
       toast({
         title: "Erreur",
-        description: "Impossible d'annuler l'invitation. Veuillez réessayer.",
+        description: "Impossible d'annuler l'invitation",
         variant: "destructive",
       });
     }
@@ -192,28 +163,6 @@ export const useInvitationManagement = () => {
   useEffect(() => {
     if (user) {
       fetchInvitations();
-      
-      // Set up real-time subscription to get updates
-      const channel = supabase
-        .channel('tenant_invitations_changes')
-        .on(
-          'postgres_changes',
-          {
-            event: '*',
-            schema: 'public',
-            table: 'tenant_invitations',
-            filter: `user_id=eq.${user.id}`
-          },
-          (payload) => {
-            console.log('Invitation change detected:', payload);
-            fetchInvitations(); // Refresh data when changes occur
-          }
-        )
-        .subscribe();
-
-      return () => {
-        supabase.removeChannel(channel);
-      };
     }
   }, [user]);
 

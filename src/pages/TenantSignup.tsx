@@ -1,36 +1,24 @@
 
-import { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/components/AuthProvider';
+import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLocale } from '@/components/providers/LocaleProvider';
-import { useTenantInvitation } from '@/hooks/tenant/useTenantInvitation';
 import { TenantSignupForm } from '@/components/auth/TenantSignupForm';
-import { AlertTriangle, CheckCircle2 } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useTenantInvitation } from '@/hooks/tenant/useTenantInvitation';
+import { Loader2, AlertCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 const TenantSignup = () => {
-  const { isAuthenticated } = useAuth();
-  const { t } = useLocale();
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const invitationParam = searchParams.get('invitation');
   const { tenantData, invitationToken } = useTenantInvitation();
-  const [signupSuccess, setSignupSuccess] = useState(false);
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    return <Navigate to="/tenant/dashboard" replace />;
-  }
-
-  // Show error if no valid invitation
-  if (!invitationToken || !tenantData) {
+  if (!invitationParam) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <AlertTriangle className="mx-auto h-12 w-12 text-destructive mb-4" />
-            <CardTitle className="text-xl text-destructive">
-              Invitation invalide
-            </CardTitle>
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <CardTitle>Lien invalide</CardTitle>
             <CardDescription>
               Ce lien d'invitation n'est pas valide ou a expiré.
             </CardDescription>
@@ -40,59 +28,53 @@ const TenantSignup = () => {
     );
   }
 
-  const handleSignupSuccess = () => {
-    setSignupSuccess(true);
-    // Rediriger vers le dashboard locataire après un court délai
-    setTimeout(() => {
-      navigate('/tenant/dashboard');
-    }, 2000);
-  };
-
-  if (signupSuccess) {
+  if (!tenantData || !invitationToken) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <Card className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <CheckCircle2 className="mx-auto h-12 w-12 text-green-500 mb-4" />
-            <CardTitle className="text-xl text-green-600">
-              Compte créé avec succès !
-            </CardTitle>
-            <CardDescription>
-              Vous allez être redirigé vers votre tableau de bord...
-            </CardDescription>
-          </CardHeader>
+          <CardContent className="flex items-center justify-center h-64">
+            <div className="text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <p>Vérification de l'invitation...</p>
+            </div>
+          </CardContent>
         </Card>
       </div>
     );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            Créer votre compte locataire
-          </CardTitle>
-          <CardDescription>
-            Bienvenue {tenantData.name} !<br />
-            Créez votre compte pour accéder au portail locataire.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Alert className="mb-4">
-            <AlertDescription>
-              <strong>Propriété :</strong> {tenantData.properties?.name || 'Non spécifiée'}<br />
-              <strong>Email :</strong> {tenantData.email}
-            </AlertDescription>
-          </Alert>
-          
-          <TenantSignupForm 
-            tenantData={tenantData}
-            invitationToken={invitationToken}
-            onSuccess={handleSignupSuccess}
-          />
-        </CardContent>
-      </Card>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-md"
+      >
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Créer votre compte locataire</CardTitle>
+            <CardDescription>
+              Bienvenue {tenantData.name}! Créez votre compte pour accéder à votre espace locataire.
+            </CardDescription>
+            {tenantData.properties && (
+              <div className="mt-4 p-3 bg-muted rounded-lg">
+                <p className="text-sm font-medium">Propriété</p>
+                <p className="text-sm text-muted-foreground">{tenantData.properties.name}</p>
+              </div>
+            )}
+          </CardHeader>
+          <CardContent>
+            <TenantSignupForm
+              tenantData={tenantData}
+              invitationToken={invitationToken}
+              onSuccess={() => {
+                // Redirection handled in the form
+              }}
+            />
+          </CardContent>
+        </Card>
+      </motion.div>
     </div>
   );
 };
