@@ -1,9 +1,7 @@
 
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ThemeProvider } from "@/components/theme-provider"
-import { AuthProvider, useAuth } from './components/AuthProvider';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAuth } from './components/AuthProvider';
 import Dashboard from './pages/Dashboard';
 import Properties from './pages/Properties';
 import PropertyDetails from './pages/PropertyDetails';
@@ -21,157 +19,144 @@ import AuthPage from './pages/AuthPage';
 import TenantSignup from './pages/TenantSignup';
 import { TenantDashboard } from './components/tenant/TenantDashboard';
 import TenantList from './pages/TenantList';
-import { LocaleProvider } from './components/providers/LocaleProvider';
 import RentReminders from './pages/RentReminders';
 import AppSidebar from './components/AppSidebar';
 
-const queryClient = new QueryClient();
-
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-            <LocaleProvider>
-              <div className="min-h-screen bg-background">
-                <Routes>
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/tenant/signup/:token" element={<TenantSignup />} />
-                  
-                  <Route path="/" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Dashboard />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/properties" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Properties />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/properties/:id" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <PropertyDetails />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/add-property" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <AddProperty />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/edit-property/:id" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <EditProperty />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/maintenance-requests" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Maintenance />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/maintenance-requests/:id" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <MaintenanceRequestDetails />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/add-maintenance-request" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <AddMaintenanceRequest />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/edit-maintenance-request/:id" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <EditMaintenanceRequest />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/tenants" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <Tenants />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
+    <div className="min-h-screen bg-background">
+      <Routes>
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/tenant/signup/:token" element={<TenantSignup />} />
+        
+        <Route path="/" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Dashboard />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/properties" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Properties />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/properties/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <PropertyDetails />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/add-property" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <AddProperty />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/edit-property/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <EditProperty />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/maintenance-requests" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Maintenance />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/maintenance-requests/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <MaintenanceRequestDetails />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/add-maintenance-request" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <AddMaintenanceRequest />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/edit-maintenance-request/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <EditMaintenanceRequest />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/tenants" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Tenants />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
 
-                  <Route path="/tenant-list" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <TenantList />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/tenants/:id" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <TenantDetails />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/add-tenant" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <AddTenant />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                  <Route path="/edit-tenant/:id" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <EditTenant />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
+        <Route path="/tenant-list" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <TenantList />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/tenants/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <TenantDetails />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/add-tenant" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <AddTenant />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/edit-tenant/:id" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <EditTenant />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
 
-                  <Route path="/tenant/dashboard" element={
-                    <TenantRoute>
-                      <TenantDashboard />
-                    </TenantRoute>
-                  } />
-                  
-                  <Route path="/rent-reminders" element={
-                    <ProtectedRoute>
-                      <AppLayout>
-                        <RentReminders />
-                      </AppLayout>
-                    </ProtectedRoute>
-                  } />
-                  
-                </Routes>
-              </div>
-            </LocaleProvider>
-          </ThemeProvider>
-        </BrowserRouter>
-      </AuthProvider>
-    </QueryClientProvider>
+        <Route path="/tenant/dashboard" element={
+          <TenantRoute>
+            <TenantDashboard />
+          </TenantRoute>
+        } />
+        
+        <Route path="/rent-reminders" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <RentReminders />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+      </Routes>
+    </div>
   );
 }
 
