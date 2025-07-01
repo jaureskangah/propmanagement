@@ -1,7 +1,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import AppSidebar from "@/components/AppSidebar";
 import { useFinancesFilters } from "@/hooks/useFinancesFilters";
 import { useOptimizedFinancialData } from "@/hooks/useOptimizedFinancialData";
 import { FinancesHeader } from "@/components/finances/FinancesHeader";
@@ -21,8 +20,7 @@ const Finances = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
+      <div className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}

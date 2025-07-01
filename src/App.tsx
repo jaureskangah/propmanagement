@@ -22,6 +22,7 @@ import RentReminders from './pages/RentReminders';
 import TenantDocuments from './pages/tenant/TenantDocuments';
 import NotFound from './pages/NotFound';
 import AppSidebar from './components/AppSidebar';
+import Finances from './pages/Finances';
 
 function App() {
   return (
@@ -206,10 +207,7 @@ function App() {
         <Route path="/finances" element={
           <ProtectedRoute>
             <AppLayout>
-              <div className="p-6">
-                <h1 className="text-2xl font-bold mb-4">Finances</h1>
-                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
-              </div>
+              <Finances />
             </AppLayout>
           </ProtectedRoute>
         } />

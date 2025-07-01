@@ -1,25 +1,32 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { useLocale } from "@/components/providers/LocaleProvider";
-import { Building2 } from "lucide-react";
+import { Building } from "lucide-react";
 
 interface NoPropertySelectedProps {
-  type: string;
+  type: "metrics" | "financial-overview" | "chart";
 }
 
-export function NoPropertySelected({ type }: NoPropertySelectedProps) {
-  const { t } = useLocale();
-  
+export const NoPropertySelected = ({ type }: NoPropertySelectedProps) => {
+  const getMessage = () => {
+    switch (type) {
+      case "metrics":
+        return "Sélectionnez une propriété pour voir les métriques financières";
+      case "financial-overview":
+        return "Sélectionnez une propriété pour voir l'aperçu financier";
+      case "chart":
+        return "Sélectionnez une propriété pour voir les graphiques";
+      default:
+        return "Sélectionnez une propriété pour voir les données";
+    }
+  };
+
   return (
-    <Card className="bg-muted/20 border-dashed">
-      <CardContent className="p-8 text-center text-muted-foreground flex flex-col items-center justify-center gap-3">
-        <Building2 className="h-12 w-12 text-muted-foreground/50 mb-2" />
-        <h3 className="text-lg font-medium">{t('selectProperty')}</h3>
-        <p className="text-sm text-muted-foreground max-w-md">
-          {t('noPropertiesAvailable')}
-        </p>
+    <Card>
+      <CardContent className="flex flex-col items-center justify-center h-48 text-center">
+        <Building className="h-12 w-12 text-muted-foreground mb-4" />
+        <p className="text-muted-foreground">{getMessage()}</p>
       </CardContent>
     </Card>
   );
-}
+};

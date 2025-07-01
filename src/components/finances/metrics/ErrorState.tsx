@@ -1,35 +1,33 @@
 
 import React from "react";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlertCircle } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { AlertCircle, RefreshCw } from "lucide-react";
 
 interface ErrorStateProps {
-  type?: string;
-  error?: Error;
-  onRetry?: () => void;
+  error: Error;
+  onRetry: () => void;
+  type?: "metrics" | "financial-overview" | "chart";
 }
 
-export const ErrorState = ({ type = "metrics", error, onRetry }: ErrorStateProps) => {
-  const { t } = useLocale();
-  
+export const ErrorState = ({ error, onRetry, type = "metrics" }: ErrorStateProps) => {
   return (
-    <div className="space-y-4">
-      <Card className="p-6 text-center bg-background/50 backdrop-blur-sm">
-        <div className="flex flex-col items-center">
-          <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-          <h3 className="text-lg font-medium mb-2">{t('errorLoadingData')}</h3>
-          <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-            {error?.message || t('unexpectedError')}
+    <Card>
+      <CardContent className="flex flex-col items-center justify-center h-48 text-center space-y-4">
+        <AlertCircle className="h-12 w-12 text-destructive" />
+        <div>
+          <p className="font-medium text-destructive mb-1">
+            Erreur lors du chargement des données
           </p>
-          {onRetry && (
-            <Button onClick={onRetry} variant="outline">
-              {t('tryAgain')}
-            </Button>
-          )}
+          <p className="text-sm text-muted-foreground">
+            {error.message}
+          </p>
         </div>
-      </Card>
-    </div>
+        <Button onClick={onRetry} variant="outline" size="sm">
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Réessayer
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
