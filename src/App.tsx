@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthProvider';
@@ -20,6 +19,8 @@ import TenantSignup from './pages/TenantSignup';
 import { TenantDashboard } from './components/tenant/TenantDashboard';
 import TenantList from './pages/TenantList';
 import RentReminders from './pages/RentReminders';
+import TenantDocuments from './pages/tenant/TenantDocuments';
+import NotFound from './pages/NotFound';
 import AppSidebar from './components/AppSidebar';
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/tenant/signup/:token" element={<TenantSignup />} />
         
+        {/* Dashboard routes */}
         <Route path="/" element={
           <ProtectedRoute>
             <AppLayout>
@@ -37,6 +39,13 @@ function App() {
           </ProtectedRoute>
         } />
         
+        <Route path="/dashboard" element={
+          <ProtectedRoute>
+            <Navigate to="/" replace />
+          </ProtectedRoute>
+        } />
+        
+        {/* Properties routes */}
         <Route path="/properties" element={
           <ProtectedRoute>
             <AppLayout>
@@ -65,6 +74,15 @@ function App() {
           <ProtectedRoute>
             <AppLayout>
               <EditProperty />
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+        
+        {/* Maintenance routes */}
+        <Route path="/maintenance" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <Maintenance />
             </AppLayout>
           </ProtectedRoute>
         } />
@@ -101,6 +119,7 @@ function App() {
           </ProtectedRoute>
         } />
         
+        {/* Tenants routes */}
         <Route path="/tenants" element={
           <ProtectedRoute>
             <AppLayout>
@@ -141,12 +160,30 @@ function App() {
           </ProtectedRoute>
         } />
 
+        {/* Tenant-specific routes */}
         <Route path="/tenant/dashboard" element={
           <TenantRoute>
             <TenantDashboard />
           </TenantRoute>
         } />
+
+        <Route path="/tenant/maintenance" element={
+          <TenantRoute>
+            <AppLayout>
+              <Maintenance />
+            </AppLayout>
+          </TenantRoute>
+        } />
+
+        <Route path="/tenant/documents" element={
+          <TenantRoute>
+            <AppLayout>
+              <TenantDocuments />
+            </AppLayout>
+          </TenantRoute>
+        } />
         
+        {/* Other routes */}
         <Route path="/rent-reminders" element={
           <ProtectedRoute>
             <AppLayout>
@@ -154,7 +191,75 @@ function App() {
             </AppLayout>
           </ProtectedRoute>
         } />
+
+        <Route path="/invitations" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4">Invitations</h1>
+                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
+              </div>
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/finances" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4">Finances</h1>
+                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
+              </div>
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/leases" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4">Baux</h1>
+                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
+              </div>
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/payments" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4">Paiements</h1>
+                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
+              </div>
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/calendar" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4">Calendrier</h1>
+                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
+              </div>
+            </AppLayout>
+          </ProtectedRoute>
+        } />
+
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <AppLayout>
+              <div className="p-6">
+                <h1 className="text-2xl font-bold mb-4">Paramètres</h1>
+                <p className="text-muted-foreground">Cette page sera développée prochainement.</p>
+              </div>
+            </AppLayout>
+          </ProtectedRoute>
+        } />
         
+        {/* 404 route */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
@@ -178,7 +283,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>; // Or a loading spinner
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated) {
@@ -192,7 +297,7 @@ function TenantRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isTenant, loading } = useAuth();
 
   if (loading) {
-    return <div>Loading...</div>; // Or a loading spinner
+    return <div>Loading...</div>;
   }
 
   if (!isAuthenticated || !isTenant) {
