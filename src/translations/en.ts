@@ -1,4 +1,3 @@
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -466,7 +465,18 @@ const translations = {
     manageDocumentsDescription: "Upload and manage important documents for your tenancy",
     success: "Success",
     error: "Error"
-  }
+  },
+  
+  // Additional missing translations for Revenue page
+  revenueAndExpenses: "Revenue and Expenses",
+  monthly: "Monthly",
+  yearly: "Yearly",
+  refreshing: "Refreshing",
+  dataBeingRefreshed: "Data is being refreshed",
+  errorLoadingData: "Error loading data",
+  
+  // Chart-specific translations
+  profit: "Profit"
 };
 
 export default translations;

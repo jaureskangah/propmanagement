@@ -1,4 +1,3 @@
-
 import {
   Area,
   AreaChart,
@@ -12,12 +11,14 @@ import { RevenueChartTooltip } from "./RevenueChartTooltip";
 import { chartColors } from "./chartColors";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface RevenueAreaChartProps {
   monthlyData: any[];
 }
 
 export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
+  const { t } = useLocale();
   const { 
     revenueColor, 
     expensesColor, 
@@ -58,7 +59,7 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
           onClick={() => toggleSeries('revenue')}
         >
           <div className="h-3 w-3 rounded-full" style={{ backgroundColor: revenueColor }} />
-          <span className="text-xs font-medium">Revenue</span>
+          <span className="text-xs font-medium">{t('revenue')}</span>
         </div>
         <div 
           className={`flex items-center gap-1.5 cursor-pointer px-2 py-1 rounded-md transition-all duration-300 
@@ -66,7 +67,7 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
           onClick={() => toggleSeries('expenses')}
         >
           <div className="h-3 w-3 rounded-full" style={{ backgroundColor: expensesColor }} />
-          <span className="text-xs font-medium">Expenses</span>
+          <span className="text-xs font-medium">{t('expenses')}</span>
         </div>
         <div 
           className={`flex items-center gap-1.5 cursor-pointer px-2 py-1 rounded-md transition-all duration-300 
@@ -74,7 +75,7 @@ export const RevenueAreaChart = ({ monthlyData }: RevenueAreaChartProps) => {
           onClick={() => toggleSeries('profit')}
         >
           <div className="h-3 w-3 rounded-full" style={{ backgroundColor: profitColor }} />
-          <span className="text-xs font-medium">Profit</span>
+          <span className="text-xs font-medium">{t('profit')}</span>
         </div>
       </div>
 

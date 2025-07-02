@@ -1,4 +1,3 @@
-
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -469,7 +468,7 @@ const translations = {
   showFilters: "Afficher les filtres",
   uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location",
   manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location",
-
+  
   // Additional error handling translations
   dataIncomplete: "Données incomplètes",
   tenantDataIncomplete: "Les données de votre profil locataire sont incomplètes.",
@@ -480,7 +479,18 @@ const translations = {
   loadingData: "Chargement des données...",
   retryingAutomatically: "Tentative de récupération automatique...",
   reloadPage: "Recharger la page",
-  errorDetails: "Détails de l'erreur"
+  errorDetails: "Détails de l'erreur",
+  
+  // Additional missing translations for Revenue page
+  revenueAndExpenses: "Revenus et Dépenses",
+  monthly: "Mensuel",
+  yearly: "Annuel",
+  refreshing: "Actualisation",
+  dataBeingRefreshed: "Les données sont en cours d'actualisation",
+  errorLoadingData: "Erreur lors du chargement des données",
+  
+  // Chart-specific translations
+  profit: "Profit"
 };
 
 export default translations;
