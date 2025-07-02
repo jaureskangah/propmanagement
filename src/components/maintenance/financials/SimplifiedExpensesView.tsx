@@ -6,6 +6,7 @@ import { DollarSign, FileText, Wrench, Calendar } from "lucide-react";
 import { DataTables } from "./DataTables";
 import { formatCurrency } from "@/lib/utils";
 import { ModernMetricCard } from "./components/ModernMetricCard";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface SimplifiedExpensesViewProps {
   propertyId: string;
@@ -16,6 +17,7 @@ export const SimplifiedExpensesView = ({
   propertyId,
   selectedYear 
 }: SimplifiedExpensesViewProps) => {
+  const { t } = useLocale();
   const { expenses, maintenance, refetch } = useFinancialData(propertyId, selectedYear);
 
   // Écouter l'événement personnalisé pour rafraîchir les données
@@ -36,13 +38,13 @@ export const SimplifiedExpensesView = ({
     ...expenses.map(expense => ({
       amount: expense.amount || 0,
       date: expense.date,
-      category: expense.category || 'Maintenance',
+      category: expense.category || t('maintenance'),
       type: 'expense' as const
     })),
     ...maintenance.map(intervention => ({
       amount: intervention.cost || 0,
       date: intervention.date,
-      category: 'Intervention',
+      category: t('maintenance'),
       type: 'intervention' as const
     }))
   ];
@@ -62,31 +64,31 @@ export const SimplifiedExpensesView = ({
 
   const metrics = [
     {
-      title: "Dépenses totales",
+      title: t('totalExpenses'),
       value: formatCurrency(totalExpenses),
       icon: <DollarSign className="h-5 w-5" />,
-      description: "Total des dépenses",
+      description: t('totalExpenses'),
       chartColor: "#3B82F6",
     },
     {
-      title: "Moyenne mensuelle",
+      title: t('averageMonthlyExpenses'),
       value: formatCurrency(monthlyAverage),
       icon: <Calendar className="h-5 w-5" />,
-      description: "Dépenses par mois",
+      description: t('averageMonthlyExpenses'),
       chartColor: "#22C55E",
     },
     {
-      title: "Interventions",
+      title: t('maintenance'),
       value: totalInterventions.toString(),
       icon: <Wrench className="h-5 w-5" />,
-      description: "Nombre d'interventions",
+      description: t('maintenance'),
       chartColor: "#8B5CF6",
     },
     {
-      title: "Ce mois-ci",
+      title: t('thisMonth'),
       value: formatCurrency(currentMonthExpenses),
       icon: <FileText className="h-5 w-5" />,
-      description: "Dépenses ce mois",
+      description: t('thisMonth'),
       chartColor: "#F59E0B",
     },
   ];
@@ -96,7 +98,7 @@ export const SimplifiedExpensesView = ({
       <Card>
         <CardContent className="flex items-center justify-center h-32">
           <p className="text-muted-foreground">
-            Veuillez sélectionner une propriété pour voir les dépenses
+            {t('pleaseSelectProperty')}
           </p>
         </CardContent>
       </Card>

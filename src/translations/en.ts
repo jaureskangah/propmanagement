@@ -113,7 +113,7 @@ const translations = {
   contactSubtitle: "Get in touch with our team",
   phone: "Phone",
   email: "Email",
-  office: "Office",
+  contactOffice: "Office", // Renamed from office to avoid conflict
   sendMessage: "Send us a Message",
   yourName: "Your Name",
   yourEmail: "Your Email",
@@ -422,7 +422,7 @@ const translations = {
   apartment: "Apartment",
   house: "House",
   condo: "Condo",
-  office: "Office",
+  propertyOffice: "Office", // Renamed to avoid conflict with contact office
   commercialspace: "Commercial Space",
   searchProperties: "Search properties...",
   filterByType: "Filter by Type",
@@ -543,7 +543,74 @@ const translations = {
   
   // Additional activity translations
   activityItem: "Activity Item",
-  propertyActivity: "Property Activity"
+  propertyActivity: "Property Activity",
+  
+  // FINANCIAL PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS
+  selectProperty: "Select Property",
+  selectYear: "Select Year",
+  noPropertySelected: "No property selected",
+  pleaseSelectProperty: "Please select a property to view financial data",
+  financialMetrics: "Financial Metrics",
+  incomeVsExpenses: "Income vs Expenses",
+  monthlyBreakdown: "Monthly Breakdown",
+  yearlyBreakdown: "Yearly Breakdown",
+  totalRevenue: "Total Revenue",
+  totalCosts: "Total Costs",
+  netProfit: "Net Profit",
+  profitMargin: "Profit Margin",
+  averageMonthlyIncome: "Average Monthly Income",
+  averageMonthlyExpenses: "Average Monthly Expenses",
+  financialTrends: "Financial Trends",
+  incomeGrowth: "Income Growth",
+  expenseGrowth: "Expense Growth",
+  cashFlow: "Cash Flow",
+  positiveFlow: "Positive Flow",
+  negativeFlow: "Negative Flow",
+  breakEvenPoint: "Break-even Point",
+  roi: "ROI",
+  returnOnInvestment: "Return on Investment",
+  
+  // Financial Chart translations
+  jan: "Jan",
+  feb: "Feb",
+  mar: "Mar",
+  apr: "Apr",
+  may: "May",
+  jun: "Jun",
+  jul: "Jul",
+  aug: "Aug",
+  sep: "Sep",
+  oct: "Oct",
+  nov: "Nov",
+  dec: "Dec",
+  
+  // Financial filters and controls
+  filterByProperty: "Filter by Property",
+  filterByYear: "Filter by Year",
+  showAll: "Show All",
+  thisYearData: "This Year Data",
+  lastYearData: "Last Year Data",
+  compareWithPrevious: "Compare with Previous Year",
+  
+  // Financial status indicators
+  increasing: "Increasing",
+  decreasing: "Decreasing",
+  unchanged: "Unchanged",
+  trendUp: "Trend Up",
+  trendDown: "Trend Down",
+  
+  // Additional financial terms
+  income: "Income",
+  rental: "Rental",
+  maintenance: "Maintenance",
+  utilities: "Utilities",
+  insurance: "Insurance",
+  taxes: "Taxes",
+  repairs: "Repairs",
+  vacancy: "Vacancy",
+  propertyValue: "Property Value",
+  appreciation: "Appreciation",
+  depreciation: "Depreciation"
 };
 
 export default translations;

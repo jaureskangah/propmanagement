@@ -98,7 +98,7 @@ const FinancialMetrics = ({ propertyId, selectedYear: initialYear }: FinancialMe
       >
         <div className="text-center sm:text-left">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent mb-2">
-            {t('financialOverview')}
+            {t('financialMetrics')}
           </h2>
         </div>
         

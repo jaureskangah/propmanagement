@@ -41,7 +41,7 @@ const PropertyFiltersSection = ({
                   : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:-translate-y-1"
               } font-sans`}
             >
-              {type === "All" ? t('all') : t(type.toLowerCase().replace(/\s+/g, ''))}
+              {type === "All" ? t('all') : t(type.toLowerCase().replace(/\s+/g, '') === 'office' ? 'propertyOffice' : type.toLowerCase().replace(/\s+/g, ''))}
             </button>
           ))}
         </div>

@@ -113,7 +113,7 @@ const translations = {
   contactSubtitle: "Entrez en contact avec notre équipe",
   phone: "Téléphone",
   email: "Email",
-  office: "Bureau",
+  contactOffice: "Bureau", // Renamed from office to avoid conflict
   sendMessage: "Envoyez-nous un message",
   yourName: "Votre nom",
   yourEmail: "Votre email",
@@ -429,7 +429,7 @@ const translations = {
   apartment: "Appartement",
   house: "Maison",
   condo: "Condo",
-  office: "Bureau",
+  propertyOffice: "Bureau", // Renamed to avoid conflict with contact office
   commercialspace: "Espace Commercial",
   searchProperties: "Rechercher des propriétés...",
   filterByType: "Filtrer par Type",
@@ -557,7 +557,74 @@ const translations = {
   
   // Additional activity translations
   activityItem: "Élément d'Activité",
-  propertyActivity: "Activité de Propriété"
+  propertyActivity: "Activité de Propriété",
+  
+  // FINANCIAL PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS
+  selectProperty: "Sélectionner une Propriété",
+  selectYear: "Sélectionner l'Année",
+  noPropertySelected: "Aucune propriété sélectionnée",
+  pleaseSelectProperty: "Veuillez sélectionner une propriété pour voir les données financières",
+  financialMetrics: "Métriques Financières",
+  incomeVsExpenses: "Revenus vs Dépenses",
+  monthlyBreakdown: "Répartition Mensuelle",
+  yearlyBreakdown: "Répartition Annuelle",
+  totalRevenue: "Revenus Totaux",
+  totalCosts: "Coûts Totaux",
+  netProfit: "Bénéfice Net",
+  profitMargin: "Marge Bénéficiaire",
+  averageMonthlyIncome: "Revenus Mensuels Moyens",
+  averageMonthlyExpenses: "Dépenses Mensuelles Moyennes",
+  financialTrends: "Tendances Financières",
+  incomeGrowth: "Croissance des Revenus",
+  expenseGrowth: "Croissance des Dépenses",
+  cashFlow: "Flux de Trésorerie",
+  positiveFlow: "Flux Positif",
+  negativeFlow: "Flux Négatif",
+  breakEvenPoint: "Point d'Équilibre",
+  roi: "ROI",
+  returnOnInvestment: "Retour sur Investissement",
+  
+  // Financial Chart translations
+  jan: "Jan",
+  feb: "Fév",
+  mar: "Mar",
+  apr: "Avr",
+  may: "Mai",
+  jun: "Juin",
+  jul: "Juil",
+  aug: "Août",
+  sep: "Sept",
+  oct: "Oct",
+  nov: "Nov",
+  dec: "Déc",
+  
+  // Financial filters and controls
+  filterByProperty: "Filtrer par Propriété",
+  filterByYear: "Filtrer par Année",
+  showAll: "Tout Afficher",
+  thisYearData: "Données de Cette Année",
+  lastYearData: "Données de l'Année Dernière",
+  compareWithPrevious: "Comparer avec l'Année Précédente",
+  
+  // Financial status indicators
+  increasing: "En Augmentation",
+  decreasing: "En Diminution",
+  unchanged: "Inchangé",
+  trendUp: "Tendance Haussière",
+  trendDown: "Tendance Baissière",
+  
+  // Additional financial terms
+  income: "Revenus",
+  rental: "Loyer",
+  maintenance: "Maintenance",
+  utilities: "Services Publics",
+  insurance: "Assurance",
+  taxes: "Taxes",
+  repairs: "Réparations",
+  vacancy: "Vacance",
+  propertyValue: "Valeur de la Propriété",
+  appreciation: "Appréciation",
+  depreciation: "Dépréciation"
 };
 
 export default translations;
