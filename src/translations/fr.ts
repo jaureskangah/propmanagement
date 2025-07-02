@@ -1,4 +1,5 @@
 
+
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -506,8 +507,8 @@ const translations = {
   
   // Additional activity translations
   activityItem: "Élément d'Activité",
-  fromProperty: "De la Propriété",
   propertyActivity: "Activité de Propriété"
 };
 
 export default translations;
+
