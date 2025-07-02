@@ -80,20 +80,18 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           name: t('properties'),
           value: metrics.properties.total.toString(),
           change: metrics.properties.new > 0 ? `+${metrics.properties.new}` : undefined,
-          percentageChange: metrics.properties.new > 0 ? "↗ Nouvelles" : "→ Stable",
+          percentageChange: metrics.properties.new > 0 ? `↗ ${t('new')}` : `→ ${t('stable')}`,
           changeType: metrics.properties.new > 0 ? "positive" as const : "neutral" as const,
           icon: <Building2 className="h-4 w-4 text-blue-600 dark:text-blue-400" />,
           chartData: formatChartDataForDisplay(metrics.properties.chartData),
           color: "hsl(217 91% 60%)"
         };
       case 'tenants':
-        // Calculer la variation des locataires (nombre de nouveaux locataires ce mois)
         const currentMonthTenants = metrics.tenants.total;
-        const previousMonthTenants = Math.max(0, currentMonthTenants - 1); // Simulation d'une augmentation
+        const previousMonthTenants = Math.max(0, currentMonthTenants - 1);
         const tenantChange = currentMonthTenants - previousMonthTenants;
         const occupancyRate = Math.round(metrics.tenants.occupancyRate || 0);
         
-        // Déterminer la flèche selon la tendance
         let arrow = "→";
         if (tenantChange > 0) arrow = "↗";
         else if (tenantChange < 0) arrow = "↘";
@@ -102,16 +100,14 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           name: t('tenants'),
           value: metrics.tenants.total.toString(),
           change: tenantChange > 0 ? `+${tenantChange}` : tenantChange < 0 ? `${tenantChange}` : undefined,
-          percentageChange: `${arrow} ${occupancyRate}% occupé`,
+          percentageChange: `${arrow} ${occupancyRate}% ${t('occupied')}`,
           changeType: tenantChange > 0 ? "positive" as const : tenantChange < 0 ? "negative" as const : "neutral" as const,
           icon: <Users className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />,
           chartData: formatChartDataForDisplay(metrics.tenants.chartData),
           color: "hsl(262 83% 58%)"
         };
       case 'maintenance':
-        // Calculer une variation réaliste basée sur les données de maintenance
         const currentPending = metrics.maintenance.pending;
-        // Simuler une variation basée sur le nombre actuel de demandes
         const estimatedPreviousPending = currentPending > 0 ? currentPending + 1 : 0;
         const maintenanceChange = currentPending - estimatedPreviousPending;
         
@@ -119,7 +115,7 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
           name: t('pendingMaintenance'),
           value: metrics.maintenance.pending.toString(),
           change: maintenanceChange !== 0 ? (maintenanceChange > 0 ? `+${maintenanceChange}` : `${maintenanceChange}`) : undefined,
-          percentageChange: currentPending === 0 ? "✓ Aucune" : maintenanceChange < 0 ? "↓ Amélioration" : "⚠️ En attente",
+          percentageChange: currentPending === 0 ? `✓ ${t('none')}` : maintenanceChange < 0 ? `↓ ${t('improvement')}` : `⚠️ ${t('pending')}`,
           changeType: currentPending === 0 ? "positive" as const : maintenanceChange < 0 ? "positive" as const : "negative" as const,
           icon: <Wrench className="h-4 w-4 text-amber-600 dark:text-amber-400" />,
           chartData: formatChartDataForDisplay(metrics.maintenance.chartData),

@@ -44,6 +44,25 @@ export const enDashboardCore = {
   revenue: "Revenue",
   expenses: "Expenses",
   pendingMaintenance: "Pending Maintenance",
+  
+  // Section descriptions
+  overviewDescription: "Key performance indicators of your real estate portfolio",
+  prioritiesDescription: "Urgent tasks and items requiring your attention",
+  revenueDescription: "Financial analysis and revenue evolution",
+  activitiesDescription: "History of recent actions and events",
+  
+  // Generic status translations
+  new: "New",
+  stable: "Stable",
+  pending: "Pending",
+  improvement: "Improvement",
+  none: "None",
+  active: "Active",
+  occupied: "Occupied",
+  available: "Available",
+  upward: "Upward",
+  downward: "Downward",
+  neutral: "Neutral",
 };
 
 export const frDashboardCore = {
@@ -91,4 +110,23 @@ export const frDashboardCore = {
   revenue: "Revenus",
   expenses: "Dépenses",
   pendingMaintenance: "Maintenance en Attente",
+  
+  // Section descriptions
+  overviewDescription: "Indicateurs clés de performance de votre portefeuille immobilier",
+  prioritiesDescription: "Tâches urgentes et éléments nécessitant votre attention",
+  revenueDescription: "Analyse financière et évolution des revenus",
+  activitiesDescription: "Historique des actions et événements récents",
+  
+  // Generic status translations
+  new: "Nouvelles",
+  stable: "Stable",
+  pending: "En attente",
+  improvement: "Amélioration",
+  none: "Aucune",
+  active: "Actif",
+  occupied: "Occupé",
+  available: "Disponible",
+  upward: "Hausse",
+  downward: "Baisse",
+  neutral: "Stable",
 };

@@ -2,6 +2,7 @@
 import React from "react";
 import { DashboardMetrics } from "../DashboardMetrics";
 import { DateRange } from "../DashboardDateFilter";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DashboardOverviewProps {
   dateRange: DateRange;
@@ -16,13 +17,15 @@ export const DashboardOverview = ({
   maintenanceData, 
   tenantsData 
 }: DashboardOverviewProps) => {
+  const { t } = useLocale();
+
   return (
     <div className="space-y-6">
       {/* Section Header */}
       <div>
-        <h2 className="text-2xl font-semibold">Vue d'ensemble</h2>
+        <h2 className="text-2xl font-semibold">{t('overview')}</h2>
         <p className="text-muted-foreground">
-          Indicateurs clés de performance de votre portefeuille immobilier
+          {t('overviewDescription')}
         </p>
       </div>
 

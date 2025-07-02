@@ -1,6 +1,7 @@
 
 import React from "react";
 import { PrioritySection } from "../PrioritySection";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DashboardPrioritiesProps {
   maintenanceData: any[];
@@ -13,13 +14,15 @@ export const DashboardPriorities = ({
   tenantsData, 
   paymentsData 
 }: DashboardPrioritiesProps) => {
+  const { t } = useLocale();
+
   return (
     <div className="space-y-6">
       {/* Section Header */}
       <div>
-        <h2 className="text-2xl font-semibold">Priorités</h2>
+        <h2 className="text-2xl font-semibold">{t('priorities')}</h2>
         <p className="text-muted-foreground">
-          Tâches urgentes et éléments nécessitant votre attention
+          {t('prioritiesDescription')}
         </p>
       </div>
 
