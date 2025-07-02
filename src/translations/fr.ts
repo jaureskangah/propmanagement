@@ -1,3 +1,4 @@
+
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -452,6 +453,22 @@ const translations = {
   errorAddingProperty: "Erreur lors de l'ajout de la propriété",
   errorUpdatingProperty: "Erreur lors de la mise à jour de la propriété",
   
+  // Additional missing translations for Property form - NOUVELLES ADDITIONS
+  enterName: "Entrez le nom de la propriété",
+  enterAddress: "Entrez l'adresse de la propriété",
+  
+  // Form validation messages - NOUVELLES ADDITIONS  
+  propertyNameRequired: "Le nom de la propriété est requis",
+  propertyAddressRequired: "L'adresse de la propriété est requise",
+  propertyTypeRequired: "Le type de propriété est requis",
+  propertyUnitsRequired: "Le nombre d'unités est requis",
+  invalidUnitsNumber: "Veuillez entrer un nombre d'unités valide",
+  
+  // Image upload messages - NOUVELLES ADDITIONS
+  imageUploadError: "Erreur lors du téléchargement de l'image",
+  imageUploaded: "Image téléchargée avec succès",
+  selectImage: "Sélectionner une image",
+  
   // Documents section
   documents: "Documents",
   uploadedDocuments: "Documents téléversés",
@@ -580,7 +597,6 @@ const translations = {
   positiveFlow: "Flux Positif",
   negativeFlow: "Flux Négatif",
   breakEvenPoint: "Point d'Équilibre",
-  roi: "ROI",
   returnOnInvestment: "Retour sur Investissement",
   
   // Financial Chart translations
