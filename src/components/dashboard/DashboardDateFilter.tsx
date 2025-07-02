@@ -15,7 +15,7 @@ interface DashboardDateFilterProps {
 
 export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterProps) {
   const [selectedPeriod, setSelectedPeriod] = useState("this_month");
-  const { t, language } = useLocale();
+  const { t } = useLocale();
 
   const handlePeriodChange = (value: string) => {
     setSelectedPeriod(value);
@@ -70,17 +70,6 @@ export function DashboardDateFilter({ onDateRangeChange }: DashboardDateFilterPr
 
     onDateRangeChange(range);
   };
-
-  // Debug pour voir les traductions
-  console.log("Traductions filtre date:", {
-    thisMonth: t('thisMonth'),
-    lastMonth: t('lastMonth'),
-    last3Months: t('last3Months'),
-    last6Months: t('last6Months'),
-    thisYear: t('thisYear'),
-    lastYear: t('lastYear'),
-    currentLanguage: language
-  });
 
   return (
     <Select value={selectedPeriod} onValueChange={handlePeriodChange}>

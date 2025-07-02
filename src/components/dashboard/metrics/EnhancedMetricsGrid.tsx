@@ -112,7 +112,7 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
         const maintenanceChange = currentPending - estimatedPreviousPending;
         
         return {
-          name: t('pendingMaintenance'),
+          name: t('maintenance'),
           value: metrics.maintenance.pending.toString(),
           change: maintenanceChange !== 0 ? (maintenanceChange > 0 ? `+${maintenanceChange}` : `${maintenanceChange}`) : undefined,
           percentageChange: currentPending === 0 ? `✓ ${t('none')}` : maintenanceChange < 0 ? `↓ ${t('improvement')}` : `⚠️ ${t('pending')}`,
