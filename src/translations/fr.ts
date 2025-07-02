@@ -1,4 +1,3 @@
-
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -623,7 +622,15 @@ const translations = {
   vacancy: "Vacance",
   propertyValue: "Valeur de la Propriété",
   appreciation: "Appréciation",
-  depreciation: "Dépréciation"
+  depreciation: "Dépréciation",
+  
+  // Missing financial metric translations
+  yearToDate: "Année en cours",
+  annualReturn: "Rendement annuel",
+  totalRentPaid: "Total des loyers payés",
+  paymentEvolution: "Évolution des paiements",
+  cumulativeTotal: "Total cumulé",
+  late: "En retard"
 };
 
 export default translations;

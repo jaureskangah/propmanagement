@@ -1,4 +1,3 @@
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -599,7 +598,7 @@ const translations = {
   trendUp: "Trend Up",
   trendDown: "Trend Down",
   
-  // Additional financial terms
+  // Additional financial terms - MISSING KEYS ADDED
   income: "Income",
   rental: "Rental",
   utilities: "Utilities",
@@ -609,7 +608,16 @@ const translations = {
   vacancy: "Vacancy",
   propertyValue: "Property Value",
   appreciation: "Appreciation",
-  depreciation: "Depreciation"
+  depreciation: "Depreciation",
+  
+  // Missing financial metric translations
+  yearToDate: "Year to Date",
+  roi: "ROI",
+  annualReturn: "Annual Return",
+  totalRentPaid: "Total Rent Paid",
+  paymentEvolution: "Payment Evolution",
+  cumulativeTotal: "Cumulative Total",
+  late: "Late"
 };
 
 export default translations;
