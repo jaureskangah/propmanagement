@@ -616,7 +616,6 @@ const translations = {
   // Additional financial terms
   income: "Revenus",
   rental: "Loyer",
-  maintenance: "Maintenance",
   utilities: "Services Publics",
   insurance: "Assurance",
   taxes: "Taxes",
