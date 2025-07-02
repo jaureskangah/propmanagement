@@ -1,3 +1,4 @@
+
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -496,7 +497,17 @@ const translations = {
   noActivityDescription: "Commencez à utiliser la plateforme pour voir les activités ici",
   refreshView: "Actualiser la vue",
   viewReset: "La vue a été réinitialisée",
-  unit: "Unité"
+  unit: "Unité",
+  
+  // Activity types and actions - AJOUT CRITIQUE
+  newTenant: "Nouveau Locataire",
+  paymentReceived: "Paiement Reçu",
+  maintenanceCompleted: "Maintenance Terminée",
+  
+  // Additional activity translations
+  activityItem: "Élément d'Activité",
+  fromProperty: "De la Propriété",
+  propertyActivity: "Activité de Propriété"
 };
 
 export default translations;
