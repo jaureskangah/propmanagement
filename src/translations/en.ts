@@ -381,7 +381,7 @@ const translations = {
   flooring: "Flooring",
   cleaning: "Cleaning",
   landscaping: "Landscaping",
-  security: "Security",
+  securityMaintenance: "Security",
   other: "Other",
   general: "General",
   inspection: "Inspection",
