@@ -51,7 +51,19 @@ export const EnhancedMetricsGrid = ({ metrics, dateRange }: EnhancedMetricsGridP
       maintenance: metrics.maintenance?.chartData?.length,
       dateRange
     });
-  }, [metrics, dateRange]);
+
+    // Debug des traductions critiques
+    console.log("=== DEBUG TRADUCTIONS MÉTRIQUES ===");
+    console.log("properties:", t('properties'));
+    console.log("tenants:", t('tenants'));
+    console.log("maintenance:", t('maintenance'));
+    console.log("occupied:", t('occupied'));
+    console.log("stable:", t('stable'));
+    console.log("improvement:", t('improvement'));
+    console.log("pending:", t('pending'));
+    console.log("none:", t('none'));
+    console.log("new:", t('new'));
+  }, [metrics, dateRange, t]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;

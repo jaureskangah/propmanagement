@@ -1,3 +1,4 @@
+
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -261,7 +262,7 @@ const translations = {
   searchTenants: "Rechercher des locataires...",
   filters: "Filtres",
 
-  // Dashboard customization - CLÉS MANQUANTES AJOUTÉES
+  // Dashboard customization - CLÉS CRITIQUES AJOUTÉES
   notifications: "Notifications",
   customizeDashboard: "Personnaliser le tableau de bord",
   customizeDashboardDescription: "Personnalisez les sections visibles sur votre tableau de bord",
@@ -332,6 +333,43 @@ const translations = {
   
   // Support
   getSupport: "Obtenir de l'aide",
+
+  // DASHBOARD CORE TRANSLATIONS - AJOUT CRITIQUE
+  priorities: "Priorités",
+  activities: "Activités",
+  revenue: "Revenus",
+  expenses: "Dépenses",
+  
+  // Section descriptions - AJOUT CRITIQUE
+  overviewDescription: "Indicateurs clés de performance de votre portefeuille immobilier",
+  prioritiesDescription: "Tâches urgentes et éléments nécessitant votre attention",
+  revenueDescription: "Analyse financière et évolution des revenus",
+  activitiesDescription: "Historique des actions et événements récents",
+  
+  // Generic status translations - AJOUT CRITIQUE
+  new: "Nouvelles",
+  stable: "Stable",
+  improvement: "Amélioration",
+  none: "Aucune",
+  active: "Actif",
+  occupied: "Occupé",
+  available: "Disponible",
+  upward: "Hausse",
+  downward: "Baisse",
+  neutral: "Stable",
+
+  // DATE TRANSLATIONS - AJOUT CRITIQUE
+  today: "Aujourd'hui",
+  yesterday: "Hier",
+  thisWeek: "Cette semaine",
+  thisMonth: "Ce mois",
+  lastMonth: "Mois dernier",
+  last3Months: "3 derniers mois",
+  last6Months: "6 derniers mois",
+  thisYear: "Cette année",
+  lastYear: "Année dernière",
+  date: "Date",
+  filterBy: "Filtrer par",
   
   // Documents section - RESTRUCTURÉ POUR ÉVITER L'ERREUR REACT
   documents: "Documents",
