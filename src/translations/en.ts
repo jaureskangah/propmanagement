@@ -1,3 +1,4 @@
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -566,7 +567,6 @@ const translations = {
   positiveFlow: "Positive Flow",
   negativeFlow: "Negative Flow",
   breakEvenPoint: "Break-even Point",
-  roi: "ROI",
   returnOnInvestment: "Return on Investment",
   
   // Financial Chart translations
