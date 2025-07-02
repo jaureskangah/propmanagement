@@ -35,6 +35,51 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
     return tenantsData.find(tenant => tenant.id === tenantId);
   };
 
+  // Function to safely translate task types with fallback
+  const translateTaskType = (taskType: string): string => {
+    if (!taskType) return t('general');
+    
+    const normalizedType = taskType.toLowerCase().trim();
+    
+    // Try to translate the task type, fallback to original if translation not found
+    try {
+      const translation = t(normalizedType);
+      // If translation returns the same as input (meaning no translation found), 
+      // try some common mappings or return capitalized original
+      if (translation === normalizedType) {
+        // Common task type mappings
+        const typeMapping: { [key: string]: string } = {
+          'maintenance': t('maintenanceTask'),
+          'regular': t('regularTask'),
+          'seasonal': t('seasonalTask'),
+          'repair': t('maintenance'),
+          'fix': t('maintenance')
+        };
+        
+        return typeMapping[normalizedType] || taskType.charAt(0).toUpperCase() + taskType.slice(1);
+      }
+      return translation;
+    } catch (error) {
+      console.warn(`Translation error for task type "${taskType}":`, error);
+      return taskType.charAt(0).toUpperCase() + taskType.slice(1);
+    }
+  };
+
+  // Function to safely translate priority levels
+  const translatePriority = (priority: string): string => {
+    if (!priority) return t('medium');
+    
+    const normalizedPriority = priority.toLowerCase().trim();
+    
+    try {
+      const translation = t(normalizedPriority);
+      return translation || priority.charAt(0).toUpperCase() + priority.slice(1);
+    } catch (error) {
+      console.warn(`Translation error for priority "${priority}":`, error);
+      return priority.charAt(0).toUpperCase() + priority.slice(1);
+    }
+  };
+
   // Trier les tâches par date de la plus récente à la moins récente
   const upcomingTasks = useMemo(() => {
     if (!tasks) return [];
@@ -158,10 +203,10 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                             'bg-green-50 border-green-200 text-green-700 dark:bg-green-900/30 dark:border-green-700 dark:text-green-400'
                           }`}
                         >
-                          {t(task.priority)}
+                          {translatePriority(task.priority)}
                         </Badge>
                         <Badge variant="secondary" className="text-xs dark:bg-gray-700 dark:text-gray-200">
-                          {t(task.type)}
+                          {translateTaskType(task.type)}
                         </Badge>
                       </div>
                     </div>

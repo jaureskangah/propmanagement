@@ -1,5 +1,3 @@
-
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -365,6 +363,37 @@ const translations = {
   date: "Date",
   filterBy: "Filter by",
   
+  // PRIORITY PAGE SPECIFIC TRANSLATIONS
+  priorityTasks: "Priority Tasks",
+  importantEvents: "Important Events",
+  noUrgentTasks: "No urgent tasks",
+  noScheduledTasks: "No scheduled tasks",
+  urgentMaintenanceRequest: "Urgent Maintenance Request",
+  
+  // Task types for maintenance
+  plumbing: "Plumbing",
+  electrical: "Electrical", 
+  hvac: "HVAC",
+  appliance: "Appliance",
+  structural: "Structural",
+  painting: "Painting",
+  flooring: "Flooring",
+  cleaning: "Cleaning",
+  landscaping: "Landscaping",
+  security: "Security",
+  other: "Other",
+  general: "General",
+  inspection: "Inspection",
+  preventive: "Preventive",
+  
+  // Additional task types used in dashboard
+  regularTask: "Regular Task",
+  seasonalTask: "Seasonal Task",
+  maintenanceTask: "Maintenance Task",
+  
+  // Emergency and priority indicators
+  emergency: "Emergency",
+  
   // Documents section - nested under documents object
   documents: {
     documents: "Documents",
@@ -440,4 +469,3 @@ const translations = {
 };
 
 export default translations;
-

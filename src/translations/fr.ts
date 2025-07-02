@@ -372,6 +372,37 @@ const translations = {
   date: "Date",
   filterBy: "Filtrer par",
   
+  // PRIORITY PAGE SPECIFIC TRANSLATIONS
+  priorityTasks: "Tâches Prioritaires",
+  importantEvents: "Événements Importants",
+  noUrgentTasks: "Aucune tâche urgente",
+  noScheduledTasks: "Aucune tâche programmée",
+  urgentMaintenanceRequest: "Demande de Maintenance Urgente",
+  
+  // Task types for maintenance - Types de tâches pour la maintenance
+  plumbing: "Plomberie",
+  electrical: "Électricité",
+  hvac: "CVC",
+  appliance: "Électroménager",
+  structural: "Structure",
+  painting: "Peinture",
+  flooring: "Revêtement de sol",
+  cleaning: "Nettoyage",
+  landscaping: "Aménagement paysager",
+  security: "Sécurité",
+  other: "Autre",
+  general: "Général", 
+  inspection: "Inspection",
+  preventive: "Préventif",
+  
+  // Additional task types used in dashboard
+  regularTask: "Tâche régulière",
+  seasonalTask: "Tâche saisonnière",
+  maintenanceTask: "Tâche de maintenance",
+  
+  // Emergency and priority indicators
+  emergency: "Urgence",
+  
   // Documents section - RESTRUCTURÉ POUR ÉVITER L'ERREUR REACT
   documents: "Documents",
   uploadedDocuments: "Documents téléversés",
@@ -454,4 +485,3 @@ const translations = {
 };
 
 export default translations;
-
