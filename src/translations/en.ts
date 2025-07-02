@@ -1,5 +1,4 @@
 
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -139,6 +138,7 @@ const translations = {
   confirm: "Confirm",
   create: "Create",
   update: "Update",
+  all: "All",
   
   // Tenant Dashboard essentials
   overview: "Overview",
@@ -404,6 +404,48 @@ const translations = {
   exportCSV: "Export CSV",
   exportPDF: "Export PDF",
   exportExcel: "Export Excel",
+  
+  // PROPERTIES PAGE TRANSLATIONS - ADDED
+  propertiesManagement: "Properties Management",
+  propertiesSubtitle: "Manage your properties efficiently",
+  addProperty: "Add Property",
+  editProperty: "Edit Property",
+  deleteProperty: "Delete Property",
+  propertyName: "Property Name",
+  propertyAddress: "Address",
+  propertyType: "Property Type",
+  propertyUnits: "Units",
+  propertyImage: "Property Image",
+  uploadImage: "Upload Image",
+  uploadingImage: "Uploading...",
+  selectPropertyType: "Select Property Type",
+  apartment: "Apartment",
+  house: "House",
+  condo: "Condo",
+  office: "Office",
+  commercialSpace: "Commercial Space",
+  searchProperties: "Search properties...",
+  filterByType: "Filter by Type",
+  noProperties: "No properties found",
+  noPropertiesFiltered: "No properties match your filters",
+  tryAdjustingFilters: "Try adjusting your search filters or add a new property to get started.",
+  addYourFirstProperty: "Get started by adding your first property to the system.",
+  propertyDeleted: "Property deleted successfully",
+  propertyAdded: "Property added successfully",
+  propertyUpdated: "Property updated successfully",
+  confirmPropertyDelete: "Confirm Property Deletion",
+  propertyDeleteWarning: "Are you sure you want to delete this property? This action cannot be undone.",
+  totalProperties: "Properties",
+  viewFinancials: "View Financials",
+  viewDetails: "View Details",
+  saveProperty: "Save Property",
+  updating: "Updating...",
+  adding: "Adding...",
+  notAvailable: "N/A",
+  propertyDeleteSuccess: "Property has been successfully deleted",
+  propertyDeleteError: "Error occurred while deleting the property",
+  errorAddingProperty: "Error occurred while adding the property",
+  errorUpdatingProperty: "Error occurred while updating the property",
   
   // Documents section - nested under documents object
   documents: {

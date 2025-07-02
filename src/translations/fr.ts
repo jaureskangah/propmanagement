@@ -1,5 +1,4 @@
 
-
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -139,6 +138,7 @@ const translations = {
   confirm: "Confirmer",
   create: "Créer",
   update: "Mettre à jour",
+  all: "Tout",
   
   // Tenant Dashboard essentials
   overview: "Aperçu",
@@ -411,6 +411,48 @@ const translations = {
   exportCSV: "Exporter CSV",
   exportPDF: "Exporter PDF",
   exportExcel: "Exporter Excel",
+  
+  // PROPERTIES PAGE TRANSLATIONS - ADDED
+  propertiesManagement: "Gestion des Propriétés",
+  propertiesSubtitle: "Gérez vos propriétés efficacement",
+  addProperty: "Ajouter une Propriété",
+  editProperty: "Modifier la Propriété",
+  deleteProperty: "Supprimer la Propriété",
+  propertyName: "Nom de la Propriété",
+  propertyAddress: "Adresse",
+  propertyType: "Type de Propriété",
+  propertyUnits: "Unités",
+  propertyImage: "Image de la Propriété",
+  uploadImage: "Télécharger une Image",
+  uploadingImage: "Téléchargement...",
+  selectPropertyType: "Sélectionner le Type de Propriété",
+  apartment: "Appartement",
+  house: "Maison",
+  condo: "Condo",
+  office: "Bureau",
+  commercialSpace: "Espace Commercial",
+  searchProperties: "Rechercher des propriétés...",
+  filterByType: "Filtrer par Type",
+  noProperties: "Aucune propriété trouvée",
+  noPropertiesFiltered: "Aucune propriété ne correspond à vos filtres",
+  tryAdjustingFilters: "Essayez d'ajuster vos filtres de recherche ou ajoutez une nouvelle propriété pour commencer.",
+  addYourFirstProperty: "Commencez en ajoutant votre première propriété au système.",
+  propertyDeleted: "Propriété supprimée avec succès",
+  propertyAdded: "Propriété ajoutée avec succès",
+  propertyUpdated: "Propriété mise à jour avec succès",
+  confirmPropertyDelete: "Confirmer la Suppression de la Propriété",
+  propertyDeleteWarning: "Êtes-vous sûr de vouloir supprimer cette propriété ? Cette action est irréversible.",
+  totalProperties: "Propriétés",
+  viewFinancials: "Voir les Finances",
+  viewDetails: "Voir les Détails",
+  saveProperty: "Enregistrer la Propriété",
+  updating: "Mise à jour...",
+  adding: "Ajout...",
+  notAvailable: "N/D",
+  propertyDeleteSuccess: "La propriété a été supprimée avec succès",
+  propertyDeleteError: "Erreur lors de la suppression de la propriété",
+  errorAddingProperty: "Erreur lors de l'ajout de la propriété",
+  errorUpdatingProperty: "Erreur lors de la mise à jour de la propriété",
   
   // Documents section
   documents: "Documents",
