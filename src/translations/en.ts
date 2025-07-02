@@ -1,4 +1,5 @@
 
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -327,22 +328,19 @@ const translations = {
   // Support
   getSupport: "Get Support",
 
-  // DASHBOARD CORE TRANSLATIONS - AJOUT CRITIQUE
+  // DASHBOARD CORE TRANSLATIONS - CRITICAL ADDITION
   priorities: "Priorities",
   activities: "Activities",
   revenue: "Revenue",
   expenses: "Expenses",
-  metricsOverview: "Metrics Overview",
-  prioritySection: "Priority Items",
-  revenueChart: "Revenue Chart",
   
-  // Section descriptions - AJOUT CRITIQUE
+  // Section descriptions - CRITICAL ADDITION
   overviewDescription: "Key performance indicators of your real estate portfolio",
   prioritiesDescription: "Urgent tasks and items requiring your attention",
   revenueDescription: "Financial analysis and revenue evolution",
   activitiesDescription: "History of recent actions and events",
   
-  // Generic status translations - AJOUT CRITIQUE
+  // Generic status translations - CRITICAL ADDITION
   new: "New",
   stable: "Stable",
   improvement: "Improvement",
@@ -354,7 +352,7 @@ const translations = {
   downward: "Downward",
   neutral: "Neutral",
 
-  // DATE TRANSLATIONS - AJOUT CRITIQUE
+  // DATE TRANSLATIONS - CRITICAL ADDITION
   today: "Today",
   yesterday: "Yesterday",
   thisWeek: "This Week",
@@ -442,3 +440,4 @@ const translations = {
 };
 
 export default translations;
+
