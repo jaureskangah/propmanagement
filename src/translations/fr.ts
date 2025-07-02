@@ -1,5 +1,4 @@
 
-
 // Simplified French translations - no complex imports  
 const translations = {
   // Critical landing page keys
@@ -403,7 +402,7 @@ const translations = {
   // Emergency and priority indicators
   emergency: "Urgence",
   
-  // Documents section - RESTRUCTURÉ POUR ÉVITER L'ERREUR REACT
+  // Documents section
   documents: "Documents",
   uploadedDocuments: "Documents téléversés",
   dragFilesHere: "Glissez vos fichiers ici",
