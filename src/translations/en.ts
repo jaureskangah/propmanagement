@@ -223,6 +223,7 @@ const translations = {
   
   // Payments
   payments: "Payments",
+  payment: "Payment", // Ajouté pour les tags d'activité
   paymentHistory: "Payment History",
   noPaymentHistory: "No payment history available",
   amount: "Amount",
@@ -261,6 +262,9 @@ const translations = {
   // Tenant search
   searchTenants: "Search tenants...",
   filters: "Filters",
+  
+  // Tenant identification
+  tenant: "Tenant", // Ajouté pour les tags d'activité
 
   // Dashboard customization
   dashboardCustomization: "Dashboard Customization",
@@ -396,6 +400,11 @@ const translations = {
   // Emergency and priority indicators
   emergency: "Emergency",
   
+  // Export buttons - AJOUTÉ
+  exportCSV: "Export CSV",
+  exportPDF: "Export PDF",
+  exportExcel: "Export Excel",
+  
   // Documents section - nested under documents object
   documents: {
     documents: "Documents",
@@ -497,4 +506,3 @@ const translations = {
 };
 
 export default translations;
-

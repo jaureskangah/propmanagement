@@ -36,7 +36,7 @@ export const ExportButton = ({ groupedActivities, hasActivities }: ExportButtonP
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Exporter au format CSV</p>
+            <p>{t('exportCSV')}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -55,7 +55,7 @@ export const ExportButton = ({ groupedActivities, hasActivities }: ExportButtonP
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Exporter au format PDF</p>
+            <p>{t('exportPDF')}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>

@@ -223,6 +223,7 @@ const translations = {
   
   // Payments
   payments: "Paiements",
+  payment: "Paiement", // Ajouté pour les tags d'activité
   paymentHistory: "Historique des paiements",
   noPaymentHistory: "Aucun historique de paiement disponible",
   amount: "Montant",
@@ -262,6 +263,9 @@ const translations = {
   // Tenant search
   searchTenants: "Rechercher des locataires...",
   filters: "Filtres",
+  
+  // Tenant identification
+  tenant: "Locataire", // Ajouté pour les tags d'activité
 
   // Dashboard customization - CLÉS CRITIQUES AJOUTÉES
   notifications: "Notifications",
@@ -403,6 +407,11 @@ const translations = {
   // Emergency and priority indicators
   emergency: "Urgence",
   
+  // Export buttons - AJOUTÉ
+  exportCSV: "Exporter CSV",
+  exportPDF: "Exporter PDF",
+  exportExcel: "Exporter Excel",
+  
   // Documents section
   documents: "Documents",
   uploadedDocuments: "Documents téléversés",
@@ -511,4 +520,3 @@ const translations = {
 };
 
 export default translations;
-
