@@ -476,7 +476,13 @@ const translations = {
   errorLoadingData: "Error loading data",
   
   // Chart-specific translations
-  profit: "Profit"
+  profit: "Profit",
+  
+  // Activity page specific translations
+  noActivityDescription: "Start using the platform to see activities here",
+  refreshView: "Refresh View",
+  viewReset: "View has been reset",
+  unit: "Unit"
 };
 
 export default translations;

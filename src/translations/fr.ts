@@ -490,7 +490,13 @@ const translations = {
   errorLoadingData: "Erreur lors du chargement des données",
   
   // Chart-specific translations
-  profit: "Profit"
+  profit: "Profit",
+  
+  // Activity page specific translations
+  noActivityDescription: "Commencez à utiliser la plateforme pour voir les activités ici",
+  refreshView: "Actualiser la vue",
+  viewReset: "La vue a été réinitialisée",
+  unit: "Unité"
 };
 
 export default translations;
