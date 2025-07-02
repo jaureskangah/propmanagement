@@ -429,7 +429,7 @@ const translations = {
   house: "Maison",
   condo: "Condo",
   propertyOffice: "Bureau", // Renamed to avoid conflict with contact office
-  commercialspace: "Espace Commercial",
+  commercialspace: "Espace Commercial", // Standardized key
   searchProperties: "Rechercher des propriétés...",
   filterByType: "Filtrer par Type",
   noProperties: "Aucune propriété trouvée",
@@ -626,6 +626,7 @@ const translations = {
   
   // Missing financial metric translations
   yearToDate: "Année en cours",
+  roi: "ROI",
   annualReturn: "Rendement annuel",
   totalRentPaid: "Total des loyers payés",
   paymentEvolution: "Évolution des paiements",

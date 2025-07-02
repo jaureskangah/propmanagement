@@ -18,6 +18,25 @@ const PropertyFiltersSection = ({
 }: PropertyFiltersSectionProps) => {
   const { t } = useLocale();
 
+  const getPropertyTypeTranslation = (type: string) => {
+    if (type === "All") return t('all');
+    
+    switch (type) {
+      case 'Commercial Space':
+        return t('commercialspace');
+      case 'Office':
+        return t('propertyOffice');
+      case 'Apartment':
+        return t('apartment');
+      case 'House':
+        return t('house');
+      case 'Condo':
+        return t('condo');
+      default:
+        return type;
+    }
+  };
+
   if (!showFilters) return null;
 
   return (
@@ -41,7 +60,7 @@ const PropertyFiltersSection = ({
                   : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:-translate-y-1"
               } font-sans`}
             >
-              {type === "All" ? t('all') : t(type.toLowerCase().replace(/\s+/g, '') === 'office' ? 'propertyOffice' : type.toLowerCase().replace(/\s+/g, ''))}
+              {getPropertyTypeTranslation(type)}
             </button>
           ))}
         </div>

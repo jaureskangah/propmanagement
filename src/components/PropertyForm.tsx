@@ -65,6 +65,23 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
     }
   };
 
+  const getPropertyTypeTranslation = (type: string) => {
+    switch (type) {
+      case 'Commercial Space':
+        return t('commercialspace');
+      case 'Office':
+        return t('propertyOffice');
+      case 'Apartment':
+        return t('apartment');
+      case 'House':
+        return t('house');
+      case 'Condo':
+        return t('condo');
+      default:
+        return type;
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -127,7 +144,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
                 <SelectContent>
                   {PROPERTY_TYPES.map((type) => (
                     <SelectItem key={type} value={type}>
-                      {type === "Commercial Space" ? t('commercialSpace') : t(type.toLowerCase())}
+                      {getPropertyTypeTranslation(type)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -174,7 +191,7 @@ export function PropertyForm({ onSubmit, onCancel, isSubmitting, initialData }: 
             {t('cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting || isUploadingImage}>
-            {isSubmitting ? t('saving') : initialData ? t('update') : t('add')}
+            {isSubmitting ? t('saving') : initialData ? t('update') : t('create')}
           </Button>
         </div>
       </form>

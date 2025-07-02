@@ -1,4 +1,3 @@
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -617,7 +616,24 @@ const translations = {
   totalRentPaid: "Total Rent Paid",
   paymentEvolution: "Payment Evolution",
   cumulativeTotal: "Cumulative Total",
-  late: "Late"
+  late: "Late",
+  
+  // Additional missing translations for Property form - NOUVELLES ADDITIONS
+  enterName: "Enter property name",
+  enterAddress: "Enter property address",
+  commercialspace: "Commercial Space", // Standardized key
+  
+  // Form validation messages - NOUVELLES ADDITIONS  
+  propertyNameRequired: "Property name is required",
+  propertyAddressRequired: "Property address is required",
+  propertyTypeRequired: "Property type is required",
+  propertyUnitsRequired: "Number of units is required",
+  invalidUnitsNumber: "Please enter a valid number of units",
+  
+  // Image upload messages - NOUVELLES ADDITIONS
+  imageUploadError: "Error uploading image",
+  imageUploaded: "Image uploaded successfully",
+  selectImage: "Select an image",
 };
 
 export default translations;

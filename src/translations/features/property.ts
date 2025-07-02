@@ -20,7 +20,7 @@ export const enProperty: PropertyManagementTranslations = {
   studio: "Studio",
   condo: "Condo",
   office: "Office",
-  commercialSpace: "Commercial Space",
+  commercialSpace: "Commercial Space", // Keep this for backwards compatibility
   searchProperties: "Search Properties",
   filterByType: "Filter by Type",
   noProperties: "No properties found",
@@ -60,7 +60,7 @@ export const frProperty: PropertyManagementTranslations = {
   studio: "Studio",
   condo: "Condo",
   office: "Bureau",
-  commercialSpace: "Espace commercial",
+  commercialSpace: "Espace commercial", // Keep this for backwards compatibility
   searchProperties: "Rechercher des propriétés",
   filterByType: "Filtrer par type",
   noProperties: "Aucune propriété trouvée",
