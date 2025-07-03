@@ -1,4 +1,3 @@
-
 const fr = {
   // Navigation et éléments principaux
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -757,6 +756,119 @@ const fr = {
   pickDate: "Choisir une date",
   add: "Ajouter",
   paymentAddedSuccess: "Le paiement a été enregistré avec succès",
+
+  // TRADUCTIONS AMÉLIORÉES POUR LOCATAIRES - ÉTAPE 1: Statuts et Messages
+  // Messages de statut de bail améliorés
+  leaseStatusHealthy: "Bail en règle",
+  leaseStatusRenewalNeeded: "Renouvellement nécessaire bientôt",
+  leaseStatusOverdue: "Bail en retard pour le renouvellement",
+  leaseStatusPendingSignature: "En attente de signature du locataire",
+  leaseStatusDraftSent: "Projet de bail envoyé au locataire",
+  
+  // États de chargement et d'erreur améliorés
+  loadingTenantData: "Chargement des informations du locataire...",
+  loadingTenantList: "Chargement des locataires...",
+  errorLoadingTenants: "Impossible de charger les informations des locataires",
+  errorConnectingDatabase: "Erreur de connexion. Veuillez réessayer.",
+  tenantDataOutdated: "Certaines informations peuvent être obsolètes",
+  refreshTenantData: "Actualiser les données du locataire",
+  
+  // Info-bulles et confirmations d'actions
+  viewTenantTooltip: "Voir les détails et documents du locataire",
+  editTenantTooltip: "Modifier les informations du locataire et les détails du bail",
+  deleteTenantTooltip: "Retirer le locataire de la propriété",
+  inviteTenantTooltip: "Envoyer une invitation au portail locataire",
+  downloadLeaseTooltip: "Télécharger le contrat de bail actuel",
+  renewLeaseTooltip: "Commencer le processus de renouvellement du bail",
+  
+  // Messages de confirmation améliorés
+  deleteTenantConfirmTitle: "Retirer le Locataire",
+  deleteTenantConfirmDescription: "Ceci supprimera définitivement {tenantName} et toutes les données associées de {propertyName}. Cette action ne peut pas être annulée.",
+  proceedWithDeletion: "Oui, retirer le locataire",
+  cancelDeletion: "Garder le locataire",
+  
+  // ÉTAPE 2: Harmonisation des Formulaires
+  // Messages de validation de formulaire améliorés
+  fieldCannotBeEmpty: "Ce champ ne peut pas être vide",
+  emailFormatInvalid: "Veuillez entrer une adresse email valide (ex: nom@exemple.com)",
+  phoneFormatInvalid: "Veuillez entrer un numéro de téléphone valide",
+  rentAmountInvalid: "Le montant du loyer doit être un nombre positif",
+  dateInvalid: "Veuillez sélectionner une date valide",
+  leaseEndBeforeStart: "La date de fin du bail doit être après la date de début",
+  futureLeaseStartWarning: "La date de début du bail est dans le futur",
+  pastLeaseEndWarning: "Le bail a déjà expiré",
+  
+  // Messages de succès de formulaire améliorés
+  tenantCreatedSuccessfully: "Nouveau locataire {tenantName} ajouté à {propertyName}",
+  tenantUpdatedSuccessfully: "Les informations du locataire ont été mises à jour avec succès",
+  invitationSentSuccessfully: "Invitation envoyée à {tenantEmail}",
+  leaseRenewedSuccessfully: "Bail renouvelé pour {tenantName} jusqu'au {endDate}",
+  
+  // Placeholders améliorés
+  searchTenantsPlaceholder: "Rechercher par nom, email, numéro d'unité ou propriété...",
+  tenantNotesPlaceholder: "Ajouter des notes sur ce locataire (historique de maintenance, préférences, etc.)",
+  emergencyContactPlaceholder: "Informations de contact d'urgence",
+  
+  // ÉTAPE 3: Amélioration des États Vides
+  noTenantsEmptyState: "Aucun locataire ajouté encore",
+  noTenantsEmptyDescription: "Commencez par ajouter votre premier locataire pour gérer efficacement vos propriétés",
+  addFirstTenant: "Ajouter votre premier locataire",
+  noSearchResults: "Aucun locataire ne correspond à votre recherche",
+  noSearchResultsDescription: "Essayez d'ajuster vos termes de recherche ou de supprimer les filtres",
+  clearSearchFilters: "Effacer tous les filtres",
+  noActiveLeases: "Aucun bail actif",
+  noActiveLeasesDescription: "Tous les baux actuels ont expiré ou sont en attente de renouvellement",
+  reviewExpiredLeases: "Examiner les baux expirés",
+  
+  // États vides spécifiques aux filtres
+  noTenantsInProperty: "Aucun locataire dans cette propriété",
+  noExpiringLeases: "Aucun bail expirant bientôt",
+  noOverduePayments: "Aucun paiement en retard",
+  allPaymentsCurrent: "Tous les paiements sont à jour",
+  
+  // ÉTAPE 4: Améliorations des Interactions
+  // Libellés des boutons d'action
+  viewFullProfile: "Voir le profil complet",
+  managePayments: "Gérer les paiements",
+  viewMaintenanceHistory: "Voir les demandes de maintenance",
+  downloadTenantReport: "Télécharger le rapport du locataire",
+  sendReminder: "Envoyer un rappel de paiement",
+  scheduleInspection: "Programmer une inspection",
+  
+  // Badges et indicateurs de statut
+  paymentStatusCurrent: "À jour",
+  paymentStatusLate: "En retard",
+  paymentStatusPartial: "Partiel",
+  maintenanceStatusOpen: "Demandes ouvertes",
+  maintenanceStatusClosed: "Tout résolu",
+  communicationStatusActive: "Messages récents",
+  communicationStatusQuiet: "Aucune activité récente",
+  
+  // Rétroaction interactive
+  actionCompleted: "Action terminée avec succès",
+  actionFailed: "L'action a échoué. Veuillez réessayer.",
+  unsavedChanges: "Vous avez des modifications non sauvegardées",
+  saveChangesPrompt: "Voulez-vous sauvegarder vos modifications ?",
+  discardChanges: "Annuler les modifications",
+  saveAndContinue: "Sauvegarder et continuer",
+  
+  // ÉTAPE 5: Améliorations spécifiques au contexte
+  // Contexte canadien
+  socialInsuranceNumber: "Numéro d'assurance sociale (NAS)",
+  creditCheckCompleted: "Vérification de crédit terminée",
+  referencesVerified: "Références vérifiées",
+  firstLastMonthDeposit: "Premier et dernier mois de loyer",
+  keyDeposit: "Dépôt de clés",
+  petDeposit: "Dépôt pour animaux",
+  utilitiesIncluded: "Services publics inclus",
+  parkingIncluded: "Stationnement inclus",
+  
+  // Termes canadiens spécifiques au bail
+  standardLeaseForm: "Contrat de bail standard (Ontario)",
+  rentControlApplies: "Contrôle des loyers s'applique",
+  rentIncreaseNotice: "Avis d'augmentation de loyer requis",
+  tenantRights: "Informations sur les droits des locataires",
+  landlordResponsibilities: "Responsabilités du propriétaire",
 };
 
 export default fr;
