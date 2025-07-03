@@ -664,7 +664,7 @@ const translations = {
   saving: "Saving...",
   
   // Tenant status and property info
-  propertyError: "Property Error",
+  propertyError: "Property is required",
   propertyNotFound: "Property Not Found",
   noPropertyAssigned: "No Property Assigned",
   loadingProperty: "Loading property...",
@@ -721,27 +721,24 @@ const translations = {
   filterByStatus: "Filter by status",
   allStatuses: "All statuses",
 
-  // List and Form translations for tenant functionality
-  list: {
-    addTenant: "Add Tenant"
-  },
+  // Root level form translations (moved from nested form object)
+  formNameLabel: "Full Name",
+  formNamePlaceholder: "Enter tenant's full name",
+  formEmailFormLabel: "Email Address",
+  formEmailPlaceholder: "Enter tenant's email address",
+  formPhoneFormLabel: "Phone Number",
+  formPhonePlaceholder: "Enter tenant's phone number",
+  formPropertyLabel: "Property",
+  formPropertyPlaceholder: "Select the property",
+  formUnitFormLabel: "Unit Number",
+  formUnitPlaceholder: "Enter unit number",
+  formLeaseStartFormLabel: "Start Date",
+  formLeaseEndFormLabel: "End Date",
+  formRentLabel: "Monthly Rent",
+  formRentPlaceholder: "Enter monthly rent amount",
   
-  form: {
-    nameLabel: "Full Name",
-    namePlaceholder: "Enter tenant's full name",
-    emailFormLabel: "Email Address", 
-    emailPlaceholder: "Enter tenant's email address",
-    phoneFormLabel: "Phone Number",
-    phonePlaceholder: "Enter tenant's phone number",
-    propertyLabel: "Property",
-    propertyPlaceholder: "Select the property",
-    unitFormLabel: "Unit Number",
-    unitPlaceholder: "Enter unit number",
-    leaseStartFormLabel: "Start Date",
-    leaseEndFormLabel: "End Date",
-    rentLabel: "Monthly Rent",
-    rentPlaceholder: "Enter monthly rent amount"
-  }
+  // Additional translations for loading states
+  noProperties: "No properties available",
 };
 
 export default translations;
