@@ -632,6 +632,11 @@ const translations = {
   late: "En Retard",
 
   // TENANT PAGE SPECIFIC TRANSLATIONS
+  // Tenant form sections - ADDED MISSING TRANSLATIONS
+  personalInfo: "Informations Personnelles",
+  propertyInfo: "Informations sur la Propriété",
+  leaseInfo: "Informations sur le Bail",
+  
   // Tenant form
   addTenant: "Ajouter un Locataire",
   editTenant: "Modifier le Locataire",

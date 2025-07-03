@@ -633,6 +633,11 @@ const translations = {
   late: "Late",
 
   // TENANT PAGE SPECIFIC TRANSLATIONS
+  // Tenant form sections - ADDED MISSING TRANSLATIONS
+  personalInfo: "Personal Information",
+  propertyInfo: "Property Information", 
+  leaseInfo: "Lease Information",
+  
   // Tenant form
   addTenant: "Add Tenant",
   editTenant: "Edit Tenant",
