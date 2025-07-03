@@ -1,3 +1,4 @@
+
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -691,6 +692,28 @@ const translations = {
   // Notes
   notes: "Notes",
   
+  // NEW: List and Form translations for tenant functionality
+  list: {
+    addTenant: "Ajouter un Locataire"
+  },
+  
+  form: {
+    nameLabel: "Nom complet",
+    namePlaceholder: "Entrez le nom complet du locataire",
+    emailFormLabel: "Adresse email",
+    emailPlaceholder: "Entrez l'adresse email du locataire",
+    phoneFormLabel: "Numéro de téléphone",
+    phonePlaceholder: "Entrez le numéro de téléphone du locataire",
+    propertyLabel: "Propriété",
+    propertyPlaceholder: "Sélectionnez la propriété",
+    unitFormLabel: "Numéro d'unité",
+    unitPlaceholder: "Entrez le numéro d'unité",
+    leaseStartFormLabel: "Date de début",
+    leaseEndFormLabel: "Date de fin",
+    rentLabel: "Loyer mensuel",
+    rentPlaceholder: "Entrez le montant du loyer mensuel"
+  },
+  
   // Tenant list translations
   tenantsList: "Locataires",
   tenantsSubtitle: "Gérer vos locataires",
@@ -702,7 +725,6 @@ const translations = {
   expiring: "Expirant bientôt",
   noResults: "Aucun résultat ne correspond à votre recherche",
   tenantListName: "Nom", // Renamed to avoid conflict with generic name
-  phone: "Téléphone",
   tenantListEmail: "Email", // Renamed to avoid conflict with contactEmail
   lease: "Bail",
   rent: "Loyer",

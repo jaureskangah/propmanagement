@@ -1,3 +1,4 @@
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -692,6 +693,28 @@ const translations = {
   // Notes
   notes: "Notes",
   
+  // NEW: List and Form translations for tenant functionality
+  list: {
+    addTenant: "Add Tenant"
+  },
+  
+  form: {
+    nameLabel: "Full Name",
+    namePlaceholder: "Enter tenant's full name",
+    emailFormLabel: "Email Address", 
+    emailPlaceholder: "Enter tenant's email address",
+    phoneFormLabel: "Phone Number",
+    phonePlaceholder: "Enter tenant's phone number",
+    propertyLabel: "Property",
+    propertyPlaceholder: "Select the property",
+    unitFormLabel: "Unit Number",
+    unitPlaceholder: "Enter unit number",
+    leaseStartFormLabel: "Start Date",
+    leaseEndFormLabel: "End Date",
+    rentLabel: "Monthly Rent",
+    rentPlaceholder: "Enter monthly rent amount"
+  },
+  
   // Tenant list translations
   tenantsList: "Tenants",
   tenantsSubtitle: "Manage your tenants",
@@ -703,7 +726,6 @@ const translations = {
   expiring: "Expiring",
   noResults: "No results match your search",
   tenantListName: "Name", // Renamed to avoid conflict with generic name
-  phone: "Phone",
   tenantListEmail: "Email", // Renamed to avoid conflict with contactEmail
   lease: "Lease",
   rent: "Rent",
