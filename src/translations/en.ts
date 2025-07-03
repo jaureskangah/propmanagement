@@ -1,4 +1,5 @@
 
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -677,7 +678,7 @@ const translations = {
   propertyInfo: "Property Information",
   leaseInfo: "Lease Information",
   
-  // Profile labels
+  // Profile labels  
   emailProfileLabel: "Email Address",
   phoneProfileLabel: "Phone Number",
   leaseStartProfileLabel: "Lease Start Date",
@@ -721,7 +722,7 @@ const translations = {
   filterByStatus: "Filter by status",
   allStatuses: "All statuses",
 
-  // NEW: List and Form translations for tenant functionality
+  // List and Form translations for tenant functionality
   list: {
     addTenant: "Add Tenant"
   },
@@ -745,3 +746,4 @@ const translations = {
 };
 
 export default translations;
+

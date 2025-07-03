@@ -1,4 +1,5 @@
 
+
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -720,7 +721,7 @@ const translations = {
   filterByStatus: "Filtrer par statut",
   allStatuses: "Tous les statuts",
 
-  // NEW: List and Form translations for tenant functionality
+  // List and Form translations for tenant functionality
   list: {
     addTenant: "Ajouter un Locataire"
   },
@@ -744,3 +745,4 @@ const translations = {
 };
 
 export default translations;
+
