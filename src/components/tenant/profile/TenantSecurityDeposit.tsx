@@ -75,8 +75,8 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
                 )}
               >
                 {tenant.security_deposit 
-                  ? `${t('deposited') || "Déposé"} ($${tenant.rent_amount})` 
-                  : t('notDeposited') || "Non déposé"}
+                  ? `${t('deposited')} ($${tenant.rent_amount})` 
+                  : t('notDeposited')}
               </Badge>
             </div>
           ) : (
@@ -89,13 +89,13 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="deposited" id="deposited" />
                 <label htmlFor="deposited" className="text-sm cursor-pointer">
-                  {t('deposited') || "Déposé"} (${tenant.rent_amount})
+                  {t('deposited')} (${tenant.rent_amount})
                 </label>
               </div>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="not_deposited" id="not_deposited" />
                 <label htmlFor="not_deposited" className="text-sm cursor-pointer">
-                  {t('notDeposited') || "Non déposé"}
+                  {t('notDeposited')}
                 </label>
               </div>
             </RadioGroup>
@@ -109,7 +109,7 @@ export const TenantSecurityDeposit = ({ tenant, onUpdateDeposit }: TenantSecurit
             disabled={isButtonDisabled()}
             className="w-full sm:w-auto"
           >
-            {isUpdating ? (t('saving') || "Enregistrement...") : (t('update') || "Mettre à jour")}
+            {isUpdating ? t('saving') : t('update')}
           </Button>
         )}
       </div>

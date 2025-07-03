@@ -16,7 +16,7 @@ interface TenantHeaderProps {
 export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   const { t } = useLocale();
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
-  const [propertyName, setPropertyName] = useState<string>("Chargement...");
+  const [propertyName, setPropertyName] = useState<string>(t('loading'));
   
   // Récupération du nom de la propriété
   useEffect(() => {
@@ -30,7 +30,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
       // Première tentative : utiliser les données de la jointure
       if (tenant.properties && typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
         console.log("✅ Found property name in joined data:", tenant.properties.name);
-        setPropertyName(tenant.properties.name || "Propriété sans nom");
+        setPropertyName(tenant.properties.name || t('propertyNotFound'));
         return;
       }
       
@@ -46,26 +46,26 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
           
           if (error) {
             console.error("❌ Error fetching property:", error);
-            setPropertyName("Erreur propriété");
+            setPropertyName(t('propertyError'));
           } else if (data && data.name) {
             console.log("✅ Found property name via direct query:", data.name);
             setPropertyName(data.name);
           } else {
             console.log("❌ No property found with this ID");
-            setPropertyName("Propriété introuvable");
+            setPropertyName(t('propertyNotFound'));
           }
         } catch (err) {
           console.error("❌ Exception fetching property:", err);
-          setPropertyName("Erreur propriété");
+          setPropertyName(t('propertyError'));
         }
       } else {
         console.log("❌ No property_id");
-        setPropertyName("Sans propriété");
+        setPropertyName(t('noPropertyAssigned'));
       }
     };
 
     getPropertyName();
-  }, [tenant.property_id, tenant.properties]);
+  }, [tenant.property_id, tenant.properties, t]);
   
   const leaseEnded = new Date(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
@@ -78,9 +78,9 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
   };
 
   const getLeaseBadgeText = () => {
-    if (leaseEnded) return t('list.leaseExpired');
-    if (leaseEnding) return t('list.leaseExpiring');
-    return t('list.leaseActive');
+    if (leaseEnded) return t('leaseExpired');
+    if (leaseEnding) return t('leaseExpiring');
+    return t('leaseActive');
   };
   
   const getLeaseStatusIcon = () => {
@@ -117,7 +117,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
             </h2>
             <p className="text-muted-foreground flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              {propertyName} - Unité {tenant.unit_number}
+              {propertyName} - {t('unit')} {tenant.unit_number}
             </p>
           </div>
           

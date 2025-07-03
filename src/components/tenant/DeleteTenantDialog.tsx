@@ -39,9 +39,9 @@ export const DeleteTenantDialog = ({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
+          <AlertDialogTitle>{t('confirmDeleteTenant')}</AlertDialogTitle>
           <AlertDialogDescription>
-            Cette action est irréversible. Le locataire et toutes ses données associées seront supprimés définitivement.
+            {t('tenantDeleteWarning')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -56,10 +56,10 @@ export const DeleteTenantDialog = ({
             {isDeleting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Suppression...
+                {t('saving')}
               </>
             ) : (
-              'Supprimer'
+              t('delete')
             )}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -1,5 +1,4 @@
 
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -233,6 +232,7 @@ const translations = {
   
   // Property info
   unitLabel: "Unit",
+  unit: "Unit",
   rentAmountLabel: "Rent Amount",
   
   // Theme
@@ -549,7 +549,6 @@ const translations = {
   noActivityDescription: "Start using the platform to see activities here",
   refreshView: "Refresh View",
   viewReset: "View has been reset",
-  unit: "Unit",
   
   // Activity types and actions - CRITICAL ADDITION
   newTenant: "New Tenant",
@@ -634,7 +633,7 @@ const translations = {
   cumulativeTotal: "Cumulative Total",
   late: "Late",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS
+  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES TRADUCTIONS
   // Tenant form
   addTenant: "Add Tenant",
   editTenant: "Edit Tenant",
@@ -643,6 +642,7 @@ const translations = {
   tenantDeleted: "Tenant deleted successfully",
   confirmDeleteTenant: "Confirm Tenant Deletion",
   tenantDeleteWarning: "Are you sure you want to delete this tenant? This action cannot be undone.",
+  confirmDelete: "Are you sure you want to delete this tenant?",
   
   // Tenant form fields
   tenantName: "Tenant Name",
@@ -675,8 +675,54 @@ const translations = {
   // Personal info section
   personalInfo: "Personal Information",
   propertyInfo: "Property Information",
-  leaseInfo: "Lease Information"
+  leaseInfo: "Lease Information",
+  
+  // NOUVELLES CLÉS POUR LA PAGE LOCATAIRES
+  // Profile labels
+  emailProfileLabel: "Email Address",
+  phoneProfileLabel: "Phone Number",
+  leaseStartProfileLabel: "Lease Start Date",
+  leaseEndProfileLabel: "Lease End Date",
+  
+  // Security deposit
+  securityDeposit: "Security Deposit",
+  deposited: "Deposited",
+  notDeposited: "Not Deposited",
+  depositStatusUpdated: "Deposit status updated",
+  errorUpdatingDeposit: "Error updating deposit status",
+  
+  // Notes
+  notes: "Notes",
+  
+  // Tenant list translations
+  tenantsList: "Tenants",
+  tenantsSubtitle: "Manage your tenants",
+  deleteTenant: "Delete Tenant",
+  tenantCount: "{count} tenants",
+  tenantCountSingular: "1 tenant",
+  noTenants: "No tenants found",
+  expired: "Expired",
+  expiring: "Expiring",
+  noResults: "No results match your search",
+  name: "Name",
+  phone: "Phone",
+  lease: "Lease",
+  rent: "Rent",
+  property: "Property",
+  actions: "Actions",
+  leaseStatus: "Lease Status",
+  view: "View",
+  details: "Details",
+  lastActivity: "Last Activity",
+  filterAll: "All",
+  filterActive: "Active",
+  filterExpiring: "Expiring",
+  filterExpired: "Expired",
+  back: "Back",
+  selectTenantToView: "Select a tenant to view details",
+  noTenantsFiltered: "No tenants match the current filters",
+  filterByStatus: "Filter by status",
+  allStatuses: "All statuses"
 };
 
 export default translations;
-

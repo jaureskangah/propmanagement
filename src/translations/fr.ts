@@ -1,5 +1,4 @@
 
-
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -232,6 +231,7 @@ const translations = {
   
   // Property info
   unitLabel: "Unité",
+  unit: "Unité",
   rentAmountLabel: "Montant du Loyer",
   
   // Theme
@@ -548,7 +548,6 @@ const translations = {
   noActivityDescription: "Commencez à utiliser la plateforme pour voir les activités ici",
   refreshView: "Actualiser la Vue",
   viewReset: "La vue a été réinitialisée",
-  unit: "Unité",
   
   // Activity types and actions - CRITICAL ADDITION
   newTenant: "Nouveau Locataire",
@@ -633,7 +632,7 @@ const translations = {
   cumulativeTotal: "Total Cumulatif",
   late: "En Retard",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS
+  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES TRADUCTIONS
   // Tenant form
   addTenant: "Ajouter un Locataire",
   editTenant: "Modifier le Locataire",
@@ -642,6 +641,7 @@ const translations = {
   tenantDeleted: "Locataire supprimé avec succès",
   confirmDeleteTenant: "Confirmer la Suppression du Locataire",
   tenantDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce locataire ? Cette action ne peut pas être annulée.",
+  confirmDelete: "Êtes-vous sûr de vouloir supprimer ce locataire ?",
   
   // Tenant form fields
   tenantName: "Nom du Locataire",
@@ -674,8 +674,54 @@ const translations = {
   // Personal info section
   personalInfo: "Informations Personnelles",
   propertyInfo: "Informations sur la Propriété",
-  leaseInfo: "Informations sur le Bail"
+  leaseInfo: "Informations sur le Bail",
+  
+  // NOUVELLES CLÉS POUR LA PAGE LOCATAIRES
+  // Profile labels
+  emailProfileLabel: "Adresse E-mail",
+  phoneProfileLabel: "Numéro de Téléphone",
+  leaseStartProfileLabel: "Date de Début du Bail",
+  leaseEndProfileLabel: "Date de Fin du Bail",
+  
+  // Security deposit
+  securityDeposit: "Dépôt de Garantie",
+  deposited: "Déposé",
+  notDeposited: "Non Déposé",
+  depositStatusUpdated: "Statut du dépôt mis à jour",
+  errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt",
+  
+  // Notes
+  notes: "Notes",
+  
+  // Tenant list translations
+  tenantsList: "Locataires",
+  tenantsSubtitle: "Gérer vos locataires",
+  deleteTenant: "Supprimer le Locataire",
+  tenantCount: "{count} locataires",
+  tenantCountSingular: "1 locataire",
+  noTenants: "Aucun locataire trouvé",
+  expired: "Expiré",
+  expiring: "Expirant bientôt",
+  noResults: "Aucun résultat ne correspond à votre recherche",
+  name: "Nom",
+  phone: "Téléphone",
+  lease: "Bail",
+  rent: "Loyer",
+  property: "Propriété",
+  actions: "Actions",
+  leaseStatus: "Statut du bail",
+  view: "Voir",
+  details: "Détails",
+  lastActivity: "Dernière activité",
+  filterAll: "Tous",
+  filterActive: "Actifs",
+  filterExpiring: "Expirants",
+  filterExpired: "Expirés",
+  back: "Retour",
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
+  noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
+  filterByStatus: "Filtrer par statut",
+  allStatuses: "Tous les statuts"
 };
 
 export default translations;
-
