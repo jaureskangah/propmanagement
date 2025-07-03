@@ -1,4 +1,5 @@
 
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -400,12 +401,12 @@ const translations = {
   // Emergency and priority indicators
   emergency: "Emergency",
   
-  // Export buttons - AJOUTÉ
+  // Export buttons
   exportCSV: "Export CSV",
   exportPDF: "Export PDF",
   exportExcel: "Export Excel",
   
-  // PROPERTIES PAGE TRANSLATIONS - ADDED
+  // PROPERTIES PAGE TRANSLATIONS
   propertiesManagement: "Properties Management",
   propertiesSubtitle: "Manage your properties efficiently",
   addProperty: "Add Property",
@@ -446,18 +447,18 @@ const translations = {
   errorAddingProperty: "Error occurred while adding the property",
   errorUpdatingProperty: "Error occurred while updating the property",
   
-  // Additional missing translations for Property form - NOUVELLES ADDITIONS
+  // Additional missing translations for Property form
   enterName: "Enter property name",
   enterAddress: "Enter property address",
   
-  // Form validation messages - NOUVELLES ADDITIONS  
+  // Form validation messages
   propertyNameRequired: "Property name is required",
   propertyAddressRequired: "Property address is required",
   propertyTypeRequired: "Property type is required",
   propertyUnitsRequired: "Number of units is required",
   invalidUnitsNumber: "Please enter a valid number of units",
   
-  // Image upload messages - NOUVELLES ADDITIONS
+  // Image upload messages
   imageUploadError: "Error uploading image",
   imageUploaded: "Image uploaded successfully",
   selectImage: "Select an image",
@@ -559,7 +560,7 @@ const translations = {
   activityItem: "Activity Item",
   propertyActivity: "Property Activity",
   
-  // FINANCIAL PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS
+  // FINANCIAL PAGE SPECIFIC TRANSLATIONS
   selectProperty: "Select Property",
   selectYear: "Select Year",
   noPropertySelected: "No property selected",
@@ -612,7 +613,7 @@ const translations = {
   trendUp: "Trend Up",
   trendDown: "Trend Down",
   
-  // Additional financial terms - MISSING KEYS ADDED
+  // Additional financial terms
   income: "Income",
   rental: "Rental",
   utilities: "Utilities",
@@ -633,7 +634,7 @@ const translations = {
   cumulativeTotal: "Cumulative Total",
   late: "Late",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS POUR LOCATAIRES
+  // TENANT PAGE SPECIFIC TRANSLATIONS
   // Tenant form
   addTenant: "Add Tenant",
   editTenant: "Edit Tenant",
@@ -647,7 +648,6 @@ const translations = {
   tenantName: "Tenant Name",
   tenantEmail: "Email Address",
   tenantPhone: "Phone Number",
-  selectProperty: "Select Property",
   unitNumber: "Unit Number",
   rentAmount: "Rent Amount",
   
@@ -679,3 +679,4 @@ const translations = {
 };
 
 export default translations;
+

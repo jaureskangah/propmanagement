@@ -1,4 +1,5 @@
 
+
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -399,12 +400,12 @@ const translations = {
   // Emergency and priority indicators
   emergency: "Urgence",
   
-  // Export buttons - AJOUTÉ
+  // Export buttons
   exportCSV: "Exporter CSV",
   exportPDF: "Exporter PDF",
   exportExcel: "Exporter Excel",
   
-  // PROPERTIES PAGE TRANSLATIONS - ADDED
+  // PROPERTIES PAGE TRANSLATIONS
   propertiesManagement: "Gestion des Propriétés",
   propertiesSubtitle: "Gérez vos propriétés efficacement",
   addProperty: "Ajouter une Propriété",
@@ -445,18 +446,18 @@ const translations = {
   errorAddingProperty: "Une erreur s'est produite lors de l'ajout de la propriété",
   errorUpdatingProperty: "Une erreur s'est produite lors de la mise à jour de la propriété",
   
-  // Additional missing translations for Property form - NOUVELLES ADDITIONS
+  // Additional missing translations for Property form
   enterName: "Entrez le nom de la propriété",
   enterAddress: "Entrez l'adresse de la propriété",
   
-  // Form validation messages - NOUVELLES ADDITIONS  
+  // Form validation messages
   propertyNameRequired: "Le nom de la propriété est requis",
   propertyAddressRequired: "L'adresse de la propriété est requise",
   propertyTypeRequired: "Le type de propriété est requis",
   propertyUnitsRequired: "Le nombre d'unités est requis",
   invalidUnitsNumber: "Veuillez entrer un nombre d'unités valide",
   
-  // Image upload messages - NOUVELLES ADDITIONS
+  // Image upload messages
   imageUploadError: "Erreur lors du téléchargement de l'image",
   imageUploaded: "Image téléchargée avec succès",
   selectImage: "Sélectionner une image",
@@ -558,7 +559,7 @@ const translations = {
   activityItem: "Élément d'Activité",
   propertyActivity: "Activité de Propriété",
   
-  // FINANCIAL PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS
+  // FINANCIAL PAGE SPECIFIC TRANSLATIONS
   selectProperty: "Sélectionner une Propriété",
   selectYear: "Sélectionner une Année",
   noPropertySelected: "Aucune propriété sélectionnée",
@@ -611,7 +612,7 @@ const translations = {
   trendUp: "Tendance Haussière",
   trendDown: "Tendance Baissière",
   
-  // Additional financial terms - MISSING KEYS ADDED
+  // Additional financial terms
   income: "Revenus",
   rental: "Location",
   utilities: "Services Publics",
@@ -632,7 +633,7 @@ const translations = {
   cumulativeTotal: "Total Cumulatif",
   late: "En Retard",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS POUR LOCATAIRES
+  // TENANT PAGE SPECIFIC TRANSLATIONS
   // Tenant form
   addTenant: "Ajouter un Locataire",
   editTenant: "Modifier le Locataire",
@@ -646,7 +647,6 @@ const translations = {
   tenantName: "Nom du Locataire",
   tenantEmail: "Adresse E-mail",
   tenantPhone: "Numéro de Téléphone",
-  selectProperty: "Sélectionner une Propriété",
   unitNumber: "Numéro d'Unité",
   rentAmount: "Montant du Loyer",
   
@@ -678,3 +678,4 @@ const translations = {
 };
 
 export default translations;
+
