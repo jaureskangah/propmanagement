@@ -721,6 +721,10 @@ const translations = {
   filterByStatus: "Filter by status",
   allStatuses: "All statuses",
 
+  // LIST-SPECIFIC TRANSLATIONS FOR TENANTLAYOUT COMPONENT
+  listBack: "Back",
+  listSelectTenant: "Select a tenant to view details",
+
   // Root level form translations - moved from nested form object
   formNameLabel: "Full Name",
   formNamePlaceholder: "Enter tenant's full name",

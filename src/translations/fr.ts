@@ -720,6 +720,10 @@ const fr = {
   filterByStatus: "Filtrer par statut",
   allStatuses: "Tous les statuts",
 
+  // LIST-SPECIFIC TRANSLATIONS FOR TENANTLAYOUT COMPONENT
+  listBack: "Retour",
+  listSelectTenant: "Sélectionnez un locataire pour voir les détails",
+
   // Additional lease management translations
   leaseExpiry: "Expiration du bail",
   leaseExpiryManagement: "Gestion de l'expiration des baux",

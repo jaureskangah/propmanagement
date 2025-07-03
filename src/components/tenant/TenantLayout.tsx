@@ -77,7 +77,7 @@ export const TenantLayout = ({
               onClick={() => onTenantSelect("")}
             >
               <ChevronLeft className="h-4 w-4 mr-2" />
-              {t('list.back')}
+              {t('listBack')}
             </Button>
           )}
           
@@ -85,7 +85,7 @@ export const TenantLayout = ({
             <TenantProfile tenant={selectedTenantData} />
           ) : (
             <Card className="h-[300px] flex items-center justify-center">
-              <p className="text-muted-foreground">{t('list.selectTenant')}</p>
+              <p className="text-muted-foreground">{t('listSelectTenant')}</p>
             </Card>
           )}
         </div>
