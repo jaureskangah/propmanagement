@@ -1,4 +1,3 @@
-
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
