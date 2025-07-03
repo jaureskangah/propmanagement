@@ -1,3 +1,4 @@
+
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -109,9 +110,9 @@ const translations = {
   // Contact section
   contactUs: "Nous Contacter",
   contactSubtitle: "Entrez en contact avec notre équipe",
-  contactPhone: "Téléphone", // Renamed to avoid conflict
-  contactEmail: "E-mail", // Renamed to avoid conflict
-  contactOffice: "Bureau", // Renamed from office to avoid conflict
+  contactPhone: "Téléphone",
+  contactEmail: "E-mail",
+  contactOffice: "Bureau",
   sendMessage: "Nous Envoyer un Message",
   yourName: "Votre Nom",
   yourEmail: "Votre E-mail",
@@ -221,7 +222,7 @@ const translations = {
   
   // Payments
   payments: "Paiements",
-  payment: "Paiement", // Ajouté pour les tags d'activité
+  payment: "Paiement",
   paymentHistory: "Historique des Paiements",
   noPaymentHistory: "Aucun historique de paiement disponible",
   amount: "Montant",
@@ -263,7 +264,7 @@ const translations = {
   filters: "Filtres",
   
   // Tenant identification
-  tenant: "Locataire", // Ajouté pour les tags d'activité
+  tenant: "Locataire",
 
   // Dashboard customization
   dashboardCustomization: "Personnalisation du Tableau de Bord",
@@ -421,7 +422,7 @@ const translations = {
   apartment: "Appartement",
   house: "Maison",
   condo: "Condo",
-  propertyOffice: "Bureau", // Renamed to avoid conflict with contact office
+  propertyOffice: "Bureau",
   commercialspace: "Espace Commercial",
   searchProperties: "Rechercher des propriétés...",
   filterByType: "Filtrer par Type",
@@ -691,6 +692,34 @@ const translations = {
   // Notes
   notes: "Notes",
   
+  // Tenant list translations
+  tenantsList: "Locataires",
+  tenantsSubtitle: "Gérer vos locataires",
+  deleteTenant: "Supprimer le Locataire",
+  tenantCount: "{count} locataires",
+  tenantCountSingular: "1 locataire",
+  noTenants: "Aucun locataire trouvé",
+  expired: "Expiré",
+  expiring: "Expirant bientôt",
+  noResults: "Aucun résultat ne correspond à votre recherche",
+  tenantListName: "Nom",
+  tenantListEmail: "Email",
+  lease: "Bail",
+  rent: "Loyer",
+  property: "Propriété",
+  tenantListView: "Voir",
+  tenantListDetails: "Détails",
+  lastActivity: "Dernière activité",
+  filterAll: "Tous",
+  filterActive: "Actifs",
+  filterExpiring: "Expirants",
+  filterExpired: "Expirés",
+  back: "Retour",
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
+  noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
+  filterByStatus: "Filtrer par statut",
+  allStatuses: "Tous les statuts",
+
   // NEW: List and Form translations for tenant functionality
   list: {
     addTenant: "Ajouter un Locataire"
@@ -711,35 +740,7 @@ const translations = {
     leaseEndFormLabel: "Date de fin",
     rentLabel: "Loyer mensuel",
     rentPlaceholder: "Entrez le montant du loyer mensuel"
-  },
-  
-  // Tenant list translations
-  tenantsList: "Locataires",
-  tenantsSubtitle: "Gérer vos locataires",
-  deleteTenant: "Supprimer le Locataire",
-  tenantCount: "{count} locataires",
-  tenantCountSingular: "1 locataire",
-  noTenants: "Aucun locataire trouvé",
-  expired: "Expiré",
-  expiring: "Expirant bientôt",
-  noResults: "Aucun résultat ne correspond à votre recherche",
-  tenantListName: "Nom", // Renamed to avoid conflict with generic name
-  tenantListEmail: "Email", // Renamed to avoid conflict with contactEmail
-  lease: "Bail",
-  rent: "Loyer",
-  property: "Propriété",
-  tenantListView: "Voir", // Renamed to avoid conflict with generic view
-  tenantListDetails: "Détails", // Renamed to avoid conflict with generic details
-  lastActivity: "Dernière activité",
-  filterAll: "Tous",
-  filterActive: "Actifs",
-  filterExpiring: "Expirants",
-  filterExpired: "Expirés",
-  back: "Retour",
-  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
-  noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
-  filterByStatus: "Filtrer par statut",
-  allStatuses: "Tous les statuts"
+  }
 };
 
 export default translations;

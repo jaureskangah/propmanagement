@@ -1,3 +1,4 @@
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -110,9 +111,9 @@ const translations = {
   // Contact section
   contactUs: "Contact Us",
   contactSubtitle: "Get in touch with our team",
-  contactPhone: "Phone", // Renamed to avoid conflict
-  contactEmail: "Email", // Renamed to avoid conflict
-  contactOffice: "Office", // Renamed from office to avoid conflict
+  contactPhone: "Phone",
+  contactEmail: "Email",
+  contactOffice: "Office",
   sendMessage: "Send us a Message",
   yourName: "Your Name",
   yourEmail: "Your Email",
@@ -222,7 +223,7 @@ const translations = {
   
   // Payments
   payments: "Payments",
-  payment: "Payment", // Ajouté pour les tags d'activité
+  payment: "Payment",
   paymentHistory: "Payment History",
   noPaymentHistory: "No payment history available",
   amount: "Amount",
@@ -264,7 +265,7 @@ const translations = {
   filters: "Filters",
   
   // Tenant identification
-  tenant: "Tenant", // Ajouté pour les tags d'activité
+  tenant: "Tenant",
 
   // Dashboard customization
   dashboardCustomization: "Dashboard Customization",
@@ -422,7 +423,7 @@ const translations = {
   apartment: "Apartment",
   house: "House",
   condo: "Condo",
-  propertyOffice: "Office", // Renamed to avoid conflict with contact office
+  propertyOffice: "Office",
   commercialspace: "Commercial Space",
   searchProperties: "Search properties...",
   filterByType: "Filter by Type",
@@ -692,6 +693,34 @@ const translations = {
   // Notes
   notes: "Notes",
   
+  // Tenant list translations
+  tenantsList: "Tenants",
+  tenantsSubtitle: "Manage your tenants",
+  deleteTenant: "Delete Tenant",
+  tenantCount: "{count} tenants",
+  tenantCountSingular: "1 tenant",
+  noTenants: "No tenants found",
+  expired: "Expired",
+  expiring: "Expiring",
+  noResults: "No results match your search",
+  tenantListName: "Name",
+  tenantListEmail: "Email",
+  lease: "Lease",
+  rent: "Rent",
+  property: "Property",
+  tenantListView: "View",
+  tenantListDetails: "Details",
+  lastActivity: "Last Activity",
+  filterAll: "All",
+  filterActive: "Active",
+  filterExpiring: "Expiring",
+  filterExpired: "Expired",
+  back: "Back",
+  selectTenantToView: "Select a tenant to view details",
+  noTenantsFiltered: "No tenants match the current filters",
+  filterByStatus: "Filter by status",
+  allStatuses: "All statuses",
+
   // NEW: List and Form translations for tenant functionality
   list: {
     addTenant: "Add Tenant"
@@ -712,35 +741,7 @@ const translations = {
     leaseEndFormLabel: "End Date",
     rentLabel: "Monthly Rent",
     rentPlaceholder: "Enter monthly rent amount"
-  },
-  
-  // Tenant list translations
-  tenantsList: "Tenants",
-  tenantsSubtitle: "Manage your tenants",
-  deleteTenant: "Delete Tenant",
-  tenantCount: "{count} tenants",
-  tenantCountSingular: "1 tenant",
-  noTenants: "No tenants found",
-  expired: "Expired",
-  expiring: "Expiring",
-  noResults: "No results match your search",
-  tenantListName: "Name", // Renamed to avoid conflict with generic name
-  tenantListEmail: "Email", // Renamed to avoid conflict with contactEmail
-  lease: "Lease",
-  rent: "Rent",
-  property: "Property",
-  tenantListView: "View", // Renamed to avoid conflict with generic view
-  tenantListDetails: "Details", // Renamed to avoid conflict with generic details
-  lastActivity: "Last Activity",
-  filterAll: "All",
-  filterActive: "Active",
-  filterExpiring: "Expiring",
-  filterExpired: "Expired",
-  back: "Back",
-  selectTenantToView: "Select a tenant to view details",
-  noTenantsFiltered: "No tenants match the current filters",
-  filterByStatus: "Filter by status",
-  allStatuses: "All statuses"
+  }
 };
 
 export default translations;
