@@ -1,5 +1,6 @@
 
 
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -725,3 +726,4 @@ const translations = {
 };
 
 export default translations;
+
