@@ -756,7 +756,6 @@ const fr = {
   showMorePayments: "Voir {count} paiements de plus",
   pickDate: "Choisir une date",
   add: "Ajouter",
-  adding: "Ajout en cours...",
   paymentAddedSuccess: "Le paiement a été enregistré avec succès",
 };
 
