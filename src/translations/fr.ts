@@ -124,7 +124,7 @@ const translations = {
   // CTA section essentials
   readyToStart: "Prêt à simplifier votre gestion ?",
   joinOthers: "Rejoignez des milliers de propriétaires qui nous font confiance",
-  ctaStartFree: "Essayer gratuitement",
+  ctaStartFree: "Essayez gratuitement",
   
   // Common translations
   error: 'Erreur',
@@ -647,7 +647,51 @@ const translations = {
   totalRentPaid: "Total des loyers payés",
   paymentEvolution: "Évolution des paiements",
   cumulativeTotal: "Total cumulé",
-  late: "En retard"
+  late: "En retard",
+
+  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS POUR LOCATAIRES
+  // Tenant form
+  addTenant: "Ajouter un Locataire",
+  editTenant: "Modifier le Locataire",
+  tenantAdded: "Locataire ajouté avec succès",
+  tenantUpdated: "Locataire mis à jour avec succès",
+  tenantDeleted: "Locataire supprimé avec succès",
+  confirmDeleteTenant: "Confirmer la Suppression du Locataire",
+  tenantDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce locataire ? Cette action est irréversible.",
+  
+  // Tenant form fields
+  tenantName: "Nom du Locataire",
+  tenantEmail: "Adresse Email",
+  tenantPhone: "Numéro de Téléphone",
+  selectProperty: "Sélectionner une Propriété",
+  unitNumber: "Numéro d'Unité",
+  rentAmount: "Montant du Loyer",
+  
+  // Form validation for tenants
+  invalidEmail: "Veuillez entrer une adresse email valide",
+  invalidAmount: "Veuillez entrer un montant valide",
+  tenantNameRequired: "Le nom du locataire est requis",
+  tenantEmailRequired: "L'adresse email est requise",
+  saving: "Enregistrement...",
+  
+  // Tenant status and property info
+  propertyError: "Erreur de Propriété",
+  propertyNotFound: "Propriété Non Trouvée",
+  noPropertyAssigned: "Aucune Propriété Assignée",
+  loadingProperty: "Chargement de la propriété...",
+  
+  // Tenant invitation
+  inviteTenant: "Inviter le Locataire",
+  invite: "Inviter",
+  
+  // Additional tenant list translations
+  noTenantSelected: "Sélectionnez un locataire pour voir les détails",
+  tenantsCount: "{count} locataires au total",
+  
+  // Personal info section
+  personalInfo: "Informations Personnelles",
+  propertyInfo: "Informations de Propriété",
+  leaseInfo: "Informations du Bail"
 };
 
 export default translations;

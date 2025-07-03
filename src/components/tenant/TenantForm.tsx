@@ -39,31 +39,31 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <h3 className="text-lg font-medium mb-4">{t('form.personalInfo')}</h3>
+          <h3 className="text-lg font-medium mb-4">{t('personalInfo')}</h3>
           <PersonalInfoFields form={form} />
         </div>
 
         <div>
-          <h3 className="text-lg font-medium mb-4">{t('form.propertyInfo')}</h3>
+          <h3 className="text-lg font-medium mb-4">{t('propertyInfo')}</h3>
           <PropertyFields form={form} />
         </div>
 
         <div>
-          <h3 className="text-lg font-medium mb-4">{t('form.leaseInfo')}</h3>
+          <h3 className="text-lg font-medium mb-4">{t('leaseInfo')}</h3>
           <LeaseFields form={form} />
         </div>
         
         <div className="flex justify-end gap-2 pt-4">
           <Button type="button" variant="outline" onClick={onCancel}>
-            {t('form.cancel')}
+            {t('cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
               t('saving')
             ) : isEditMode ? (
-              t('form.saveChanges')
+              t('save')
             ) : (
-              t('form.saveTenant')
+              t('save')
             )}
           </Button>
         </div>

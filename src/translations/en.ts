@@ -634,6 +634,50 @@ const translations = {
   paymentEvolution: "Payment Evolution",
   cumulativeTotal: "Cumulative Total",
   late: "Late",
+
+  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES ADDITIONS POUR LOCATAIRES
+  // Tenant form
+  addTenant: "Add Tenant",
+  editTenant: "Edit Tenant",
+  tenantAdded: "Tenant added successfully",
+  tenantUpdated: "Tenant updated successfully",
+  tenantDeleted: "Tenant deleted successfully",
+  confirmDeleteTenant: "Confirm Tenant Deletion",
+  tenantDeleteWarning: "Are you sure you want to delete this tenant? This action cannot be undone.",
+  
+  // Tenant form fields
+  tenantName: "Tenant Name",
+  tenantEmail: "Email Address",
+  tenantPhone: "Phone Number",
+  selectProperty: "Select Property",
+  unitNumber: "Unit Number",
+  rentAmount: "Rent Amount",
+  
+  // Form validation for tenants
+  invalidEmail: "Please enter a valid email address",
+  invalidAmount: "Please enter a valid amount",
+  tenantNameRequired: "Tenant name is required",
+  tenantEmailRequired: "Email address is required",
+  saving: "Saving...",
+  
+  // Tenant status and property info
+  propertyError: "Property Error",
+  propertyNotFound: "Property Not Found",
+  noPropertyAssigned: "No Property Assigned",
+  loadingProperty: "Loading property...",
+  
+  // Tenant invitation
+  inviteTenant: "Invite Tenant",
+  invite: "Invite",
+  
+  // Additional tenant list translations
+  noTenantSelected: "Select a tenant to view details",
+  tenantsCount: "{count} tenants total",
+  
+  // Personal info section
+  personalInfo: "Personal Information",
+  propertyInfo: "Property Information",
+  leaseInfo: "Lease Information"
 };
 
 export default translations;

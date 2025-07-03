@@ -66,7 +66,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     }
     
     console.log("TenantHeader - No property found, returning default");
-    return "Sans propriété";
+    return t('noPropertyAssigned');
   };
 
   const handleInviteClick = () => {
@@ -97,7 +97,7 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
             </h2>
             <p className="text-muted-foreground flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              {getPropertyName()} - Unité {tenant.unit_number}
+              {getPropertyName()} - {t('unitLabel')} {tenant.unit_number}
             </p>
           </div>
           

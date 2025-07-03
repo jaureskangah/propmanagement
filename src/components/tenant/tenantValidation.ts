@@ -3,13 +3,13 @@ import { z } from "zod";
 
 // Nous utilisons une fonction pour créer le schéma avec les messages traduits
 export const createTenantFormSchema = (t: (key: string) => string) => z.object({
-  name: z.string().min(1, t('form.required')),
+  name: z.string().min(1, t('required')),
   email: z.string().email(t('invalidEmail')),
   phone: z.string().optional(),
-  property_id: z.string().min(1, t('form.required')),
+  property_id: z.string().min(1, t('required')),
   unit_number: z.string().optional(),
-  lease_start: z.string().min(1, t('form.required')),
-  lease_end: z.string().min(1, t('form.required')),
+  lease_start: z.string().min(1, t('required')),
+  lease_end: z.string().min(1, t('required')),
   rent_amount: z.number().min(0, t('invalidAmount')),
 });
 

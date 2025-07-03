@@ -6,6 +6,7 @@ import { TenantActions } from "./TenantActions";
 import { BorderTrail } from "@/components/ui/border-trail";
 import { MapPin, Phone, Mail } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
 
 interface TenantCardProps {
@@ -25,7 +26,8 @@ export const TenantCard = ({
   onDelete,
   onInvite,
 }: TenantCardProps) => {
-  const [propertyName, setPropertyName] = useState<string>("Chargement...");
+  const { t } = useLocale();
+  const [propertyName, setPropertyName] = useState<string>(t('loading'));
 
   // Calculate lease status for gradient
   const leaseEnded = new Date(tenant.lease_end) < new Date();
@@ -66,7 +68,7 @@ export const TenantCard = ({
       // Première tentative : utiliser les données de la jointure
       if (tenant.properties && typeof tenant.properties === 'object' && !Array.isArray(tenant.properties) && 'name' in tenant.properties) {
         console.log("✅ Found property name in joined data:", tenant.properties.name);
-        setPropertyName(tenant.properties.name || "Propriété sans nom");
+        setPropertyName(tenant.properties.name || t('propertyNotFound'));
         return;
       }
       
@@ -82,26 +84,26 @@ export const TenantCard = ({
           
           if (error) {
             console.error("❌ Error fetching property:", error);
-            setPropertyName("Erreur propriété");
+            setPropertyName(t('propertyError'));
           } else if (data && data.name) {
             console.log("✅ Found property name via direct query:", data.name);
             setPropertyName(data.name);
           } else {
             console.log("❌ No property found with this ID");
-            setPropertyName("Propriété introuvable");
+            setPropertyName(t('propertyNotFound'));
           }
         } catch (err) {
           console.error("❌ Exception fetching property:", err);
-          setPropertyName("Erreur propriété");
+          setPropertyName(t('propertyError'));
         }
       } else {
         console.log("❌ No property_id");
-        setPropertyName("Sans propriété");
+        setPropertyName(t('noPropertyAssigned'));
       }
     };
 
     getPropertyName();
-  }, [tenant.property_id, tenant.properties]);
+  }, [tenant.property_id, tenant.properties, t]);
 
   console.log("Final property name for display:", propertyName);
 
@@ -134,7 +136,7 @@ export const TenantCard = ({
             </h3>
           </div>
           <Badge variant="secondary" className="ml-3 bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 font-semibold">
-            Unité {tenant.unit_number}
+            {t('unitLabel')} {tenant.unit_number}
           </Badge>
         </div>
 
