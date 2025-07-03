@@ -709,7 +709,6 @@ const translations = {
   lease: "Bail",
   rent: "Loyer",
   property: "Propriété",
-  actions: "Actions",
   view: "Voir",
   details: "Détails",
   lastActivity: "Dernière activité",
