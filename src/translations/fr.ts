@@ -1,6 +1,4 @@
 
-
-
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -112,8 +110,8 @@ const translations = {
   // Contact section
   contactUs: "Nous Contacter",
   contactSubtitle: "Entrez en contact avec notre équipe",
-  phone: "Téléphone",
-  email: "E-mail",
+  contactPhone: "Téléphone", // Renamed to avoid conflict
+  contactEmail: "E-mail", // Renamed to avoid conflict
   contactOffice: "Bureau", // Renamed from office to avoid conflict
   sendMessage: "Nous Envoyer un Message",
   yourName: "Votre Nom",
@@ -706,6 +704,7 @@ const translations = {
   noResults: "Aucun résultat ne correspond à votre recherche",
   name: "Nom",
   phone: "Téléphone",
+  email: "Email",
   lease: "Bail",
   rent: "Loyer",
   property: "Propriété",

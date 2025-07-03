@@ -1,6 +1,4 @@
 
-
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -113,8 +111,8 @@ const translations = {
   // Contact section
   contactUs: "Contact Us",
   contactSubtitle: "Get in touch with our team",
-  phone: "Phone",
-  email: "Email",
+  contactPhone: "Phone", // Renamed to avoid conflict
+  contactEmail: "Email", // Renamed to avoid conflict
   contactOffice: "Office", // Renamed from office to avoid conflict
   sendMessage: "Send us a Message",
   yourName: "Your Name",
@@ -707,6 +705,7 @@ const translations = {
   noResults: "No results match your search",
   name: "Name",
   phone: "Phone",
+  email: "Email",
   lease: "Lease",
   rent: "Rent",
   property: "Property",
