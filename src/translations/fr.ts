@@ -1,5 +1,4 @@
 
-
 const fr = {
   // Navigation et éléments principaux
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -762,4 +761,3 @@ const fr = {
 };
 
 export default fr;
-
