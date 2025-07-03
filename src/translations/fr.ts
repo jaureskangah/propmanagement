@@ -1,4 +1,3 @@
-
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -702,14 +701,14 @@ const translations = {
   expired: "Expiré",
   expiring: "Expirant bientôt",
   noResults: "Aucun résultat ne correspond à votre recherche",
-  name: "Nom",
+  tenantListName: "Nom", // Renamed to avoid conflict with generic name
   phone: "Téléphone",
-  email: "Email",
+  tenantListEmail: "Email", // Renamed to avoid conflict with contactEmail
   lease: "Bail",
   rent: "Loyer",
   property: "Propriété",
-  view: "Voir",
-  details: "Détails",
+  tenantListView: "Voir", // Renamed to avoid conflict with generic view
+  tenantListDetails: "Détails", // Renamed to avoid conflict with generic details
   lastActivity: "Dernière activité",
   filterAll: "Tous",
   filterActive: "Actifs",

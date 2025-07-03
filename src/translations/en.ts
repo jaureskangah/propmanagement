@@ -1,4 +1,3 @@
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -703,14 +702,14 @@ const translations = {
   expired: "Expired",
   expiring: "Expiring",
   noResults: "No results match your search",
-  name: "Name",
+  tenantListName: "Name", // Renamed to avoid conflict with generic name
   phone: "Phone",
-  email: "Email",
+  tenantListEmail: "Email", // Renamed to avoid conflict with contactEmail
   lease: "Lease",
   rent: "Rent",
   property: "Property",
-  view: "View",
-  details: "Details",
+  tenantListView: "View", // Renamed to avoid conflict with generic view
+  tenantListDetails: "Details", // Renamed to avoid conflict with generic details
   lastActivity: "Last Activity",
   filterAll: "All",
   filterActive: "Active",
