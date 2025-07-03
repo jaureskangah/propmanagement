@@ -1,5 +1,3 @@
-
-
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -705,7 +703,7 @@ const translations = {
   noResults: "Aucun résultat ne correspond à votre recherche",
   tenantListName: "Nom",
   tenantListEmail: "Email",
-  lease: "Bail",
+  leaseColumn: "Bail",
   rent: "Loyer",
   property: "Propriété",
   tenantListView: "Voir",
@@ -745,4 +743,3 @@ const translations = {
 };
 
 export default translations;
-

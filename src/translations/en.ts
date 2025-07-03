@@ -1,5 +1,3 @@
-
-
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -706,7 +704,7 @@ const translations = {
   noResults: "No results match your search",
   tenantListName: "Name",
   tenantListEmail: "Email",
-  lease: "Lease",
+  leaseColumn: "Lease",
   rent: "Rent",
   property: "Property",
   tenantListView: "View",
@@ -746,4 +744,3 @@ const translations = {
 };
 
 export default translations;
-
