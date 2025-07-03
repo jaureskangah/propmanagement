@@ -91,25 +91,25 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
 
   const navItems = [
     { 
-      name: t('documents.documents'), 
+      name: t('documents'), 
       value: "documents", 
       icon: Files,
       count: getCountForTab('documents')
     },
     { 
-      name: t('payments.payments'), 
+      name: t('payments'), 
       value: "payments", 
       icon: CreditCard,
       count: getCountForTab('payments')
     },
     { 
-      name: t('maintenance.maintenance'), 
+      name: t('maintenance'), 
       value: "maintenance", 
       icon: Wrench,
       count: getCountForTab('maintenance')
     },
     { 
-      name: t('documentGenerator.documentGenerator'), 
+      name: t('documentGenerator'), 
       value: "documentGenerator", 
       icon: FileText,
       count: getCountForTab('documentGenerator')

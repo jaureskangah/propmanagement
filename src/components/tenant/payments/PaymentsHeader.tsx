@@ -15,14 +15,14 @@ export const PaymentsHeader = ({ onAddPayment }: PaymentsHeaderProps) => {
     <CardHeader className="flex flex-row items-center justify-between">
       <div className="flex items-center gap-2">
         <DollarSign className="h-5 w-5 text-green-600" />
-        <CardTitle className="text-lg">{t('payments.payments')}</CardTitle>
+        <CardTitle className="text-lg">{t('payments')}</CardTitle>
       </div>
       <Button 
         onClick={onAddPayment}
         className="bg-green-600 hover:bg-green-700"
       >
         <Plus className="h-4 w-4 mr-2" />
-        {t('payments.addPayment')}
+        {t('addPayment')}
       </Button>
     </CardHeader>
   );
