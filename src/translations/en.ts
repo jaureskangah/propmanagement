@@ -530,9 +530,7 @@ const translations = {
     hideFilters: "Hide Filters",
     showFilters: "Show Filters",
     uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
-    manageDocumentsDescription: "Upload and manage important documents for your tenancy",
-    success: "Success",
-    error: "Error"
+    manageDocumentsDescription: "Upload and manage important documents for your tenancy"
   },
   
   // Additional missing translations for Revenue page
