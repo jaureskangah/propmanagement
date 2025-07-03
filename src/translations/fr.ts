@@ -1,3 +1,4 @@
+
 const fr = {
   // Navigation et éléments principaux
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -720,18 +721,6 @@ const fr = {
   // LIST-SPECIFIC TRANSLATIONS FOR TENANTLAYOUT COMPONENT
   listBack: "Retour",
   listSelectTenant: "Sélectionnez un locataire pour voir les détails",
-
-  // Additional lease management translations
-  leaseExpiry: "Expiration du bail",
-  leaseExpiryManagement: "Gestion de l'expiration des baux",
-  leaseExpiryNotifications: "Notifications d'expiration de bail",
-  enableLeaseReminders: "Activer les rappels de bail",
-  reminderSettings: "Paramètres de rappel",
-  daysBeforeExpiry: "Jours avant expiration",
-  notificationMethod: "Méthode de notification",
-  emailAndApp: "Email et App",
-  emailOnly: "Email uniquement",
-  appOnly: "App uniquement",
 
   // Root level form translations (moved from nested form object)
   formNameLabel: "Nom complet",
