@@ -1,3 +1,4 @@
+
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -632,7 +633,7 @@ const translations = {
   late: "En Retard",
 
   // TENANT PAGE SPECIFIC TRANSLATIONS
-  // Tenant form sections - ADDED MISSING TRANSLATIONS
+  // Tenant form sections
   personalInfo: "Informations Personnelles",
   propertyInfo: "Informations sur la Propriété",
   leaseInfo: "Informations sur le Bail",
@@ -674,11 +675,6 @@ const translations = {
   // Additional tenant list translations
   noTenantSelected: "Sélectionnez un locataire pour voir les détails",
   tenantsCount: "{count} locataires au total",
-  
-  // Personal info section
-  personalInfo: "Informations Personnelles",
-  propertyInfo: "Informations sur la Propriété",
-  leaseInfo: "Informations sur le Bail",
   
   // Profile labels
   emailProfileLabel: "Adresse E-mail",

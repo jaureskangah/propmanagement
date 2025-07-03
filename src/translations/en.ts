@@ -1,3 +1,4 @@
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -633,7 +634,7 @@ const translations = {
   late: "Late",
 
   // TENANT PAGE SPECIFIC TRANSLATIONS
-  // Tenant form sections - ADDED MISSING TRANSLATIONS
+  // Tenant form sections
   personalInfo: "Personal Information",
   propertyInfo: "Property Information", 
   leaseInfo: "Lease Information",
@@ -675,11 +676,6 @@ const translations = {
   // Additional tenant list translations
   noTenantSelected: "Select a tenant to view details",
   tenantsCount: "{count} tenants total",
-  
-  // Personal info section
-  personalInfo: "Personal Information",
-  propertyInfo: "Property Information",
-  leaseInfo: "Lease Information",
   
   // Profile labels  
   emailProfileLabel: "Email Address",
