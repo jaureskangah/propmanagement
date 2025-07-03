@@ -721,7 +721,7 @@ const translations = {
   filterByStatus: "Filter by status",
   allStatuses: "All statuses",
 
-  // Root level form translations (moved from nested form object)
+  // Root level form translations - moved from nested form object
   formNameLabel: "Full Name",
   formNamePlaceholder: "Enter tenant's full name",
   formEmailFormLabel: "Email Address",
@@ -736,9 +736,6 @@ const translations = {
   formLeaseEndFormLabel: "End Date",
   formRentLabel: "Monthly Rent",
   formRentPlaceholder: "Enter monthly rent amount",
-  
-  // Additional translations for loading states
-  noProperties: "No properties available",
 };
 
 export default translations;
