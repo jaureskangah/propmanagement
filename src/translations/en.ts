@@ -1,4 +1,5 @@
 
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -633,7 +634,7 @@ const translations = {
   cumulativeTotal: "Cumulative Total",
   late: "Late",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES TRADUCTIONS
+  // TENANT PAGE SPECIFIC TRANSLATIONS
   // Tenant form
   addTenant: "Add Tenant",
   editTenant: "Edit Tenant",
@@ -677,7 +678,6 @@ const translations = {
   propertyInfo: "Property Information",
   leaseInfo: "Lease Information",
   
-  // NOUVELLES CLÉS POUR LA PAGE LOCATAIRES
   // Profile labels
   emailProfileLabel: "Email Address",
   phoneProfileLabel: "Phone Number",
@@ -710,7 +710,6 @@ const translations = {
   rent: "Rent",
   property: "Property",
   actions: "Actions",
-  leaseStatus: "Lease Status",
   view: "View",
   details: "Details",
   lastActivity: "Last Activity",
@@ -726,3 +725,4 @@ const translations = {
 };
 
 export default translations;
+

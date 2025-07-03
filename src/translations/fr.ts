@@ -1,4 +1,5 @@
 
+
 const translations = {
   // Critical landing page keys
   heroTitle: "Gestion Immobilière Simplifiée",
@@ -632,7 +633,7 @@ const translations = {
   cumulativeTotal: "Total Cumulatif",
   late: "En Retard",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS - NOUVELLES TRADUCTIONS
+  // TENANT PAGE SPECIFIC TRANSLATIONS
   // Tenant form
   addTenant: "Ajouter un Locataire",
   editTenant: "Modifier le Locataire",
@@ -676,7 +677,6 @@ const translations = {
   propertyInfo: "Informations sur la Propriété",
   leaseInfo: "Informations sur le Bail",
   
-  // NOUVELLES CLÉS POUR LA PAGE LOCATAIRES
   // Profile labels
   emailProfileLabel: "Adresse E-mail",
   phoneProfileLabel: "Numéro de Téléphone",
@@ -709,7 +709,6 @@ const translations = {
   rent: "Loyer",
   property: "Propriété",
   actions: "Actions",
-  leaseStatus: "Statut du bail",
   view: "Voir",
   details: "Détails",
   lastActivity: "Dernière activité",
@@ -725,3 +724,4 @@ const translations = {
 };
 
 export default translations;
+
