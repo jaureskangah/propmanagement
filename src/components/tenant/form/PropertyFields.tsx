@@ -1,19 +1,19 @@
 
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import type { UseFormReturn } from "react-hook-form";
 import type { TenantFormValues } from "../tenantValidation";
-import { useProperties } from "@/hooks/useProperties";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useProperties } from "@/hooks/useProperties";
 
 interface PropertyFieldsProps {
   form: UseFormReturn<TenantFormValues>;
 }
 
 export const PropertyFields = ({ form }: PropertyFieldsProps) => {
-  const { properties = [] } = useProperties();
   const { t } = useLocale();
+  const { properties, isLoading } = useProperties();
 
   return (
     <div className="space-y-4">
@@ -23,18 +23,28 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('form.propertyLabel')}</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder={t('form.propertyPlaceholder')} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {properties.map((property) => (
-                  <SelectItem key={property.id} value={property.id}>
-                    {property.name}
+                {isLoading ? (
+                  <SelectItem value="" disabled>
+                    {t('loading')}
                   </SelectItem>
-                ))}
+                ) : properties && properties.length > 0 ? (
+                  properties.map((property) => (
+                    <SelectItem key={property.id} value={property.id}>
+                      {property.name} - {property.address}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="" disabled>
+                    {t('noProperties')}
+                  </SelectItem>
+                )}
               </SelectContent>
             </Select>
             <FormMessage />
