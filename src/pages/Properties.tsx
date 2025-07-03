@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import AppSidebar from "@/components/AppSidebar";
 import { motion } from "framer-motion";
@@ -107,7 +106,7 @@ const Properties = () => {
             </div>
           ) : error ? (
             <div className="text-center py-12 text-red-500">
-              <p>{error}</p>
+              <p>{error.message || "An error occurred while loading properties"}</p>
             </div>
           ) : (
             <PropertyCardsSection
