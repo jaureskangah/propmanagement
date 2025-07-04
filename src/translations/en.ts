@@ -154,7 +154,7 @@ const translations = {
   totalRequests: "Total Requests",
   pendingRequests: "Pending Requests",
   resolvedRequests: "Resolved Requests",
-  noMaintenanceRequests: "No maintenance requests found",
+  noMaintenanceRequestsFound: "No maintenance requests found",
   createNewRequestToSee: "Create a new maintenance request to see it here.",
   deleteMaintenanceRequest: "Delete Maintenance Request",
   
@@ -357,7 +357,7 @@ const translations = {
   available: "Available",
   upward: "Upward",
   downward: "Downward",
-  neutral: "Neutral",
+  neutralTrend: "Neutral",
 
   // DATE TRANSLATIONS - CRITICAL ADDITION
   today: "Today",
@@ -415,7 +415,7 @@ const translations = {
   editProperty: "Edit Property",
   deleteProperty: "Delete Property",
   propertyName: "Property Name",
-  propertyAddress: "Address",
+  propertyAddressField: "Address",
   propertyType: "Property Type",
   propertyUnits: "Units",
   propertyImage: "Property Image",
@@ -768,21 +768,6 @@ const translations = {
   documentGeneratorTabTooltip: "Generate new documents",
   noItemsInTab: "No items in this tab",
   
-  // Document upload and management
-  uploadInProgress: "Upload in progress",
-  uploadSuccess: "Upload successful",
-  uploadCancelled: "Upload cancelled",
-  fileTypeNotSupported: "File type not supported",
-  fileTooLarge: "File too large",
-  documentCategorization: "Document Categorization",
-  selectDocumentCategory: "Select document category",
-  documentPreview: "Document Preview",
-  previewUnavailable: "Preview unavailable for this file type",
-  downloadInProgress: "Download in progress",
-  shareDocumentLink: "Share document link",
-  copyLinkToClipboard: "Copy link to clipboard",
-  linkCopied: "Link copied to clipboard",
-  
   // Document categories enhanced
   leaseAgreement: "Lease Agreement",
   identificationDocument: "Identification Document",
@@ -869,7 +854,6 @@ const translations = {
   satisfactionLevel: "Satisfaction Level",
   verySatisfied: "Very Satisfied",
   satisfied: "Satisfied",
-  neutral: "Neutral",
   dissatisfied: "Dissatisfied",
   veryDissatisfied: "Very Dissatisfied",
   additionalComments: "Additional Comments",
@@ -913,7 +897,6 @@ const translations = {
   // Dynamic fields
   dynamicFields: "Dynamic Fields",
   tenantAddress: "Tenant Address",
-  propertyAddress: "Property Address",
   currentDate: "Current Date",
   leaseStartDate: "Lease Start Date",
   leaseEndDate: "Lease End Date",
@@ -964,7 +947,7 @@ const translations = {
   // Empty states - tab specific
   noDocumentsYet: "No documents uploaded yet",
   noPaymentsRecorded: "No payments recorded yet",
-  noMaintenanceRequests: "No maintenance requests yet",
+  noMaintenanceRequestsTab: "No maintenance requests yet",
   noTemplatesAvailable: "No templates available",
   
   // Call-to-action messages
@@ -987,4 +970,3 @@ const translations = {
 };
 
 export default translations;
-

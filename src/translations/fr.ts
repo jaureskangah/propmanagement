@@ -152,7 +152,7 @@ const translations = {
   totalRequests: "Total des Demandes",
   pendingRequests: "Demandes en Attente",
   resolvedRequests: "Demandes Résolues",
-  noMaintenanceRequests: "Aucune demande de maintenance trouvée",
+  noMaintenanceRequestsFound: "Aucune demande de maintenance trouvée",
   createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici.",
   deleteMaintenanceRequest: "Supprimer la Demande de Maintenance",
   
@@ -355,7 +355,7 @@ const translations = {
   available: "Disponible",
   upward: "Ascendant",
   downward: "Descendant",
-  neutral: "Neutre",
+  neutralTrend: "Neutre",
 
   // TRADUCTIONS DE DATE - AJOUT CRITIQUE
   today: "Aujourd'hui",
@@ -413,7 +413,7 @@ const translations = {
   editProperty: "Modifier la Propriété",
   deleteProperty: "Supprimer la Propriété",
   propertyName: "Nom de la Propriété",
-  propertyAddress: "Adresse",
+  propertyAddressField: "Adresse",
   propertyType: "Type de Propriété",
   propertyUnits: "Unités",
   propertyImage: "Image de la Propriété",
@@ -766,21 +766,6 @@ const translations = {
   documentGeneratorTabTooltip: "Générer de nouveaux documents",
   noItemsInTab: "Aucun élément dans cet onglet",
   
-  // Téléchargement et gestion de documents
-  uploadInProgress: "Téléchargement en cours",
-  uploadSuccess: "Téléchargement réussi",
-  uploadCancelled: "Téléchargement annulé",
-  fileTypeNotSupported: "Type de fichier non supporté",
-  fileTooLarge: "Fichier trop volumineux",
-  documentCategorization: "Catégorisation de Document",
-  selectDocumentCategory: "Sélectionner la catégorie de document",
-  documentPreview: "Aperçu du Document",
-  previewUnavailable: "Aperçu indisponible pour ce type de fichier",
-  downloadInProgress: "Téléchargement en cours",
-  shareDocumentLink: "Partager le lien du document",
-  copyLinkToClipboard: "Copier le lien dans le presse-papiers",
-  linkCopied: "Lien copié dans le presse-papiers",
-  
   // Catégories de documents améliorées
   leaseAgreement: "Contrat de Bail",
   identificationDocument: "Document d'Identification",
@@ -867,7 +852,6 @@ const translations = {
   satisfactionLevel: "Niveau de Satisfaction",
   verySatisfied: "Très Satisfait",
   satisfied: "Satisfait",
-  neutral: "Neutre",
   dissatisfied: "Insatisfait",
   veryDissatisfied: "Très Insatisfait",
   additionalComments: "Commentaires Supplémentaires",
@@ -911,7 +895,6 @@ const translations = {
   // Champs dynamiques
   dynamicFields: "Champs Dynamiques",
   tenantAddress: "Adresse du Locataire",
-  propertyAddress: "Adresse de la Propriété",
   currentDate: "Date Actuelle",
   leaseStartDate: "Date de Début de Bail",
   leaseEndDate: "Date de Fin de Bail",
@@ -962,7 +945,7 @@ const translations = {
   // États vides - spécifiques aux onglets
   noDocumentsYet: "Aucun document téléchargé encore",
   noPaymentsRecorded: "Aucun paiement enregistré encore",
-  noMaintenanceRequests: "Aucune demande de maintenance encore",
+  noMaintenanceRequestsTab: "Aucune demande de maintenance encore",
   noTemplatesAvailable: "Aucun modèle disponible",
   
   // Messages d'appel à l'action
@@ -985,4 +968,3 @@ const translations = {
 };
 
 export default translations;
-
