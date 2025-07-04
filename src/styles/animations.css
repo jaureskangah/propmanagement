@@ -120,12 +120,43 @@
   animation: float 3s ease-in-out infinite;
 }
 
+/* Animation shimmer pour les effets de brillance */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+/* Animation de gradient */
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+}
+
 /* Réduction des animations pour les utilisateurs qui préfèrent moins de mouvement */
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-slide-up-fade,
   .animate-grow-from-left,
-  .animate-bar-grow {
+  .animate-bar-grow,
+  .animate-shimmer,
+  .animate-gradient {
     animation: none;
     opacity: 1;
     transform: none;
