@@ -1,4 +1,5 @@
 
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -48,11 +49,9 @@ export const enTenant = {
   notes: "Notes",
   errorUpdatingDeposit: "Error updating deposit",
   
-  // Lease information
-  lease: {
-    start: "Lease Start",
-    end: "Lease End"
-  },
+  // Lease information - now flat keys
+  leaseStart: "Lease Start",
+  leaseEnd: "Lease End",
   leaseStatus: "Lease Status",
   leaseStatusActive: "Active Lease",
   leaseStatusExpiringDays: "Expires in {days} days",
@@ -60,9 +59,7 @@ export const enTenant = {
   leaseActive: "Active Lease",
   leaseExpiring: "Lease Expiring",
   leaseExpired: "Lease Expired",
-  leaseStart: "Lease Start",
   leaseStartProfileLabel: "Lease Start Date",
-  leaseEnd: "Lease End",
   leaseEndProfileLabel: "Lease End Date",
   daysLeft: "{days} days left",
   daysAgo: "{days} days ago",
@@ -86,22 +83,37 @@ export const enTenant = {
   fromProperty: "From Property",
   typeYourMessage: "Type your message here...",
   
-  // Payments section
-  payments: {
-    paid: "Paid",
-    overdue: "Overdue",
-    pending: "Pending",
-    addPayment: "Add Payment",
-    editPayment: "Edit Payment",
-    deletePayment: "Delete Payment",
-    showMorePayments: "Show {count} more payments",
-    paymentHistory: "Payment History",
-    noPaymentHistory: "No payment history available",
-    totalRentPaid: "Total Rent Paid",
-    paymentEvolution: "Payment Evolution",
-    cumulativeTotal: "Cumulative Total",
-    late: "Late"
-  },
+  // Payments section - all flat keys now
+  paymentsPaid: "Paid",
+  paymentsOverdue: "Overdue",
+  paymentsPending: "Pending",
+  addPayment: "Add Payment",
+  editPayment: "Edit Payment",
+  deletePayment: "Delete Payment",
+  showMorePayments: "Show {count} more payments",
+  paymentHistory: "Payment History",
+  noPaymentHistory: "No payment history available",
+  totalRentPaid: "Total Rent Paid",
+  paymentEvolution: "Payment Evolution",
+  cumulativeTotal: "Cumulative Total",
+  paymentsLate: "Late",
+  noPayments: "No payments yet",
+  showLess: "Show Less",
+  paymentDate: "Payment Date",
+  amount: "Amount",
+  paymentStatus: "Status",
+  confirmDeletePayment: "Delete Payment",
+  paymentDeleteWarning: "Are you sure you want to delete this payment?",
+  paymentDeleted: "Payment deleted successfully",
+  paymentAdded: "Payment added successfully",
+  paymentUpdated: "Payment updated successfully",
+  paymentError: "An error occurred while processing the payment",
+  selectPaymentStatus: "Select a status",
+  pickDate: "Pick a date",
+  add: "Add",
+  adding: "Adding...",
+  paymentAddedSuccess: "The payment has been recorded successfully",
+  cancel: "Cancel",
   
   // Additional tenant feedback
   rating: "Rating",
@@ -137,7 +149,6 @@ export const enTenant = {
   rearrangeSections: "Rearrange sections",
   dragToRearrange: "Drag items to rearrange",
   saveChanges: "Save changes",
-  cancel: "Cancel",
   refresh: "Refresh",
   maintenance: "Maintenance",
   chart: "Chart",
@@ -155,15 +166,19 @@ export const enTenant = {
   deleteMaintenanceRequest: "Delete",
   resolved: "Resolved",
   
-  // Payment action translations (flat keys)
-  editPayment: "Edit Payment",
-  deletePayment: "Delete Payment",
-  showLess: "Show Less",
-  showMorePayments: "Show {count} more payments",
-  addPayment: "Add Payment",
-  noPayments: "No payments yet",
+  // Document Generator - all flat keys now
+  documentGeneratorTitle: "Document Generator",
+  documentGeneratorDescription: "Generate professional documents for your property management",
+  documentHistory: "Document History",
+  generateDocument: "Generate Document",
+  selectTemplate: "Select Template",
+  customizeContent: "Customize Content",
+  preview: "Preview",
+  download: "Download",
+  saveTemplate: "Save Template",
+  shareDocument: "Share Document",
   
-  // Document related (nested structure)
+  // Document related (nested structure kept for organization but flat keys for UI)
   documents: {
     dragFilesHere: "Drag your files here",
     orClickToUpload: "or click to browse",
@@ -220,11 +235,9 @@ export const frTenant = {
   notes: "Notes",
   errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt",
   
-  // Informations de bail
-  lease: {
-    start: "Début du Bail",
-    end: "Fin du Bail"
-  },
+  // Informations de bail - maintenant des clés plates
+  leaseStart: "Début du Bail",
+  leaseEnd: "Fin du Bail",
   leaseStatus: "Statut du Bail",
   leaseStatusActive: "Bail Actif",
   leaseStatusExpiringDays: "Expire dans {days} jours",
@@ -232,9 +245,7 @@ export const frTenant = {
   leaseActive: "Bail Actif",
   leaseExpiring: "Bail Expirant",
   leaseExpired: "Bail Expiré",
-  leaseStart: "Début du Bail",
   leaseStartProfileLabel: "Date de Début du Bail",
-  leaseEnd: "Fin du Bail",
   leaseEndProfileLabel: "Date de Fin du Bail",
   daysLeft: "{days} jours restants",
   daysAgo: "il y a {days} jours",
@@ -258,22 +269,37 @@ export const frTenant = {
   fromProperty: "De la Propriété",
   typeYourMessage: "Tapez votre message ici...",
   
-  // Section des paiements
-  payments: {
-    paid: "Payé",
-    overdue: "En Retard",
-    pending: "En Attente",
-    addPayment: "Ajouter un Paiement",
-    editPayment: "Modifier le Paiement",
-    deletePayment: "Supprimer le Paiement",
-    showMorePayments: "Voir {count} paiements de plus",
-    paymentHistory: "Historique des Paiements",
-    noPaymentHistory: "Aucun historique de paiement disponible",
-    totalRentPaid: "Total des Loyers Payés",
-    paymentEvolution: "Évolution des Paiements",
-    cumulativeTotal: "Total Cumulatif",
-    late: "En Retard"
-  },
+  // Section des paiements - toutes les clés plates maintenant
+  paymentsPaid: "Payé",
+  paymentsOverdue: "En Retard",
+  paymentsPending: "En Attente",
+  addPayment: "Ajouter un Paiement",
+  editPayment: "Modifier le Paiement",
+  deletePayment: "Supprimer le Paiement",
+  showMorePayments: "Voir {count} paiements de plus",
+  paymentHistory: "Historique des Paiements",
+  noPaymentHistory: "Aucun historique de paiement disponible",
+  totalRentPaid: "Total des Loyers Payés",
+  paymentEvolution: "Évolution des Paiements",
+  cumulativeTotal: "Total Cumulatif",
+  paymentsLate: "En Retard",
+  noPayments: "Aucun paiement encore",
+  showLess: "Voir Moins",
+  paymentDate: "Date du paiement",
+  amount: "Montant",
+  paymentStatus: "Statut",
+  confirmDeletePayment: "Supprimer le paiement",
+  paymentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce paiement ?",
+  paymentDeleted: "Paiement supprimé avec succès",
+  paymentAdded: "Paiement ajouté avec succès",
+  paymentUpdated: "Paiement mis à jour avec succès",
+  paymentError: "Une erreur est survenue lors du traitement du paiement",
+  selectPaymentStatus: "Sélectionner un statut",
+  pickDate: "Choisir une date",
+  add: "Ajouter",
+  adding: "Ajout en cours...",
+  paymentAddedSuccess: "Le paiement a été enregistré avec succès",
+  cancel: "Annuler",
   
   // Commentaires supplémentaires des locataires
   rating: "Évaluation",
@@ -327,15 +353,19 @@ export const frTenant = {
   deleteMaintenanceRequest: "Supprimer",
   resolved: "Résolu",
   
-  // Payment action translations (flat keys)
-  editPayment: "Modifier le Paiement",
-  deletePayment: "Supprimer le Paiement",
-  showLess: "Voir Moins",
-  showMorePayments: "Voir {count} paiements de plus",
-  addPayment: "Ajouter un Paiement",
-  noPayments: "Aucun paiement encore",
+  // Document Generator - toutes les clés plates maintenant
+  documentGeneratorTitle: "Générateur de Documents",
+  documentGeneratorDescription: "Générez des documents professionnels pour votre gestion immobilière",
+  documentHistory: "Historique des Documents",
+  generateDocument: "Générer un Document",
+  selectTemplate: "Sélectionner un Modèle",
+  customizeContent: "Personnaliser le Contenu",
+  preview: "Aperçu",
+  download: "Télécharger",
+  saveTemplate: "Sauvegarder le Modèle",
+  shareDocument: "Partager le Document",
   
-  // Documents (structure imbriquée)
+  // Documents (structure imbriquée gardée pour l'organisation mais clés plates pour l'UI)
   documents: {
     dragFilesHere: "Glissez vos fichiers ici",
     orClickToUpload: "ou cliquez pour parcourir",

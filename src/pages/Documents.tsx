@@ -35,7 +35,7 @@ const Documents = () => {
                       {t('documentGenerator')}
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                      {t('documentDescription')}
+                      {t('documentGeneratorDescription')}
                     </p>
                   </div>
                 </div>

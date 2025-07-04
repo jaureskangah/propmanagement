@@ -22,7 +22,7 @@ export const AddPaymentDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('payments.addPayment')}</DialogTitle>
+          <DialogTitle>{t('addPayment')}</DialogTitle>
         </DialogHeader>
 
         <PaymentForm 
