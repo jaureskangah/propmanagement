@@ -1,4 +1,5 @@
 
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -91,9 +92,6 @@ export const enTenant = {
   
   // Flat payment keys for backward compatibility
   addPayment: "Add Payment",
-  
-  // Property info
-  rentAmountLabel: "Rent Amount",
   
   // Additional tenant feedback
   rating: "Rating",
@@ -237,9 +235,6 @@ export const frTenant = {
   // Clés de paiement plates pour la compatibilité
   addPayment: "Ajouter un Paiement",
   
-  // Informations de propriété
-  rentAmountLabel: "Montant du Loyer",
-  
   // Commentaires supplémentaires des locataires
   rating: "Évaluation",
   comments: "Commentaires",
@@ -288,3 +283,4 @@ export const frTenant = {
     supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
   }
 };
+
