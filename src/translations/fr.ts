@@ -1,4 +1,5 @@
 
+
 const translations = {
   // Clés essentielles de la page d'accueil
   heroTitle: "Gestion Immobilière Simplifiée",
