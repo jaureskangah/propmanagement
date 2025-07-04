@@ -24,23 +24,24 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
     setSelectedTemplateName(templateName);
   };
 
-  const handleGeneratePreview = async (content: string) => {
+  const handleGeneratePreview = async (content?: string) => {
+    const contentToUse = content || documentContent;
     setIsGenerating(true);
     setPreviewError(null);
     
     try {
-      if (!content || content.trim() === '') {
+      if (!contentToUse || contentToUse.trim() === '') {
         throw new Error(t('documentGenerator.emptyDocument') || "Le contenu du document est vide");
       }
       
       try {
-        const lines = content.split('\n');
+        const lines = contentToUse.split('\n');
         const title = lines.length > 0 ? lines[0].trim() : t('documentGenerator.document') || 'Document';
         
         // Traiter les champs dynamiques si un locataire est fourni
-        let processedContent = content;
+        let processedContent = contentToUse;
         if (tenant) {
-          processedContent = processDynamicFields(content, tenant);
+          processedContent = processDynamicFields(contentToUse, tenant);
         }
         
         const pdfBuffer = await generateCustomPdf(processedContent, {
