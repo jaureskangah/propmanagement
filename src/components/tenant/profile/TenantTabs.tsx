@@ -109,7 +109,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       count: getCountForTab('maintenance')
     },
     { 
-      name: "Document Generator", 
+      name: t('documentGenerator.documentGenerator'), 
       value: "documentGenerator", 
       icon: FileText,
       count: getCountForTab('documentGenerator')
