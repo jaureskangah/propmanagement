@@ -1,4 +1,3 @@
-
 import { Wrench, ArrowUpRight, PlusCircle, AlertCircle, CheckCircle, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -62,7 +61,6 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 border border-amber-100/50 dark:from-amber-950/80 dark:via-yellow-950/70 dark:to-orange-950/60 dark:border-amber-800/30"
     >
-      {/* Decorative background element */}
       <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-amber-200/40 to-yellow-300/30 rounded-full -translate-y-14 translate-x-14 dark:from-amber-700/20 dark:to-yellow-600/15" />
       
       <div className="relative p-6">
@@ -161,8 +159,8 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                       <div className="flex items-center space-x-2 mt-1">
                         <span className="text-xs text-gray-500 dark:text-gray-400">
                           {request.updated_at && request.updated_at !== request.created_at 
-                            ? `Mis à jour: ${formatDate(request.updated_at)}`
-                            : `Créé: ${formatDate(request.created_at)}`
+                            ? `Mis à jour: ${formatDate(request.updated_at, language)}`
+                            : `Créé: ${formatDate(request.created_at, language)}`
                           }
                         </span>
                         {request.priority && request.priority !== 'Medium' && (

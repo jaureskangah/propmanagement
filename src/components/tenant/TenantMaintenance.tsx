@@ -28,7 +28,7 @@ export const TenantMaintenance = ({
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null);
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const queryClient = useQueryClient();
 
   const handleEditClick = async (request: MaintenanceRequest) => {
@@ -104,7 +104,7 @@ export const TenantMaintenance = ({
                   <div>
                     <p className="font-medium">{request.title || request.issue}</p>
                     <p className="text-sm text-muted-foreground">
-                      {t('createdOn')} {formatDate(request.created_at)}
+                      {t('createdOn')} {formatDate(request.created_at, language)}
                     </p>
                   </div>
                 </div>

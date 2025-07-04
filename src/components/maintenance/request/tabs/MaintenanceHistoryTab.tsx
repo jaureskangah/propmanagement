@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { formatDate } from "@/lib/utils";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface HistoryEvent {
   id: string;
@@ -18,6 +19,7 @@ interface MaintenanceHistoryTabProps {
 export const MaintenanceHistoryTab = ({ requestId }: MaintenanceHistoryTabProps) => {
   const [history, setHistory] = useState<HistoryEvent[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { language } = useLocale();
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -91,7 +93,7 @@ export const MaintenanceHistoryTab = ({ requestId }: MaintenanceHistoryTabProps)
             <div className="ml-4">
               <div className="flex justify-between items-start">
                 <h4 className="font-medium">{event.status}</h4>
-                <span className="text-sm text-gray-500">{formatDate(event.created_at)}</span>
+                <span className="text-sm text-gray-500">{formatDate(event.created_at, language)}</span>
               </div>
               {event.comments && (
                 <p className="text-sm text-gray-600 mt-1">{event.comments}</p>

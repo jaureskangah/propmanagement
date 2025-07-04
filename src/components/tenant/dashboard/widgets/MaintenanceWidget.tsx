@@ -94,8 +94,8 @@ export const MaintenanceWidget = ({ requests }: MaintenanceWidgetProps) => {
                   </span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">
                     {request.updated_at && request.updated_at !== request.created_at 
-                      ? `${t('updated')}: ${formatDate(request.updated_at)}`
-                      : `${t('createdOn')}: ${formatDate(request.created_at)}`
+                      ? `${t('updated')}: ${formatDate(request.updated_at, language)}`
+                      : `${t('createdOn')}: ${formatDate(request.created_at, language)}`
                     }
                   </span>
                 </div>

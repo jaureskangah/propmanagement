@@ -100,7 +100,7 @@ export const MaintenanceRequestItem = ({ request, onClick }: MaintenanceRequestI
     }
     
     // Final fallback: Show creation date
-    const fallback = `${t("createdOn")} ${formatDate(request.created_at)}`;
+    const fallback = `${t("createdOn")} ${formatDate(request.created_at, language)}`;
     console.log("Returning fallback date:", fallback);
     return fallback;
   };
