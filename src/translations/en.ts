@@ -875,6 +875,240 @@ const translations = {
   provincialRegulations: "Provincial rental regulations",
   municipalBylaws: "Municipal rental bylaws",
   residentialTenancyAct: "Residential Tenancy Act compliance",
+  
+  // TENANT TABS SPECIFIC TRANSLATIONS
+  // Tab counters and tooltips
+  documentsTabTooltip: "View and manage documents ({count})",
+  paymentsTabTooltip: "View payment history ({count})",
+  maintenanceTabTooltip: "View maintenance requests ({count})",
+  documentGeneratorTabTooltip: "Generate new documents",
+  noItemsInTab: "No items in this tab",
+  
+  // DOCUMENTS TAB ENHANCED TRANSLATIONS
+  // Document upload process
+  uploadInProgress: "Upload in progress",
+  uploadSuccess: "Upload successful",
+  uploadCancelled: "Upload cancelled",
+  fileTypeNotSupported: "File type not supported",
+  fileTooLarge: "File too large",
+  documentCategorization: "Document Categorization",
+  selectDocumentCategory: "Select document category",
+  documentPreview: "Document Preview",
+  previewUnavailable: "Preview unavailable for this file type",
+  downloadInProgress: "Download in progress",
+  shareDocumentLink: "Share document link",
+  copyLinkToClipboard: "Copy link to clipboard",
+  linkCopied: "Link copied to clipboard",
+  
+  // Document categories - enhanced
+  leaseAgreement: "Lease Agreement",
+  identificationDocument: "Identification Document",
+  incomeProof: "Proof of Income",
+  references: "References",
+  insuranceDocument: "Insurance Document",
+  utilitiesDocument: "Utilities Document",
+  moveInInspection: "Move-in Inspection",
+  moveOutInspection: "Move-out Inspection",
+  correspondence: "Correspondence",
+  
+  // Document actions enhanced
+  viewInBrowser: "View in browser",
+  downloadPDF: "Download PDF",
+  printDocument: "Print document",
+  archiveDocument: "Archive document",
+  restoreDocument: "Restore document",
+  documentArchived: "Document archived",
+  documentRestored: "Document restored",
+  
+  // PAYMENTS TAB ENHANCED TRANSLATIONS
+  // Payment statuses - detailed
+  paymentPending: "Payment Pending",
+  paymentProcessing: "Processing",
+  paymentCompleted: "Payment Completed",
+  paymentDeclined: "Payment Declined",
+  paymentRefunded: "Refunded",
+  paymentPartiallyPaid: "Partially Paid",
+  paymentOverdue: "Overdue",
+  paymentScheduled: "Scheduled",
+  
+  // Payment form enhancements
+  paymentMethod: "Payment Method",
+  selectPaymentMethod: "Select payment method",
+  cash: "Cash",
+  check: "Check",
+  bankTransfer: "Bank Transfer",
+  creditCard: "Credit Card",
+  onlinePayment: "Online Payment",
+  
+  // Payment validation
+  paymentAmountRequired: "Payment amount is required",
+  paymentDateRequired: "Payment date is required",
+  paymentMethodRequired: "Payment method is required",
+  invalidPaymentAmount: "Invalid payment amount",
+  paymentAmountTooHigh: "Payment amount exceeds rent amount",
+  
+  // Payment history and filtering
+  filterByPaymentStatus: "Filter by payment status",
+  filterByPaymentMethod: "Filter by payment method",
+  filterByDateRange: "Filter by date range",
+  paymentSummary: "Payment Summary",
+  totalPaid: "Total Paid",
+  totalOutstanding: "Total Outstanding",
+  averagePaymentTime: "Average Payment Time",
+  paymentTrend: "Payment Trend",
+  
+  // MAINTENANCE TAB ENHANCED TRANSLATIONS
+  // Maintenance request types - tenant specific
+  emergencyRequest: "Emergency Request",
+  urgentRequest: "Urgent Request",
+  routineRequest: "Routine Request",
+  preventiveRequest: "Preventive Request",
+  
+  // Maintenance categories - detailed
+  plumbingIssue: "Plumbing Issue",
+  electricalIssue: "Electrical Issue",
+  heatingCooling: "Heating/Cooling",
+  applianceRepair: "Appliance Repair",
+  structuralIssue: "Structural Issue",
+  paintingWork: "Painting Work",
+  flooringIssue: "Flooring Issue",
+  cleaningService: "Cleaning Service",
+  exteriorMaintenance: "Exterior Maintenance",
+  securityIssue: "Security Issue",
+  
+  // Maintenance workflow
+  maintenanceRequestSubmitted: "Your maintenance request has been submitted",
+  maintenanceInspectionScheduled: "Inspection scheduled",
+  maintenanceWorkInProgress: "Work in progress",
+  maintenanceWorkCompleted: "Work completed",
+  maintenanceRequestClosed: "Request closed",
+  
+  // Maintenance feedback system
+  rateMaintenanceWork: "Rate the maintenance work",
+  maintenanceWorkRating: "Maintenance Work Rating",
+  satisfactionLevel: "Satisfaction Level",
+  verySatisfied: "Very Satisfied",
+  satisfied: "Satisfied",
+  neutral: "Neutral",
+  dissatisfied: "Dissatisfied",
+  veryDissatisfied: "Very Dissatisfied",
+  additionalComments: "Additional Comments",
+  feedbackSubmitted: "Feedback submitted successfully",
+  
+  // Maintenance communication
+  maintenanceUpdate: "Maintenance Update",
+  contractorAssigned: "Contractor assigned",
+  estimatedCompletionDate: "Estimated completion date",
+  actualCompletionDate: "Actual completion date",
+  maintenancePhotos: "Maintenance Photos",
+  beforePhotos: "Before Photos",
+  afterPhotos: "After Photos",
+  
+  // DOCUMENT GENERATOR TAB ENHANCED TRANSLATIONS
+  // Document templates
+  documentTemplateLibrary: "Document Template Library",
+  selectTemplate: "Select Template",
+  customTemplate: "Custom Template",
+  blankDocument: "Blank Document",
+  
+  // Template categories
+  legalTemplates: "Legal Templates",
+  communicationTemplates: "Communication Templates",
+  maintenanceTemplates: "Maintenance Templates",
+  financialTemplates: "Financial Templates",
+  
+  // Specific templates
+  leaseRenewalLetter: "Lease Renewal Letter",
+  moveOutNotice: "Move-out Notice",
+  maintenanceRequestForm: "Maintenance Request Form",
+  paymentReminder: "Payment Reminder",
+  receiptTemplate: "Receipt Template",
+  inspectionReport: "Inspection Report",
+  
+  // Document generation process
+  documentGenerationInProgress: "Generating document...",
+  documentGenerated: "Document generated successfully",
+  documentGenerationFailed: "Document generation failed",
+  fillRequiredFields: "Please fill all required fields",
+  
+  // Dynamic fields
+  dynamicFields: "Dynamic Fields",
+  tenantName: "Tenant Name",
+  tenantAddress: "Tenant Address",
+  propertyAddress: "Property Address",
+  currentDate: "Current Date",
+  rentAmount: "Rent Amount",
+  leaseStartDate: "Lease Start Date",
+  leaseEndDate: "Lease End Date",
+  
+  // Document customization
+  documentCustomization: "Document Customization",
+  fontSize: "Font Size",
+  fontFamily: "Font Family",
+  textColor: "Text Color",
+  backgroundColor: "Background Color",
+  margins: "Margins",
+  pageOrientation: "Page Orientation",
+  portrait: "Portrait",
+  landscape: "Landscape",
+  
+  // Document actions
+  saveAsDraft: "Save as Draft",
+  generatePDF: "Generate PDF",
+  sendByEmail: "Send by Email",
+  scheduleDelivery: "Schedule Delivery",
+  documentHistory: "Document History",
+  recentDocuments: "Recent Documents",
+  
+  // TRANSVERSAL ELEMENTS
+  // Tab navigation
+  switchingTabs: "Switching tabs...",
+  tabLoadError: "Error loading tab content",
+  retryLoadingTab: "Retry loading tab",
+  tabContentOutdated: "Tab content may be outdated",
+  refreshTabContent: "Refresh tab content",
+  
+  // Counter tooltips
+  itemCount: "{count} items",
+  itemCountSingular: "1 item",
+  noItems: "No items",
+  newItemsAvailable: "New items available",
+  
+  // Loading states - tab specific
+  loadingDocuments: "Loading documents...",
+  loadingPayments: "Loading payments...",
+  loadingMaintenanceRequests: "Loading maintenance requests...",
+  loadingTemplates: "Loading templates...",
+  
+  // Error states - tab specific
+  errorLoadingDocuments: "Error loading documents",
+  errorLoadingPayments: "Error loading payments",
+  errorLoadingMaintenanceRequests: "Error loading maintenance requests",
+  errorLoadingTemplates: "Error loading templates",
+  
+  // Empty states - tab specific
+  noDocumentsYet: "No documents uploaded yet",
+  noPaymentsRecorded: "No payments recorded yet",
+  noMaintenanceRequests: "No maintenance requests yet",
+  noTemplatesAvailable: "No templates available",
+  
+  // Call-to-action messages
+  uploadFirstDocument: "Upload your first document",
+  recordFirstPayment: "Record your first payment",
+  submitFirstMaintenanceRequest: "Submit your first maintenance request",
+  createFirstDocument: "Create your first document",
+  
+  // Help and guidance
+  documentsHelpText: "Upload and organize important documents related to your tenancy",
+  paymentsHelpText: "Track your rent payments and payment history",
+  maintenanceHelpText: "Submit and track maintenance requests for your unit",
+  documentGeneratorHelpText: "Generate official documents using our templates",
+  
+  // Accessibility
+  tabPanel: "Tab panel",
+  tabList: "Tab list",
+  selectedTab: "Selected tab",
+  tabIndex: "Tab {index} of {total}",
 };
 
 export default translations;

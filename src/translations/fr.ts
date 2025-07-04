@@ -752,10 +752,14 @@ const fr = {
   paymentUpdated: "Paiement mis à jour avec succès",
   paymentError: "Une erreur est survenue lors du traitement du paiement",
   selectPaymentStatus: "Sélectionner un statut",
+  showMore: "Voir Plus",
+  showLess: "Voir Moins",
   showMorePayments: "Voir {count} paiements de plus",
   pickDate: "Choisir une date",
   add: "Ajouter",
+  adding: "Ajout en cours...",
   paymentAddedSuccess: "Le paiement a été enregistré avec succès",
+  cancel: "Annuler",
 
   // TRADUCTIONS AMÉLIORÉES POUR LOCATAIRES - ÉTAPE 1: Statuts et Messages
   // Messages de statut de bail améliorés
@@ -869,6 +873,240 @@ const fr = {
   rentIncreaseNotice: "Avis d'augmentation de loyer requis",
   tenantRights: "Informations sur les droits des locataires",
   landlordResponsibilities: "Responsabilités du propriétaire",
+  
+  // TENANT TABS SPECIFIC TRANSLATIONS
+  // Tooltips et compteurs des onglets
+  documentsTabTooltip: "Voir et gérer les documents ({count})",
+  paymentsTabTooltip: "Voir l'historique des paiements ({count})",
+  maintenanceTabTooltip: "Voir les demandes de maintenance ({count})",
+  documentGeneratorTabTooltip: "Générer de nouveaux documents",
+  noItemsInTab: "Aucun élément dans cet onglet",
+  
+  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET DOCUMENTS
+  // Processus de téléchargement de documents
+  uploadInProgress: "Téléchargement en cours",
+  uploadSuccess: "Téléchargement réussi",
+  uploadCancelled: "Téléchargement annulé",
+  fileTypeNotSupported: "Type de fichier non supporté",
+  fileTooLarge: "Fichier trop volumineux",
+  documentCategorization: "Catégorisation des Documents",
+  selectDocumentCategory: "Sélectionner une catégorie de document",
+  documentPreview: "Aperçu du Document",
+  previewUnavailable: "Aperçu non disponible pour ce type de fichier",
+  downloadInProgress: "Téléchargement en cours",
+  shareDocumentLink: "Partager le lien du document",
+  copyLinkToClipboard: "Copier le lien dans le presse-papiers",
+  linkCopied: "Lien copié dans le presse-papiers",
+  
+  // Catégories de documents - améliorées
+  leaseAgreement: "Contrat de Bail",
+  identificationDocument: "Document d'Identité",
+  incomeProof: "Preuve de Revenus",
+  references: "Références",
+  insuranceDocument: "Document d'Assurance",
+  utilitiesDocument: "Document de Services Publics",
+  moveInInspection: "Inspection d'Entrée",
+  moveOutInspection: "Inspection de Sortie",
+  correspondence: "Correspondance",
+  
+  // Actions de documents améliorées
+  viewInBrowser: "Voir dans le navigateur",
+  downloadPDF: "Télécharger PDF",
+  printDocument: "Imprimer le document",
+  archiveDocument: "Archiver le document",
+  restoreDocument: "Restaurer le document",
+  documentArchived: "Document archivé",
+  documentRestored: "Document restauré",
+  
+  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET PAIEMENTS
+  // Statuts de paiement - détaillés
+  paymentPending: "Paiement en Attente",
+  paymentProcessing: "En Cours de Traitement",
+  paymentCompleted: "Paiement Terminé",
+  paymentDeclined: "Paiement Refusé",
+  paymentRefunded: "Remboursé",
+  paymentPartiallyPaid: "Partiellement Payé",
+  paymentOverdue: "En Retard",
+  paymentScheduled: "Programmé",
+  
+  // Améliorations du formulaire de paiement
+  paymentMethod: "Méthode de Paiement",
+  selectPaymentMethod: "Sélectionner une méthode de paiement",
+  cash: "Espèces",
+  check: "Chèque",
+  bankTransfer: "Virement Bancaire",
+  creditCard: "Carte de Crédit",
+  onlinePayment: "Paiement en Ligne",
+  
+  // Validation des paiements
+  paymentAmountRequired: "Le montant du paiement est requis",
+  paymentDateRequired: "La date de paiement est requise",
+  paymentMethodRequired: "La méthode de paiement est requise",
+  invalidPaymentAmount: "Montant de paiement invalide",
+  paymentAmountTooHigh: "Le montant du paiement dépasse le montant du loyer",
+  
+  // Historique et filtrage des paiements
+  filterByPaymentStatus: "Filtrer par statut de paiement",
+  filterByPaymentMethod: "Filtrer par méthode de paiement",
+  filterByDateRange: "Filtrer par plage de dates",
+  paymentSummary: "Résumé des Paiements",
+  totalPaid: "Total Payé",
+  totalOutstanding: "Total en Attente",
+  averagePaymentTime: "Temps de Paiement Moyen",
+  paymentTrend: "Tendance des Paiements",
+  
+  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET MAINTENANCE
+  // Types de demandes de maintenance - spécifiques aux locataires
+  emergencyRequest: "Demande d'Urgence",
+  urgentRequest: "Demande Urgente",
+  routineRequest: "Demande de Routine",
+  preventiveRequest: "Demande Préventive",
+  
+  // Catégories de maintenance - détaillées
+  plumbingIssue: "Problème de Plomberie",
+  electricalIssue: "Problème Électrique",
+  heatingCooling: "Chauffage/Climatisation",
+  applianceRepair: "Réparation d'Électroménager",
+  structuralIssue: "Problème Structurel",
+  paintingWork: "Travaux de Peinture",
+  flooringIssue: "Problème de Revêtement de Sol",
+  cleaningService: "Service de Nettoyage",
+  exteriorMaintenance: "Maintenance Extérieure",
+  securityIssue: "Problème de Sécurité",
+  
+  // Flux de travail de maintenance
+  maintenanceRequestSubmitted: "Votre demande de maintenance a été soumise",
+  maintenanceInspectionScheduled: "Inspection programmée",
+  maintenanceWorkInProgress: "Travaux en cours",
+  maintenanceWorkCompleted: "Travaux terminés",
+  maintenanceRequestClosed: "Demande fermée",
+  
+  // Système de feedback de maintenance
+  rateMaintenanceWork: "Évaluer les travaux de maintenance",
+  maintenanceWorkRating: "Évaluation des Travaux de Maintenance",
+  satisfactionLevel: "Niveau de Satisfaction",
+  verySatisfied: "Très Satisfait",
+  satisfied: "Satisfait",
+  neutral: "Neutre",
+  dissatisfied: "Insatisfait",
+  veryDissatisfied: "Très Insatisfait",
+  additionalComments: "Commentaires Supplémentaires",
+  feedbackSubmitted: "Feedback soumis avec succès",
+  
+  // Communication de maintenance
+  maintenanceUpdate: "Mise à Jour de Maintenance",
+  contractorAssigned: "Entrepreneur assigné",
+  estimatedCompletionDate: "Date d'achèvement estimée",
+  actualCompletionDate: "Date d'achèvement réelle",
+  maintenancePhotos: "Photos de Maintenance",
+  beforePhotos: "Photos Avant",
+  afterPhotos: "Photos Après",
+  
+  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET GÉNÉRATEUR DE DOCUMENTS
+  // Modèles de documents
+  documentTemplateLibrary: "Bibliothèque de Modèles de Documents",
+  selectTemplate: "Sélectionner un Modèle",
+  customTemplate: "Modèle Personnalisé",
+  blankDocument: "Document Vierge",
+  
+  // Catégories de modèles
+  legalTemplates: "Modèles Légaux",
+  communicationTemplates: "Modèles de Communication",
+  maintenanceTemplates: "Modèles de Maintenance",
+  financialTemplates: "Modèles Financiers",
+  
+  // Modèles spécifiques
+  leaseRenewalLetter: "Lettre de Renouvellement de Bail",
+  moveOutNotice: "Avis de Déménagement",
+  maintenanceRequestForm: "Formulaire de Demande de Maintenance",
+  paymentReminder: "Rappel de Paiement",
+  receiptTemplate: "Modèle de Reçu",
+  inspectionReport: "Rapport d'Inspection",
+  
+  // Processus de génération de documents
+  documentGenerationInProgress: "Génération du document...",
+  documentGenerated: "Document généré avec succès",
+  documentGenerationFailed: "Échec de la génération du document",
+  fillRequiredFields: "Veuillez remplir tous les champs requis",
+  
+  // Champs dynamiques
+  dynamicFields: "Champs Dynamiques",
+  tenantName: "Nom du Locataire",
+  tenantAddress: "Adresse du Locataire",
+  propertyAddress: "Adresse de la Propriété",
+  currentDate: "Date Actuelle",
+  rentAmount: "Montant du Loyer",
+  leaseStartDate: "Date de Début du Bail",
+  leaseEndDate: "Date de Fin du Bail",
+  
+  // Personnalisation des documents
+  documentCustomization: "Personnalisation du Document",
+  fontSize: "Taille de Police",
+  fontFamily: "Famille de Police",
+  textColor: "Couleur du Texte",
+  backgroundColor: "Couleur de Fond",
+  margins: "Marges",
+  pageOrientation: "Orientation de la Page",
+  portrait: "Portrait",
+  landscape: "Paysage",
+  
+  // Actions de documents
+  saveAsDraft: "Enregistrer comme Brouillon",
+  generatePDF: "Générer PDF",
+  sendByEmail: "Envoyer par Email",
+  scheduleDelivery: "Programmer la Livraison",
+  documentHistory: "Historique des Documents",
+  recentDocuments: "Documents Récents",
+  
+  // ÉLÉMENTS TRANSVERSAUX
+  // Navigation des onglets
+  switchingTabs: "Changement d'onglets...",
+  tabLoadError: "Erreur de chargement du contenu de l'onglet",
+  retryLoadingTab: "Réessayer le chargement de l'onglet",
+  tabContentOutdated: "Le contenu de l'onglet peut être obsolète",
+  refreshTabContent: "Actualiser le contenu de l'onglet",
+  
+  // Tooltips de compteurs
+  itemCount: "{count} éléments",
+  itemCountSingular: "1 élément",
+  noItems: "Aucun élément",
+  newItemsAvailable: "Nouveaux éléments disponibles",
+  
+  // États de chargement - spécifiques aux onglets
+  loadingDocuments: "Chargement des documents...",
+  loadingPayments: "Chargement des paiements...",
+  loadingMaintenanceRequests: "Chargement des demandes de maintenance...",
+  loadingTemplates: "Chargement des modèles...",
+  
+  // États d'erreur - spécifiques aux onglets
+  errorLoadingDocuments: "Erreur de chargement des documents",
+  errorLoadingPayments: "Erreur de chargement des paiements",
+  errorLoadingMaintenanceRequests: "Erreur de chargement des demandes de maintenance",
+  errorLoadingTemplates: "Erreur de chargement des modèles",
+  
+  // États vides - spécifiques aux onglets
+  noDocumentsYet: "Aucun document téléchargé encore",
+  noPaymentsRecorded: "Aucun paiement enregistré encore",
+  noMaintenanceRequests: "Aucune demande de maintenance encore",
+  noTemplatesAvailable: "Aucun modèle disponible",
+  
+  // Messages d'appel à l'action
+  uploadFirstDocument: "Téléchargez votre premier document",
+  recordFirstPayment: "Enregistrez votre premier paiement",
+  submitFirstMaintenanceRequest: "Soumettez votre première demande de maintenance",
+  createFirstDocument: "Créez votre premier document",
+  
+  // Aide et orientation
+  documentsHelpText: "Téléchargez et organisez les documents importants liés à votre location",
+  paymentsHelpText: "Suivez vos paiements de loyer et votre historique de paiement",
+  maintenanceHelpText: "Soumettez et suivez les demandes de maintenance pour votre unité",
+  documentGeneratorHelpText: "Générez des documents officiels en utilisant nos modèles",
+  
+  // Accessibilité
+  tabPanel: "Panneau d'onglet",
+  tabList: "Liste d'onglets",
+  selectedTab: "Onglet sélectionné",
+  tabIndex: "Onglet {index} sur {total}",
 };
 
 export default fr;
