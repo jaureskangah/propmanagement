@@ -23,6 +23,16 @@ const translations = {
   fr: frTranslations
 };
 
+// Debug: Log des traductions chargées
+console.log('🔍 DEBUG: Translations loaded:', {
+  en: !!enTranslations,
+  fr: !!frTranslations,
+  enHasDocumentGenerator: !!(enTranslations as any)?.documentGenerator,
+  frHasDocumentGenerator: !!(frTranslations as any)?.documentGenerator,
+  enDocumentGeneratorKeys: Object.keys((enTranslations as any)?.documentGenerator || {}),
+  frDocumentGeneratorKeys: Object.keys((frTranslations as any)?.documentGenerator || {})
+});
+
 // Fonction utilitaire pour accéder aux clés imbriquées
 const getNestedValue = (obj: any, key: string): any => {
   return key.split('.').reduce((current, keyPart) => {
@@ -67,16 +77,22 @@ export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   }, [unitSystem]);
 
   const t = (key: string, params?: Record<string, string> | { fallback?: string }) => {
+    // Debug: Log de chaque tentative de traduction
+    console.log(`🔍 DEBUG: Translating key "${key}" in language "${language}"`);
+    
     // Support des clés imbriquées avec la notation pointée
     let translation = getNestedValue(translations[language], key);
+    console.log(`🔍 DEBUG: Nested translation result for "${key}":`, translation);
     
     // Si la clé imbriquée n'existe pas, essayer la clé plate (compatibilité arrière)
     if (!translation) {
       translation = translations[language][key];
+      console.log(`🔍 DEBUG: Flat translation result for "${key}":`, translation);
     }
     
     if (!translation) {
       console.warn(`🚨 Missing translation for key: "${key}" in language: ${language}`);
+      console.log(`🔍 DEBUG: Available translations for language "${language}":`, Object.keys(translations[language]));
       
       // Check if params has fallback property
       if (params && 'fallback' in params) {
@@ -93,6 +109,7 @@ export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
       });
     }
     
+    console.log(`✅ DEBUG: Final translation for "${key}":`, translation);
     return translation;
   };
 

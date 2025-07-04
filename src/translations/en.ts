@@ -15,6 +15,13 @@ const supportExtensions = {
   getSupport: "Get Support",
 };
 
+// Debug: Log pour vérifier l'import des documents
+console.log('🔍 DEBUG: enDocuments import:', {
+  imported: !!enDocuments,
+  hasDocumentGenerator: !!(enDocuments as any)?.documentGenerator,
+  documentGeneratorKeys: Object.keys((enDocuments as any)?.documentGenerator || {})
+});
+
 // Compose all translations
 const translations = {
   ...enCommon,
@@ -28,5 +35,12 @@ const translations = {
   ...enTenant,
   ...supportExtensions,
 };
+
+// Debug: Log final des traductions composées
+console.log('🔍 DEBUG: Final EN translations:', {
+  hasDocumentGenerator: !!(translations as any)?.documentGenerator,
+  totalKeys: Object.keys(translations).length,
+  documentGeneratorKeys: Object.keys((translations as any)?.documentGenerator || {})
+});
 
 export default translations;
