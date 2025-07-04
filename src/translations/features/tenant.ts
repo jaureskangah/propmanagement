@@ -1,5 +1,6 @@
 
 
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -129,7 +130,6 @@ export const enTenant = {
   saveChanges: "Save changes",
   cancel: "Cancel",
   refresh: "Refresh",
-  documents: "Documents",
   maintenance: "Maintenance",
   chart: "Chart",
   property: "Property",
@@ -271,7 +271,6 @@ export const frTenant = {
   saveChanges: "Enregistrer les modifications",
   cancel: "Annuler",
   refresh: "Actualiser",
-  documents: "Documents",
   maintenance: "Maintenance",
   chart: "Graphique",
   property: "Propriété",
@@ -283,4 +282,5 @@ export const frTenant = {
     supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
   }
 };
+
 
