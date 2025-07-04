@@ -24,7 +24,7 @@ export const MaintenanceDetailSheetContent = ({
   onUpdate,
   canRate
 }: MaintenanceDetailSheetContentProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const [activeTab, setActiveTab] = useState("details");
 
   const getStatusBadge = (status: string) => {
@@ -87,13 +87,13 @@ export const MaintenanceDetailSheetContent = ({
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span>{t('created')}: {formatDate(request.created_at)}</span>
+              <span>{t('created')}: {formatDate(request.created_at, language)}</span>
             </div>
             
             {request.updated_at && request.updated_at !== request.created_at && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Clock className="h-4 w-4" />
-                <span>{t('updated')}: {formatDate(request.updated_at)}</span>
+                <span>{t('updated')}: {formatDate(request.updated_at, language)}</span>
               </div>
             )}
 

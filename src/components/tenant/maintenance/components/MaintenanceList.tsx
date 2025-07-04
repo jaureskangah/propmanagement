@@ -115,7 +115,7 @@ export const MaintenanceList = ({
               <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Calendar className="h-3 w-3" />
-                  {t('createdOn')} {formatDate(request.created_at)}
+                  {t('createdOn')} {formatDate(request.created_at, language)}
                 </span>
               </div>
             </div>
