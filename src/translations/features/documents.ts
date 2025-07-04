@@ -35,7 +35,23 @@ export const enDocuments = {
     documentSaved: "Document saved",
     documentSavedDescription: "Your document has been saved successfully",
     downloadStarted: "Download started",
-    downloadStartedDescription: "Your document will be downloaded shortly"
+    downloadStartedDescription: "Your document will be downloaded shortly",
+    generating: "Generating...",
+    templateLoaded: "Template loaded",
+    templateLoadedDescription: "Template content has been loaded successfully",
+    errorTitle: "Error",
+    templateLoadError: "Unable to load template content",
+    // Document template names
+    leaseAgreement: "Lease Agreement",
+    rentReceipt: "Rent Receipt",
+    noticeToVacate: "Notice to Vacate",
+    leaseRenewal: "Lease Renewal",
+    paymentReminder: "Payment Reminder",
+    latePaymentNotice: "Late Payment Notice",
+    entryNotice: "Entry Notice",
+    maintenanceNotice: "Maintenance Notice",
+    moveInChecklist: "Move-In Checklist",
+    moveOutChecklist: "Move-Out Checklist"
   },
   
   // Flat keys for backward compatibility
@@ -130,7 +146,23 @@ export const frDocuments = {
     documentSaved: "Document enregistré",
     documentSavedDescription: "Votre document a été enregistré avec succès",
     downloadStarted: "Téléchargement commencé",
-    downloadStartedDescription: "Votre document sera téléchargé dans quelques instants"
+    downloadStartedDescription: "Votre document sera téléchargé dans quelques instants",
+    generating: "Génération...",
+    templateLoaded: "Modèle chargé",
+    templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
+    errorTitle: "Erreur",
+    templateLoadError: "Impossible de charger le contenu du modèle",
+    // Noms des modèles de documents
+    leaseAgreement: "Contrat de Bail",
+    rentReceipt: "Quittance de Loyer",
+    noticeToVacate: "Avis de Départ",
+    leaseRenewal: "Renouvellement de Bail",
+    paymentReminder: "Rappel de Paiement",
+    latePaymentNotice: "Avis de Retard de Paiement",
+    entryNotice: "Avis d'Entrée",
+    maintenanceNotice: "Avis de Maintenance",
+    moveInChecklist: "Liste de Contrôle d'Entrée",
+    moveOutChecklist: "Liste de Contrôle de Sortie"
   },
   
   // Clés plates pour la compatibilité

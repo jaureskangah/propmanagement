@@ -27,7 +27,7 @@ export function DocumentTemplateSection({
       <CardHeader className="border-b">
         <div className="flex items-center space-x-2">
           <FileText className="h-4 w-4 text-primary" />
-          <CardTitle className="text-base font-medium">{t('documentGenerator.documentTemplates') || "Modèles de documents"}</CardTitle>
+          <CardTitle className="text-base font-medium">{t('documentGenerator.documentTemplates')}</CardTitle>
         </div>
       </CardHeader>
       <CardContent className="pt-6">

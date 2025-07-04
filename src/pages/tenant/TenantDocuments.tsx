@@ -29,10 +29,10 @@ const TenantDocuments = () => {
                   </div>
                   <div>
                     <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                      {t('documentGenerator')}
+                      {t('documentGenerator.documentGenerator')}
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                      {t('documentGeneratorDescription')}
+                      {t('documentGenerator.description')}
                     </p>
                   </div>
                 </div>
