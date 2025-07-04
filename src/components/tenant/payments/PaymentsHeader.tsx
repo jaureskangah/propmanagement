@@ -15,7 +15,7 @@ export const PaymentsHeader = ({ onAddPayment }: PaymentsHeaderProps) => {
     <CardHeader className="flex flex-row items-center justify-between">
       <div className="flex items-center gap-2">
         <DollarSign className="h-5 w-5 text-green-600" />
-        <CardTitle className="text-lg">{t('payments')}</CardTitle>
+        <CardTitle className="text-lg">{t('paymentsLabel')}</CardTitle>
       </div>
       <Button 
         onClick={onAddPayment}

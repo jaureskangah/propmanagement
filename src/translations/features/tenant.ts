@@ -1,3 +1,4 @@
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -159,6 +160,8 @@ export const enTenant = {
   deletePayment: "Delete Payment",
   showLess: "Show Less",
   showMorePayments: "Show {count} more payments",
+  addPayment: "Add Payment",
+  noPayments: "No payments yet",
   
   // Document related (nested structure)
   documents: {
@@ -329,6 +332,8 @@ export const frTenant = {
   deletePayment: "Supprimer le Paiement",
   showLess: "Voir Moins",
   showMorePayments: "Voir {count} paiements de plus",
+  addPayment: "Ajouter un Paiement",
+  noPayments: "Aucun paiement encore",
   
   // Documents (structure imbriquée)
   documents: {
