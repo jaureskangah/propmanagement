@@ -1,4 +1,5 @@
 
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -759,134 +760,14 @@ const translations = {
   add: "Add",
   paymentAddedSuccess: "The payment has been recorded successfully",
 
-  // ENHANCED TENANT TRANSLATIONS - STEP 1: Status and Messages
-  // Enhanced lease status messages
-  leaseStatusHealthy: "Lease in good standing",
-  leaseStatusRenewalNeeded: "Renewal needed soon",
-  leaseStatusOverdue: "Lease overdue for renewal",
-  leaseStatusPendingSignature: "Awaiting tenant signature",
-  leaseStatusDraftSent: "Draft lease sent to tenant",
-  
-  // Enhanced loading and error states
-  loadingTenantData: "Loading tenant information...",
-  loadingTenantList: "Loading tenants...",
-  errorLoadingTenants: "Unable to load tenant information",
-  errorConnectingDatabase: "Connection error. Please try again.",
-  tenantDataOutdated: "Some information may be outdated",
-  refreshTenantData: "Refresh tenant data",
-  
-  // Action tooltips and confirmations
-  viewTenantTooltip: "View tenant details and documents",
-  editTenantTooltip: "Edit tenant information and lease details",
-  deleteTenantTooltip: "Remove tenant from property",
-  inviteTenantTooltip: "Send invitation to tenant portal",
-  downloadLeaseTooltip: "Download current lease agreement",
-  renewLeaseTooltip: "Start lease renewal process",
-  
-  // Enhanced confirmation messages
-  deleteTenantConfirmTitle: "Remove Tenant",
-  deleteTenantConfirmDescription: "This will permanently remove {tenantName} and all associated data from {propertyName}. This action cannot be undone.",
-  proceedWithDeletion: "Yes, remove tenant",
-  cancelDeletion: "Keep tenant",
-  
-  // STEP 2: Form Harmonization
-  // Enhanced form validation messages
-  fieldCannotBeEmpty: "This field cannot be empty",
-  emailFormatInvalid: "Please enter a valid email address (e.g., name@example.com)",
-  phoneFormatInvalid: "Please enter a valid phone number",
-  rentAmountInvalid: "Rent amount must be a positive number",
-  dateInvalid: "Please select a valid date",
-  leaseEndBeforeStart: "Lease end date must be after start date",
-  futureLeaseStartWarning: "Lease start date is in the future",
-  pastLeaseEndWarning: "Lease has already expired",
-  
-  // Enhanced form success messages
-  tenantCreatedSuccessfully: "New tenant {tenantName} has been added to {propertyName}",
-  tenantUpdatedSuccessfully: "Tenant information has been updated successfully",
-  invitationSentSuccessfully: "Invitation sent to {tenantEmail}",
-  leaseRenewedSuccessfully: "Lease renewed for {tenantName} until {endDate}",
-  
-  // Enhanced placeholders
-  searchTenantsPlaceholder: "Search by name, email, unit number, or property...",
-  tenantNotesPlaceholder: "Add notes about this tenant (maintenance history, preferences, etc.)",
-  emergencyContactPlaceholder: "Emergency contact information",
-  
-  // STEP 3: Empty States Enhancement
-  noTenantsEmptyState: "No tenants added yet",
-  noTenantsEmptyDescription: "Start by adding your first tenant to begin managing your properties effectively",
-  addFirstTenant: "Add your first tenant",
-  noSearchResults: "No tenants match your search",
-  noSearchResultsDescription: "Try adjusting your search terms or clearing filters",
-  clearSearchFilters: "Clear all filters",
-  noActiveLeases: "No active leases",
-  noActiveLeasesDescription: "All current leases have expired or are pending renewal",
-  reviewExpiredLeases: "Review expired leases",
-  
-  // Filter-specific empty states
-  noTenantsInProperty: "No tenants in this property",
-  noExpiringLeases: "No leases expiring soon",
-  noOverduePayments: "No overdue payments",
-  allPaymentsCurrent: "All payments are up to date",
-  
-  // STEP 4: Interaction Enhancements
-  // Action button labels
-  viewFullProfile: "View full profile",
-  managePayments: "Manage payments",
-  viewMaintenanceHistory: "View maintenance requests",
-  downloadTenantReport: "Download tenant report",
-  sendReminder: "Send payment reminder",
-  scheduleInspection: "Schedule inspection",
-  
-  // Status badges and indicators
-  paymentStatusCurrent: "Current",
-  paymentStatusLate: "Late",
-  paymentStatusPartial: "Partial",
-  maintenanceStatusOpen: "Open requests",
-  maintenanceStatusClosed: "All resolved",
-  communicationStatusActive: "Recent messages",
-  communicationStatusQuiet: "No recent activity",
-  
-  // Interactive feedback
-  actionCompleted: "Action completed successfully",
-  actionFailed: "Action failed. Please try again.",
-  unsavedChanges: "You have unsaved changes",
-  saveChangesPrompt: "Would you like to save your changes?",
-  discardChanges: "Discard changes",
-  saveAndContinue: "Save and continue",
-  
-  // STEP 5: Context-specific improvements
-  // Canadian context
-  socialInsuranceNumber: "Social Insurance Number (SIN)",
-  creditCheckCompleted: "Credit check completed",
-  referencesVerified: "References verified",
-  firstLastMonthDeposit: "First and last month's rent",
-  keyDeposit: "Key deposit",
-  petDeposit: "Pet deposit",
-  utilitiesIncluded: "Utilities included",
-  parkingIncluded: "Parking included",
-  
-  // Lease-specific Canadian terms
-  standardLeaseForm: "Standard Lease Agreement (Ontario)",
-  rentControlApplies: "Rent control applies",
-  rentIncreaseNotice: "Rent increase notice required",
-  tenantRights: "Tenant rights information",
-  landlordResponsibilities: "Landlord responsibilities",
-  
-  // Regional customizations
-  provincialRegulations: "Provincial rental regulations",
-  municipalBylaws: "Municipal rental bylaws",
-  residentialTenancyAct: "Residential Tenancy Act compliance",
-  
-  // TENANT TABS SPECIFIC TRANSLATIONS
-  // Tab counters and tooltips
+  // Enhanced tab translations for tenant profile
   documentsTabTooltip: "View and manage documents ({count})",
   paymentsTabTooltip: "View payment history ({count})",
   maintenanceTabTooltip: "View maintenance requests ({count})",
   documentGeneratorTabTooltip: "Generate new documents",
   noItemsInTab: "No items in this tab",
   
-  // ENHANCED TENANT TABS TRANSLATIONS
-  // Documents tab enhanced
+  // Document upload and management
   uploadInProgress: "Upload in progress",
   uploadSuccess: "Upload successful",
   uploadCancelled: "Upload cancelled",
@@ -963,7 +844,7 @@ const translations = {
   routineRequest: "Routine Request",
   preventiveRequest: "Preventive Request",
   
-  // Maintenance categories detailed
+  // Maintenance categories
   plumbingIssue: "Plumbing Issue",
   electricalIssue: "Electrical Issue",
   heatingCooling: "Heating/Cooling",
@@ -1105,3 +986,4 @@ const translations = {
 };
 
 export default translations;
+
