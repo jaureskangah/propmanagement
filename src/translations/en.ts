@@ -22,13 +22,12 @@ console.log('🔍 DEBUG: enDocuments import:', {
   documentGeneratorKeys: Object.keys((enDocuments as any)?.documentGenerator || {})
 });
 
-// Compose all translations
-const translations = {
+// Composer toutes les traductions en préservant la structure documentGenerator
+const baseTranslations = {
   ...enCommon,
   ...enLanding,
   ...enProperties,
   ...enDashboard,
-  ...enDocuments,
   ...enAuth,
   ...enFinances,
   ...enMaintenance,
@@ -36,11 +35,21 @@ const translations = {
   ...supportExtensions,
 };
 
+// Extraire documentGenerator de enDocuments et l'ajouter séparément
+const { documentGenerator, ...otherDocuments } = enDocuments;
+
+const translations = {
+  ...baseTranslations,
+  ...otherDocuments,
+  documentGenerator: documentGenerator
+};
+
 // Debug: Log final des traductions composées
 console.log('🔍 DEBUG: Final EN translations:', {
-  hasDocumentGenerator: !!(translations as any)?.documentGenerator,
+  hasDocumentGenerator: !!translations.documentGenerator,
+  documentGeneratorType: typeof translations.documentGenerator,
   totalKeys: Object.keys(translations).length,
-  documentGeneratorKeys: Object.keys((translations as any)?.documentGenerator || {})
+  documentGeneratorKeys: typeof translations.documentGenerator === 'object' ? Object.keys(translations.documentGenerator || {}) : []
 });
 
 export default translations;

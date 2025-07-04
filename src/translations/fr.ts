@@ -26,13 +26,12 @@ console.log('🔍 DEBUG: frDocuments import:', {
 // Debug spécifique pour documentGenerator
 console.log('🔍 DEBUG: frDocuments.documentGenerator:', (frDocuments as any)?.documentGenerator);
 
-// Composer toutes les traductions
-const translations = {
+// Composer toutes les traductions en préservant la structure documentGenerator
+const baseTranslations = {
   ...frCommon,
   ...frLanding,
   ...frProperties,
   ...frDashboard,
-  ...frDocuments,
   ...frAuth,
   ...frFinances,
   ...frMaintenance,
@@ -40,15 +39,27 @@ const translations = {
   ...supportExtensions,
 };
 
+// Extraire documentGenerator de frDocuments et l'ajouter séparément
+const { documentGenerator, ...otherDocuments } = frDocuments;
+
+const translations = {
+  ...baseTranslations,
+  ...otherDocuments,
+  documentGenerator: documentGenerator
+};
+
 // Debug: Log final des traductions composées
 console.log('🔍 DEBUG: Final FR translations:', {
-  hasDocumentGenerator: !!(translations as any)?.documentGenerator,
+  hasDocumentGenerator: !!translations.documentGenerator,
+  documentGeneratorType: typeof translations.documentGenerator,
   totalKeys: Object.keys(translations).length,
-  documentGeneratorKeys: Object.keys((translations as any)?.documentGenerator || {}),
+  documentGeneratorKeys: typeof translations.documentGenerator === 'object' ? Object.keys(translations.documentGenerator || {}) : [],
   translationsWithDocumentGenerator: translations.documentGenerator
 });
 
 // Test spécifique pour une clé documentGenerator
-console.log('🔍 DEBUG: Test direct access to documentGenerator.saveTemplate:', translations.documentGenerator?.saveTemplate);
+if (typeof translations.documentGenerator === 'object' && translations.documentGenerator) {
+  console.log('🔍 DEBUG: Test direct access to documentGenerator.saveTemplate:', translations.documentGenerator.saveTemplate);
+}
 
 export default translations;
