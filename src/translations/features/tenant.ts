@@ -1,6 +1,3 @@
-
-
-
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -144,6 +141,12 @@ export const enTenant = {
   maintenance: "Maintenance",
   chart: "Chart",
   property: "Property",
+  
+  // Core functionality translations
+  tenants: "Tenants",
+  payments: "Payments",
+  documents: "Documents",
+  documentGenerator: "Document Generator",
   
   // Document related (nested structure)
   documents: {
@@ -297,6 +300,12 @@ export const frTenant = {
   chart: "Graphique",
   property: "Propriété",
   
+  // Core functionality translations
+  tenants: "Locataires",
+  payments: "Paiements",
+  documents: "Documents",
+  documentGenerator: "Générateur de Documents",
+  
   // Documents (structure imbriquée)
   documents: {
     dragFilesHere: "Glissez vos fichiers ici",
@@ -304,5 +313,3 @@ export const frTenant = {
     supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
   }
 };
-
-
