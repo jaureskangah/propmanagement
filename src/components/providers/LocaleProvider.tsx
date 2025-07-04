@@ -23,6 +23,13 @@ const translations = {
   fr: frTranslations
 };
 
+// Fonction utilitaire pour accéder aux clés imbriquées
+const getNestedValue = (obj: any, key: string): any => {
+  return key.split('.').reduce((current, keyPart) => {
+    return current && current[keyPart] !== undefined ? current[keyPart] : undefined;
+  }, obj);
+};
+
 export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   const [language, setLanguage] = useState<Language>(() => {
     try {
@@ -60,7 +67,13 @@ export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   }, [unitSystem]);
 
   const t = (key: string, params?: Record<string, string> | { fallback?: string }) => {
-    let translation = translations[language][key];
+    // Support des clés imbriquées avec la notation pointée
+    let translation = getNestedValue(translations[language], key);
+    
+    // Si la clé imbriquée n'existe pas, essayer la clé plate (compatibilité arrière)
+    if (!translation) {
+      translation = translations[language][key];
+    }
     
     if (!translation) {
       console.warn(`🚨 Missing translation for key: "${key}" in language: ${language}`);

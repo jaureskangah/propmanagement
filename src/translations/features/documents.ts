@@ -54,12 +54,6 @@ export const enDocuments = {
     moveOutChecklist: "Move-Out Checklist"
   },
   
-  // Flat keys for backward compatibility
-  documentTemplates: "Document Templates",
-  selectDocumentTemplate: "Select Document Template", 
-  generateDocument: "Generate Document",
-  mySavedTemplates: "My Saved Templates",
-  
   // Document types and categories
   documentType: "Document Type",
   filterByType: "Filter by type",
@@ -164,12 +158,6 @@ export const frDocuments = {
     moveInChecklist: "Liste de Contrôle d'Entrée",
     moveOutChecklist: "Liste de Contrôle de Sortie"
   },
-  
-  // Clés plates pour la compatibilité
-  documentTemplates: "Modèles de Documents",
-  selectDocumentTemplate: "Sélectionner un Modèle de Document",
-  generateDocument: "Générer un Document",
-  mySavedTemplates: "Mes Modèles Sauvegardés",
   
   // Types et catégories de documents
   documentType: "Type de Document",
