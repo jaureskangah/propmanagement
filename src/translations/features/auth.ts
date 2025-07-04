@@ -1,70 +1,124 @@
 
-import { AuthTranslations } from '../types';
-
-export const enAuth: AuthTranslations = {
-  welcome: "Welcome to PropManagement",
-  authDescription: "Please sign in or create an account to continue",
-  firstName: "First Name",
-  lastName: "Last Name",
+export const enAuth = {
+  // Authentication
+  signIn: "Sign In",
+  signUp: "Sign Up",
+  signOut: "Sign Out",
+  signInWithEmail: "Sign in with Email",
+  signUpWithEmail: "Sign up with Email",
+  emailAddress: "Email Address",
   password: "Password",
   confirmPassword: "Confirm Password",
-  iAmTenant: "I am a tenant",
-  register: "Sign Up",
-  processingRegistration: "Registration in progress...",
-  processingLogin: "Login in progress...",
-  emailLabel: "Email",
-  emailPlaceholder: "name@example.com",
-  passwordLabel: "Password",
-  passwordPlaceholder: "••••••••",
-  signInCta: "Sign In",
-  signUpCta: "Create Account",
-  processingCta: "Processing...",
-  authErrorTitle: "Authentication Error",
+  firstName: "First Name",
+  lastName: "Last Name",
+  fullName: "Full Name",
+  
+  // Auth states
+  signingIn: "Signing in...",
+  signingUp: "Signing up...",
+  signingOut: "Signing out...",
+  
+  // Auth messages
+  welcomeBack: "Welcome back",
+  createAccount: "Create your account",
+  forgotPassword: "Forgot Password",
+  resetPassword: "Reset Password",
+  rememberMe: "Remember me",
+  dontHaveAccount: "Don't have an account?",
+  alreadyHaveAccount: "Already have an account?",
+  
+  // Auth errors
   invalidCredentials: "Invalid email or password",
-  emailNotConfirmed: "Please confirm your email before signing in",
-  generalAuthError: "An error occurred during authentication",
-  loginRequired: "You must be logged in to perform this action",
-  validation: {
-    emailRequired: "Email is required",
-    emailInvalid: "Please enter a valid email",
-    passwordRequired: "Password is required",
-    passwordMinLength: "Password must be at least 6 characters",
-    passwordsDoNotMatch: "Passwords do not match",
-    firstNameRequired: "First name is required",
-    lastNameRequired: "Last name is required"
-  }
+  emailRequired: "Email is required",
+  passwordRequired: "Password is required",
+  passwordTooShort: "Password must be at least 6 characters long",
+  passwordsDoNotMatch: "Passwords do not match",
+  firstNameRequired: "First name is required",
+  lastNameRequired: "Last name is required",
+  
+  // Auth success
+  signInSuccess: "Successfully signed in",
+  signUpSuccess: "Account created successfully",
+  passwordResetSent: "Password reset email sent",
+  
+  // Roles and access
+  tenantSignup: "Sign up as Tenant",
+  ownerSignup: "Sign up as Owner",
+  selectRole: "Select your role",
+  iAmATenant: "I am a tenant",
+  iAmAnOwner: "I am a property owner",
+  
+  // Auth validation
+  pleaseEnterValidEmail: "Please enter a valid email address",
+  pleaseEnterPassword: "Please enter your password",
+  pleaseConfirmPassword: "Please confirm your password",
+  
+  // Auth flow
+  continueWithEmail: "Continue with Email",
+  backToSignIn: "Back to Sign In",
+  sendResetLink: "Send Reset Link",
+  checkYourEmail: "Check your email",
+  resetLinkSent: "We've sent a password reset link to your email",
 };
 
-export const frAuth: AuthTranslations = {
-  welcome: "Bienvenue sur PropManagement",
-  authDescription: "Veuillez vous connecter ou créer un compte pour continuer",
+export const frAuth = {
+  // Authentification
+  signIn: "Se Connecter",
+  signUp: "S'Inscrire",
+  signOut: "Se Déconnecter",
+  signInWithEmail: "Se connecter avec Email",
+  signUpWithEmail: "S'inscrire avec Email",
+  emailAddress: "Adresse Email",
+  password: "Mot de Passe",
+  confirmPassword: "Confirmer le Mot de Passe",
   firstName: "Prénom",
   lastName: "Nom",
-  password: "Mot de passe",
-  confirmPassword: "Confirmer le mot de passe",
-  iAmTenant: "Je suis locataire",
-  register: "S'inscrire",
-  processingRegistration: "Inscription en cours...",
-  processingLogin: "Connexion en cours...",
-  emailLabel: "Email",
-  emailPlaceholder: "nom@exemple.com",
-  passwordLabel: "Mot de passe",
-  passwordPlaceholder: "••••••••",
-  signInCta: "Se connecter",
-  signUpCta: "Créer un compte",
-  processingCta: "Traitement en cours...",
-  authErrorTitle: "Erreur d'authentification",
+  fullName: "Nom Complet",
+  
+  // États d'auth
+  signingIn: "Connexion...",
+  signingUp: "Inscription...",
+  signingOut: "Déconnexion...",
+  
+  // Messages d'auth
+  welcomeBack: "Bon retour",
+  createAccount: "Créez votre compte",
+  forgotPassword: "Mot de Passe Oublié",
+  resetPassword: "Réinitialiser le Mot de Passe",
+  rememberMe: "Se souvenir de moi",
+  dontHaveAccount: "Vous n'avez pas de compte ?",
+  alreadyHaveAccount: "Vous avez déjà un compte ?",
+  
+  // Erreurs d'auth
   invalidCredentials: "Email ou mot de passe invalide",
-  emailNotConfirmed: "Veuillez confirmer votre email avant de vous connecter",
-  generalAuthError: "Une erreur s'est produite lors de l'authentification",
-  loginRequired: "Vous devez être connecté pour effectuer cette action",
-  validation: {
-    emailRequired: "L'email est requis",
-    emailInvalid: "Veuillez entrer un email valide",
-    passwordRequired: "Le mot de passe est requis",
-    passwordMinLength: "Le mot de passe doit contenir au moins 6 caractères",
-    passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
-    firstNameRequired: "Le prénom est requis",
-    lastNameRequired: "Le nom est requis"
-  }
+  emailRequired: "L'email est requis",
+  passwordRequired: "Le mot de passe est requis",
+  passwordTooShort: "Le mot de passe doit contenir au moins 6 caractères",
+  passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
+  firstNameRequired: "Le prénom est requis",
+  lastNameRequired: "Le nom est requis",
+  
+  // Succès d'auth
+  signInSuccess: "Connexion réussie",
+  signUpSuccess: "Compte créé avec succès",
+  passwordResetSent: "Email de réinitialisation envoyé",
+  
+  // Rôles et accès
+  tenantSignup: "S'inscrire comme Locataire",
+  ownerSignup: "S'inscrire comme Propriétaire",
+  selectRole: "Sélectionnez votre rôle",
+  iAmATenant: "Je suis un locataire",
+  iAmAnOwner: "Je suis un propriétaire",
+  
+  // Validation d'auth
+  pleaseEnterValidEmail: "Veuillez entrer une adresse email valide",
+  pleaseEnterPassword: "Veuillez entrer votre mot de passe",
+  pleaseConfirmPassword: "Veuillez confirmer votre mot de passe",
+  
+  // Flux d'auth
+  continueWithEmail: "Continuer avec Email",
+  backToSignIn: "Retour à la Connexion",
+  sendResetLink: "Envoyer le Lien de Réinitialisation",
+  checkYourEmail: "Vérifiez votre email",
+  resetLinkSent: "Nous avons envoyé un lien de réinitialisation à votre email",
 };
