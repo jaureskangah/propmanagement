@@ -1,5 +1,4 @@
 
-
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -49,7 +48,7 @@ export const enTenant = {
   notes: "Notes",
   errorUpdatingDeposit: "Error updating deposit",
   
-  // Lease information - now flat keys
+  // Lease information - flat keys
   leaseStart: "Lease Start",
   leaseEnd: "Lease End",
   leaseStatus: "Lease Status",
@@ -83,7 +82,7 @@ export const enTenant = {
   fromProperty: "From Property",
   typeYourMessage: "Type your message here...",
   
-  // Payments section - all flat keys now
+  // Payments section - all flat keys
   paymentsPaid: "Paid",
   paymentsOverdue: "Overdue",
   paymentsPending: "Pending",
@@ -166,7 +165,7 @@ export const enTenant = {
   deleteMaintenanceRequest: "Delete",
   resolved: "Resolved",
   
-  // Document Generator - all flat keys now
+  // Document Generator - all flat keys
   documentGeneratorTitle: "Document Generator",
   documentGeneratorDescription: "Generate professional documents for your property management",
   documentHistory: "Document History",
@@ -235,7 +234,7 @@ export const frTenant = {
   notes: "Notes",
   errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt",
   
-  // Informations de bail - maintenant des clés plates
+  // Informations de bail - clés plates
   leaseStart: "Début du Bail",
   leaseEnd: "Fin du Bail",
   leaseStatus: "Statut du Bail",
@@ -269,7 +268,7 @@ export const frTenant = {
   fromProperty: "De la Propriété",
   typeYourMessage: "Tapez votre message ici...",
   
-  // Section des paiements - toutes les clés plates maintenant
+  // Section des paiements - toutes les clés plates
   paymentsPaid: "Payé",
   paymentsOverdue: "En Retard",
   paymentsPending: "En Attente",
@@ -335,7 +334,6 @@ export const frTenant = {
   rearrangeSections: "Réorganiser les sections",
   dragToRearrange: "Faites glisser les éléments pour les réorganiser",
   saveChanges: "Enregistrer les modifications",
-  cancel: "Annuler",
   refresh: "Actualiser",
   maintenance: "Maintenance",
   chart: "Graphique",
@@ -353,7 +351,7 @@ export const frTenant = {
   deleteMaintenanceRequest: "Supprimer",
   resolved: "Résolu",
   
-  // Document Generator - toutes les clés plates maintenant
+  // Document Generator - toutes les clés plates
   documentGeneratorTitle: "Générateur de Documents",
   documentGeneratorDescription: "Générez des documents professionnels pour votre gestion immobilière",
   documentHistory: "Historique des Documents",
