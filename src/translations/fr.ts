@@ -1,30 +1,32 @@
-const fr = {
-  // Navigation et éléments principaux
+
+// Traductions françaises simplifiées
+const translations = {
+  // Clés critiques de la page d'accueil
   heroTitle: "Gestion Immobilière Simplifiée",
   heroSubtitle: "La solution complète pour les propriétaires canadiens. Gérez locataires, maintenance et finances en un seul endroit.",
   heroGetStarted: "Commencer Gratuitement",
   learnMore: "En Savoir Plus",
   
-  // Navigation essentials
+  // Navigation essentielles - DOIT ÊTRE AU NIVEAU RACINE
   dashboard: "Tableau de Bord",
-  features: "Fonctionnalités",
-  pricing: "Tarification", 
-  login: "Connexion",
-  signOut: "Déconnexion",
+  features: "Fonctionnalités", 
+  pricing: "Tarification",
+  login: "Se Connecter",
+  signOut: "Se Déconnecter",
   properties: "Propriétés",
   tenants: "Locataires",
   maintenance: "Maintenance",
   settings: "Paramètres",
   invitations: "Invitations",
   finances: "Finances",
-  documentsLabel: "Documents",
+  documentsLabel: "Documents", // Libellé simple pour la barre latérale
   
-  // Footer
+  // Pied de page essentiels
   companyName: "PropManagement",
-  companyDescription: "Simplifier la gestion immobilière pour les propriétaires et gestionnaires",
+  companyDescription: "Simplifier la gestion immobilière pour propriétaires et gestionnaires",
   product: "Produit",
   company: "Entreprise",
-  legal: "Légal",
+  legal: "Juridique",
   security: "Sécurité",
   aboutUs: "À Propos",
   careers: "Carrières",
@@ -34,29 +36,29 @@ const fr = {
   cookiePolicy: "Politique des Cookies",
   allRightsReserved: "Tous droits réservés",
   
-  // Features
+  // Section des fonctionnalités essentielles
   everythingYouNeed: "Tout Ce Dont Vous Avez Besoin",
   featuresSubtitle: "Outils complets conçus pour la gestion immobilière canadienne",
   propertyManagement: "Gestion de Propriétés",
   propertyManagementDesc: "Gérez toutes vos propriétés depuis un tableau de bord central",
   tenantManagement: "Gestion des Locataires",
-  tenantManagementDesc: "Suivez les locataires, baux et communications",
+  tenantManagementDesc: "Suivez locataires, baux et communications",
   maintenanceDesc: "Planifiez et suivez les demandes de maintenance efficacement",
-  securityDesc: "Vos données sont protégées par une sécurité de niveau entreprise",
+  securityDesc: "Vos données sont protégées avec une sécurité de niveau entreprise",
   
-  // How It Works
+  // Section Comment ça marche
   howItWorksTitle: "Comment Ça Marche",
   howItWorksSubtitle: "Étapes simples pour commencer à gérer vos propriétés",
   step1Title: "Créer un Compte",
-  step1Description: "Inscrivez-vous en quelques minutes avec votre adresse email",
+  step1Description: "Inscrivez-vous en minutes avec votre adresse e-mail",
   step2Title: "Ajouter Vos Propriétés",
   step2Description: "Entrez les détails de vos propriétés et commencez à gérer",
   step3Title: "Gérer les Locataires",
   step3Description: "Ajoutez des locataires et gérez les communications efficacement",
   step4Title: "Tout Suivre",
-  step4Description: "Surveillez la maintenance, paiements et documents en un endroit",
+  step4Description: "Surveillez maintenance, paiements et documents en un endroit",
   
-  // Pricing
+  // Section tarification
   pricingTitle: "Tarification Simple et Transparente",
   pricingSubtitle: "Choisissez le plan qui vous convient le mieux",
   freemiumPlan: "Basique",
@@ -64,25 +66,25 @@ const fr = {
   enterprisePlan: "Pro",
   free: "Gratuit",
   month: "mois",
-  mostPopular: "Plus Populaire",
+  mostPopular: "Le Plus Populaire",
   pricingStartFree: "Commencer",
   pricingGetStarted: "Commencer",
   comparePlans: "Comparer les Plans",
   comparePlansTitle: "Comparaison des Fonctionnalités",
   feature: "Fonctionnalité",
   
-  // Plan features
+  // Caractéristiques des plans
   upTo2Properties: "Jusqu'à 3 propriétés",
   upTo5Properties: "Jusqu'à 10 propriétés", 
   upTo20Properties: "Propriétés illimitées",
-  rentManagement: "Suivi de base des loyers",
+  rentManagement: "Suivi de loyer basique",
   digitalDocuments: "Stockage de documents",
-  basicPropertyCards: "Gestion de base des locataires",
-  emailNotifications: "Notifications par email",
+  basicPropertyCards: "Gestion de locataires basique",
+  emailNotifications: "Notifications par e-mail",
   tenantVerification: "Vérification des locataires",
   prioritySupport: "Support prioritaire",
   advancedDashboard: "Tableau de bord avancé",
-  financialReports: "Rapports financiers de base",
+  financialReports: "Rapports financiers basiques",
   maintenanceManagement: "Gestion de la maintenance",
   dedicatedSupport: "Équipe de support dédiée",
   customDashboard: "Tableau de bord personnalisé",
@@ -90,7 +92,7 @@ const fr = {
   userTraining: "Sessions de formation utilisateur",
   dailyBackup: "Sauvegarde automatique des données",
   
-  // FAQ
+  // Section FAQ
   frequentlyAskedQuestions: "Questions Fréquemment Posées",
   findAnswers: "Trouvez des réponses aux questions courantes",
   faqHowToStart: "Comment commencer ?",
@@ -102,29 +104,29 @@ const fr = {
   faqCommunication: "Comment fonctionne la communication avec les locataires ?",
   faqCommunicationAnswer: "Vous pouvez communiquer avec les locataires via notre système de messagerie intégré et les notifications.",
   faqSecurity: "Mes données sont-elles sécurisées ?",
-  faqSecurityAnswer: "Oui, nous utilisons un chiffrement et des mesures de sécurité de niveau industriel pour protéger vos données.",
+  faqSecurityAnswer: "Oui, nous utilisons un chiffrement standard de l'industrie et des mesures de sécurité pour protéger vos données.",
   faqExport: "Puis-je exporter mes données ?",
-  faqExportAnswer: "Oui, vous pouvez exporter vos données dans divers formats incluant PDF et Excel.",
+  faqExportAnswer: "Oui, vous pouvez exporter vos données en différents formats incluant PDF et Excel.",
   
-  // Contact
+  // Section contact
   contactUs: "Nous Contacter",
   contactSubtitle: "Entrez en contact avec notre équipe",
   contactPhone: "Téléphone",
-  contactEmail: "Email",
+  contactEmail: "E-mail",
   contactOffice: "Bureau",
-  sendMessage: "Nous Envoyer un Message",
+  sendMessage: "Envoyez-nous un Message",
   yourName: "Votre Nom",
-  yourEmail: "Votre Email",
+  yourEmail: "Votre E-mail",
   message: "Message",
-  sending: "Envoi...",
+  sending: "Envoi en cours...",
   send: "Envoyer le Message",
   
-  // CTA
+  // Section CTA essentiels
   readyToStart: "Prêt à Simplifier Votre Gestion ?",
   joinOthers: "Rejoignez des milliers de propriétaires qui font confiance à notre solution",
   ctaStartFree: "Essayer Gratuitement",
   
-  // Common
+  // Traductions communes
   error: 'Erreur',
   success: 'Succès',
   loading: "Chargement",
@@ -138,13 +140,13 @@ const fr = {
   update: "Mettre à jour",
   all: "Tous",
   
-  // Tenant Dashboard
+  // Essentiels du tableau de bord locataire
   overview: "Aperçu",
   welcomeTenant: "Bienvenue, {name}",
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
   manageApartmentInfo: "Gérez les informations de votre appartement et communications",
   
-  // Maintenance
+  // Essentiels de maintenance
   maintenanceRequests: "Demandes de Maintenance",
   newMaintenanceRequest: "Nouvelle Demande de Maintenance",
   totalRequests: "Total des Demandes",
@@ -154,7 +156,7 @@ const fr = {
   createNewRequestToSee: "Créez une nouvelle demande de maintenance pour la voir ici.",
   deleteMaintenanceRequest: "Supprimer la Demande de Maintenance",
   
-  // Status and priority
+  // Statut et priorité
   status: "Statut",
   priority: "Priorité",
   pending: "En Attente",
@@ -167,27 +169,27 @@ const fr = {
   high: "Élevé",
   urgent: "Urgent",
   
-  // Common UI
+  // Interface utilisateur commune
   title: "Titre",
   description: "Description",
   createdOn: "Créé le",
-  createdAt: "Créé le",
-  updatedAt: "Mis à jour le",
+  createdAt: "Créé à",
+  updatedAt: "Mis à jour à",
   viewDetails: "Voir les Détails",
   viewAll: "Voir Tout",
-  showMore: "Voir Plus",
-  showLess: "Voir Moins",
+  showMore: "Afficher Plus",
+  showLess: "Afficher Moins",
   refresh: "Actualiser",
   
-  // Form validation
+  // Validation de formulaire
   required: "Requis",
-  optional: "Facultatif",
+  optional: "Optionnel",
   pleaseFillAllFields: "Veuillez remplir tous les champs requis",
   pleaseSelectPriority: "Veuillez sélectionner une priorité",
   pleaseSelectStatus: "Veuillez sélectionner un statut",
   pleaseProvideDescription: "Veuillez fournir une description",
   
-  // Lease information
+  // Informations de bail
   lease: {
     start: "Début du Bail",
     end: "Fin du Bail"
@@ -195,7 +197,7 @@ const fr = {
   leaseStatus: "Statut du Bail",
   leaseStatusActive: "Bail Actif",
   leaseStatusExpiringDays: "Expire dans {days} jours",
-  leaseStatusExpired: "Expiré depuis {days} jours",
+  leaseStatusExpired: "Expiré il y a {days} jours",
   leaseActive: "Bail Actif",
   leaseExpiring: "Bail Expirant",
   leaseExpired: "Bail Expiré",
@@ -205,7 +207,7 @@ const fr = {
   daysAgo: "il y a {days} jours",
   daysRemaining: "Jours Restants",
   
-  // Recent Activity
+  // Activité récente
   recentActivity: "Activité Récente",
   noRecentActivity: "Aucune activité récente",
   noMaintenanceIssues: "Aucun problème de maintenance",
@@ -219,7 +221,7 @@ const fr = {
   sentByYou: "Envoyé par vous",
   andMoreMessages: "et {count} autres messages",
   
-  // Payments
+  // Paiements
   payments: "Paiements",
   payment: "Paiement",
   paymentHistory: "Historique des Paiements",
@@ -228,16 +230,16 @@ const fr = {
   paid: "Payé",
   overdue: "En Retard",
   
-  // Property info
+  // Informations de propriété
   unitLabel: "Unité",
   unit: "Unité",
   rentAmountLabel: "Montant du Loyer",
   
-  // Theme
+  // Thème
   lightMode: "Mode Clair",
   darkMode: "Mode Sombre",
 
-  // Financial metrics
+  // Métriques financières
   totalIncome: "Revenus Totaux",
   allTimeIncome: "Revenus totaux de toutes les propriétés",
   totalExpenses: "Dépenses Totales", 
@@ -245,10 +247,10 @@ const fr = {
   occupancyRate: "Taux d'Occupation",
   occupancyRateDescription: "Pourcentage d'unités occupées",
   unpaidRent: "Loyer Impayé",
-  unpaidRentDescription: "Paiements de loyer en attente",
+  unpaidRentDescription: "Paiements de loyer en souffrance",
   financialOverview: "Aperçu Financier",
 
-  // Direct messaging
+  // Messagerie directe
   messageCantBeEmpty: "Le message ne peut pas être vide",
   maintenanceIssue: "Problème de Maintenance",
   messageSent: "Message envoyé avec succès",
@@ -258,14 +260,14 @@ const fr = {
   fromProperty: "De la Propriété",
   typeYourMessage: "Tapez votre message ici...",
 
-  // Tenant search
+  // Recherche de locataires
   searchTenants: "Rechercher des locataires...",
   filters: "Filtres",
   
-  // Tenant identification
+  // Identification des locataires
   tenant: "Locataire",
 
-  // Dashboard customization
+  // Personnalisation du tableau de bord
   dashboardCustomization: "Personnalisation du Tableau de Bord",
   customizeDescription: "Personnalisez quelles sections sont visibles sur votre tableau de bord",
   visibleSections: "Sections Visibles",
@@ -273,18 +275,18 @@ const fr = {
   prioritySection: "Section Priorité",
   revenueChart: "Graphique des Revenus",
 
-  // Additional tenant feedback
-  rating: "Note",
+  // Commentaires additionnels des locataires
+  rating: "Évaluation",
   comments: "Commentaires",
   feedbackPlaceholder: "Veuillez partager vos commentaires sur le travail de maintenance...",
   submit: "Soumettre",
-  submitting: "Soumission...",
+  submitting: "Soumission en cours...",
 
-  // Maintenance page specific translations
+  // Traductions spécifiques à la page de maintenance
   maintenanceRequestTitlePlaceholder: "ex., Fuite d'eau dans la salle de bain",
   maintenanceDescriptionPlaceholder: "Décrivez le problème de maintenance en détail...",
   submitRequest: "Soumettre la Demande",
-  updateRequest: "Mettre à Jour la Demande",
+  updateRequest: "Mettre à jour la Demande",
   editMaintenanceRequest: "Modifier la Demande de Maintenance",
   selectPriority: "Sélectionner la priorité",
   selectStatus: "Sélectionner le statut",
@@ -295,7 +297,7 @@ const fr = {
   maintenanceTitle: "Maintenance",
   manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance",
   
-  // Auth and access translations
+  // Traductions d'autorisation et d'accès
   authenticationRequired: "Authentification Requise",
   pleaseSignIn: "Veuillez vous connecter pour continuer",
   accessDenied: "Accès Refusé",
@@ -303,7 +305,7 @@ const fr = {
   loadingMaintenanceInfo: "Chargement des informations de maintenance...",
   notLinkedToTenant: "Vous n'êtes pas lié à un profil de locataire",
   
-  // Document Generator specific
+  // Générateur de documents spécifique
   documentGenerator: "Générateur de Documents",
   documentTemplates: "Modèles de Documents",
   editContent: "Modifier le Contenu",
@@ -320,10 +322,10 @@ const fr = {
   generatePreviewDescription: "Cliquez sur 'Générer l'Aperçu' pour créer un document basé sur votre contenu",
   startTypingDocument: "Commencez à taper votre document ici...",
   documentDescription: "Créez, gérez et partagez des documents importants pour votre gestion immobilière",
-  documentHistory: "Historique des Documents",
+  documentHistoryTitle: "Historique des Documents",
   noDocumentHistory: "Aucun historique de document disponible",
   viewDocumentHistory: "Voir l'Historique des Documents",
-  documentHistoryDescription: "Voir et gérer vos documents générés précédemment",
+  documentHistoryDescription: "Visualisez et gérez vos documents générés précédemment",
   dateGenerated: "Date de Génération",
   documentCategory: "Catégorie",
   documentActions: "Actions",
@@ -331,19 +333,19 @@ const fr = {
   // Support
   getSupport: "Obtenir du Support",
 
-  // DASHBOARD CORE TRANSLATIONS
+  // TRADUCTIONS ESSENTIELLES DU TABLEAU DE BORD - AJOUT CRITIQUE
   priorities: "Priorités",
   activities: "Activités",
   revenue: "Revenus",
   expenses: "Dépenses",
   
-  // Section descriptions
+  // Descriptions des sections - AJOUT CRITIQUE
   overviewDescription: "Indicateurs clés de performance de votre portefeuille immobilier",
   prioritiesDescription: "Tâches urgentes et éléments nécessitant votre attention",
   revenueDescription: "Analyse financière et évolution des revenus",
   activitiesDescription: "Historique des actions et événements récents",
   
-  // Generic status translations
+  // Traductions de statut générique - AJOUT CRITIQUE
   new: "Nouveau",
   stable: "Stable",
   improvement: "Amélioration",
@@ -355,7 +357,7 @@ const fr = {
   downward: "Descendant",
   neutral: "Neutre",
 
-  // DATE TRANSLATIONS
+  // TRADUCTIONS DE DATE - AJOUT CRITIQUE
   today: "Aujourd'hui",
   yesterday: "Hier",
   thisWeek: "Cette Semaine",
@@ -368,45 +370,45 @@ const fr = {
   date: "Date",
   filterBy: "Filtrer par",
   
-  // PRIORITY PAGE SPECIFIC TRANSLATIONS
+  // TRADUCTIONS SPÉCIFIQUES À LA PAGE DE PRIORITÉ
   priorityTasks: "Tâches Prioritaires",
   importantEvents: "Événements Importants",
   noUrgentTasks: "Aucune tâche urgente",
-  noScheduledTasks: "Aucune tâche programmée",
+  noScheduledTasks: "Aucune tâche planifiée",
   urgentMaintenanceRequest: "Demande de Maintenance Urgente",
   
-  // Task types for maintenance
+  // Types de tâches pour la maintenance
   plumbing: "Plomberie",
   electrical: "Électricité", 
   hvac: "CVC",
   appliance: "Électroménager",
   structural: "Structurel",
   painting: "Peinture",
-  flooring: "Revêtement de Sol",
+  flooring: "Revêtement de sol",
   cleaning: "Nettoyage",
-  landscaping: "Aménagement Paysager",
+  landscaping: "Aménagement paysager",
   securityMaintenance: "Sécurité",
   other: "Autre",
   general: "Général",
   inspection: "Inspection",
   preventive: "Préventif",
   
-  // Additional task types used in dashboard
+  // Types de tâches additionnels utilisés dans le tableau de bord
   regularTask: "Tâche Régulière",
   seasonalTask: "Tâche Saisonnière",
   maintenanceTask: "Tâche de Maintenance",
   
-  // Emergency and priority indicators
+  // Indicateurs d'urgence et de priorité
   emergency: "Urgence",
   
-  // Export buttons
+  // Boutons d'exportation
   exportCSV: "Exporter CSV",
   exportPDF: "Exporter PDF",
   exportExcel: "Exporter Excel",
   
-  // PROPERTIES PAGE TRANSLATIONS
+  // TRADUCTIONS DE LA PAGE PROPRIÉTÉS
   propertiesManagement: "Gestion des Propriétés",
-  propertiesSubtitle: "Gérez vos propriétés efficacement",
+  propertiesSubtitle: "Gérez efficacement vos propriétés",
   addProperty: "Ajouter une Propriété",
   editProperty: "Modifier la Propriété",
   deleteProperty: "Supprimer la Propriété",
@@ -441,27 +443,27 @@ const fr = {
   adding: "Ajout...",
   notAvailable: "N/D",
   propertyDeleteSuccess: "La propriété a été supprimée avec succès",
-  propertyDeleteError: "Erreur lors de la suppression de la propriété",
-  errorAddingProperty: "Erreur lors de l'ajout de la propriété",
-  errorUpdatingProperty: "Erreur lors de la mise à jour de la propriété",
+  propertyDeleteError: "Une erreur s'est produite lors de la suppression de la propriété",
+  errorAddingProperty: "Une erreur s'est produite lors de l'ajout de la propriété",
+  errorUpdatingProperty: "Une erreur s'est produite lors de la mise à jour de la propriété",
   
-  // Additional missing translations for Property form
+  // Traductions manquantes additionnelles pour le formulaire de propriété
   enterName: "Entrez le nom de la propriété",
   enterAddress: "Entrez l'adresse de la propriété",
   
-  // Form validation messages
+  // Messages de validation du formulaire
   propertyNameRequired: "Le nom de la propriété est requis",
   propertyAddressRequired: "L'adresse de la propriété est requise",
   propertyTypeRequired: "Le type de propriété est requis",
   propertyUnitsRequired: "Le nombre d'unités est requis",
-  invalidUnitsNumber: "Veuillez entrer un nombre d'unités valide",
+  invalidUnitsNumber: "Veuillez entrer un nombre valide d'unités",
   
-  // Image upload messages
+  // Messages de téléchargement d'image
   imageUploadError: "Erreur lors du téléchargement de l'image",
   imageUploaded: "Image téléchargée avec succès",
   selectImage: "Sélectionner une image",
   
-  // Documents section - flat structure for tenant tabs
+  // Section documents - structure plate pour les onglets locataires
   documents: "Documents",
   uploadedDocuments: "Documents Téléchargés",
   dragFilesHere: "Glissez vos fichiers ici",
@@ -472,7 +474,7 @@ const fr = {
   uploadDocument: "Télécharger un Document",
   uploading: "Téléchargement...",
   uploadComplete: "Téléchargement terminé !",
-  uploadFailed: "Échec du téléchargement",
+  uploadFailed: "Téléchargement échoué",
   fileSelected: "Fichier sélectionné",
   fileSizeLimit: "Taille de fichier maximale : 10MB",
   documentDeleted: "Document supprimé",
@@ -499,7 +501,7 @@ const fr = {
   docDeleteSuccess: "Document supprimé avec succès",
   docUploadSuccess: "Document téléchargé avec succès",
   shareDocument: "Partager le Document",
-  documentViewer: "Visualiseur de Documents",
+  documentViewer: "Visionneuse de Documents",
   closeViewer: "Fermer",
   editDocument: "Modifier le Document",
   saveChanges: "Enregistrer les Modifications",
@@ -513,24 +515,24 @@ const fr = {
   andMoreDocuments: "et {count} autres documents",
   viewAllDocuments: "Voir tous les documents",
   quickPreview: "Aperçu Rapide",
-  openFullViewer: "Ouvrir le Visualiseur Complet",
+  openFullViewer: "Ouvrir la Visionneuse Complète",
   documentShareSuccess: "Document partagé avec succès",
   documentShareError: "Échec du partage du document",
-  permissionError: "Erreur de permission : Vous n'avez pas accès pour télécharger des documents",
+  permissionError: "Erreur de permission : Vous n'avez pas accès au téléchargement de documents",
   tenantProfileNotFound: "Profil de locataire non trouvé",
   authRequired: "Vous devez être connecté pour télécharger des documents",
   databaseError: "Erreur de base de données lors de la sauvegarde du document",
   storageError: "Erreur du système de stockage",
-  storageBucketMissing: "Stockage de documents pas configuré correctement",
+  storageBucketMissing: "Stockage de documents non configuré correctement",
   uploadError: "Erreur lors du téléchargement du fichier vers le stockage",
   publicUrlError: "Impossible de générer l'URL publique pour le document",
   fileValidationError: "Type de fichier ou taille invalide. Veuillez essayer un autre fichier.",
   hideFilters: "Masquer les Filtres",
   showFilters: "Afficher les Filtres",
-  uploadAndManageDocuments: "Téléchargez et gérez des documents importants pour votre location",
-  manageDocumentsDescription: "Téléchargez et gérez des documents importants pour votre location",
+  uploadAndManageDocuments: "Téléchargez et gérez les documents importants pour votre location",
+  manageDocumentsDescription: "Téléchargez et gérez les documents importants pour votre location",
   
-  // Additional missing translations for Revenue page
+  // Traductions manquantes additionnelles pour la page des Revenus
   revenueAndExpenses: "Revenus et Dépenses",
   monthly: "Mensuel",
   yearly: "Annuel",
@@ -538,26 +540,26 @@ const fr = {
   dataBeingRefreshed: "Les données sont en cours d'actualisation",
   errorLoadingData: "Erreur lors du chargement des données",
   
-  // Chart-specific translations
+  // Traductions spécifiques aux graphiques
   profit: "Profit",
   
-  // Activity page specific translations
+  // Traductions spécifiques à la page d'activité
   noActivityDescription: "Commencez à utiliser la plateforme pour voir les activités ici",
   refreshView: "Actualiser la Vue",
   viewReset: "La vue a été réinitialisée",
   
-  // Activity types and actions
+  // Types d'activité et actions - AJOUT CRITIQUE
   newTenant: "Nouveau Locataire",
   paymentReceived: "Paiement Reçu", 
   maintenanceCompleted: "Maintenance Terminée",
   
-  // Additional activity translations
+  // Traductions d'activité additionnelles
   activityItem: "Élément d'Activité",
   propertyActivity: "Activité de Propriété",
   
-  // FINANCIAL PAGE SPECIFIC TRANSLATIONS
+  // TRADUCTIONS SPÉCIFIQUES DE LA PAGE FINANCIÈRE
   selectProperty: "Sélectionner une Propriété",
-  selectYear: "Sélectionner une Année",
+  selectYear: "Sélectionner l'Année",
   noPropertySelected: "Aucune propriété sélectionnée",
   pleaseSelectProperty: "Veuillez sélectionner une propriété pour voir les données financières",
   financialMetrics: "Métriques Financières",
@@ -579,7 +581,7 @@ const fr = {
   breakEvenPoint: "Point d'Équilibre",
   returnOnInvestment: "Retour sur Investissement",
   
-  // Financial Chart translations
+  // Traductions des graphiques financiers
   jan: "Jan",
   feb: "Fév",
   mar: "Mar",
@@ -593,35 +595,35 @@ const fr = {
   nov: "Nov",
   dec: "Déc",
   
-  // Financial filters and controls
+  // Filtres et contrôles financiers
   filterByProperty: "Filtrer par Propriété",
   filterByYear: "Filtrer par Année",
-  showAll: "Tout Afficher",
+  showAll: "Afficher Tout",
   thisYearData: "Données de Cette Année",
   lastYearData: "Données de l'Année Dernière",
   compareWithPrevious: "Comparer avec l'Année Précédente",
   
-  // Financial status indicators
+  // Indicateurs de statut financier
   increasing: "En Augmentation",
   decreasing: "En Diminution",
   unchanged: "Inchangé",
-  trendUp: "Tendance Hausse",
-  trendDown: "Tendance Baisse",
+  trendUp: "Tendance Haussière",
+  trendDown: "Tendance Baissière",
   
-  // Additional financial terms
+  // Termes financiers additionnels
   income: "Revenus",
   rental: "Location",
   utilities: "Services Publics",
   insurance: "Assurance",
-  taxes: "Taxes",
+  taxes: "Impôts",
   repairs: "Réparations",
   vacancy: "Vacance",
   propertyValue: "Valeur de la Propriété",
   appreciation: "Appréciation",
   depreciation: "Dépréciation",
   
-  // Missing financial metric translations
-  yearToDate: "Année à ce Jour",
+  // Traductions de métriques financières manquantes
+  yearToDate: "Cumul Annuel",
   roi: "ROI",
   annualReturn: "Rendement Annuel",
   totalRentPaid: "Total des Loyers Payés",
@@ -629,13 +631,13 @@ const fr = {
   cumulativeTotal: "Total Cumulé",
   late: "En Retard",
 
-  // TENANT PAGE SPECIFIC TRANSLATIONS
-  // Tenant form sections
+  // TRADUCTIONS SPÉCIFIQUES DE LA PAGE LOCATAIRES
+  // Sections du formulaire locataire
   personalInfo: "Informations Personnelles",
-  propertyInfo: "Informations sur la Propriété", 
-  leaseInfo: "Informations sur le Bail",
+  propertyInfo: "Informations de Propriété", 
+  leaseInfo: "Informations de Bail",
   
-  // Tenant form
+  // Formulaire locataire
   addTenant: "Ajouter un Locataire",
   editTenant: "Modifier le Locataire",
   tenantAdded: "Locataire ajouté avec succès",
@@ -645,41 +647,41 @@ const fr = {
   tenantDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce locataire ? Cette action ne peut pas être annulée.",
   confirmDelete: "Êtes-vous sûr de vouloir supprimer ce locataire ?",
   
-  // Tenant form fields
+  // Champs du formulaire locataire
   tenantName: "Nom du Locataire",
-  tenantEmail: "Adresse Email",
+  tenantEmail: "Adresse E-mail",
   tenantPhone: "Numéro de Téléphone",
   unitNumber: "Numéro d'Unité",
   rentAmount: "Montant du Loyer",
   
-  // Form validation for tenants
-  invalidEmail: "Veuillez entrer une adresse email valide",
+  // Validation de formulaire pour les locataires
+  invalidEmail: "Veuillez entrer une adresse e-mail valide",
   invalidAmount: "Veuillez entrer un montant valide",
   tenantNameRequired: "Le nom du locataire est requis",
-  tenantEmailRequired: "L'adresse email est requise",
+  tenantEmailRequired: "L'adresse e-mail est requise",
   saving: "Sauvegarde...",
   
-  // Tenant status and property info
+  // Statut locataire et informations de propriété
   propertyError: "La propriété est requise",
   propertyNotFound: "Propriété Non Trouvée",
   noPropertyAssigned: "Aucune Propriété Assignée",
   loadingProperty: "Chargement de la propriété...",
   
-  // Tenant invitation
-  inviteTenant: "Inviter un Locataire",
+  // Invitation de locataire
+  inviteTenant: "Inviter le Locataire",
   invite: "Inviter",
   
-  // Additional tenant list translations
+  // Traductions additionnelles de la liste des locataires
   noTenantSelected: "Sélectionnez un locataire pour voir les détails",
   tenantsCount: "{count} locataires au total",
   
-  // Profile labels  
-  emailProfileLabel: "Adresse Email",
+  // Libellés de profil  
+  emailProfileLabel: "Adresse E-mail",
   phoneProfileLabel: "Numéro de Téléphone",
   leaseStartProfileLabel: "Date de Début du Bail",
   leaseEndProfileLabel: "Date de Fin du Bail",
   
-  // Security deposit
+  // Dépôt de garantie
   securityDeposit: "Dépôt de Garantie",
   deposited: "Déposé",
   notDeposited: "Non Déposé",
@@ -689,7 +691,7 @@ const fr = {
   // Notes
   notes: "Notes",
   
-  // Tenant list translations
+  // Traductions de la liste des locataires
   tenantsList: "Locataires",
   tenantsSubtitle: "Gérez vos locataires",
   deleteTenant: "Supprimer le Locataire",
@@ -697,10 +699,10 @@ const fr = {
   tenantCountSingular: "1 locataire",
   noTenants: "Aucun locataire trouvé",
   expired: "Expiré",
-  expiring: "Expirant bientôt",
+  expiring: "Expirant",
   noResults: "Aucun résultat ne correspond à votre recherche",
   tenantListName: "Nom",
-  tenantListEmail: "Email",
+  tenantListEmail: "E-mail",
   leaseColumn: "Bail",
   rent: "Loyer",
   property: "Propriété",
@@ -708,36 +710,36 @@ const fr = {
   tenantListDetails: "Détails",
   lastActivity: "Dernière Activité",
   filterAll: "Tous",
-  filterActive: "Actifs",
-  filterExpiring: "Expirant bientôt",
-  filterExpired: "Expirés",
+  filterActive: "Actif",
+  filterExpiring: "Expirant",
+  filterExpired: "Expiré",
   back: "Retour",
   selectTenantToView: "Sélectionnez un locataire pour voir les détails",
   noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
   filterByStatus: "Filtrer par statut",
   allStatuses: "Tous les statuts",
 
-  // LIST-SPECIFIC TRANSLATIONS FOR TENANTLAYOUT COMPONENT
+  // TRADUCTIONS SPÉCIFIQUES POUR LE COMPOSANT TENANTLAYOUT
   listBack: "Retour",
   listSelectTenant: "Sélectionnez un locataire pour voir les détails",
 
-  // Root level form translations (moved from nested form object)
-  formNameLabel: "Nom complet",
+  // Traductions de niveau racine du formulaire - déplacées de l'objet form imbriqué
+  formNameLabel: "Nom Complet",
   formNamePlaceholder: "Entrez le nom complet du locataire",
-  formEmailFormLabel: "Adresse e-mail",
+  formEmailFormLabel: "Adresse E-mail",
   formEmailPlaceholder: "Entrez l'adresse e-mail du locataire",
-  formPhoneFormLabel: "Numéro de téléphone",
+  formPhoneFormLabel: "Numéro de Téléphone",
   formPhonePlaceholder: "Entrez le numéro de téléphone du locataire",
   formPropertyLabel: "Propriété",
   formPropertyPlaceholder: "Sélectionnez la propriété",
-  formUnitFormLabel: "Numéro d'unité",
+  formUnitFormLabel: "Numéro d'Unité",
   formUnitPlaceholder: "Entrez le numéro d'unité",
-  formLeaseStartFormLabel: "Date de début",
-  formLeaseEndFormLabel: "Date de fin",
-  formRentLabel: "Loyer mensuel",
+  formLeaseStartFormLabel: "Date de Début",
+  formLeaseEndFormLabel: "Date de Fin",
+  formRentLabel: "Loyer Mensuel",
   formRentPlaceholder: "Entrez le montant du loyer mensuel",
-  
-  // Payments translations - flat structure
+
+  // Traductions des paiements - structure plate
   addPayment: "Ajouter un Paiement",
   editPayment: "Modifier le Paiement",
   deletePayment: "Supprimer le Paiement",
@@ -750,18 +752,14 @@ const fr = {
   paymentDeleted: "Paiement supprimé avec succès",
   paymentAdded: "Paiement ajouté avec succès",
   paymentUpdated: "Paiement mis à jour avec succès",
-  paymentError: "Une erreur est survenue lors du traitement du paiement",
-  selectPaymentStatus: "Sélectionner un statut",
-  showMore: "Voir Plus",
-  showLess: "Voir Moins",
-  showMorePayments: "Voir {count} paiements de plus",
+  paymentError: "Une erreur s'est produite lors du traitement du paiement",
+  selectPaymentStatus: "Sélectionnez un statut",
+  showMorePayments: "Afficher {count} paiements de plus",
   pickDate: "Choisir une date",
   add: "Ajouter",
-  adding: "Ajout en cours...",
   paymentAddedSuccess: "Le paiement a été enregistré avec succès",
-  cancel: "Annuler",
 
-  // TRADUCTIONS AMÉLIORÉES POUR LOCATAIRES - ÉTAPE 1: Statuts et Messages
+  // TRADUCTIONS LOCATAIRES AMÉLIORÉES - ÉTAPE 1 : Statuts et Messages
   // Messages de statut de bail améliorés
   leaseStatusHealthy: "Bail en règle",
   leaseStatusRenewalNeeded: "Renouvellement nécessaire bientôt",
@@ -772,29 +770,29 @@ const fr = {
   // États de chargement et d'erreur améliorés
   loadingTenantData: "Chargement des informations du locataire...",
   loadingTenantList: "Chargement des locataires...",
-  errorLoadingTenants: "Impossible de charger les informations des locataires",
+  errorLoadingTenants: "Impossible de charger les informations du locataire",
   errorConnectingDatabase: "Erreur de connexion. Veuillez réessayer.",
   tenantDataOutdated: "Certaines informations peuvent être obsolètes",
   refreshTenantData: "Actualiser les données du locataire",
   
-  // Info-bulles et confirmations d'actions
+  // Tooltips d'action et confirmations
   viewTenantTooltip: "Voir les détails et documents du locataire",
-  editTenantTooltip: "Modifier les informations du locataire et les détails du bail",
+  editTenantTooltip: "Modifier les informations du locataire et détails du bail",
   deleteTenantTooltip: "Retirer le locataire de la propriété",
   inviteTenantTooltip: "Envoyer une invitation au portail locataire",
-  downloadLeaseTooltip: "Télécharger le contrat de bail actuel",
+  downloadLeaseTooltip: "Télécharger l'accord de bail actuel",
   renewLeaseTooltip: "Commencer le processus de renouvellement du bail",
   
   // Messages de confirmation améliorés
   deleteTenantConfirmTitle: "Retirer le Locataire",
-  deleteTenantConfirmDescription: "Ceci supprimera définitivement {tenantName} et toutes les données associées de {propertyName}. Cette action ne peut pas être annulée.",
+  deleteTenantConfirmDescription: "Cela supprimera définitivement {tenantName} et toutes les données associées de {propertyName}. Cette action ne peut pas être annulée.",
   proceedWithDeletion: "Oui, retirer le locataire",
   cancelDeletion: "Garder le locataire",
   
-  // ÉTAPE 2: Harmonisation des Formulaires
+  // ÉTAPE 2 : Harmonisation des formulaires
   // Messages de validation de formulaire améliorés
   fieldCannotBeEmpty: "Ce champ ne peut pas être vide",
-  emailFormatInvalid: "Veuillez entrer une adresse email valide (ex: nom@exemple.com)",
+  emailFormatInvalid: "Veuillez entrer une adresse e-mail valide (ex. nom@exemple.com)",
   phoneFormatInvalid: "Veuillez entrer un numéro de téléphone valide",
   rentAmountInvalid: "Le montant du loyer doit être un nombre positif",
   dateInvalid: "Veuillez sélectionner une date valide",
@@ -803,22 +801,22 @@ const fr = {
   pastLeaseEndWarning: "Le bail a déjà expiré",
   
   // Messages de succès de formulaire améliorés
-  tenantCreatedSuccessfully: "Nouveau locataire {tenantName} ajouté à {propertyName}",
+  tenantCreatedSuccessfully: "Nouveau locataire {tenantName} a été ajouté à {propertyName}",
   tenantUpdatedSuccessfully: "Les informations du locataire ont été mises à jour avec succès",
   invitationSentSuccessfully: "Invitation envoyée à {tenantEmail}",
   leaseRenewedSuccessfully: "Bail renouvelé pour {tenantName} jusqu'au {endDate}",
   
-  // Placeholders améliorés
-  searchTenantsPlaceholder: "Rechercher par nom, email, numéro d'unité ou propriété...",
+  // Espaces réservés améliorés
+  searchTenantsPlaceholder: "Rechercher par nom, e-mail, numéro d'unité ou propriété...",
   tenantNotesPlaceholder: "Ajouter des notes sur ce locataire (historique de maintenance, préférences, etc.)",
   emergencyContactPlaceholder: "Informations de contact d'urgence",
   
-  // ÉTAPE 3: Amélioration des États Vides
+  // ÉTAPE 3 : Amélioration des états vides
   noTenantsEmptyState: "Aucun locataire ajouté encore",
-  noTenantsEmptyDescription: "Commencez par ajouter votre premier locataire pour gérer efficacement vos propriétés",
+  noTenantsEmptyDescription: "Commencez par ajouter votre premier locataire pour commencer à gérer efficacement vos propriétés",
   addFirstTenant: "Ajouter votre premier locataire",
   noSearchResults: "Aucun locataire ne correspond à votre recherche",
-  noSearchResultsDescription: "Essayez d'ajuster vos termes de recherche ou de supprimer les filtres",
+  noSearchResultsDescription: "Essayez d'ajuster vos termes de recherche ou d'effacer les filtres",
   clearSearchFilters: "Effacer tous les filtres",
   noActiveLeases: "Aucun bail actif",
   noActiveLeasesDescription: "Tous les baux actuels ont expiré ou sont en attente de renouvellement",
@@ -830,67 +828,72 @@ const fr = {
   noOverduePayments: "Aucun paiement en retard",
   allPaymentsCurrent: "Tous les paiements sont à jour",
   
-  // ÉTAPE 4: Améliorations des Interactions
-  // Libellés des boutons d'action
+  // ÉTAPE 4 : Améliorations d'interaction
+  // Libellés de boutons d'action
   viewFullProfile: "Voir le profil complet",
   managePayments: "Gérer les paiements",
   viewMaintenanceHistory: "Voir les demandes de maintenance",
   downloadTenantReport: "Télécharger le rapport du locataire",
   sendReminder: "Envoyer un rappel de paiement",
-  scheduleInspection: "Programmer une inspection",
+  scheduleInspection: "Planifier une inspection",
   
-  // Badges et indicateurs de statut
+  // Badges de statut et indicateurs
   paymentStatusCurrent: "À jour",
   paymentStatusLate: "En retard",
   paymentStatusPartial: "Partiel",
   maintenanceStatusOpen: "Demandes ouvertes",
-  maintenanceStatusClosed: "Tout résolu",
+  maintenanceStatusClosed: "Toutes résolues",
   communicationStatusActive: "Messages récents",
   communicationStatusQuiet: "Aucune activité récente",
   
-  // Rétroaction interactive
+  // Retour interactif
   actionCompleted: "Action terminée avec succès",
-  actionFailed: "L'action a échoué. Veuillez réessayer.",
+  actionFailed: "Action échouée. Veuillez réessayer.",
   unsavedChanges: "Vous avez des modifications non sauvegardées",
-  saveChangesPrompt: "Voulez-vous sauvegarder vos modifications ?",
-  discardChanges: "Annuler les modifications",
+  saveChangesPrompt: "Souhaitez-vous sauvegarder vos modifications ?",
+  discardChanges: "Abandonner les modifications",
   saveAndContinue: "Sauvegarder et continuer",
   
-  // ÉTAPE 5: Améliorations spécifiques au contexte
+  // ÉTAPE 5 : Améliorations spécifiques au contexte
   // Contexte canadien
   socialInsuranceNumber: "Numéro d'assurance sociale (NAS)",
   creditCheckCompleted: "Vérification de crédit terminée",
   referencesVerified: "Références vérifiées",
   firstLastMonthDeposit: "Premier et dernier mois de loyer",
-  keyDeposit: "Dépôt de clés",
-  petDeposit: "Dépôt pour animaux",
+  keyDeposit: "Dépôt de clé",
+  petDeposit: "Dépôt d'animal",
   utilitiesIncluded: "Services publics inclus",
   parkingIncluded: "Stationnement inclus",
   
-  // Termes canadiens spécifiques au bail
-  standardLeaseForm: "Contrat de bail standard (Ontario)",
+  // Termes spécifiques au bail canadien
+  standardLeaseForm: "Formulaire de bail standard (Ontario)",
   rentControlApplies: "Contrôle des loyers s'applique",
   rentIncreaseNotice: "Avis d'augmentation de loyer requis",
   tenantRights: "Informations sur les droits des locataires",
   landlordResponsibilities: "Responsabilités du propriétaire",
   
-  // TENANT TABS SPECIFIC TRANSLATIONS
-  // Tooltips et compteurs des onglets
+  // Personnalisations régionales
+  provincialRegulations: "Réglementations provinciales de location",
+  municipalBylaws: "Règlements municipaux de location",
+  residentialTenancyAct: "Conformité à la Loi sur la location résidentielle",
+  
+  // TRADUCTIONS SPÉCIFIQUES DES ONGLETS LOCATAIRES
+  // Compteurs d'onglets et tooltips
   documentsTabTooltip: "Voir et gérer les documents ({count})",
   paymentsTabTooltip: "Voir l'historique des paiements ({count})",
   maintenanceTabTooltip: "Voir les demandes de maintenance ({count})",
   documentGeneratorTabTooltip: "Générer de nouveaux documents",
   noItemsInTab: "Aucun élément dans cet onglet",
   
-  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET DOCUMENTS
-  // Processus de téléchargement de documents
+  // TRADUCTIONS AMÉLIORÉES DES ONGLETS LOCATAIRES
+  // Onglet documents amélioré
   uploadInProgress: "Téléchargement en cours",
   uploadSuccess: "Téléchargement réussi",
   uploadCancelled: "Téléchargement annulé",
   fileTypeNotSupported: "Type de fichier non supporté",
   fileTooLarge: "Fichier trop volumineux",
   documentCategorization: "Catégorisation des Documents",
-  selectDocumentCategory: "Sélectionner une catégorie de document",
+  selectDocumentCategory: "Sélectionner la catégorie du document",
   documentPreview: "Aperçu du Document",
   previewUnavailable: "Aperçu non disponible pour ce type de fichier",
   downloadInProgress: "Téléchargement en cours",
@@ -898,9 +901,9 @@ const fr = {
   copyLinkToClipboard: "Copier le lien dans le presse-papiers",
   linkCopied: "Lien copié dans le presse-papiers",
   
-  // Catégories de documents - améliorées
-  leaseAgreement: "Contrat de Bail",
-  identificationDocument: "Document d'Identité",
+  // Catégories de documents améliorées
+  leaseAgreement: "Accord de Bail",
+  identificationDocument: "Document d'Identification",
   incomeProof: "Preuve de Revenus",
   references: "Références",
   insuranceDocument: "Document d'Assurance",
@@ -918,20 +921,19 @@ const fr = {
   documentArchived: "Document archivé",
   documentRestored: "Document restauré",
   
-  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET PAIEMENTS
-  // Statuts de paiement - détaillés
+  // Statuts de paiement détaillés
   paymentPending: "Paiement en Attente",
-  paymentProcessing: "En Cours de Traitement",
+  paymentProcessing: "En Traitement",
   paymentCompleted: "Paiement Terminé",
   paymentDeclined: "Paiement Refusé",
   paymentRefunded: "Remboursé",
   paymentPartiallyPaid: "Partiellement Payé",
   paymentOverdue: "En Retard",
-  paymentScheduled: "Programmé",
+  paymentScheduled: "Planifié",
   
-  // Améliorations du formulaire de paiement
+  // Méthodes de paiement
   paymentMethod: "Méthode de Paiement",
-  selectPaymentMethod: "Sélectionner une méthode de paiement",
+  selectPaymentMethod: "Sélectionner la méthode de paiement",
   cash: "Espèces",
   check: "Chèque",
   bankTransfer: "Virement Bancaire",
@@ -951,18 +953,17 @@ const fr = {
   filterByDateRange: "Filtrer par plage de dates",
   paymentSummary: "Résumé des Paiements",
   totalPaid: "Total Payé",
-  totalOutstanding: "Total en Attente",
+  totalOutstanding: "Total en Souffrance",
   averagePaymentTime: "Temps de Paiement Moyen",
   paymentTrend: "Tendance des Paiements",
   
-  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET MAINTENANCE
-  // Types de demandes de maintenance - spécifiques aux locataires
+  // Types de demandes de maintenance pour les locataires
   emergencyRequest: "Demande d'Urgence",
   urgentRequest: "Demande Urgente",
   routineRequest: "Demande de Routine",
   preventiveRequest: "Demande Préventive",
   
-  // Catégories de maintenance - détaillées
+  // Catégories de maintenance détaillées
   plumbingIssue: "Problème de Plomberie",
   electricalIssue: "Problème Électrique",
   heatingCooling: "Chauffage/Climatisation",
@@ -975,26 +976,25 @@ const fr = {
   securityIssue: "Problème de Sécurité",
   
   // Flux de travail de maintenance
-  maintenanceRequestSubmitted: "Votre demande de maintenance a été soumise",
   maintenanceInspectionScheduled: "Inspection programmée",
-  maintenanceWorkInProgress: "Travaux en cours",
-  maintenanceWorkCompleted: "Travaux terminés",
+  maintenanceWorkInProgress: "Travail en cours",
+  maintenanceWorkCompleted: "Travail terminé",
   maintenanceRequestClosed: "Demande fermée",
   
-  // Système de feedback de maintenance
-  rateMaintenanceWork: "Évaluer les travaux de maintenance",
-  maintenanceWorkRating: "Évaluation des Travaux de Maintenance",
+  // Système de commentaires de maintenance
+  rateMaintenanceWork: "Évaluer le travail de maintenance",
+  maintenanceWorkRating: "Évaluation du Travail de Maintenance",
   satisfactionLevel: "Niveau de Satisfaction",
   verySatisfied: "Très Satisfait",
   satisfied: "Satisfait",
   neutral: "Neutre",
   dissatisfied: "Insatisfait",
   veryDissatisfied: "Très Insatisfait",
-  additionalComments: "Commentaires Supplémentaires",
-  feedbackSubmitted: "Feedback soumis avec succès",
+  additionalComments: "Commentaires Additionnels",
+  feedbackSubmitted: "Commentaires soumis avec succès",
   
   // Communication de maintenance
-  maintenanceUpdate: "Mise à Jour de Maintenance",
+  maintenanceUpdate: "Mise à jour de Maintenance",
   contractorAssigned: "Entrepreneur assigné",
   estimatedCompletionDate: "Date d'achèvement estimée",
   actualCompletionDate: "Date d'achèvement réelle",
@@ -1002,15 +1002,14 @@ const fr = {
   beforePhotos: "Photos Avant",
   afterPhotos: "Photos Après",
   
-  // TRADUCTIONS AMÉLIORÉES POUR L'ONGLET GÉNÉRATEUR DE DOCUMENTS
-  // Modèles de documents
+  // Générateur de documents amélioré
   documentTemplateLibrary: "Bibliothèque de Modèles de Documents",
   selectTemplate: "Sélectionner un Modèle",
   customTemplate: "Modèle Personnalisé",
   blankDocument: "Document Vierge",
   
   // Catégories de modèles
-  legalTemplates: "Modèles Légaux",
+  legalTemplates: "Modèles Juridiques",
   communicationTemplates: "Modèles de Communication",
   maintenanceTemplates: "Modèles de Maintenance",
   financialTemplates: "Modèles Financiers",
@@ -1024,27 +1023,25 @@ const fr = {
   inspectionReport: "Rapport d'Inspection",
   
   // Processus de génération de documents
-  documentGenerationInProgress: "Génération du document...",
+  documentGenerationInProgress: "Génération du document en cours...",
   documentGenerated: "Document généré avec succès",
   documentGenerationFailed: "Échec de la génération du document",
   fillRequiredFields: "Veuillez remplir tous les champs requis",
   
   // Champs dynamiques
   dynamicFields: "Champs Dynamiques",
-  tenantName: "Nom du Locataire",
   tenantAddress: "Adresse du Locataire",
   propertyAddress: "Adresse de la Propriété",
   currentDate: "Date Actuelle",
-  rentAmount: "Montant du Loyer",
   leaseStartDate: "Date de Début du Bail",
   leaseEndDate: "Date de Fin du Bail",
   
-  // Personnalisation des documents
+  // Personnalisation de documents
   documentCustomization: "Personnalisation du Document",
   fontSize: "Taille de Police",
   fontFamily: "Famille de Police",
   textColor: "Couleur du Texte",
-  backgroundColor: "Couleur de Fond",
+  backgroundColor: "Couleur d'Arrière-plan",
   margins: "Marges",
   pageOrientation: "Orientation de la Page",
   portrait: "Portrait",
@@ -1053,20 +1050,18 @@ const fr = {
   // Actions de documents
   saveAsDraft: "Enregistrer comme Brouillon",
   generatePDF: "Générer PDF",
-  sendByEmail: "Envoyer par Email",
+  sendByEmail: "Envoyer par E-mail",
   scheduleDelivery: "Programmer la Livraison",
-  documentHistory: "Historique des Documents",
   recentDocuments: "Documents Récents",
   
-  // ÉLÉMENTS TRANSVERSAUX
-  // Navigation des onglets
+  // Éléments transversaux
   switchingTabs: "Changement d'onglets...",
-  tabLoadError: "Erreur de chargement du contenu de l'onglet",
-  retryLoadingTab: "Réessayer le chargement de l'onglet",
+  tabLoadError: "Erreur lors du chargement du contenu de l'onglet",
+  retryLoadingTab: "Réessayer de charger l'onglet",
   tabContentOutdated: "Le contenu de l'onglet peut être obsolète",
   refreshTabContent: "Actualiser le contenu de l'onglet",
   
-  // Tooltips de compteurs
+  // Tooltips de compteur
   itemCount: "{count} éléments",
   itemCountSingular: "1 élément",
   noItems: "Aucun élément",
@@ -1079,10 +1074,10 @@ const fr = {
   loadingTemplates: "Chargement des modèles...",
   
   // États d'erreur - spécifiques aux onglets
-  errorLoadingDocuments: "Erreur de chargement des documents",
-  errorLoadingPayments: "Erreur de chargement des paiements",
-  errorLoadingMaintenanceRequests: "Erreur de chargement des demandes de maintenance",
-  errorLoadingTemplates: "Erreur de chargement des modèles",
+  errorLoadingDocuments: "Erreur lors du chargement des documents",
+  errorLoadingPayments: "Erreur lors du chargement des paiements",
+  errorLoadingMaintenanceRequests: "Erreur lors du chargement des demandes de maintenance",
+  errorLoadingTemplates: "Erreur lors du chargement des modèles",
   
   // États vides - spécifiques aux onglets
   noDocumentsYet: "Aucun document téléchargé encore",
@@ -1091,14 +1086,14 @@ const fr = {
   noTemplatesAvailable: "Aucun modèle disponible",
   
   // Messages d'appel à l'action
-  uploadFirstDocument: "Téléchargez votre premier document",
-  recordFirstPayment: "Enregistrez votre premier paiement",
-  submitFirstMaintenanceRequest: "Soumettez votre première demande de maintenance",
-  createFirstDocument: "Créez votre premier document",
+  uploadFirstDocument: "Télécharger votre premier document",
+  recordFirstPayment: "Enregistrer votre premier paiement",
+  submitFirstMaintenanceRequest: "Soumettre votre première demande de maintenance",
+  createFirstDocument: "Créer votre premier document",
   
-  // Aide et orientation
+  // Aide et guidance
   documentsHelpText: "Téléchargez et organisez les documents importants liés à votre location",
-  paymentsHelpText: "Suivez vos paiements de loyer et votre historique de paiement",
+  paymentsHelpText: "Suivez vos paiements de loyer et l'historique des paiements",
   maintenanceHelpText: "Soumettez et suivez les demandes de maintenance pour votre unité",
   documentGeneratorHelpText: "Générez des documents officiels en utilisant nos modèles",
   
@@ -1109,4 +1104,4 @@ const fr = {
   tabIndex: "Onglet {index} sur {total}",
 };
 
-export default fr;
+export default translations;

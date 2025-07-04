@@ -1,3 +1,4 @@
+
 // Simplified English translations - no complex imports
 const translations = {
   // Critical landing page keys
@@ -321,7 +322,7 @@ const translations = {
   generatePreviewDescription: "Click 'Generate Preview' to create a document based on your content",
   startTypingDocument: "Start typing your document here...",
   documentDescription: "Create, manage and share important documents for your property management",
-  documentHistory: "Document History",
+  documentHistoryTitle: "Document History",
   noDocumentHistory: "No document history available",
   viewDocumentHistory: "View Document History",
   documentHistoryDescription: "View and manage your previously generated documents",
@@ -884,8 +885,8 @@ const translations = {
   documentGeneratorTabTooltip: "Generate new documents",
   noItemsInTab: "No items in this tab",
   
-  // DOCUMENTS TAB ENHANCED TRANSLATIONS
-  // Document upload process
+  // ENHANCED TENANT TABS TRANSLATIONS
+  // Documents tab enhanced
   uploadInProgress: "Upload in progress",
   uploadSuccess: "Upload successful",
   uploadCancelled: "Upload cancelled",
@@ -900,7 +901,7 @@ const translations = {
   copyLinkToClipboard: "Copy link to clipboard",
   linkCopied: "Link copied to clipboard",
   
-  // Document categories - enhanced
+  // Document categories enhanced
   leaseAgreement: "Lease Agreement",
   identificationDocument: "Identification Document",
   incomeProof: "Proof of Income",
@@ -920,8 +921,7 @@ const translations = {
   documentArchived: "Document archived",
   documentRestored: "Document restored",
   
-  // PAYMENTS TAB ENHANCED TRANSLATIONS
-  // Payment statuses - detailed
+  // Payment statuses detailed
   paymentPending: "Payment Pending",
   paymentProcessing: "Processing",
   paymentCompleted: "Payment Completed",
@@ -931,7 +931,7 @@ const translations = {
   paymentOverdue: "Overdue",
   paymentScheduled: "Scheduled",
   
-  // Payment form enhancements
+  // Payment methods
   paymentMethod: "Payment Method",
   selectPaymentMethod: "Select payment method",
   cash: "Cash",
@@ -957,14 +957,13 @@ const translations = {
   averagePaymentTime: "Average Payment Time",
   paymentTrend: "Payment Trend",
   
-  // MAINTENANCE TAB ENHANCED TRANSLATIONS
-  // Maintenance request types - tenant specific
+  // Maintenance request types for tenants
   emergencyRequest: "Emergency Request",
   urgentRequest: "Urgent Request",
   routineRequest: "Routine Request",
   preventiveRequest: "Preventive Request",
   
-  // Maintenance categories - detailed
+  // Maintenance categories detailed
   plumbingIssue: "Plumbing Issue",
   electricalIssue: "Electrical Issue",
   heatingCooling: "Heating/Cooling",
@@ -977,7 +976,6 @@ const translations = {
   securityIssue: "Security Issue",
   
   // Maintenance workflow
-  maintenanceRequestSubmitted: "Your maintenance request has been submitted",
   maintenanceInspectionScheduled: "Inspection scheduled",
   maintenanceWorkInProgress: "Work in progress",
   maintenanceWorkCompleted: "Work completed",
@@ -1004,8 +1002,7 @@ const translations = {
   beforePhotos: "Before Photos",
   afterPhotos: "After Photos",
   
-  // DOCUMENT GENERATOR TAB ENHANCED TRANSLATIONS
-  // Document templates
+  // Document generator enhanced
   documentTemplateLibrary: "Document Template Library",
   selectTemplate: "Select Template",
   customTemplate: "Custom Template",
@@ -1033,11 +1030,9 @@ const translations = {
   
   // Dynamic fields
   dynamicFields: "Dynamic Fields",
-  tenantName: "Tenant Name",
   tenantAddress: "Tenant Address",
   propertyAddress: "Property Address",
   currentDate: "Current Date",
-  rentAmount: "Rent Amount",
   leaseStartDate: "Lease Start Date",
   leaseEndDate: "Lease End Date",
   
@@ -1057,11 +1052,9 @@ const translations = {
   generatePDF: "Generate PDF",
   sendByEmail: "Send by Email",
   scheduleDelivery: "Schedule Delivery",
-  documentHistory: "Document History",
   recentDocuments: "Recent Documents",
   
-  // TRANSVERSAL ELEMENTS
-  // Tab navigation
+  // Transversal elements
   switchingTabs: "Switching tabs...",
   tabLoadError: "Error loading tab content",
   retryLoadingTab: "Retry loading tab",
