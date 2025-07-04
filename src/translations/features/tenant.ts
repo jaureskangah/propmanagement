@@ -14,6 +14,12 @@ export const enTenant = {
   noTenantProfile: "No tenant profile linked",
   noTenantProfileDescription: "Please contact your property manager to link your account to a tenant profile.",
   
+  // Navigation and UI
+  listBack: "Back",
+  listSelectTenant: "Select a tenant to view details",
+  noTenantSelected: "No tenant selected",
+  selectTenantToView: "Select a tenant to view details",
+  
   // Profile fields
   emailProfileLabel: "Email Address",
   phoneProfileLabel: "Phone Number",
@@ -21,6 +27,14 @@ export const enTenant = {
   unit: "Unit",
   rentAmountLabel: "Rent Amount",
   perMonth: "/month",
+  
+  // Property related
+  noPropertyAssigned: "No property assigned",
+  propertyNotFound: "Property not found",
+  propertyError: "Error loading property",
+  
+  // Invitations
+  inviteTenant: "Invite Tenant",
   
   // Security deposit
   securityDeposit: "Security Deposit",
@@ -91,9 +105,6 @@ export const enTenant = {
     late: "Late"
   },
   
-  // Flat payment keys for backward compatibility
-  addPayment: "Add Payment",
-  
   // Additional tenant feedback
   rating: "Rating",
   comments: "Comments",
@@ -155,6 +166,12 @@ export const frTenant = {
   noTenantProfile: "Aucun profil locataire lié",
   noTenantProfileDescription: "Veuillez contacter votre gestionnaire immobilier pour lier votre compte à un profil locataire.",
   
+  // Navigation et UI
+  listBack: "Retour",
+  listSelectTenant: "Sélectionnez un locataire pour voir les détails",
+  noTenantSelected: "Aucun locataire sélectionné",
+  selectTenantToView: "Sélectionnez un locataire pour voir les détails",
+  
   // Champs de profil
   emailProfileLabel: "Adresse Email",
   phoneProfileLabel: "Numéro de Téléphone",
@@ -162,6 +179,14 @@ export const frTenant = {
   unit: "Unité",
   rentAmountLabel: "Montant du Loyer",
   perMonth: "/mois",
+  
+  // Propriété
+  noPropertyAssigned: "Aucune propriété assignée",
+  propertyNotFound: "Propriété non trouvée",
+  propertyError: "Erreur lors du chargement de la propriété",
+  
+  // Invitations
+  inviteTenant: "Inviter un Locataire",
   
   // Dépôt de garantie
   securityDeposit: "Dépôt de Garantie",
@@ -231,9 +256,6 @@ export const frTenant = {
     cumulativeTotal: "Total Cumulatif",
     late: "En Retard"
   },
-  
-  // Clés de paiement plates pour la compatibilité
-  addPayment: "Ajouter un Paiement",
   
   // Commentaires supplémentaires des locataires
   rating: "Évaluation",
