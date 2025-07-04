@@ -1,4 +1,5 @@
 
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -176,6 +177,12 @@ export const enTenant = {
   download: "Download",
   saveTemplate: "Save Template",
   shareDocument: "Share Document",
+  
+  // Document upload and management
+  uploadedDocuments: "Uploaded Documents",
+  dragFilesHere: "Drag your files here",
+  orClickToUpload: "or click to browse",
+  supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG",
   
   // Document related (nested structure kept for organization but flat keys for UI)
   documents: {
@@ -363,6 +370,12 @@ export const frTenant = {
   saveTemplate: "Sauvegarder le Modèle",
   shareDocument: "Partager le Document",
   
+  // Document upload and management
+  uploadedDocuments: "Documents Téléversés",
+  dragFilesHere: "Glissez vos fichiers ici",
+  orClickToUpload: "ou cliquez pour parcourir",
+  supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG",
+  
   // Documents (structure imbriquée gardée pour l'organisation mais clés plates pour l'UI)
   documents: {
     dragFilesHere: "Glissez vos fichiers ici",
@@ -370,3 +383,4 @@ export const frTenant = {
     supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
   }
 };
+
