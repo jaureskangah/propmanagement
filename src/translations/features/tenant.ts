@@ -1,5 +1,6 @@
 
 
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -178,18 +179,15 @@ export const enTenant = {
   saveTemplate: "Save Template",
   shareDocument: "Share Document",
   
-  // Document upload and management
+  // Document upload and management - ALL FLAT KEYS
   uploadedDocuments: "Uploaded Documents",
   dragFilesHere: "Drag your files here",
   orClickToUpload: "or click to browse",
   supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG",
-  
-  // Document related (nested structure kept for organization but flat keys for UI)
-  documents: {
-    dragFilesHere: "Drag your files here",
-    orClickToUpload: "or click to browse",
-    supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG"
-  }
+  fileSizeLimit: "Maximum file size: 10MB",
+  storageBucketMissing: "Document storage not properly configured",
+  dropFilesHere: "Drop your files here",
+  uploadAndManageDocuments: "Upload and manage important documents for your tenancy"
 };
 
 export const frTenant = {
@@ -370,17 +368,13 @@ export const frTenant = {
   saveTemplate: "Sauvegarder le Modèle",
   shareDocument: "Partager le Document",
   
-  // Document upload and management
+  // Document upload and management - TOUTES LES CLÉS PLATES
   uploadedDocuments: "Documents Téléversés",
   dragFilesHere: "Glissez vos fichiers ici",
   orClickToUpload: "ou cliquez pour parcourir",
   supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG",
-  
-  // Documents (structure imbriquée gardée pour l'organisation mais clés plates pour l'UI)
-  documents: {
-    dragFilesHere: "Glissez vos fichiers ici",
-    orClickToUpload: "ou cliquez pour parcourir",
-    supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
-  }
+  fileSizeLimit: "Taille maximale du fichier : 10 Mo",
+  storageBucketMissing: "Le stockage de documents n'est pas correctement configuré",
+  dropFilesHere: "Déposez vos fichiers ici",
+  uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location"
 };
-

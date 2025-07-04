@@ -31,7 +31,7 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const file = e.dataTransfer.files[0];
       if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        alert(t("documents.fileSizeLimit"));
+        alert(t("fileSizeLimit"));
         return;
       }
       onFileDrop(file);
@@ -46,7 +46,7 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
     const file = event.target.files?.[0];
     if (file) {
       if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        alert(t("documents.fileSizeLimit"));
+        alert(t("fileSizeLimit"));
         return;
       }
       onFileDrop(file);
@@ -86,7 +86,7 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
           >
             <FileUp className="h-14 w-14 mx-auto mb-4 text-purple-500" />
             <p className="text-lg font-medium text-purple-600 mb-1">
-              {t("documents.dropFilesHere")}
+              {t("dropFilesHere")}
             </p>
           </motion.div>
         ) : (
@@ -99,10 +99,10 @@ export const DragDropArea = ({ onFileDrop, fileInputRef }: DragDropAreaProps) =>
           >
             <FileUp className="h-14 w-14 mx-auto mb-3 text-purple-500" />
             <p className="text-base font-medium text-gray-700 dark:text-gray-300 mb-1">
-              {t("documents.dragFilesHere")}
+              {t("dragFilesHere")}
             </p>
             <p className="text-sm text-muted-foreground">
-              {t("documents.orClickToUpload")}
+              {t("orClickToUpload")}
             </p>
           </motion.div>
         )}
