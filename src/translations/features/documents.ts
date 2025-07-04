@@ -1,0 +1,268 @@
+
+export const enDocuments = {
+  // Main section
+  documents: "Documents",
+  uploadedDocuments: "Uploaded Documents",
+  myDocuments: "My Documents",
+  importantDocuments: "Important Documents",
+  allDocuments: "All Documents",
+  recentlyUploaded: "Recently Uploaded",
+  
+  // Upload functionality
+  uploadDocument: "Upload Document",
+  uploadNewDocument: "Add New Document",
+  dragFilesHere: "Drag your files here",
+  orClickToUpload: "or click to browse",
+  dropFilesHere: "Drop your files here",
+  dragDropFiles: "Drag and drop files here or click to browse",
+  supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG",
+  fileSizeLimit: "Maximum file size: 10MB",
+  fileSelected: "File selected",
+  uploadingFile: "Uploading file...",
+  uploadComplete: "Upload complete!",
+  uploadFailed: "Upload failed",
+  
+  // Document management
+  noDocuments: "No documents available",
+  generateDocument: "Generate Document",
+  downloadDocument: "Download document",
+  openDocument: "Open Document",
+  shareDocument: "Share Document",
+  editDocument: "Edit Document",
+  documentViewer: "Document Viewer",
+  closeViewer: "Close",
+  previewNotAvailable: "Preview not available",
+  quickPreview: "Quick Preview",
+  openFullViewer: "Open Full Viewer",
+  
+  // Document organization
+  filterDocuments: "Filter Documents",
+  searchDocuments: "Search Documents",
+  sortBy: "Sort By",
+  dateUploaded: "Date Uploaded",
+  documentName: "Document Name",
+  documentType: "Document Type",
+  categories: "Categories",
+  category: "Category",
+  selectCategory: "Select a category",
+  uncategorized: "Uncategorized",
+  
+  // Document categories
+  leaseDocuments: "Lease Documents",
+  paymentReceipts: "Payment Receipts",
+  otherDocuments: "Other Documents",
+  leaseAgreement: "Lease Agreement",
+  identificationDocument: "Identification Document",
+  incomeProof: "Proof of Income",
+  references: "References",
+  insuranceDocument: "Insurance Document",
+  utilitiesDocument: "Utilities Document",
+  moveInInspection: "Move-in Inspection",
+  moveOutInspection: "Move-out Inspection",
+  correspondence: "Correspondence",
+  
+  // Document actions
+  viewInBrowser: "View in browser",
+  downloadPDF: "Download PDF",
+  printDocument: "Print document",
+  archiveDocument: "Archive document",
+  restoreDocument: "Restore document",
+  documentArchived: "Document archived",
+  documentRestored: "Document restored",
+  
+  // Document Generator
+  documentGenerator: "Document Generator",
+  documentTemplates: "Document Templates",
+  documentTemplateLibrary: "Document Template Library",
+  selectTemplate: "Select Template",
+  customTemplate: "Custom Template",
+  blankDocument: "Blank Document",
+  editContent: "Edit Content",
+  preview: "Preview",
+  generatePreview: "Generate Preview",
+  noPreviewAvailable: "No preview available yet",
+  generatePreviewDescription: "Click 'Generate Preview' to create a document based on your content",
+  startTypingDocument: "Start typing your document here...",
+  
+  // Document history
+  documentHistoryTitle: "Document History",
+  noDocumentHistory: "No document history available",
+  viewDocumentHistory: "View Document History",
+  documentHistoryDescription: "View and manage your previously generated documents",
+  dateGenerated: "Date Generated",
+  documentCategory: "Category",
+  documentActions: "Actions",
+  
+  // Messages and feedback
+  andMoreDocuments: "and {count} more documents",
+  viewAllDocuments: "View all documents",
+  documentDeleted: "Document deleted",
+  confirmDeleteDocument: "Delete Document",
+  documentDeleteWarning: "Are you sure you want to delete this document?",
+  docDeleteSuccess: "Document successfully deleted",
+  docUploadSuccess: "Document successfully uploaded",
+  documentShareSuccess: "Document shared successfully",
+  documentShareError: "Failed to share document",
+  documentSaved: "Document saved",
+  documentSavedDescription: "Your document has been saved successfully",
+  downloadStarted: "Download started",
+  downloadStartedDescription: "Your document will be downloaded shortly",
+  generatingPreview: "Generating preview...",
+  templateLoaded: "Template loaded",
+  templateLoadedDescription: "Template content has been loaded successfully",
+  
+  // Filters and controls
+  hideFilters: "Hide Filters",
+  showFilters: "Show Filters",
+  saveChanges: "Save Changes",
+  
+  // Error messages
+  permissionError: "Permission error: You don't have access to upload documents",
+  tenantProfileNotFound: "Tenant profile not found",
+  authRequired: "You must be logged in to upload documents",
+  databaseError: "Database error occurred while saving document",
+  storageError: "Storage system error occurred",
+  storageBucketMissing: "Document storage not properly configured",
+  uploadError: "Error uploading file to storage",
+  publicUrlError: "Could not generate public URL for document",
+  fileValidationError: "Invalid file type or size. Please try another file.",
+  
+  // Description
+  documentDescription: "Create, manage and share important documents for your property management",
+  uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
+  manageDocumentsDescription: "Upload and manage important documents for your tenancy",
+};
+
+export const frDocuments = {
+  // Section principale
+  documents: "Documents",
+  uploadedDocuments: "Documents Téléchargés",
+  myDocuments: "Mes Documents",
+  importantDocuments: "Documents Importants",
+  allDocuments: "Tous les Documents",
+  recentlyUploaded: "Récemment Téléchargés",
+  
+  // Fonctionnalité de téléchargement
+  uploadDocument: "Télécharger un Document",
+  uploadNewDocument: "Ajouter un Nouveau Document",
+  dragFilesHere: "Glissez vos fichiers ici",
+  orClickToUpload: "ou cliquez pour parcourir",
+  dropFilesHere: "Déposez vos fichiers ici",
+  dragDropFiles: "Glissez et déposez les fichiers ici ou cliquez pour parcourir",
+  supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG",
+  fileSizeLimit: "Taille maximale du fichier : 10MB",
+  fileSelected: "Fichier sélectionné",
+  uploadingFile: "Téléchargement du fichier...",
+  uploadComplete: "Téléchargement terminé !",
+  uploadFailed: "Échec du téléchargement",
+  
+  // Gestion des documents
+  noDocuments: "Aucun document disponible",
+  generateDocument: "Générer un Document",
+  downloadDocument: "Télécharger le document",
+  openDocument: "Ouvrir le Document",
+  shareDocument: "Partager le Document",
+  editDocument: "Modifier le Document",
+  documentViewer: "Visionneuse de Document",
+  closeViewer: "Fermer",
+  previewNotAvailable: "Aperçu non disponible",
+  quickPreview: "Aperçu Rapide",
+  openFullViewer: "Ouvrir la Visionneuse Complète",
+  
+  // Organisation des documents
+  filterDocuments: "Filtrer les Documents",
+  searchDocuments: "Rechercher des Documents",
+  sortBy: "Trier par",
+  dateUploaded: "Date de Téléchargement",
+  documentName: "Nom du Document",
+  documentType: "Type de Document",
+  categories: "Catégories",
+  category: "Catégorie",
+  selectCategory: "Sélectionner une catégorie",
+  uncategorized: "Non catégorisé",
+  
+  // Catégories de documents
+  leaseDocuments: "Documents de Bail",
+  paymentReceipts: "Reçus de Paiement",
+  otherDocuments: "Autres Documents",
+  leaseAgreement: "Contrat de Bail",
+  identificationDocument: "Document d'Identification",
+  incomeProof: "Preuve de Revenus",
+  references: "Références",
+  insuranceDocument: "Document d'Assurance",
+  utilitiesDocument: "Document de Services Publics",
+  moveInInspection: "Inspection d'Entrée",
+  moveOutInspection: "Inspection de Sortie",
+  correspondence: "Correspondance",
+  
+  // Actions de document
+  viewInBrowser: "Voir dans le navigateur",
+  downloadPDF: "Télécharger PDF",
+  printDocument: "Imprimer le document",
+  archiveDocument: "Archiver le document",
+  restoreDocument: "Restaurer le document",
+  documentArchived: "Document archivé",
+  documentRestored: "Document restauré",
+  
+  // Générateur de documents
+  documentGenerator: "Générateur de Documents",
+  documentTemplates: "Modèles de Documents",
+  documentTemplateLibrary: "Bibliothèque de Modèles de Documents",
+  selectTemplate: "Sélectionner un Modèle",
+  customTemplate: "Modèle Personnalisé",
+  blankDocument: "Document Vierge",
+  editContent: "Modifier le Contenu",
+  preview: "Aperçu",
+  generatePreview: "Générer l'Aperçu",
+  noPreviewAvailable: "Aucun aperçu disponible encore",
+  generatePreviewDescription: "Cliquez sur 'Générer l'Aperçu' pour créer un document basé sur votre contenu",
+  startTypingDocument: "Commencez à taper votre document ici...",
+  
+  // Historique des documents
+  documentHistoryTitle: "Historique des Documents",
+  noDocumentHistory: "Aucun historique de document disponible",
+  viewDocumentHistory: "Voir l'Historique des Documents",
+  documentHistoryDescription: "Visualisez et gérez vos documents générés précédemment",
+  dateGenerated: "Date de Génération",
+  documentCategory: "Catégorie",
+  documentActions: "Actions",
+  
+  // Messages et retours
+  andMoreDocuments: "et {count} documents de plus",
+  viewAllDocuments: "Voir tous les documents",
+  documentDeleted: "Document supprimé",
+  confirmDeleteDocument: "Supprimer le Document",
+  documentDeleteWarning: "Êtes-vous sûr de vouloir supprimer ce document ?",
+  docDeleteSuccess: "Document supprimé avec succès",
+  docUploadSuccess: "Document téléchargé avec succès",
+  documentShareSuccess: "Document partagé avec succès",
+  documentShareError: "Échec du partage du document",
+  documentSaved: "Document sauvegardé",
+  documentSavedDescription: "Votre document a été sauvegardé avec succès",
+  downloadStarted: "Téléchargement commencé",
+  downloadStartedDescription: "Votre document sera téléchargé sous peu",
+  generatingPreview: "Génération de l'aperçu...",
+  templateLoaded: "Modèle chargé",
+  templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
+  
+  // Filtres et contrôles
+  hideFilters: "Masquer les Filtres",
+  showFilters: "Afficher les Filtres",
+  saveChanges: "Enregistrer les Modifications",
+  
+  // Messages d'erreur
+  permissionError: "Erreur de permission : Vous n'avez pas accès au téléchargement de documents",
+  tenantProfileNotFound: "Profil de locataire non trouvé",
+  authRequired: "Vous devez être connecté pour télécharger des documents",
+  databaseError: "Erreur de base de données lors de l'enregistrement du document",
+  storageError: "Erreur du système de stockage",
+  storageBucketMissing: "Stockage de documents pas correctement configuré",
+  uploadError: "Erreur lors du téléchargement du fichier vers le stockage",
+  publicUrlError: "Impossible de générer l'URL publique pour le document",
+  fileValidationError: "Type de fichier ou taille invalide. Veuillez essayer un autre fichier.",
+  
+  // Description
+  documentDescription: "Créez, gérez et partagez des documents importants pour votre gestion immobilière",
+  uploadAndManageDocuments: "Téléchargez et gérez des documents importants pour votre location",
+  manageDocumentsDescription: "Téléchargez et gérez des documents importants pour votre location",
+};

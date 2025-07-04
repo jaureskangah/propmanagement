@@ -17,7 +17,7 @@ export function NoPropertySelected({ type }: NoPropertySelectedProps) {
         <Building2 className="h-12 w-12 text-muted-foreground/50 mb-2" />
         <h3 className="text-lg font-medium">{t('selectProperty')}</h3>
         <p className="text-sm text-muted-foreground max-w-md">
-          {t('noPropertiesAvailable')}
+          {t('pleaseSelectProperty')}
         </p>
       </CardContent>
     </Card>
