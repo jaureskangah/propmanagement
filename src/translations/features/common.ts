@@ -110,6 +110,10 @@ export const enCommon = {
   unchanged: "Unchanged",
   trendUp: "Trend Up",
   trendDown: "Trend Down",
+  
+  // Missing translations from finances
+  pleaseSelectProperty: "Please select a property to view financial data",
+  selectProperty: "Select Property"
 };
 
 export const frCommon = {
@@ -223,4 +227,8 @@ export const frCommon = {
   unchanged: "Inchangé",
   trendUp: "Tendance Haussière",
   trendDown: "Tendance Baissière",
+  
+  // Traductions manquantes des finances
+  pleaseSelectProperty: "Veuillez sélectionner une propriété pour voir les données financières",
+  selectProperty: "Sélectionner une Propriété"
 };

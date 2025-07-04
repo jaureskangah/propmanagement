@@ -5,10 +5,34 @@ export const enTenant = {
   welcomeGeneric: "Welcome to your dashboard",
   manageApartmentInfo: "Manage your apartment information and communications",
   
-  // Tenant profile
+  // Tenant profile and basic info
   tenant: "Tenant",
+  tenantsList: "Tenants List",
+  tenantsSubtitle: "Manage your tenants and their information",
   noTenantProfile: "No tenant profile linked",
   noTenantProfileDescription: "Please contact your property manager to link your account to a tenant profile.",
+  
+  // Profile fields
+  emailProfileLabel: "Email Address",
+  phoneProfileLabel: "Phone Number",
+  unitLabel: "Unit",
+  unit: "Unit",
+  rentAmountLabel: "Rent Amount",
+  perMonth: "/month",
+  
+  // Security deposit
+  securityDeposit: "Security Deposit",
+  deposited: "Deposited",
+  notDeposited: "Not Deposited",
+  depositPaid: "Deposit Paid",
+  depositNotPaid: "Deposit Not Paid",
+  payDeposit: "Pay Deposit",
+  markAsPaid: "Mark as Paid",
+  markAsNotPaid: "Mark as Not Paid",
+  depositStatus: "Deposit Status",
+  depositStatusUpdated: "Deposit status updated",
+  notes: "Notes",
+  errorUpdatingDeposit: "Error updating deposit",
   
   // Lease information
   lease: {
@@ -23,7 +47,9 @@ export const enTenant = {
   leaseExpiring: "Lease Expiring",
   leaseExpired: "Lease Expired",
   leaseStart: "Lease Start",
+  leaseStartProfileLabel: "Lease Start Date",
   leaseEnd: "Lease End",
+  leaseEndProfileLabel: "Lease End Date",
   daysLeft: "{days} days left",
   daysAgo: "{days} days ago",
   daysRemaining: "Days Remaining",
@@ -46,21 +72,27 @@ export const enTenant = {
   fromProperty: "From Property",
   typeYourMessage: "Type your message here...",
   
-  // Payments
-  payments: "Payments",
-  payment: "Payment",
-  paymentHistory: "Payment History",
-  noPaymentHistory: "No payment history available",
-  paid: "Paid",
-  overdue: "Overdue",
-  totalRentPaid: "Total Rent Paid",
-  paymentEvolution: "Payment Evolution",
-  cumulativeTotal: "Cumulative Total",
-  late: "Late",
+  // Payments section
+  payments: {
+    paid: "Paid",
+    overdue: "Overdue",
+    pending: "Pending",
+    addPayment: "Add Payment",
+    editPayment: "Edit Payment",
+    deletePayment: "Delete Payment",
+    showMorePayments: "Show {count} more payments",
+    paymentHistory: "Payment History",
+    noPaymentHistory: "No payment history available",
+    totalRentPaid: "Total Rent Paid",
+    paymentEvolution: "Payment Evolution",
+    cumulativeTotal: "Cumulative Total",
+    late: "Late"
+  },
+  
+  // Flat payment keys for backward compatibility
+  addPayment: "Add Payment",
   
   // Property info
-  unitLabel: "Unit",
-  unit: "Unit",
   rentAmountLabel: "Rent Amount",
   
   // Additional tenant feedback
@@ -103,6 +135,13 @@ export const enTenant = {
   maintenance: "Maintenance",
   chart: "Chart",
   property: "Property",
+  
+  // Document related (nested structure)
+  documents: {
+    dragFilesHere: "Drag your files here",
+    orClickToUpload: "or click to browse",
+    supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG"
+  }
 };
 
 export const frTenant = {
@@ -111,10 +150,34 @@ export const frTenant = {
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
   manageApartmentInfo: "Gérez les informations de votre appartement et communications",
   
-  // Profil locataire
+  // Profil locataire et infos de base
   tenant: "Locataire",
+  tenantsList: "Liste des Locataires",
+  tenantsSubtitle: "Gérez vos locataires et leurs informations",
   noTenantProfile: "Aucun profil locataire lié",
   noTenantProfileDescription: "Veuillez contacter votre gestionnaire immobilier pour lier votre compte à un profil locataire.",
+  
+  // Champs de profil
+  emailProfileLabel: "Adresse Email",
+  phoneProfileLabel: "Numéro de Téléphone",
+  unitLabel: "Unité",
+  unit: "Unité",
+  rentAmountLabel: "Montant du Loyer",
+  perMonth: "/mois",
+  
+  // Dépôt de garantie
+  securityDeposit: "Dépôt de Garantie",
+  deposited: "Déposé",
+  notDeposited: "Non Déposé",
+  depositPaid: "Dépôt Payé",
+  depositNotPaid: "Dépôt Non Payé",
+  payDeposit: "Payer le Dépôt",
+  markAsPaid: "Marquer comme Payé",
+  markAsNotPaid: "Marquer comme Non Payé",
+  depositStatus: "Statut du Dépôt",
+  depositStatusUpdated: "Statut du dépôt mis à jour",
+  notes: "Notes",
+  errorUpdatingDeposit: "Erreur lors de la mise à jour du dépôt",
   
   // Informations de bail
   lease: {
@@ -129,7 +192,9 @@ export const frTenant = {
   leaseExpiring: "Bail Expirant",
   leaseExpired: "Bail Expiré",
   leaseStart: "Début du Bail",
+  leaseStartProfileLabel: "Date de Début du Bail",
   leaseEnd: "Fin du Bail",
+  leaseEndProfileLabel: "Date de Fin du Bail",
   daysLeft: "{days} jours restants",
   daysAgo: "il y a {days} jours",
   daysRemaining: "Jours Restants",
@@ -152,21 +217,27 @@ export const frTenant = {
   fromProperty: "De la Propriété",
   typeYourMessage: "Tapez votre message ici...",
   
-  // Paiements
-  payments: "Paiements",
-  payment: "Paiement",
-  paymentHistory: "Historique des Paiements",
-  noPaymentHistory: "Aucun historique de paiement disponible",
-  paid: "Payé",
-  overdue: "En Retard",
-  totalRentPaid: "Total des Loyers Payés",
-  paymentEvolution: "Évolution des Paiements",
-  cumulativeTotal: "Total Cumulatif",
-  late: "En Retard",
+  // Section des paiements
+  payments: {
+    paid: "Payé",
+    overdue: "En Retard",
+    pending: "En Attente",
+    addPayment: "Ajouter un Paiement",
+    editPayment: "Modifier le Paiement",
+    deletePayment: "Supprimer le Paiement",
+    showMorePayments: "Voir {count} paiements de plus",
+    paymentHistory: "Historique des Paiements",
+    noPaymentHistory: "Aucun historique de paiement disponible",
+    totalRentPaid: "Total des Loyers Payés",
+    paymentEvolution: "Évolution des Paiements",
+    cumulativeTotal: "Total Cumulatif",
+    late: "En Retard"
+  },
+  
+  // Clés de paiement plates pour la compatibilité
+  addPayment: "Ajouter un Paiement",
   
   // Informations de propriété
-  unitLabel: "Unité",
-  unit: "Unité",
   rentAmountLabel: "Montant du Loyer",
   
   // Commentaires supplémentaires des locataires
@@ -209,4 +280,11 @@ export const frTenant = {
   maintenance: "Maintenance",
   chart: "Graphique",
   property: "Propriété",
+  
+  // Documents (structure imbriquée)
+  documents: {
+    dragFilesHere: "Glissez vos fichiers ici",
+    orClickToUpload: "ou cliquez pour parcourir",
+    supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
+  }
 };
