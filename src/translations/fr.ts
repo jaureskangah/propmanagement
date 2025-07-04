@@ -19,8 +19,12 @@ const supportExtensions = {
 console.log('🔍 DEBUG: frDocuments import:', {
   imported: !!frDocuments,
   hasDocumentGenerator: !!(frDocuments as any)?.documentGenerator,
-  documentGeneratorKeys: Object.keys((frDocuments as any)?.documentGenerator || {})
+  documentGeneratorKeys: Object.keys((frDocuments as any)?.documentGenerator || {}),
+  fullfrDocuments: frDocuments
 });
+
+// Debug spécifique pour documentGenerator
+console.log('🔍 DEBUG: frDocuments.documentGenerator:', (frDocuments as any)?.documentGenerator);
 
 // Composer toutes les traductions
 const translations = {
@@ -40,7 +44,11 @@ const translations = {
 console.log('🔍 DEBUG: Final FR translations:', {
   hasDocumentGenerator: !!(translations as any)?.documentGenerator,
   totalKeys: Object.keys(translations).length,
-  documentGeneratorKeys: Object.keys((translations as any)?.documentGenerator || {})
+  documentGeneratorKeys: Object.keys((translations as any)?.documentGenerator || {}),
+  translationsWithDocumentGenerator: translations.documentGenerator
 });
+
+// Test spécifique pour une clé documentGenerator
+console.log('🔍 DEBUG: Test direct access to documentGenerator.saveTemplate:', translations.documentGenerator?.saveTemplate);
 
 export default translations;

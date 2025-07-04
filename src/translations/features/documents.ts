@@ -1,4 +1,3 @@
-
 export const enDocuments = {
   // Main document labels
   documents: "Documents",
@@ -41,6 +40,17 @@ export const enDocuments = {
     templateLoadedDescription: "Template content has been loaded successfully",
     errorTitle: "Error",
     templateLoadError: "Unable to load template content",
+    cancel: "Cancel",
+    saveTemplate: "Save Template",
+    templateName: "Template Name",
+    templateNamePlaceholder: "Enter a name for your template",
+    templateDescription: "Template Description", 
+    templateDescriptionPlaceholder: "Describe your template briefly",
+    category: "Category",
+    selectCategory: "Select Category",
+    saving: "Saving...",
+    saveAsTemplate: "Save as Template",
+    saveAsTemplateDescription: "Save this document as a template for future use",
     // Document template names
     leaseAgreement: "Lease Agreement",
     rentReceipt: "Rent Receipt",
@@ -51,7 +61,13 @@ export const enDocuments = {
     entryNotice: "Entry Notice",
     maintenanceNotice: "Maintenance Notice",
     moveInChecklist: "Move-In Checklist",
-    moveOutChecklist: "Move-Out Checklist"
+    moveOutChecklist: "Move-Out Checklist",
+    // Document categories for templates
+    leaseDocuments: "Lease Documents",
+    paymentDocuments: "Payment Documents", 
+    noticeDocuments: "Notice Documents",
+    inspectionDocuments: "Inspection Documents",
+    miscDocuments: "Miscellaneous Documents"
   },
   
   // Document types and categories
@@ -146,6 +162,17 @@ export const frDocuments = {
     templateLoadedDescription: "Le contenu du modèle a été chargé avec succès",
     errorTitle: "Erreur",
     templateLoadError: "Impossible de charger le contenu du modèle",
+    cancel: "Annuler",
+    saveTemplate: "Enregistrer le Modèle",
+    templateName: "Nom du Modèle",
+    templateNamePlaceholder: "Entrez un nom pour votre modèle",
+    templateDescription: "Description du Modèle",
+    templateDescriptionPlaceholder: "Décrivez brièvement votre modèle",
+    category: "Catégorie",
+    selectCategory: "Sélectionner une Catégorie",
+    saving: "Enregistrement...",
+    saveAsTemplate: "Enregistrer comme Modèle",
+    saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future",
     // Noms des modèles de documents
     leaseAgreement: "Contrat de Bail",
     rentReceipt: "Quittance de Loyer",
@@ -156,7 +183,13 @@ export const frDocuments = {
     entryNotice: "Avis d'Entrée",
     maintenanceNotice: "Avis de Maintenance",
     moveInChecklist: "Liste de Contrôle d'Entrée",
-    moveOutChecklist: "Liste de Contrôle de Sortie"
+    moveOutChecklist: "Liste de Contrôle de Sortie",
+    // Catégories de documents pour les modèles
+    leaseDocuments: "Documents de Bail",
+    paymentDocuments: "Documents de Paiement",
+    noticeDocuments: "Documents d'Avis",
+    inspectionDocuments: "Documents d'Inspection", 
+    miscDocuments: "Documents Divers"
   },
   
   // Types et catégories de documents
@@ -208,3 +241,12 @@ export const frDocuments = {
   orClickToUpload: "ou cliquez pour parcourir",
   supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
 };
+
+// Debug: vérification de l'export
+console.log('🔍 DEBUG: Export verification:', {
+  enDocuments: !!enDocuments,
+  frDocuments: !!frDocuments,
+  enDocumentGenerator: !!enDocuments.documentGenerator,
+  frDocumentGenerator: !!frDocuments.documentGenerator,
+  frSaveTemplate: frDocuments.documentGenerator?.saveTemplate
+});
