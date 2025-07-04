@@ -1,4 +1,5 @@
 
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -148,6 +149,12 @@ export const enTenant = {
   paymentsLabel: "Payments",
   documentsLabel: "Documents",
   documentGenerator: "Document Generator",
+  
+  // Maintenance translations
+  createdOn: "Created on",
+  edit: "Edit",
+  deleteMaintenanceRequest: "Delete",
+  resolved: "Resolved",
   
   // Document related (nested structure)
   documents: {
@@ -306,6 +313,12 @@ export const frTenant = {
   paymentsLabel: "Paiements",
   documentsLabel: "Documents",
   documentGenerator: "Générateur de Documents",
+  
+  // Maintenance translations
+  createdOn: "Créé le",
+  edit: "Modifier",
+  deleteMaintenanceRequest: "Supprimer",
+  resolved: "Résolu",
   
   // Documents (structure imbriquée)
   documents: {

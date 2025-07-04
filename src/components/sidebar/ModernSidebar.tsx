@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useLocation, Link, useNavigate } from "react-router-dom";
 import {
@@ -30,7 +31,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
     if (isTenant) {
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard') },
-        { to: "/tenant/maintenance", icon: Wrench, label: String(t('maintenance') || 'Maintenance') },
+        { to: "/tenant/maintenance", icon: Wrench, label: "Maintenance" },
         { to: "/tenant/documents", icon: FileText, label: String(t('documentsLabel') || 'Documents') },
         { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
       ];
@@ -42,7 +43,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
       { to: "/tenants", icon: Users, label: String(t('tenants') || 'Tenants') },
       { to: "/invitations", icon: Mail, label: String(t('invitations') || 'Invitations') },
       { to: "/finances", icon: CreditCard, label: String(t('finances') || 'Finances') },
-      { to: "/maintenance", icon: Wrench, label: String(t('maintenance') || 'Maintenance') },
+      { to: "/maintenance", icon: Wrench, label: "Maintenance" },
       { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
     ];
   }, [isTenant, t]);

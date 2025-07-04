@@ -157,13 +157,13 @@ export const SimplifiedTenantDashboardContainer = ({
           count: getCountForTab('overview')
         },
         { 
-          name: t('maintenance', 'Maintenance'), 
+          name: "Maintenance", 
           value: "maintenance", 
           icon: Wrench,
           count: getCountForTab('maintenance')
         },
         { 
-          name: t('documents', 'Documents'), 
+          name: "Documents", 
           value: "documents", 
           icon: FileText,
           count: getCountForTab('documents')

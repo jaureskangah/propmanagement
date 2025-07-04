@@ -76,13 +76,13 @@ export const TenantMaintenance = ({
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">{t('maintenanceRequests')}</CardTitle>
+        <CardTitle className="text-lg">Maintenance</CardTitle>
         <Button 
           onClick={() => setIsAddDialogOpen(true)}
           className="bg-[#ea384c] hover:bg-[#ea384c]/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          {t('newMaintenanceRequest')}
+          {t('newRequest')}
         </Button>
       </CardHeader>
       <CardContent>
