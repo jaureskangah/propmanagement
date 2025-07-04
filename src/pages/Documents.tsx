@@ -32,10 +32,10 @@ const Documents = () => {
                   </div>
                   <div>
                     <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                      {t('documentGenerator')}
+                      {t('documentGenerator.documentGenerator')}
                     </h1>
                     <p className="text-muted-foreground mt-1">
-                      {t('documentGeneratorDescription')}
+                      {t('documentGenerator.description')}
                     </p>
                   </div>
                 </div>
@@ -45,7 +45,7 @@ const Documents = () => {
                   className="flex items-color gap-2 w-full lg:w-auto"
                 >
                   <History className="h-4 w-4" />
-                  {t('documentHistory')}
+                  {t('documentGenerator.documentHistory')}
                 </Button>
               </div>
             </div>

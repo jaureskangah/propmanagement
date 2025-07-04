@@ -45,7 +45,7 @@ export function DocumentEditorSection({
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="editor">
               <FileCheck className="h-4 w-4 mr-2" />
-              {t('documentGenerator.editContent') || "Éditer le contenu"}
+              {t('documentGenerator.editContent')}
             </TabsTrigger>
             <TabsTrigger value="preview" onClick={() => {
               if (!previewUrl && documentContent) {
@@ -53,7 +53,7 @@ export function DocumentEditorSection({
               }
             }}>
               <FilePlus className="h-4 w-4 mr-2" />
-              {t('documentGenerator.preview') || "Aperçu"}
+              {t('documentGenerator.preview')}
             </TabsTrigger>
           </TabsList>
         </Tabs>

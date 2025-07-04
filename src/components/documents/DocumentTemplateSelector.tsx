@@ -33,16 +33,16 @@ export function DocumentTemplateSelector({
   const [showTemplatesDialog, setShowTemplatesDialog] = useState(false);
 
   const templates = [
-    { id: "lease", name: t('documentGenerator.leaseAgreement') || "Contrat de bail" },
-    { id: "receipt", name: t('documentGenerator.rentReceipt') || "Quittance de loyer" },
-    { id: "notice", name: t('documentGenerator.noticeToVacate') || "Avis de départ" },
-    { id: "lease_renewal", name: t('documentGenerator.leaseRenewal') || "Renouvellement de bail" },
-    { id: "payment_reminder", name: t('documentGenerator.paymentReminder') || "Rappel de paiement" },
-    { id: "late_payment", name: t('documentGenerator.latePaymentNotice') || "Avis de retard de paiement" },
-    { id: "entry_notice", name: t('documentGenerator.entryNotice') || "Avis d'entrée" },
-    { id: "maintenance_notice", name: t('documentGenerator.maintenanceNotice') || "Avis de maintenance" },
-    { id: "move_in_checklist", name: t('documentGenerator.moveInChecklist') || "Liste de contrôle d'entrée" },
-    { id: "move_out_checklist", name: t('documentGenerator.moveOutChecklist') || "Liste de contrôle de sortie" },
+    { id: "lease", name: t('documentGenerator.leaseAgreement') },
+    { id: "receipt", name: t('documentGenerator.rentReceipt') },
+    { id: "notice", name: t('documentGenerator.noticeToVacate') },
+    { id: "lease_renewal", name: t('documentGenerator.leaseRenewal') },
+    { id: "payment_reminder", name: t('documentGenerator.paymentReminder') },
+    { id: "late_payment", name: t('documentGenerator.latePaymentNotice') },
+    { id: "entry_notice", name: t('documentGenerator.entryNotice') },
+    { id: "maintenance_notice", name: t('documentGenerator.maintenanceNotice') },
+    { id: "move_in_checklist", name: t('documentGenerator.moveInChecklist') },
+    { id: "move_out_checklist", name: t('documentGenerator.moveOutChecklist') },
   ];
 
   const handleSelectTemplate = (templateId: string) => {
@@ -70,14 +70,14 @@ export function DocumentTemplateSelector({
         
         onGenerateContent(content);
         toast({
-          title: t('documentGenerator.templateLoaded') || "Modèle chargé",
-          description: t('documentGenerator.templateLoadedDescription') || "Le contenu du modèle a été chargé avec succès"
+          title: t('documentGenerator.templateLoaded'),
+          description: t('documentGenerator.templateLoadedDescription')
         });
       } catch (error) {
         console.error("Error generating template content:", error);
         toast({
-          title: t('documentGenerator.errorTitle') || "Erreur",
-          description: t('documentGenerator.templateLoadError') || "Impossible de charger le contenu du modèle",
+          title: t('documentGenerator.errorTitle'),
+          description: t('documentGenerator.templateLoadError'),
           variant: "destructive"
         });
       }
@@ -91,8 +91,8 @@ export function DocumentTemplateSelector({
     setShowTemplatesDialog(false);
     onGenerateContent(template.content);
     toast({
-      title: t('documentGenerator.templateLoaded') || "Modèle chargé",
-      description: t('documentGenerator.templateLoadedDescription') || "Le contenu du modèle a été chargé avec succès"
+      title: t('documentGenerator.templateLoaded'),
+      description: t('documentGenerator.templateLoadedDescription')
     });
   };
   
@@ -100,7 +100,7 @@ export function DocumentTemplateSelector({
     <div className="space-y-4">
       <Select value={selectedTemplate} onValueChange={handleSelectTemplate}>
         <SelectTrigger>
-          <SelectValue placeholder={t('documentGenerator.selectDocumentTemplate') || "Sélectionner un modèle de document"} />
+          <SelectValue placeholder={t('documentGenerator.selectDocumentTemplate')} />
         </SelectTrigger>
         <SelectContent>
           {templates.map((template) => (
@@ -118,8 +118,8 @@ export function DocumentTemplateSelector({
       >
         <FileText className="mr-2 h-4 w-4" />
         {loading ? 
-          (t('documentGenerator.generating') || "Génération...") : 
-          (t('documentGenerator.generateDocument') || "Générer un document")
+          t('documentGenerator.generating') : 
+          t('documentGenerator.generateDocument')
         }
       </Button>
       
@@ -129,14 +129,14 @@ export function DocumentTemplateSelector({
         className="w-full flex items-center"
       >
         <BookmarkCheck className="mr-2 h-4 w-4" />
-        {t('documentGenerator.mySavedTemplates') || "Mes modèles enregistrés"}
+        {t('documentGenerator.mySavedTemplates')}
       </Button>
 
       <Dialog open={showTemplatesDialog} onOpenChange={setShowTemplatesDialog}>
         <DialogContent className="sm:max-w-[700px] p-6">
           <DialogHeader>
             <DialogTitle className="text-2xl font-semibold">
-              {t('documentGenerator.mySavedTemplates') || "Mes modèles enregistrés"}
+              {t('documentGenerator.mySavedTemplates')}
             </DialogTitle>
           </DialogHeader>
           <UserTemplates onSelectTemplate={handleSelectUserTemplate} />
