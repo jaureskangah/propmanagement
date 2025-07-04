@@ -1,6 +1,4 @@
 
-
-
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -88,6 +86,9 @@ export const enTenant = {
   paymentsPaid: "Paid",
   paymentsOverdue: "Overdue",
   paymentsPending: "Pending",
+  paid: "Paid",
+  pending: "Pending",
+  overdue: "Overdue",
   addPayment: "Add Payment",
   editPayment: "Edit Payment",
   deletePayment: "Delete Payment",
@@ -130,7 +131,6 @@ export const enTenant = {
   viewMaintenanceRequests: "View maintenance requests",
   currentMonthRent: "Current month rent",
   status: "Status",
-  pending: "Pending",
   notPaidYet: "Not paid yet",
   lastPayment: "Last payment",
   viewPaymentHistory: "View history",
@@ -277,6 +277,9 @@ export const frTenant = {
   paymentsPaid: "Payé",
   paymentsOverdue: "En Retard",
   paymentsPending: "En Attente",
+  paid: "Payé",
+  pending: "En Attente",
+  overdue: "En Retard",
   addPayment: "Ajouter un Paiement",
   editPayment: "Modifier le Paiement",
   deletePayment: "Supprimer le Paiement",
@@ -319,7 +322,6 @@ export const frTenant = {
   viewMaintenanceRequests: "Voir les demandes de maintenance",
   currentMonthRent: "Loyer du mois en cours",
   status: "Statut",
-  pending: "En attente",
   notPaidYet: "Pas encore payé",
   lastPayment: "Dernier paiement",
   viewPaymentHistory: "Voir l'historique",

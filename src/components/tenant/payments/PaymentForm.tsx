@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -79,8 +80,8 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
       if (error) throw error;
 
       toast({
-        title: t('payments.paymentAdded'),
-        description: t('payments.paymentAddedSuccess'),
+        title: t('paymentAdded'),
+        description: t('paymentAddedSuccess'),
       });
       
       onSuccess();
@@ -88,7 +89,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
       console.error("Error adding payment:", error);
       toast({
         title: t('error'),
-        description: t('payments.paymentError'),
+        description: t('paymentError'),
         variant: "destructive",
       });
     } finally {
@@ -104,7 +105,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
           name="amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('payments.amount')} ($)</FormLabel>
+              <FormLabel>{t('amount')} ($)</FormLabel>
               <FormControl>
                 <Input
                   type="number"
@@ -123,20 +124,20 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
           name="status"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('payments.paymentStatus')}</FormLabel>
+              <FormLabel>{t('paymentStatus')}</FormLabel>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder={t('payments.selectPaymentStatus')} />
+                    <SelectValue placeholder={t('selectPaymentStatus')} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="paid">{t('payments.paid')}</SelectItem>
-                  <SelectItem value="pending">{t('payments.pending')}</SelectItem>
-                  <SelectItem value="overdue">{t('payments.overdue')}</SelectItem>
+                  <SelectItem value="paid">{t('paid')}</SelectItem>
+                  <SelectItem value="pending">{t('pending')}</SelectItem>
+                  <SelectItem value="overdue">{t('overdue')}</SelectItem>
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -149,7 +150,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
           name="payment_date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>{t('payments.paymentDate')}</FormLabel>
+              <FormLabel>{t('paymentDate')}</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -163,7 +164,7 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
                       {field.value ? (
                         format(field.value, "PPP", { locale: dateFnsLocale })
                       ) : (
-                        <span>{t('payments.pickDate')}</span>
+                        <span>{t('pickDate')}</span>
                       )}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
@@ -190,14 +191,14 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
             variant="outline"
             onClick={onCancel}
           >
-            {t('payments.cancel')}
+            {t('cancel')}
           </Button>
           <Button
             type="submit"
             disabled={isSubmitting}
             className="bg-[#ea384c] hover:bg-[#ea384c]/90"
           >
-            {isSubmitting ? t('payments.adding') : t('payments.add')}
+            {isSubmitting ? t('adding') : t('add')}
           </Button>
         </div>
       </form>

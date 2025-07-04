@@ -16,19 +16,19 @@ export const PaymentStatus = ({ status }: PaymentStatusProps) => {
       case "payé":
         return {
           color: "bg-green-100 text-green-800 hover:bg-green-100/80",
-          label: t('payments.paid')
+          label: t('paid')
         };
       case "pending":
       case "en attente":
         return {
           color: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100/80",
-          label: t('payments.pending')
+          label: t('pending')
         };
       case "overdue":
       case "en retard":
         return {
           color: "bg-red-100 text-red-800 hover:bg-red-100/80",
-          label: t('payments.overdue')
+          label: t('overdue')
         };
       default:
         return {
