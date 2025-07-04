@@ -1,3 +1,4 @@
+
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -144,8 +145,8 @@ export const enTenant = {
   
   // Core functionality translations
   tenants: "Tenants",
-  payments: "Payments",
-  documents: "Documents",
+  paymentsLabel: "Payments",
+  documentsLabel: "Documents",
   documentGenerator: "Document Generator",
   
   // Document related (nested structure)
@@ -302,8 +303,8 @@ export const frTenant = {
   
   // Core functionality translations
   tenants: "Locataires",
-  payments: "Paiements",
-  documents: "Documents",
+  paymentsLabel: "Paiements",
+  documentsLabel: "Documents",
   documentGenerator: "Générateur de Documents",
   
   // Documents (structure imbriquée)
