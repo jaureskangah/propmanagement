@@ -58,7 +58,7 @@ export const PaymentsList = ({
               onClick={() => onEditClick(payment)}
               className="hover:text-blue-600 hover:border-blue-600"
             >
-              {t('payments.editPayment')}
+              {t('editPayment')}
             </Button>
             <Button
               variant="outline"
@@ -66,7 +66,7 @@ export const PaymentsList = ({
               onClick={() => onDeleteClick(payment)}
               className="text-red-500 hover:text-red-600 hover:border-red-600"
             >
-              {t('payments.deletePayment')}
+              {t('deletePayment')}
             </Button>
           </div>
         </div>

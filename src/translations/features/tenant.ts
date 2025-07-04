@@ -1,5 +1,3 @@
-
-
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
@@ -155,6 +153,12 @@ export const enTenant = {
   edit: "Edit",
   deleteMaintenanceRequest: "Delete",
   resolved: "Resolved",
+  
+  // Payment action translations (flat keys)
+  editPayment: "Edit Payment",
+  deletePayment: "Delete Payment",
+  showLess: "Show Less",
+  showMorePayments: "Show {count} more payments",
   
   // Document related (nested structure)
   documents: {
@@ -319,6 +323,12 @@ export const frTenant = {
   edit: "Modifier",
   deleteMaintenanceRequest: "Supprimer",
   resolved: "Résolu",
+  
+  // Payment action translations (flat keys)
+  editPayment: "Modifier le Paiement",
+  deletePayment: "Supprimer le Paiement",
+  showLess: "Voir Moins",
+  showMorePayments: "Voir {count} paiements de plus",
   
   // Documents (structure imbriquée)
   documents: {

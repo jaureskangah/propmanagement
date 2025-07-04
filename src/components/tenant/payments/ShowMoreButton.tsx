@@ -26,12 +26,12 @@ export const ShowMoreButton = ({
         {showAllPayments ? (
           <>
             <ChevronUp className="h-4 w-4" />
-            {t('payments.showLess')}
+            {t('showLess')}
           </>
         ) : (
           <>
             <ChevronDown className="h-4 w-4" />
-            {t('payments.showMorePayments').replace('{count}', hiddenPaymentsCount.toString())}
+            {t('showMorePayments').replace('{count}', hiddenPaymentsCount.toString())}
           </>
         )}
       </Button>
