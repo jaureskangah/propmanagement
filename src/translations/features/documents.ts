@@ -1,3 +1,4 @@
+
 export const enDocuments = {
   // Main document labels
   documents: "Documents",
@@ -24,6 +25,7 @@ export const enDocuments = {
     selectTemplate: "Select template",
     generate: "Generate",
     download: "Download",
+    downloadDocument: "Download Document",
     save: "Save",
     share: "Share",
     history: "History",
@@ -51,6 +53,16 @@ export const enDocuments = {
     saving: "Saving...",
     saveAsTemplate: "Save as Template",
     saveAsTemplateDescription: "Save this document as a template for future use",
+    // Nouvelles clés ajoutées
+    aiAssistant: "AI Assistant",
+    aiAssistantDescription: "Use AI to generate or modify content",
+    advancedEditing: "Advanced Editing",
+    shareDocument: "Share Document",
+    shareDocumentDescription: "Share this document with others",
+    generatePreview: "Generate Preview",
+    startTypingDocument: "Start typing your document content here...",
+    noPreviewAvailable: "No preview available",
+    generatePreviewDescription: "Generate a preview to see how your document will look",
     // Document template names
     leaseAgreement: "Lease Agreement",
     rentReceipt: "Rent Receipt",
@@ -146,6 +158,7 @@ export const frDocuments = {
     selectTemplate: "Sélectionner un modèle",
     generate: "Générer",
     download: "Télécharger",
+    downloadDocument: "Télécharger le Document",
     save: "Enregistrer",
     share: "Partager", 
     history: "Historique",
@@ -173,6 +186,16 @@ export const frDocuments = {
     saving: "Enregistrement...",
     saveAsTemplate: "Enregistrer comme Modèle",
     saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future",
+    // Nouvelles clés ajoutées
+    aiAssistant: "Assistant IA",
+    aiAssistantDescription: "Utiliser l'IA pour générer ou modifier du contenu",
+    advancedEditing: "Édition Avancée",
+    shareDocument: "Partager le Document",
+    shareDocumentDescription: "Partager ce document avec d'autres personnes",
+    generatePreview: "Générer l'Aperçu",
+    startTypingDocument: "Commencez à taper le contenu de votre document ici...",
+    noPreviewAvailable: "Aucun aperçu disponible",
+    generatePreviewDescription: "Générez un aperçu pour voir à quoi ressemblera votre document",
     // Noms des modèles de documents
     leaseAgreement: "Contrat de Bail",
     rentReceipt: "Quittance de Loyer",

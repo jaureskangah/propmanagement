@@ -45,7 +45,9 @@ const { documentGenerator, ...otherDocuments } = frDocuments;
 const translations = {
   ...baseTranslations,
   ...otherDocuments,
-  documentGenerator: documentGenerator
+  documentGenerator: documentGenerator,
+  // Ajouter downloadDocument à la racine pour compatibilité
+  downloadDocument: documentGenerator.downloadDocument
 };
 
 // Debug: Log final des traductions composées
@@ -54,7 +56,8 @@ console.log('🔍 DEBUG: Final FR translations:', {
   documentGeneratorType: typeof translations.documentGenerator,
   totalKeys: Object.keys(translations).length,
   documentGeneratorKeys: typeof translations.documentGenerator === 'object' ? Object.keys(translations.documentGenerator || {}) : [],
-  translationsWithDocumentGenerator: translations.documentGenerator
+  translationsWithDocumentGenerator: translations.documentGenerator,
+  hasDownloadDocument: !!translations.downloadDocument
 });
 
 // Test spécifique pour une clé documentGenerator
