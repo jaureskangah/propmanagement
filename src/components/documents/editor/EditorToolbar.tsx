@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Sparkles, FileCheck, Loader2, Save, PenSquare, Download } from "lucide-react";
+import { Sparkles, Save, PenSquare, Download, Loader2 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 
@@ -9,9 +9,7 @@ interface EditorToolbarProps {
   onOpenAIDialog: () => void;
   onOpenSaveTemplateDialog: () => void;
   onToggleAdvancedEditing: () => void;
-  onGeneratePreview: () => void;
   onDownload?: () => void;
-  isGenerating: boolean;
   isDownloading?: boolean;
   hasContent: boolean;
   hasPreview?: boolean;
@@ -22,9 +20,7 @@ export function EditorToolbar({
   onOpenAIDialog,
   onOpenSaveTemplateDialog,
   onToggleAdvancedEditing,
-  onGeneratePreview,
   onDownload,
-  isGenerating,
   isDownloading = false,
   hasContent,
   hasPreview = false,
@@ -89,58 +85,29 @@ export function EditorToolbar({
         </motion.div>
       </div>
 
-      {/* Section Boutons d'Action - Alignés à droite */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:gap-3">
-        {/* Bouton Télécharger (si aperçu disponible) */}
-        {onDownload && hasPreview && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3, delay: 0.1 }}
-          >
-            <Button
-              variant="outline"
-              onClick={onDownload}
-              disabled={isDownloading || !hasPreview}
-              className="gap-2 bg-white/80 border-green-200 hover:bg-green-100 hover:text-green-800 text-green-700 transition-all duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:hover:scale-100 min-w-[120px]"
-              size={isMobile ? "sm" : "default"}
-            >
-              {isDownloading ? (
-                <Loader2 className="h-4 w-4 animate-spin text-green-600" />
-              ) : (
-                <Download className="h-4 w-4 text-green-600" />
-              )}
-              {!isMobile && (t('downloadDocument') || "Télécharger")}
-            </Button>
-          </motion.div>
-        )}
-        
-        {/* Bouton Principal - Générer l'aperçu */}
+      {/* Bouton Télécharger (si aperçu disponible) */}
+      {onDownload && hasPreview && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
         >
           <Button
-            onClick={onGeneratePreview}
-            disabled={!hasContent || isGenerating}
-            className="gap-2 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 w-full sm:w-auto px-6 min-w-[140px] sm:min-w-[160px]"
-            size={isMobile ? "sm" : "lg"}
+            variant="outline"
+            onClick={onDownload}
+            disabled={isDownloading || !hasPreview}
+            className="gap-2 bg-white/80 border-green-200 hover:bg-green-100 hover:text-green-800 text-green-700 transition-all duration-200 hover:scale-105 hover:shadow-md disabled:opacity-50 disabled:hover:scale-100 min-w-[120px]"
+            size={isMobile ? "sm" : "default"}
           >
-            {isGenerating ? (
-              <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span className="truncate">{t('documentGenerator.generating') || "Génération..."}</span>
-              </>
+            {isDownloading ? (
+              <Loader2 className="h-4 w-4 animate-spin text-green-600" />
             ) : (
-              <>
-                <FileCheck className="h-4 w-4" />
-                <span className="truncate">{t('documentGenerator.generatePreview') || "Générer l'aperçu"}</span>
-              </>
+              <Download className="h-4 w-4 text-green-600" />
             )}
+            {!isMobile && (t('downloadDocument') || "Télécharger")}
           </Button>
         </motion.div>
-      </div>
+      )}
     </div>
   );
 }

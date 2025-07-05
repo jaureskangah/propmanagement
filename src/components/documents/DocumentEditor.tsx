@@ -51,11 +51,6 @@ export function DocumentEditor({
     insertDynamicField 
   } = useFormatInsertion({ content, onContentChange });
 
-  // Gestionnaire pour la génération d'aperçu
-  const handleGeneratePreview = () => {
-    onGeneratePreview(content);
-  };
-
   // Gestionnaire pour l'ouverture de la boîte de dialogue d'enregistrement de modèle
   const handleOpenSaveTemplateDialog = () => {
     if (onOpenSaveTemplateDialog) {
@@ -84,8 +79,6 @@ export function DocumentEditor({
         onOpenAIDialog={() => setIsAIDialogOpen(true)}
         onOpenSaveTemplateDialog={handleOpenSaveTemplateDialog}
         onToggleAdvancedEditing={() => setIsAdvancedEditingEnabled(!isAdvancedEditingEnabled)}
-        onGeneratePreview={handleGeneratePreview}
-        isGenerating={isGenerating}
         hasContent={!!content}
         isAdvancedEditingEnabled={isAdvancedEditingEnabled}
       />
