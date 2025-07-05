@@ -285,7 +285,6 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
                 />
               </FormControl>
               <FormMessage />
-            </FormMessage>
             </FormItem>
           )}
         />
