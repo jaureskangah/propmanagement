@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
 import { InviteTenantDialog } from "@/components/tenant/communications/InviteTenantDialog";
 import { motion } from "framer-motion";
 
 const TenantList = () => {
-  const { t } = useLocale();
+  const { t } = useTenantListTranslations();
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
   const [selectedTenantId, setSelectedTenantId] = useState<string | null>(null);
 
@@ -32,7 +32,7 @@ const TenantList = () => {
           className="flex items-center gap-2"
         >
           <UserPlus className="h-4 w-4" />
-          {t('inviteTenant')}
+          {t('addTenant')}
         </Button>
       </div>
 

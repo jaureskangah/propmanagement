@@ -2,7 +2,7 @@
 import React from "react";
 import { Users, Info } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
 import { TenantActions } from "@/components/tenant/TenantActions";
 import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
@@ -14,7 +14,7 @@ interface TenantsHeaderProps {
 }
 
 export const TenantsHeader = ({ tenantCount, onAddClick, isMobile }: TenantsHeaderProps) => {
-  const { t } = useLocale();
+  const { t } = useTenantListTranslations();
 
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
