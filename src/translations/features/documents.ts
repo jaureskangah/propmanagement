@@ -1,4 +1,3 @@
-
 export const enDocuments = {
   // Main document labels
   documents: "Documents",
@@ -51,7 +50,7 @@ export const enDocuments = {
     category: "Category",
     selectCategory: "Select Category",
     saving: "Saving...",
-    saveAsTemplate: "Save as Template",
+    saveAsTemplate: "Save Template",
     saveAsTemplateDescription: "Save this document as a template for future use",
     // Nouvelles clés ajoutées
     aiAssistant: "AI Assistant",
@@ -184,7 +183,7 @@ export const frDocuments = {
     category: "Catégorie",
     selectCategory: "Sélectionner une Catégorie",
     saving: "Enregistrement...",
-    saveAsTemplate: "Enregistrer comme Modèle",
+    saveAsTemplate: "Enregistrer modèle",
     saveAsTemplateDescription: "Enregistrez ce document comme modèle pour une utilisation future",
     // Nouvelles clés ajoutées
     aiAssistant: "Assistant IA",
@@ -271,5 +270,5 @@ console.log('🔍 DEBUG: Export verification:', {
   frDocuments: !!frDocuments,
   enDocumentGenerator: !!enDocuments.documentGenerator,
   frDocumentGenerator: !!frDocuments.documentGenerator,
-  frSaveTemplate: frDocuments.documentGenerator?.saveTemplate
+  frSaveTemplate: frDocuments.documentGenerator?.saveAsTemplate
 });

@@ -1,6 +1,6 @@
 export default {
   documentGenerator: "Générateur de documents",
-  documentTemplates: "Modèles de documents",
+  documentTemplates: "Modèles de documents", 
   editContent: "Éditer le contenu",
   preview: "Aperçu",
   documentType: "Type de document",
@@ -142,7 +142,7 @@ export default {
   // AI Assistant
   aiAssistant: "Assistant IA",
   aiAssistantDescription: "Utilisez l'IA pour générer ou améliorer le contenu du document selon vos instructions",
-  saveAsTemplate: "Enregistrer comme modèle",
+  saveAsTemplate: "Enregistrer modèle",
   aiInstructions: "Instructions pour l'IA",
   aiInstructionsPlaceholder: "Décrivez ce que vous souhaitez générer...",
   aiGenerating: "Génération en cours...",
