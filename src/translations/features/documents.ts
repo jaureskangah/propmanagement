@@ -1,3 +1,4 @@
+
 export const enDocuments = {
   // Main document labels
   documents: "Documents",
@@ -78,7 +79,15 @@ export const enDocuments = {
     paymentDocuments: "Payment Documents", 
     noticeDocuments: "Notice Documents",
     inspectionDocuments: "Inspection Documents",
-    miscDocuments: "Miscellaneous Documents"
+    miscDocuments: "Miscellaneous Documents",
+    // Template related - NOUVELLES CLÉS MANQUANTES
+    allTemplates: "All Templates",
+    customTemplates: "Custom Templates",
+    noTemplatesFound: "No templates found",
+    createTemplateHint: "Create a template by saving a document",
+    deleteTemplate: "Delete Template",
+    deleteTemplateConfirmation: "Are you sure you want to delete this template? This action cannot be undone.",
+    delete: "Delete"
   },
   
   // Document types and categories
@@ -211,7 +220,15 @@ export const frDocuments = {
     paymentDocuments: "Documents de Paiement",
     noticeDocuments: "Documents d'Avis",
     inspectionDocuments: "Documents d'Inspection", 
-    miscDocuments: "Documents Divers"
+    miscDocuments: "Documents Divers",
+    // Template related - NOUVELLES CLÉS MANQUANTES
+    allTemplates: "Tous les modèles",
+    customTemplates: "Modèles personnalisés",
+    noTemplatesFound: "Aucun modèle trouvé",
+    createTemplateHint: "Créez un modèle en sauvegardant un document",
+    deleteTemplate: "Supprimer le modèle",
+    deleteTemplateConfirmation: "Êtes-vous sûr de vouloir supprimer ce modèle ? Cette action est irréversible.",
+    delete: "Supprimer"
   },
   
   // Types et catégories de documents
@@ -270,5 +287,7 @@ console.log('🔍 DEBUG: Export verification:', {
   frDocuments: !!frDocuments,
   enDocumentGenerator: !!enDocuments.documentGenerator,
   frDocumentGenerator: !!frDocuments.documentGenerator,
-  frSaveTemplate: frDocuments.documentGenerator?.saveAsTemplate
+  frSaveTemplate: frDocuments.documentGenerator?.saveAsTemplate,
+  enAllTemplates: enDocuments.documentGenerator?.allTemplates,
+  frAllTemplates: frDocuments.documentGenerator?.allTemplates
 });

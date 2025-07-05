@@ -20,11 +20,8 @@ console.log('🔍 DEBUG: frDocuments import:', {
   imported: !!frDocuments,
   hasDocumentGenerator: !!(frDocuments as any)?.documentGenerator,
   documentGeneratorKeys: Object.keys((frDocuments as any)?.documentGenerator || {}),
-  fullfrDocuments: frDocuments
+  allTemplatesKey: (frDocuments as any)?.documentGenerator?.allTemplates
 });
-
-// Debug spécifique pour documentGenerator
-console.log('🔍 DEBUG: frDocuments.documentGenerator:', (frDocuments as any)?.documentGenerator);
 
 // Composer toutes les traductions en préservant la structure documentGenerator
 const baseTranslations = {
@@ -57,12 +54,18 @@ console.log('🔍 DEBUG: Final FR translations:', {
   totalKeys: Object.keys(translations).length,
   documentGeneratorKeys: typeof translations.documentGenerator === 'object' ? Object.keys(translations.documentGenerator || {}) : [],
   translationsWithDocumentGenerator: translations.documentGenerator,
-  hasDownloadDocument: !!translations.downloadDocument
+  hasDownloadDocument: !!translations.downloadDocument,
+  allTemplatesValue: translations.documentGenerator?.allTemplates
 });
 
-// Test spécifique pour une clé documentGenerator
+// Test spécifique pour les nouvelles clés
 if (typeof translations.documentGenerator === 'object' && translations.documentGenerator) {
-  console.log('🔍 DEBUG: Test direct access to documentGenerator.saveTemplate:', translations.documentGenerator.saveTemplate);
+  console.log('🔍 DEBUG: Test direct access to new keys:', {
+    allTemplates: translations.documentGenerator.allTemplates,
+    customTemplates: translations.documentGenerator.customTemplates,
+    noTemplatesFound: translations.documentGenerator.noTemplatesFound,
+    createTemplateHint: translations.documentGenerator.createTemplateHint
+  });
 }
 
 export default translations;

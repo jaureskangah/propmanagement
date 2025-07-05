@@ -19,7 +19,8 @@ const supportExtensions = {
 console.log('🔍 DEBUG: enDocuments import:', {
   imported: !!enDocuments,
   hasDocumentGenerator: !!(enDocuments as any)?.documentGenerator,
-  documentGeneratorKeys: Object.keys((enDocuments as any)?.documentGenerator || {})
+  documentGeneratorKeys: Object.keys((enDocuments as any)?.documentGenerator || {}),
+  allTemplatesKey: (enDocuments as any)?.documentGenerator?.allTemplates
 });
 
 // Composer toutes les traductions en préservant la structure documentGenerator
@@ -52,7 +53,8 @@ console.log('🔍 DEBUG: Final EN translations:', {
   documentGeneratorType: typeof translations.documentGenerator,
   totalKeys: Object.keys(translations).length,
   documentGeneratorKeys: typeof translations.documentGenerator === 'object' ? Object.keys(translations.documentGenerator || {}) : [],
-  hasDownloadDocument: !!translations.downloadDocument
+  hasDownloadDocument: !!translations.downloadDocument,
+  allTemplatesValue: translations.documentGenerator?.allTemplates
 });
 
 export default translations;
