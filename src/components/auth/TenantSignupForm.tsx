@@ -36,6 +36,14 @@ interface TenantSignupFormProps {
   onSuccess: () => void;
 }
 
+interface LinkTenantProfileResult {
+  success: boolean;
+  message: string;
+  error_code?: string;
+  warning?: string;
+  details?: any;
+}
+
 export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: TenantSignupFormProps) => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -53,7 +61,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
   const onSubmit = async (values: TenantSignupFormValues) => {
     try {
       setLoading(true);
-      console.log("=== TENANT SIGNUP PROCESS - IMPROVED ===");
+      console.log("=== TENANT SIGNUP PROCESS - ENHANCED VERSION ===");
       console.log("Creating account for tenant:", tenantData.email);
 
       // 1. Créer le compte utilisateur
@@ -81,20 +89,59 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
 
       console.log("✅ User account created:", authData.user.id);
 
-      // 2. Créer une transaction pour garantir la cohérence
-      const { error: transactionError } = await supabase.rpc('link_tenant_profile', {
+      // 2. Utiliser la fonction RPC améliorée pour lier le profil
+      const { data: linkResult, error: linkError } = await supabase.rpc('link_tenant_profile', {
         p_tenant_id: tenantData.id,
         p_user_id: authData.user.id
       });
 
-      if (transactionError) {
-        console.error("Error linking tenant profile:", transactionError);
-        throw new Error("Erreur lors de la liaison du profil locataire");
+      if (linkError) {
+        console.error("RPC call error:", linkError);
+        throw new Error(`Erreur lors de la liaison du profil: ${linkError.message}`);
       }
 
-      console.log("✅ Tenant profile linked successfully");
+      // 3. Analyser le résultat JSON de la fonction RPC
+      const result = linkResult as LinkTenantProfileResult;
+      console.log("🔍 Link Profile Result:", result);
 
-      // 3. Mettre à jour le statut de l'invitation
+      if (!result.success) {
+        console.error("❌ Profile linking failed:", result.message);
+        
+        // Messages d'erreur personnalisés selon le code d'erreur
+        let userMessage = "Erreur lors de la liaison du profil locataire";
+        
+        switch (result.error_code) {
+          case 'TENANT_NOT_FOUND':
+            userMessage = "Données du locataire introuvables";
+            break;
+          case 'USER_NOT_FOUND':
+            userMessage = "Utilisateur introuvable après création";
+            break;
+          case 'EMAIL_MISMATCH':
+            userMessage = "Problème de correspondance des emails";
+            break;
+          case 'ALREADY_LINKED_OTHER_USER':
+            userMessage = "Ce locataire est déjà associé à un autre compte";
+            break;
+          case 'VERIFICATION_FAILED':
+            userMessage = "La vérification de la liaison a échoué";
+            break;
+          case 'DATABASE_ERROR':
+            userMessage = "Erreur de base de données";
+            break;
+        }
+        
+        throw new Error(userMessage);
+      }
+
+      // 4. Gestion du succès (avec warning possible si déjà lié)
+      if (result.warning === 'ALREADY_LINKED') {
+        console.log("⚠️ Tenant was already linked, but continuing...");
+      } else {
+        console.log("✅ Tenant profile linked successfully");
+      }
+
+      // 5. Mettre à jour le statut de l'invitation
       console.log("Updating invitation status...");
       const { error: invitationError } = await supabase
         .from('tenant_invitations')
@@ -108,26 +155,14 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
         console.log("✅ Invitation status updated to 'accepted'");
       }
 
-      // 4. Vérifier que la liaison a bien fonctionné
-      const { data: verificationData, error: verificationError } = await supabase
-        .from('tenants')
-        .select('tenant_profile_id')
-        .eq('id', tenantData.id)
-        .single();
-
-      if (verificationError || !verificationData?.tenant_profile_id) {
-        console.error("❌ Verification failed - tenant profile not linked properly");
-        throw new Error("La liaison du profil locataire a échoué");
-      }
-
-      console.log("✅ Verification successful - tenant profile linked:", verificationData.tenant_profile_id);
+      console.log("✅ Signup process completed successfully");
 
       toast({
         title: "Compte créé avec succès !",
         description: "Bienvenue dans votre espace locataire. Redirection en cours...",
       });
 
-      // 5. Redirection après un délai
+      // 6. Redirection après un délai
       setTimeout(() => {
         console.log("Redirecting to tenant dashboard...");
         window.location.href = '/tenant/dashboard';
@@ -142,8 +177,8 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
         errorMessage = "Cette adresse email est déjà utilisée.";
       } else if (error.message?.includes('weak password')) {
         errorMessage = "Le mot de passe n'est pas assez fort.";
-      } else if (error.message?.includes('liaison')) {
-        errorMessage = "Erreur lors de la liaison du profil. Veuillez contacter l'administrateur.";
+      } else if (error.message?.includes('liaison') || error.message?.includes('profil')) {
+        errorMessage = error.message; // Utiliser le message d'erreur personnalisé
       }
 
       toast({

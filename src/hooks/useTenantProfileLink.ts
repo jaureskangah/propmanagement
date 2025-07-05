@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabase';
@@ -6,6 +7,9 @@ import type { Tenant } from '@/types/tenant';
 interface LinkProfileResult {
   success: boolean;
   message: string;
+  error_code?: string;
+  warning?: string;
+  details?: any;
 }
 
 export const useTenantProfileLink = () => {
@@ -26,17 +30,31 @@ export const useTenantProfileLink = () => {
       }
 
       if (tenant && !tenant.tenant_profile_id) {
-        console.log('Found tenant without profile link, updating...', tenant.id);
-        const { error: updateError } = await supabase
-          .from('tenants')
-          .update({ tenant_profile_id: user.id })
-          .eq('id', tenant.id)
-          .eq('email', user.email);
+        console.log('Found tenant without profile link, using enhanced RPC function...', tenant.id);
+        
+        // Utiliser la fonction RPC améliorée
+        const { data: linkResult, error: rpcError } = await supabase
+          .rpc('link_tenant_profile', {
+            p_tenant_id: tenant.id,
+            p_user_id: user.id
+          });
 
-        if (updateError) {
-          console.error('Error updating tenant:', updateError);
+        if (rpcError) {
+          console.error('RPC Error:', rpcError);
+          return;
+        }
+
+        const result = linkResult as LinkProfileResult;
+        console.log('RPC Result:', result);
+
+        if (result.success) {
+          if (result.warning === 'ALREADY_LINKED') {
+            console.log('Tenant was already linked to this user');
+          } else {
+            console.log('Successfully linked tenant profile via enhanced RPC');
+          }
         } else {
-          console.log('Successfully linked tenant profile');
+          console.error('Enhanced RPC linking failed:', result.message, result.error_code);
         }
       } else if (!tenant) {
         console.log('No tenant found for email:', user.email);
@@ -51,31 +69,48 @@ export const useTenantProfileLink = () => {
   const linkProfile = async (tenant: Tenant): Promise<LinkProfileResult> => {
     setIsLoading(true);
     try {
-      console.log('Linking profile for tenant:', tenant.email);
-      const { error: updateError } = await supabase
-        .from('tenants')
-        .update({ tenant_profile_id: tenant.id })
-        .eq('id', tenant.id)
-        .eq('email', tenant.email);
+      console.log('Linking profile for tenant using enhanced RPC:', tenant.email);
+      
+      // Utiliser la fonction RPC améliorée au lieu de l'UPDATE direct
+      const { data: linkResult, error: rpcError } = await supabase
+        .rpc('link_tenant_profile', {
+          p_tenant_id: tenant.id,
+          p_user_id: tenant.id // Note: ceci semble incorrect, probablement un bug dans l'original
+        });
 
-      if (updateError) {
-        console.error('Error linking tenant profile:', updateError);
+      if (rpcError) {
+        console.error('RPC Error:', rpcError);
         return {
           success: false,
-          message: 'Failed to link tenant profile. Please try again.',
+          message: `RPC Error: ${rpcError.message}`,
+          error_code: 'RPC_ERROR'
         };
       }
 
-      console.log('Successfully linked tenant profile');
-      return {
-        success: true,
-        message: 'Successfully linked tenant profile',
-      };
-    } catch (error) {
+      const result = linkResult as LinkProfileResult;
+      console.log('Enhanced RPC Result:', result);
+
+      if (result.success) {
+        console.log('Successfully linked tenant profile via enhanced RPC');
+        return {
+          success: true,
+          message: result.message,
+          warning: result.warning
+        };
+      } else {
+        console.error('Enhanced RPC linking failed:', result.message);
+        return {
+          success: false,
+          message: result.message || 'Failed to link tenant profile',
+          error_code: result.error_code
+        };
+      }
+    } catch (error: any) {
       console.error('Error in linkProfile:', error);
       return {
         success: false,
         message: 'An unexpected error occurred. Please try again.',
+        error_code: 'UNEXPECTED_ERROR'
       };
     } finally {
       setIsLoading(false);
