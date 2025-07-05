@@ -41,4 +41,19 @@ export interface TenantFormTranslations {
   leaseExpired?: string;
   leaseExpiring?: string;
   leaseActive?: string;
+  // Form-specific keys that might be used in components
+  formNameLabel: string;
+  formNamePlaceholder: string;
+  formEmailFormLabel: string;
+  formEmailPlaceholder: string;
+  formPhoneFormLabel: string;
+  formPhonePlaceholder: string;
+  formPropertyLabel: string;
+  formPropertyPlaceholder: string;
+  formUnitFormLabel: string;
+  formUnitPlaceholder: string;
+  formLeaseStartFormLabel: string;
+  formLeaseEndFormLabel: string;
+  formRentLabel: string;
+  formRentPlaceholder: string;
 }

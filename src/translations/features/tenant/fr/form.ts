@@ -41,5 +41,20 @@ export const frForm: TenantFormTranslations = {
   unitLabel: "Unité",
   leaseExpired: "Bail expiré",
   leaseExpiring: "Bail expirant bientôt",
-  leaseActive: "Bail actif"
+  leaseActive: "Bail actif",
+  // Additional form-specific translations
+  formNameLabel: "Nom complet",
+  formNamePlaceholder: "Entrez le nom complet du locataire",
+  formEmailFormLabel: "Adresse email",
+  formEmailPlaceholder: "Entrez l'adresse email du locataire",
+  formPhoneFormLabel: "Numéro de téléphone",
+  formPhonePlaceholder: "Entrez le numéro de téléphone du locataire",
+  formPropertyLabel: "Propriété",
+  formPropertyPlaceholder: "Sélectionnez la propriété",
+  formUnitFormLabel: "Numéro d'unité",
+  formUnitPlaceholder: "Entrez le numéro d'unité",
+  formLeaseStartFormLabel: "Date de début",
+  formLeaseEndFormLabel: "Date de fin",
+  formRentLabel: "Loyer mensuel",
+  formRentPlaceholder: "Entrez le montant du loyer mensuel",
 };

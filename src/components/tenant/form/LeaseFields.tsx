@@ -3,14 +3,14 @@ import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/comp
 import { Input } from "@/components/ui/input";
 import type { UseFormReturn } from "react-hook-form";
 import type { TenantFormValues } from "../tenantValidation";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantFormTranslations } from "@/hooks/useTenantFormTranslations";
 
 interface LeaseFieldsProps {
   form: UseFormReturn<TenantFormValues>;
 }
 
 export const LeaseFields = ({ form }: LeaseFieldsProps) => {
-  const { t } = useLocale();
+  const { t } = useTenantFormTranslations();
 
   return (
     <div className="space-y-4">

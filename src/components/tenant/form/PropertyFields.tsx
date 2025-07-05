@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input";
 import type { UseFormReturn } from "react-hook-form";
 import type { TenantFormValues } from "../tenantValidation";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantFormTranslations } from "@/hooks/useTenantFormTranslations";
 import { useProperties } from "@/hooks/useProperties";
 
 interface PropertyFieldsProps {
@@ -12,7 +12,7 @@ interface PropertyFieldsProps {
 }
 
 export const PropertyFields = ({ form }: PropertyFieldsProps) => {
-  const { t } = useLocale();
+  const { t } = useTenantFormTranslations();
   const { properties, isLoading } = useProperties();
 
   return (
@@ -32,7 +32,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
               <SelectContent>
                 {isLoading ? (
                   <SelectItem value="" disabled>
-                    {t('loading')}
+                    Chargement...
                   </SelectItem>
                 ) : properties && properties.length > 0 ? (
                   properties.map((property) => (
@@ -42,7 +42,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
                   ))
                 ) : (
                   <SelectItem value="" disabled>
-                    {t('noProperties')}
+                    Aucune propriété disponible
                   </SelectItem>
                 )}
               </SelectContent>

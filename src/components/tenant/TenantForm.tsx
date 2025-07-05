@@ -7,7 +7,7 @@ import { TenantFormValues, createTenantFormSchema } from "./tenantValidation";
 import { PersonalInfoFields } from "./form/PersonalInfoFields";
 import { PropertyFields } from "./form/PropertyFields";
 import { LeaseFields } from "./form/LeaseFields";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantFormTranslations } from "@/hooks/useTenantFormTranslations";
 
 interface TenantFormProps {
   onSubmit: (data: TenantFormValues) => Promise<void>;
@@ -17,7 +17,7 @@ interface TenantFormProps {
 }
 
 export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: TenantFormProps) {
-  const { t } = useLocale();
+  const { t } = useTenantFormTranslations();
   
   const form = useForm<TenantFormValues>({
     resolver: zodResolver(createTenantFormSchema(t)),
@@ -59,11 +59,11 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
-              t('saving')
+              "Enregistrement..."
             ) : isEditMode ? (
-              t('save')
+              t('saveChanges')
             ) : (
-              t('save')
+              t('saveTenant')
             )}
           </Button>
         </div>
