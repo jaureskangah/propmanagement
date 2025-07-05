@@ -1,13 +1,12 @@
 
 import { Button } from "@/components/ui/button";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Sparkles, Share2, FileCheck, Loader2, Save, PenSquare, Download } from "lucide-react";
+import { Sparkles, FileCheck, Loader2, Save, PenSquare, Download } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { motion } from "framer-motion";
 
 interface EditorToolbarProps {
   onOpenAIDialog: () => void;
-  onOpenShareDialog: () => void;
   onOpenSaveTemplateDialog: () => void;
   onToggleAdvancedEditing: () => void;
   onGeneratePreview: () => void;
@@ -21,7 +20,6 @@ interface EditorToolbarProps {
 
 export function EditorToolbar({
   onOpenAIDialog,
-  onOpenShareDialog,
   onOpenSaveTemplateDialog,
   onToggleAdvancedEditing,
   onGeneratePreview,
@@ -38,11 +36,11 @@ export function EditorToolbar({
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
       {/* Groupes de boutons pour desktop / Stack pour mobile */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4 sm:justify-center sm:flex-1">
         
-        {/* Groupe Édition */}
+        {/* Groupe Édition - Centré */}
         <motion.div 
-          className="flex gap-2 p-2 rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100/50 shadow-sm"
+          className="flex gap-2 p-2 rounded-xl bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-100/50 shadow-sm justify-center"
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3 }}
@@ -79,16 +77,6 @@ export function EditorToolbar({
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.3, delay: 0.1 }}
         >
-          <Button
-            variant="outline"
-            onClick={onOpenShareDialog}
-            className="gap-2 bg-white/80 border-blue-200 hover:bg-blue-100 hover:text-blue-800 text-blue-700 transition-all duration-200 hover:scale-105 hover:shadow-md"
-            size={isMobile ? "sm" : "default"}
-          >
-            <Share2 className="h-4 w-4 text-blue-600" />
-            {!isMobile && (t('documentGenerator.shareDocument') || "Partager")}
-          </Button>
-          
           <Button
             variant="outline"
             onClick={onOpenSaveTemplateDialog}
