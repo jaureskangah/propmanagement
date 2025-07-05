@@ -82,7 +82,6 @@ export function DocumentEditor({
       
       <EditorToolbar
         onOpenAIDialog={() => setIsAIDialogOpen(true)}
-        onOpenShareDialog={() => setIsShareDialogOpen(true)}
         onOpenSaveTemplateDialog={handleOpenSaveTemplateDialog}
         onToggleAdvancedEditing={() => setIsAdvancedEditingEnabled(!isAdvancedEditingEnabled)}
         onGeneratePreview={handleGeneratePreview}
