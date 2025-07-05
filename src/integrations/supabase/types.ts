@@ -1128,7 +1128,7 @@ export type Database = {
       }
       link_tenant_profile: {
         Args: { p_tenant_id: string; p_user_id: string }
-        Returns: boolean
+        Returns: Json
       }
     }
     Enums: {

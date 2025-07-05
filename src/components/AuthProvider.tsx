@@ -63,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       async (event, session) => {
         if (!isMounted) return;
 
-        console.log("=== AUTH STATE CHANGE - IMPROVED ===");
+        console.log("=== AUTH STATE CHANGE - ENHANCED VERSION ===");
         console.log("Event:", event);
         console.log("Session exists:", !!session);
         console.log("User ID:", session?.user?.id);
@@ -71,13 +71,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (session?.user) {
           setUser(session.user);
           if (event === 'SIGNED_IN') {
-            // Utiliser setTimeout pour éviter le blocage avec plus de délai
+            // Délai plus long pour s'assurer que la liaison est terminée
             setTimeout(() => {
               if (isMounted) {
-                console.log("Checking tenant status after sign in...");
-                checkTenantStatus(session.user.id);
+                console.log("Checking tenant status after sign in with enhanced recovery...");
+                checkTenantStatusWithRecovery(session.user.id);
               }
-            }, 500); // Délai plus long pour s'assurer que tout est en place
+            }, 1000);
           }
         } else {
           console.log("No session, clearing user data");
@@ -99,7 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkTenantStatus = async (userId: string) => {
     try {
-      console.log("=== CHECKING TENANT STATUS - IMPROVED ===");
+      console.log("=== CHECKING TENANT STATUS - ENHANCED VERSION ===");
       console.log("Checking tenant status for user:", userId);
 
       // Requête optimisée avec plus de détails
@@ -228,6 +228,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setTenantData(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Nouvelle fonction avec récupération automatique pour les nouveaux comptes
+  const checkTenantStatusWithRecovery = async (userId: string) => {
+    try {
+      console.log("=== CHECKING TENANT STATUS WITH RECOVERY ===");
+      
+      // Première tentative
+      await checkTenantStatus(userId);
+      
+      // Si toujours pas de données tenant mais marqué comme tenant, tenter une récupération
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('email, is_tenant_user')
+        .eq('id', userId)
+        .single();
+        
+      if (profileData?.is_tenant_user && !isTenant) {
+        console.log("🔄 Attempting tenant profile recovery for recently created account..."); 
+        
+        // Chercher un tenant avec cet email qui n'est pas encore lié
+        const { data: unlinkedTenant } = await supabase
+          .from('tenants')
+          .select('id, name, email')
+          .eq('email', profileData.email)
+          .is('tenant_profile_id', null)
+          .maybeSingle();
+          
+        if (unlinkedTenant) {
+          console.log("🔗 Found unlinked tenant, attempting automatic linking...");
+          
+          // Utiliser la fonction RPC pour lier automatiquement
+          const { data: linkResult, error: linkError } = await supabase
+            .rpc('link_tenant_profile', {
+              p_tenant_id: unlinkedTenant.id,
+              p_user_id: userId
+            });
+            
+          if (!linkError && linkResult?.success) {
+            console.log("✅ Automatic linking successful, rechecking status...");
+            
+            // Refaire une vérification après 500ms
+            setTimeout(() => {
+              checkTenantStatus(userId);
+            }, 500);
+          } else {
+            console.error("❌ Automatic linking failed:", linkError || linkResult);
+          }
+        }
+      }
+    } catch (error) {
+      console.error("❌ Error in checkTenantStatusWithRecovery:", error);
     }
   };
 

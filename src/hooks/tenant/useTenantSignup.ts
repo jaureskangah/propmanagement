@@ -53,7 +53,7 @@ export const useTenantSignup = () => {
       });
 
       if (signUpError) {
-        console.error("Signup error:", signUpError);
+        console.error("❌ Signup error:", signUpError);
         throw signUpError;
       }
 
@@ -109,9 +109,21 @@ export const useTenantSignup = () => {
         throw new Error(`Erreur RPC: ${linkError.message}`);
       }
 
-      // 2. Analyser le résultat JSON retourné par la fonction RPC
-      const result = linkResult as LinkTenantProfileResult;
-      console.log("🔍 RPC Result:", result);
+      // 2. Gérer à la fois les anciens (boolean) et nouveaux formats (JSON) pour backward compatibility
+      let result: LinkTenantProfileResult;
+      
+      if (typeof linkResult === 'boolean') {
+        console.warn('⚠️ Received old boolean format from RPC, converting...');
+        result = {
+          success: linkResult,
+          message: linkResult ? 'Tenant profile linked successfully (legacy format)' : 'Failed to link tenant profile (legacy format)',
+          warning: linkResult ? 'LEGACY_FORMAT' : undefined
+        };
+      } else {
+        result = linkResult as LinkTenantProfileResult;
+      }
+
+      console.log("🔍 Enhanced RPC Result:", result);
 
       if (!result.success) {
         console.error("❌ Linking failed:", result.message);
@@ -148,6 +160,8 @@ export const useTenantSignup = () => {
       // 3. Liaison réussie (peut avoir un warning si déjà lié)
       if (result.warning === 'ALREADY_LINKED') {
         console.log("⚠️ Tenant already linked, continuing...");
+      } else if (result.warning === 'LEGACY_FORMAT') {
+        console.log("⚠️ Tenant linked using legacy format, but successful");
       } else {
         console.log("✅ Tenant profile linked successfully");
       }

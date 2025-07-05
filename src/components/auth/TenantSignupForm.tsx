@@ -79,7 +79,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
       });
 
       if (authError) {
-        console.error("Auth error:", authError);
+        console.error("❌ Auth error:", authError);
         throw authError;
       }
 
@@ -96,13 +96,25 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
       });
 
       if (linkError) {
-        console.error("RPC call error:", linkError);
+        console.error("❌ RPC call error:", linkError);
         throw new Error(`Erreur lors de la liaison du profil: ${linkError.message}`);
       }
 
-      // 3. Analyser le résultat JSON de la fonction RPC
-      const result = linkResult as LinkTenantProfileResult;
-      console.log("🔍 Link Profile Result:", result);
+      // 3. Gérer à la fois les anciens (boolean) et nouveaux formats (JSON) pour backward compatibility
+      let result: LinkTenantProfileResult;
+      
+      if (typeof linkResult === 'boolean') {
+        console.warn('⚠️ Received old boolean format from RPC, converting...');
+        result = {
+          success: linkResult,
+          message: linkResult ? 'Tenant profile linked successfully (legacy format)' : 'Failed to link tenant profile (legacy format)',
+          warning: linkResult ? 'LEGACY_FORMAT' : undefined
+        };
+      } else {
+        result = linkResult as LinkTenantProfileResult;
+      }
+
+      console.log("🔍 Enhanced Link Profile Result:", result);
 
       if (!result.success) {
         console.error("❌ Profile linking failed:", result.message);
@@ -137,6 +149,8 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
       // 4. Gestion du succès (avec warning possible si déjà lié)
       if (result.warning === 'ALREADY_LINKED') {
         console.log("⚠️ Tenant was already linked, but continuing...");
+      } else if (result.warning === 'LEGACY_FORMAT') {
+        console.log("⚠️ Tenant linked using legacy format, but successful");
       } else {
         console.log("✅ Tenant profile linked successfully");
       }
@@ -149,7 +163,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
         .eq('token', invitationToken);
 
       if (invitationError) {
-        console.error("Error updating invitation status:", invitationError);
+        console.error("❌ Error updating invitation status:", invitationError);
         // Ne pas bloquer le processus pour cette erreur
       } else {
         console.log("✅ Invitation status updated to 'accepted'");
@@ -169,7 +183,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
       }, 2000);
 
     } catch (error: any) {
-      console.error("Error in tenant signup:", error);
+      console.error("❌ Error in tenant signup:", error);
       
       let errorMessage = "Une erreur s'est produite lors de la création du compte.";
       
@@ -271,6 +285,7 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
                 />
               </FormControl>
               <FormMessage />
+            </FormMessage>
             </FormItem>
           )}
         />
