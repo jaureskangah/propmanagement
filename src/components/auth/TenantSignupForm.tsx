@@ -155,18 +155,62 @@ export const TenantSignupForm = ({ tenantData, invitationToken, onSuccess }: Ten
         console.log("✅ Tenant profile linked successfully");
       }
 
-      // 5. Mettre à jour le statut de l'invitation
-      console.log("Updating invitation status...");
-      const { error: invitationError } = await supabase
+      // 5. Mettre à jour le statut de l'invitation avec une approche plus robuste
+      console.log("=== UPDATING INVITATION STATUS - ENHANCED VERSION ===");
+      console.log("Updating invitation for tenant:", tenantData.id, "email:", tenantData.email);
+      
+      // D'abord, vérifier si l'invitation existe
+      const { data: existingInvitation, error: checkError } = await supabase
         .from('tenant_invitations')
-        .update({ status: 'accepted' })
-        .eq('token', invitationToken);
+        .select('id, status, token, email, tenant_id')
+        .eq('tenant_id', tenantData.id)
+        .eq('email', tenantData.email)
+        .eq('status', 'pending')
+        .maybeSingle();
 
-      if (invitationError) {
-        console.error("❌ Error updating invitation status:", invitationError);
-        // Ne pas bloquer le processus pour cette erreur
+      if (checkError) {
+        console.error("❌ Error checking invitation:", checkError);
+        // Ne pas bloquer le processus pour cette erreur, mais logger
+        console.log("⚠️ Could not verify invitation status, but continuing with signup...");
+      } else if (existingInvitation) {
+        console.log("✅ Found pending invitation:", existingInvitation.id);
+        
+        // Mettre à jour le statut de l'invitation trouvée
+        const { error: updateError } = await supabase
+          .from('tenant_invitations')
+          .update({ 
+            status: 'accepted',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', existingInvitation.id);
+
+        if (updateError) {
+          console.error("❌ Error updating invitation status:", updateError);
+          // Ne pas bloquer le processus pour cette erreur
+          console.log("⚠️ Invitation status update failed, but signup was successful");
+        } else {
+          console.log("✅ Invitation status updated to 'accepted' for invitation ID:", existingInvitation.id);
+        }
       } else {
-        console.log("✅ Invitation status updated to 'accepted'");
+        console.log("⚠️ No pending invitation found for this tenant and email combination");
+        
+        // Essayer une approche de fallback avec le token original si disponible
+        if (invitationToken) {
+          console.log("🔄 Attempting fallback update using invitation token...");
+          const { error: fallbackError } = await supabase
+            .from('tenant_invitations')
+            .update({ 
+              status: 'accepted',
+              updated_at: new Date().toISOString()
+            })
+            .eq('token', invitationToken);
+
+          if (fallbackError) {
+            console.error("❌ Fallback invitation update also failed:", fallbackError);
+          } else {
+            console.log("✅ Invitation status updated via fallback method");
+          }
+        }
       }
 
       console.log("✅ Signup process completed successfully");
