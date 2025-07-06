@@ -1,10 +1,10 @@
 
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
 import { Card } from "@/components/ui/card";
 import { UsersRound } from "lucide-react";
 
 export const EmptyTenantState = () => {
-  const { t } = useLocale();
+  const { t } = useTenantListTranslations();
   
   return (
     <Card className="flex flex-col items-center justify-center p-8 text-center min-h-[300px]">

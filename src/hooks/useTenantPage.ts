@@ -47,18 +47,38 @@ export const useTenantPage = () => {
 
   // Filter tenants based on search query and filters
   const filteredTenants = tenants?.filter((tenant: Tenant) => {
+    console.log("=== FILTERING TENANT ===");
+    console.log("Tenant:", tenant.name, "Property ID:", tenant.property_id);
+    console.log("Search filters:", searchFilters);
+    
     const matchesSearch = 
       tenant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tenant.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       tenant.unit_number.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const propertyName = getPropertyName(tenant);
-    const matchesProperty = !searchFilters.property || 
-      propertyName.toLowerCase().includes(searchFilters.property.toLowerCase());
+    console.log("Matches search:", matchesSearch);
+
+    // Amélioration du filtrage par propriété
+    let matchesProperty = true;
+    
+    if (searchFilters.propertyId) {
+      // Filtrage principal par ID de propriété (plus fiable)
+      matchesProperty = tenant.property_id === searchFilters.propertyId;
+      console.log("Filtering by propertyId:", searchFilters.propertyId, "matches:", matchesProperty);
+    } else if (searchFilters.property) {
+      // Fallback : filtrage par nom de propriété
+      const propertyName = getPropertyName(tenant);
+      matchesProperty = propertyName.toLowerCase().includes(searchFilters.property.toLowerCase());
+      console.log("Filtering by property name:", searchFilters.property, "tenant property:", propertyName, "matches:", matchesProperty);
+    }
 
     const matchesRentRange = 
       tenant.rent_amount >= searchFilters.rentRange[0] &&
       tenant.rent_amount <= searchFilters.rentRange[1];
+
+    console.log("Matches rent range:", matchesRentRange);
+    console.log("Final result:", matchesSearch && matchesProperty && matchesRentRange);
+    console.log("=== END FILTERING ===");
 
     return matchesSearch && matchesProperty && matchesRentRange;
   });
