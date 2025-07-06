@@ -17,6 +17,7 @@ export const enFinances = {
   // Income and expenses
   income: "Income",
   expenses: "Expenses",
+  expense: "Expense",
   revenue: "Revenue",
   costs: "Costs",
   rental: "Rental",
@@ -35,6 +36,7 @@ export const enFinances = {
   
   // Charts and reports
   incomeVsExpenses: "Income vs Expenses",
+  revenueAndExpenses: "Revenue & Expenses",
   monthlyBreakdown: "Monthly Breakdown",
   yearlyBreakdown: "Yearly Breakdown",
   financialTrends: "Financial Trends",
@@ -104,6 +106,7 @@ export const frFinances = {
   // Revenus et dépenses
   income: "Revenus",
   expenses: "Dépenses",
+  expense: "Dépense",
   revenue: "Revenus",
   costs: "Coûts",
   rental: "Location",
@@ -122,6 +125,7 @@ export const frFinances = {
   
   // Graphiques et rapports
   incomeVsExpenses: "Revenus vs Dépenses",
+  revenueAndExpenses: "Revenus & Dépenses",
   monthlyBreakdown: "Répartition Mensuelle",
   yearlyBreakdown: "Répartition Annuelle",
   financialTrends: "Tendances Financières",
