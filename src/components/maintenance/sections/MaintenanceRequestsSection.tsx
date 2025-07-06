@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useQuery } from "@tanstack/react-query";
@@ -8,6 +7,7 @@ import { MaintenanceRequestItem } from "../request/MaintenanceRequestItem";
 import { MaintenanceRequestDialog } from "../request/MaintenanceRequestDialog";
 import { MaintenanceRequest } from "../types";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export const MaintenanceRequestsSection = () => {
   const { t } = useLocale();
