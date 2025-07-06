@@ -105,6 +105,12 @@ export const enMaintenance = {
   completed: "Completed",
   urgent: "Urgent",
   expenses: "Expenses",
+
+  // Tasks section - nouvelles clés ajoutées
+  maintenanceTasks: "Maintenance Tasks",
+  maintenanceTasksDescription: "Schedule and track your maintenance tasks",
+  loadingProperties: "Loading properties...",
+  newTask: "New Task",
 };
 
 export const frMaintenance = {
@@ -213,4 +219,10 @@ export const frMaintenance = {
   completed: "Terminées",
   urgent: "Urgentes",
   expenses: "Dépenses",
+
+  // Section des tâches - nouvelles clés ajoutées
+  maintenanceTasks: "Tâches de maintenance",
+  maintenanceTasksDescription: "Planifiez et suivez vos tâches de maintenance",
+  loadingProperties: "Chargement des propriétés...",
+  newTask: "Nouvelle tâche",
 };

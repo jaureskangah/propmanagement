@@ -95,9 +95,9 @@ export const MaintenanceTasksSection = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-semibold">Tâches de maintenance</h2>
+            <h2 className="text-2xl font-semibold">{t('maintenanceTasks')}</h2>
             <p className="text-muted-foreground">
-              Chargement des propriétés...
+              {t('loadingProperties')}
             </p>
           </div>
         </div>
@@ -110,9 +110,9 @@ export const MaintenanceTasksSection = () => {
       {/* Section Header with Actions */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-semibold">Tâches de maintenance</h2>
+          <h2 className="text-2xl font-semibold">{t('maintenanceTasks')}</h2>
           <p className="text-muted-foreground">
-            Planifiez et suivez vos tâches de maintenance
+            {t('maintenanceTasksDescription')}
           </p>
         </div>
         <Button 
@@ -120,7 +120,7 @@ export const MaintenanceTasksSection = () => {
           className="bg-primary hover:bg-primary/90"
         >
           <Plus className="h-4 w-4 mr-2" />
-          Nouvelle tâche
+          {t('newTask')}
         </Button>
       </div>
 
