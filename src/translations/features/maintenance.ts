@@ -186,6 +186,8 @@ export const enMaintenance = {
   enterTaskTitle: "Enter task title",
   saveTask: "Save Task",
   batchAdd: "Batch Scheduling",
+  recurringTask: "Recurring Task",
+  setReminder: "Set Reminder",
   
   // New keys for fixing untranslated texts
   errorAddingTask: "Error adding task",
@@ -379,10 +381,11 @@ export const frMaintenance = {
   enterTaskTitle: "Entrez le titre de la tâche",
   saveTask: "Enregistrer la tâche",
   batchAdd: "Planification par lot",
+  recurringTask: "Tâche récurrente",
+  setReminder: "Définir un rappel",
   
   // Nouvelles clés pour corriger les textes non traduits
   errorAddingTask: "Erreur lors de l'ajout de la tâche",
   saving: "Enregistrement...",
   property: "Propriété",
 };
-
