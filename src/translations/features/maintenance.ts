@@ -1,4 +1,5 @@
 
+
 export const enMaintenance = {
   // Main sections
   maintenance: "Maintenance",
@@ -112,8 +113,7 @@ export const enMaintenance = {
   loadingProperties: "Loading properties...",
   newTask: "New Task",
   
-  // Task management - intégration des traductions de tasks.ts
-  regularTask: "Regular Task",
+  // Task management
   taskTitle: "Task Title",
   deadline: "Deadline",
   taskType: "Task Type",
@@ -162,7 +162,6 @@ export const enMaintenance = {
   low: "Low",
   medium: "Medium",
   high: "High",
-  urgent: "Urgent",
   makeRecurring: "Make recurring",
   recurrenceFrequency: "Frequency",
   recurrenceInterval: "Interval",
@@ -188,7 +187,7 @@ export const enMaintenance = {
   saveTask: "Save Task",
   batchAdd: "Batch Scheduling",
   
-  // Nouvelles clés manquantes
+  // New keys for fixing untranslated texts
   errorAddingTask: "Error adding task",
   saving: "Saving...",
   property: "Property",
@@ -307,8 +306,7 @@ export const frMaintenance = {
   loadingProperties: "Chargement des propriétés...",
   newTask: "Nouvelle tâche",
   
-  // Gestion des tâches - intégration des traductions de tasks.ts
-  regularTask: "Tâche régulière",
+  // Gestion des tâches
   taskTitle: "Titre de la tâche",
   deadline: "Date limite",
   taskType: "Type de tâche",
@@ -357,7 +355,6 @@ export const frMaintenance = {
   low: "Faible",
   medium: "Moyenne",
   high: "Haute",
-  urgent: "Urgente",
   makeRecurring: "Rendre récurrente",
   recurrenceFrequency: "Fréquence",
   recurrenceInterval: "Intervalle",
@@ -383,8 +380,9 @@ export const frMaintenance = {
   saveTask: "Enregistrer la tâche",
   batchAdd: "Planification par lot",
   
-  // Nouvelles clés manquantes
+  // Nouvelles clés pour corriger les textes non traduits
   errorAddingTask: "Erreur lors de l'ajout de la tâche",
   saving: "Enregistrement...",
   property: "Propriété",
 };
+
