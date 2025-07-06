@@ -1,7 +1,5 @@
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
@@ -74,21 +72,12 @@ export const MaintenanceRequestsSection = () => {
 
   return (
     <div className="space-y-6">
-      {/* Section Header with Actions */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-semibold">Demandes de maintenance</h2>
-          <p className="text-muted-foreground">
-            Gérez toutes les demandes de maintenance
-          </p>
-        </div>
-        <Button 
-          onClick={() => navigate('/add-maintenance-request')}
-          className="bg-primary hover:bg-primary/90"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Nouvelle demande
-        </Button>
+      {/* Section Header */}
+      <div>
+        <h2 className="text-2xl font-semibold">Demandes de maintenance</h2>
+        <p className="text-muted-foreground">
+          Gérez toutes les demandes de maintenance
+        </p>
       </div>
 
       {/* Requests List */}
