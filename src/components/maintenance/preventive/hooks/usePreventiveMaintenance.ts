@@ -52,7 +52,9 @@ export const usePreventiveMaintenance = () => {
     id: task.id,
     title: task.title,
     date: task.date instanceof Date ? format(task.date, "yyyy-MM-dd") : typeof task.date === 'string' ? task.date : 'Invalid date',
-    type: task.type
+    type: task.type,
+    has_reminder: task.has_reminder,
+    is_recurring: task.is_recurring
   })));
 
   // Filter tasks by selected type
@@ -92,12 +94,18 @@ export const usePreventiveMaintenance = () => {
     console.log(`Filtered tasks:`, filteredTasksByDate.map(t => ({ 
       id: t.id, 
       title: t.title, 
-      date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date'
+      date: t.date instanceof Date ? format(t.date, "yyyy-MM-dd") : 'Invalid date',
+      has_reminder: t.has_reminder,
+      is_recurring: t.is_recurring
     })));
   }
 
   const onAddTask = (newTask: NewTask): Promise<any> => {
     console.log("Create task clicked with data:", newTask);
+    console.log("Task has reminder:", newTask.has_reminder);
+    console.log("Reminder data:", { date: newTask.reminder_date, method: newTask.reminder_method });
+    console.log("Task is recurring:", newTask.is_recurring);
+    console.log("Recurrence pattern:", newTask.recurrence_pattern);
     
     // Ensure the task has a valid date
     let dateToStore: string;
@@ -148,6 +156,8 @@ export const usePreventiveMaintenance = () => {
       date: dateToStore
     };
     
+    console.log("Final task data being sent to handleAddTask:", taskWithFormattedDate);
+    
     // Now add the task with formatted date and return the promise
     return handleAddTask(taskWithFormattedDate as NewTask)
       .then((result) => {
@@ -195,7 +205,7 @@ export const usePreventiveMaintenance = () => {
       }
       
       return {
-        ...task,
+        ...task, // Keep all reminder and recurrence data
         date: dateToStore
       };
     });

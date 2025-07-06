@@ -31,10 +31,24 @@ export const useTaskAddition = () => {
         console.log("Formatted date from date object:", formattedDate, "Original:", dateObj);
       }
       
+      // Format reminder date if present
+      let formattedReminderDate: string | undefined = undefined;
+      if (newTask.has_reminder && newTask.reminder_date) {
+        if (newTask.reminder_date instanceof Date) {
+          formattedReminderDate = formatLocalDateForStorage(newTask.reminder_date);
+        } else if (typeof newTask.reminder_date === 'string') {
+          formattedReminderDate = newTask.reminder_date;
+        }
+        console.log("Formatted reminder date:", formattedReminderDate);
+      }
+      
       // Log all date information for diagnosis
       console.log("=== TASK DATE DIAGNOSIS ===");
       console.log("Original task date:", newTask.date);
       console.log("Final formatted date for DB:", formattedDate);
+      console.log("Has reminder:", newTask.has_reminder);
+      console.log("Reminder date:", formattedReminderDate);
+      console.log("Reminder method:", newTask.reminder_method);
       console.log("=============================");
       
       // Get current user
@@ -44,7 +58,7 @@ export const useTaskAddition = () => {
         throw new Error("User not authenticated");
       }
       
-      // Prepare the task data to insert with the properly formatted date
+      // Prepare the task data to insert with the properly formatted date and reminder data
       const taskData = {
         title: newTask.title,
         type: newTask.type || "regular",
@@ -53,6 +67,11 @@ export const useTaskAddition = () => {
         is_recurring: newTask.is_recurring || false,
         user_id: user.id,
         property_id: newTask.property_id,
+        // Add reminder fields
+        has_reminder: newTask.has_reminder || false,
+        ...(newTask.has_reminder && formattedReminderDate ? { reminder_date: formattedReminderDate } : {}),
+        ...(newTask.has_reminder && newTask.reminder_method ? { reminder_method: newTask.reminder_method } : {}),
+        // Add recurrence pattern
         ...(newTask.recurrence_pattern ? { recurrence_pattern: newTask.recurrence_pattern } : {}),
       };
       
@@ -79,11 +98,14 @@ export const useTaskAddition = () => {
       
       // Parse the date string back to a Date object for the returned Task
       const parsedDate = new Date(formattedDate + 'T00:00:00');
+      const parsedReminderDate = data.reminder_date ? new Date(data.reminder_date + 'T00:00:00') : undefined;
       console.log("Parsed date for return:", parsedDate);
+      console.log("Parsed reminder date for return:", parsedReminderDate);
       
       return {
         ...data,
         date: parsedDate, // Return the exact date that was selected
+        reminder_date: parsedReminderDate, // Return the parsed reminder date
         completed: false,
       } as Task;
     } catch (error) {
@@ -123,6 +145,16 @@ export const useTaskAddition = () => {
           console.log(`Task "${task.title}" formatted date:`, formattedDate, "Original:", dateObj);
         }
         
+        // Format reminder date if present
+        let formattedReminderDate: string | undefined = undefined;
+        if (task.has_reminder && task.reminder_date) {
+          if (task.reminder_date instanceof Date) {
+            formattedReminderDate = formatLocalDateForStorage(task.reminder_date);
+          } else if (typeof task.reminder_date === 'string') {
+            formattedReminderDate = task.reminder_date;
+          }
+        }
+        
         return {
           title: task.title,
           type: task.type || "regular",
@@ -131,6 +163,11 @@ export const useTaskAddition = () => {
           is_recurring: task.is_recurring || false,
           user_id: user.id,
           property_id: task.property_id,
+          // Add reminder fields
+          has_reminder: task.has_reminder || false,
+          ...(task.has_reminder && formattedReminderDate ? { reminder_date: formattedReminderDate } : {}),
+          ...(task.has_reminder && task.reminder_method ? { reminder_method: task.reminder_method } : {}),
+          // Add recurrence pattern
           ...(task.recurrence_pattern ? { recurrence_pattern: task.recurrence_pattern } : {}),
         };
       });
@@ -167,10 +204,12 @@ export const useTaskAddition = () => {
         // Reconstruct the date from the stored formatted string
         // Adding T00:00:00 ensures consistent parsing behavior
         const parsedDate = new Date(task.date + 'T00:00:00');
+        const parsedReminderDate = task.reminder_date ? new Date(task.reminder_date + 'T00:00:00') : undefined;
         
         return {
           ...task,
           date: parsedDate,
+          reminder_date: parsedReminderDate,
           completed: false,
         };
       }) as Task[];

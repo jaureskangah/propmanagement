@@ -404,6 +404,7 @@ export type Database = {
           completed: boolean | null
           created_at: string
           date: string
+          has_reminder: boolean | null
           id: string
           is_recurring: boolean | null
           photos: string[] | null
@@ -411,6 +412,8 @@ export type Database = {
           priority: string | null
           property_id: string | null
           recurrence_pattern: Json | null
+          reminder_date: string | null
+          reminder_method: string | null
           status: string | null
           title: string
           type: string
@@ -421,6 +424,7 @@ export type Database = {
           completed?: boolean | null
           created_at?: string
           date: string
+          has_reminder?: boolean | null
           id?: string
           is_recurring?: boolean | null
           photos?: string[] | null
@@ -428,6 +432,8 @@ export type Database = {
           priority?: string | null
           property_id?: string | null
           recurrence_pattern?: Json | null
+          reminder_date?: string | null
+          reminder_method?: string | null
           status?: string | null
           title: string
           type: string
@@ -438,6 +444,7 @@ export type Database = {
           completed?: boolean | null
           created_at?: string
           date?: string
+          has_reminder?: boolean | null
           id?: string
           is_recurring?: boolean | null
           photos?: string[] | null
@@ -445,6 +452,8 @@ export type Database = {
           priority?: string | null
           property_id?: string | null
           recurrence_pattern?: Json | null
+          reminder_date?: string | null
+          reminder_method?: string | null
           status?: string | null
           title?: string
           type?: string

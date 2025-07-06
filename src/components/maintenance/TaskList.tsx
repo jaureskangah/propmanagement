@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2, Bell, Repeat } from "lucide-react";
 import { format, isValid, parseISO } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -64,7 +64,9 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
       title: task.title,
       date: task.formattedDate,
       type: task.type,
-      priority: task.priority
+      priority: task.priority,
+      has_reminder: task.has_reminder,
+      is_recurring: task.is_recurring
     })));
   }
   
@@ -136,6 +138,15 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                 >
                   {task.title}
                 </label>
+                {/* Show recurring and reminder indicators */}
+                <div className="flex items-center gap-1">
+                  {task.is_recurring && (
+                    <Repeat className="h-3 w-3 text-blue-500" title={t('recurringTask')} />
+                  )}
+                  {task.has_reminder && (
+                    <Bell className="h-3 w-3 text-orange-500" title={t('hasReminder')} />
+                  )}
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Badge

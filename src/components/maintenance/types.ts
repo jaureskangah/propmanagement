@@ -90,7 +90,7 @@ export interface NewTask {
   recurrence_interval?: number;
   recurrence_pattern?: RecurrencePattern;
   has_reminder?: boolean;
-  reminder_date?: Date;
+  reminder_date?: Date | string; // Allow both Date and string
   reminder_method?: "app" | "email" | "both";
   completed?: boolean;
   position?: number;
