@@ -1,4 +1,5 @@
 
+
 export const enFinances = {
   // Main sections
   finances: "Finances",
@@ -27,6 +28,7 @@ export const enFinances = {
   repairs: "Repairs",
   maintenance: "Maintenance",
   vacancy: "Vacancy",
+  profit: "Profit",
   
   // Time periods
   monthly: "Monthly",
@@ -86,6 +88,19 @@ export const enFinances = {
   oct: "Oct",
   nov: "Nov",
   dec: "Dec",
+  
+  // Chart controls and UI
+  all: "All",
+  showAll: "Show All",
+  showIncome: "Show Income",
+  showExpense: "Show Expenses",
+  showProfit: "Show Profit",
+  retry: "Retry",
+  refreshing: "Refreshing",
+  dataBeingRefreshed: "Data is being refreshed",
+  noDataAvailable: "No data available",
+  authRequired: "Authentication required",
+  errorLoadingData: "Error loading data",
 };
 
 export const frFinances = {
@@ -116,6 +131,7 @@ export const frFinances = {
   repairs: "Réparations",
   maintenance: "Maintenance",
   vacancy: "Vacance",
+  profit: "Profit",
   
   // Périodes
   monthly: "Mensuel",
@@ -175,4 +191,18 @@ export const frFinances = {
   oct: "Oct",
   nov: "Nov",
   dec: "Déc",
+  
+  // Contrôles des graphiques et interface
+  all: "Tout",
+  showAll: "Afficher Tout",
+  showIncome: "Afficher Revenus",
+  showExpense: "Afficher Dépenses",
+  showProfit: "Afficher Profit",
+  retry: "Réessayer",
+  refreshing: "Actualisation",
+  dataBeingRefreshed: "Données en cours d'actualisation",
+  noDataAvailable: "Aucune donnée disponible",
+  authRequired: "Authentification requise",
+  errorLoadingData: "Erreur lors du chargement des données",
 };
+
