@@ -34,9 +34,9 @@ export const enDashboard = {
   
   // Financial metrics
   totalIncome: "Total Income",
-  allTimeIncome: "Total income from all properties",
+  allTimeIncome: "Total income from the property",
   totalExpenses: "Total Expenses", 
-  allTimeExpenses: "Total expenses for all properties",
+  allTimeExpenses: "Total expenses for the property",
   occupancyRate: "Occupancy Rate",
   occupancyRateDescription: "Percentage of occupied units",
   unpaidRent: "Unpaid Rent",
@@ -104,9 +104,9 @@ export const frDashboard = {
   
   // Métriques financières
   totalIncome: "Revenus Totaux",
-  allTimeIncome: "Revenus totaux de toutes les propriétés",
+  allTimeIncome: "Revenus totaux de la propriété",
   totalExpenses: "Dépenses Totales", 
-  allTimeExpenses: "Dépenses totales pour toutes les propriétés",
+  allTimeExpenses: "Dépenses totales de la propriété",
   occupancyRate: "Taux d'Occupation",
   occupancyRateDescription: "Pourcentage d'unités occupées",
   unpaidRent: "Loyer Impayé",
