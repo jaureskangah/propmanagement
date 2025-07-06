@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -88,119 +90,125 @@ export const TaskFormContent = ({
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="title" className="block text-sm font-medium mb-1">
-          {t('taskTitle')}
-        </label>
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder={t('enterTaskTitle')}
-          required
-        />
-      </div>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="task-type" className="block text-sm font-medium mb-1">
-            {t('taskType')}
-          </label>
-          <Select value={type} onValueChange={(value: any) => setType(value)}>
-            <SelectTrigger id="task-type">
-              <SelectValue placeholder={t('selectType')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="regular">{t('regularTask')}</SelectItem>
-              <SelectItem value="inspection">{t('inspection')}</SelectItem>
-              <SelectItem value="seasonal">{t('seasonalTask')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        
-        <div>
-          <label htmlFor="priority" className="block text-sm font-medium mb-1">
-            {t('priority')}
-          </label>
-          <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
-            <SelectTrigger id="priority">
-              <SelectValue placeholder={t('selectPriority')} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="low">{t('low')}</SelectItem>
-              <SelectItem value="medium">{t('medium')}</SelectItem>
-              <SelectItem value="high">{t('high')}</SelectItem>
-              <SelectItem value="urgent">{t('urgent')}</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div>
-        <label htmlFor="date" className="block text-sm font-medium mb-1">
-          {t('date')}
-        </label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant={"outline"}
-              className="w-full justify-start text-left font-normal"
-              id="date"
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? (
-                format(date, "PPP", { locale: language === 'fr' ? fr : undefined })
-              ) : (
-                <span>{t('selectDate')}</span>
-              )}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={setDate}
-              initialFocus
+    <form onSubmit={onSubmit} className="flex flex-col h-full">
+      <ScrollArea className="max-h-[70vh] pr-4">
+        <div className="space-y-4 pb-4">
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium mb-1">
+              {t('taskTitle')}
+            </label>
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={t('enterTaskTitle')}
+              required
             />
-          </PopoverContent>
-        </Popover>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="task-type" className="block text-sm font-medium mb-1">
+                {t('taskType')}
+              </label>
+              <Select value={type} onValueChange={(value: any) => setType(value)}>
+                <SelectTrigger id="task-type">
+                  <SelectValue placeholder={t('selectType')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="regular">{t('regularTask')}</SelectItem>
+                  <SelectItem value="inspection">{t('inspection')}</SelectItem>
+                  <SelectItem value="seasonal">{t('seasonalTask')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div>
+              <label htmlFor="priority" className="block text-sm font-medium mb-1">
+                {t('priority')}
+              </label>
+              <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
+                <SelectTrigger id="priority">
+                  <SelectValue placeholder={t('selectPriority')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="low">{t('low')}</SelectItem>
+                  <SelectItem value="medium">{t('medium')}</SelectItem>
+                  <SelectItem value="high">{t('high')}</SelectItem>
+                  <SelectItem value="urgent">{t('urgent')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div>
+            <label htmlFor="date" className="block text-sm font-medium mb-1">
+              {t('date')}
+            </label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className="w-full justify-start text-left font-normal"
+                  id="date"
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? (
+                    format(date, "PPP", { locale: language === 'fr' ? fr : undefined })
+                  ) : (
+                    <span>{t('selectDate')}</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          <PropertySelect
+            value={propertyId}
+            onChange={setPropertyId}
+            label={t('property')}
+          />
+          
+          <RecurrenceSelect 
+            isRecurring={isRecurring}
+            setIsRecurring={setIsRecurring}
+            recurrenceFrequency={recurrenceFrequency}
+            setRecurrenceFrequency={setRecurrenceFrequency}
+            recurrenceInterval={recurrenceInterval}
+            setRecurrenceInterval={setRecurrenceInterval}
+          />
+          
+          <ReminderFields 
+            hasReminder={hasReminder}
+            setHasReminder={setHasReminder}
+            reminderDate={reminderDate}
+            setReminderDate={setReminderDate}
+            reminderMethod={reminderMethod}
+            setReminderMethod={setReminderMethod}
+          />
+        </div>
+      </ScrollArea>
+
+      <div className="pt-4 border-t">
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              {t('saving')}
+            </>
+          ) : (
+            t('saveTask')
+          )}
+        </Button>
       </div>
-
-      <PropertySelect
-        value={propertyId}
-        onChange={setPropertyId}
-        label={t('property')}
-      />
-      
-      <RecurrenceSelect 
-        isRecurring={isRecurring}
-        setIsRecurring={setIsRecurring}
-        recurrenceFrequency={recurrenceFrequency}
-        setRecurrenceFrequency={setRecurrenceFrequency}
-        recurrenceInterval={recurrenceInterval}
-        setRecurrenceInterval={setRecurrenceInterval}
-      />
-      
-      <ReminderFields 
-        hasReminder={hasReminder}
-        setHasReminder={setHasReminder}
-        reminderDate={reminderDate}
-        setReminderDate={setReminderDate}
-        reminderMethod={reminderMethod}
-        setReminderMethod={setReminderMethod}
-      />
-
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {t('saving')}
-          </>
-        ) : (
-          t('saveTask')
-        )}
-      </Button>
     </form>
   );
 };

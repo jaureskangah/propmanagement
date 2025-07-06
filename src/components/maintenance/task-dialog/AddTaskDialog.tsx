@@ -93,14 +93,16 @@ export const AddTaskDialog = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
+      <DialogContent className="max-w-md max-h-[90vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle>{t('addNewTask')}</DialogTitle>
         </DialogHeader>
-        <TaskFormContent 
-          {...taskForm} 
-          initialPropertyId={initialPropertyId}
-        />
+        <div className="flex-1 overflow-hidden">
+          <TaskFormContent 
+            {...taskForm} 
+            initialPropertyId={initialPropertyId}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
