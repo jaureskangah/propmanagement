@@ -26,7 +26,8 @@ import { fr } from "date-fns/locale";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { useFinancialCacheInvalidation } from "@/hooks/useFinancialCacheInvalidation";
 
 interface AddExpenseDialogProps {
   isOpen: boolean;
@@ -37,7 +38,7 @@ interface AddExpenseDialogProps {
 
 export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: AddExpenseDialogProps) => {
   const { toast } = useToast();
-  const queryClient = useQueryClient();
+  const { invalidateFinancialData } = useFinancialCacheInvalidation();
   const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState<Date>();
   const [formData, setFormData] = useState({
@@ -175,21 +176,14 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       }
 
       console.log("Dépense ajoutée avec succès:", data);
+      console.log("Invalidating financial cache after expense addition");
 
-      // Invalider les queries avec les bonnes clés
-      const currentYear = new Date().getFullYear();
-      await Promise.all([
-        queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId] }),
-        queryClient.invalidateQueries({ queryKey: ["maintenance_expenses", propertyId, currentYear] }),
-        queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId] }),
-        queryClient.invalidateQueries({ queryKey: ["vendor_interventions", propertyId, currentYear] }),
-        queryClient.invalidateQueries({ queryKey: ["tenant_payments", propertyId] }),
-        queryClient.invalidateQueries({ queryKey: ["tenant_payments", propertyId, currentYear] }),
-      ]);
+      // Invalider tous les caches financiers avec notre hook centralisé
+      await invalidateFinancialData(propertyId);
 
       toast({
         title: "Succès",
-        description: "Dépense ajoutée avec succès",
+        description: "Dépense ajoutée - Données financières mises à jour",
       });
 
       // Reset form et fermer

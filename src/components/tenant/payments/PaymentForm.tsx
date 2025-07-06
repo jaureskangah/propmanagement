@@ -29,6 +29,8 @@ import { paymentSchema, PaymentFormValues } from "./schema/paymentSchema";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useFinancialCacheInvalidation } from "@/hooks/useFinancialCacheInvalidation";
+import { useQuery } from "@tanstack/react-query";
 
 interface PaymentFormProps {
   tenantId: string;
@@ -40,6 +42,23 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const { t, language } = useLocale();
+  const { invalidateFinancialData } = useFinancialCacheInvalidation();
+  
+  // Récupérer les informations du locataire pour obtenir le propertyId
+  const { data: tenant } = useQuery({
+    queryKey: ["tenant", tenantId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tenants")
+        .select("property_id")
+        .eq("id", tenantId)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!tenantId,
+  });
   
   const form = useForm<PaymentFormValues>({
     resolver: zodResolver(paymentSchema),
@@ -79,9 +98,14 @@ export function PaymentForm({ tenantId, onSuccess, onCancel }: PaymentFormProps)
 
       if (error) throw error;
 
+      console.log("Payment added successfully, invalidating financial cache");
+      
+      // Invalider tous les caches financiers
+      await invalidateFinancialData(tenant?.property_id);
+
       toast({
         title: t('paymentAdded'),
-        description: t('paymentAddedSuccess'),
+        description: "Données financières mises à jour",
       });
       
       onSuccess();

@@ -16,6 +16,7 @@ import {
 
 /**
  * Hook that fetches and calculates financial metrics for a property
+ * Optimisé pour une mise à jour rapide des données (30 secondes de cache)
  */
 export function useFinancialMetricsData(propertyId: string | null, selectedYear: number) {
   return useQuery({
@@ -76,6 +77,8 @@ export function useFinancialMetricsData(propertyId: string | null, selectedYear:
         throw error;
       }
     },
-    enabled: !!propertyId
+    enabled: !!propertyId,
+    staleTime: 30 * 1000, // 30 secondes au lieu de 5 minutes pour une mise à jour plus rapide
+    gcTime: 5 * 60 * 1000, // 5 minutes en cache mémoire
   });
 }
