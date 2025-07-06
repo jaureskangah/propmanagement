@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -16,12 +15,13 @@ import {
   AreaChart 
 } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+import { ChartContainer } from "@/components/ui/chart";
 import { 
   useMaintenanceChartConfig, 
   useExpensesChartConfig,
   formatMonthsForLocale
 } from "./utils/chartUtils";
+import { MaintenanceChartTooltip } from "./MaintenanceChartTooltip";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { motion } from "framer-motion";
@@ -38,9 +38,8 @@ interface MaintenanceChartsProps {
 }
 
 export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFullYear() }: MaintenanceChartsProps) => {
-  const { t, locale } = useLocale();
+  const { t, language } = useLocale();
   const [activeMetrics, setActiveMetrics] = useState<string[]>(["totalRequests", "completedRequests", "urgentRequests"]);
-  // Gardons la variable d'état mais n'affichons plus les boutons de bascule
   const [expensesView, setExpensesView] = useState<'bar' | 'area'>('area');
   
   // Only filter when both propertyId and selectedYear are provided AND different from defaults
@@ -262,8 +261,8 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
       monthlyData[monthIndex].expenses += parseFloat(expense.amount || 0);
     });
     
-    return formatMonthsForLocale(monthlyData, locale);
-  }, [maintenanceRequests, expensesData, locale]);
+    return formatMonthsForLocale(monthlyData, language);
+  }, [maintenanceRequests, expensesData, language]);
   
   // Get chart configurations
   const chartConfig = useMaintenanceChartConfig();
@@ -370,7 +369,7 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
                       width={30}
                     />
                     <Tooltip 
-                      content={<ChartTooltipContent />} 
+                      content={<MaintenanceChartTooltip />} 
                       animationDuration={200}
                     />
                     
@@ -433,7 +432,6 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
               <CardTitle className="text-sm font-semibold text-primary/90 dark:text-white/90">
                 {t('maintenanceExpensesTrends')}
               </CardTitle>
-              {/* Suppression des boutons de bascule ici */}
             </div>
           </CardHeader>
           <CardContent>
@@ -469,7 +467,7 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
                         tickFormatter={(value) => `$${value}`}
                       />
                       <Tooltip 
-                        content={<ChartTooltipContent />}
+                        content={<MaintenanceChartTooltip />}
                         animationDuration={200}
                       />
                       <Bar 
@@ -509,7 +507,7 @@ export const MaintenanceCharts = ({ propertyId, selectedYear = new Date().getFul
                         tickFormatter={(value) => `$${value}`}
                       />
                       <Tooltip 
-                        content={<ChartTooltipContent />}
+                        content={<MaintenanceChartTooltip />}
                         animationDuration={200}
                       />
                       <Area 

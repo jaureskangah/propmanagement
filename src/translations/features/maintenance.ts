@@ -89,6 +89,22 @@ export const enMaintenance = {
   totalExpenses: "Total Expenses",
   averageMonthlyExpenses: "Average Monthly Expenses",
   thisMonth: "This Month",
+
+  // Chart titles and trends - nouvelles clés ajoutées
+  maintenanceRequestsTrends: "Maintenance Request Trends",
+  maintenanceExpensesTrends: "Maintenance Expenses Trends",
+  
+  // Chart metrics labels - nouvelles clés ajoutées
+  totalMaintenanceRequests: "Total Maintenance Requests",
+  completedMaintenanceRequests: "Completed Requests",
+  urgentMaintenanceRequests: "Urgent Requests",
+  maintenanceExpenses: "Maintenance Expenses",
+  
+  // Chart data labels
+  requests: "Requests",
+  completed: "Completed",
+  urgent: "Urgent",
+  expenses: "Expenses",
 };
 
 export const frMaintenance = {
@@ -181,4 +197,20 @@ export const frMaintenance = {
   totalExpenses: "Total des Dépenses",
   averageMonthlyExpenses: "Dépenses Mensuelles Moyennes",
   thisMonth: "Ce Mois",
+
+  // Titres des graphiques et tendances - nouvelles clés ajoutées
+  maintenanceRequestsTrends: "Tendances des Demandes de Maintenance",
+  maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
+  
+  // Labels des métriques des graphiques - nouvelles clés ajoutées
+  totalMaintenanceRequests: "Nombre Total de Demandes",
+  completedMaintenanceRequests: "Demandes Terminées",
+  urgentMaintenanceRequests: "Demandes Urgentes",
+  maintenanceExpenses: "Dépenses de Maintenance",
+  
+  // Labels des données des graphiques
+  requests: "Demandes",
+  completed: "Terminées",
+  urgent: "Urgentes",
+  expenses: "Dépenses",
 };

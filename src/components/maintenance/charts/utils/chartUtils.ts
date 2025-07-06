@@ -25,8 +25,8 @@ export const getMaintenanceChartData = (propertyId: string): MaintenanceChartDat
   }));
 };
 
-// Function to translate month names based on the selected locale
-export const formatMonthsForLocale = (data: MaintenanceChartData[], locale: string): MaintenanceChartData[] => {
+// Function to translate month names based on the selected language
+export const formatMonthsForLocale = (data: MaintenanceChartData[], language: string): MaintenanceChartData[] => {
   const frenchMonths: Record<string, string> = {
     'Jan': 'Jan',
     'Feb': 'Fév',
@@ -42,7 +42,7 @@ export const formatMonthsForLocale = (data: MaintenanceChartData[], locale: stri
     'Dec': 'Déc'
   };
 
-  if (locale === 'fr') {
+  if (language === 'fr') {
     return data.map(item => ({
       ...item,
       month: frenchMonths[item.month] || item.month
