@@ -106,7 +106,7 @@ export const frFinances = {
   // Revenus et dépenses
   income: "Revenus",
   expenses: "Dépenses",
-  expense: "Dépense",
+  expense: "Dépenses",
   revenue: "Revenus",
   costs: "Coûts",
   rental: "Location",
