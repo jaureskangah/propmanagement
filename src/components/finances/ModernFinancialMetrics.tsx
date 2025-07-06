@@ -79,7 +79,7 @@ const ModernFinancialMetrics = ({ propertyId, selectedYear }: ModernFinancialMet
         className="text-center sm:text-left mb-8"
       >
         <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-200 bg-clip-text text-transparent mb-2">
-          {t('financialOverview')}
+          Métriques Financières
         </h2>
       </motion.div>
 
