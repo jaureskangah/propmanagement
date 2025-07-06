@@ -1,6 +1,8 @@
+
 import React, { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ExpensesByCategoryChartProps {
   expenses: {
@@ -13,6 +15,8 @@ interface ExpensesByCategoryChartProps {
 const COLORS = ['#ea384c', '#0ea5e9', '#84cc16', '#f59e0b', '#8b5cf6'];
 
 export const ExpensesByCategoryChart = ({ expenses }: ExpensesByCategoryChartProps) => {
+  const { t } = useLocale();
+  
   const categoryData = useMemo(() => {
     const categories = expenses.reduce((acc, expense) => {
       acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
@@ -28,7 +32,7 @@ export const ExpensesByCategoryChart = ({ expenses }: ExpensesByCategoryChartPro
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Expenses by Category</CardTitle>
+        <CardTitle>{t('expensesByCategory')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">

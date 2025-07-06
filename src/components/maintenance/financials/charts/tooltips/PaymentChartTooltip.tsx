@@ -25,18 +25,18 @@ export const PaymentChartTooltip = ({ active, payload, label }: PaymentChartTool
           <p className="text-xs font-semibold text-primary/90 pb-1 border-b border-border/30">{label}</p>
           
           <div className="grid grid-cols-2 gap-y-1 text-xs">
-            <span className="text-muted-foreground">{t('paid', { fallback: 'Paid' })}:</span>
+            <span className="text-muted-foreground">{t('paid')}:</span>
             <span className="font-medium text-green-500">${paid.toLocaleString()}</span>
             
-            <span className="text-muted-foreground">{t('pending', { fallback: 'Pending' })}:</span>
+            <span className="text-muted-foreground">{t('pending')}:</span>
             <span className="font-medium text-yellow-500">${pending.toLocaleString()}</span>
             
-            <span className="text-muted-foreground">{t('late', { fallback: 'Late' })}:</span>
+            <span className="text-muted-foreground">{t('late')}:</span>
             <span className="font-medium text-red-500">${late.toLocaleString()}</span>
             
             <span className="col-span-2 pt-1 mt-1 border-t border-border/30"></span>
             
-            <span className="text-muted-foreground">{t('cumulativeTotal', { fallback: 'Cumulative' })}:</span>
+            <span className="text-muted-foreground">{t('cumulativeTotal')}:</span>
             <span className="font-medium text-blue-500">${cumulative.toLocaleString()}</span>
           </div>
         </CardContent>

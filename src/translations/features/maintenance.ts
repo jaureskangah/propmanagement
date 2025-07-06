@@ -78,6 +78,17 @@ export const enMaintenance = {
   // Navigation
   maintenanceTitle: "Maintenance",
   manageMaintenanceRequests: "Manage and track your maintenance requests",
+
+  // Charts and financial translations
+  expensesByCategory: "Expenses by Category",
+  paymentEvolution: "Payment Evolution",
+  paid: "Paid",
+  pending: "Pending",
+  late: "Late",
+  cumulativeTotal: "Cumulative Total",
+  totalExpenses: "Total Expenses",
+  averageMonthlyExpenses: "Average Monthly Expenses",
+  thisMonth: "This Month",
 };
 
 export const frMaintenance = {
@@ -159,4 +170,15 @@ export const frMaintenance = {
   // Navigation
   maintenanceTitle: "Maintenance",
   manageMaintenanceRequests: "Gérez et suivez vos demandes de maintenance",
+
+  // Graphiques et traductions financières
+  expensesByCategory: "Dépenses par Catégorie",
+  paymentEvolution: "Évolution des Paiements",
+  paid: "Payé",
+  pending: "En Attente",
+  late: "En Retard",
+  cumulativeTotal: "Total Cumulatif",
+  totalExpenses: "Total des Dépenses",
+  averageMonthlyExpenses: "Dépenses Mensuelles Moyennes",
+  thisMonth: "Ce Mois",
 };
