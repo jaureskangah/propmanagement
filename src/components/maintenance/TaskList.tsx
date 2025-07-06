@@ -141,10 +141,14 @@ export const TaskList = ({ tasks, onTaskComplete, onTaskDelete }: TaskListProps)
                 {/* Show recurring and reminder indicators */}
                 <div className="flex items-center gap-1">
                   {task.is_recurring && (
-                    <Repeat className="h-3 w-3 text-blue-500" title={t('recurringTask')} />
+                    <div title={t('recurringTask')}>
+                      <Repeat className="h-3 w-3 text-blue-500" />
+                    </div>
                   )}
                   {task.has_reminder && (
-                    <Bell className="h-3 w-3 text-orange-500" title={t('hasReminder')} />
+                    <div title={t('hasReminder')}>
+                      <Bell className="h-3 w-3 text-orange-500" />
+                    </div>
                   )}
                 </div>
               </div>

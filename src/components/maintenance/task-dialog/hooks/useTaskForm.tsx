@@ -19,9 +19,15 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   );
   const [recurrenceInterval, setRecurrenceInterval] = useState(initialValue?.recurrence_pattern?.interval || 1);
   
-  // Properties for reminders
+  // Properties for reminders - Fix the type conversion for reminder_date
   const [hasReminder, setHasReminder] = useState(initialValue?.has_reminder || false);
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(initialValue?.reminder_date || undefined);
+  const [reminderDate, setReminderDate] = useState<Date | undefined>(
+    initialValue?.reminder_date instanceof Date 
+      ? initialValue.reminder_date 
+      : initialValue?.reminder_date 
+        ? new Date(initialValue.reminder_date)
+        : undefined
+  );
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">(initialValue?.reminder_method || "app");
   
   // Property for property selection
