@@ -1,7 +1,7 @@
 
 import React, { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useFinancialOverviewData } from "./overview/hooks/useFinancialOverviewData";
 import { LoadingMetrics } from "./metrics/LoadingMetrics";
@@ -48,12 +48,7 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-lg font-medium">
-          {language === 'fr' ? "Vue d'ensemble financière" : t('financialOverview')}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+      <CardContent className="pt-6">
         <Tabs defaultValue="income">
           <TabsList className="mb-4">
             <TabsTrigger value="income">{language === 'fr' ? "Revenus" : t('income')}</TabsTrigger>
