@@ -5,7 +5,7 @@ import { toast } from "@/hooks/use-toast";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TenantForm } from "./TenantForm";
 import type { TenantFormValues } from "./tenantValidation";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
 
 interface AddTenantModalProps {
   isOpen: boolean;
@@ -15,20 +15,20 @@ interface AddTenantModalProps {
 
 export function AddTenantModal({ isOpen, onClose, onSubmit }: AddTenantModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { t } = useLocale();
+  const { t } = useTenantListTranslations();
 
   const handleSubmit = async (data: TenantFormValues) => {
     try {
       setIsSubmitting(true);
       await onSubmit(data);
       toast({
-        title: t('success'),
-        description: t('tenantAdded'),
+        title: "Succès",
+        description: "Locataire ajouté avec succès",
       });
       onClose();
     } catch (error: any) {
       toast({
-        title: t('error'),
+        title: "Erreur",
         description: error.message,
         variant: "destructive",
       });
