@@ -1,7 +1,7 @@
 
 import React from "react";
 import { VendorListHeader } from "./header/VendorListHeader";
-import { VendorSimplifiedTabs } from "./tabs/VendorSimplifiedTabs";
+import { VendorMainList } from "./main/VendorMainList";
 import { VendorSimplifiedFilters } from "./filters/VendorSimplifiedFilters";
 import { VendorDialogs } from "./dialogs/VendorDialogs";
 import { useVendorList } from "./hooks/useVendorList";
@@ -55,7 +55,7 @@ export const VendorList = () => {
         specialties={specialties}
       />
 
-      <VendorSimplifiedTabs
+      <VendorMainList
         vendors={filteredVendors}
         onEdit={handleEdit}
         onDelete={handleDelete}
