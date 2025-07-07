@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useFinancialData } from "./hooks/useFinancialData";
-import { DollarSign, FileText, Wrench, Calendar } from "lucide-react";
+import { DollarSign, FileText, Calendar } from "lucide-react";
 import { DataTables } from "./DataTables";
 import { formatCurrency } from "@/lib/utils";
 import { ModernMetricCard } from "./components/ModernMetricCard";
@@ -51,7 +51,6 @@ export const SimplifiedExpensesView = ({
 
   // Calculate simplified metrics focused on expenses
   const totalExpenses = allExpenses.reduce((sum, item) => sum + item.amount, 0);
-  const totalInterventions = maintenance.length;
   const monthlyAverage = totalExpenses / 12;
   
   // Calculate current month expenses (sum of amounts, not count)
@@ -78,13 +77,6 @@ export const SimplifiedExpensesView = ({
       chartColor: "#22C55E",
     },
     {
-      title: t('maintenance'),
-      value: totalInterventions.toString(),
-      icon: <Wrench className="h-5 w-5" />,
-      description: t('maintenance'),
-      chartColor: "#8B5CF6",
-    },
-    {
       title: t('thisMonth'),
       value: formatCurrency(currentMonthExpenses),
       icon: <FileText className="h-5 w-5" />,
@@ -108,7 +100,7 @@ export const SimplifiedExpensesView = ({
   return (
     <div className="space-y-6">
       {/* Modern Metrics Cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {metrics.map((metric, index) => (
           <ModernMetricCard
             key={metric.title}
