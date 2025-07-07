@@ -91,8 +91,8 @@ export const TaskFormContent = ({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col h-full">
-      <ScrollArea className="flex-1 pr-3" style={{ maxHeight: 'calc(85vh - 160px)' }}>
-        <div className="space-y-4 pb-6">
+      <ScrollArea className="flex-1 pr-3" style={{ maxHeight: 'calc(85vh - 120px)' }}>
+        <div className="space-y-4 pb-8">
           <div>
             <label htmlFor="title" className="block text-sm font-medium mb-1">
               {t('taskTitle')}
@@ -195,8 +195,8 @@ export const TaskFormContent = ({
             setReminderMethod={setReminderMethod}
           />
           
-          {/* Extra spacing at the bottom to ensure content is not cut off */}
-          <div className="h-4" />
+          {/* Espacement supplémentaire en bas pour s'assurer que tout le contenu est accessible */}
+          <div className="h-8" />
         </div>
       </ScrollArea>
 

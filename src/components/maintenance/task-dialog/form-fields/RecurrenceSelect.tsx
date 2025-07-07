@@ -26,7 +26,7 @@ export const RecurrenceSelect = ({
   const { t } = useLocale();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center space-x-2">
         <Switch
           id="is-recurring"
@@ -37,8 +37,8 @@ export const RecurrenceSelect = ({
       </div>
 
       {isRecurring && (
-        <div className="space-y-4 pl-6 border-l-2 border-gray-200">
-          <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-3 pl-6 border-l-2 border-gray-200">
+          <div className="grid grid-cols-2 gap-3">
             <div>
               <Label htmlFor="recurrence-frequency" className="block text-sm font-medium mb-1">
                 {t('recurrenceFrequency')}

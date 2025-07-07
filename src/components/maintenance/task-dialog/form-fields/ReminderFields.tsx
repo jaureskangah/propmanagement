@@ -31,7 +31,7 @@ export const ReminderFields = ({
   const { t, language } = useLocale();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <div className="flex items-center space-x-2">
         <Switch
           id="has-reminder"
@@ -42,7 +42,7 @@ export const ReminderFields = ({
       </div>
 
       {hasReminder && (
-        <div className="space-y-4 pl-6 border-l-2 border-gray-200">
+        <div className="space-y-3 pl-6 border-l-2 border-gray-200">
           <div>
             <Label htmlFor="reminder-date" className="block text-sm font-medium mb-1">
               {t('reminderDate')}
