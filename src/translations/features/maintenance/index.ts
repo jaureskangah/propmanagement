@@ -1,5 +1,5 @@
 
-import { enMaintenance, frMaintenance } from './maintenance';
+import { enMaintenance, frMaintenance } from '../maintenance';
 import { enVendors, frVendors } from './vendors';
 
 export { 
