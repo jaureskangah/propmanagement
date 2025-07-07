@@ -26,7 +26,7 @@ export function ChangePasswordDialog() {
     if (formData.newPassword !== formData.confirmPassword) {
       toast({
         title: t('error'),
-        description: "New passwords do not match.",
+        description: t('passwordMismatch'),
         variant: "destructive"
       });
       return;
@@ -35,7 +35,7 @@ export function ChangePasswordDialog() {
     if (formData.newPassword.length < 6) {
       toast({
         title: t('error'),
-        description: "Password must be at least 6 characters long.",
+        description: t('passwordTooShort'),
         variant: "destructive"
       });
       return;

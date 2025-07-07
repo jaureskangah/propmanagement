@@ -42,7 +42,9 @@ export const enSettings = {
   languageDescription: "Choose your preferred language for the interface",
   selectLanguage: "Select Language",
   selectLanguageDescription: "Change the language used throughout the application",
-  email: "Email"
+  email: "Email",
+  passwordMismatch: "New passwords do not match",
+  passwordTooShort: "Password must be at least 6 characters long"
 };
 
 export const frSettings = {
@@ -88,5 +90,7 @@ export const frSettings = {
   languageDescription: "Choisissez votre langue préférée pour l'interface",
   selectLanguage: "Sélectionner la langue",
   selectLanguageDescription: "Changez la langue utilisée dans toute l'application",
-  email: "Email"
+  email: "Email",
+  passwordMismatch: "Les nouveaux mots de passe ne correspondent pas",
+  passwordTooShort: "Le mot de passe doit contenir au moins 6 caractères"
 };
