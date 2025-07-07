@@ -1,11 +1,10 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -69,12 +68,28 @@ export const TaskFormContent = ({
 }: TaskFormContentProps) => {
   const { t, language } = useLocale();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
     if (initialPropertyId && !propertyId) {
       setPropertyId(initialPropertyId);
     }
   }, [initialPropertyId, propertyId, setPropertyId]);
+
+  // Fonction pour gérer le focus et le défilement automatique
+  const handleFocusAndScroll = (event: React.FocusEvent) => {
+    const target = event.target as HTMLElement;
+    if (contentRef.current && target) {
+      // Petit délai pour laisser le temps au focus de se positionner
+      setTimeout(() => {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'nearest'
+        });
+      }, 100);
+    }
+  };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +106,12 @@ export const TaskFormContent = ({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col h-full">
-      <ScrollArea className="flex-1 pr-3" style={{ maxHeight: 'calc(85vh - 120px)' }}>
+      <div 
+        ref={contentRef}
+        className="flex-1 overflow-y-auto pr-3 scroll-smooth"
+        style={{ maxHeight: 'calc(85vh - 140px)' }}
+        onFocus={handleFocusAndScroll}
+      >
         <div className="space-y-4 pb-8">
           <div>
             <label htmlFor="title" className="block text-sm font-medium mb-1">
@@ -103,6 +123,7 @@ export const TaskFormContent = ({
               onChange={(e) => setTitle(e.target.value)}
               placeholder={t('enterTaskTitle')}
               required
+              onFocus={handleFocusAndScroll}
             />
           </div>
           
@@ -112,7 +133,7 @@ export const TaskFormContent = ({
                 {t('taskType')}
               </label>
               <Select value={type} onValueChange={(value: any) => setType(value)}>
-                <SelectTrigger id="task-type">
+                <SelectTrigger id="task-type" onFocus={handleFocusAndScroll}>
                   <SelectValue placeholder={t('selectType')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -128,7 +149,7 @@ export const TaskFormContent = ({
                 {t('priority')}
               </label>
               <Select value={priority} onValueChange={(value: any) => setPriority(value)}>
-                <SelectTrigger id="priority">
+                <SelectTrigger id="priority" onFocus={handleFocusAndScroll}>
                   <SelectValue placeholder={t('selectPriority')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -151,6 +172,7 @@ export const TaskFormContent = ({
                   variant={"outline"}
                   className="w-full justify-start text-left font-normal"
                   id="date"
+                  onFocus={handleFocusAndScroll}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {date ? (
@@ -175,30 +197,35 @@ export const TaskFormContent = ({
             value={propertyId}
             onChange={setPropertyId}
             label={t('property')}
+            onFocus={handleFocusAndScroll}
           />
           
-          <RecurrenceSelect 
-            isRecurring={isRecurring}
-            setIsRecurring={setIsRecurring}
-            recurrenceFrequency={recurrenceFrequency}
-            setRecurrenceFrequency={setRecurrenceFrequency}
-            recurrenceInterval={recurrenceInterval}
-            setRecurrenceInterval={setRecurrenceInterval}
-          />
+          <div onFocus={handleFocusAndScroll}>
+            <RecurrenceSelect 
+              isRecurring={isRecurring}
+              setIsRecurring={setIsRecurring}
+              recurrenceFrequency={recurrenceFrequency}
+              setRecurrenceFrequency={setRecurrenceFrequency}
+              recurrenceInterval={recurrenceInterval}
+              setRecurrenceInterval={setRecurrenceInterval}
+            />
+          </div>
           
-          <ReminderFields 
-            hasReminder={hasReminder}
-            setHasReminder={setHasReminder}
-            reminderDate={reminderDate}
-            setReminderDate={setReminderDate}
-            reminderMethod={reminderMethod}
-            setReminderMethod={setReminderMethod}
-          />
+          <div onFocus={handleFocusAndScroll}>
+            <ReminderFields 
+              hasReminder={hasReminder}
+              setHasReminder={setHasReminder}
+              reminderDate={reminderDate}
+              setReminderDate={setReminderDate}
+              reminderMethod={reminderMethod}
+              setReminderMethod={setReminderMethod}
+            />
+          </div>
           
-          {/* Espacement supplémentaire en bas pour s'assurer que tout le contenu est accessible */}
-          <div className="h-8" />
+          {/* Espacement supplémentaire en bas pour garantir l'accessibilité */}
+          <div className="h-12" />
         </div>
-      </ScrollArea>
+      </div>
 
       <div className="flex-shrink-0 mt-4 pt-4 border-t bg-background">
         <Button type="submit" className="w-full" disabled={isSubmitting}>

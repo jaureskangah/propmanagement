@@ -25,6 +25,17 @@ export const RecurrenceSelect = ({
 }: RecurrenceSelectProps) => {
   const { t } = useLocale();
 
+  const handleFocusAndScroll = (event: React.FocusEvent) => {
+    const target = event.target as HTMLElement;
+    setTimeout(() => {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+    }, 100);
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex items-center space-x-2">
@@ -32,6 +43,7 @@ export const RecurrenceSelect = ({
           id="is-recurring"
           checked={isRecurring}
           onCheckedChange={setIsRecurring}
+          onFocus={handleFocusAndScroll}
         />
         <Label htmlFor="is-recurring">{t('makeRecurring')}</Label>
       </div>
@@ -44,7 +56,7 @@ export const RecurrenceSelect = ({
                 {t('recurrenceFrequency')}
               </Label>
               <Select value={recurrenceFrequency} onValueChange={(value: any) => setRecurrenceFrequency(value)}>
-                <SelectTrigger id="recurrence-frequency">
+                <SelectTrigger id="recurrence-frequency" onFocus={handleFocusAndScroll}>
                   <SelectValue placeholder={t('selectFrequency')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -66,6 +78,7 @@ export const RecurrenceSelect = ({
                 min={1}
                 value={recurrenceInterval}
                 onChange={(e) => setRecurrenceInterval(Number(e.target.value))}
+                onFocus={handleFocusAndScroll}
               />
             </div>
           </div>

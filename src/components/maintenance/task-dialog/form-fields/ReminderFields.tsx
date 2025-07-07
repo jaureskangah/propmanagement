@@ -30,6 +30,17 @@ export const ReminderFields = ({
 }: ReminderFieldsProps) => {
   const { t, language } = useLocale();
 
+  const handleFocusAndScroll = (event: React.FocusEvent) => {
+    const target = event.target as HTMLElement;
+    setTimeout(() => {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'nearest'
+      });
+    }, 100);
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex items-center space-x-2">
@@ -37,6 +48,7 @@ export const ReminderFields = ({
           id="has-reminder"
           checked={hasReminder}
           onCheckedChange={setHasReminder}
+          onFocus={handleFocusAndScroll}
         />
         <Label htmlFor="has-reminder">{t('setReminder')}</Label>
       </div>
@@ -53,6 +65,7 @@ export const ReminderFields = ({
                   variant={"outline"}
                   className="w-full justify-start text-left font-normal"
                   id="reminder-date"
+                  onFocus={handleFocusAndScroll}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {reminderDate ? (
@@ -78,7 +91,7 @@ export const ReminderFields = ({
               {t('reminderMethod')}
             </Label>
             <Select value={reminderMethod} onValueChange={(value: any) => setReminderMethod(value)}>
-              <SelectTrigger id="reminder-method">
+              <SelectTrigger id="reminder-method" onFocus={handleFocusAndScroll}>
                 <SelectValue placeholder={t('selectMethod')} />
               </SelectTrigger>
               <SelectContent>

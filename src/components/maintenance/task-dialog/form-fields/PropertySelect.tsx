@@ -10,9 +10,10 @@ interface PropertySelectProps {
   value: string;
   onChange: (value: string) => void;
   label: string;
+  onFocus?: (event: React.FocusEvent) => void;
 }
 
-export const PropertySelect = ({ value, onChange, label }: PropertySelectProps) => {
+export const PropertySelect = ({ value, onChange, label, onFocus }: PropertySelectProps) => {
   const { t } = useLocale();
 
   const { data: properties, isLoading } = useQuery({
@@ -41,7 +42,7 @@ export const PropertySelect = ({ value, onChange, label }: PropertySelectProps) 
     <div>
       <Label className="block text-sm font-medium mb-1">{label}</Label>
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger>
+        <SelectTrigger onFocus={onFocus}>
           <SelectValue placeholder={t('selectProperty', { fallback: 'Select a property' })} />
         </SelectTrigger>
         <SelectContent>
