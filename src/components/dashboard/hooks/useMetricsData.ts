@@ -11,11 +11,21 @@ export const useMetricsData = (
   tenantsData: any[],
   dateRange: DateRange
 ) => {
+  console.log("🔍 DEBUG: useMetricsData - Starting with date range:", {
+    startDate: dateRange.startDate.toISOString(),
+    endDate: dateRange.endDate.toISOString(),
+    dataLengths: {
+      properties: Array.isArray(propertiesData) ? propertiesData.length : 0,
+      maintenance: Array.isArray(maintenanceData) ? maintenanceData.length : 0,
+      tenants: Array.isArray(tenantsData) ? tenantsData.length : 0
+    }
+  });
+
   // Use the calculation hook to process data
   const {
     globalOccupancyRate,
-    newPropertiesThisMonth,
-    pendingMaintenance,
+    newPropertiesThisMonth, // Now filtered by period
+    pendingMaintenance, // Now filtered by period
     tenantsChartData,
     propertiesChartData,
     maintenanceChartData,
@@ -25,13 +35,20 @@ export const useMetricsData = (
   // Use the communications hook to get communications data, passing the date range
   const { unreadMessages, communicationsChartData } = useCommunicationsMetrics(validTenantsData, dateRange);
 
-  // Logging for debugging
+  // Logging for debugging the impact of date range changes
   useEffect(() => {
-    console.log("useMetricsData input:", {
-      propertiesLength: Array.isArray(propertiesData) ? propertiesData.length : 0,
-      maintenanceLength: Array.isArray(maintenanceData) ? maintenanceData.length : 0,
-      tenantsLength: Array.isArray(tenantsData) ? tenantsData.length : 0,
-      dateRange,
+    console.log("🔍 DEBUG: useMetricsData - KPI Impact Analysis:", {
+      dateRange: {
+        start: dateRange.startDate.toISOString(),
+        end: dateRange.endDate.toISOString()
+      },
+      kpiValues: {
+        propertiesTotal: Array.isArray(propertiesData) ? propertiesData.length : 0,
+        newPropertiesInPeriod: newPropertiesThisMonth,
+        tenantsTotal: validTenantsData.length,
+        occupancyRate: globalOccupancyRate || 0,
+        pendingMaintenanceInPeriod: pendingMaintenance
+      },
       chartDataLengths: {
         properties: propertiesChartData?.length,
         tenants: tenantsChartData?.length,
@@ -40,19 +57,27 @@ export const useMetricsData = (
       }
     });
   }, [propertiesData, maintenanceData, tenantsData, dateRange, 
+      newPropertiesThisMonth, pendingMaintenance, globalOccupancyRate,
       propertiesChartData, tenantsChartData, maintenanceChartData, communicationsChartData]);
 
   // Format the metrics into the required structure
   const metrics = useFormattedMetrics({
     propertiesTotal: Array.isArray(propertiesData) ? propertiesData.length : 0,
-    newProperties: newPropertiesThisMonth,
+    newProperties: newPropertiesThisMonth, // Now correctly filtered
     propertiesChartData,
     tenantsTotal: validTenantsData.length,
     occupancyRate: globalOccupancyRate || 0,
     tenantsChartData,
-    pendingMaintenance,
+    pendingMaintenance, // Now correctly filtered
     maintenanceChartData,
-    communicationsChartData
+    communicationsChartData,
+    isFiltered: true // Indicate that period filtering is active
+  });
+
+  console.log("🔍 DEBUG: useMetricsData - Final metrics output:", {
+    hasMetrics: !!metrics,
+    metricsKeys: Object.keys(metrics || {}),
+    unreadMessagesCount: unreadMessages
   });
 
   return {

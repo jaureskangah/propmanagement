@@ -28,12 +28,39 @@ export const generateMonthlyData = (data: any[], valueKey: string = 'amount') =>
 };
 
 export const filterDataByDateRange = (data: any[], dateRange: DateRange) => {
-  return data?.filter(item => 
-    isWithinInterval(new Date(item.created_at), {
-      start: dateRange.startDate,
-      end: dateRange.endDate
-    })
-  ) || [];
+  if (!Array.isArray(data) || !dateRange) {
+    console.warn("🚨 filterDataByDateRange: Invalid input data or dateRange");
+    return [];
+  }
+
+  const filteredData = data.filter(item => {
+    if (!item || !item.created_at) {
+      console.warn("🚨 filterDataByDateRange: Item missing created_at field", item);
+      return false;
+    }
+    
+    try {
+      const itemDate = new Date(item.created_at);
+      return isWithinInterval(itemDate, {
+        start: dateRange.startDate,
+        end: dateRange.endDate
+      });
+    } catch (error) {
+      console.error("🚨 filterDataByDateRange: Error parsing date", item.created_at, error);
+      return false;
+    }
+  });
+
+  console.log("🔍 DEBUG: filterDataByDateRange result:", {
+    inputLength: data.length,
+    outputLength: filteredData.length,
+    dateRange: {
+      start: dateRange.startDate.toISOString(),
+      end: dateRange.endDate.toISOString()
+    }
+  });
+
+  return filteredData;
 };
 
 export const calculateOccupancyData = (
@@ -44,6 +71,13 @@ export const calculateOccupancyData = (
   const totalUnits = propertiesData?.reduce((acc, property) => acc + (property.units || 0), 0) || 0;
   const occupiedUnits = allTenantsData.length; // Utiliser tous les locataires actifs
   const globalOccupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0;
+
+  console.log("🔍 DEBUG: calculateOccupancyData:", {
+    totalUnits,
+    occupiedUnits,
+    globalOccupancyRate,
+    allTenantsCount: allTenantsData.length
+  });
 
   // Pour la tendance, utiliser les locataires filtrés par date (nouveaux locataires dans la période)
   const filteredTenantsForTrend = filterDataByDateRange(allTenantsData, dateRange);
@@ -59,4 +93,44 @@ export const calculateOccupancyData = (
     : 0;
 
   return { globalOccupancyRate, occupancyTrend, totalUnits, occupiedUnits };
+};
+
+// NEW: Utility function to calculate period-specific KPIs
+export const calculatePeriodKPIs = (
+  data: any[],
+  dateRange: DateRange,
+  type: 'properties' | 'maintenance' | 'tenants'
+) => {
+  const filteredData = filterDataByDateRange(data, dateRange);
+  
+  let count = 0;
+  let pendingCount = 0;
+  
+  switch (type) {
+    case 'properties':
+      count = filteredData.length;
+      break;
+    case 'maintenance':
+      count = filteredData.length;
+      pendingCount = filteredData.filter(req => 
+        (req.status === "Pending" || req.status === "pending") && req.status !== "Resolved"
+      ).length;
+      break;
+    case 'tenants':
+      count = filteredData.length;
+      break;
+  }
+  
+  console.log(`🔍 DEBUG: calculatePeriodKPIs for ${type}:`, {
+    totalData: data.length,
+    filteredData: filteredData.length,
+    count,
+    pendingCount,
+    dateRange: {
+      start: dateRange.startDate.toISOString(),
+      end: dateRange.endDate.toISOString()
+    }
+  });
+  
+  return { count, pendingCount, filteredData };
 };

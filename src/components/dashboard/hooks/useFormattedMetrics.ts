@@ -11,6 +11,8 @@ interface FormattedMetricsInput {
   pendingMaintenance: number;
   maintenanceChartData: Array<{ value: number }>;
   communicationsChartData: Array<{ value: number }>;
+  // NEW: Add period context for better descriptions
+  isFiltered?: boolean;
 }
 
 export const useFormattedMetrics = ({
@@ -22,25 +24,46 @@ export const useFormattedMetrics = ({
   tenantsChartData,
   pendingMaintenance,
   maintenanceChartData,
-  communicationsChartData
+  communicationsChartData,
+  isFiltered = true
 }: FormattedMetricsInput): MetricsData => {
-  return {
+  
+  console.log("🔍 DEBUG: useFormattedMetrics - Input data:", {
+    propertiesTotal,
+    newProperties,
+    tenantsTotal,
+    occupancyRate,
+    pendingMaintenance,
+    isFiltered,
+    chartDataLengths: {
+      properties: propertiesChartData?.length,
+      tenants: tenantsChartData?.length,
+      maintenance: maintenanceChartData?.length,
+      communications: communicationsChartData?.length
+    }
+  });
+
+  const result = {
     properties: {
-      total: propertiesTotal,
-      new: newProperties,
+      total: propertiesTotal, // Global total (unchanged)
+      new: newProperties, // Now filtered by period
       chartData: propertiesChartData
     },
     tenants: {
-      total: tenantsTotal,
-      occupancyRate: occupancyRate,
+      total: tenantsTotal, // Global total (unchanged)
+      occupancyRate: occupancyRate, // Global rate (unchanged)
       chartData: tenantsChartData
     },
     maintenance: {
-      pending: pendingMaintenance,
+      pending: pendingMaintenance, // Now filtered by period
       chartData: maintenanceChartData
     },
     communications: {
       chartData: communicationsChartData
     }
   };
+
+  console.log("🔍 DEBUG: useFormattedMetrics - Formatted result:", result);
+
+  return result;
 };
