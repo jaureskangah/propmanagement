@@ -57,11 +57,9 @@ export const VendorList = () => {
 
       <VendorSimplifiedTabs
         vendors={filteredVendors}
-        reviews={reviews}
         onEdit={handleEdit}
         onDelete={handleDelete}
         onReview={handleOpenReviewDialog}
-        refetchReviews={refetchReviews}
       />
 
       <VendorDialogs
