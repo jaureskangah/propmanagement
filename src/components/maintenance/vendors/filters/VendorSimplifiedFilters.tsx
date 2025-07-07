@@ -39,7 +39,7 @@ export const VendorSimplifiedFilters = ({
           <div className="relative">
             <Search className="absolute left-2 top-3 h-4 w-4 text-gray-500" />
             <Input
-              placeholder="Rechercher un prestataire..."
+              placeholder={t('searchVendors')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-8"
@@ -52,10 +52,10 @@ export const VendorSimplifiedFilters = ({
           onValueChange={(value) => setSelectedSpecialty(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Toutes spécialités" />
+            <SelectValue placeholder={t('allSpecialties')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes spécialités</SelectItem>
+            <SelectItem value="all">{t('allSpecialties')}</SelectItem>
             {specialties.map(specialty => (
               <SelectItem key={specialty} value={specialty}>
                 {specialty}
@@ -69,13 +69,13 @@ export const VendorSimplifiedFilters = ({
           onValueChange={(value) => setSelectedRating(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[150px]">
-            <SelectValue placeholder="Toutes notes" />
+            <SelectValue placeholder={t('allRatings')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Toutes notes</SelectItem>
-            <SelectItem value="4">4+ étoiles</SelectItem>
-            <SelectItem value="3">3+ étoiles</SelectItem>
-            <SelectItem value="2">2+ étoiles</SelectItem>
+            <SelectItem value="all">{t('allRatings')}</SelectItem>
+            <SelectItem value="4">{t('fourPlusStars')}</SelectItem>
+            <SelectItem value="3">{t('threePlusStars')}</SelectItem>
+            <SelectItem value="2">{t('twoPlusStars')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -85,7 +85,7 @@ export const VendorSimplifiedFilters = ({
             checked={showEmergencyOnly}
             onCheckedChange={setShowEmergencyOnly}
           />
-          <Label htmlFor="emergency-only">Urgence uniquement</Label>
+          <Label htmlFor="emergency-only">{t('emergencyOnly')}</Label>
         </div>
       </div>
     </div>

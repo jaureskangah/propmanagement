@@ -28,8 +28,8 @@ export const VendorSimplifiedTabs = ({
   return (
     <Tabs defaultValue="vendors" className="space-y-4">
       <TabsList>
-        <TabsTrigger value="vendors">Prestataires</TabsTrigger>
-        <TabsTrigger value="reviews">Évaluations</TabsTrigger>
+        <TabsTrigger value="vendors">{t('vendors')}</TabsTrigger>
+        <TabsTrigger value="reviews">{t('reviews')}</TabsTrigger>
       </TabsList>
 
       <TabsContent value="vendors">

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BorderTrail } from "@/components/ui/border-trail";
@@ -30,9 +31,13 @@ export const VendorCard = ({
   
   // Données simulées pour la disponibilité
   const isAvailableNow = vendor.id.charAt(0) <= 'c'; // Juste une simulation basée sur l'ID
-  const nextAvailability = isAvailableNow 
-    ? t('availableNow')
-    : `${t('availableOn')} ${['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'][Math.floor(Math.random() * 5)]}`;
+  const getNextAvailability = () => {
+    if (isAvailableNow) return t('availableNow');
+    
+    const days = [t('monday'), t('tuesday'), t('wednesday'), t('thursday'), t('friday')];
+    const randomDay = days[Math.floor(Math.random() * days.length)];
+    return `${t('availableOn')} ${randomDay}`;
+  };
   
   // Fetch vendor documents
   const { data: documents = [] } = useQuery({
@@ -129,7 +134,7 @@ export const VendorCard = ({
             ) : (
               <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
                 <Calendar className="h-3 w-3 mr-1" />
-                {nextAvailability}
+                {getNextAvailability()}
               </Badge>
             )}
             

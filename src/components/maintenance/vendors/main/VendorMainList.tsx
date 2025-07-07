@@ -2,6 +2,7 @@
 import React from "react";
 import { VendorCard } from "../VendorCard";
 import { Vendor } from "@/types/vendor";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface VendorMainListProps {
   vendors: Vendor[];
@@ -16,11 +17,13 @@ export const VendorMainList = ({
   onDelete,
   onReview
 }: VendorMainListProps) => {
+  const { t } = useLocale();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {vendors.length === 0 ? (
         <div className="col-span-full text-center py-10 border rounded-lg border-dashed">
-          <p className="text-muted-foreground">Aucun fournisseur ne correspond à vos critères</p>
+          <p className="text-muted-foreground">{t('noVendorsMatch')}</p>
         </div>
       ) : (
         vendors.map((vendor) => (

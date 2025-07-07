@@ -5,11 +5,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { format } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { enUS, fr } from "date-fns/locale";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Star, Pencil, Trash2 } from "lucide-react";
 import { VendorReviewDialog } from "./VendorReviewDialog";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface VendorReviewListProps {
   reviews: VendorReview[];
@@ -19,14 +20,15 @@ interface VendorReviewListProps {
 export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onRefresh }) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t, language } = useLocale();
   const [editingReview, setEditingReview] = useState<VendorReview | null>(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
 
   const handleDelete = async (review: VendorReview) => {
     try {
       toast({
-        title: "Suppression en cours",
-        description: "Traitement de votre demande...",
+        title: t('deleteInProgress'),
+        description: t('processingRequest'),
       });
 
       const { error } = await supabase
@@ -37,16 +39,16 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
       if (error) throw error;
 
       toast({
-        title: "Avis supprimé",
-        description: "L'avis a été supprimé avec succès.",
+        title: t('reviewDeleted'),
+        description: t('reviewDeletedSuccess'),
       });
       
       onRefresh();
     } catch (error) {
-      console.error("Erreur lors de la suppression de l'avis:", error);
+      console.error("Error deleting review:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de la suppression de l'avis.",
+        title: t('error'),
+        description: t('errorDeletingReview'),
         variant: "destructive",
       });
     }
@@ -69,7 +71,11 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
                   {review.rating}/5
                 </CardTitle>
                 <span className="text-sm text-gray-500">
-                  {format(new Date(review.created_at), "MMMM d, yyyy", { locale: enUS })}
+                  {format(
+                    new Date(review.created_at), 
+                    "MMMM d, yyyy", 
+                    { locale: language === 'fr' ? fr : enUS }
+                  )}
                 </span>
               </div>
             </CardHeader>
@@ -77,15 +83,15 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
               <div className="space-y-4">
                 <div className="grid grid-cols-3 gap-2 text-sm">
                   <div>
-                    <p className="font-medium">Qualité</p>
+                    <p className="font-medium">{t('quality')}</p>
                     <p>{review.quality_rating}/5</p>
                   </div>
                   <div>
-                    <p className="font-medium">Prix</p>
+                    <p className="font-medium">{t('price')}</p>
                     <p>{review.price_rating}/5</p>
                   </div>
                   <div>
-                    <p className="font-medium">Ponctualité</p>
+                    <p className="font-medium">{t('punctuality')}</p>
                     <p>{review.punctuality_rating}/5</p>
                   </div>
                 </div>
@@ -100,7 +106,7 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
                       onClick={() => handleEdit(review)}
                     >
                       <Pencil className="h-4 w-4 mr-1" />
-                      Modifier
+                      {t('modify')}
                     </Button>
                     <Button
                       variant="destructive"
@@ -108,7 +114,7 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
                       onClick={() => handleDelete(review)}
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
-                      Supprimer
+                      {t('delete')}
                     </Button>
                   </div>
                 )}
