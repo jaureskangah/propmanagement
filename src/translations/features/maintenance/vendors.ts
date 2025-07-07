@@ -162,7 +162,22 @@ export const enVendors = {
   saturday: "Saturday",
   sunday: "Sunday",
   // Additional translations
-  manageVendorsAndInterventions: "Manage your vendors and their interventions"
+  manageVendorsAndInterventions: "Manage your vendors and their interventions",
+  // Review form translations
+  newReview: "New Review",
+  editReview: "Edit Review",
+  reviewFor: "Review for",
+  workQuality: "Work Quality",
+  valueForMoney: "Value for Money",
+  detailedComment: "Detailed Comment",
+  shareExperience: "Share your experience with this vendor...",
+  submitReview: "Submit Review",
+  updateReview: "Update Review",
+  reviewSubmitted: "Review submitted successfully",
+  reviewUpdated: "Review updated successfully",
+  authenticationError: "Authentication Error",
+  mustBeLoggedInToReview: "You must be logged in to submit a review",
+  errorSubmittingReview: "An error occurred while saving the review"
 };
 
 export const frVendors = {
@@ -328,5 +343,20 @@ export const frVendors = {
   saturday: "Samedi",
   sunday: "Dimanche",
   // Additional translations
-  manageVendorsAndInterventions: "Gérez vos prestataires et leurs interventions"
+  manageVendorsAndInterventions: "Gérez vos prestataires et leurs interventions",
+  // Review form translations
+  newReview: "Nouvel avis",
+  editReview: "Modifier l'avis",
+  reviewFor: "Avis pour",
+  workQuality: "Qualité du travail",
+  valueForMoney: "Rapport qualité-prix",
+  detailedComment: "Commentaire détaillé",
+  shareExperience: "Partagez votre expérience avec ce prestataire...",
+  submitReview: "Soumettre l'avis",
+  updateReview: "Mettre à jour l'avis",
+  reviewSubmitted: "Avis soumis avec succès",
+  reviewUpdated: "Avis mis à jour avec succès",
+  authenticationError: "Erreur d'authentification",
+  mustBeLoggedInToReview: "Vous devez être connecté pour soumettre un avis",
+  errorSubmittingReview: "Une erreur est survenue lors de l'enregistrement de l'avis"
 };

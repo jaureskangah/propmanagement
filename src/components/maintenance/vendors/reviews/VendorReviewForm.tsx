@@ -9,6 +9,7 @@ import { VendorReview } from "@/types/vendor";
 import { RatingFields } from "./form/RatingFields";
 import { CommentField } from "./form/CommentField";
 import { FormActions } from "./form/FormActions";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface VendorReviewFormProps {
   vendorId: string;
@@ -25,6 +26,7 @@ export const VendorReviewForm = ({
 }: VendorReviewFormProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLocale();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm({
@@ -40,8 +42,8 @@ export const VendorReviewForm = ({
     try {
       if (!user?.id) {
         toast({
-          title: "Erreur d'authentification",
-          description: "Vous devez être connecté pour soumettre un avis.",
+          title: t('authenticationError'),
+          description: t('mustBeLoggedInToReview'),
           variant: "destructive",
         });
         return;
@@ -67,8 +69,8 @@ export const VendorReviewForm = ({
         if (error) throw error;
 
         toast({
-          title: "Avis mis à jour",
-          description: "Votre avis a été mis à jour avec succès.",
+          title: t('success'),
+          description: t('reviewUpdated'),
         });
       } else {
         const { error } = await supabase
@@ -78,8 +80,8 @@ export const VendorReviewForm = ({
         if (error) throw error;
 
         toast({
-          title: "Avis ajouté",
-          description: "Votre avis a été soumis avec succès.",
+          title: t('success'),
+          description: t('reviewSubmitted'),
         });
       }
       
@@ -87,8 +89,8 @@ export const VendorReviewForm = ({
     } catch (error) {
       console.error("Erreur lors de la soumission de l'avis:", error);
       toast({
-        title: "Erreur",
-        description: "Une erreur est survenue lors de l'enregistrement de l'avis.",
+        title: t('error'),
+        description: t('errorSubmittingReview'),
         variant: "destructive",
       });
     } finally {

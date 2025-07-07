@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Dialog,
@@ -7,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { VendorReviewForm } from "./VendorReviewForm";
 import { VendorReview } from "@/types/vendor";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface VendorReviewDialogProps {
   open: boolean;
@@ -25,13 +27,15 @@ export const VendorReviewDialog = ({
   initialData,
   onSuccess,
 }: VendorReviewDialogProps) => {
+  const { t } = useLocale();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {initialData ? "Edit Review" : "New Review"}
-            {vendorName && ` for ${vendorName}`}
+            {initialData ? t('editReview') : t('newReview')}
+            {vendorName && ` ${t('reviewFor')} ${vendorName}`}
           </DialogTitle>
         </DialogHeader>
         <VendorReviewForm

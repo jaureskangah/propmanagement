@@ -1,12 +1,16 @@
+
 import { FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
 import { UseFormReturn } from "react-hook-form";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface RatingFieldsProps {
   form: UseFormReturn<any>;
 }
 
 export const RatingFields = ({ form }: RatingFieldsProps) => {
+  const { t } = useLocale();
+
   return (
     <>
       <FormField
@@ -14,7 +18,7 @@ export const RatingFields = ({ form }: RatingFieldsProps) => {
         name="qualityRating"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Work Quality</FormLabel>
+            <FormLabel>{t('workQuality')}</FormLabel>
             <FormControl>
               <div className="flex items-center gap-4">
                 <Slider
@@ -37,7 +41,7 @@ export const RatingFields = ({ form }: RatingFieldsProps) => {
         name="priceRating"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Value for Money</FormLabel>
+            <FormLabel>{t('valueForMoney')}</FormLabel>
             <FormControl>
               <div className="flex items-center gap-4">
                 <Slider
@@ -60,7 +64,7 @@ export const RatingFields = ({ form }: RatingFieldsProps) => {
         name="punctualityRating"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Punctuality</FormLabel>
+            <FormLabel>{t('punctuality')}</FormLabel>
             <FormControl>
               <div className="flex items-center gap-4">
                 <Slider
