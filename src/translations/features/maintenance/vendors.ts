@@ -92,7 +92,7 @@ export const enVendors = {
   reviewsPlural: "reviews",
   available: "Available",
   unavailable: "Unavailable",
-  // New translations for form
+  // Form translations
   enterVendorName: "Enter vendor name",
   enterVendorSpecialty: "Enter vendor specialty",
   enterPhoneNumber: "Enter phone number",
@@ -106,7 +106,7 @@ export const enVendors = {
   update: "Update",
   mustBeLoggedIn: "You must be logged in to perform this action",
   errorSavingVendor: "An error occurred while saving",
-  // New dialog translations
+  // Dialog translations
   addNewVendor: "Add New Vendor",
   editVendor: "Edit Vendor",
   fillVendorDescription: "Fill in the vendor's information below.",
@@ -137,17 +137,16 @@ export const enVendors = {
   interventionCalendar: "Intervention Calendar",
   interventionHistory: "Intervention History",
   scheduledIntervention: "Scheduled Intervention",
-  // New translations for filters and search
+  // Filters and search translations
   searchVendors: "Search vendors...",
   filterByRating: "Filter by rating",
-  allRatings: "All ratings",
   fourPlusStars: "4+ stars",
   threePlusStars: "3+ stars",
   twoPlusStars: "2+ stars",
   emergencyOnly: "Emergency only",
-  // New translations for vendor list
+  // Vendor list translations
   noVendorsMatch: "No vendors match your criteria",
-  // New translations for reviews
+  // Review translations
   deleteInProgress: "Deletion in progress",
   processingRequest: "Processing your request...",
   reviewDeleted: "Review deleted",
@@ -161,7 +160,9 @@ export const enVendors = {
   thursday: "Thursday",
   friday: "Friday",
   saturday: "Saturday",
-  sunday: "Sunday"
+  sunday: "Sunday",
+  // Additional translations
+  manageVendorsAndInterventions: "Manage your vendors and their interventions"
 };
 
 export const frVendors = {
@@ -257,7 +258,7 @@ export const frVendors = {
   reviewsPlural: "avis",
   available: "Disponible",
   unavailable: "Indisponible",
-  // New translations for form
+  // Form translations
   enterVendorName: "Entrez le nom du prestataire",
   enterVendorSpecialty: "Entrez la spécialité du prestataire",
   enterPhoneNumber: "Entrez le numéro de téléphone",
@@ -271,7 +272,7 @@ export const frVendors = {
   update: "Mettre à jour",
   mustBeLoggedIn: "Vous devez être connecté pour effectuer cette action",
   errorSavingVendor: "Une erreur est survenue lors de l'enregistrement",
-  // New dialog translations
+  // Dialog translations
   addNewVendor: "Ajouter un nouveau prestataire",
   editVendor: "Modifier le prestataire",
   fillVendorDescription: "Remplissez les informations du prestataire ci-dessous.",
@@ -302,17 +303,16 @@ export const frVendors = {
   interventionCalendar: "Calendrier des interventions",
   interventionHistory: "Historique des interventions",
   scheduledIntervention: "Intervention planifiée",
-  // New translations for filters and search
+  // Filters and search translations
   searchVendors: "Rechercher un prestataire...",
   filterByRating: "Filtrer par note",
-  allRatings: "Toutes les notes",
   fourPlusStars: "4+ étoiles",
   threePlusStars: "3+ étoiles",
   twoPlusStars: "2+ étoiles",
   emergencyOnly: "Urgence uniquement",
-  // New translations for vendor list
+  // Vendor list translations
   noVendorsMatch: "Aucun prestataire ne correspond à vos critères",
-  // New translations for reviews
+  // Review translations
   deleteInProgress: "Suppression en cours",
   processingRequest: "Traitement de votre demande...",
   reviewDeleted: "Avis supprimé",
@@ -326,5 +326,7 @@ export const frVendors = {
   thursday: "Jeudi",
   friday: "Vendredi",
   saturday: "Samedi",
-  sunday: "Dimanche"
+  sunday: "Dimanche",
+  // Additional translations
+  manageVendorsAndInterventions: "Gérez vos prestataires et leurs interventions"
 };
