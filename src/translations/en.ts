@@ -9,6 +9,7 @@ import { enAuth } from './features/auth';
 import { enFinances } from './features/finances';
 import { enMaintenance } from './features/maintenance';
 import { enTenant } from './features/tenant';
+import { enSettings } from './features/settings';
 
 // Support extensions
 const supportExtensions = {
@@ -33,6 +34,7 @@ const baseTranslations = {
   ...enFinances,
   ...enMaintenance,
   ...enTenant,
+  ...enSettings,
   ...supportExtensions,
 };
 

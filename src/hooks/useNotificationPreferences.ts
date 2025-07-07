@@ -4,11 +4,13 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { Profile } from "@/types/profile";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const useNotificationPreferences = (profile: Profile | null) => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   const updatePreference = async (
     type: 'push_notifications' | 'email_updates', 
@@ -26,14 +28,14 @@ export const useNotificationPreferences = (profile: Profile | null) => {
       if (error) throw error;
 
       toast({
-        title: "Préférences mises à jour",
-        description: "Vos préférences de notification ont été sauvegardées",
+        title: t('preferencesUpdated'),
+        description: t('preferencesUpdatedMessage'),
       });
     } catch (error) {
       console.error('Error updating preferences:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de mettre à jour les préférences",
+        title: t('error'),
+        description: t('preferencesUpdateError'),
         variant: "destructive",
       });
     } finally {

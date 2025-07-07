@@ -4,12 +4,14 @@ import { useAuth } from "@/components/AuthProvider";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { Profile } from "@/types/profile";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const useProfileData = () => {
   const { user } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState<Profile | null>(null);
   const { toast } = useToast();
+  const { t } = useLocale();
 
   useEffect(() => {
     if (user) {
@@ -50,8 +52,8 @@ export const useProfileData = () => {
     } catch (error) {
       console.error('Error fetching profile:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de charger le profil",
+        title: t('error'),
+        description: t('profileUpdateError'),
         variant: "destructive",
       });
     } finally {
@@ -77,14 +79,14 @@ export const useProfileData = () => {
       setProfile({ ...profile, ...updates });
       
       toast({
-        title: "Profil mis à jour",
-        description: "Vos informations ont été sauvegardées avec succès",
+        title: t('profileUpdated'),
+        description: t('preferencesUpdatedMessage'),
       });
     } catch (error) {
       console.error('Error updating profile:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder le profil",
+        title: t('error'),
+        description: t('profileUpdateError'),
         variant: "destructive",
       });
     } finally {

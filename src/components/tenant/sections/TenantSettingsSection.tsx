@@ -51,14 +51,14 @@ export const TenantSettingsSection = ({
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('settings')}</h2>
-            <p className="text-gray-600">Gérez vos préférences et informations personnelles</p>
+            <p className="text-gray-600">{t('profileDescription')}</p>
           </div>
 
           {/* Profile Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Profil</CardTitle>
-              <CardDescription>Vos informations personnelles</CardDescription>
+              <CardTitle>{t('profile')}</CardTitle>
+              <CardDescription>{t('profileDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <ProfileSection 
@@ -73,8 +73,8 @@ export const TenantSettingsSection = ({
           {/* Language Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Langue</CardTitle>
-              <CardDescription>Choisissez votre langue préférée</CardDescription>
+              <CardTitle>{t('language')}</CardTitle>
+              <CardDescription>{t('languageDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <LanguageSection />
@@ -84,8 +84,8 @@ export const TenantSettingsSection = ({
           {/* Appearance Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Apparence</CardTitle>
-              <CardDescription>Personnalisez l'apparence de l'interface</CardDescription>
+              <CardTitle>{t('appearance')}</CardTitle>
+              <CardDescription>{t('appearanceDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <AppearanceSection 
@@ -98,8 +98,8 @@ export const TenantSettingsSection = ({
           {/* Notifications Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>Gérez vos préférences de notification</CardDescription>
+              <CardTitle>{t('notifications')}</CardTitle>
+              <CardDescription>{t('notificationsDescription')}</CardDescription>
             </CardHeader>
             <CardContent>
               <NotificationsSection 
