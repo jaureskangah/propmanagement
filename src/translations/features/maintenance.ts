@@ -1,8 +1,9 @@
+import { enVendors, frVendors } from './maintenance/vendors';
 
 export const enMaintenance = {
   // Main sections
   maintenance: "Maintenance",
-  maintenanceManagement: "Maintenance Management",
+  maintenanceManagement: "Maintenance Management", 
   maintenanceRequests: "Maintenance Requests",
   maintenanceRequest: "Maintenance Request",
   newMaintenanceRequest: "New Maintenance Request",
@@ -189,11 +190,12 @@ export const enMaintenance = {
   batchAdd: "Batch Scheduling",
   recurringTask: "Recurring Task",
   setReminder: "Set Reminder",
-  
-  // New keys for fixing untranslated texts
   errorAddingTask: "Error adding task",
   saving: "Saving...",
   property: "Property",
+  
+  // Intégrer toutes les traductions des prestataires
+  ...enVendors,
 };
 
 export const frMaintenance = {
@@ -286,30 +288,20 @@ export const frMaintenance = {
   totalExpenses: "Total des Dépenses",
   averageMonthlyExpenses: "Dépenses Mensuelles Moyennes",
   thisMonth: "Ce Mois",
-
-  // Titres des graphiques et tendances
   maintenanceRequestsTrends: "Tendances des Demandes de Maintenance",
   maintenanceExpensesTrends: "Tendances des Dépenses de Maintenance",
-  
-  // Labels des métriques des graphiques
   totalMaintenanceRequests: "Nombre Total de Demandes",
   completedMaintenanceRequests: "Demandes Terminées",
   urgentMaintenanceRequests: "Demandes Urgentes",
   maintenanceExpenses: "Dépenses de Maintenance",
-  
-  // Labels des données des graphiques
   requests: "Demandes",
   completed: "Terminées",
   urgent: "Urgentes",
   expenses: "Dépenses",
-
-  // Section des tâches
   maintenanceTasks: "Tâches de maintenance",
   maintenanceTasksDescription: "Planifiez et suivez vos tâches de maintenance",
   loadingProperties: "Chargement des propriétés...",
   newTask: "Nouvelle tâche",
-  
-  // Gestion des tâches
   taskTitle: "Titre de la tâche",
   deadline: "Date limite",
   taskType: "Type de tâche",
@@ -386,9 +378,10 @@ export const frMaintenance = {
   batchAdd: "Planification par lot",
   recurringTask: "Tâche récurrente",
   setReminder: "Définir un rappel",
-  
-  // Nouvelles clés pour corriger les textes non traduits
   errorAddingTask: "Erreur lors de l'ajout de la tâche",
   saving: "Enregistrement...",
   property: "Propriété",
+  
+  // Intégrer toutes les traductions des prestataires
+  ...frVendors,
 };

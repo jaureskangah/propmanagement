@@ -1,8 +1,10 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Star } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface VendorFiltersProps {
   specialties: string[];
@@ -27,12 +29,14 @@ export const VendorFilters = ({
   showEmergencyOnly,
   onEmergencyChange,
 }: VendorFiltersProps) => {
+  const { t } = useLocale();
+
   return (
     <div className="space-y-4">
       <div className="relative">
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search vendors..."
+          placeholder={t('searchVendors')}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-8"
@@ -44,7 +48,7 @@ export const VendorFilters = ({
           variant={selectedSpecialty === null ? "default" : "outline"}
           onClick={() => onSpecialtyChange(null)}
         >
-          All specialties
+          {t('allSpecialties')}
         </Button>
         {specialties.map(specialty => (
           <Button
@@ -63,13 +67,13 @@ export const VendorFilters = ({
           onValueChange={(value) => onRatingChange(value === "all" ? null : value)}
         >
           <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Filter by rating" />
+            <SelectValue placeholder={t('filterByRating')} />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All ratings</SelectItem>
-            <SelectItem value="4">4+ stars</SelectItem>
-            <SelectItem value="3">3+ stars</SelectItem>
-            <SelectItem value="2">2+ stars</SelectItem>
+            <SelectItem value="all">{t('allRatings')}</SelectItem>
+            <SelectItem value="4">{t('fourPlusStars')}</SelectItem>
+            <SelectItem value="3">{t('threePlusStars')}</SelectItem>
+            <SelectItem value="2">{t('twoPlusStars')}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -78,7 +82,7 @@ export const VendorFilters = ({
           onClick={() => onEmergencyChange(!showEmergencyOnly)}
           className="gap-2"
         >
-          {showEmergencyOnly ? "All vendors" : "Emergency contacts only"}
+          {showEmergencyOnly ? t('allVendors') : t('emergencyOnly')}
         </Button>
       </div>
     </div>
