@@ -28,13 +28,11 @@ export const DataTables = ({ propertyId, expenses, allExpenses = [] }: DataTable
 
   return (
     <div className="space-y-6">
-      {/* Expenses Table - Show expenses from maintenance_expenses */}
-      {expenses.length > 0 && (
-        <ExpensesTable 
-          expenses={expenses}
-          propertyId={propertyId}
-        />
-      )}
+      {/* Expenses Table - Always show the table, even when no expenses */}
+      <ExpensesTable 
+        expenses={expenses}
+        propertyId={propertyId}
+      />
     </div>
   );
 };
