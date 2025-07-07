@@ -10,6 +10,7 @@ import { RatingFields } from "./form/RatingFields";
 import { CommentField } from "./form/CommentField";
 import { FormActions } from "./form/FormActions";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface VendorReviewFormProps {
   vendorId: string;
@@ -27,6 +28,7 @@ export const VendorReviewForm = ({
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useLocale();
+  const queryClient = useQueryClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm({
@@ -84,6 +86,10 @@ export const VendorReviewForm = ({
           description: t('reviewSubmitted'),
         });
       }
+      
+      // Invalider les caches pour rafraîchir les données
+      await queryClient.invalidateQueries({ queryKey: ['vendors'] });
+      await queryClient.invalidateQueries({ queryKey: ['vendor_reviews'] });
       
       onSuccess();
     } catch (error) {

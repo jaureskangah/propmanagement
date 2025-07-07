@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Star, Pencil, Trash2 } from "lucide-react";
 import { VendorReviewDialog } from "./VendorReviewDialog";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface VendorReviewListProps {
   reviews: VendorReview[];
@@ -21,6 +22,7 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
   const { toast } = useToast();
   const { user } = useAuth();
   const { t, language } = useLocale();
+  const queryClient = useQueryClient();
   const [editingReview, setEditingReview] = useState<VendorReview | null>(null);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
 
@@ -43,6 +45,10 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
         description: t('reviewDeletedSuccess'),
       });
       
+      // Invalider les caches pour rafraîchir les données des prestataires
+      await queryClient.invalidateQueries({ queryKey: ['vendors'] });
+      await queryClient.invalidateQueries({ queryKey: ['vendor_reviews'] });
+      
       onRefresh();
     } catch (error) {
       console.error("Error deleting review:", error);
@@ -57,6 +63,14 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
   const handleEdit = (review: VendorReview) => {
     setEditingReview(review);
     setReviewDialogOpen(true);
+  };
+
+  const handleEditSuccess = async () => {
+    setReviewDialogOpen(false);
+    setEditingReview(null);
+    // Invalider les caches pour rafraîchir les données des prestataires
+    await queryClient.invalidateQueries({ queryKey: ['vendors'] });
+    onRefresh();
   };
 
   return (
@@ -130,11 +144,7 @@ export const VendorReviewList: React.FC<VendorReviewListProps> = ({ reviews, onR
           onOpenChange={setReviewDialogOpen}
           vendorId={editingReview.vendor_id}
           initialData={editingReview}
-          onSuccess={() => {
-            setReviewDialogOpen(false);
-            setEditingReview(null);
-            onRefresh();
-          }}
+          onSuccess={handleEditSuccess}
         />
       )}
     </>
