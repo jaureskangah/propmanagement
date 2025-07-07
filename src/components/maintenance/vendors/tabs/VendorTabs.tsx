@@ -3,16 +3,14 @@ import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VendorMainContent } from "../main/VendorMainContent";
 import { EmergencyContactList } from "../emergency/EmergencyContactList";
-import { VendorReviewList } from "../reviews/VendorReviewList";
 import { InterventionHistory } from "../interventions/InterventionHistory";
 import { VendorAppointmentsTab } from "../appointments/VendorAppointmentsTab";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Vendor, VendorReview } from "@/types/vendor";
+import { Vendor } from "@/types/vendor";
 
 interface VendorTabsProps {
   vendors: Vendor[];
   emergencyContacts: Vendor[];
-  reviews: VendorReview[];
   filteredVendors: Vendor[];
   specialties: string[];
   selectedSpecialty: string | null;
@@ -30,13 +28,11 @@ interface VendorTabsProps {
   onEdit: (vendor: Vendor) => void;
   onDelete: (vendor: Vendor) => void;
   onReview: (vendor: { id: string; name: string }) => void;
-  refetchReviews: () => void;
 }
 
 export const VendorTabs = ({
   vendors,
   emergencyContacts,
-  reviews,
   filteredVendors,
   specialties,
   selectedSpecialty,
@@ -53,8 +49,7 @@ export const VendorTabs = ({
   onAvailabilityChange,
   onEdit,
   onDelete,
-  onReview,
-  refetchReviews
+  onReview
 }: VendorTabsProps) => {
   const { t } = useLocale();
 
@@ -64,7 +59,6 @@ export const VendorTabs = ({
         <TabsTrigger value="all">{t('allVendors')}</TabsTrigger>
         <TabsTrigger value="emergency">{t('emergencyContacts')}</TabsTrigger>
         <TabsTrigger value="appointments">{t('appointments')}</TabsTrigger>
-        <TabsTrigger value="reviews">{t('reviews')}</TabsTrigger>
         <TabsTrigger value="history">{t('history')}</TabsTrigger>
       </TabsList>
 
@@ -99,13 +93,6 @@ export const VendorTabs = ({
       </TabsContent>
       
       <VendorAppointmentsTab vendors={filteredVendors} />
-
-      <TabsContent value="reviews">
-        <VendorReviewList
-          reviews={reviews}
-          onRefresh={refetchReviews}
-        />
-      </TabsContent>
 
       <TabsContent value="history">
         <InterventionHistory />
