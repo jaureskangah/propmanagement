@@ -9,6 +9,7 @@ import { frAuth } from './features/auth';
 import { frFinances } from './features/finances';
 import { frMaintenance } from './features/maintenance';
 import { frTenant } from './features/tenant';
+import { frSettings } from './features/settings';
 
 // Extensions de support
 const supportExtensions = {
@@ -33,6 +34,7 @@ const baseTranslations = {
   ...frFinances,
   ...frMaintenance,
   ...frTenant,
+  ...frSettings,
   ...supportExtensions,
 };
 
