@@ -95,8 +95,8 @@ export const TenantMaintenance = ({
             requests.map((request) => (
               <div
                 key={request.id}
-                className={`flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 ${
-                  !request.tenant_notified ? 'bg-yellow-50' : ''
+                className={`flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors ${
+                  !request.tenant_notified ? 'bg-yellow-50 dark:bg-yellow-950/30' : ''
                 }`}
               >
                 <div className="flex items-center gap-3">

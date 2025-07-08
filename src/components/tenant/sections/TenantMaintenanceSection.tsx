@@ -20,7 +20,7 @@ export const TenantMaintenanceSection = ({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      <div className="bg-gradient-to-br from-orange-50 via-white to-red-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+      <div className="bg-gradient-to-br from-orange-50/50 via-card to-red-50/50 dark:from-orange-950/20 dark:via-card dark:to-red-950/20 rounded-2xl p-6 border border-border shadow-sm">
         <TenantMaintenance 
           requests={requests}
           tenantId={tenantId}
