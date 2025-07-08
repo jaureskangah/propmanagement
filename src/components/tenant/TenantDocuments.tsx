@@ -95,7 +95,7 @@ export const TenantDocuments = ({
                   className="flex items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 text-blue-700">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300">
                       <FileText className="h-5 w-5" />
                     </div>
                     <div>
@@ -111,7 +111,7 @@ export const TenantDocuments = ({
                       size="icon"
                       onClick={() => handleDownload(doc.file_url!, doc.name)}
                       title={t('downloadDocument')}
-                      className="hover:text-blue-600 hover:bg-blue-50"
+                      className="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                     >
                       <Download className="h-4 w-4" />
                     </Button>
@@ -120,7 +120,7 @@ export const TenantDocuments = ({
                       size="icon"
                       asChild
                       title={t('openDocument')}
-                      className="hover:text-blue-600 hover:bg-blue-50"
+                      className="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30"
                     >
                       <a 
                         href={doc.file_url} 
@@ -134,7 +134,7 @@ export const TenantDocuments = ({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleDelete(doc.id, doc.name)}
-                      className="hover:text-red-600 hover:bg-red-50"
+                      className="hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/30"
                       title={t('confirmDeleteDocument')}
                     >
                       <Trash2 className="h-4 w-4" />

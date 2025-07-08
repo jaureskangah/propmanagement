@@ -39,7 +39,7 @@ export const TenantDocumentsSection = ({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      <div className="bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+      <div className="bg-gradient-to-br from-blue-50/50 via-card to-purple-50/50 dark:from-blue-950/20 dark:via-card dark:to-purple-950/20 rounded-2xl p-6 border border-border shadow-sm">
         <TenantDocuments 
           documents={documents}
           tenantId={tenantId}
