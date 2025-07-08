@@ -34,12 +34,12 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
   // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {
     if (isTenant) {
-      // Menu limité pour les locataires
+      // Menu pour les locataires - tous pointent vers /tenant/dashboard avec des sections
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
-        { to: "/tenant/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-        { to: "/tenant/documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
-        { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
+        { to: "/tenant/dashboard?section=maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
+        { to: "/tenant/dashboard?section=documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
+        { to: "/tenant/dashboard?section=settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
       ];
     }
     
@@ -55,7 +55,13 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
     ];
   }, [isTenant, t]);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (isTenant && path.startsWith("/tenant/dashboard")) {
+      // Pour les liens tenant, vérifier si on est sur la page tenant/dashboard
+      return location.pathname === "/tenant/dashboard";
+    }
+    return location.pathname === path;
+  };
   
   // Don't wrap with tooltips when not needed
   if (!tooltipEnabled) {

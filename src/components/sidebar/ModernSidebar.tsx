@@ -31,9 +31,9 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
     if (isTenant) {
       return [
         { to: "/tenant/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard') },
-        { to: "/tenant/maintenance", icon: Wrench, label: "Maintenance" },
-        { to: "/tenant/documents", icon: FileText, label: String(t('documentsLabel') || 'Documents') },
-        { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
+        { to: "/tenant/dashboard?section=maintenance", icon: Wrench, label: "Maintenance" },
+        { to: "/tenant/dashboard?section=documents", icon: FileText, label: String(t('documentsLabel') || 'Documents') },
+        { to: "/tenant/dashboard?section=settings", icon: Settings, label: String(t('settings') || 'Settings') }
       ];
     }
     
@@ -48,7 +48,13 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
     ];
   }, [isTenant, t]);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (isTenant && path.startsWith("/tenant/dashboard")) {
+      // Pour les liens tenant, vérifier si on est sur la page tenant/dashboard
+      return location.pathname === "/tenant/dashboard";
+    }
+    return location.pathname === path;
+  };
 
   const handleSupportClick = () => {
     window.open('mailto:contact@propmanagement.app', '_blank');
