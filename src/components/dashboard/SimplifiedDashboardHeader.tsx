@@ -4,10 +4,10 @@ import { DashboardDateFilter, DateRange } from "./DashboardDateFilter";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useAuth } from "@/components/AuthProvider";
 import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
-import { Moon, Sun, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 interface SimplifiedDashboardHeaderProps {
   title: string;
@@ -17,7 +17,6 @@ interface SimplifiedDashboardHeaderProps {
 export const SimplifiedDashboardHeader = ({ title, onDateRangeChange }: SimplifiedDashboardHeaderProps) => {
   const { t } = useLocale();
   const { user } = useAuth();
-  const { theme, setTheme } = useTheme();
   const { toast } = useToast();
   const [displayName, setDisplayName] = useState<string>("");
   
@@ -69,11 +68,6 @@ export const SimplifiedDashboardHeader = ({ title, onDateRangeChange }: Simplifi
     onDateRangeChange(newDateRange);
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-  };
-
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
@@ -88,16 +82,7 @@ export const SimplifiedDashboardHeader = ({ title, onDateRangeChange }: Simplifi
         </div>
         <div className="flex items-center gap-2">
           <DashboardDateFilter onDateRangeChange={handleDateRangeChange} />
-          <Button 
-            variant="outline" 
-            size="icon" 
-            onClick={toggleTheme} 
-            type="button"
-            className="h-9 w-9"
-            title={theme === "dark" ? t('lightMode') : t('darkMode')}
-          >
-            {theme === "dark" ? <Sun className="h-4 w-4 text-amber-400" /> : <Moon className="h-4 w-4" />}
-          </Button>
+          <ThemeToggle />
         </div>
       </div>
     </div>
