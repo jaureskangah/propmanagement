@@ -1,12 +1,11 @@
 
-import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Moon, Sun } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
-import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   Tooltip,
   TooltipContent,
@@ -27,7 +26,6 @@ export function DashboardHeader({
   refreshDashboard
 }: DashboardHeaderProps) {
   const { t } = useLocale();
-  const { theme, setTheme } = useTheme();
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
   
@@ -70,12 +68,6 @@ export function DashboardHeader({
     ? t('welcomeTenant', { name: displayName })
     : t('welcomeGeneric');
   
-  const toggleTheme = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    console.log("Tenant dashboard toggling theme to:", newTheme);
-    setTheme(newTheme);
-  };
-  
   return (
     <div className="mb-8 bg-gradient-to-r from-background to-muted/30 backdrop-blur-sm p-6 rounded-xl border border-border/40 shadow-sm dark:border-gray-800/60 dark:from-gray-900 dark:to-gray-900/80 dark-shadow-sm">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -106,21 +98,12 @@ export function DashboardHeader({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  onClick={toggleTheme}
-                  className="h-9 w-9 hover:bg-blue-50 hover:text-blue-700 transition-all dark:border-gray-800 dark:hover:bg-gray-800 dark:hover:text-blue-400 dark:bg-gray-900/60"
-                >
-                  {theme === "dark" ? (
-                    <Sun className="h-4 w-4 text-amber-400" />
-                  ) : (
-                    <Moon className="h-4 w-4" />
-                  )}
-                </Button>
+                <div>
+                  <ThemeToggle className="hover:scale-105 transition-transform" />
+                </div>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="dark:bg-gray-900 dark:border-gray-800">
-                {theme === "dark" ? t('lightMode') : t('darkMode')}
+                {t('toggleTheme', 'Changer de thème')}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
