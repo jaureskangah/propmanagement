@@ -1,9 +1,8 @@
-
 export const enTenant = {
   // Dashboard and welcome
   welcomeTenant: "Welcome, {name}",
   welcomeGeneric: "Welcome to your dashboard",
-  manageApartmentInfo: "Manage your apartment information and communications",
+  manageApartmentInfo: "Manage your apartment information and maintenance",
   
   // Tenant profile and basic info
   tenant: "Tenant",
@@ -194,7 +193,7 @@ export const frTenant = {
   // Tableau de bord et bienvenue
   welcomeTenant: "Bienvenue, {name}",
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
-  manageApartmentInfo: "Gérez les informations de votre appartement et communications",
+  manageApartmentInfo: "Gérez les informations et les maintenances de votre appartement",
   
   // Profil locataire et infos de base
   tenant: "Locataire",

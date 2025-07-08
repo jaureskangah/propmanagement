@@ -2,7 +2,7 @@
 export const frDashboard = {
   welcomeTenant: "Bienvenue, {name}",
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
-  manageApartmentInfo: "Gérez les informations et communications de votre appartement",
+  manageApartmentInfo: "Gérez les informations et les maintenances de votre appartement",
   noTenantProfile: "Aucun profil locataire lié",
   noTenantProfileDescription: "Veuillez contacter votre gestionnaire immobilier pour lier votre compte à un profil locataire.",
   notifications: "Notifications",
