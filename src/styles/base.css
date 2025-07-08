@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
@@ -90,11 +91,11 @@
 
 @layer utilities {
   .glass-card {
-    @apply bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-white/20 dark:border-gray-800/30 shadow-lg;
+    @apply bg-card/80 dark:bg-card/80 backdrop-blur-sm border border-border shadow-lg;
   }
 
   .glass-effect {
-    @apply backdrop-blur-md bg-white/5 border border-white/10 dark:border-gray-800/30;
+    @apply backdrop-blur-md bg-card/5 border border-border;
   }
 
   .hover-lift {
