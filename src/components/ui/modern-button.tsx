@@ -4,18 +4,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
-interface ModernButtonProps extends React.ComponentProps<"button"> {
+interface ModernButtonProps {
   isLoading?: boolean;
   variant?: 'primary' | 'secondary' | 'glass';
   children: React.ReactNode;
+  className?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
 }
 
 export function ModernButton({ 
   className, 
   isLoading = false, 
   variant = 'primary',
-  children, 
-  ...props 
+  children,
+  onClick,
+  type = 'button',
+  disabled = false,
+  ...props
 }: ModernButtonProps) {
   const baseClasses = "w-full relative group/button h-10 rounded-lg transition-all duration-300 flex items-center justify-center font-medium text-sm";
   
@@ -29,8 +36,10 @@ export function ModernButton({
     <motion.button
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
-      disabled={isLoading}
+      disabled={isLoading || disabled}
       className={cn(baseClasses, variantClasses[variant], className)}
+      onClick={onClick}
+      type={type}
       {...props}
     >
       {/* Button glow effect */}
