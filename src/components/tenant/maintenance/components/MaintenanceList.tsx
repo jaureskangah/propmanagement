@@ -64,17 +64,25 @@ export const MaintenanceList = ({
     }
   };
 
-  // Translate status for display
+  // Translate status for display - CORRECTION CRITIQUE
   const translateStatus = (status: string) => {
+    console.log("🔍 Translating status:", status, "in language:", language);
+    
     if (language === 'fr') {
-      switch(status) {
-        case "Resolved": return "Résolue";
-        case "In Progress": return "En cours";
-        case "Pending": return "En attente";
+      switch(status.toLowerCase()) {
+        case "resolved": return t('resolved');
+        case "in progress": return t('inProgress');
+        case "pending": return t('pending');
         default: return status;
       }
     }
-    return status;
+    // Pour l'anglais, utiliser les traductions aussi pour la cohérence
+    switch(status.toLowerCase()) {
+      case "resolved": return t('resolved');
+      case "in progress": return t('inProgress');
+      case "pending": return t('pending');
+      default: return status;
+    }
   };
 
   return (
@@ -124,7 +132,7 @@ export const MaintenanceList = ({
             <Badge
               variant="secondary"
               className={cn(
-                "flex items-center gap-1",
+                "flex items-center gap-1 text-white",
                 getStatusColor(request.status)
               )}
             >
