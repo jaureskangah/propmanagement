@@ -14,8 +14,8 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
   // For 3D card effect - simplified for better scroll compatibility
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rotateX = useTransform(mouseY, [-300, 300], [2, -2]); // Reduced rotation
-  const rotateY = useTransform(mouseX, [-300, 300], [-2, 2]); // Reduced rotation
+  const rotateX = useTransform(mouseY, [-300, 300], [1, -1]); // Further reduced rotation
+  const rotateY = useTransform(mouseX, [-300, 300], [-1, 1]); // Further reduced rotation
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -74,27 +74,23 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
       <div className="absolute left-1/4 top-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse opacity-40" />
       <div className="absolute right-1/4 bottom-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse delay-1000 opacity-40" />
 
-      {/* Centered container with scroll support */}
-      <div className="flex flex-col min-h-screen py-8 px-4">
-        {/* Flexible spacer for vertical centering */}
-        <div className="flex-1 min-h-0" />
-        
+      {/* Simplified container with natural centering */}
+      <div className="flex justify-center items-start min-h-screen px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full max-w-md mx-auto relative z-10 my-auto"
+          className="w-full max-w-md relative z-10 mt-8 mb-8"
         >
           <motion.div
             className="relative"
             style={{ 
               rotateX, 
-              rotateY,
-              transformStyle: 'preserve-3d'
+              rotateY
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            whileHover={{ z: 10 }}
+            whileHover={{ z: 5 }}
           >
             <div className="relative group">
               {/* Card glow effect */}
@@ -292,7 +288,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
               {/* Card border glow */}
               <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-r from-white/3 via-white/7 to-white/3 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
               
-              {/* Glass card background with proper dimensions */}
+              {/* Glass card background */}
               <div className={cn("relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/[0.05] shadow-2xl", className)}>
                 {/* Subtle card inner patterns */}
                 <div className="absolute inset-0 opacity-[0.03]" 
@@ -302,7 +298,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
 
-                {/* Content with natural scrolling */}
+                {/* Content */}
                 <div className="p-6">
                   {children}
                 </div>
@@ -310,9 +306,6 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
             </div>
           </motion.div>
         </motion.div>
-        
-        {/* Flexible spacer for vertical centering */}
-        <div className="flex-1 min-h-0" />
       </div>
     </div>
   );
