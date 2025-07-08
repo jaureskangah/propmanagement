@@ -1,3 +1,4 @@
+
 'use client'
 import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
@@ -30,7 +31,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black relative overflow-y-auto">
+    <div className="w-full bg-black relative overflow-y-scroll" style={{ height: '120vh' }}>
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-500/40 via-purple-700/50 to-black" />
       
@@ -74,13 +75,13 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
       <div className="absolute left-1/4 top-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse opacity-40" />
       <div className="absolute right-1/4 bottom-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse delay-1000 opacity-40" />
 
-      {/* Simplified container with natural centering */}
-      <div className="flex justify-center items-start min-h-screen px-4 py-8">
+      {/* Simple centered container */}
+      <div className="flex items-center justify-center px-4 py-16" style={{ minHeight: '120vh' }}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full max-w-md relative z-10 mt-8 mb-8"
+          className="w-full max-w-md relative z-10"
         >
           <motion.div
             className="relative"
