@@ -13,6 +13,17 @@ export const enAuth = {
   lastName: "Last Name",
   fullName: "Full Name",
   
+  // Welcome and descriptions
+  welcome: "Welcome to PropManagement",
+  authDescription: "Please sign in or create an account to continue",
+  
+  // Placeholders
+  enterFirstName: "Enter your first name",
+  enterLastName: "Enter your last name",
+  enterEmail: "Enter your email",
+  enterPassword: "Enter your password",
+  confirmYourPassword: "Confirm your password",
+  
   // Auth states
   signingIn: "Signing in...",
   signingUp: "Signing up...",
@@ -48,6 +59,12 @@ export const enAuth = {
   iAmATenant: "I am a tenant",
   iAmAnOwner: "I am a property owner",
   
+  // Owner specific
+  createOwnerAccount: "Create your owner account",
+  ownerAccountDescription: "Manage your properties and tenants with ease",
+  createMyOwnerAccount: "Create my owner account",
+  ownerSignupNote: "By creating an account, you are signing up as an owner. Tenants receive an email invitation.",
+  
   // Auth validation
   pleaseEnterValidEmail: "Please enter a valid email address",
   pleaseEnterPassword: "Please enter your password",
@@ -59,6 +76,10 @@ export const enAuth = {
   sendResetLink: "Send Reset Link",
   checkYourEmail: "Check your email",
   resetLinkSent: "We've sent a password reset link to your email",
+  
+  // Tabs
+  signInCta: "Sign In",
+  signUpCta: "Sign Up",
 };
 
 export const frAuth = {
@@ -74,6 +95,17 @@ export const frAuth = {
   firstName: "Prénom",
   lastName: "Nom",
   fullName: "Nom Complet",
+  
+  // Bienvenue et descriptions
+  welcome: "Bienvenue sur PropManagement",
+  authDescription: "Veuillez vous connecter ou créer un compte pour continuer",
+  
+  // Placeholders
+  enterFirstName: "Entrez votre prénom",
+  enterLastName: "Entrez votre nom",
+  enterEmail: "Entrez votre email",
+  enterPassword: "Entrez votre mot de passe",
+  confirmYourPassword: "Confirmez votre mot de passe",
   
   // États d'auth
   signingIn: "Connexion...",
@@ -110,6 +142,12 @@ export const frAuth = {
   iAmATenant: "Je suis un locataire",
   iAmAnOwner: "Je suis un propriétaire",
   
+  // Spécifique aux propriétaires
+  createOwnerAccount: "Créer un compte propriétaire",
+  ownerAccountDescription: "Gérez vos propriétés et locataires en toute simplicité",
+  createMyOwnerAccount: "Créer mon compte propriétaire",
+  ownerSignupNote: "En créant un compte, vous vous inscrivez en tant que propriétaire. Les locataires reçoivent une invitation par email.",
+  
   // Validation d'auth
   pleaseEnterValidEmail: "Veuillez entrer une adresse email valide",
   pleaseEnterPassword: "Veuillez entrer votre mot de passe",
@@ -121,4 +159,8 @@ export const frAuth = {
   sendResetLink: "Envoyer le Lien de Réinitialisation",
   checkYourEmail: "Vérifiez votre email",
   resetLinkSent: "Nous avons envoyé un lien de réinitialisation à votre email",
+  
+  // Onglets
+  signInCta: "Se Connecter",
+  signUpCta: "S'Inscrire",
 };

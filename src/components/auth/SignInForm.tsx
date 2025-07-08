@@ -72,14 +72,14 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
     } catch (error: any) {
       console.error("Sign in failed:", error);
       
-      let errorMessage = "Erreur de connexion. Vérifiez vos identifiants.";
+      let errorMessage = t('invalidCredentials');
       
       if (error.message === 'Invalid login credentials') {
-        errorMessage = "Email ou mot de passe incorrect.";
+        errorMessage = t('invalidCredentials');
       }
 
       toast({
-        title: "Erreur",
+        title: t('error'),
         description: errorMessage,
         variant: 'destructive',
       });
@@ -94,7 +94,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
         {searchParams.get('message') === 'account_created' && (
           <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-green-700">
-              ✅ Votre compte a été créé avec succès ! Vous pouvez maintenant vous connecter.
+              ✅ {t('signUpSuccess')} {t('pleaseEnterPassword')}
             </p>
           </div>
         )}
@@ -104,7 +104,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('email')}</FormLabel>
+              <FormLabel>{t('emailAddress')}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
@@ -150,10 +150,10 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           {loading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Connexion...
+              {t('signingIn')}
             </>
           ) : (
-            'Se connecter'
+            t('signIn')
           )}
         </Button>
       </form>

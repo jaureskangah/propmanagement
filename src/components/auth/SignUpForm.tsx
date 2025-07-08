@@ -54,14 +54,14 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       if (error) throw error;
 
       if (!data.user) {
-        throw new Error(t('noUserDataReturned'));
+        throw new Error(t('signUpError'));
       }
 
       toast({
         title: t('signUpSuccess'),
         description: data.session ? 
-          "Votre compte propriétaire a été créé avec succès !" : 
-          t('verifyEmailPrompt'),
+          t('signUpSuccess') : 
+          t('checkYourEmail'),
       });
 
       if (onSuccess) {
@@ -98,8 +98,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
           <p className="text-sm text-blue-700">
-            ℹ️ En créant un compte, vous vous inscrivez en tant que propriétaire. 
-            Les locataires reçoivent une invitation par email.
+            ℹ️ {t('ownerSignupNote')}
           </p>
         </div>
         
@@ -110,7 +109,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
               {t('signingUp')}
             </>
           ) : (
-            'Créer mon compte propriétaire'
+            t('createMyOwnerAccount')
           )}
         </Button>
       </form>

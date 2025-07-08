@@ -20,7 +20,7 @@ export function EmailField({ form, disabled }: EmailFieldProps) {
       name="email"
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{t('email')}</FormLabel>
+          <FormLabel>{t('emailAddress')}</FormLabel>
           <FormControl>
             <div className="relative">
               <Mail className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
