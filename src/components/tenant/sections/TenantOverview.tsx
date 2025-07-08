@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Building, Calendar, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
@@ -28,9 +29,9 @@ export const TenantOverview = ({
 
   const getLeaseStatusColor = () => {
     switch (leaseStatus.status) {
-      case 'expired': return 'bg-red-500/10 text-red-700 border-red-200';
-      case 'expiring': return 'bg-orange-500/10 text-orange-700 border-orange-200';
-      default: return 'bg-green-500/10 text-green-700 border-green-200';
+      case 'expired': return 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800';
+      case 'expiring': return 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800';
+      default: return 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800';
     }
   };
 
@@ -98,11 +99,11 @@ export const TenantOverview = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5" />
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20" />
             <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Calendar className="h-5 w-5 text-blue-600" />
+              <CardTitle className="flex items-center gap-2 text-lg text-card-foreground">
+                <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 {t('leaseStatus', 'Statut du bail')}
               </CardTitle>
             </CardHeader>
@@ -113,7 +114,7 @@ export const TenantOverview = ({
                   {getLeaseStatusText()}
                 </span>
               </div>
-              <div className="space-y-1 text-sm text-gray-600">
+              <div className="space-y-1 text-sm text-muted-foreground">
                 <p><strong>{t('leaseStart', 'Début du bail')}:</strong> {formatLeaseDate(tenant.lease_start)}</p>
                 <p><strong>{t('leaseEnd', 'Fin du bail')}:</strong> {formatLeaseDate(tenant.lease_end)}</p>
                 {leaseStatus.status !== 'expired' && (
@@ -130,22 +131,22 @@ export const TenantOverview = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5" />
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 dark:from-orange-500/20 dark:to-red-500/20" />
             <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <AlertTriangle className="h-5 w-5 text-orange-600" />
+              <CardTitle className="flex items-center gap-2 text-lg text-card-foreground">
+                <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
                 {t('maintenance', 'Maintenance')}
               </CardTitle>
             </CardHeader>
             <CardContent className="relative">
               <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-gray-900">{pendingRequests}</span>
+                <span className="text-2xl font-bold text-foreground">{pendingRequests}</span>
                 <Badge variant={pendingRequests > 0 ? "destructive" : "secondary"}>
                   {pendingRequests > 0 ? t('pending', 'En attente') : t('allGood', 'Tout va bien')}
                 </Badge>
               </div>
-              <p className="text-sm text-gray-600 mt-2">
+              <p className="text-sm text-muted-foreground mt-2">
                 {pendingRequests > 0 
                   ? `${pendingRequests} ${t('pendingRequests', 'demandes en attente').toLowerCase()}`
                   : t('noMaintenanceIssues', 'Aucun problème de maintenance')
@@ -162,19 +163,19 @@ export const TenantOverview = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card className="border-0 shadow-lg bg-gradient-to-br from-white to-gray-50">
+        <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
           <CardHeader>
-            <CardTitle className="text-lg">{t('recentActivity', 'Activité récente')}</CardTitle>
+            <CardTitle className="text-lg text-card-foreground">{t('recentActivity', 'Activité récente')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {/* Recent maintenance requests */}
               {maintenanceRequests.slice(0, 3).map((request, index) => (
-                <div key={request.id} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
-                  <AlertTriangle className="h-4 w-4 text-orange-500" />
+                <div key={request.id} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
+                  <AlertTriangle className="h-4 w-4 text-orange-500 dark:text-orange-400" />
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{request.title || request.issue}</p>
-                    <p className="text-xs text-gray-500">{formatDate(request.created_at, language)}</p>
+                    <p className="text-sm font-medium text-card-foreground">{request.title || request.issue}</p>
+                    <p className="text-xs text-muted-foreground">{formatDate(request.created_at, language)}</p>
                   </div>
                   <Badge variant="secondary" className="text-xs">
                     {/* Translate status here too */}
@@ -187,7 +188,7 @@ export const TenantOverview = ({
               ))}
 
               {maintenanceRequests.length === 0 && (
-                <p className="text-center text-gray-500 py-4">{t('noRecentActivity', 'Aucune activité récente')}</p>
+                <p className="text-center text-muted-foreground py-4">{t('noRecentActivity', 'Aucune activité récente')}</p>
               )}
             </div>
           </CardContent>
@@ -196,3 +197,4 @@ export const TenantOverview = ({
     </div>
   );
 };
+
