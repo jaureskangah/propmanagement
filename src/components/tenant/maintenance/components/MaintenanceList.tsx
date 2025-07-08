@@ -64,24 +64,22 @@ export const MaintenanceList = ({
     }
   };
 
-  // Translate status for display - CORRECTION CRITIQUE
+  // Translate status for display - CORRECTION MAJEURE
   const translateStatus = (status: string) => {
     console.log("🔍 Translating status:", status, "in language:", language);
     
-    if (language === 'fr') {
-      switch(status.toLowerCase()) {
-        case "resolved": return t('resolved');
-        case "in progress": return t('inProgress');
-        case "pending": return t('pending');
-        default: return status;
-      }
-    }
-    // Pour l'anglais, utiliser les traductions aussi pour la cohérence
-    switch(status.toLowerCase()) {
-      case "resolved": return t('resolved');
-      case "in progress": return t('inProgress');
-      case "pending": return t('pending');
-      default: return status;
+    // Normaliser le statut pour la comparaison
+    const normalizedStatus = status.toLowerCase().trim();
+    
+    switch(normalizedStatus) {
+      case "resolved": 
+        return language === 'fr' ? "Résolue" : "Resolved";
+      case "in progress": 
+        return language === 'fr' ? "En cours" : "In Progress";
+      case "pending": 
+        return language === 'fr' ? "En attente" : "Pending";
+      default: 
+        return status;
     }
   };
 

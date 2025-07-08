@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 import type { Communication, MaintenanceRequest } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantOverviewProps {
   tenant: TenantData;
@@ -23,6 +24,7 @@ export const TenantOverview = ({
   communications
 }: TenantOverviewProps) => {
   const { t } = useSafeTranslation();
+  const { language } = useLocale();
 
   const getLeaseStatusColor = () => {
     switch (leaseStatus.status) {
@@ -38,6 +40,16 @@ export const TenantOverview = ({
       case 'expiring': return <AlertTriangle className="h-5 w-5" />;
       default: return <CheckCircle className="h-5 w-5" />;
     }
+  };
+
+  // Format dates according to language
+  const formatLeaseDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
   };
 
   // Memoized calculation to ensure consistency with container
@@ -102,8 +114,8 @@ export const TenantOverview = ({
                 </span>
               </div>
               <div className="space-y-1 text-sm text-gray-600">
-                <p><strong>{t('leaseStart', 'Début du bail')}:</strong> {formatDate(tenant.lease_start)}</p>
-                <p><strong>{t('leaseEnd', 'Fin du bail')}:</strong> {formatDate(tenant.lease_end)}</p>
+                <p><strong>{t('leaseStart', 'Début du bail')}:</strong> {formatLeaseDate(tenant.lease_start)}</p>
+                <p><strong>{t('leaseEnd', 'Fin du bail')}:</strong> {formatLeaseDate(tenant.lease_end)}</p>
                 {leaseStatus.status !== 'expired' && (
                   <p><strong>{t('daysRemaining', 'Jours restants')}:</strong> {leaseStatus.daysLeft} jours</p>
                 )}
@@ -162,10 +174,14 @@ export const TenantOverview = ({
                   <AlertTriangle className="h-4 w-4 text-orange-500" />
                   <div className="flex-1">
                     <p className="text-sm font-medium">{request.title || request.issue}</p>
-                    <p className="text-xs text-gray-500">{formatDate(request.created_at)}</p>
+                    <p className="text-xs text-gray-500">{formatDate(request.created_at, language)}</p>
                   </div>
                   <Badge variant="secondary" className="text-xs">
-                    {request.status}
+                    {/* Translate status here too */}
+                    {request.status?.toLowerCase() === 'resolved' ? (language === 'fr' ? 'Résolue' : 'Resolved') :
+                     request.status?.toLowerCase() === 'in progress' ? (language === 'fr' ? 'En cours' : 'In Progress') :
+                     request.status?.toLowerCase() === 'pending' ? (language === 'fr' ? 'En attente' : 'Pending') :
+                     request.status}
                   </Badge>
                 </div>
               ))}

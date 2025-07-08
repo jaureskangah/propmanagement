@@ -10,8 +10,10 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(date: string | Date, localeCode: string = 'en') {
   const dateObj = new Date(date);
+  const locale = localeCode === 'fr' ? fr : enUS;
+  
   return format(dateObj, "d MMMM yyyy", {
-    locale: localeCode === 'fr' ? fr : enUS
+    locale: locale
   });
 }
 

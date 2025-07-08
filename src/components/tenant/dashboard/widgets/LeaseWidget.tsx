@@ -11,7 +11,7 @@ interface LeaseWidgetProps {
 }
 
 export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWidgetProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   
   const getStatusColor = () => {
     switch (status) {
@@ -49,6 +49,16 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
       return 0;
     }
   };
+
+  // Format dates according to language
+  const formatLeaseDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
   
   const progressPercentage = getProgressPercentage();
   
@@ -75,11 +85,11 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-500">{t('lease.start')}</span>
-            <span className="font-medium text-gray-700">{new Date(leaseStart).toLocaleDateString()}</span>
+            <span className="font-medium text-gray-700">{formatLeaseDate(leaseStart)}</span>
           </div>
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-500">{t('lease.end')}</span>
-            <span className="font-medium text-gray-700">{new Date(leaseEnd).toLocaleDateString()}</span>
+            <span className="font-medium text-gray-700">{formatLeaseDate(leaseEnd)}</span>
           </div>
         </div>
         
