@@ -47,11 +47,11 @@ export const TenantSettingsSection = ({
       animate={{ opacity: 1, y: 0 }}
       className="space-y-6"
     >
-      <div className="bg-gradient-to-br from-purple-50 via-white to-blue-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+      <div className="bg-gradient-to-br from-purple-50/50 via-card to-blue-50/50 dark:from-purple-950/20 dark:via-card dark:to-blue-950/20 rounded-2xl p-6 border border-border shadow-sm">
         <div className="space-y-6">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('settings')}</h2>
-            <p className="text-gray-600">{t('profileDescription')}</p>
+            <h2 className="text-2xl font-bold text-foreground mb-2">{t('settings')}</h2>
+            <p className="text-muted-foreground">{t('profileDescription')}</p>
           </div>
 
           {/* Profile Section */}
