@@ -1,4 +1,3 @@
-
 'use client'
 import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
@@ -12,11 +11,11 @@ interface ModernAuthCardProps {
 export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
-  // For 3D card effect - now only for the inner card
+  // For 3D card effect - simplified for better scroll compatibility
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rotateX = useTransform(mouseY, [-300, 300], [5, -5]);
-  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
+  const rotateX = useTransform(mouseY, [-300, 300], [2, -2]); // Reduced rotation
+  const rotateY = useTransform(mouseX, [-300, 300], [-2, 2]); // Reduced rotation
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -31,7 +30,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black relative overflow-y-auto py-8 px-4">
+    <div className="min-h-screen w-full bg-black relative overflow-y-auto">
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-500/40 via-purple-700/50 to-black" />
       
@@ -43,7 +42,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
         }}
       />
 
-      {/* Top radial glow */}
+      {/* Background animated glows */}
       <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120vh] h-[60vh] rounded-b-[50%] bg-purple-400/20 blur-[80px]" />
       <motion.div 
         className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100vh] h-[60vh] rounded-b-full bg-purple-300/20 blur-[60px]"
@@ -75,18 +74,24 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
       <div className="absolute left-1/4 top-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse opacity-40" />
       <div className="absolute right-1/4 bottom-1/4 w-96 h-96 bg-white/5 rounded-full blur-[100px] animate-pulse delay-1000 opacity-40" />
 
-      {/* Centered container */}
-      <div className="min-h-full flex items-center justify-center">
+      {/* Centered container with scroll support */}
+      <div className="flex flex-col min-h-screen py-8 px-4">
+        {/* Flexible spacer for vertical centering */}
+        <div className="flex-1 min-h-0" />
+        
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="w-full max-w-md relative z-10 my-auto"
-          style={{ perspective: 1500 }}
+          className="w-full max-w-md mx-auto relative z-10 my-auto"
         >
           <motion.div
             className="relative"
-            style={{ rotateX, rotateY }}
+            style={{ 
+              rotateX, 
+              rotateY,
+              transformStyle: 'preserve-3d'
+            }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             whileHover={{ z: 10 }}
@@ -111,9 +116,8 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 }}
               />
 
-              {/* Traveling light beam effect */}
+              {/* Traveling light beam effects */}
               <div className="absolute -inset-[1px] rounded-2xl overflow-hidden">
-                {/* Top light beam */}
                 <motion.div 
                   className="absolute top-0 left-0 h-[3px] w-[50%] bg-gradient-to-r from-transparent via-white to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
@@ -142,7 +146,6 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
                 
-                {/* Right light beam */}
                 <motion.div 
                   className="absolute top-0 right-0 h-[50%] w-[3px] bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
@@ -174,7 +177,6 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
                 
-                {/* Bottom light beam */}
                 <motion.div 
                   className="absolute bottom-0 right-0 h-[3px] w-[50%] bg-gradient-to-r from-transparent via-white to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
@@ -206,7 +208,6 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
                 
-                {/* Left light beam */}
                 <motion.div 
                   className="absolute bottom-0 left-0 h-[50%] w-[3px] bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
@@ -291,8 +292,8 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
               {/* Card border glow */}
               <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-r from-white/3 via-white/7 to-white/3 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
               
-              {/* Glass card background */}
-              <div className={cn("relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/[0.05] shadow-2xl min-h-fit", className)}>
+              {/* Glass card background with proper dimensions */}
+              <div className={cn("relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/[0.05] shadow-2xl", className)}>
                 {/* Subtle card inner patterns */}
                 <div className="absolute inset-0 opacity-[0.03]" 
                   style={{
@@ -309,6 +310,9 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
             </div>
           </motion.div>
         </motion.div>
+        
+        {/* Flexible spacer for vertical centering */}
+        <div className="flex-1 min-h-0" />
       </div>
     </div>
   );
