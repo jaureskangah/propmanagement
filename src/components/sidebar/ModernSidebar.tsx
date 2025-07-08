@@ -30,10 +30,10 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const links = React.useMemo(() => {
     if (isTenant) {
       return [
-        { to: "/tenant/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard') },
-        { to: "/tenant/dashboard?section=maintenance", icon: Wrench, label: "Maintenance" },
-        { to: "/tenant/dashboard?section=documents", icon: FileText, label: String(t('documentsLabel') || 'Documents') },
-        { to: "/tenant/dashboard?section=settings", icon: Settings, label: String(t('settings') || 'Settings') }
+        { to: "/tenant/dashboard", icon: LayoutDashboard, label: String(t('dashboard') || 'Dashboard'), section: null },
+        { to: "/tenant/dashboard?section=maintenance", icon: Wrench, label: "Maintenance", section: "maintenance" },
+        { to: "/tenant/dashboard?section=documents", icon: FileText, label: String(t('documentsLabel') || 'Documents'), section: "documents" },
+        { to: "/tenant/dashboard?section=settings", icon: Settings, label: String(t('settings') || 'Settings'), section: "settings" }
       ];
     }
     
@@ -48,10 +48,24 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
     ];
   }, [isTenant, t]);
 
-  const isActive = (path: string) => {
+  const isActive = (path: string, section?: string) => {
     if (isTenant && path.startsWith("/tenant/dashboard")) {
       // Pour les liens tenant, vérifier si on est sur la page tenant/dashboard
-      return location.pathname === "/tenant/dashboard";
+      if (location.pathname !== "/tenant/dashboard") {
+        return false;
+      }
+      
+      // Récupérer la section actuelle depuis l'URL
+      const searchParams = new URLSearchParams(location.search);
+      const currentSection = searchParams.get('section');
+      
+      // Si pas de section spécifiée dans le lien, c'est le dashboard principal
+      if (!section) {
+        return !currentSection || currentSection === 'overview';
+      }
+      
+      // Sinon, vérifier que la section correspond
+      return currentSection === section;
     }
     return location.pathname === path;
   };
@@ -93,7 +107,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
               to={link.to}
               className={cn(
                 "modern-sidebar-item",
-                isActive(link.to) && "active"
+                isActive(link.to, 'section' in link ? link.section : undefined) && "active"
               )}
               style={{ '--item-index': index } as React.CSSProperties}
             >

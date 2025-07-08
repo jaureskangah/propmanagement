@@ -36,10 +36,10 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
     if (isTenant) {
       // Menu pour les locataires - tous pointent vers /tenant/dashboard avec des sections
       return [
-        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
-        { to: "/tenant/dashboard?section=maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
-        { to: "/tenant/dashboard?section=documents", icon: FileText, label: t('documents'), tooltip: t('documents') },
-        { to: "/tenant/dashboard?section=settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
+        { to: "/tenant/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard'), section: null },
+        { to: "/tenant/dashboard?section=maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance'), section: "maintenance" },
+        { to: "/tenant/dashboard?section=documents", icon: FileText, label: t('documents'), tooltip: t('documents'), section: "documents" },
+        { to: "/tenant/dashboard?section=settings", icon: Settings, label: t('settings'), tooltip: t('settings'), section: "settings" }
       ];
     }
     
@@ -55,10 +55,24 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
     ];
   }, [isTenant, t]);
 
-  const isActive = (path: string) => {
+  const isActive = (path: string, section?: string) => {
     if (isTenant && path.startsWith("/tenant/dashboard")) {
       // Pour les liens tenant, vérifier si on est sur la page tenant/dashboard
-      return location.pathname === "/tenant/dashboard";
+      if (location.pathname !== "/tenant/dashboard") {
+        return false;
+      }
+      
+      // Récupérer la section actuelle depuis l'URL
+      const searchParams = new URLSearchParams(location.search);
+      const currentSection = searchParams.get('section');
+      
+      // Si pas de section spécifiée dans le lien, c'est le dashboard principal
+      if (!section) {
+        return !currentSection || currentSection === 'overview';
+      }
+      
+      // Sinon, vérifier que la section correspond
+      return currentSection === section;
     }
     return location.pathname === path;
   };
@@ -74,7 +88,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
               key={link.to}
               to={link.to}
               className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
-                isActive(link.to) ? "bg-muted font-medium" : ""
+                isActive(link.to, 'section' in link ? link.section : undefined) ? "bg-muted font-medium" : ""
               }`}
             >
               <Icon className="h-5 w-5" />
@@ -98,7 +112,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
                 <Link
                   to={link.to}
                   className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors hover:bg-muted ${
-                    isActive(link.to) ? "bg-muted font-medium" : ""
+                    isActive(link.to, 'section' in link ? link.section : undefined) ? "bg-muted font-medium" : ""
                   } ${collapsed ? "justify-center px-2" : ""}`}
                 >
                   <Icon className="h-5 w-5" />
