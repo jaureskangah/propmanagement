@@ -103,7 +103,7 @@ export function DashboardHeader({
                 </div>
               </TooltipTrigger>
               <TooltipContent side="bottom" className="dark:bg-gray-900 dark:border-gray-800">
-                {t('toggleTheme', 'Changer de thème')}
+                {t('toggleTheme', { fallback: 'Changer de thème' })}
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
