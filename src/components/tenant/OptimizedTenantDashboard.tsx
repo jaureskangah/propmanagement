@@ -82,10 +82,6 @@ const TenantDashboardContent = () => {
             firstName={tenant?.firstName}
             lastName={tenant?.lastName}
             refreshDashboard={refreshDashboard}
-            onOrderChange={() => {}}
-            onVisibilityChange={() => {}}
-            currentOrder={[]}
-            hiddenSections={[]}
           />
         </ProgressiveLoader>
       </ErrorBoundary>
