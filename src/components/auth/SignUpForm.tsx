@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
-import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { NameFields } from './form/NameFields';
 import { EmailField } from './form/EmailField';
 import { PasswordFields } from './form/PasswordFields';
 import { SignUpFormValues, signUpFormSchema } from './signUpValidation';
-import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { ModernButton } from '@/components/ui/modern-button';
+import { motion } from 'framer-motion';
 
 interface SignUpFormProps {
   onSuccess: () => void;
@@ -46,7 +46,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
           data: {
             first_name: values.firstName,
             last_name: values.lastName,
-            is_tenant_user: false, // Toujours propriétaire pour les inscriptions directes
+            is_tenant_user: false,
           },
         },
       });
@@ -91,27 +91,55 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-        <NameFields form={form} disabled={loading} />
-        <EmailField form={form} disabled={loading} />
-        <PasswordFields form={form} disabled={loading} />
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <motion.div 
+          className="space-y-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <NameFields form={form} disabled={loading} />
+          <EmailField form={form} disabled={loading} />
+          <PasswordFields form={form} disabled={loading} />
+        </motion.div>
         
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
-          <p className="text-sm text-blue-700">
+        <motion.div 
+          className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4 mt-4 backdrop-blur-sm"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <p className="text-sm text-purple-200">
             ℹ️ {t('ownerSignupNote')}
           </p>
-        </div>
+        </motion.div>
         
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('signingUp')}
-            </>
-          ) : (
-            t('createMyOwnerAccount')
-          )}
-        </Button>
+        <ModernButton
+          type="submit"
+          isLoading={loading}
+          className="mt-6"
+        >
+          {!loading && t('createMyOwnerAccount')}
+        </ModernButton>
+
+        {/* Sign in link */}
+        <motion.p 
+          className="text-center text-xs text-white/60 mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          {t('alreadyHaveAccount')}{' '}
+          <Link 
+            to="/login" 
+            className="relative inline-block group/signin"
+          >
+            <span className="relative z-10 text-white group-hover/signin:text-white/70 transition-colors duration-300 font-medium">
+              {t('signInCta')}
+            </span>
+            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white group-hover/signin:w-full transition-all duration-300" />
+          </Link>
+        </motion.p>
       </form>
     </Form>
   );

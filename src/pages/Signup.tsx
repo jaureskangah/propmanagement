@@ -3,15 +3,13 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import SignUpForm from '@/components/auth/SignUpForm';
 import { useAuth } from '@/components/AuthProvider';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocale } from '@/components/providers/LocaleProvider';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { ModernAuthCard } from '@/components/ui/modern-auth-card';
+import { motion } from 'framer-motion';
 
 const Signup = () => {
   const { isAuthenticated } = useAuth();
   const { t } = useLocale();
-  const [activeTab, setActiveTab] = useState<'signup'>('signup');
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -19,34 +17,40 @@ const Signup = () => {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            {t('createOwnerAccount')}
-          </CardTitle>
-          <CardDescription>
-            {t('ownerAccountDescription')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScrollArea className="h-full pr-4">
-            <Tabs 
-              value={activeTab} 
-              onValueChange={(value) => setActiveTab(value as 'signup')} 
-              className="w-full"
-            >
-              <TabsList className="grid w-full grid-cols-1 mb-4">
-                <TabsTrigger value="signup">{t('ownerSignup')}</TabsTrigger>
-              </TabsList>
-              <TabsContent value="signup" className="mt-0">
-                <SignUpForm onSuccess={() => {}} />
-              </TabsContent>
-            </Tabs>
-          </ScrollArea>
-        </CardContent>
-      </Card>
-    </div>
+    <ModernAuthCard>
+      {/* Logo and header */}
+      <div className="text-center space-y-1 mb-6">
+        <motion.div
+          initial={{ scale: 0.5, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", duration: 0.8 }}
+          className="mx-auto w-12 h-12 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden mb-4"
+        >
+          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/70">P</span>
+          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-50" />
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
+        >
+          {t('createOwnerAccount')}
+        </motion.h1>
+        
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="text-white/60 text-sm"
+        >
+          {t('ownerAccountDescription')}
+        </motion.p>
+      </div>
+
+      <SignUpForm onSuccess={() => {}} />
+    </ModernAuthCard>
   );
 };
 

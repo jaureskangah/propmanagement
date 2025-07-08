@@ -1,16 +1,17 @@
 
 import { useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { supabase } from '@/lib/supabase';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, Loader2 } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { ModernInput } from '@/components/ui/modern-input';
+import { ModernButton } from '@/components/ui/modern-button';
+import { motion } from 'framer-motion';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -23,6 +24,8 @@ interface SignInFormProps {
 
 export default function SignInForm({ onSuccess }: SignInFormProps) {
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { t } = useLocale();
@@ -92,70 +95,141 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         {searchParams.get('message') === 'account_created' && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-700">
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg backdrop-blur-sm"
+          >
+            <p className="text-sm text-green-300">
               ✅ {t('signUpSuccess')} {t('pleaseEnterPassword')}
             </p>
-          </div>
+          </motion.div>
         )}
         
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('emailAddress')}</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                  <Input 
-                    placeholder={t('enterEmail')} 
-                    className="pl-10" 
-                    {...field}
+        <motion.div className="space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ModernInput
+                    type="email"
+                    placeholder={t('enterEmail')}
+                    icon={<Mail className="h-4 w-4" />}
                     disabled={loading}
+                    {...field}
                   />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('password')}</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                  <Input 
-                    type="password" 
+                </FormControl>
+                <FormMessage className="text-red-400 text-xs" />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <ModernInput
+                    type={showPassword ? "text" : "password"}
                     placeholder={t('enterPassword')}
-                    className="pl-10" 
-                    {...field}
+                    icon={<Lock className="h-4 w-4" />}
+                    rightIcon={showPassword ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+                    onRightIconClick={() => setShowPassword(!showPassword)}
                     disabled={loading}
+                    {...field}
                   />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button 
-          type="submit" 
-          className="w-full" 
-          disabled={loading}
+                </FormControl>
+                <FormMessage className="text-red-400 text-xs" />
+              </FormItem>
+            )}
+          />
+        </motion.div>
+
+        {/* Remember me & Forgot password */}
+        <div className="flex items-center justify-between pt-1">
+          <div className="flex items-center space-x-2">
+            <div className="relative">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={() => setRememberMe(!rememberMe)}
+                className="appearance-none h-4 w-4 rounded border border-white/20 bg-white/5 checked:bg-white checked:border-white focus:outline-none focus:ring-1 focus:ring-white/30 transition-all duration-200"
+              />
+              {rememberMe && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute inset-0 flex items-center justify-center text-black pointer-events-none"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </motion.div>
+              )}
+            </div>
+            <label htmlFor="remember-me" className="text-xs text-white/60 hover:text-white/80 transition-colors duration-200 cursor-pointer">
+              {t('rememberMe')}
+            </label>
+          </div>
+          
+          <div className="text-xs">
+            <Link to="/forgot-password" className="text-white/60 hover:text-white transition-colors duration-200">
+              {t('forgotPassword')}
+            </Link>
+          </div>
+        </div>
+
+        {/* Sign in button */}
+        <ModernButton
+          type="submit"
+          isLoading={loading}
+          className="mt-6"
         >
-          {loading ? (
+          {!loading && (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('signingIn')}
+              {t('signIn')}
+              <ArrowRight className="w-4 h-4 ml-1 group-hover/button:translate-x-1 transition-transform duration-300" />
             </>
-          ) : (
-            t('signIn')
           )}
-        </Button>
+        </ModernButton>
+
+        {/* Divider */}
+        <div className="relative mt-6 mb-4 flex items-center">
+          <div className="flex-grow border-t border-white/10"></div>
+          <motion.span 
+            className="mx-3 text-xs text-white/40"
+            initial={{ opacity: 0.7 }}
+            animate={{ opacity: [0.7, 0.9, 0.7] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          >
+            {t('or') || 'or'}
+          </motion.span>
+          <div className="flex-grow border-t border-white/10"></div>
+        </div>
+
+        {/* Sign up link */}
+        <motion.p 
+          className="text-center text-xs text-white/60 mt-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          {t('dontHaveAccount')}{' '}
+          <Link 
+            to="/signup" 
+            className="relative inline-block group/signup"
+          >
+            <span className="relative z-10 text-white group-hover/signup:text-white/70 transition-colors duration-300 font-medium">
+              {t('signUpCta')}
+            </span>
+            <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white group-hover/signup:w-full transition-all duration-300" />
+          </Link>
+        </motion.p>
       </form>
     </Form>
   );
