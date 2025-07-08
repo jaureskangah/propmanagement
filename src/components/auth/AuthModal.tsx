@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import SignInForm from './SignInForm';
@@ -14,27 +14,6 @@ interface AuthModalProps {
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin');
   const { t } = useLocale();
-
-  // Debug logs pour comprendre le problème de scroll
-  useEffect(() => {
-    if (isOpen) {
-      console.log('🔍 AuthModal Debug: Modal opened');
-      setTimeout(() => {
-        const dialogContent = document.querySelector('[role="dialog"]');
-        if (dialogContent) {
-          const styles = window.getComputedStyle(dialogContent);
-          console.log('🔍 AuthModal Debug: Dialog styles:', {
-            height: styles.height,
-            maxHeight: styles.maxHeight,
-            overflow: styles.overflow,
-            overflowY: styles.overflowY,
-            scrollHeight: dialogContent.scrollHeight,
-            clientHeight: dialogContent.clientHeight
-          });
-        }
-      }, 100);
-    }
-  }, [isOpen, activeTab]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -133,25 +112,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 <SignUpForm onSuccess={onClose} />
               )}
             </motion.div>
-
-            {/* Section de test pour forcer le dépassement et tester le scroll */}
-            <div className="mt-8 p-4 border border-white/10 rounded-lg bg-white/5">
-              <h3 className="text-white text-sm font-medium mb-2">Test de scroll</h3>
-              <div className="space-y-2 text-white/60 text-xs">
-                <p>Si vous voyez cette section, le modal est assez grand.</p>
-                <p>Essayez de faire défiler vers le bas pour voir plus de contenu.</p>
-                <p>Cette section sert à tester le comportement du scroll.</p>
-                <p>Ligne 1 de test de contenu supplémentaire</p>
-                <p>Ligne 2 de test de contenu supplémentaire</p>
-                <p>Ligne 3 de test de contenu supplémentaire</p>
-                <p>Ligne 4 de test de contenu supplémentaire</p>
-                <p>Ligne 5 de test de contenu supplémentaire</p>
-                <p>Ligne 6 de test de contenu supplémentaire</p>
-                <p>Ligne 7 de test de contenu supplémentaire</p>
-                <p>Ligne 8 de test de contenu supplémentaire</p>
-                <p>Fin de la section de test - vous devriez pouvoir faire défiler jusqu'ici!</p>
-              </div>
-            </div>
           </div>
         </div>
       </DialogContent>
