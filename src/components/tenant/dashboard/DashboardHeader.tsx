@@ -1,8 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { Settings, LayoutDashboard, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, Moon, Sun } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { DashboardCustomization } from "./DashboardCustomization";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
@@ -20,20 +19,12 @@ interface DashboardHeaderProps {
   firstName?: string;
   lastName?: string;
   refreshDashboard: () => void;
-  onOrderChange: (order: string[]) => void;
-  onVisibilityChange: (hidden: string[]) => void;
-  currentOrder: string[];
-  hiddenSections: string[];
 }
 
 export function DashboardHeader({
   tenantName,
   firstName,
-  refreshDashboard,
-  onOrderChange,
-  onVisibilityChange,
-  currentOrder,
-  hiddenSections
+  refreshDashboard
 }: DashboardHeaderProps) {
   const { t } = useLocale();
   const { theme, setTheme } = useTheme();
@@ -105,7 +96,7 @@ export function DashboardHeader({
                 {welcomeMessage}
               </h1>
               <p className="text-muted-foreground text-sm font-sans dark:text-gray-400">
-                {t('manageApartmentInfo', { fallback: 'Manage your apartment information and communications' })}
+                {t('manageApartmentInfo', { fallback: 'Manage your apartment information and maintenance' })}
               </p>
             </div>
           </div>
@@ -133,13 +124,6 @@ export function DashboardHeader({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          
-          <DashboardCustomization
-            onOrderChange={onOrderChange}
-            onVisibilityChange={onVisibilityChange}
-            currentOrder={currentOrder}
-            hiddenSections={hiddenSections}
-          />
         </div>
       </div>
     </div>

@@ -32,7 +32,7 @@ export const SimplifiedTenantDashboardContainer = ({
     return searchParams.get('section') || 'overview';
   });
 
-  // Mettre à jour la section active quand les paramètres URL changent
+  // Update active section when URL parameters change
   useEffect(() => {
     const section = searchParams.get('section') || 'overview';
     setActiveSection(section);
