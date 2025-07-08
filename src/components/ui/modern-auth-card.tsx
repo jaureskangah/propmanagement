@@ -1,9 +1,7 @@
-
 'use client'
 import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { cn } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ModernAuthCardProps {
   children: React.ReactNode;
@@ -32,7 +30,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black relative overflow-hidden flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-black relative flex items-center justify-center p-4">
       {/* Background gradient effect */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-500/40 via-purple-700/50 to-black" />
       
@@ -80,17 +78,17 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="w-full max-w-md relative z-10 max-h-[95vh]"
+        className="w-full max-w-md relative z-10 h-[90vh] flex flex-col"
         style={{ perspective: 1500 }}
       >
         <motion.div
-          className="relative"
+          className="relative flex-1 flex flex-col"
           style={{ rotateX, rotateY }}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
           whileHover={{ z: 10 }}
         >
-          <div className="relative group">
+          <div className="relative group flex-1 flex flex-col">
             {/* Card glow effect */}
             <motion.div 
               className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-700"
@@ -290,8 +288,8 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
             {/* Card border glow */}
             <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-r from-white/3 via-white/7 to-white/3 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
             
-            {/* Glass card background with scroll */}
-            <div className={cn("relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/[0.05] shadow-2xl overflow-hidden max-h-[95vh]", className)}>
+            {/* Glass card background with native scroll */}
+            <div className={cn("relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/[0.05] shadow-2xl flex-1 flex flex-col", className)}>
               {/* Subtle card inner patterns */}
               <div className="absolute inset-0 opacity-[0.03]" 
                 style={{
@@ -300,11 +298,12 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 }}
               />
 
-              <ScrollArea className="max-h-[95vh]">
+              {/* Scrollable content */}
+              <div className="flex-1 overflow-y-auto">
                 <div className="p-6">
                   {children}
                 </div>
-              </ScrollArea>
+              </div>
             </div>
           </div>
         </motion.div>
