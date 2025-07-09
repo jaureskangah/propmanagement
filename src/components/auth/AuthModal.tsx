@@ -84,7 +84,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             ref={contentRef}
             className={`relative h-full ${
               scrollState.isScrollable 
-                ? 'overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent' 
+                ? 'overflow-y-auto scrollbar-hide' 
                 : ''
             }`}
             style={{ maxHeight: '95vh' }}
