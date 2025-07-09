@@ -10,6 +10,7 @@ import { frFinances } from './features/finances';
 import { frMaintenance } from './features/maintenance';
 import { frTenant } from './features/tenant';
 import { frSettings } from './features/settings';
+import { frPricing, frPlanFeatures } from './features/pricing';
 
 // Extensions de support
 const supportExtensions = {
@@ -35,6 +36,8 @@ const baseTranslations = {
   ...frMaintenance,
   ...frTenant,
   ...frSettings,
+  ...frPricing,
+  ...frPlanFeatures,
   ...supportExtensions,
 };
 
