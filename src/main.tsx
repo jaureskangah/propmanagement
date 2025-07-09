@@ -34,9 +34,9 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+  <QueryClientProvider client={queryClient}>
+    <AuthProvider>
+      <React.StrictMode>
         <LocaleProvider>
           <ThemeProvider>
             <TooltipProvider>
@@ -46,7 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             </TooltipProvider>
           </ThemeProvider>
         </LocaleProvider>
-      </AuthProvider>
-    </QueryClientProvider>
-  </React.StrictMode>,
+      </React.StrictMode>
+    </AuthProvider>
+  </QueryClientProvider>
 )
