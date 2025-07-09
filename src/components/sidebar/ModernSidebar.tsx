@@ -11,7 +11,8 @@ import {
   CreditCard,
   Mail,
   HelpCircle,
-  Building2
+  Building2,
+  BarChart3
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
       { to: "/invitations", icon: Mail, label: String(t('invitations') || 'Invitations') },
       { to: "/finances", icon: CreditCard, label: String(t('finances') || 'Finances') },
       { to: "/maintenance", icon: Wrench, label: "Maintenance" },
+      { to: "/reports", icon: BarChart3, label: String(t('reports') || 'Reports') },
       { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
     ];
   }, [isTenant, t]);
