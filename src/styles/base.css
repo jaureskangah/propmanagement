@@ -7,20 +7,21 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 210 20% 98%;
+    --background-secondary: 210 30% 96%;
     --foreground: 222.2 84% 4.9%;
  
-    --muted: 210 40% 96.1%;
+    --muted: 210 40% 94%;
     --muted-foreground: 215.4 16.3% 46.9%;
  
-    --popover: 0 0% 100%;
+    --popover: 210 20% 98%;
     --popover-foreground: 222.2 84% 4.9%;
  
-    --card: 0 0% 100%;
+    --card: 210 15% 97%;
     --card-foreground: 222.2 84% 4.9%;
  
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
+    --border: 214.3 31.8% 88%;
+    --input: 214.3 31.8% 90%;
  
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -85,13 +86,13 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-background via-background/95 to-muted/20 min-h-screen font-sans antialiased;
+    @apply bg-gradient-to-br from-background via-background to-muted/30 min-h-screen font-sans antialiased;
   }
 }
 
 @layer utilities {
   .glass-card {
-    @apply bg-card/80 dark:bg-card/90 backdrop-blur-sm border border-border shadow-lg;
+    @apply bg-gradient-to-br from-card via-card to-card/95 dark:bg-card/90 backdrop-blur-sm border border-border shadow-xl shadow-black/10;
   }
 
   .glass-effect {
@@ -99,7 +100,7 @@
   }
 
   .hover-lift {
-    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-lg;
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-black/15;
   }
 
   .animate-fade-in {
