@@ -12,10 +12,12 @@ import {
   Mail,
   HelpCircle,
   Building2,
-  BarChart3
+  BarChart3,
+  Shield
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
+import { useAdminRole } from "@/hooks/useAdminRole";
 import "./modernSidebar.css";
 
 export interface ModernSidebarProps {
@@ -26,6 +28,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useLocale();
+  const { isAdmin } = useAdminRole();
   
   // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {
@@ -46,9 +49,10 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
       { to: "/finances", icon: CreditCard, label: String(t('finances') || 'Finances') },
       { to: "/maintenance", icon: Wrench, label: "Maintenance" },
       { to: "/reports", icon: BarChart3, label: String(t('reports') || 'Reports') },
+      { to: "/admin", icon: Shield, label: String(t('admin') || 'Admin'), adminOnly: true },
       { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
-    ];
-  }, [isTenant, t]);
+    ].filter(link => !link.adminOnly || isAdmin);
+  }, [isTenant, t, isAdmin]);
 
   const isActive = (path: string, section?: string) => {
     if (isTenant && path.startsWith("/tenant/dashboard")) {

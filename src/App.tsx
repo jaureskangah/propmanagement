@@ -34,6 +34,7 @@ const DocumentsPage = lazy(() => import('./pages/tenant/TenantDocuments'));
 const Invitations = lazy(() => import('./pages/Invitations'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
+const Admin = lazy(() => import('./pages/Admin'));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -81,6 +82,7 @@ function App() {
         <Route path="/maintenance" element={isAuthenticated ? <Maintenance /> : <Navigate to="/login" />} />
         <Route path="/maintenance-requests" element={isAuthenticated ? <MaintenanceRequestList /> : <Navigate to="/login" />} />
         <Route path="/reports" element={isAuthenticated ? <Reports /> : <Navigate to="/login" />} />
+        <Route path="/admin" element={isAuthenticated ? <Admin /> : <Navigate to="/login" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
