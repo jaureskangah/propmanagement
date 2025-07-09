@@ -44,8 +44,6 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
     const link = window.document.createElement('a');
     link.href = doc.file_url;
     link.download = doc.name || 'document';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
     
     // Ajouter au document, cliquer, puis supprimer
     window.document.body.appendChild(link);

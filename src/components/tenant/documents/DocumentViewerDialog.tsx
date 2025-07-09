@@ -56,8 +56,6 @@ export const DocumentViewerDialog = ({
     const link = window.document.createElement('a');
     link.href = document.file_url;
     link.download = document.name || 'document';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
     
     // Ajouter au document, cliquer, puis supprimer
     window.document.body.appendChild(link);
