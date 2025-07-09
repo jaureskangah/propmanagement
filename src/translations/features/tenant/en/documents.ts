@@ -75,5 +75,12 @@ export const enDocuments: TenantDocumentsTranslations = {
   showFilters: "Show Filters",
   uploadAndManageDocuments: "Upload and manage important documents for your tenancy",
   manageDocumentsDescription: "Upload and manage important documents for your tenancy",
-  uploadedDocuments: "Uploaded Documents"
+  uploadedDocuments: "Uploaded Documents",
+  view: "View",
+  delete: "Delete",
+  edit: "Edit",
+  important: "Important",
+  lease: "Lease",
+  receipt: "Receipt",
+  other: "Other"
 };

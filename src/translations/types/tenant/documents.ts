@@ -74,4 +74,11 @@ export interface TenantDocumentsTranslations {
   uploadAndManageDocuments: string;
   manageDocumentsDescription: string;
   uploadedDocuments: string;
+  view: string;
+  delete: string;
+  edit: string;
+  important: string;
+  lease: string;
+  receipt: string;
+  other: string;
 }

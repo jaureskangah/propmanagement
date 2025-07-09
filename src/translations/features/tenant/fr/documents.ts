@@ -75,5 +75,12 @@ export const frDocuments: TenantDocumentsTranslations = {
   showFilters: "Afficher les filtres",
   uploadAndManageDocuments: "Téléversez et gérez des documents importants pour votre location",
   manageDocumentsDescription: "Téléversez et gérez des documents importants pour votre location",
-  uploadedDocuments: "Documents téléversés"
+  uploadedDocuments: "Documents téléversés",
+  view: "Voir",
+  delete: "Supprimer",
+  edit: "Modifier",
+  important: "Important",
+  lease: "Bail",
+  receipt: "Reçu",
+  other: "Autre"
 };
