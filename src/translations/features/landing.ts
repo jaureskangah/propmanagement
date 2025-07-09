@@ -36,6 +36,18 @@ export const enLanding = {
   maintenanceDesc: "Schedule and track maintenance requests efficiently",
   securityDesc: "Your data is protected with enterprise-grade security",
   
+  // Additional feature translations
+  financialTracking: "Financial Tracking",
+  financialTrackingDesc: "Track income, expenses, and generate financial reports",
+  maintenanceScheduling: "Maintenance Scheduling", 
+  maintenanceSchedulingDesc: "Schedule and manage maintenance tasks efficiently",
+  documentGeneration: "Document Generation",
+  documentGenerationDesc: "Generate leases, invoices, and other documents automatically",
+  reportingAnalytics: "Reporting & Analytics",
+  reportingAnalyticsDesc: "Get insights with detailed reports and analytics",
+  secureAccess: "Secure Access",
+  secureAccessDesc: "Role-based access control and data encryption",
+  
   // How It Works
   howItWorksTitle: "How It Works",
   howItWorksSubtitle: "Simple steps to start managing your properties",
@@ -151,6 +163,18 @@ export const frLanding = {
   tenantManagementDesc: "Suivez les locataires, baux et communications",
   maintenanceDesc: "Planifiez et suivez les demandes de maintenance efficacement",
   securityDesc: "Vos données sont protégées par une sécurité de niveau entreprise",
+  
+  // Traductions additionnelles des fonctionnalités
+  financialTracking: "Suivi Financier",
+  financialTrackingDesc: "Suivez revenus, dépenses et générez des rapports financiers",
+  maintenanceScheduling: "Planification Maintenance",
+  maintenanceSchedulingDesc: "Planifiez et gérez les tâches de maintenance efficacement",
+  documentGeneration: "Génération de Documents",
+  documentGenerationDesc: "Générez baux, factures et autres documents automatiquement",
+  reportingAnalytics: "Rapports et Analyses",
+  reportingAnalyticsDesc: "Obtenez des insights avec des rapports et analyses détaillés",
+  secureAccess: "Accès Sécurisé",
+  secureAccessDesc: "Contrôle d'accès basé sur les rôles et chiffrement des données",
   
   // Comment ça marche
   howItWorksTitle: "Comment Ça Marche",

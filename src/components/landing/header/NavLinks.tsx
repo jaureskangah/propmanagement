@@ -29,7 +29,7 @@ export const NavLinks = ({
     <>
       <NavLink 
         scrolled={scrolled} 
-        onClick={() => onSectionClick('features')}
+        onClick={() => onSectionClick('everything-you-need')}
         icon={<LayoutList size={18} />}
         label={t('features')}
       />
