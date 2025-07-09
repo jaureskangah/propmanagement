@@ -2,9 +2,9 @@
 import { PricingTranslations, PlanFeaturesTranslations } from '../types';
 
 export const enPricing: PricingTranslations = {
-  freemiumPlan: "Basic",
-  proPlan: "Standard",
-  enterprisePlan: "Pro",
+  freePlan: "Free",
+  standardPlan: "Standard", 
+  proPlan: "Pro",
   free: "Free",
   month: "month",
   mostPopular: "Most Popular",
@@ -18,9 +18,9 @@ export const enPricing: PricingTranslations = {
 };
 
 export const frPricing: PricingTranslations = {
-  freemiumPlan: "Basique",
-  proPlan: "Standard",
-  enterprisePlan: "Pro",
+  freePlan: "Gratuit",
+  standardPlan: "Standard",
+  proPlan: "Pro",
   free: "Gratuit",
   month: "mois",
   mostPopular: "Le plus populaire",
@@ -34,43 +34,53 @@ export const frPricing: PricingTranslations = {
 };
 
 export const enPlanFeatures: PlanFeaturesTranslations = {
-  // Plan Basic - Limité mais fonctionnel
-  upTo2Properties: "Up to 3 properties",
-  upTo5Properties: "Up to 10 properties",
-  upTo20Properties: "Unlimited properties",
-  rentManagement: "Basic rent tracking",
-  digitalDocuments: "Document storage",
-  basicPropertyCards: "Basic tenant management",
-  emailNotifications: "Email notifications",
-  tenantVerification: "Tenant verification",
-  prioritySupport: "Priority support",
-  advancedDashboard: "Advanced dashboard",
-  financialReports: "Basic financial reports",
+  // Plan Gratuit
+  upTo2Properties: "Up to 2 properties",
+  upTo5Tenants: "Up to 5 tenants",
+  basicRentManagement: "Basic rent tracking",
+  limitedDocumentGeneration: "5 document generations/month",
+  basicSupport: "Email support",
+  
+  // Plan Standard
+  upTo10Properties: "Up to 10 properties", 
+  unlimitedTenants: "Unlimited tenants",
+  fullTenantManagement: "Complete tenant management",
+  unlimitedDocumentGeneration: "Unlimited document generation",
   maintenanceManagement: "Maintenance management",
-  dedicatedSupport: "Dedicated support team",
-  customDashboard: "Custom dashboard",
+  financialReports: "Financial reports",
+  prioritySupport: "Priority support",
+  
+  // Plan Pro
+  unlimitedProperties: "Unlimited properties",
   advancedFinancialReports: "Advanced financial reports",
-  userTraining: "User training sessions",
-  dailyBackup: "Automatic data backup"
+  dataExportImport: "Data export/import",
+  automatedReminders: "Automated reminders",
+  customDashboard: "Custom dashboard",
+  dedicatedSupport: "Dedicated support team"
 };
 
 export const frPlanFeatures: PlanFeaturesTranslations = {
-  // Plan Basique - Limité mais fonctionnel
-  upTo2Properties: "Jusqu'à 3 propriétés",
-  upTo5Properties: "Jusqu'à 10 propriétés",
-  upTo20Properties: "Propriétés illimitées",
-  rentManagement: "Suivi des loyers basique",
-  digitalDocuments: "Stockage de documents",
-  basicPropertyCards: "Gestion des locataires basique",
-  emailNotifications: "Notifications par email",
-  tenantVerification: "Vérification des locataires",
-  prioritySupport: "Support prioritaire",
-  advancedDashboard: "Tableau de bord avancé",
-  financialReports: "Rapports financiers basiques",
+  // Plan Gratuit
+  upTo2Properties: "Jusqu'à 2 propriétés",
+  upTo5Tenants: "Jusqu'à 5 locataires",
+  basicRentManagement: "Suivi des loyers basique",
+  limitedDocumentGeneration: "5 générations de documents/mois",
+  basicSupport: "Support par email",
+  
+  // Plan Standard
+  upTo10Properties: "Jusqu'à 10 propriétés",
+  unlimitedTenants: "Locataires illimités",
+  fullTenantManagement: "Gestion complète des locataires",
+  unlimitedDocumentGeneration: "Génération de documents illimitée",
   maintenanceManagement: "Gestion de la maintenance",
-  dedicatedSupport: "Équipe de support dédiée",
-  customDashboard: "Tableau de bord personnalisable",
+  financialReports: "Rapports financiers",
+  prioritySupport: "Support prioritaire",
+  
+  // Plan Pro
+  unlimitedProperties: "Propriétés illimitées",
   advancedFinancialReports: "Rapports financiers avancés",
-  userTraining: "Sessions de formation",
-  dailyBackup: "Sauvegarde automatique des données"
+  dataExportImport: "Export/import de données",
+  automatedReminders: "Rappels automatisés",
+  customDashboard: "Tableau de bord personnalisable",
+  dedicatedSupport: "Équipe de support dédiée"
 };

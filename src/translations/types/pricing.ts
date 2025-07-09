@@ -1,8 +1,8 @@
 
 export interface PricingTranslations {
-  freemiumPlan: string;
+  freePlan: string;
+  standardPlan: string;
   proPlan: string;
-  enterprisePlan: string;
   free: string;
   month: string;
   mostPopular: string;
@@ -16,21 +16,27 @@ export interface PricingTranslations {
 }
 
 export interface PlanFeaturesTranslations {
+  // Plan Gratuit
   upTo2Properties: string;
-  upTo5Properties: string;
-  upTo20Properties: string;
-  rentManagement: string;
-  digitalDocuments: string;
-  basicPropertyCards: string;
-  emailNotifications: string;
-  tenantVerification: string;
-  prioritySupport: string;
-  advancedDashboard: string;
-  financialReports: string;
+  upTo5Tenants: string;
+  basicRentManagement: string;
+  limitedDocumentGeneration: string;
+  basicSupport: string;
+  
+  // Plan Standard
+  upTo10Properties: string;
+  unlimitedTenants: string;
+  fullTenantManagement: string;
+  unlimitedDocumentGeneration: string;
   maintenanceManagement: string;
-  dedicatedSupport: string;
-  customDashboard: string;
+  financialReports: string;
+  prioritySupport: string;
+  
+  // Plan Pro
+  unlimitedProperties: string;
   advancedFinancialReports: string;
-  userTraining: string;
-  dailyBackup: string;
+  dataExportImport: string;
+  automatedReminders: string;
+  customDashboard: string;
+  dedicatedSupport: string;
 }

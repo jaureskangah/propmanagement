@@ -1,4 +1,4 @@
 
 export const formatPrice = (price: string | number) => {
-  return `$${price}`;
+  return price === "0" ? "Gratuit" : `${price}$ CAD`;
 };
