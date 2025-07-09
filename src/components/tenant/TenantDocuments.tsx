@@ -1,5 +1,5 @@
 
-import { FileText, Download, ExternalLink, Trash2, Upload } from "lucide-react";
+import { FileText, ExternalLink, Trash2, Upload } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DocumentUpload } from "./DocumentUpload";
@@ -26,15 +26,6 @@ export const TenantDocuments = ({
   const { toast } = useToast();
   const { t } = useLocale();
 
-  const handleDownload = (url: string, filename: string) => {
-    console.log("Downloading document:", filename, "from URL:", url);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleDelete = async (documentId: string, filename: string) => {
     try {
@@ -106,15 +97,6 @@ export const TenantDocuments = ({
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDownload(doc.file_url!, doc.name)}
-                      title={t('downloadDocument')}
-                      className="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30"
-                    >
-                      <Download className="h-4 w-4" />
-                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"
