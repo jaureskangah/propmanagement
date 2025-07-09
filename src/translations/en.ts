@@ -51,7 +51,10 @@ const translations = {
   otherDocuments: "Other Documents",
   importantDocuments: "Important Documents", 
   leaseDocuments: "Lease Documents",
-  paymentReceipts: "Payment Receipts"
+  paymentReceipts: "Payment Receipts",
+  // Traductions pour l'upload de documents
+  uploadDocument: "Upload Document",
+  uploadNewDocument: "Add New Document"
 };
 
 // Debug: Log final des traductions composées

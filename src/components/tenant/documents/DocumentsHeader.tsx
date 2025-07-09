@@ -91,6 +91,22 @@ export const DocumentsHeader = ({ tenant, onDocumentUpdate }: DocumentsHeaderPro
         </div>
       </div>
       
+      {/* Disclaimer de sécurité */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="mt-4 p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg"
+      >
+        <div className="flex items-start gap-2">
+          <div className="h-4 w-4 rounded-full bg-amber-500 flex-shrink-0 mt-0.5">
+            <span className="sr-only">Avertissement</span>
+          </div>
+          <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
+            <strong className="font-medium">Rappel de sécurité :</strong> Ne partagez jamais d'informations sensibles (mots de passe, numéros de carte bancaire, documents d'identité) via cette application. Utilisez des canaux sécurisés pour ce type d'informations.
+          </p>
+        </div>
+      </motion.div>
       {isUploadOpen && tenant && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
