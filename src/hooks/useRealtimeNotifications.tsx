@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useUnreadMessages } from './notifications/useUnreadMessages';
 import { useMaintenanceNotifications } from './notifications/useMaintenanceNotifications';
 import { useRealtimeSubscription } from './notifications/useRealtimeSubscription';
+import { useEnhancedRealtime } from './notifications/useEnhancedRealtime';
 
 export function useRealtimeNotifications() {
   const [totalNotificationCount, setTotalNotificationCount] = useState(0);
@@ -24,7 +25,10 @@ export function useRealtimeNotifications() {
     handleMaintenanceRequest
   } = useMaintenanceNotifications();
   
-  // Set up realtime subscription
+  // Set up enhanced realtime subscriptions
+  const { checkPaymentDeadlines } = useEnhancedRealtime();
+  
+  // Fallback realtime subscription for older functionality
   useRealtimeSubscription({
     handleUrgentTasks,
     handleMaintenanceRequest,
@@ -63,6 +67,7 @@ export function useRealtimeNotifications() {
     setShowUnreadDialog,
     refreshUnreadMessages: fetchUnreadMessages,
     refreshMaintenanceRequests: fetchPendingMaintenance,
-    markAllMessagesAsRead
+    markAllMessagesAsRead,
+    checkPaymentDeadlines
   };
 }

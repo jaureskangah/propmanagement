@@ -811,6 +811,7 @@ export type Database = {
           lease_start: string
           name: string
           notes: string | null
+          notification_preferences: Json | null
           phone: string | null
           property_id: string | null
           rent_amount: number
@@ -829,6 +830,7 @@ export type Database = {
           lease_start: string
           name: string
           notes?: string | null
+          notification_preferences?: Json | null
           phone?: string | null
           property_id?: string | null
           rent_amount: number
@@ -847,6 +849,7 @@ export type Database = {
           lease_start?: string
           name?: string
           notes?: string | null
+          notification_preferences?: Json | null
           phone?: string | null
           property_id?: string | null
           rent_amount?: number
