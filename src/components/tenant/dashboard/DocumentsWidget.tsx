@@ -35,6 +35,28 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
       }
     }
   };
+
+  const handleDownloadDocument = (doc: TenantDocument, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!doc.file_url) return;
+    
+    // Créer un élément de lien temporaire
+    const link = window.document.createElement('a');
+    link.href = doc.file_url;
+    link.download = doc.name || 'document';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    
+    // Ajouter au document, cliquer, puis supprimer
+    window.document.body.appendChild(link);
+    link.click();
+    window.document.body.removeChild(link);
+  };
+
+  const handleViewDocument = (doc: TenantDocument) => {
+    if (!doc.file_url) return;
+    window.open(doc.file_url, '_blank');
+  };
   
   return (
     <motion.div 
@@ -86,7 +108,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   className="group flex items-center p-4 rounded-xl bg-white/80 dark:bg-gray-800/60 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-purple-100/30 dark:border-purple-800/20 hover:border-purple-200 dark:hover:border-purple-700/40"
-                  onClick={() => window.open(doc.file_url, '_blank')}
+                  onClick={() => handleViewDocument(doc)}
                 >
                   <div className="flex-shrink-0 p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/70 transition-colors">
                     {getDocumentIcon(doc.name, doc.document_type, doc.category)}
@@ -112,10 +134,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                       variant="ghost" 
                       size="icon" 
                       className="h-8 w-8 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 opacity-0 group-hover:opacity-100 transition-all"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(doc.file_url, '_blank');
-                      }}
+                      onClick={(e) => handleDownloadDocument(doc, e)}
                     >
                       <Download className="h-3.5 w-3.5" />
                     </Button>

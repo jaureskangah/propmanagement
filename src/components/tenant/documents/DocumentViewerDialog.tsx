@@ -49,6 +49,22 @@ export const DocumentViewerDialog = ({
     }
   }, [document]);
 
+  const handleDownload = () => {
+    if (!document?.file_url) return;
+    
+    // Créer un élément de lien temporaire
+    const link = window.document.createElement('a');
+    link.href = document.file_url;
+    link.download = document.name || 'document';
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    
+    // Ajouter au document, cliquer, puis supprimer
+    window.document.body.appendChild(link);
+    link.click();
+    window.document.body.removeChild(link);
+  };
+
   if (!document) return null;
 
   return (
@@ -61,11 +77,7 @@ export const DocumentViewerDialog = ({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => {
-                  if (document.file_url) {
-                    window.open(document.file_url, '_blank');
-                  }
-                }}
+                onClick={handleDownload}
                 title={t("downloadDocument") || "Télécharger"}
               >
                 <Download className="h-4 w-4" />
@@ -109,9 +121,9 @@ export const DocumentViewerDialog = ({
                 </p>
                 <Button 
                   variant="secondary" 
-                  onClick={() => window.open(viewUrl, '_blank')}
+                  onClick={handleDownload}
                 >
-                  {t("openDocument") || "Ouvrir le document"}
+                  {t("downloadDocument") || "Télécharger le document"}
                 </Button>
               </div>
             )
