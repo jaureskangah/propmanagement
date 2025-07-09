@@ -49,18 +49,37 @@ export const DocumentViewerDialog = ({
     }
   }, [document]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!document?.file_url) return;
     
-    // Créer un élément de lien temporaire
-    const link = window.document.createElement('a');
-    link.href = document.file_url;
-    link.download = document.name || 'document';
-    
-    // Ajouter au document, cliquer, puis supprimer
-    window.document.body.appendChild(link);
-    link.click();
-    window.document.body.removeChild(link);
+    try {
+      // Utiliser fetch pour récupérer le fichier
+      const response = await fetch(document.file_url);
+      if (!response.ok) throw new Error('Erreur lors du téléchargement');
+      
+      // Créer un blob à partir de la réponse
+      const blob = await response.blob();
+      
+      // Créer une URL temporaire pour le blob
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      // Créer un élément de lien temporaire
+      const link = window.document.createElement('a');
+      link.href = blobUrl;
+      link.download = document.name || 'document';
+      
+      // Ajouter au document, cliquer, puis supprimer
+      window.document.body.appendChild(link);
+      link.click();
+      window.document.body.removeChild(link);
+      
+      // Nettoyer l'URL temporaire
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Erreur lors du téléchargement:', error);
+      // Fallback: ouvrir dans un nouvel onglet
+      window.open(document.file_url, '_blank');
+    }
   };
 
   if (!document) return null;
