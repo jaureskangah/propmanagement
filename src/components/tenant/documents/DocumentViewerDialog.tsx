@@ -49,39 +49,6 @@ export const DocumentViewerDialog = ({
     }
   }, [document]);
 
-  const handleDownload = async () => {
-    if (!document?.file_url) return;
-    
-    try {
-      // Utiliser fetch pour récupérer le fichier
-      const response = await fetch(document.file_url);
-      if (!response.ok) throw new Error('Erreur lors du téléchargement');
-      
-      // Créer un blob à partir de la réponse
-      const blob = await response.blob();
-      
-      // Créer une URL temporaire pour le blob
-      const blobUrl = window.URL.createObjectURL(blob);
-      
-      // Créer un élément de lien temporaire
-      const link = window.document.createElement('a');
-      link.href = blobUrl;
-      link.download = document.name || 'document';
-      
-      // Ajouter au document, cliquer, puis supprimer
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
-      
-      // Nettoyer l'URL temporaire
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('Erreur lors du téléchargement:', error);
-      // Fallback: ouvrir dans un nouvel onglet
-      window.open(document.file_url, '_blank');
-    }
-  };
-
   if (!document) return null;
 
   return (
@@ -94,7 +61,11 @@ export const DocumentViewerDialog = ({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={handleDownload}
+                onClick={() => {
+                  if (document.file_url) {
+                    window.open(document.file_url, '_blank');
+                  }
+                }}
                 title={t("downloadDocument") || "Télécharger"}
               >
                 <Download className="h-4 w-4" />
@@ -138,9 +109,9 @@ export const DocumentViewerDialog = ({
                 </p>
                 <Button 
                   variant="secondary" 
-                  onClick={handleDownload}
+                  onClick={() => window.open(viewUrl, '_blank')}
                 >
-                  {t("downloadDocument") || "Télécharger le document"}
+                  {t("openDocument") || "Ouvrir le document"}
                 </Button>
               </div>
             )

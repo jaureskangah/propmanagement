@@ -35,45 +35,6 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
       }
     }
   };
-
-  const handleDownloadDocument = async (doc: TenantDocument, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!doc.file_url) return;
-    
-    try {
-      // Utiliser fetch pour récupérer le fichier
-      const response = await fetch(doc.file_url);
-      if (!response.ok) throw new Error('Erreur lors du téléchargement');
-      
-      // Créer un blob à partir de la réponse
-      const blob = await response.blob();
-      
-      // Créer une URL temporaire pour le blob
-      const blobUrl = window.URL.createObjectURL(blob);
-      
-      // Créer un élément de lien temporaire
-      const link = window.document.createElement('a');
-      link.href = blobUrl;
-      link.download = doc.name || 'document';
-      
-      // Ajouter au document, cliquer, puis supprimer
-      window.document.body.appendChild(link);
-      link.click();
-      window.document.body.removeChild(link);
-      
-      // Nettoyer l'URL temporaire
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('Erreur lors du téléchargement:', error);
-      // Fallback: ouvrir dans un nouvel onglet
-      window.open(doc.file_url, '_blank');
-    }
-  };
-
-  const handleViewDocument = (doc: TenantDocument) => {
-    if (!doc.file_url) return;
-    window.open(doc.file_url, '_blank');
-  };
   
   return (
     <motion.div 
@@ -125,7 +86,7 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                   className="group flex items-center p-4 rounded-xl bg-white/80 dark:bg-gray-800/60 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-purple-100/30 dark:border-purple-800/20 hover:border-purple-200 dark:hover:border-purple-700/40"
-                  onClick={() => handleViewDocument(doc)}
+                  onClick={() => window.open(doc.file_url, '_blank')}
                 >
                   <div className="flex-shrink-0 p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50 group-hover:bg-purple-200 dark:group-hover:bg-purple-800/70 transition-colors">
                     {getDocumentIcon(doc.name, doc.document_type, doc.category)}
@@ -151,7 +112,10 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                       variant="ghost" 
                       size="icon" 
                       className="h-8 w-8 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 opacity-0 group-hover:opacity-100 transition-all"
-                      onClick={(e) => handleDownloadDocument(doc, e)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(doc.file_url, '_blank');
+                      }}
                     >
                       <Download className="h-3.5 w-3.5" />
                     </Button>
