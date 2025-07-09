@@ -11,7 +11,8 @@ import {
   MessageSquare,
   Wrench,
   CreditCard,
-  Mail
+  Mail,
+  BarChart3
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import {
@@ -51,6 +52,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       { to: "/invitations", icon: Mail, label: t('invitations'), tooltip: t('invitations') },
       { to: "/finances", icon: CreditCard, label: t('finances'), tooltip: t('finances') },
       { to: "/maintenance", icon: Wrench, label: t('maintenance'), tooltip: t('maintenance') },
+      { to: "/reports", icon: BarChart3, label: t('reports'), tooltip: t('reports') },
       { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
     ];
   }, [isTenant, t]);

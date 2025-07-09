@@ -23,4 +23,5 @@ export interface NavigationTranslations {
   getSupport: string;
   invitations: string;
   documents: string;
+  reports: string;
 }
