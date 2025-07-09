@@ -9,7 +9,6 @@ export const useTenants = () => {
   const { data: tenants, isLoading } = useQuery({
     queryKey: ["tenants"],
     queryFn: async () => {
-      console.log("Fetching tenants data...");
       const { data, error } = await supabase
         .from("tenants")
         .select(`
@@ -55,50 +54,12 @@ export const useTenants = () => {
         throw error;
       }
 
-      console.log("Raw Supabase response:", data);
-      console.log("Tenants data fetched successfully:", data);
-      if (data && data.length > 0) {
-        console.log("=== DETAILED TENANT DATA DEBUG ===");
-        data.forEach((tenant, index) => {
-          console.log(`Tenant ${index + 1}:`, {
-            id: tenant.id,
-            name: tenant.name,
-            property_id: tenant.property_id,
-            unit_number: tenant.unit_number, // Ajoutons ceci pour comparaison
-            properties: tenant.properties,
-            properties_type: typeof tenant.properties,
-            properties_isArray: Array.isArray(tenant.properties),
-            properties_keys: tenant.properties ? Object.keys(tenant.properties) : 'null'
-          });
-          
-          // Vérifions si property_id existe dans la table properties
-          if (tenant.property_id) {
-            console.log(`🔍 Tenant ${tenant.name} has property_id: ${tenant.property_id}`);
-            console.log("But properties data is:", tenant.properties);
-            
-            // Testons une requête directe pour cette property
-            supabase
-              .from("properties")
-              .select("*")
-              .eq("id", tenant.property_id)
-              .then(({ data: propData, error: propError }) => {
-                if (propError) {
-                  console.error(`❌ Error fetching property ${tenant.property_id}:`, propError);
-                } else {
-                  console.log(`✅ Direct property query for ${tenant.property_id}:`, propData);
-                }
-              });
-          }
-        });
-        console.log("=== END DEBUG ===");
-      }
       return data;
     },
   });
 
   // Set up realtime subscription
   useEffect(() => {
-    console.log("Setting up realtime subscription for tenants...");
     const channel = supabase
       .channel('schema-db-changes')
       .on(
@@ -109,51 +70,38 @@ export const useTenants = () => {
           table: 'tenants'
         },
         (payload) => {
-          console.log("New tenant inserted:", payload);
-          // Invalidate and refetch
           queryClient.invalidateQueries({ queryKey: ["tenants"] });
         }
       )
       .subscribe();
 
     return () => {
-      console.log("Cleaning up realtime subscription...");
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
 
   const addTenant = useMutation({
     mutationFn: async (newTenant: any) => {
-      console.log("Adding new tenant:", newTenant);
-      
-      // Get the current user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       
       if (userError || !user) {
-        console.error("User not authenticated:", userError);
         throw new Error("Vous devez être connecté pour ajouter un locataire");
       }
 
-      // Add user_id to the tenant data
       const tenantData = {
         ...newTenant,
         user_id: user.id
       };
 
-      console.log("Tenant data with user_id:", tenantData);
-
       const { data, error } = await supabase.from("tenants").insert(tenantData).select();
       
       if (error) {
-        console.error("Database error:", error);
         throw error;
       }
       
-      console.log("Tenant added successfully:", data);
       return data;
     },
     onSuccess: () => {
-      console.log("Tenant added successfully");
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       toast({
         title: "Success",
@@ -161,7 +109,6 @@ export const useTenants = () => {
       });
     },
     onError: (error: Error) => {
-      console.error("Error adding tenant:", error);
       toast({
         title: "Error adding tenant",
         description: error.message,
@@ -172,7 +119,6 @@ export const useTenants = () => {
 
   const updateTenant = useMutation({
     mutationFn: async ({ id, ...data }: any) => {
-      console.log("Updating tenant:", id, data);
       const { data: updatedData, error } = await supabase
         .from("tenants")
         .update(data)
@@ -181,11 +127,9 @@ export const useTenants = () => {
       return updatedData;
     },
     onSuccess: () => {
-      console.log("Tenant updated successfully");
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
     },
     onError: (error: Error) => {
-      console.error("Error updating tenant:", error);
       toast({
         title: "Error updating tenant",
         description: error.message,
@@ -196,12 +140,10 @@ export const useTenants = () => {
 
   const deleteTenant = useMutation({
     mutationFn: async (id: string) => {
-      console.log("Deleting tenant:", id);
       const { error } = await supabase.from("tenants").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
-      console.log("Tenant deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       toast({
         title: "Success",
@@ -209,7 +151,6 @@ export const useTenants = () => {
       });
     },
     onError: (error: Error) => {
-      console.error("Error deleting tenant:", error);
       toast({
         title: "Error deleting tenant",
         description: error.message,

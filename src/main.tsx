@@ -14,17 +14,17 @@ import { TooltipProvider } from './components/ui/tooltip'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // Optimisations de performance par défaut
-      staleTime: 1000 * 60 * 2, // 2 minutes avant qu'une requête soit considérée comme périmée
-      gcTime: 1000 * 60 * 10, // Durée de conservation dans le cache (10 minutes)
-      retry: 1, // Limiter les tentatives de nouvelle requête en cas d'échec
-      refetchOnWindowFocus: false, // Ne pas refetch automatiquement quand la fenêtre regagne le focus
-      refetchOnMount: true, // Refetch au montage des composants
+      staleTime: 1000 * 60 * 5, // 5 minutes pour réduire les requêtes
+      gcTime: 1000 * 60 * 15, // Cache plus long pour les performances
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnMount: false, // Éviter les refetch inutiles au montage
+      refetchOnReconnect: false, // Éviter les refetch sur reconnexion
     },
   },
 })
 
-// Observer et loguer les changements de cache pour le débogage
+// Désactiver les logs en production pour améliorer les performances
 if (process.env.NODE_ENV === 'development') {
   queryClient.getQueryCache().subscribe(event => {
     if (event.type === 'added' || event.type === 'removed') {

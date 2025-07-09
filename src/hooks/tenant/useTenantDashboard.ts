@@ -22,16 +22,8 @@ export const useTenantDashboard = () => {
   const retryCount = useRef(0);
   const maxRetries = 2;
 
-  console.log("=== OPTIMIZED TENANT DASHBOARD HOOK ===");
-  console.log("tenant:", !!tenant, "ID:", tenant?.id);
-  console.log("isLoadingTenant:", isLoadingTenant);
-  console.log("isRefreshing:", isRefreshing);
-
   // Only consider essential loading (tenant data) for main loading state
   const isLoading = isLoadingTenant || isRefreshing;
-  
-  console.log("Final loading state:", isLoading);
-  console.log("Can show dashboard:", !isLoading && !!tenant);
 
   // Resilient function to load secondary data
   const loadSecondaryData = useCallback(async () => {
@@ -45,44 +37,27 @@ export const useTenantDashboard = () => {
     }
     lastSecondaryDataLoad.current = now;
     
-    console.log("=== LOADING SECONDARY DATA (RESILIENT) ===");
-    console.log("Tenant ID available:", tenant.id);
-    
     isSecondaryDataLoading.current = true;
     
     try {
-      console.log("Loading secondary data with error isolation...");
       
       // Load secondary data with generous delays and error isolation
       const promises = [
-        fetchCommunications().catch(err => {
-          console.error('Communications fetch failed (non-critical):', err);
-          return null;
-        }),
+        fetchCommunications().catch(() => null),
         new Promise(resolve => setTimeout(resolve, 500)).then(() => 
-          fetchMaintenanceRequests().catch(err => {
-            console.error('Maintenance fetch failed (non-critical):', err);
-            return null;
-          })
+          fetchMaintenanceRequests().catch(() => null)
         ),
         new Promise(resolve => setTimeout(resolve, 800)).then(() =>
-          fetchPaymentsAndDocuments().catch(err => {
-            console.error('Payments/documents fetch failed (non-critical):', err);
-            return null;
-          })
+          fetchPaymentsAndDocuments().catch(() => null)
         )
       ];
       
       await Promise.allSettled(promises);
-      console.log("Secondary data loading completed (some may have failed non-critically)");
       retryCount.current = 0; // Reset on success
     } catch (error) {
-      console.error('Error in secondary data loading:', error);
-      
       // Implement retry logic for critical failures
       if (retryCount.current < maxRetries) {
         retryCount.current++;
-        console.log(`Retrying secondary data load (attempt ${retryCount.current}/${maxRetries})`);
         setTimeout(() => {
           if (tenant?.id && !isRefreshing) {
             loadSecondaryData();
@@ -108,7 +83,6 @@ export const useTenantDashboard = () => {
 
   // Resilient refresh function
   const refreshDashboard = useCallback(async () => {
-    console.log("=== REFRESHING DASHBOARD (RESILIENT) ===");
     setIsRefreshing(true);
     
     try {
@@ -120,7 +94,6 @@ export const useTenantDashboard = () => {
           tenantDataSuccess = true;
           break;
         } catch (error) {
-          console.error(`Tenant data fetch attempt ${i + 1} failed:`, error);
           if (i < 2) {
             await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
           }
@@ -133,33 +106,22 @@ export const useTenantDashboard = () => {
       
       // Then reload secondary data with longer delays and error tolerance
       const secondaryPromises = [
-        fetchCommunications().catch(err => {
-          console.warn('Communications refresh failed:', err);
-          return null;
-        }),
+        fetchCommunications().catch(() => null),
         new Promise(resolve => setTimeout(resolve, 500)).then(() =>
-          fetchMaintenanceRequests().catch(err => {
-            console.warn('Maintenance refresh failed:', err);
-            return null;
-          })
+          fetchMaintenanceRequests().catch(() => null)
         ),
         new Promise(resolve => setTimeout(resolve, 800)).then(() =>
-          fetchPaymentsAndDocuments().catch(err => {
-            console.warn('Payments/documents refresh failed:', err);
-            return null;
-          })
+          fetchPaymentsAndDocuments().catch(() => null)
         )
       ];
       
       await Promise.allSettled(secondaryPromises);
       
-      console.log("Dashboard refresh completed successfully");
       toast({
         title: "Dashboard actualisé",
         description: "Toutes les données ont été mises à jour avec succès.",
       });
     } catch (error) {
-      console.error('Error refreshing dashboard:', error);
       toast({
         title: "Erreur de rafraîchissement",
         description: "Impossible de rafraîchir complètement le dashboard. Certaines données peuvent être manquantes.",
