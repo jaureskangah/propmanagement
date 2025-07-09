@@ -130,7 +130,6 @@ export const DocumentPreview = ({
                 onEdit();
               }}
               onSaveEdit={handleSaveEdit}
-              onDownload={handleDownload}
             />
           </div>
         </div>

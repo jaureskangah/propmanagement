@@ -44,7 +44,6 @@ export function DocumentPreview({
         {/* Retrait du titre "Aperçu" */}
         <div></div>
         <ActionButtons 
-          onDownload={onDownload}
           onShare={handleShare}
           isDownloading={isDownloading}
         />

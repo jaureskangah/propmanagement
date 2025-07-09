@@ -5,13 +5,12 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ActionButtonsProps {
   onSave?: () => void;
-  onDownload?: () => void;
   onShare?: () => void;
   isSaving?: boolean;
   isDownloading?: boolean;
 }
 
-export function ActionButtons({ onSave, onDownload, onShare, isSaving = false, isDownloading = false }: ActionButtonsProps) {
+export function ActionButtons({ onSave, onShare, isSaving = false, isDownloading = false }: ActionButtonsProps) {
   const { t } = useLocale();
   
   return (
@@ -45,26 +44,6 @@ export function ActionButtons({ onSave, onDownload, onShare, isSaving = false, i
         >
           <Share2 className="mr-2 h-4 w-4 text-purple-600 dark:text-purple-400" />
           {t('shareDocument') || "Partager le document"}
-        </Button>
-      )}
-      
-      {onDownload && (
-        <Button 
-          onClick={onDownload} 
-          disabled={isDownloading}
-          className="bg-green-600 hover:bg-green-700 text-white dark:bg-green-700 dark:hover:bg-green-800"
-        >
-          {isDownloading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {t('downloading') || "Téléchargement..."}
-            </>
-          ) : (
-            <>
-              <Download className="mr-2 h-4 w-4" />
-              {t('downloadDocument') || "Télécharger le document"}
-            </>
-          )}
         </Button>
       )}
     </div>
