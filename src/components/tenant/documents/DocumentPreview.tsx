@@ -104,7 +104,6 @@ export const DocumentPreview = ({
                 loadError ? (
                   <ErrorState
                     onRetry={handleRetryLoad}
-                    onDownload={handleDownload}
                   />
                 ) : (
                   <PdfViewer
