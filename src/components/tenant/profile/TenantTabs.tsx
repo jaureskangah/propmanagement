@@ -121,7 +121,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       case 'documents':
         return (
           <TenantDocuments 
-            documents={tenant.documents} 
+            documents={documentsData} 
             tenantId={tenant.id}
             onDocumentUpdate={handleDataUpdate}
             tenant={tenant}
@@ -147,7 +147,7 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
       default:
         return (
           <TenantDocuments 
-            documents={tenant.documents} 
+            documents={documentsData} 
             tenantId={tenant.id}
             onDocumentUpdate={handleDataUpdate}
             tenant={tenant}
