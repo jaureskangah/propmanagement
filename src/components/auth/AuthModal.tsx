@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { useLocale } from '@/components/providers/LocaleProvider';
@@ -90,7 +89,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             style={{ maxHeight: '95vh' }}
           >
             {/* Background effects for modal */}
-            <div className="absolute inset-0 bg-gradient-to-b from-purple-500/20 via-purple-700/30 to-black/50" />
+            <div className="absolute inset-0 bg-gradient-to-b from-red-500/20 via-red-700/30 to-black/50" />
             <div className="absolute inset-0 opacity-[0.03]" 
               style={{
                 backgroundImage: `linear-gradient(135deg, white 0.5px, transparent 0.5px), linear-gradient(45deg, white 0.5px, transparent 0.5px)`,

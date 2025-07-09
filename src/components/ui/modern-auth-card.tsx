@@ -32,8 +32,8 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
 
   return (
     <div className="w-full bg-black relative overflow-y-scroll" style={{ height: '120vh' }}>
-      {/* Background gradient effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-500/40 via-purple-700/50 to-black" />
+      {/* Background gradient effect - Updated to red */}
+      <div className="absolute inset-0 bg-gradient-to-b from-red-500/40 via-red-700/50 to-black" />
       
       {/* Subtle noise texture overlay */}
       <div className="absolute inset-0 opacity-[0.03] mix-blend-soft-light" 
@@ -43,10 +43,10 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
         }}
       />
 
-      {/* Background animated glows */}
-      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120vh] h-[60vh] rounded-b-[50%] bg-purple-400/20 blur-[80px]" />
+      {/* Background animated glows - Updated to red */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[120vh] h-[60vh] rounded-b-[50%] bg-red-400/20 blur-[80px]" />
       <motion.div 
-        className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100vh] h-[60vh] rounded-b-full bg-purple-300/20 blur-[60px]"
+        className="absolute top-0 left-1/2 transform -translate-x-1/2 w-[100vh] h-[60vh] rounded-b-full bg-red-300/20 blur-[60px]"
         animate={{ 
           opacity: [0.15, 0.3, 0.15],
           scale: [0.98, 1.02, 0.98]
@@ -58,7 +58,7 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
         }}
       />
       <motion.div 
-        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90vh] h-[90vh] rounded-t-full bg-purple-400/20 blur-[60px]"
+        className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-[90vh] h-[90vh] rounded-t-full bg-red-400/20 blur-[60px]"
         animate={{ 
           opacity: [0.3, 0.5, 0.3],
           scale: [1, 1.1, 1]
