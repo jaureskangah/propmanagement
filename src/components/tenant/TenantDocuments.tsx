@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { motion } from "framer-motion";
 
 interface TenantDocumentsProps {
   documents: TenantDocument[];
@@ -62,6 +63,22 @@ export const TenantDocuments = ({
 
   return (
     <div className="space-y-6">
+      {/* Security disclaimer */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.2 }}
+        className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800 rounded-lg"
+      >
+        <div className="flex items-start gap-2">
+          <div className="h-4 w-4 rounded-full bg-amber-500 flex-shrink-0 mt-0.5">
+            <span className="sr-only">Avertissement</span>
+          </div>
+          <p className="text-sm text-amber-800 dark:text-amber-200 leading-relaxed">
+            <strong className="font-medium">{t('securityReminder')}</strong> {t('securityDisclaimerText')}
+          </p>
+        </div>
+      </motion.div>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex items-center gap-2">

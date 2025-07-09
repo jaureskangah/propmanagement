@@ -54,7 +54,10 @@ const translations = {
   paymentReceipts: "Reçus de paiement",
   // Traductions pour l'upload de documents
   uploadDocument: "Téléverser un document",
-  uploadNewDocument: "Ajouter un document"
+  uploadNewDocument: "Ajouter un document",
+  // Security disclaimer translations
+  securityReminder: "Rappel de sécurité :",
+  securityDisclaimerText: "Ne partagez jamais d'informations sensibles (mots de passe, numéros de carte bancaire, documents d'identité) via cette application. Utilisez des canaux sécurisés pour ce type d'informations."
 };
 
 // Debug: Log final des traductions composées
