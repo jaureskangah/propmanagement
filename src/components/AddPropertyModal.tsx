@@ -1,9 +1,10 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { PropertyForm } from "@/components/PropertyForm";
+import { PropertyEnhancedForm } from "@/components/properties/PropertyEnhancedForm";
 import { useProperties, PropertyFormData } from "@/hooks/useProperties";
 import { toast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -33,15 +34,17 @@ export function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>{t('addProperty')}</DialogTitle>
         </DialogHeader>
-        <PropertyForm
-          onSubmit={handleSubmit}
-          onCancel={onClose}
-          isSubmitting={false}
-        />
+        <ScrollArea className="max-h-[calc(90vh-100px)] pr-4">
+          <PropertyEnhancedForm
+            onSubmit={handleSubmit}
+            onCancel={onClose}
+            isSubmitting={false}
+          />
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

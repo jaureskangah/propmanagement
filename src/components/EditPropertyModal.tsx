@@ -1,6 +1,6 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { PropertyForm } from "@/components/PropertyForm";
+import { PropertyEnhancedForm } from "@/components/properties/PropertyEnhancedForm";
 import { useProperties, Property, PropertyFormData } from "@/hooks/useProperties";
 import { toast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -48,7 +48,7 @@ export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyMod
           <DialogTitle>{t('editProperty')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-80px)] px-6 pb-6">
-          <PropertyForm
+          <PropertyEnhancedForm
             onSubmit={handleSubmit}
             onCancel={onClose}
             isSubmitting={false}
