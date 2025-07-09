@@ -21,18 +21,22 @@ interface PropertyCardProps {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onViewFinancials: (id: string) => void;
+  onViewDetails?: (id: string) => void;
 }
 
-const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials }: PropertyCardProps) => {
+const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials, onViewDetails }: PropertyCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   
   return (
-    <Card className={cn(
-      "relative h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
-      "hover:shadow-2xl hover:-translate-y-2 group cursor-pointer",
-      "bg-gradient-to-br",
-      getGradientByType(property.type)
-    )}>
+    <Card 
+      className={cn(
+        "relative h-full overflow-hidden transition-all duration-300 border border-slate-200 dark:border-slate-800",
+        "hover:shadow-2xl hover:-translate-y-2 group cursor-pointer",
+        "bg-gradient-to-br",
+        getGradientByType(property.type)
+      )}
+      onClick={() => onViewDetails?.(property.id)}
+    >
       <BorderTrail
         className="bg-gradient-to-r from-blue-500 via-purple-500 to-teal-500"
         size={80}

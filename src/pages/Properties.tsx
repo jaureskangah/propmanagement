@@ -17,6 +17,7 @@ import PropertyFinancialsSection from "@/components/properties/PropertyFinancial
 import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import PropertyDetailView from "@/components/properties/PropertyDetailView";
 
 const Properties = () => {
   const { t } = useLocale();
@@ -35,6 +36,7 @@ const Properties = () => {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [selectedPropertyIds, setSelectedPropertyIds] = useState<string[]>([]);
   const [isBulkDeleteDialogOpen, setIsBulkDeleteDialogOpen] = useState(false);
+  const [selectedPropertyForDetails, setSelectedPropertyForDetails] = useState<string | null>(null);
   
   const isMobile = useMediaQuery("(max-width: 768px)");
   
