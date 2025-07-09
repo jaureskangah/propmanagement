@@ -1,5 +1,5 @@
 
-import { File, FileText, ArrowUpRight, Download, FolderOpen } from "lucide-react";
+import { File, FileText, ArrowUpRight, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { TenantDocument } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -108,17 +108,6 @@ export const DocumentsWidget = ({ documents }: DocumentsWidgetProps) => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-1">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="h-8 w-8 text-purple-600 dark:text-purple-400 hover:bg-purple-100 dark:hover:bg-purple-900/30 opacity-0 group-hover:opacity-100 transition-all"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.open(doc.file_url, '_blank');
-                      }}
-                    >
-                      <Download className="h-3.5 w-3.5" />
-                    </Button>
                     <ArrowUpRight className="h-4 w-4 text-gray-400 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors" />
                   </div>
                 </motion.div>

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { TenantDocument } from "@/types/tenant";
-import { Download, Share2, X } from "lucide-react";
+import { Share2, X } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface DocumentViewerDialogProps {
@@ -58,18 +58,6 @@ export const DocumentViewerDialog = ({
           <div className="flex items-center justify-between">
             <DialogTitle>{document.name}</DialogTitle>
             <div className="flex items-center gap-2">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  if (document.file_url) {
-                    window.open(document.file_url, '_blank');
-                  }
-                }}
-                title={t("downloadDocument") || "Télécharger"}
-              >
-                <Download className="h-4 w-4" />
-              </Button>
               
               <Button
                 variant="ghost"

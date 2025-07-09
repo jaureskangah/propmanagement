@@ -1,7 +1,7 @@
 
 import { TenantDocument } from "@/types/tenant";
 import { Button } from "@/components/ui/button";
-import { Download, ExternalLink, Trash2 } from "lucide-react";
+import { ExternalLink, Trash2 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { QuickPreview } from "./QuickPreview";
 
@@ -18,22 +18,6 @@ export const DocumentActions = ({
 }: DocumentActionsProps) => {
   const { t } = useLocale();
 
-  const handleDownload = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!documentItem.file_url) return;
-    
-    // Create a temporary link element
-    const link = window.document.createElement('a');
-    link.href = documentItem.file_url;
-    link.download = documentItem.name || 'document';
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
-    
-    // Append to the document, click it, and remove it
-    window.document.body.appendChild(link);
-    link.click();
-    window.document.body.removeChild(link);
-  };
 
   return (
     <div className="flex gap-1 justify-end">
@@ -41,15 +25,6 @@ export const DocumentActions = ({
         document={documentItem} 
         onFullView={() => onViewDocument(documentItem)} 
       />
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleDownload}
-        title={t("downloadDocument")}
-        className="h-8 w-8"
-      >
-        <Download className="h-4 w-4" />
-      </Button>
       <Button
         variant="ghost"
         size="icon"

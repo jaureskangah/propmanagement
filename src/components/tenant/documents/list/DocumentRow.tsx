@@ -2,7 +2,7 @@
 import React from "react";
 import { TenantDocument } from "@/types/tenant";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal, Eye, Trash, Download } from "lucide-react";
+import { MoreHorizontal, Eye, Trash } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,9 +46,6 @@ export const DocumentRow = ({
   
   const handleDelete = () => onDeleteDocument(document.id, document.file_url);
   
-  const handleDownload = () => {
-    window.open(document.file_url, '_blank');
-  };
 
   return (
     <>
@@ -88,10 +85,6 @@ export const DocumentRow = ({
                 <Eye className="h-4 w-4 mr-2" />
                 {t("view")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={handleDownload}>
-                <Download className="h-4 w-4 mr-2" />
-                {t("download")}
-              </DropdownMenuItem>
               <DropdownMenuItem 
                 onClick={handleDelete}
                 className="text-red-600 focus:text-red-600"
@@ -105,9 +98,6 @@ export const DocumentRow = ({
           <div className="flex justify-end gap-2">
             <Button variant="ghost" size="icon" onClick={handleView} title={t("view")}>
               <Eye className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon" onClick={handleDownload} title={t("download")}>
-              <Download className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="icon" onClick={handleDelete} title={t("delete")} className="text-red-600 hover:text-red-700">
               <Trash className="h-4 w-4" />
