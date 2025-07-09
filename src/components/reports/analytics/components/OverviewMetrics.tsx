@@ -62,21 +62,27 @@ export const OverviewMetrics = ({ properties, tenants, payments, maintenance }: 
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
       {metrics.map((metric, index) => {
         const Icon = metric.icon;
         return (
-          <Card key={index} className="hover:shadow-md transition-shadow">
-            <CardContent className="p-6">
-              <div className="flex items-center space-x-4">
-                <div className={`p-3 rounded-full ${metric.bgColor}`}>
-                  <Icon className={`h-6 w-6 ${metric.color}`} />
+          <Card 
+            key={index} 
+            className="group hover-lift glass-card cursor-pointer transition-all duration-300 border-border/50 hover:border-primary/20"
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center space-x-3 sm:space-x-4">
+                <div className={`p-2 sm:p-3 rounded-full ${metric.bgColor} transition-transform duration-300 group-hover:scale-110`}>
+                  <Icon className={`h-5 w-5 sm:h-6 sm:w-6 ${metric.color} transition-colors duration-300`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-muted-foreground">
+                  <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">
                     {metric.title}
                   </p>
-                  <p className="text-2xl font-bold">{metric.value}</p>
+                  <p className="text-lg sm:text-2xl font-bold transition-colors duration-300 group-hover:text-primary">
+                    {metric.value}
+                  </p>
                 </div>
               </div>
             </CardContent>

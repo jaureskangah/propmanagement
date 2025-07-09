@@ -71,33 +71,43 @@ export const AnalyticsDashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header with export options */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">
+    <div className="space-y-6 animate-fade-in">
+      {/* Header with export options - Mobile responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="space-y-1">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
             {t('analyticsOverview', { fallback: 'Vue d\'ensemble Analytics' })}
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm sm:text-base">
             {t('comprehensiveAnalytics', { fallback: 'Analyse complète de vos données immobilières' })}
           </p>
         </div>
-        <GlobalExportOptions data={allData} type="analytics" />
+        <div className="flex-shrink-0">
+          <GlobalExportOptions data={allData} type="analytics" />
+        </div>
       </div>
 
-      {/* Overview Metrics */}
-      <OverviewMetrics 
-        properties={properties}
-        tenants={tenants}
-        payments={payments}
-        maintenance={maintenance}
-      />
+      {/* Overview Metrics - Enhanced animations */}
+      <div className="animate-slide-up-fade">
+        <OverviewMetrics 
+          properties={properties}
+          tenants={tenants}
+          payments={payments}
+          maintenance={maintenance}
+        />
+      </div>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RevenueChart payments={payments} />
-        <MaintenanceAnalytics maintenance={maintenance} />
-        <OccupancyTrends tenants={tenants} properties={properties} />
+      {/* Charts Grid - Staggered animations on mobile */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <RevenueChart payments={payments} />
+        </div>
+        <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <MaintenanceAnalytics maintenance={maintenance} />
+        </div>
+        <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <OccupancyTrends tenants={tenants} properties={properties} />
+        </div>
       </div>
     </div>
   );

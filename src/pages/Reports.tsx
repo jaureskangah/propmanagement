@@ -28,13 +28,13 @@ const Reports = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
+      <div className="ml-0 md:ml-20 p-3 sm:p-6 md:p-8 pt-16 sm:pt-20 md:pt-8 transition-all duration-300">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <div className="mb-6 sm:mb-8 animate-fade-in">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               {t('advancedReports', { fallback: 'Rapports Avancés' })}
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">
               {t('analyticsDescription', { fallback: 'Tableaux de bord analytics et métriques de performance' })}
             </p>
           </div>

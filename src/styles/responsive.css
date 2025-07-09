@@ -32,10 +32,27 @@
       flex-wrap: nowrap !important;
       -ms-overflow-style: none !important;
       scrollbar-width: none !important;
+      scroll-behavior: smooth !important;
+      -webkit-overflow-scrolling: touch !important;
     }
     
     .mobile-tabs-scroll::-webkit-scrollbar {
       display: none !important;
+    }
+
+    /* Améliorations tactiles pour mobile */
+    .mobile-touch-target {
+      min-height: 44px !important;
+      min-width: 44px !important;
+    }
+
+    .mobile-card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .mobile-card-hover:active {
+      transform: scale(0.98) !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
     }
     
     .toolbar-grid {
