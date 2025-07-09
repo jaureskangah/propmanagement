@@ -24,7 +24,7 @@ export const TenantDocuments = ({
   tenant 
 }: TenantDocumentsProps) => {
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { t, language } = useLocale();
 
 
   const handleDelete = async (documentId: string, filename: string) => {
@@ -92,7 +92,7 @@ export const TenantDocuments = ({
                     <div>
                       <p className="font-medium">{doc.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatDate(doc.created_at)}
+                        {formatDate(doc.created_at, language)}
                       </p>
                     </div>
                   </div>

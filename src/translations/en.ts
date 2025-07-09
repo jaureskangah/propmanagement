@@ -46,7 +46,12 @@ const translations = {
   ...otherDocuments,
   documentGenerator: documentGenerator,
   // Ajouter downloadDocument à la racine pour compatibilité
-  downloadDocument: documentGenerator.downloadDocument
+  downloadDocument: documentGenerator.downloadDocument,
+  // Traductions pour les catégories de documents tenant
+  otherDocuments: "Other Documents",
+  importantDocuments: "Important Documents", 
+  leaseDocuments: "Lease Documents",
+  paymentReceipts: "Payment Receipts"
 };
 
 // Debug: Log final des traductions composées

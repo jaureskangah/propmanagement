@@ -28,7 +28,7 @@ export const DocumentRow = ({
   onDeleteDocument,
   isMobile = false
 }: DocumentRowProps) => {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   
   // Format the document name to truncate if too long
   const displayName = 
@@ -69,7 +69,7 @@ export const DocumentRow = ({
       </TableCell>
       
       <TableCell className="hidden md:table-cell text-sm text-muted-foreground text-right">
-        {document.created_at ? formatDate(document.created_at) : "-"}
+        {document.created_at ? formatDate(document.created_at, language) : "-"}
       </TableCell>
       
       <TableCell className="text-right">
