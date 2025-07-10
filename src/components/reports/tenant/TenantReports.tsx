@@ -163,7 +163,7 @@ export const TenantReports = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="font-medium">{t('rentAmount', { fallback: 'Loyer' })}</p>
-                    <p className="text-muted-foreground">€{tenant.rent_amount?.toLocaleString()}</p>
+                    <p className="text-muted-foreground">${tenant.rent_amount?.toLocaleString()}</p>
                   </div>
                   <div>
                     <p className="font-medium">{t('unit', { fallback: 'Unité' })}</p>
@@ -178,7 +178,7 @@ export const TenantReports = () => {
                       <DollarSign className="h-4 w-4 text-green-600" />
                       <span>{t('totalPaid', { fallback: 'Total payé' })}</span>
                     </div>
-                    <span className="font-medium">€{tenant.totalPaid.toLocaleString()}</span>
+                    <span className="font-medium">${tenant.totalPaid.toLocaleString()}</span>
                   </div>
                   
                   {tenant.lastPayment && (

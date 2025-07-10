@@ -106,7 +106,7 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
         yPosition += 8;
         
         const totalRevenue = data.payments?.reduce((sum: number, payment: any) => sum + (payment.amount || 0), 0) || 0;
-        doc.text(`${t('totalRevenue', { fallback: 'Revenus totaux' })}: €${totalRevenue.toLocaleString()}`, 14, yPosition);
+        doc.text(`${t('totalRevenue', { fallback: 'Revenus totaux' })}: $${totalRevenue.toLocaleString()}`, 14, yPosition);
         yPosition += 20;
 
         // Properties table
@@ -160,7 +160,7 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
       content += `Locataires totaux: ${data.tenants?.length || 0}\n`;
       
       const totalRevenue = data.payments?.reduce((sum: number, payment: any) => sum + (payment.amount || 0), 0) || 0;
-      content += `Revenus totaux: €${totalRevenue.toLocaleString()}\n\n`;
+      content += `Revenus totaux: $${totalRevenue.toLocaleString()}\n\n`;
       
       // Properties details
       if (data.properties?.length > 0) {
@@ -181,7 +181,7 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
         data.tenants.slice(0, 10).forEach((tenant: any) => {
           content += `- ${tenant.name}\n`;
           content += `  Email: ${tenant.email}\n`;
-          content += `  Loyer: €${tenant.rent_amount}\n`;
+          content += `  Loyer: $${tenant.rent_amount}\n`;
           content += `  Bail: ${format(new Date(tenant.lease_start), 'dd/MM/yyyy')} - ${format(new Date(tenant.lease_end), 'dd/MM/yyyy')}\n\n`;
         });
       }
