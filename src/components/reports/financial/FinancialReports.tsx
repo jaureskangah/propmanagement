@@ -61,7 +61,9 @@ export const FinancialReports = () => {
   const totalRevenue = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
   const totalExpenses = expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
   const netIncome = totalRevenue - totalExpenses;
-  const roi = totalExpenses > 0 ? ((netIncome / totalExpenses) * 100) : 0;
+  // ROI basé sur la valeur de propriété estimée
+  const propertyValue = 500000; // Valeur estimée de la propriété
+  const roi = propertyValue > 0 ? ((netIncome / propertyValue) * 100) : 0;
 
   return (
     <div className="space-y-6">
@@ -119,7 +121,7 @@ export const FinancialReports = () => {
               {roi.toFixed(1)}%
             </div>
             <p className="text-sm text-muted-foreground">
-              {t('roi', { fallback: 'ROI' })}
+              {t('roi', { fallback: 'ROI sur valeur propriété' })}
             </p>
           </CardContent>
         </Card>

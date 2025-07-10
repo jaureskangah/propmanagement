@@ -33,7 +33,7 @@ export const MetricsCards = ({ expenses, maintenance, rentData }: MetricsCardsPr
       borderColor: "border-rose-100 dark:border-rose-800/30 hover:border-rose-200 dark:hover:border-rose-700/40",
     },
     {
-      title: t('roi'),
+      title: t('roi', { fallback: 'ROI Annuel' }),
       value: `${roi}%`,
       icon: <TrendingUp className="h-4 w-4" />,
       description: t('annualReturn'),
