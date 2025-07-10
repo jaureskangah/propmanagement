@@ -33,11 +33,11 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
   };
 
   return (
-    <div className="w-full bg-black relative overflow-y-scroll" style={{ height: '120vh' }}>
+    <div className="w-full h-screen bg-black relative overflow-hidden">
       <AuthCardBackground />
 
       {/* Simple centered container */}
-      <div className="flex items-center justify-center px-4 py-16" style={{ minHeight: '120vh' }}>
+      <div className="flex items-center justify-center px-4 py-16 h-full overflow-y-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
