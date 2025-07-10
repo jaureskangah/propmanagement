@@ -44,15 +44,15 @@ export const PageLoadingAnimation = ({ duration = 2000 }: PageLoadingAnimationPr
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="text-2xl font-bold text-primary"
+            className="text-2xl font-bold text-red-600"
           >
-            PropertyManager
+            PropManagement
           </motion.div>
 
           {/* Barre de progression */}
           <div className="w-80 bg-muted rounded-full h-3 overflow-hidden">
             <motion.div
-              className="h-full bg-gradient-to-r from-primary to-primary/80 rounded-full"
+              className="h-full bg-gradient-to-r from-red-500 to-red-600 rounded-full"
               initial={{ width: 0 }}
               animate={{ width: `${progress}%` }}
               transition={{ duration: 0.1, ease: "easeOut" }}
@@ -65,7 +65,7 @@ export const PageLoadingAnimation = ({ duration = 2000 }: PageLoadingAnimationPr
             initial={{ scale: 0.9, opacity: 0.5 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.2 }}
-            className="text-4xl font-bold text-primary tabular-nums"
+            className="text-4xl font-bold text-red-600 tabular-nums"
           >
             {progress}%
           </motion.div>
@@ -88,7 +88,7 @@ export const PageLoadingAnimation = ({ duration = 2000 }: PageLoadingAnimationPr
             {[0, 1, 2].map((index) => (
               <motion.div
                 key={index}
-                className="w-2 h-2 bg-primary rounded-full"
+                className="w-2 h-2 bg-red-500 rounded-full"
                 animate={{
                   scale: [1, 1.2, 1],
                   opacity: [0.5, 1, 0.5],
