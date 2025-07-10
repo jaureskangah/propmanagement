@@ -7,9 +7,11 @@ import { Loader2 } from "lucide-react";
 import { GlobalExportOptions } from "../shared/GlobalExportOptions";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import { MetricsCards } from "@/components/maintenance/financials/MetricsCards";
+import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
 
 export const FinancialReports = () => {
   const { t } = useLocale();
+  const [selectedPropertyId, setSelectedPropertyId] = React.useState<string | null>(null);
 
   // Fetch financial data
   const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
@@ -135,15 +137,21 @@ export const FinancialReports = () => {
 
       {/* Financial Overview per Property */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-6">
           <CardTitle>
             {t('financialOverviewByProperty', { fallback: 'Vue d\'ensemble par propriété' })}
           </CardTitle>
+          <PropertyFinancialSelector
+            properties={properties.map(p => ({ id: p.id, name: p.name }))}
+            isLoading={isLoadingProperties}
+            selectedPropertyId={selectedPropertyId || properties[0]?.id || null}
+            onPropertySelect={setSelectedPropertyId}
+          />
         </CardHeader>
         <CardContent>
           {properties.length > 0 ? (
             <FinancialOverview 
-              propertyId={properties[0]?.id || null}
+              propertyId={selectedPropertyId || properties[0]?.id || null}
               selectedYear={new Date().getFullYear()}
             />
           ) : (
