@@ -3,6 +3,8 @@ import { FileText, Home, Wallet } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MetricCard } from "./components/MetricCard";
 import { useFinancialCalculations } from "./hooks/useFinancialCalculations";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 interface MetricsCardsProps {
   expenses: any[];
@@ -12,10 +14,32 @@ interface MetricsCardsProps {
 
 export const MetricsCards = ({ expenses, maintenance, rentData }: MetricsCardsProps) => {
   const { t } = useLocale();
+  
+  // Récupérer les données des propriétés et locataires pour le calcul du taux d'occupation
+  const { data: properties = [] } = useQuery({
+    queryKey: ['properties_for_occupancy'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('properties').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: tenants = [] } = useQuery({
+    queryKey: ['tenants_for_occupancy'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('tenants').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
   const { calculateOccupancyRate, calculateTotalExpenses, calculateTotalIncome } = useFinancialCalculations({
     expenses,
     maintenance,
-    rentData
+    rentData,
+    properties,
+    tenants
   });
 
   const totalExpenses = calculateTotalExpenses();

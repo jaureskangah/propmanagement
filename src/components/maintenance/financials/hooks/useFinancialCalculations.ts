@@ -3,32 +3,26 @@ interface FinancialData {
   expenses: any[];
   maintenance: any[];
   rentData: any[];
+  properties?: any[];
+  tenants?: any[];
 }
 
-export const useFinancialCalculations = ({ expenses, maintenance, rentData }: FinancialData) => {
+export const useFinancialCalculations = ({ expenses, maintenance, rentData, properties = [], tenants = [] }: FinancialData) => {
   const calculateOccupancyRate = () => {
     try {
-      if (!Array.isArray(rentData)) {
-        return "0.00";
+      // Calculer le taux d'occupation basé sur les unités occupées / unités totales
+      const totalUnits = properties.reduce((acc, property) => acc + (property.units || 0), 0);
+      const occupiedUnits = tenants.length; // Nombre de locataires actifs
+      
+      if (totalUnits === 0) {
+        return "0.0";
       }
-
-      // Calculer le taux d'occupation basé sur les paiements reçus
-      // Supposons 12 mois par an et calculons le pourcentage de mois payés
-      const currentYear = new Date().getFullYear();
-      const currentMonth = new Date().getMonth() + 1;
       
-      const paidMonths = rentData
-        .filter(payment => {
-          if (!payment || payment.status !== "paid") return false;
-          const paymentDate = new Date(payment.payment_date);
-          return paymentDate.getFullYear() === currentYear;
-        }).length;
-      
-      const occupancyRate = (paidMonths / currentMonth) * 100;
+      const occupancyRate = (occupiedUnits / totalUnits) * 100;
       return Math.min(occupancyRate, 100).toFixed(1);
     } catch (error) {
       console.error("Error calculating occupancy rate:", error);
-      return "0.00";
+      return "0.0";
     }
   };
 
