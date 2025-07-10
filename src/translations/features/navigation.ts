@@ -47,7 +47,7 @@ export const frNavigation: NavigationTranslations = {
   loading: "Chargement...",
   error: "Erreur",
   properties: "Propriétés",
-  finances: "Dépenses",
+  finances: "Finances",
   costs: "Dépenses",
   getSupport: "Obtenir de l'aide",
   invitations: "Invitations",
