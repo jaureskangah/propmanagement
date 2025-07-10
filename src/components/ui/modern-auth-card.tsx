@@ -96,17 +96,16 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
             <div className="relative group">
               {/* Card glow effect */}
               <motion.div 
-                className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-700"
+                className="absolute -inset-[1px] rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-500"
                 animate={{
                   boxShadow: [
-                    "0 0 10px 2px rgba(255,255,255,0.03)",
-                    "0 0 15px 5px rgba(255,255,255,0.05)",
-                    "0 0 10px 2px rgba(255,255,255,0.03)"
-                  ],
-                  opacity: [0.2, 0.4, 0.2]
+                    "0 0 20px 3px rgba(239, 68, 68, 0.1)",
+                    "0 0 30px 6px rgba(239, 68, 68, 0.2)",
+                    "0 0 20px 3px rgba(239, 68, 68, 0.1)"
+                  ]
                 }}
                 transition={{ 
-                  duration: 4, 
+                  duration: 3, 
                   repeat: Infinity, 
                   ease: "easeInOut", 
                   repeatType: "mirror" 
@@ -116,11 +115,11 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
               {/* Traveling light beam effects */}
               <div className="absolute -inset-[1px] rounded-2xl overflow-hidden">
                 <motion.div 
-                  className="absolute top-0 left-0 h-[3px] w-[50%] bg-gradient-to-r from-transparent via-white to-transparent opacity-70"
+                  className="absolute top-0 left-0 h-[3px] w-[50%] bg-gradient-to-r from-transparent via-red-400 to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
                   animate={{ 
                     left: ["-50%", "100%"],
-                    opacity: [0.3, 0.7, 0.3],
+                    opacity: [0.3, 0.8, 0.3],
                     filter: ["blur(1px)", "blur(2.5px)", "blur(1px)"]
                   }}
                   transition={{ 
@@ -144,11 +143,11 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 />
                 
                 <motion.div 
-                  className="absolute top-0 right-0 h-[50%] w-[3px] bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
+                  className="absolute top-0 right-0 h-[50%] w-[3px] bg-gradient-to-b from-transparent via-red-400 to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
                   animate={{ 
                     top: ["-50%", "100%"],
-                    opacity: [0.3, 0.7, 0.3],
+                    opacity: [0.3, 0.8, 0.3],
                     filter: ["blur(1px)", "blur(2.5px)", "blur(1px)"]
                   }}
                   transition={{ 
@@ -175,11 +174,11 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 />
                 
                 <motion.div 
-                  className="absolute bottom-0 right-0 h-[3px] w-[50%] bg-gradient-to-r from-transparent via-white to-transparent opacity-70"
+                  className="absolute bottom-0 right-0 h-[3px] w-[50%] bg-gradient-to-r from-transparent via-red-400 to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
                   animate={{ 
                     right: ["-50%", "100%"],
-                    opacity: [0.3, 0.7, 0.3],
+                    opacity: [0.3, 0.8, 0.3],
                     filter: ["blur(1px)", "blur(2.5px)", "blur(1px)"]
                   }}
                   transition={{ 
@@ -206,11 +205,11 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 />
                 
                 <motion.div 
-                  className="absolute bottom-0 left-0 h-[50%] w-[3px] bg-gradient-to-b from-transparent via-white to-transparent opacity-70"
+                  className="absolute bottom-0 left-0 h-[50%] w-[3px] bg-gradient-to-b from-transparent via-red-400 to-transparent opacity-70"
                   initial={{ filter: "blur(2px)" }}
                   animate={{ 
                     bottom: ["-50%", "100%"],
-                    opacity: [0.3, 0.7, 0.3],
+                    opacity: [0.3, 0.8, 0.3],
                     filter: ["blur(1px)", "blur(2.5px)", "blur(1px)"]
                   }}
                   transition={{ 
@@ -238,9 +237,9 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 
                 {/* Corner glow spots */}
                 <motion.div 
-                  className="absolute top-0 left-0 h-[5px] w-[5px] rounded-full bg-white/40 blur-[1px]"
+                  className="absolute top-0 left-0 h-[5px] w-[5px] rounded-full bg-red-400/60 blur-[1px]"
                   animate={{ 
-                    opacity: [0.2, 0.4, 0.2] 
+                    opacity: [0.4, 0.8, 0.4] 
                   }}
                   transition={{ 
                     duration: 2, 
@@ -249,9 +248,9 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
                 <motion.div 
-                  className="absolute top-0 right-0 h-[8px] w-[8px] rounded-full bg-white/60 blur-[2px]"
+                  className="absolute top-0 right-0 h-[8px] w-[8px] rounded-full bg-red-400/80 blur-[2px]"
                   animate={{ 
-                    opacity: [0.2, 0.4, 0.2] 
+                    opacity: [0.4, 0.8, 0.4] 
                   }}
                   transition={{ 
                     duration: 2.4, 
@@ -261,9 +260,9 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
                 <motion.div 
-                  className="absolute bottom-0 right-0 h-[8px] w-[8px] rounded-full bg-white/60 blur-[2px]"
+                  className="absolute bottom-0 right-0 h-[8px] w-[8px] rounded-full bg-red-400/80 blur-[2px]"
                   animate={{ 
-                    opacity: [0.2, 0.4, 0.2] 
+                    opacity: [0.4, 0.8, 0.4] 
                   }}
                   transition={{ 
                     duration: 2.2, 
@@ -273,9 +272,9 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                   }}
                 />
                 <motion.div 
-                  className="absolute bottom-0 left-0 h-[5px] w-[5px] rounded-full bg-white/40 blur-[1px]"
+                  className="absolute bottom-0 left-0 h-[5px] w-[5px] rounded-full bg-red-400/60 blur-[1px]"
                   animate={{ 
-                    opacity: [0.2, 0.4, 0.2] 
+                    opacity: [0.4, 0.8, 0.4] 
                   }}
                   transition={{ 
                     duration: 2.3, 
@@ -286,8 +285,8 @@ export function ModernAuthCard({ children, className }: ModernAuthCardProps) {
                 />
               </div>
 
-              {/* Card border glow */}
-              <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-r from-white/3 via-white/7 to-white/3 opacity-0 group-hover:opacity-70 transition-opacity duration-500" />
+              {/* Enhanced card border with subtle hover effect */}
+              <div className="absolute -inset-[0.5px] rounded-2xl bg-gradient-to-r from-red-500/10 via-red-400/20 to-red-500/10 opacity-0 group-hover:opacity-50 transition-opacity duration-700" />
               
               {/* Glass card background */}
               <div className={cn("relative bg-black/40 backdrop-blur-xl rounded-2xl border border-white/[0.05] shadow-2xl", className)}>
