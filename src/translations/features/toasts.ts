@@ -31,6 +31,10 @@ export const enToasts: ToastTranslations = {
   filterReset: "Filters reset",
   welcomeTenant: "Welcome, {name}!",
   welcomeGeneric: "Welcome to your dashboard",
+  exportSuccess: "Export successful",
+  exportError: "Export error",
+  linkCopied: "Link copied to clipboard",
+  shareError: "Share error",
 };
 
 export const frToasts: ToastTranslations = {
@@ -63,4 +67,8 @@ export const frToasts: ToastTranslations = {
   filterReset: "Filtres réinitialisés",
   welcomeTenant: "Bienvenue, {name} !",
   welcomeGeneric: "Bienvenue sur votre tableau de bord",
+  exportSuccess: "Export réussi",
+  exportError: "Erreur lors de l'export",
+  linkCopied: "Lien copié dans le presse-papier",
+  shareError: "Erreur lors du partage",
 };

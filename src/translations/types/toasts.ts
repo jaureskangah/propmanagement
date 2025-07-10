@@ -28,4 +28,8 @@ export interface ToastTranslations {
   filterReset: string;
   welcomeTenant: string;
   welcomeGeneric: string;
+  exportSuccess: string;
+  exportError: string;
+  linkCopied: string;
+  shareError: string;
 }

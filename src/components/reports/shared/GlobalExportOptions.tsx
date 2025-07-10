@@ -65,10 +65,10 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
       const exportFilename = filename || `${type}_report_${timestamp}.xlsx`;
       XLSX.writeFile(workbook, exportFilename);
       
-      toast.success(t('exportSuccess', { fallback: 'Export Excel réussi' }));
+      toast.success(t('toasts.exportSuccess', { fallback: 'Export Excel réussi' }));
     } catch (error) {
       console.error('Export error:', error);
-      toast.error(t('exportError', { fallback: 'Erreur lors de l\'export' }));
+      toast.error(t('toasts.exportError', { fallback: 'Erreur lors de l\'export' }));
     }
   };
 
@@ -135,10 +135,10 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
       const exportFilename = filename || `${type}_report_${format(new Date(), 'yyyy-MM-dd-HH-mm')}.pdf`;
       doc.save(exportFilename);
       
-      toast.success(t('exportSuccess', { fallback: 'Export PDF réussi' }));
+      toast.success(t('toasts.exportSuccess', { fallback: 'Export PDF réussi' }));
     } catch (error) {
       console.error('PDF export error:', error);
-      toast.error(t('exportError', { fallback: 'Erreur lors de l\'export PDF' }));
+      toast.error(t('toasts.exportError', { fallback: 'Erreur lors de l\'export PDF' }));
     }
   };
 
@@ -146,10 +146,10 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
     try {
       // Try to copy to clipboard first as a reliable fallback
       await navigator.clipboard.writeText(window.location.href);
-      toast.success(t('linkCopied', { fallback: 'Lien copié dans le presse-papier' }));
+      toast.success(t('toasts.linkCopied', { fallback: 'Lien copié dans le presse-papier' }));
     } catch (error) {
       console.error('Share error:', error);
-      toast.error(t('shareError', { fallback: 'Erreur lors du partage' }));
+      toast.error(t('toasts.shareError', { fallback: 'Erreur lors du partage' }));
     }
   };
 
