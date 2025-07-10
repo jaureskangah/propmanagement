@@ -2,6 +2,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthProvider';
 import { lazy, Suspense } from 'react';
+import { PageLoadingAnimation } from './components/common/PageLoadingAnimation';
 
 // Landing page - load immediately
 import LandingPage from './pages/LandingPage';
@@ -38,12 +39,8 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Admin = lazy(() => import('./pages/Admin'));
 
-// Loading fallback component
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-  </div>
-);
+// Loading fallback component with percentage animation
+const PageLoader = () => <PageLoadingAnimation />;
 
 function App() {
   const { isAuthenticated } = useAuth();
