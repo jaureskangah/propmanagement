@@ -143,26 +143,13 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
   };
 
   const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: t('advancedReport', { fallback: 'Rapport Avancé' }),
-          text: t('shareReportText', { fallback: 'Consultez ce rapport détaillé' }),
-          url: window.location.href
-        });
-        toast.success(t('shareSuccess', { fallback: 'Partage réussi' }));
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('Share error:', error);
-          // Fallback: copy to clipboard
-          navigator.clipboard.writeText(window.location.href);
-          toast.success(t('linkCopied', { fallback: 'Lien copié dans le presse-papier' }));
-        }
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(window.location.href);
+    try {
+      // Try to copy to clipboard first as a reliable fallback
+      await navigator.clipboard.writeText(window.location.href);
       toast.success(t('linkCopied', { fallback: 'Lien copié dans le presse-papier' }));
+    } catch (error) {
+      console.error('Share error:', error);
+      toast.error(t('shareError', { fallback: 'Erreur lors du partage' }));
     }
   };
 
