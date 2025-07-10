@@ -43,8 +43,22 @@ export const PropertyReports = () => {
   const { data: maintenance = [], isLoading: isLoadingMaintenance } = useQuery({
     queryKey: ['property_maintenance'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('maintenance_requests').select('*, tenants(name, property_id), tenants!inner(properties(name))');
+      const { data, error } = await supabase
+        .from('maintenance_requests')
+        .select(`
+          *,
+          tenants!inner (
+            id,
+            name,
+            property_id,
+            properties (
+              id,
+              name
+            )
+          )
+        `);
       if (error) throw error;
+      console.log("Maintenance data:", data);
       return data;
     }
   });
@@ -70,9 +84,18 @@ export const PropertyReports = () => {
   // Calculate property metrics
   const propertyMetrics = properties.map(property => {
     const propertyTenants = tenants.filter(tenant => tenant.property_id === property.id);
-    const propertyMaintenance = maintenance.filter(item => 
-      propertyTenants.some(tenant => tenant.id === item.tenant_id)
-    );
+    
+    // Filtrer les demandes de maintenance pour cette propriété
+    const propertyMaintenance = maintenance.filter(item => {
+      // Vérifier si la demande de maintenance est liée à un locataire de cette propriété
+      return item.tenants && item.tenants.property_id === property.id;
+    });
+    
+    console.log(`Property ${property.name}:`, {
+      propertyTenants: propertyTenants.length,
+      propertyMaintenance: propertyMaintenance.length,
+      maintenanceItems: propertyMaintenance
+    });
     
     const occupancyRate = property.units > 0 ? Math.round((propertyTenants.length / property.units) * 100) : 0;
     const pendingMaintenance = propertyMaintenance.filter(item => 
