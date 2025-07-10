@@ -21,7 +21,9 @@ export const OverviewMetrics = ({ properties, tenants, payments, maintenance }: 
     item.status === 'pending' || item.status === 'Pending'
   ).length;
   
-  const occupancyRate = totalProperties > 0 ? Math.round((totalTenants / totalProperties) * 100) : 0;
+  // Calculate total units across all properties
+  const totalUnits = properties.reduce((sum, property) => sum + (property.units || 1), 0);
+  const occupancyRate = totalUnits > 0 ? Math.round((totalTenants / totalUnits) * 100) : 0;
 
   const metrics = [
     {
