@@ -178,8 +178,14 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
           </div>
           
           <div className="text-xs">
-            <Link to="/forgot-password" className="text-white/60 hover:text-white transition-colors duration-200">
-              {t('forgotPassword')}
+            <Link 
+              to="/forgot-password" 
+              className="relative inline-block text-white/60 hover:text-white transition-colors duration-200 cursor-pointer z-10"
+            >
+              <span className="relative z-10">
+                {t('forgotPassword')}
+              </span>
+              <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-white hover:w-full transition-all duration-300" />
             </Link>
           </div>
         </div>
