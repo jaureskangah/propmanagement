@@ -51,6 +51,9 @@ export const enAuth = {
   signInSuccess: "Successfully signed in",
   signUpSuccess: "Account created successfully",
   passwordResetSent: "Password reset email sent",
+  passwordResetEmailSent: "Password reset email sent! Check your inbox.",
+  passwordResetError: "Error sending password reset email. Please try again.",
+  passwordResetSuccess: "Password updated successfully! You will be redirected to login.",
   
   // Roles and access
   tenantSignup: "Sign up as Tenant",
@@ -76,6 +79,16 @@ export const enAuth = {
   sendResetLink: "Send Reset Link",
   checkYourEmail: "Check your email",
   resetLinkSent: "We've sent a password reset link to your email",
+  checkEmailForReset: "We've sent you a password reset link.",
+  enterEmailForReset: "Enter your email address to receive a password reset link.",
+  sendResetEmail: "Send Reset Email",
+  checkSpamFolder: "Don't forget to check your spam folder.",
+  backToLogin: "Back to login",
+  invalidResetLink: "Invalid or expired reset link",
+  enterNewPassword: "Enter your new password below.",
+  newPassword: "New Password",
+  confirmNewPassword: "Confirm New Password",
+  updatePassword: "Update Password",
   
   // Tabs
   signInCta: "Sign In",
@@ -134,6 +147,9 @@ export const frAuth = {
   signInSuccess: "Connexion réussie",
   signUpSuccess: "Compte créé avec succès",
   passwordResetSent: "Email de réinitialisation envoyé",
+  passwordResetEmailSent: "Email de réinitialisation envoyé ! Vérifiez votre boîte de réception.",
+  passwordResetError: "Erreur lors de l'envoi de l'email de réinitialisation. Veuillez réessayer.",
+  passwordResetSuccess: "Mot de passe mis à jour avec succès ! Vous allez être redirigé vers la connexion.",
   
   // Rôles et accès
   tenantSignup: "S'inscrire comme Locataire",
@@ -159,6 +175,16 @@ export const frAuth = {
   sendResetLink: "Envoyer le Lien de Réinitialisation",
   checkYourEmail: "Vérifiez votre email",
   resetLinkSent: "Nous avons envoyé un lien de réinitialisation à votre email",
+  checkEmailForReset: "Nous vous avons envoyé un lien de réinitialisation de mot de passe.",
+  enterEmailForReset: "Entrez votre adresse email pour recevoir un lien de réinitialisation de mot de passe.",
+  sendResetEmail: "Envoyer l'Email de Réinitialisation",
+  checkSpamFolder: "N'oubliez pas de vérifier votre dossier spam.",
+  backToLogin: "Retour à la connexion",
+  invalidResetLink: "Lien de réinitialisation invalide ou expiré",
+  enterNewPassword: "Entrez votre nouveau mot de passe ci-dessous.",
+  newPassword: "Nouveau Mot de Passe",
+  confirmNewPassword: "Confirmer le Nouveau Mot de Passe",
+  updatePassword: "Mettre à Jour le Mot de Passe",
   
   // Onglets
   signInCta: "Se Connecter",

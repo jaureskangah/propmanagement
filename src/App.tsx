@@ -9,6 +9,8 @@ import LandingPage from './pages/LandingPage';
 // Lazy load all other pages for better performance
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 const TenantSignup = lazy(() => import('./pages/TenantSignup'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Vendors = lazy(() => import('./pages/Vendors'));
@@ -52,6 +54,8 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/tenant-signup" element={<TenantSignup />} />
         <Route path="/auth" element={<AuthPage />} />
         
