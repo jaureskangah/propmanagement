@@ -43,7 +43,7 @@ export const frNavigation: NavigationTranslations = {
   tenants: "Locataires",
   maintenance: "Maintenance",
   settings: "Paramètres",
-  admin: "Administration",
+  admin: "Admin",
   loading: "Chargement...",
   error: "Erreur",
   properties: "Propriétés",
