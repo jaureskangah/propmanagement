@@ -24,7 +24,7 @@ export const RevenueChart = ({ payments }: RevenueChartProps) => {
     
     const monthlyRevenue = payments
       .filter(payment => {
-        const paymentDate = new Date(payment.payment_date);
+        const paymentDate = new Date(payment.payment_date || payment.created_at);
         return paymentDate >= monthStart && paymentDate <= monthEnd;
       })
       .reduce((sum, payment) => sum + (payment.amount || 0), 0);
@@ -32,7 +32,7 @@ export const RevenueChart = ({ payments }: RevenueChartProps) => {
     return {
       month: format(month, 'MMM yyyy', { locale }),
       revenue: monthlyRevenue,
-      displayRevenue: `€${monthlyRevenue.toLocaleString()}`
+      displayRevenue: `$${monthlyRevenue.toLocaleString()}`
     };
   });
 
@@ -56,10 +56,10 @@ export const RevenueChart = ({ payments }: RevenueChartProps) => {
               <YAxis 
                 className="text-xs"
                 stroke="hsl(var(--muted-foreground))"
-                tickFormatter={(value) => `€${value.toLocaleString()}`}
+                tickFormatter={(value) => `$${value.toLocaleString()}`}
               />
               <Tooltip 
-                formatter={(value: number) => [`€${value.toLocaleString()}`, t('revenue', { fallback: 'Revenus' })]}
+                formatter={(value: number) => [`$${value.toLocaleString()}`, t('revenue', { fallback: 'Revenus' })]}
                 labelStyle={{ color: 'hsl(var(--foreground))' }}
                 contentStyle={{
                   backgroundColor: 'hsl(var(--background))',
