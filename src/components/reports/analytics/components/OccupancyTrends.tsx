@@ -30,19 +30,19 @@ export const OccupancyTrends = ({ tenants, properties }: OccupancyTrendsProps) =
       return leaseStart <= monthEnd && leaseEnd >= monthStart;
     }).length;
 
-    // Count properties that existed at this time
-    const existingProperties = properties.filter(property => {
+    // Count available units in properties that existed at this time
+    const availableUnits = properties.filter(property => {
       const createdAt = new Date(property.created_at);
       return createdAt <= monthEnd;
-    }).length;
+    }).reduce((total, property) => total + (property.units || 1), 0);
 
-    const occupancyRate = existingProperties > 0 ? Math.round((activeTenants / existingProperties) * 100) : 0;
+    const occupancyRate = availableUnits > 0 ? Math.round((activeTenants / availableUnits) * 100) : 0;
 
     return {
       month: format(month, 'MMM yyyy', { locale }),
       occupancyRate,
       activeTenants,
-      totalProperties: existingProperties
+      totalUnits: availableUnits
     };
   });
 
@@ -121,10 +121,10 @@ export const OccupancyTrends = ({ tenants, properties }: OccupancyTrendsProps) =
           </div>
           <div>
             <p className="text-2xl font-bold text-blue-600">
-              {occupancyData[occupancyData.length - 1]?.totalProperties || 0}
+              {occupancyData[occupancyData.length - 1]?.totalUnits || 0}
             </p>
             <p className="text-sm text-muted-foreground">
-              {t('totalProperties', { fallback: 'Propriétés Totales' })}
+              {t('totalUnits', { fallback: 'Unités Totales' })}
             </p>
           </div>
         </div>

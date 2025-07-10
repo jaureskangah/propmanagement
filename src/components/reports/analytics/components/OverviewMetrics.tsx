@@ -47,7 +47,7 @@ export const OverviewMetrics = ({ properties, tenants, payments, maintenance }: 
     },
     {
       title: t('totalRevenue', { fallback: 'Revenus Totaux' }),
-      value: `€${totalRevenue.toLocaleString()}`,
+      value: `$${totalRevenue.toLocaleString()}`,
       icon: DollarSign,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50 dark:bg-emerald-900/20"

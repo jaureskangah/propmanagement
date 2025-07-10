@@ -110,9 +110,9 @@ export const MaintenanceAnalytics = ({ maintenance }: MaintenanceAnalyticsProps)
                     borderRadius: '6px'
                   }}
                 />
-                <Bar 
+                 <Bar 
                   dataKey="count" 
-                  fill="hsl(var(--secondary))"
+                  fill="hsl(var(--primary))"
                   radius={[4, 4, 0, 0]}
                 />
               </BarChart>
