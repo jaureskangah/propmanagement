@@ -150,8 +150,14 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
           text: t('shareReportText', { fallback: 'Consultez ce rapport détaillé' }),
           url: window.location.href
         });
+        toast.success(t('shareSuccess', { fallback: 'Partage réussi' }));
       } catch (error) {
-        console.log('Share cancelled');
+        if (error.name !== 'AbortError') {
+          console.error('Share error:', error);
+          // Fallback: copy to clipboard
+          navigator.clipboard.writeText(window.location.href);
+          toast.success(t('linkCopied', { fallback: 'Lien copié dans le presse-papier' }));
+        }
       }
     } else {
       // Fallback: copy to clipboard
