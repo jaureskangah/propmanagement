@@ -11,6 +11,8 @@ import { frMaintenance } from './features/maintenance';
 import { frTenant } from './features/tenant';
 import { frSettings } from './features/settings';
 import { frPricing, frPlanFeatures } from './features/pricing';
+import { frNavigation } from './features/navigation';
+import { frAdmin } from './features/admin';
 
 // Extensions de support
 const supportExtensions = {
@@ -38,6 +40,8 @@ const baseTranslations = {
   ...frSettings,
   ...frPricing,
   ...frPlanFeatures,
+  ...frNavigation,
+  ...frAdmin,
   ...supportExtensions,
 };
 
