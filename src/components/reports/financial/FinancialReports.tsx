@@ -83,7 +83,7 @@ export const FinancialReports = () => {
         <Card>
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-green-600">
-              €{totalRevenue.toLocaleString()}
+              ${totalRevenue.toLocaleString()}
             </div>
             <p className="text-sm text-muted-foreground">
               {t('totalRevenue', { fallback: 'Revenus Totaux' })}
@@ -94,7 +94,7 @@ export const FinancialReports = () => {
         <Card>
           <CardContent className="p-6">
             <div className="text-2xl font-bold text-red-600">
-              €{totalExpenses.toLocaleString()}
+              ${totalExpenses.toLocaleString()}
             </div>
             <p className="text-sm text-muted-foreground">
               {t('totalExpenses', { fallback: 'Dépenses Totales' })}
@@ -105,7 +105,7 @@ export const FinancialReports = () => {
         <Card>
           <CardContent className="p-6">
             <div className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              €{netIncome.toLocaleString()}
+              ${netIncome.toLocaleString()}
             </div>
             <p className="text-sm text-muted-foreground">
               {t('netIncome', { fallback: 'Revenu Net' })}
