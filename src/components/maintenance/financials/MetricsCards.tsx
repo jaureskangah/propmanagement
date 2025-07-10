@@ -1,5 +1,5 @@
 
-import { FileText, TrendingUp, Wallet } from "lucide-react";
+import { FileText, Home, Wallet } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { MetricCard } from "./components/MetricCard";
 import { useFinancialCalculations } from "./hooks/useFinancialCalculations";
@@ -12,7 +12,7 @@ interface MetricsCardsProps {
 
 export const MetricsCards = ({ expenses, maintenance, rentData }: MetricsCardsProps) => {
   const { t } = useLocale();
-  const { calculateROI, calculateTotalExpenses, calculateTotalIncome } = useFinancialCalculations({
+  const { calculateOccupancyRate, calculateTotalExpenses, calculateTotalIncome } = useFinancialCalculations({
     expenses,
     maintenance,
     rentData
@@ -20,7 +20,7 @@ export const MetricsCards = ({ expenses, maintenance, rentData }: MetricsCardsPr
 
   const totalExpenses = calculateTotalExpenses();
   const totalIncome = calculateTotalIncome();
-  const roi = calculateROI();
+  const occupancyRate = calculateOccupancyRate();
 
   const metrics = [
     {
@@ -33,10 +33,10 @@ export const MetricsCards = ({ expenses, maintenance, rentData }: MetricsCardsPr
       borderColor: "border-rose-100 dark:border-rose-800/30 hover:border-rose-200 dark:hover:border-rose-700/40",
     },
     {
-      title: t('roi', { fallback: 'ROI Annuel' }),
-      value: `${roi}%`,
-      icon: <TrendingUp className="h-4 w-4" />,
-      description: t('annualReturn'),
+      title: t('occupancyRate', { fallback: 'Taux d\'Occupation' }),
+      value: `${occupancyRate}%`,
+      icon: <Home className="h-4 w-4" />,
+      description: t('occupancyRateDescription', { fallback: 'Année en cours' }),
       color: "text-blue-500",
       bgColor: "from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20",
       borderColor: "border-blue-100 dark:border-blue-800/30 hover:border-blue-200 dark:hover:border-blue-700/40",
