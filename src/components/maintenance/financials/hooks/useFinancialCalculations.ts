@@ -15,14 +15,14 @@ export const useFinancialCalculations = ({ expenses, maintenance, rentData, prop
       const occupiedUnits = tenants.length; // Nombre de locataires actifs
       
       if (totalUnits === 0) {
-        return "0.0";
+        return "0";
       }
       
-      const occupancyRate = (occupiedUnits / totalUnits) * 100;
-      return Math.min(occupancyRate, 100).toFixed(1);
+      const occupancyRate = Math.round((occupiedUnits / totalUnits) * 100);
+      return occupancyRate.toString();
     } catch (error) {
       console.error("Error calculating occupancy rate:", error);
-      return "0.0";
+      return "0";
     }
   };
 
