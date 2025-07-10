@@ -8,6 +8,18 @@ import { GlobalExportOptions } from "../shared/GlobalExportOptions";
 
 export const PropertyReports = () => {
   const { t } = useLocale();
+  
+  // Fonction pour traduire le type de propriété
+  const getTranslatedPropertyType = (type: string) => {
+    const typeMap: Record<string, string> = {
+      'Apartment': t('apartment'),
+      'House': t('house'), 
+      'Condo': t('condo'),
+      'Office': t('propertyOffice'),
+      'Commercial Space': t('commercialspace')
+    };
+    return typeMap[type] || type;
+  };
 
   // Fetch properties and related data
   const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
@@ -108,7 +120,7 @@ export const PropertyReports = () => {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <p className="font-medium">{t('type', { fallback: 'Type' })}</p>
-                    <p className="text-muted-foreground">{property.type}</p>
+                    <p className="text-muted-foreground">{getTranslatedPropertyType(property.type)}</p>
                   </div>
                   <div>
                     <p className="font-medium">{t('units', { fallback: 'Unités' })}</p>
@@ -185,7 +197,7 @@ export const PropertyReports = () => {
                 {propertyMetrics.map((property) => (
                   <tr key={property.id} className="border-b hover:bg-muted/50">
                     <td className="p-2 font-medium">{property.name}</td>
-                    <td className="p-2">{property.type}</td>
+                    <td className="p-2">{getTranslatedPropertyType(property.type)}</td>
                     <td className="p-2 text-center">{property.units}</td>
                     <td className="p-2 text-center">{property.tenantCount}</td>
                     <td className="p-2 text-center">
