@@ -7,6 +7,7 @@ import { BorderTrail } from "@/components/ui/border-trail";
 import PropertyCardImage from "./properties/card/PropertyCardImage";
 import PropertyCardHeader from "./properties/card/PropertyCardHeader";
 import PropertyCardDetails from "./properties/card/PropertyCardDetails";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface PropertyCardProps {
   property: {
@@ -25,7 +26,20 @@ interface PropertyCardProps {
 }
 
 const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials, onViewDetails }: PropertyCardProps) => {
+  const { t } = useLocale();
   const [imageLoaded, setImageLoaded] = useState(false);
+  
+  // Fonction pour traduire le type de propriété
+  const getTranslatedPropertyType = (type: string) => {
+    const typeMap: Record<string, string> = {
+      'Apartment': t('apartment'),
+      'House': t('house'), 
+      'Condo': t('condo'),
+      'Office': t('propertyOffice'),
+      'Commercial Space': t('commercialspace')
+    };
+    return typeMap[type] || type;
+  };
   
   return (
     <Card 
@@ -52,7 +66,7 @@ const PropertyCard = ({ property, onEdit, onDelete, onViewFinancials, onViewDeta
       
       <PropertyCardImage 
         image={property.image}
-        type={property.type}
+        type={getTranslatedPropertyType(property.type)}
         imageLoaded={imageLoaded}
         setImageLoaded={setImageLoaded}
       />

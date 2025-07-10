@@ -38,6 +38,18 @@ const PropertyTableView = ({
   const [sortField, setSortField] = useState<keyof Property>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
+  // Fonction pour traduire le type de propriété
+  const getTranslatedPropertyType = (type: string) => {
+    const typeMap: Record<string, string> = {
+      'Apartment': t('apartment'),
+      'House': t('house'), 
+      'Condo': t('condo'),
+      'Office': t('propertyOffice'),
+      'Commercial Space': t('commercialspace')
+    };
+    return typeMap[type] || type;
+  };
+
   const handleSort = (field: keyof Property) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -171,7 +183,7 @@ const PropertyTableView = ({
                 {property.address}
               </TableCell>
               <TableCell>
-                <Badge variant="outline">{property.type}</Badge>
+                <Badge variant="outline">{getTranslatedPropertyType(property.type)}</Badge>
               </TableCell>
               <TableCell className="text-center font-medium">
                 {property.units}
