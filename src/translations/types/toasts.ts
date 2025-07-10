@@ -32,4 +32,6 @@ export interface ToastTranslations {
   exportError: string;
   linkCopied: string;
   shareError: string;
+  shareEmailSuccess: string;
+  shareEmailError: string;
 }

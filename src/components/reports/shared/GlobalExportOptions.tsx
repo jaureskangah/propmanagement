@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { FileSpreadsheet, FileText, Share2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FileSpreadsheet, FileText, Share2, Mail } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { supabase } from "@/integrations/supabase/client";
 import * as XLSX from 'xlsx';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -16,6 +20,9 @@ interface GlobalExportOptionsProps {
 
 export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOptionsProps) => {
   const { t } = useLocale();
+  const [isShareDialogOpen, setIsShareDialogOpen] = useState(false);
+  const [recipientEmail, setRecipientEmail] = useState("");
+  const [isSharing, setIsSharing] = useState(false);
 
   const handleExcelExport = () => {
     try {
@@ -142,14 +149,79 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
     }
   };
 
-  const handleShare = async () => {
+  const generateReportContent = () => {
+    if (type === 'analytics' && data) {
+      let content = `Rapport Analytics - ${format(new Date(), 'dd/MM/yyyy HH:mm')}\n\n`;
+      
+      // Summary
+      content += `RÉSUMÉ\n`;
+      content += `========\n`;
+      content += `Propriétés totales: ${data.properties?.length || 0}\n`;
+      content += `Locataires totaux: ${data.tenants?.length || 0}\n`;
+      
+      const totalRevenue = data.payments?.reduce((sum: number, payment: any) => sum + (payment.amount || 0), 0) || 0;
+      content += `Revenus totaux: €${totalRevenue.toLocaleString()}\n\n`;
+      
+      // Properties details
+      if (data.properties?.length > 0) {
+        content += `PROPRIÉTÉS\n`;
+        content += `==========\n`;
+        data.properties.slice(0, 10).forEach((property: any) => {
+          content += `- ${property.name} (${property.type})\n`;
+          content += `  Adresse: ${property.address}\n`;
+          content += `  Unités: ${property.units}\n`;
+          content += `  Créé le: ${format(new Date(property.created_at), 'dd/MM/yyyy')}\n\n`;
+        });
+      }
+      
+      // Tenants details
+      if (data.tenants?.length > 0) {
+        content += `LOCATAIRES\n`;
+        content += `==========\n`;
+        data.tenants.slice(0, 10).forEach((tenant: any) => {
+          content += `- ${tenant.name}\n`;
+          content += `  Email: ${tenant.email}\n`;
+          content += `  Loyer: €${tenant.rent_amount}\n`;
+          content += `  Bail: ${format(new Date(tenant.lease_start), 'dd/MM/yyyy')} - ${format(new Date(tenant.lease_end), 'dd/MM/yyyy')}\n\n`;
+        });
+      }
+      
+      return content;
+    }
+    
+    return `Rapport ${type} - ${format(new Date(), 'dd/MM/yyyy HH:mm')}\n\nAucune donnée disponible.`;
+  };
+
+  const handleEmailShare = async () => {
+    if (!recipientEmail.trim()) {
+      toast.error("Veuillez saisir un email valide");
+      return;
+    }
+
+    setIsSharing(true);
+    
     try {
-      // Try to copy to clipboard first as a reliable fallback
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success(t('toasts.linkCopied', { fallback: 'Lien copié dans le presse-papier' }));
+      const reportContent = generateReportContent();
+      const reportTitle = `Rapport ${type} - ${format(new Date(), 'dd/MM/yyyy')}`;
+      
+      const { data: response, error } = await supabase.functions.invoke('share-document', {
+        body: {
+          recipientEmail: recipientEmail.trim(),
+          documentContent: reportContent,
+          documentTitle: reportTitle
+        }
+      });
+
+      if (error) throw error;
+
+      toast.success(t('toasts.shareEmailSuccess', { fallback: 'Rapport envoyé par email avec succès' }));
+      setIsShareDialogOpen(false);
+      setRecipientEmail("");
     } catch (error) {
-      console.error('Share error:', error);
-      toast.error(t('toasts.shareError', { fallback: 'Erreur lors du partage' }));
+      console.error('Email share error:', error);
+      toast.error(t('toasts.shareEmailError', { fallback: 'Erreur lors de l\'envoi du rapport' }));
+    } finally {
+      setIsSharing(false);
     }
   };
 
@@ -163,10 +235,59 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
         <FileText className="h-4 w-4" />
         {t('exportPDF', { fallback: 'Export PDF' })}
       </Button>
-      <Button variant="outline" onClick={handleShare} className="flex items-center gap-2">
-        <Share2 className="h-4 w-4" />
-        {t('share', { fallback: 'Partager' })}
-      </Button>
+      
+      <Dialog open={isShareDialogOpen} onOpenChange={setIsShareDialogOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Mail className="h-4 w-4" />
+            {t('shareByEmail', { fallback: 'Partager par email' })}
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('shareReport', { fallback: 'Partager le rapport' })}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">
+                {t('recipientEmail', { fallback: 'Email du destinataire' })}
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="exemple@email.com"
+                value={recipientEmail}
+                onChange={(e) => setRecipientEmail(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setIsShareDialogOpen(false)}
+                disabled={isSharing}
+              >
+                {t('cancel', { fallback: 'Annuler' })}
+              </Button>
+              <Button
+                onClick={handleEmailShare}
+                disabled={isSharing || !recipientEmail.trim()}
+              >
+                {isSharing ? (
+                  <>
+                    <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full mr-2" />
+                    {t('sending', { fallback: 'Envoi...' })}
+                  </>
+                ) : (
+                  <>
+                    <Mail className="h-4 w-4 mr-2" />
+                    {t('send', { fallback: 'Envoyer' })}
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

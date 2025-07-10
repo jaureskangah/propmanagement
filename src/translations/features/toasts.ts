@@ -35,6 +35,8 @@ export const enToasts: ToastTranslations = {
   exportError: "Export error",
   linkCopied: "Link copied to clipboard",
   shareError: "Share error",
+  shareEmailSuccess: "Report sent by email successfully",
+  shareEmailError: "Error sending report",
 };
 
 export const frToasts: ToastTranslations = {
@@ -71,4 +73,6 @@ export const frToasts: ToastTranslations = {
   exportError: "Erreur lors de l'export",
   linkCopied: "Lien copié dans le presse-papier",
   shareError: "Erreur lors du partage",
+  shareEmailSuccess: "Rapport envoyé par email avec succès",
+  shareEmailError: "Erreur lors de l'envoi du rapport",
 };
