@@ -9,6 +9,7 @@ import { AuthProvider } from './components/AuthProvider.tsx'
 import { LocaleProvider } from './components/providers/LocaleProvider.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import { TooltipProvider } from './components/ui/tooltip'
+import { Toaster } from './components/ui/sonner'
 
 // Configuration optimisée du client React Query pour les performances
 const queryClient = new QueryClient({
@@ -42,6 +43,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <TooltipProvider>
               <BrowserRouter>
                 <App />
+                <Toaster />
               </BrowserRouter>
             </TooltipProvider>
           </ThemeProvider>
