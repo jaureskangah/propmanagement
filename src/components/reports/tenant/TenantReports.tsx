@@ -123,7 +123,7 @@ export const TenantReports = () => {
                     tenant.daysUntilLeaseEnd <= 30 ? 'text-red-600' :
                     tenant.daysUntilLeaseEnd <= 60 ? 'text-orange-600' : 'text-yellow-600'
                   }`}>
-                    {`${tenant.daysUntilLeaseEnd} ${t('daysLeft', { fallback: 'jours restants' })}`}
+                    {t('daysLeft', { fallback: `${tenant.daysUntilLeaseEnd} jours restants`, days: tenant.daysUntilLeaseEnd })}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {format(new Date(tenant.lease_end), 'dd/MM/yyyy', { locale })}
