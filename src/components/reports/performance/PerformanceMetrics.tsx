@@ -101,7 +101,7 @@ export const PerformanceMetrics = () => {
   const kpiMetrics = [
     {
       title: t('occupancyRate', { fallback: 'Taux d\'Occupation' }),
-      value: `${occupancyRate.toFixed(1)}%`,
+      value: `${occupancyRate.toFixed(0)}%`,
       target: 90,
       actual: occupancyRate,
       icon: Target,
@@ -110,7 +110,7 @@ export const PerformanceMetrics = () => {
     },
     {
       title: t('paymentRate', { fallback: 'Taux de Paiement' }),
-      value: `${paymentRate.toFixed(1)}%`,
+      value: `${paymentRate.toFixed(0)}%`,
       target: 95,
       actual: paymentRate,
       icon: CheckCircle,
@@ -119,7 +119,7 @@ export const PerformanceMetrics = () => {
     },
     {
       title: t('maintenanceEfficiency', { fallback: 'Efficacité Maintenance' }),
-      value: `${maintenanceEfficiency.toFixed(1)}%`,
+      value: `${maintenanceEfficiency.toFixed(0)}%`,
       target: 85,
       actual: maintenanceEfficiency,
       icon: Activity,
@@ -128,7 +128,7 @@ export const PerformanceMetrics = () => {
     },
     {
       title: t('responseRate', { fallback: 'Taux de Réponse' }),
-      value: `${responseRate.toFixed(1)}%`,
+      value: `${responseRate.toFixed(0)}%`,
       target: 90,
       actual: responseRate,
       icon: Clock,
@@ -227,7 +227,7 @@ export const PerformanceMetrics = () => {
                 <div className="flex justify-between items-center font-medium">
                   <span>{t('occupancyRate', { fallback: 'Taux d\'occupation' })}</span>
                   <span className={occupancyRate >= 90 ? 'text-green-600' : 'text-yellow-600'}>
-                    {occupancyRate.toFixed(1)}%
+                    {occupancyRate.toFixed(0)}%
                   </span>
                 </div>
               </div>
@@ -261,7 +261,7 @@ export const PerformanceMetrics = () => {
                 <div className="flex justify-between items-center font-medium">
                   <span>{t('paymentRate', { fallback: 'Taux de paiement' })}</span>
                   <span className={paymentRate >= 95 ? 'text-green-600' : 'text-yellow-600'}>
-                    {paymentRate.toFixed(1)}%
+                    {paymentRate.toFixed(0)}%
                   </span>
                 </div>
               </div>
