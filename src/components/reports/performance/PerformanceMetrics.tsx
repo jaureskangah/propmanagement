@@ -243,11 +243,11 @@ export const PerformanceMetrics = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm">{t('totalRevenue', { fallback: 'Revenus totaux' })}</span>
-                <span className="font-medium">€{totalRevenue.toLocaleString()}</span>
+                <span className="font-medium">${totalRevenue.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">{t('averageRent', { fallback: 'Loyer moyen' })}</span>
-                <span className="font-medium">€{averageRent.toLocaleString()}</span>
+                <span className="font-medium">${averageRent.toLocaleString()}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">{t('onTimePayments', { fallback: 'Paiements à temps' })}</span>
