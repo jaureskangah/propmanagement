@@ -1,16 +1,20 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Loader2, User, MapPin, Calendar, DollarSign } from "lucide-react";
+import { Loader2, User, MapPin, Calendar, DollarSign, Mail, Send } from "lucide-react";
 import { GlobalExportOptions } from "../shared/GlobalExportOptions";
 import { format, differenceInDays } from "date-fns";
 import { fr } from "date-fns/locale";
+import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export const TenantReports = () => {
   const { t, language } = useLocale();
   const locale = language === 'fr' ? fr : undefined;
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
   // Fetch tenants and related data
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
@@ -37,6 +41,42 @@ export const TenantReports = () => {
       const { data, error } = await supabase.from('tenant_communications').select('*');
       if (error) throw error;
       return data;
+    }
+  });
+
+  // Mutation pour envoyer des emails de rappel
+  const sendLeaseReminderMutation = useMutation({
+    mutationFn: async (tenantId: string) => {
+      const { data, error } = await supabase.functions.invoke('send-tenant-email', {
+        body: {
+          tenantId,
+          subject: 'Rappel de fin de bail - Renouvellement nécessaire',
+          content: `
+            <p>Cher locataire,</p>
+            <p>Nous vous informons que votre bail arrive à expiration prochainement.</p>
+            <p>Veuillez nous contacter pour discuter du renouvellement de votre bail ou des modalités de fin de location.</p>
+            <p>Cordialement,<br/>Votre gestionnaire immobilier</p>
+          `,
+          category: 'lease_reminder'
+        }
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      toast({
+        title: "Email envoyé",
+        description: "Le rappel de fin de bail a été envoyé au locataire.",
+      });
+      queryClient.invalidateQueries({ queryKey: ['tenant_communications_reports'] });
+    },
+    onError: (error) => {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'envoyer l'email. Veuillez réessayer.",
+        variant: "destructive",
+      });
+      console.error('Error sending lease reminder:', error);
     }
   });
 
@@ -114,20 +154,36 @@ export const TenantReports = () => {
           <div className="space-y-3">
             {sortedTenants.filter(tenant => tenant.daysUntilLeaseEnd <= 90 && tenant.daysUntilLeaseEnd >= 0).map(tenant => (
               <div key={tenant.id} className="flex items-center justify-between p-3 border rounded-lg">
-                <div>
+                <div className="flex-1">
                   <p className="font-medium">{tenant.name}</p>
                   <p className="text-sm text-muted-foreground">{tenant.properties?.name}</p>
                 </div>
-                <div className="text-right">
-                  <p className={`font-medium ${
-                    tenant.daysUntilLeaseEnd <= 30 ? 'text-red-600' :
-                    tenant.daysUntilLeaseEnd <= 60 ? 'text-orange-600' : 'text-yellow-600'
-                  }`}>
-                    {`${tenant.daysUntilLeaseEnd} jours restants`}
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    {format(new Date(tenant.lease_end), 'dd/MM/yyyy', { locale })}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <div className="text-right">
+                    <p className={`font-medium ${
+                      tenant.daysUntilLeaseEnd <= 30 ? 'text-red-600' :
+                      tenant.daysUntilLeaseEnd <= 60 ? 'text-orange-600' : 'text-yellow-600'
+                    }`}>
+                      {`${tenant.daysUntilLeaseEnd} jours restants`}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      {format(new Date(tenant.lease_end), 'dd/MM/yyyy', { locale })}
+                    </p>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => sendLeaseReminderMutation.mutate(tenant.id)}
+                    disabled={sendLeaseReminderMutation.isPending}
+                    className="flex items-center gap-2"
+                  >
+                    {sendLeaseReminderMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Mail className="h-4 w-4" />
+                    )}
+                    {t('sendReminder', { fallback: 'Envoyer rappel' })}
+                  </Button>
                 </div>
               </div>
             ))}
