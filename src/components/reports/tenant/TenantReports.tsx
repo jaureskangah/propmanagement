@@ -198,7 +198,7 @@ export const TenantReports = () => {
                     }`}>
                       {tenant.daysUntilLeaseEnd < 0 ? 
                         t('expired', { fallback: 'Expiré' }) :
-                        `${tenant.daysUntilLeaseEnd} ${t('days', { fallback: 'jours' })}`
+                        `${tenant.daysUntilLeaseEnd} jours`
                       }
                     </span>
                   </div>
