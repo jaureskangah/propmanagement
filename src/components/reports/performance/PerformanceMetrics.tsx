@@ -94,8 +94,9 @@ export const PerformanceMetrics = () => {
   const resolvedCommunications = communications.filter(comm => comm.status === 'resolved').length;
   const responseRate = communications.length > 0 ? (resolvedCommunications / communications.length) * 100 : 0;
 
-  // Revenue performance
-  const totalRevenue = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
+  // Revenue performance - only count paid payments for total revenue
+  const paidPayments = payments.filter(payment => payment.status === 'paid');
+  const totalRevenue = paidPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
   const averageRent = tenants.length > 0 ? tenants.reduce((sum, tenant) => sum + (tenant.rent_amount || 0), 0) / tenants.length : 0;
 
   const kpiMetrics = [
