@@ -213,16 +213,25 @@ async function checkLeaseExpirations() {
           thresholds: notificationThresholds
         });
 
-        // Check if we should send a notification
+        // Check if we should send a notification (only once per threshold)
         let shouldSendNotification = false;
         
-        if (daysUntilExpiry < 0) {
-          // Lease has expired - send notification daily for first week, then weekly
-          const daysExpired = Math.abs(daysUntilExpiry);
-          shouldSendNotification = daysExpired <= 7 || (daysExpired % 7 === 0 && daysExpired <= 30);
-        } else if (notificationThresholds.includes(daysUntilExpiry)) {
-          // Lease is expiring soon
-          shouldSendNotification = true;
+        if (daysUntilExpiry === 90) {
+          // Check if we already sent a 90-day reminder for this tenant
+          const { data: existingReminder } = await supabase
+            .from('tenant_communications')
+            .select('id')
+            .eq('tenant_id', tenant.id)
+            .eq('category', 'lease_reminder')
+            .eq('subject', 'Rappel de fin de bail - Renouvellement nécessaire (90 jours)')
+            .single();
+
+          if (!existingReminder) {
+            shouldSendNotification = true;
+            logInfo(`90-day reminder needed for tenant ${tenant.name} - no previous reminder found`);
+          } else {
+            logInfo(`90-day reminder already sent for tenant ${tenant.name}, skipping...`);
+          }
         }
 
         if (shouldSendNotification) {
@@ -261,6 +270,21 @@ async function checkLeaseExpirations() {
           if (emailSent) {
             emailsSent++;
             logInfo(`Successfully sent notification for tenant ${tenant.name}`);
+            
+            // Record the notification in tenant_communications to prevent duplicates
+            await supabase
+              .from('tenant_communications')
+              .insert({
+                tenant_id: tenant.id,
+                subject: 'Rappel de fin de bail - Renouvellement nécessaire (90 jours)',
+                content: `Email de rappel automatique envoyé au propriétaire - bail expire dans 90 jours le ${new Date(tenant.lease_end).toLocaleDateString('fr-FR')}`,
+                category: 'lease_reminder',
+                type: 'notification',
+                status: 'sent',
+                is_from_tenant: false
+              });
+              
+            logInfo(`Recorded communication for tenant ${tenant.name}`);
           } else {
             errorsOccurred++;
             logError(`Failed to send notification for tenant ${tenant.name}`);
