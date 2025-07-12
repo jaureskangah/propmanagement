@@ -23,7 +23,7 @@ export const PropertyReports = () => {
 
   // Fetch properties and related data
   const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
-    queryKey: ['property_reports'],
+    queryKey: ['properties'],
     queryFn: async () => {
       const { data, error } = await supabase.from('properties').select('*');
       if (error) throw error;
@@ -32,7 +32,7 @@ export const PropertyReports = () => {
   });
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
-    queryKey: ['property_tenants'],
+    queryKey: ['tenants'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenants').select('*, properties(name)');
       if (error) throw error;
@@ -41,7 +41,7 @@ export const PropertyReports = () => {
   });
 
   const { data: maintenance = [], isLoading: isLoadingMaintenance } = useQuery({
-    queryKey: ['property_maintenance'],
+    queryKey: ['maintenance_requests'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('maintenance_requests')
