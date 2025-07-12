@@ -82,7 +82,7 @@ export const PerformanceMetrics = () => {
 
   // Payment performance
   const onTimePayments = payments.filter(payment => payment.status === 'paid').length;
-  const latePayments = payments.filter(payment => payment.status === 'late').length;
+  const latePayments = payments.filter(payment => payment.status === 'overdue').length;
   const paymentRate = payments.length > 0 ? (onTimePayments / payments.length) * 100 : 0;
 
   // Maintenance performance
