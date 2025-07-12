@@ -8,7 +8,7 @@ import { GlobalExportOptions } from "../shared/GlobalExportOptions";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import { MetricsCards } from "@/components/maintenance/financials/MetricsCards";
 import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 export const FinancialReports = () => {
   const { t } = useLocale();
@@ -83,8 +83,7 @@ export const FinancialReports = () => {
       </div>
 
       {/* Financial Summary Cards */}
-      <TooltipProvider>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-6">
               <div className="text-2xl font-bold text-green-600">
@@ -94,18 +93,18 @@ export const FinancialReports = () => {
                 <p className="text-sm text-muted-foreground">
                   {t('totalRevenue', { fallback: 'Revenus Totaux' })}
                 </p>
-                <Tooltip>
-                  <TooltipTrigger>
+                <HoverCard>
+                  <HoverCardTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" sideOffset={10} className="z-[100]">
-                    <p className="max-w-xs">
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-80">
+                    <p className="text-sm">
                       {t('totalRevenueTooltip', { 
                         fallback: 'Somme de tous les paiements de loyers reçus des locataires sur la période sélectionnée.' 
                       })}
                     </p>
-                  </TooltipContent>
-                </Tooltip>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </CardContent>
           </Card>
@@ -119,18 +118,18 @@ export const FinancialReports = () => {
                 <p className="text-sm text-muted-foreground">
                   {t('totalExpenses', { fallback: 'Dépenses Totales' })}
                 </p>
-                <Tooltip>
-                  <TooltipTrigger>
+                <HoverCard>
+                  <HoverCardTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" sideOffset={10} className="z-[100]">
-                    <p className="max-w-xs">
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-80">
+                    <p className="text-sm">
                       {t('totalExpensesTooltip', { 
                         fallback: 'Montant total des dépenses de maintenance et autres frais liés à la gestion de vos propriétés.' 
                       })}
                     </p>
-                  </TooltipContent>
-                </Tooltip>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </CardContent>
           </Card>
@@ -144,18 +143,18 @@ export const FinancialReports = () => {
                 <p className="text-sm text-muted-foreground">
                   {t('netIncome', { fallback: 'Revenu Net' })}
                 </p>
-                <Tooltip>
-                  <TooltipTrigger>
+                <HoverCard>
+                  <HoverCardTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" sideOffset={10} className="z-[100]">
-                    <p className="max-w-xs">
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-80">
+                    <p className="text-sm">
                       {t('netIncomeTooltip', { 
                         fallback: 'Différence entre les revenus totaux et les dépenses totales. Indique la rentabilité réelle de vos propriétés.' 
                       })}
                     </p>
-                  </TooltipContent>
-                </Tooltip>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </CardContent>
           </Card>
@@ -169,23 +168,22 @@ export const FinancialReports = () => {
                 <p className="text-sm text-muted-foreground">
                   {t('roi', { fallback: 'ROI sur dépenses' })}
                 </p>
-                <Tooltip>
-                  <TooltipTrigger>
+                <HoverCard>
+                  <HoverCardTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent side="top" sideOffset={10} className="z-[100]">
-                    <p className="max-w-xs">
+                  </HoverCardTrigger>
+                  <HoverCardContent side="top" align="center" className="w-80">
+                    <p className="text-sm">
                       {t('roiTooltip', { 
                         fallback: 'Retour sur investissement calculé comme (Revenu Net / Dépenses Totales) × 100. Mesure l\'efficacité de vos dépenses.' 
                       })}
                     </p>
-                  </TooltipContent>
-                </Tooltip>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             </CardContent>
           </Card>
         </div>
-      </TooltipProvider>
 
       {/* Metrics Cards */}
       <MetricsCards
