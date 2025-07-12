@@ -13,8 +13,6 @@ import { frSettings } from './features/settings';
 import { frPricing, frPlanFeatures } from './features/pricing';
 import { frNavigation } from './features/navigation';
 import { frAdmin } from './features/admin';
-// Import direct des traductions communications
-import { frCommunications } from './features/tenant/fr/communications';
 
 // Extensions de support
 const supportExtensions = {
@@ -39,8 +37,6 @@ const baseTranslations = {
   ...frFinances,
   ...frMaintenance,
   ...frTenant,
-  // Ajouter les traductions communications directement à la racine
-  ...frCommunications,
   ...frSettings,
   ...frPricing,
   ...frPlanFeatures,

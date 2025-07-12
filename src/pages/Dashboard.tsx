@@ -1,56 +1,114 @@
-import React, { useState } from 'react';
+
+import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import AppSidebar from "@/components/AppSidebar";
+import { SimplifiedDashboardHeader } from "@/components/dashboard/SimplifiedDashboardHeader";
+import { SimplifiedDashboardContainer } from "@/components/dashboard/SimplifiedDashboardContainer";
 import { useAuth } from '@/components/AuthProvider';
-import AppSidebar from '@/components/AppSidebar';
-import { SimplifiedDashboardContainer } from '@/components/dashboard/SimplifiedDashboardContainer';
-import { SimplifiedDashboardHeader } from '@/components/dashboard/SimplifiedDashboardHeader';
-import { DateRange } from '@/components/dashboard/DashboardDateFilter';
-import { useLocale } from '@/components/providers/LocaleProvider';
+import { useLocale } from "@/components/providers/LocaleProvider";
+import { DateRange } from "@/components/dashboard/DashboardDateFilter";
+import { cn } from "@/lib/utils";
+import { useState } from 'react';
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/lib/supabase";
 
 const Dashboard = () => {
-  const { isAuthenticated, loading: authLoading, user } = useAuth();
+  const { isAuthenticated, loading, isTenant } = useAuth();
   const { t } = useLocale();
   const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+    startDate: new Date(),
     endDate: new Date()
   });
 
-  // Loading state
-  if (authLoading) {
+  // Fetch all required data
+  const { data: propertiesData = [] } = useQuery({
+    queryKey: ['properties'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('properties').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: maintenanceData = [] } = useQuery({
+    queryKey: ['maintenance_requests'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('maintenance_requests').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: tenantsData = [] } = useQuery({
+    queryKey: ['tenants'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('tenants').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const { data: paymentsData = [] } = useQuery({
+    queryKey: ['tenant_payments'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('tenant_payments').select('*');
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const handleDateRangeChange = (newDateRange: DateRange) => {
+    console.log("Dashboard page received date range:", newDateRange);
+    setDateRange(newDateRange);
+  };
+
+  useEffect(() => {
+    console.log("=== OWNER DASHBOARD ===");
+    console.log("Dashboard component mounted, auth state:", { 
+      isAuthenticated, 
+      isTenant,
+      loading 
+    });
+  }, [isAuthenticated, isTenant, loading]);
+
+  // Show loading spinner while checking auth OR while tenant status is being determined
+  if (loading) {
+    console.log("Dashboard showing loading spinner");
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="flex flex-col items-center space-y-4 animate-fade-in">
-          <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full" />
-          <p className="text-sm text-muted-foreground animate-pulse">
-            {t('loading', { fallback: 'Chargement...' })}
-          </p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full" />
       </div>
     );
   }
 
-  // Redirect if not authenticated
+  // Redirect to auth if not authenticated
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+    console.log("User not authenticated, redirecting to /auth");
+    return <Navigate to="/auth" replace />;
+  }
+  
+  // Redirect tenants to their dashboard - SEULEMENT si on est sûr du statut
+  if (isTenant && !loading) {
+    console.log("🔄 User is tenant, redirecting to tenant dashboard");
+    return <Navigate to="/tenant/dashboard" replace />;
   }
 
-  // Check if user profile indicates tenant user
-  // For now, assume non-tenant users access this dashboard
-
+  // Only property owners should reach this point
+  console.log("✅ Rendering owner dashboard for property owner");
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="ml-0 md:ml-20 p-4 sm:p-6">
+      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
         <SimplifiedDashboardHeader 
-          title={t('dashboard', { fallback: 'Dashboard' })}
-          onDateRangeChange={setDateRange}
+          title={t('dashboard')}
+          onDateRangeChange={handleDateRangeChange}
         />
         <SimplifiedDashboardContainer 
           dateRange={dateRange}
-          propertiesData={[]}
-          maintenanceData={[]}
-          tenantsData={[]}
-          paymentsData={[]}
+          propertiesData={propertiesData}
+          maintenanceData={maintenanceData}
+          tenantsData={tenantsData}
+          paymentsData={paymentsData}
         />
       </div>
     </div>

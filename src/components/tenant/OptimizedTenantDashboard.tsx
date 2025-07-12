@@ -111,7 +111,6 @@ const TenantDashboardContent = () => {
               communications={communications || []}
               maintenanceRequests={maintenanceRequests || []}
               documents={documents || []}
-              payments={payments || []}
               leaseStatus={leaseStatus}
               refreshDashboard={refreshDashboard}
             />

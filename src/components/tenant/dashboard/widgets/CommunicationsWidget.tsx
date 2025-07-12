@@ -29,7 +29,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
           <MessageSquare className="h-5 w-5 mr-2 text-blue-600 dark:text-blue-400" />
-          <h3 className="font-semibold text-blue-700 dark:text-blue-300">{t('communications')}</h3>
+          <h3 className="font-semibold text-blue-700 dark:text-blue-300">Communications</h3>
           {unreadCount > 0 && (
             <Badge variant="default" className="ml-2 bg-blue-500 hover:bg-blue-600">
               {unreadCount}
@@ -43,7 +43,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
             transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse", repeatDelay: 2 }}
           >
             <Badge variant="outline" className="border-blue-200 bg-blue-100/50 text-blue-800 dark:border-blue-700 dark:bg-blue-900/50 dark:text-blue-300">
-              {unreadCount} {unreadCount === 1 ? t('newMessage') : t('newMessages')}
+              {unreadCount} {unreadCount === 1 ? 'nouveau message' : 'nouveaux messages'}
             </Badge>
           </motion.div>
         )}
@@ -98,7 +98,7 @@ export const CommunicationsWidget = ({ communications }: CommunicationsWidgetPro
                       : "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800"
                   }
                 >
-                  {t(comm.category)}
+                  {comm.category}
                 </Badge>
               </motion.div>
             ))}

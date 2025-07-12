@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { TenantNotificationBell } from "../notifications/TenantNotificationBell";
 import {
   Tooltip,
   TooltipContent,
@@ -96,7 +95,6 @@ export function DashboardHeader({
         </motion.div>
 
         <div className="flex items-center gap-2">
-          <TenantNotificationBell />
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
