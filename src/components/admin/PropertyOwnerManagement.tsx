@@ -220,53 +220,61 @@ export const PropertyOwnerManagement = () => {
       </div>
 
       {/* Search */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder={t('searchOwners', { fallback: 'Rechercher des propriétaires...' })}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="animate-fade-in">
+        <Card className="hover:shadow-lg transition-all duration-300">
+          <CardContent className="p-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                placeholder={t('searchOwners', { fallback: 'Rechercher des propriétaires...' })}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in">
+        <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-blue-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">{t('totalOwners', { fallback: 'Propriétaires' })}</p>
-                <p className="text-2xl font-bold">{filteredOwners.length}</p>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                <Building2 className="h-5 w-5 text-blue-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-muted-foreground truncate">{t('totalOwners', { fallback: 'Propriétaires' })}</p>
+                <p className="text-2xl font-bold text-foreground">{filteredOwners.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-green-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">{t('totalProperties', { fallback: 'Propriétés' })}</p>
-                <p className="text-2xl font-bold">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                <Building2 className="h-5 w-5 text-green-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-muted-foreground truncate">{t('totalProperties', { fallback: 'Propriétés' })}</p>
+                <p className="text-2xl font-bold text-foreground">
                   {filteredOwners.reduce((sum, owner) => sum + (owner.properties?.length || 0), 0)}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-purple-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">{t('totalTenants', { fallback: 'Locataires' })}</p>
-                <p className="text-2xl font-bold">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+                <Users className="h-5 w-5 text-purple-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-muted-foreground truncate">{t('totalTenants', { fallback: 'Locataires' })}</p>
+                <p className="text-2xl font-bold text-foreground">
                   {filteredOwners.reduce((sum, owner) => {
                     const stats = getOwnerStats(owner);
                     return sum + stats.totalTenants;
@@ -276,13 +284,15 @@ export const PropertyOwnerManagement = () => {
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
           <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5 text-emerald-600" />
-              <div>
-                <p className="text-sm text-muted-foreground">{t('totalRevenue', { fallback: 'Revenus' })}</p>
-                <p className="text-2xl font-bold">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-emerald-100 dark:bg-emerald-900/20 rounded-lg">
+                <DollarSign className="h-5 w-5 text-emerald-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-muted-foreground truncate">{t('totalRevenue', { fallback: 'Revenus' })}</p>
+                <p className="text-xl sm:text-2xl font-bold text-foreground truncate">
                   ${filteredOwners.reduce((sum, owner) => {
                     const stats = getOwnerStats(owner);
                     return sum + stats.totalRevenue;
@@ -295,101 +305,46 @@ export const PropertyOwnerManagement = () => {
       </div>
 
       {/* Owners Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Building2 className="h-5 w-5" />
-            {t('propertyOwners', { fallback: 'Propriétaires' })}
-            <Badge variant="secondary">{filteredOwners.length}</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('owner', { fallback: 'Propriétaire' })}</TableHead>
-                  <TableHead>{t('contact', { fallback: 'Contact' })}</TableHead>
-                  <TableHead>{t('properties', { fallback: 'Propriétés' })}</TableHead>
-                  <TableHead>{t('tenants', { fallback: 'Locataires' })}</TableHead>
-                  <TableHead>{t('occupancy', { fallback: 'Occupation' })}</TableHead>
-                  <TableHead>{t('revenue', { fallback: 'Revenus' })}</TableHead>
-                  <TableHead className="text-right">{t('actions', { fallback: 'Actions' })}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOwners.map((owner) => {
-                  const stats = getOwnerStats(owner);
-                  
-                  return (
-                    <TableRow key={owner.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center text-white text-sm font-medium">
+      <div className="animate-fade-in">
+        <Card className="hover:shadow-lg transition-all duration-300">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <Building2 className="h-5 w-5" />
+              {t('propertyOwners', { fallback: 'Propriétaires' })}
+              <Badge variant="secondary" className="ml-auto">
+                {filteredOwners.length}
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {/* Mobile View */}
+            <div className="md:hidden space-y-4">
+              {filteredOwners.map((owner) => {
+                const stats = getOwnerStats(owner);
+                
+                return (
+                  <Card key={owner.id} className="hover:shadow-md transition-all duration-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center text-white text-sm font-medium flex-shrink-0">
                             {(owner.first_name?.[0] || owner.email?.[0] || '?').toUpperCase()}
                           </div>
-                          <div>
-                            <div className="font-medium">
+                          <div className="min-w-0 flex-1">
+                            <div className="font-medium truncate">
                               {owner.first_name && owner.last_name 
                                 ? `${owner.first_name} ${owner.last_name}`
                                 : owner.email?.split('@')[0] || 'N/A'
                               }
                             </div>
                             {owner.company && (
-                              <div className="text-sm text-muted-foreground">{owner.company}</div>
+                              <div className="text-sm text-muted-foreground truncate">{owner.company}</div>
                             )}
                           </div>
                         </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-sm">
-                            <Mail className="h-3 w-3 text-muted-foreground" />
-                            {owner.email}
-                          </div>
-                          {owner.phone && (
-                            <div className="flex items-center gap-2 text-sm">
-                              <Phone className="h-3 w-3 text-muted-foreground" />
-                              {owner.phone}
-                            </div>
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Building2 className="h-4 w-4 text-blue-600" />
-                          <span className="font-medium">{stats.totalProperties}</span>
-                          <span className="text-sm text-muted-foreground">
-                            ({stats.totalUnits} unités)
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-purple-600" />
-                          <span className="font-medium">{stats.activeTenants}</span>
-                          <span className="text-sm text-muted-foreground">
-                            / {stats.totalTenants}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={stats.occupancyRate >= 80 ? "default" : stats.occupancyRate >= 60 ? "secondary" : "destructive"}
-                        >
-                          {stats.occupancyRate}%
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <DollarSign className="h-4 w-4 text-emerald-600" />
-                          <span className="font-medium">${stats.totalRevenue.toLocaleString()}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
+                            <Button variant="ghost" size="sm">
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -406,15 +361,165 @@ export const PropertyOwnerManagement = () => {
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+                      </div>
+                      
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                          <span className="truncate">{owner.email}</span>
+                        </div>
+                        {owner.phone && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                            <span>{owner.phone}</span>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t">
+                        <div className="flex items-center gap-1">
+                          <Building2 className="h-3 w-3 text-blue-600" />
+                          <span className="text-xs text-muted-foreground">Prop:</span>
+                          <span className="text-sm font-medium">{stats.totalProperties}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users className="h-3 w-3 text-purple-600" />
+                          <span className="text-xs text-muted-foreground">Loc:</span>
+                          <span className="text-sm font-medium">{stats.activeTenants}/{stats.totalTenants}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs text-muted-foreground">Occ:</span>
+                          <Badge 
+                            variant={stats.occupancyRate >= 80 ? "default" : stats.occupancyRate >= 60 ? "secondary" : "destructive"}
+                            className="text-xs"
+                          >
+                            {stats.occupancyRate}%
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <DollarSign className="h-3 w-3 text-emerald-600" />
+                          <span className="text-sm font-medium">${stats.totalRevenue.toLocaleString()}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+
+            {/* Desktop View */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('owner', { fallback: 'Propriétaire' })}</TableHead>
+                    <TableHead>{t('contact', { fallback: 'Contact' })}</TableHead>
+                    <TableHead>{t('properties', { fallback: 'Propriétés' })}</TableHead>
+                    <TableHead>{t('tenants', { fallback: 'Locataires' })}</TableHead>
+                    <TableHead>{t('occupancy', { fallback: 'Occupation' })}</TableHead>
+                    <TableHead>{t('revenue', { fallback: 'Revenus' })}</TableHead>
+                    <TableHead className="text-right">{t('actions', { fallback: 'Actions' })}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredOwners.map((owner) => {
+                    const stats = getOwnerStats(owner);
+                    
+                    return (
+                      <TableRow key={owner.id} className="hover:bg-muted/50 transition-colors duration-200">
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center text-white text-sm font-medium">
+                              {(owner.first_name?.[0] || owner.email?.[0] || '?').toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="font-medium">
+                                {owner.first_name && owner.last_name 
+                                  ? `${owner.first_name} ${owner.last_name}`
+                                  : owner.email?.split('@')[0] || 'N/A'
+                                }
+                              </div>
+                              {owner.company && (
+                                <div className="text-sm text-muted-foreground">{owner.company}</div>
+                              )}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="h-3 w-3 text-muted-foreground" />
+                              {owner.email}
+                            </div>
+                            {owner.phone && (
+                              <div className="flex items-center gap-2 text-sm">
+                                <Phone className="h-3 w-3 text-muted-foreground" />
+                                {owner.phone}
+                              </div>
+                            )}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Building2 className="h-4 w-4 text-blue-600" />
+                            <span className="font-medium">{stats.totalProperties}</span>
+                            <span className="text-sm text-muted-foreground">
+                              ({stats.totalUnits} unités)
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Users className="h-4 w-4 text-purple-600" />
+                            <span className="font-medium">{stats.activeTenants}</span>
+                            <span className="text-sm text-muted-foreground">
+                              / {stats.totalTenants}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge 
+                            variant={stats.occupancyRate >= 80 ? "default" : stats.occupancyRate >= 60 ? "secondary" : "destructive"}
+                          >
+                            {stats.occupancyRate}%
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <DollarSign className="h-4 w-4 text-emerald-600" />
+                            <span className="font-medium">${stats.totalRevenue.toLocaleString()}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted transition-colors duration-200">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>{t('actions', { fallback: 'Actions' })}</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem onClick={() => handleViewDetails(owner)} className="hover:bg-muted transition-colors duration-200">
+                                <Eye className="h-4 w-4 mr-2" />
+                                {t('viewDetails', { fallback: 'Voir détails' })}
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleManageProperties(owner)} className="hover:bg-muted transition-colors duration-200">
+                                <Building2 className="h-4 w-4 mr-2" />
+                                {t('manageProperties', { fallback: 'Gérer propriétés' })}
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };

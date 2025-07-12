@@ -59,14 +59,18 @@ export const ReportsContainer = () => {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <TubelightNavBar
-        items={navItems}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-      />
+      <div className="animate-scale-in">
+        <TubelightNavBar
+          items={navItems}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+        />
+      </div>
       
-      <div className="space-y-4 sm:space-y-6 animate-fade-in">
-        {renderActiveContent()}
+      <div className="space-y-4 sm:space-y-6">
+        <div key={activeTab} className="animate-fade-in">
+          {renderActiveContent()}
+        </div>
       </div>
     </div>
   );
