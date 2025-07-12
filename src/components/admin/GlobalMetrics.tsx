@@ -39,14 +39,18 @@ export const GlobalMetrics = () => {
     queryFn: async () => {
       const [users, properties, tenants, payments, maintenance] = await Promise.all([
         supabase.from('profiles').select('*', { count: 'exact', head: true }),
-        supabase.from('properties').select('*', { count: 'exact', head: true }),
+        supabase.from('properties').select('units', { count: 'exact' }),
         supabase.from('tenants').select('*', { count: 'exact', head: true }),
         supabase.from('tenant_payments').select('amount'),
         supabase.from('maintenance_requests').select('status')
       ]);
 
       const totalRevenue = payments.data?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-      const pendingMaintenance = maintenance.data?.filter(req => req.status === 'pending')?.length || 0;
+      const pendingMaintenance = maintenance.data?.filter(req => req.status === 'Pending')?.length || 0;
+
+      // Calculate occupancy rate based on units in properties vs active tenants
+      const totalUnits = properties.data?.reduce((sum, property) => sum + (property.units || 0), 0) || 0;
+      const occupancyRate = totalUnits > 0 ? Math.round(((tenants.count || 0) / totalUnits) * 100) : 0;
 
       return {
         totalUsers: users.count || 0,
@@ -54,7 +58,7 @@ export const GlobalMetrics = () => {
         totalTenants: tenants.count || 0,
         totalRevenue,
         pendingMaintenance,
-        occupancyRate: properties.count ? Math.round((tenants.count || 0) / properties.count * 100) : 0
+        occupancyRate
       };
     }
   });
@@ -99,11 +103,11 @@ export const GlobalMetrics = () => {
     },
     {
       title: t('totalRevenue', { fallback: 'Revenus Totaux' }),
-      value: `€${(currentStats?.totalRevenue || 0).toLocaleString()}`,
+      value: `$${(currentStats?.totalRevenue || 0).toLocaleString()}`,
       icon: DollarSign,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50 dark:bg-emerald-900/20",
-      trend: latestMetrics.total_revenue ? `+€${((currentStats?.totalRevenue || 0) - latestMetrics.total_revenue).toLocaleString()}` : null
+      trend: latestMetrics.total_revenue ? `+$${((currentStats?.totalRevenue || 0) - latestMetrics.total_revenue).toLocaleString()}` : null
     },
     {
       title: t('occupancyRate', { fallback: 'Taux d\'Occupation' }),
@@ -222,7 +226,7 @@ export const GlobalMetrics = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
-                  <Tooltip formatter={(value) => [`€${Number(value) * 1000}`, 'Revenus']} />
+                  <Tooltip formatter={(value) => [`$${Number(value) * 1000}`, 'Revenus']} />
                   <Bar dataKey="revenue" fill="#10B981" />
                 </BarChart>
               </ResponsiveContainer>
