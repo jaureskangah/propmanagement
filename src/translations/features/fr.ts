@@ -34,4 +34,19 @@ export const fr = {
   emailOnly: "Email uniquement",
   appOnly: "App uniquement",
   leaseStatus: "Statut du bail",
+
+  // Admin translations
+  user: "Utilisateur",
+  role: "Rôle",
+  roles: "Rôles",
+  systemSettings: "Paramètres système",
+  roleManagement: "Gestion des rôles",
+  manageUserRoles: "Gérer les rôles des utilisateurs",
+  admin: "Administrateur",
+  moderator: "Modérateur",
+  assignRole: "Attribuer un rôle",
+  removeRole: "Supprimer le rôle",
+  totalUsers: "Total des utilisateurs",
+  usersWithRoles: "Utilisateurs avec rôles",
+  roleDistribution: "Répartition des rôles",
 };
