@@ -41,9 +41,11 @@ export const AdminRoles = () => {
   const [selectedRole, setSelectedRole] = useState<AppRole>("user");
 
   // Fetch users with their roles
-  const { data: usersWithRoles = [], isLoading } = useQuery({
+  const { data: usersWithRoles = [], isLoading, error } = useQuery({
     queryKey: ['admin_users_roles'],
     queryFn: async () => {
+      console.log('🔍 Fetching users with roles for admin...');
+      
       const { data, error } = await supabase
         .from('profiles')
         .select(`
@@ -56,7 +58,13 @@ export const AdminRoles = () => {
         `)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error fetching users with roles:', error);
+        throw error;
+      }
+      
+      console.log('✅ Users with roles fetched:', data?.length);
+      console.log('📊 Users data:', data);
       return data || [];
     }
   });
