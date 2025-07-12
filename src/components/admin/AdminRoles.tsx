@@ -296,7 +296,7 @@ export const AdminRoles = () => {
                     <HoverCardTrigger asChild>
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
+                    <HoverCardContent className="w-80" side="top">
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold flex items-center gap-2">
                           <Crown className="h-4 w-4 text-red-600" />
@@ -331,7 +331,7 @@ export const AdminRoles = () => {
                     <HoverCardTrigger asChild>
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
+                    <HoverCardContent className="w-80" side="top">
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold flex items-center gap-2">
                           <Settings className="h-4 w-4 text-orange-600" />
@@ -366,7 +366,7 @@ export const AdminRoles = () => {
                     <HoverCardTrigger asChild>
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
+                    <HoverCardContent className="w-80" side="top">
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold flex items-center gap-2">
                           <User className="h-4 w-4 text-gray-600" />
@@ -400,7 +400,7 @@ export const AdminRoles = () => {
                     <HoverCardTrigger asChild>
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-80">
+                    <HoverCardContent className="w-80" side="top">
                       <div className="space-y-2">
                         <h4 className="text-sm font-semibold flex items-center gap-2">
                           <UserPlus className="h-4 w-4 text-blue-600" />
