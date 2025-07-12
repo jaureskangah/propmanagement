@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { 
@@ -18,6 +18,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 
 export const GlobalMetrics = () => {
   const { t } = useLocale();
+  const queryClient = useQueryClient();
 
   // Fetch global metrics
   const { data: metrics = [], isLoading: isLoadingMetrics } = useQuery({
@@ -62,6 +63,87 @@ export const GlobalMetrics = () => {
       };
     }
   });
+
+  // Set up real-time subscriptions for automatic updates
+  useEffect(() => {
+    const channels = [
+      // Listen to changes in profiles table
+      supabase
+        .channel('admin-profiles-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'profiles' },
+          () => {
+            console.log('Admin: Profiles data changed, refreshing...');
+            queryClient.invalidateQueries({ queryKey: ['admin_current_stats'] });
+          }
+        ),
+      
+      // Listen to changes in properties table
+      supabase
+        .channel('admin-properties-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'properties' },
+          () => {
+            console.log('Admin: Properties data changed, refreshing...');
+            queryClient.invalidateQueries({ queryKey: ['admin_current_stats'] });
+          }
+        ),
+      
+      // Listen to changes in tenants table
+      supabase
+        .channel('admin-tenants-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'tenants' },
+          () => {
+            console.log('Admin: Tenants data changed, refreshing...');
+            queryClient.invalidateQueries({ queryKey: ['admin_current_stats'] });
+          }
+        ),
+      
+      // Listen to changes in tenant_payments table
+      supabase
+        .channel('admin-payments-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'tenant_payments' },
+          () => {
+            console.log('Admin: Payments data changed, refreshing...');
+            queryClient.invalidateQueries({ queryKey: ['admin_current_stats'] });
+          }
+        ),
+      
+      // Listen to changes in maintenance_requests table
+      supabase
+        .channel('admin-maintenance-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'maintenance_requests' },
+          () => {
+            console.log('Admin: Maintenance data changed, refreshing...');
+            queryClient.invalidateQueries({ queryKey: ['admin_current_stats'] });
+          }
+        ),
+      
+      // Listen to changes in admin_metrics table
+      supabase
+        .channel('admin-metrics-changes')
+        .on('postgres_changes', 
+          { event: '*', schema: 'public', table: 'admin_metrics' },
+          () => {
+            console.log('Admin: Metrics data changed, refreshing...');
+            queryClient.invalidateQueries({ queryKey: ['admin_global_metrics'] });
+          }
+        )
+    ];
+
+    // Subscribe to all channels
+    channels.forEach(channel => channel.subscribe());
+
+    // Cleanup function
+    return () => {
+      channels.forEach(channel => {
+        supabase.removeChannel(channel);
+      });
+    };
+  }, [queryClient]);
 
   const isLoading = isLoadingMetrics || isLoadingStats;
   const latestMetrics = metrics[0] || {};
