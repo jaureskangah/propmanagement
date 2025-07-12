@@ -16,7 +16,7 @@ export const AnalyticsDashboard = () => {
 
   // Fetch all data needed for analytics
   const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
-    queryKey: ['analytics_properties'],
+    queryKey: ['properties'],
     queryFn: async () => {
       const { data, error } = await supabase.from('properties').select('*');
       if (error) throw error;
@@ -25,7 +25,7 @@ export const AnalyticsDashboard = () => {
   });
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
-    queryKey: ['analytics_tenants'],
+    queryKey: ['tenants'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenants').select('*');
       if (error) throw error;
@@ -34,7 +34,7 @@ export const AnalyticsDashboard = () => {
   });
 
   const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
-    queryKey: ['analytics_payments'],
+    queryKey: ['tenant_payments'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenant_payments').select('*');
       if (error) throw error;
@@ -43,7 +43,7 @@ export const AnalyticsDashboard = () => {
   });
 
   const { data: maintenance = [], isLoading: isLoadingMaintenance } = useQuery({
-    queryKey: ['analytics_maintenance'],
+    queryKey: ['maintenance_requests'],
     queryFn: async () => {
       const { data, error } = await supabase.from('maintenance_requests').select('*');
       if (error) throw error;
