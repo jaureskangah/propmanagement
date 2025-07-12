@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Loader2, 
   Search, 
@@ -37,6 +38,7 @@ import {
 
 export const PropertyOwnerManagement = () => {
   const { t } = useLocale();
+  const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch property owners with their properties and tenant data
@@ -119,6 +121,22 @@ export const PropertyOwnerManagement = () => {
       totalRevenue,
       occupancyRate
     };
+  };
+
+  const handleViewDetails = (owner: any) => {
+    toast({
+      title: "Voir détails",
+      description: `Affichage des détails pour ${owner.first_name} ${owner.last_name}`,
+    });
+    // TODO: Implémenter la navigation vers la page de détails
+  };
+
+  const handleManageProperties = (owner: any) => {
+    toast({
+      title: "Gérer propriétés",
+      description: `Gestion des propriétés de ${owner.first_name} ${owner.last_name}`,
+    });
+    // TODO: Implémenter la navigation vers la page de gestion des propriétés
   };
 
   if (isLoading) {
@@ -322,11 +340,11 @@ export const PropertyOwnerManagement = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>{t('actions', { fallback: 'Actions' })}</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleViewDetails(owner)}>
                               <Eye className="h-4 w-4 mr-2" />
                               {t('viewDetails', { fallback: 'Voir détails' })}
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleManageProperties(owner)}>
                               <Building2 className="h-4 w-4 mr-2" />
                               {t('manageProperties', { fallback: 'Gérer propriétés' })}
                             </DropdownMenuItem>
