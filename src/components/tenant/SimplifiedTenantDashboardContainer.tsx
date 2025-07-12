@@ -7,6 +7,7 @@ import { TenantMaintenanceSection } from './sections/TenantMaintenanceSection';
 import { TenantCommunicationsSection } from './sections/TenantCommunicationsSection';
 import { TenantDocumentsSection } from './sections/TenantDocumentsSection';
 import { TenantSettingsSection } from './sections/TenantSettingsSection';
+import { TenantCalendar } from './calendar/TenantCalendar';
 import { TenantDashboardNav } from './dashboard/TenantDashboardNav';
 import type { TenantData } from '@/hooks/tenant/dashboard/useTenantData';
 import type { Communication, MaintenanceRequest, TenantDocument } from '@/types/tenant';
@@ -16,6 +17,7 @@ interface SimplifiedTenantDashboardContainerProps {
   communications: Communication[];
   maintenanceRequests: MaintenanceRequest[];
   documents: TenantDocument[];
+  payments: any[];
   leaseStatus: { daysLeft: number; status: 'active' | 'expiring' | 'expired' };
   refreshDashboard: () => void;
 }
@@ -25,6 +27,7 @@ export const SimplifiedTenantDashboardContainer = ({
   communications,
   maintenanceRequests,
   documents,
+  payments,
   leaseStatus,
   refreshDashboard
 }: SimplifiedTenantDashboardContainerProps) => {
@@ -69,6 +72,15 @@ export const SimplifiedTenantDashboardContainer = ({
             tenantId={tenant.id}
             onDocumentUpdate={refreshDashboard}
             tenant={tenant}
+          />
+        );
+      case 'calendar':
+        return (
+          <TenantCalendar
+            tenant={tenant}
+            payments={payments}
+            maintenanceRequests={maintenanceRequests}
+            communications={communications}
           />
         );
       case 'settings':

@@ -7,7 +7,9 @@ import { MaintenanceWidget } from "./MaintenanceWidget";
 import { CommunicationsWidget } from "./CommunicationsWidget";
 import { DocumentsWidget } from "./DocumentsWidget";
 import { PaymentHistoryChart } from "./widgets/PaymentHistoryChart";
+import { InteractiveWidget } from "./widgets/InteractiveWidget";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import type { Communication, MaintenanceRequest, Payment, TenantDocument } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
 
@@ -33,6 +35,7 @@ export const DashboardWidgets = ({
   hiddenSections
 }: DashboardWidgetsProps) => {
   const { t } = useLocale();
+  const navigate = useNavigate();
   
   const container = {
     hidden: { opacity: 0 },
@@ -57,55 +60,119 @@ export const DashboardWidgets = ({
   
   // Render a widget
   const renderWidget = (widgetId: string, index: number) => {
+    const getWidgetAction = (widgetId: string) => {
+      switch (widgetId) {
+        case 'property':
+          return () => navigate('/tenant/overview');
+        case 'lease':
+          return () => navigate('/tenant/overview');
+        case 'notifications':
+          return () => navigate('/tenant/communications');
+        case 'payments':
+          return () => navigate('/tenant/payments');
+        case 'maintenance':
+          return () => navigate('/tenant/maintenance');
+        case 'communications':
+          return () => navigate('/tenant/communications');
+        case 'documents':
+          return () => navigate('/tenant/documents');
+        default:
+          return undefined;
+      }
+    };
+
     const widgetContent = () => {
       switch (widgetId) {
         case 'property':
           return tenant?.properties && (
-            <div className="h-full bg-white dark:bg-gray-900 dark:border-gray-800 rounded-lg shadow-sm p-6 border border-gray-200 flex flex-col">
-              <h3 className="text-lg font-semibold mb-2 dark:text-white">{tenant.properties.name}</h3>
-              <p className="text-gray-500 dark:text-gray-400">{t('unitLabel')}: {tenant.unit_number}</p>
-            </div>
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('viewDetails')}
+              className="h-full"
+            >
+              <div className="h-full flex flex-col">
+                <h3 className="text-lg font-semibold mb-2">{tenant.properties.name}</h3>
+                <p className="text-muted-foreground">{t('unitLabel')}: {tenant.unit_number}</p>
+              </div>
+            </InteractiveWidget>
           );
         case 'lease':
           return tenant && (
-            <LeaseStatusCard 
-              leaseStart={tenant.lease_start}
-              leaseEnd={tenant.lease_end}
-              daysLeft={leaseStatus.daysLeft}
-              status={leaseStatus.status}
-            />
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('viewLease')}
+              className="h-full"
+            >
+              <LeaseStatusCard 
+                leaseStart={tenant.lease_start}
+                leaseEnd={tenant.lease_end}
+                daysLeft={leaseStatus.daysLeft}
+                status={leaseStatus.status}
+              />
+            </InteractiveWidget>
           );
         case 'notifications':
           return (
-            <NotificationSummary
-              communications={communications}
-              maintenanceRequests={maintenanceRequests}
-            />
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('viewAll')}
+              className="h-full"
+            >
+              <NotificationSummary
+                communications={communications}
+                maintenanceRequests={maintenanceRequests}
+              />
+            </InteractiveWidget>
           );
         case 'payments':
           return tenant && (
-            <PaymentWidget
-              rentAmount={tenant.rent_amount}
-              payments={payments}
-            />
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('viewPayments')}
+              className="h-full"
+              showAction={false}
+            >
+              <PaymentWidget
+                rentAmount={tenant.rent_amount}
+                payments={payments}
+              />
+            </InteractiveWidget>
           );
         case 'maintenance':
           return (
-            <MaintenanceWidget
-              requests={maintenanceRequests}
-            />
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('viewRequests')}
+              className="h-full"
+            >
+              <MaintenanceWidget
+                requests={maintenanceRequests}
+              />
+            </InteractiveWidget>
           );
         case 'communications':
           return (
-            <CommunicationsWidget
-              communications={communications}
-            />
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('openChat')}
+              className="h-full"
+            >
+              <CommunicationsWidget
+                communications={communications}
+              />
+            </InteractiveWidget>
           );
         case 'documents':
           return (
-            <DocumentsWidget
-              documents={documents}
-            />
+            <InteractiveWidget 
+              onClick={getWidgetAction(widgetId)}
+              actionLabel={t('manageDocuments')}
+              className="h-full"
+            >
+              <DocumentsWidget
+                documents={documents}
+              />
+            </InteractiveWidget>
           );
         case 'chart':
           return (
@@ -122,7 +189,7 @@ export const DashboardWidgets = ({
       <motion.div 
         key={widgetId}
         variants={item}
-        className="w-full h-full transform transition-all duration-300 hover:-translate-y-1.5 hover:shadow-md rounded-xl overflow-hidden dark:bg-gray-800/90 dark:backdrop-blur-sm dark:border dark:border-gray-700/80"
+        className="w-full h-full"
         initial="hidden"
         animate="show"
         transition={{ duration: 0.3, delay: index * 0.05 }}

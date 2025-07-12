@@ -2,7 +2,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { TubelightNavBar } from '@/components/ui/tubelight-navbar';
-import { LayoutDashboard, Wrench, FileText, Settings, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Wrench, FileText, Settings, MessageSquare, Calendar } from 'lucide-react';
 import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface TenantDashboardNavProps {
@@ -34,6 +34,11 @@ export const TenantDashboardNav = ({ onSectionChange }: TenantDashboardNavProps)
       name: t('documents'), 
       value: "documents", 
       icon: FileText,
+    },
+    { 
+      name: t('calendar'), 
+      value: "calendar", 
+      icon: Calendar,
     },
     { 
       name: t('settings'), 
