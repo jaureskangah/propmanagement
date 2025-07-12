@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -88,6 +88,42 @@ export const SystemSettings = () => {
       });
     }
   });
+
+  // Real-time updates for system statistics
+  useEffect(() => {
+    const channels = [
+      'profiles',
+      'properties', 
+      'tenants',
+      'tenant_payments',
+      'maintenance_requests',
+      'tenant_documents'
+    ].map(tableName => {
+      const channel = supabase
+        .channel(`system-stats-${tableName}`)
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: tableName
+          },
+          () => {
+            // Invalidate and refetch system stats when any relevant table changes
+            queryClient.invalidateQueries({ queryKey: ['admin_system_stats'] });
+          }
+        )
+        .subscribe();
+
+      return channel;
+    });
+
+    return () => {
+      channels.forEach(channel => {
+        supabase.removeChannel(channel);
+      });
+    };
+  }, [queryClient]);
 
   const handleCalculateMetrics = () => {
     calculateMetricsMutation.mutate();
