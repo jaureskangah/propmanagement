@@ -11,7 +11,7 @@ export const PerformanceMetrics = () => {
 
   // Fetch all performance-related data
   const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
-    queryKey: ['performance_properties'],
+    queryKey: ['properties'],
     queryFn: async () => {
       const { data, error } = await supabase.from('properties').select('*');
       if (error) throw error;
@@ -20,7 +20,7 @@ export const PerformanceMetrics = () => {
   });
 
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
-    queryKey: ['performance_tenants'],
+    queryKey: ['tenants'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenants').select('*');
       if (error) throw error;
@@ -38,7 +38,7 @@ export const PerformanceMetrics = () => {
   });
 
   const { data: maintenance = [], isLoading: isLoadingMaintenance } = useQuery({
-    queryKey: ['performance_maintenance'],
+    queryKey: ['maintenance_requests'],
     queryFn: async () => {
       const { data, error } = await supabase.from('maintenance_requests').select('*');
       if (error) throw error;
@@ -47,7 +47,7 @@ export const PerformanceMetrics = () => {
   });
 
   const { data: communications = [], isLoading: isLoadingCommunications } = useQuery({
-    queryKey: ['performance_communications'],
+    queryKey: ['tenant_communications'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenant_communications').select('*');
       if (error) throw error;
