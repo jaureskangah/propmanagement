@@ -39,30 +39,41 @@ export const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch users with profiles and roles
-  const { data: users = [], isLoading, refetch } = useQuery({
+  const { data: users = [], isLoading, refetch, error } = useQuery({
     queryKey: ['admin_users'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      console.log('🔍 Fetching users for admin...');
+      
+      // First try a simple query to test RLS
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (profilesError) {
+        console.error('❌ Error fetching profiles:', profilesError);
+        throw profilesError;
+      }
+      
+      console.log('✅ Profiles fetched:', profiles?.length);
+      
+      // If basic query works, try with joins
+      const { data: usersWithRoles, error: rolesError } = await supabase
         .from('profiles')
         .select(`
           *,
-          user_roles(role),
-          tenants!tenants_tenant_profile_id_fkey(
-            id,
-            name,
-            property_id,
-            properties(name)
-          ),
-          properties_owned:properties!properties_user_id_fkey(
-            id,
-            name,
-            type
-          )
+          user_roles(role)
         `)
         .order('created_at', { ascending: false });
+        
+      if (rolesError) {
+        console.error('❌ Error fetching with roles:', rolesError);
+        // Return basic profiles if roles query fails
+        return profiles || [];
+      }
       
-      if (error) throw error;
-      return data || [];
+      console.log('✅ Users with roles fetched:', usersWithRoles?.length);
+      return usersWithRoles || [];
     }
   });
 
