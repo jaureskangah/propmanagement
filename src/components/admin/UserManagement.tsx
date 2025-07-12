@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useToast } from "@/hooks/use-toast";
 import { 
   Loader2, 
   Search, 
@@ -15,7 +16,9 @@ import {
   MoreHorizontal,
   Shield,
   User,
-  Settings
+  Settings,
+  Edit,
+  UserCog
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -36,7 +39,12 @@ import {
 
 export const UserManagement = () => {
   const { t } = useLocale();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
 
   // Fetch users with profiles and roles
   const { data: users = [], isLoading, refetch, error } = useQuery({
@@ -110,6 +118,25 @@ export const UserManagement = () => {
       case 'owner': return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
       default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-300';
     }
+  };
+
+  // Handle user actions
+  const handleEditUser = (user: any) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+    toast({
+      title: t('editUser', { fallback: 'Modifier l\'utilisateur' }),
+      description: `${t('editingUser', { fallback: 'Modification de' })} ${user.email}`,
+    });
+  };
+
+  const handleManageRoles = (user: any) => {
+    setSelectedUser(user);
+    setIsRoleModalOpen(true);
+    toast({
+      title: t('manageRoles', { fallback: 'Gérer les rôles' }),
+      description: `${t('managingRolesFor', { fallback: 'Gestion des rôles pour' })} ${user.email}`,
+    });
   };
 
   if (isLoading) {
@@ -245,12 +272,12 @@ export const UserManagement = () => {
                           <DropdownMenuContent align="end">
                             <DropdownMenuLabel>{t('actions', { fallback: 'Actions' })}</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              <Settings className="h-4 w-4 mr-2" />
+                            <DropdownMenuItem onClick={() => handleEditUser(user)}>
+                              <Edit className="h-4 w-4 mr-2" />
                               {t('editUser', { fallback: 'Modifier' })}
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Shield className="h-4 w-4 mr-2" />
+                            <DropdownMenuItem onClick={() => handleManageRoles(user)}>
+                              <UserCog className="h-4 w-4 mr-2" />
                               {t('manageRoles', { fallback: 'Gérer les rôles' })}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
