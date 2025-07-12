@@ -3,11 +3,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Loader2 } from "lucide-react";
+import { Loader2, Info } from "lucide-react";
 import { GlobalExportOptions } from "../shared/GlobalExportOptions";
 import FinancialOverview from "@/components/finances/FinancialOverview";
 import { MetricsCards } from "@/components/maintenance/financials/MetricsCards";
 import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export const FinancialReports = () => {
   const { t } = useLocale();
@@ -82,51 +83,109 @@ export const FinancialReports = () => {
       </div>
 
       {/* Financial Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-green-600">
-              ${totalRevenue.toLocaleString()}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('totalRevenue', { fallback: 'Revenus Totaux' })}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-2xl font-bold text-red-600">
-              ${totalExpenses.toLocaleString()}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('totalExpenses', { fallback: 'Dépenses Totales' })}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              ${netIncome.toLocaleString()}
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('netIncome', { fallback: 'Revenu Net' })}
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className={`text-2xl font-bold ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {roi.toFixed(1)}%
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('roi', { fallback: 'ROI sur dépenses' })}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <TooltipProvider>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-2xl font-bold text-green-600">
+                ${totalRevenue.toLocaleString()}
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('totalRevenue', { fallback: 'Revenus Totaux' })}
+                </p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      {t('totalRevenueTooltip', { 
+                        fallback: 'Somme de tous les paiements de loyers reçus des locataires sur la période sélectionnée.' 
+                      })}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className="text-2xl font-bold text-red-600">
+                ${totalExpenses.toLocaleString()}
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('totalExpenses', { fallback: 'Dépenses Totales' })}
+                </p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      {t('totalExpensesTooltip', { 
+                        fallback: 'Montant total des dépenses de maintenance et autres frais liés à la gestion de vos propriétés.' 
+                      })}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className={`text-2xl font-bold ${netIncome >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                ${netIncome.toLocaleString()}
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('netIncome', { fallback: 'Revenu Net' })}
+                </p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      {t('netIncomeTooltip', { 
+                        fallback: 'Différence entre les revenus totaux et les dépenses totales. Indique la rentabilité réelle de vos propriétés.' 
+                      })}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-6">
+              <div className={`text-2xl font-bold ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {roi.toFixed(1)}%
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-muted-foreground">
+                  {t('roi', { fallback: 'ROI sur dépenses' })}
+                </p>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="max-w-xs">
+                      {t('roiTooltip', { 
+                        fallback: 'Retour sur investissement calculé comme (Revenu Net / Dépenses Totales) × 100. Mesure l\'efficacité de vos dépenses.' 
+                      })}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </TooltipProvider>
 
       {/* Metrics Cards */}
       <MetricsCards
