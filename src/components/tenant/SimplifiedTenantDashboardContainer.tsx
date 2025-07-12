@@ -4,6 +4,7 @@ import { useSearchParams } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { TenantOverview } from './sections/TenantOverview';
 import { TenantMaintenanceSection } from './sections/TenantMaintenanceSection';
+import { TenantCommunicationsSection } from './sections/TenantCommunicationsSection';
 import { TenantDocumentsSection } from './sections/TenantDocumentsSection';
 import { TenantSettingsSection } from './sections/TenantSettingsSection';
 import { TenantDashboardNav } from './dashboard/TenantDashboardNav';
@@ -50,6 +51,15 @@ export const SimplifiedTenantDashboardContainer = ({
             requests={maintenanceRequests}
             tenantId={tenant.id}
             onMaintenanceUpdate={refreshDashboard}
+          />
+        );
+      case 'communications':
+        return (
+          <TenantCommunicationsSection
+            communications={communications}
+            tenantId={tenant.id}
+            onCommunicationUpdate={refreshDashboard}
+            tenant={tenant}
           />
         );
       case 'documents':
