@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
@@ -39,6 +39,7 @@ import {
 export const PropertyOwnerManagement = () => {
   const { t } = useLocale();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Fetch property owners with their properties and tenant data
@@ -138,6 +139,61 @@ export const PropertyOwnerManagement = () => {
     });
     // TODO: Implémenter la navigation vers la page de gestion des propriétés
   };
+
+  // Set up real-time subscriptions for automatic updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('admin-property-owners-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'profiles'
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['admin_property_owners'] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'properties'
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['admin_property_owners'] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tenants'
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['admin_property_owners'] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'tenant_payments'
+        },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ['admin_property_owners'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   if (isLoading) {
     return (
