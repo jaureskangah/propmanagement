@@ -2,7 +2,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { TubelightNavBar } from '@/components/ui/tubelight-navbar';
-import { LayoutDashboard, Wrench, FileText, Settings, CreditCard } from 'lucide-react';
+import { LayoutDashboard, Wrench, FileText, Settings } from 'lucide-react';
 import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface TenantDashboardNavProps {
@@ -19,11 +19,6 @@ export const TenantDashboardNav = ({ onSectionChange }: TenantDashboardNavProps)
       name: t('overview'), 
       value: "overview", 
       icon: LayoutDashboard,
-    },
-    { 
-      name: t('payments'), 
-      value: "payments", 
-      icon: CreditCard,
     },
     { 
       name: t('maintenance'), 

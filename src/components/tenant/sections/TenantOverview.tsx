@@ -2,15 +2,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building, Calendar, AlertTriangle, CheckCircle, XCircle, CreditCard } from "lucide-react";
+import { Building, Calendar, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/useSafeTranslation";
 import { formatDate } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useMemo } from "react";
-import type { Communication, MaintenanceRequest, TenantPayment } from "@/types/tenant";
+import type { Communication, MaintenanceRequest } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { usePaymentsAndDocuments } from "@/hooks/tenant/dashboard/usePaymentsAndDocuments";
 
 interface TenantOverviewProps {
   tenant: TenantData;
@@ -27,7 +26,6 @@ export const TenantOverview = ({
 }: TenantOverviewProps) => {
   const { t } = useSafeTranslation();
   const { language } = useLocale();
-  const { payments } = usePaymentsAndDocuments();
 
   const getLeaseStatusColor = () => {
     switch (leaseStatus.status) {
@@ -91,38 +89,10 @@ export const TenantOverview = ({
     }
   };
 
-  // Get payment status for current month
-  const getCurrentMonthPaymentStatus = () => {
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    
-    const currentMonthPayment = payments?.find(payment => {
-      const paymentDate = new Date(payment.payment_date);
-      return paymentDate.getMonth() === currentMonth && paymentDate.getFullYear() === currentYear;
-    });
-
-    if (currentMonthPayment) {
-      switch (currentMonthPayment.status) {
-        case 'paid':
-        case 'completed':
-          return { status: 'paid', color: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800' };
-        case 'pending':
-          return { status: 'pending', color: 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800' };
-        default:
-          return { status: 'overdue', color: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800' };
-      }
-    }
-    
-    // No payment found for current month - overdue
-    return { status: 'overdue', color: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800' };
-  };
-
-  const paymentStatus = getCurrentMonthPaymentStatus();
-
   return (
     <div className="space-y-6">
-      {/* Status Cards Grid - 3 columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Status Cards Grid - 2 columns */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Lease Status Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -150,39 +120,6 @@ export const TenantOverview = ({
                 {leaseStatus.status !== 'expired' && (
                   <p><strong>{t('daysRemaining', 'Jours restants')}:</strong> {leaseStatus.daysLeft} jours</p>
                 )}
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Payment Status Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15 }}
-        >
-          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
-            <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-emerald-500/10 dark:from-green-500/20 dark:to-emerald-500/20" />
-            <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-lg text-card-foreground">
-                <CreditCard className="h-5 w-5 text-green-600 dark:text-green-400" />
-                {t('payments', 'Paiements')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="relative space-y-3">
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${paymentStatus.color}`}>
-                {paymentStatus.status === 'paid' && <CheckCircle className="h-5 w-5" />}
-                {paymentStatus.status === 'pending' && <AlertTriangle className="h-5 w-5" />}
-                {paymentStatus.status === 'overdue' && <XCircle className="h-5 w-5" />}
-                <span className="font-medium">
-                  {paymentStatus.status === 'paid' && t('paid', 'Payé')}
-                  {paymentStatus.status === 'pending' && t('pending', 'En attente')}
-                  {paymentStatus.status === 'overdue' && t('overdue', 'En retard')}
-                </span>
-              </div>
-              <div className="space-y-1 text-sm text-muted-foreground">
-                <p><strong>{t('monthlyRent', 'Loyer mensuel')}:</strong> {tenant.rent_amount}€</p>
-                <p><strong>{t('nextPayment', 'Prochain paiement')}:</strong> {formatLeaseDate(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1).toISOString())}</p>
               </div>
             </CardContent>
           </Card>

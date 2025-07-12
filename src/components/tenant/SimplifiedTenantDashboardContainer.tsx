@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { TenantOverview } from './sections/TenantOverview';
-import { TenantPaymentsSection } from './sections/TenantPaymentsSection';
 import { TenantMaintenanceSection } from './sections/TenantMaintenanceSection';
 import { TenantDocumentsSection } from './sections/TenantDocumentsSection';
 import { TenantSettingsSection } from './sections/TenantSettingsSection';
@@ -45,13 +44,6 @@ export const SimplifiedTenantDashboardContainer = ({
 
   const renderActiveSection = () => {
     switch (activeSection) {
-      case 'payments':
-        return (
-          <TenantPaymentsSection
-            tenantId={tenant.id}
-            onPaymentUpdate={refreshDashboard}
-          />
-        );
       case 'maintenance':
         return (
           <TenantMaintenanceSection
