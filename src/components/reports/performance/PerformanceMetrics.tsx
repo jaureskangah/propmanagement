@@ -29,7 +29,7 @@ export const PerformanceMetrics = () => {
   });
 
   const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
-    queryKey: ['performance_payments'],
+    queryKey: ['tenant_payments'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenant_payments').select('*');
       if (error) throw error;
