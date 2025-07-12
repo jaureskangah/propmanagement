@@ -46,7 +46,7 @@ export const GlobalMetrics = () => {
       ]);
 
       const totalRevenue = payments.data?.reduce((sum, payment) => sum + (payment.amount || 0), 0) || 0;
-      const pendingMaintenance = maintenance.data?.filter(req => req.status === 'Pending')?.length || 0;
+      const pendingMaintenance = maintenance.data?.filter(req => req.status === 'pending' || req.status === 'Pending').length || 0;
 
       // Calculate occupancy rate based on units in properties vs active tenants
       const totalUnits = properties.data?.reduce((sum, property) => sum + (property.units || 0), 0) || 0;
