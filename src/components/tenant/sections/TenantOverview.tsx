@@ -90,20 +90,20 @@ export const TenantOverview = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mobile-px-2">
       {/* Status Cards Grid - 2 columns */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mobile-stack">
         {/* Lease Status Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80 mobile-card-hover hover-scale">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/20 dark:to-purple-500/20" />
-            <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-lg text-card-foreground">
-                <Calendar className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <CardHeader className="relative mobile-py-2">
+              <CardTitle className="flex items-center gap-2 text-base md:text-lg text-card-foreground">
+                <Calendar className="h-4 w-4 md:h-5 md:w-5 text-blue-600 dark:text-blue-400" />
                 {t('leaseStatus', 'Statut du bail')}
               </CardTitle>
             </CardHeader>
@@ -131,11 +131,11 @@ export const TenantOverview = ({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
+          <Card className="relative overflow-hidden border-0 shadow-lg bg-gradient-to-br from-card to-card/80 mobile-card-hover hover-scale">
             <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 dark:from-orange-500/20 dark:to-red-500/20" />
-            <CardHeader className="relative">
-              <CardTitle className="flex items-center gap-2 text-lg text-card-foreground">
-                <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+            <CardHeader className="relative mobile-py-2">
+              <CardTitle className="flex items-center gap-2 text-base md:text-lg text-card-foreground">
+                <AlertTriangle className="h-4 w-4 md:h-5 md:w-5 text-orange-600 dark:text-orange-400" />
                 {t('maintenance', 'Maintenance')}
               </CardTitle>
             </CardHeader>
@@ -163,15 +163,21 @@ export const TenantOverview = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-card/80">
-          <CardHeader>
-            <CardTitle className="text-lg text-card-foreground">{t('recentActivity', 'Activité récente')}</CardTitle>
+        <Card className="border-0 shadow-lg bg-gradient-to-br from-card to-card/80 mobile-card-hover">
+          <CardHeader className="mobile-py-2">
+            <CardTitle className="text-base md:text-lg text-card-foreground">{t('recentActivity', 'Activité récente')}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               {/* Recent maintenance requests */}
               {maintenanceRequests.slice(0, 3).map((request, index) => (
-                <div key={request.id} className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
+                <motion.div 
+                  key={request.id} 
+                  className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border mobile-card-hover mobile-touch-target"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
                   <AlertTriangle className="h-4 w-4 text-orange-500 dark:text-orange-400" />
                   <div className="flex-1">
                     <p className="text-sm font-medium text-card-foreground">{request.title || request.issue}</p>
@@ -184,7 +190,7 @@ export const TenantOverview = ({
                      request.status?.toLowerCase() === 'pending' ? (language === 'fr' ? 'En attente' : 'Pending') :
                      request.status}
                   </Badge>
-                </div>
+                </motion.div>
               ))}
 
               {maintenanceRequests.length === 0 && (

@@ -45,9 +45,9 @@ export const TenantSettingsSection = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="space-y-6 mobile-px-2"
     >
-      <div className="bg-gradient-to-br from-purple-50/50 via-card to-blue-50/50 dark:from-purple-950/20 dark:via-card dark:to-blue-950/20 rounded-2xl p-6 border border-border shadow-sm">
+      <div className="bg-gradient-to-br from-purple-50/50 via-card to-blue-50/50 dark:from-purple-950/20 dark:via-card dark:to-blue-950/20 rounded-2xl p-4 md:p-6 border border-border shadow-sm mobile-card-hover">
         <div className="space-y-6">
           <div className="text-center mb-6">
             <h2 className="text-2xl font-bold text-foreground mb-2">{t('settings')}</h2>

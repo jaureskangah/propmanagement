@@ -31,9 +31,9 @@ export const TenantCommunicationsSection = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="space-y-6 mobile-px-2"
     >
-      <div className="bg-gradient-to-br from-green-50 via-white to-blue-50 rounded-2xl p-6 border border-gray-100 shadow-sm">
+      <div className="bg-gradient-to-br from-green-50/50 via-card to-blue-50/50 dark:from-green-950/20 dark:via-card dark:to-blue-950/20 rounded-2xl p-4 md:p-6 border border-border shadow-sm mobile-card-hover">
         <TenantCommunications 
           communications={communications}
           tenantId={tenantId}

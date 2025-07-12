@@ -18,9 +18,9 @@ export const TenantMaintenanceSection = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className="space-y-6 mobile-px-2"
     >
-      <div className="bg-gradient-to-br from-orange-50/50 via-card to-red-50/50 dark:from-orange-950/20 dark:via-card dark:to-red-950/20 rounded-2xl p-6 border border-border shadow-sm">
+      <div className="bg-gradient-to-br from-orange-50/50 via-card to-red-50/50 dark:from-orange-950/20 dark:via-card dark:to-red-950/20 rounded-2xl p-4 md:p-6 border border-border shadow-sm mobile-card-hover">
         <TenantMaintenance 
           requests={requests}
           tenantId={tenantId}

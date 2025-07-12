@@ -74,7 +74,7 @@ const TenantDashboardContent = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 md:px-6 lg:px-8 space-y-6 max-w-7xl">
+    <div className="container mx-auto px-2 md:px-6 lg:px-8 space-y-4 md:space-y-6 max-w-7xl mobile-px-2">
       <ErrorBoundary
         fallback={
           <Card className="p-6 border-red-200 bg-red-50">

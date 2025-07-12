@@ -45,11 +45,13 @@ export const TenantDashboardNav = ({ onSectionChange }: TenantDashboardNavProps)
   };
 
   return (
-    <TubelightNavBar
-      items={navItems}
-      activeTab={currentSection}
-      onTabChange={handleTabChange}
-      className="mb-8"
-    />
+    <div className="mobile-tabs-scroll">
+      <TubelightNavBar
+        items={navItems}
+        activeTab={currentSection}
+        onTabChange={handleTabChange}
+        className="mb-8 mobile-full-width"
+      />
+    </div>
   );
 };

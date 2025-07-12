@@ -28,7 +28,7 @@ export function TubelightNavBar({ items, activeTab, onTabChange, className }: Tu
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center gap-1 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg">
+      <div className="flex items-center gap-1 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg overflow-x-auto mobile-tabs-scroll mobile-full-width max-w-full">
         {items.map((item, index) => {
           const Icon = item.icon
           const isActive = activeTab === item.value
@@ -43,7 +43,7 @@ export function TubelightNavBar({ items, activeTab, onTabChange, className }: Tu
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className={cn(
-                "relative cursor-pointer text-sm font-semibold px-3 sm:px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-1 sm:gap-2",
+                "relative cursor-pointer text-sm font-semibold px-3 sm:px-4 py-2 rounded-full transition-all duration-200 flex items-center gap-1 sm:gap-2 mobile-touch-target whitespace-nowrap",
                 "text-foreground/80 hover:text-primary hover:bg-primary/5",
                 isActive && "text-primary",
               )}
