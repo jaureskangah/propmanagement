@@ -98,7 +98,7 @@ export const FinancialReports = () => {
                   <TooltipTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent side="top">
                     <p className="max-w-xs">
                       {t('totalRevenueTooltip', { 
                         fallback: 'Somme de tous les paiements de loyers reçus des locataires sur la période sélectionnée.' 
@@ -123,7 +123,7 @@ export const FinancialReports = () => {
                   <TooltipTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent side="top">
                     <p className="max-w-xs">
                       {t('totalExpensesTooltip', { 
                         fallback: 'Montant total des dépenses de maintenance et autres frais liés à la gestion de vos propriétés.' 
@@ -148,7 +148,7 @@ export const FinancialReports = () => {
                   <TooltipTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent side="top">
                     <p className="max-w-xs">
                       {t('netIncomeTooltip', { 
                         fallback: 'Différence entre les revenus totaux et les dépenses totales. Indique la rentabilité réelle de vos propriétés.' 
@@ -173,7 +173,7 @@ export const FinancialReports = () => {
                   <TooltipTrigger>
                     <Info className="h-3 w-3 text-muted-foreground hover:text-primary cursor-help" />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent side="top">
                     <p className="max-w-xs">
                       {t('roiTooltip', { 
                         fallback: 'Retour sur investissement calculé comme (Revenu Net / Dépenses Totales) × 100. Mesure l\'efficacité de vos dépenses.' 
