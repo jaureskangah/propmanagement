@@ -9,27 +9,28 @@ export const useTenantNotifications = () => {
   const { toast } = useToast();
   const [tenantId, setTenantId] = useState<string | null>(null);
 
-  useEffect(() => {
+  // Optimized tenant ID fetch with memoization
+  const fetchTenantId = useCallback(async () => {
     if (!user?.id || !isTenant) return;
 
-    const fetchTenantId = async () => {
-      try {
-        const { data } = await supabase
-          .from('tenants')
-          .select('id')
-          .eq('tenant_profile_id', user.id)
-          .maybeSingle();
-        
-        if (data) {
-          setTenantId(data.id);
-        }
-      } catch (error) {
-        console.error('Error fetching tenant ID:', error);
+    try {
+      const { data } = await supabase
+        .from('tenants')
+        .select('id')
+        .eq('tenant_profile_id', user.id)
+        .maybeSingle();
+      
+      if (data?.id && data.id !== tenantId) {
+        setTenantId(data.id);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching tenant ID:', error);
+    }
+  }, [user?.id, isTenant, tenantId]);
 
+  useEffect(() => {
     fetchTenantId();
-  }, [user?.id, isTenant]);
+  }, [fetchTenantId]);
 
   useEffect(() => {
     if (!tenantId || !user?.id || !isTenant) return;
