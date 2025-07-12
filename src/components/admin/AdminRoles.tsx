@@ -197,7 +197,7 @@ export const AdminRoles = () => {
   const roleStats = {
     admin: usersWithRoles.filter(u => getUserRole(u) === 'admin').length,
     moderator: usersWithRoles.filter(u => getUserRole(u) === 'moderator').length,
-    user: usersWithRoles.filter(u => getUserRole(u) === 'user').length,
+    totalUsers: usersWithRoles.length, // Total number of users (all profiles)
     noRole: usersWithoutRoles.length
   };
 
@@ -254,8 +254,8 @@ export const AdminRoles = () => {
             <div className="flex items-center gap-2">
               <User className="h-5 w-5 text-gray-600" />
               <div>
-                <p className="text-sm text-muted-foreground">{t('regularUsers', { fallback: 'Utilisateurs' })}</p>
-                <p className="text-2xl font-bold">{roleStats.user}</p>
+                <p className="text-sm text-muted-foreground">{t('totalUsers', { fallback: 'Total Utilisateurs' })}</p>
+                <p className="text-2xl font-bold">{roleStats.totalUsers}</p>
               </div>
             </div>
           </CardContent>
