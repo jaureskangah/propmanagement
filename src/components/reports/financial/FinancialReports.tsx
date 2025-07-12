@@ -15,7 +15,7 @@ export const FinancialReports = () => {
 
   // Fetch financial data
   const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
-    queryKey: ['financial_payments'],
+    queryKey: ['tenant_payments'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenant_payments').select('*');
       if (error) throw error;
@@ -24,7 +24,7 @@ export const FinancialReports = () => {
   });
 
   const { data: expenses = [], isLoading: isLoadingExpenses } = useQuery({
-    queryKey: ['financial_expenses'],
+    queryKey: ['maintenance_expenses'],
     queryFn: async () => {
       const { data, error } = await supabase.from('maintenance_expenses').select('*');
       if (error) throw error;
@@ -33,7 +33,7 @@ export const FinancialReports = () => {
   });
 
   const { data: properties = [], isLoading: isLoadingProperties } = useQuery({
-    queryKey: ['financial_properties'],
+    queryKey: ['properties'],
     queryFn: async () => {
       const { data, error } = await supabase.from('properties').select('*');
       if (error) throw error;
