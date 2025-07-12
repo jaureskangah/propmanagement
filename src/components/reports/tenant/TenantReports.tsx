@@ -18,7 +18,7 @@ export const TenantReports = () => {
 
   // Fetch tenants and related data
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
-    queryKey: ['tenant_reports'],
+    queryKey: ['tenants'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenants').select('*, properties(name, address)');
       if (error) throw error;
@@ -27,7 +27,7 @@ export const TenantReports = () => {
   });
 
   const { data: payments = [], isLoading: isLoadingPayments } = useQuery({
-    queryKey: ['tenant_payments_reports'],
+    queryKey: ['tenant_payments'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenant_payments').select('*');
       if (error) throw error;
@@ -36,7 +36,7 @@ export const TenantReports = () => {
   });
 
   const { data: communications = [], isLoading: isLoadingCommunications } = useQuery({
-    queryKey: ['tenant_communications_reports'],
+    queryKey: ['tenant_communications'],
     queryFn: async () => {
       const { data, error } = await supabase.from('tenant_communications').select('*');
       if (error) throw error;
@@ -68,7 +68,7 @@ export const TenantReports = () => {
         title: "Email envoyé",
         description: "Le rappel de fin de bail a été envoyé au locataire.",
       });
-      queryClient.invalidateQueries({ queryKey: ['tenant_communications_reports'] });
+      queryClient.invalidateQueries({ queryKey: ['tenant_communications'] });
     },
     onError: (error) => {
       toast({
