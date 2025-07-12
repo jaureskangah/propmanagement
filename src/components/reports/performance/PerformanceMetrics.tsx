@@ -86,12 +86,18 @@ export const PerformanceMetrics = () => {
   const paymentRate = payments.length > 0 ? (onTimePayments / payments.length) * 100 : 0;
 
   // Maintenance performance
-  const completedMaintenance = maintenance.filter(item => item.status === 'completed' || item.status === 'Completed').length;
-  const pendingMaintenance = maintenance.filter(item => item.status === 'pending' || item.status === 'Pending').length;
+  const completedMaintenance = maintenance.filter(item => 
+    item.status === 'completed' || item.status === 'Completed' || item.status === 'Resolved'
+  ).length;
+  const pendingMaintenance = maintenance.filter(item => 
+    item.status === 'pending' || item.status === 'Pending'
+  ).length;
   const maintenanceEfficiency = maintenance.length > 0 ? (completedMaintenance / maintenance.length) * 100 : 0;
 
   // Communication response rate
-  const resolvedCommunications = communications.filter(comm => comm.status === 'resolved').length;
+  const resolvedCommunications = communications.filter(comm => 
+    comm.status === 'resolved' || comm.status === 'read'
+  ).length;
   const responseRate = communications.length > 0 ? (resolvedCommunications / communications.length) * 100 : 0;
 
   // Revenue performance - only count paid payments for total revenue
