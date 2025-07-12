@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -82,6 +82,51 @@ export const AdminRoles = () => {
       return usersWithRoles;
     }
   });
+
+  // Real-time updates for automatic refresh
+  useEffect(() => {
+    console.log('🔄 Setting up real-time listeners for admin roles...');
+    
+    const userRolesChannel = supabase
+      .channel('user_roles_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'user_roles'
+        },
+        (payload) => {
+          console.log('🔄 User roles changed:', payload);
+          queryClient.invalidateQueries({ queryKey: ['admin_users_roles'] });
+          queryClient.invalidateQueries({ queryKey: ['admin_all_users'] });
+        }
+      )
+      .subscribe();
+
+    const profilesChannel = supabase
+      .channel('profiles_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+          schema: 'public',
+          table: 'profiles'
+        },
+        (payload) => {
+          console.log('🔄 Profiles changed:', payload);
+          queryClient.invalidateQueries({ queryKey: ['admin_users_roles'] });
+          queryClient.invalidateQueries({ queryKey: ['admin_all_users'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      console.log('🔄 Cleaning up real-time listeners...');
+      supabase.removeChannel(userRolesChannel);
+      supabase.removeChannel(profilesChannel);
+    };
+  }, [queryClient]);
 
   // Fetch all users for role assignment - simplified approach
   const { data: allUsers = [] } = useQuery({
