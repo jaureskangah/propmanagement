@@ -6,12 +6,13 @@ import { DashboardHeader } from './dashboard/DashboardHeader';
 import { DashboardLoading } from './dashboard/DashboardLoading';
 import { NoTenantProfile } from './dashboard/NoTenantProfile';
 import { SimplifiedTenantDashboardContainer } from './SimplifiedTenantDashboardContainer';
-import { useTenantDashboard } from '@/hooks/tenant/useTenantDashboard';
+import { useOptimizedTenantDashboard } from '@/hooks/tenant/useOptimizedTenantDashboard';
 import { motion } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { useSafeTranslation } from '@/hooks/useSafeTranslation';
+import { RealtimeNotificationToast } from './notifications/RealtimeNotificationToast';
 
 // Detect mobile/tablet devices
 const isMobileDevice = () => {
@@ -19,7 +20,8 @@ const isMobileDevice = () => {
 };
 
 const TenantDashboardContent = () => {
-  const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard } = useTenantDashboard();
+  const dashboardData = useOptimizedTenantDashboard();
+  const { tenant, communications, maintenanceRequests, payments, documents, leaseStatus, isLoading, refreshDashboard, notifications, setupAutoRefresh } = dashboardData;
   const { t } = useSafeTranslation();
   const isMobile = isMobileDevice();
 
@@ -27,6 +29,12 @@ const TenantDashboardContent = () => {
   console.log("Tenant exists:", !!tenant);
   console.log("Is mobile device:", isMobile);
   console.log("Loading state:", isLoading);
+  
+  // Configuration de l'auto-refresh intelligent
+  React.useEffect(() => {
+    const cleanup = setupAutoRefresh();
+    return cleanup;
+  }, [setupAutoRefresh]);
 
   // Show loading for a reasonable time
   if (isLoading && !tenant) {
@@ -117,6 +125,13 @@ const TenantDashboardContent = () => {
           </motion.div>
         </ProgressiveLoader>
       </ErrorBoundary>
+      
+      {/* Notifications temps réel */}
+      <RealtimeNotificationToast
+        notifications={notifications}
+        maintenanceRequests={maintenanceRequests}
+        leaseStatus={leaseStatus}
+      />
     </div>
   );
 };
