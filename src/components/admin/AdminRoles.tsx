@@ -40,32 +40,46 @@ export const AdminRoles = () => {
   const [selectedUserId, setSelectedUserId] = useState<string>("");
   const [selectedRole, setSelectedRole] = useState<AppRole>("user");
 
-  // Fetch users with their roles
+  // Fetch users with their roles - simplified approach
   const { data: usersWithRoles = [], isLoading, error } = useQuery({
     queryKey: ['admin_users_roles'],
     queryFn: async () => {
-      console.log('🔍 Fetching users with roles for admin...');
+      console.log('🔍 Fetching users and roles for admin...');
       
-      const { data, error } = await supabase
+      // First get all profiles
+      const { data: profiles, error: profilesError } = await supabase
         .from('profiles')
-        .select(`
-          id,
-          email,
-          first_name,
-          last_name,
-          company,
-          user_roles(role)
-        `)
+        .select('id, email, first_name, last_name, company, created_at')
         .order('created_at', { ascending: false });
       
-      if (error) {
-        console.error('❌ Error fetching users with roles:', error);
-        throw error;
+      if (profilesError) {
+        console.error('❌ Error fetching profiles:', profilesError);
+        throw profilesError;
       }
       
-      console.log('✅ Users with roles fetched:', data?.length);
-      console.log('📊 Users data:', data);
-      return data || [];
+      console.log('✅ Profiles fetched:', profiles?.length);
+      
+      // Then get all user roles
+      const { data: roles, error: rolesError } = await supabase
+        .from('user_roles')
+        .select('user_id, role');
+      
+      if (rolesError) {
+        console.error('❌ Error fetching roles:', rolesError);
+        // Don't throw, just log the error and continue with empty roles
+        console.warn('⚠️ Continuing without roles data');
+      }
+      
+      console.log('✅ Roles fetched:', roles?.length || 0);
+      
+      // Combine profiles with their roles
+      const usersWithRoles = profiles?.map(profile => ({
+        ...profile,
+        user_roles: roles?.filter(role => role.user_id === profile.id) || []
+      })) || [];
+      
+      console.log('📊 Combined users with roles:', usersWithRoles.length);
+      return usersWithRoles;
     }
   });
 
