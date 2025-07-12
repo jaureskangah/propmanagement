@@ -7,7 +7,7 @@ import AppSidebar from '@/components/AppSidebar';
 import { AdminContainer } from '@/components/admin/AdminContainer';
 
 const Admin = () => {
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { isAdmin, loading: roleLoading } = useAdminRole();
   const { t } = useLocale();
 
@@ -53,6 +53,12 @@ const Admin = () => {
             <p className="text-muted-foreground mt-2 text-sm sm:text-base">
               {t('adminDescription', { fallback: 'Gestion globale du système et métriques administrateur' })}
             </p>
+            {/* Debug info - remove in production */}
+            <div className="mt-4 p-4 bg-muted rounded-lg text-sm">
+              <p><strong>Utilisateur connecté:</strong> {user?.email || 'Non connecté'}</p>
+              <p><strong>ID utilisateur:</strong> {user?.id || 'N/A'}</p>
+              <p><strong>Admin:</strong> {isAdmin ? 'Oui' : 'Non'}</p>
+            </div>
           </div>
           <AdminContainer />
         </div>

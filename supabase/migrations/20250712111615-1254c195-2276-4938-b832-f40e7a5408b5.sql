@@ -1,0 +1,1 @@
+DROP POLICY "Temporary admin dashboard access" ON public.profiles;
