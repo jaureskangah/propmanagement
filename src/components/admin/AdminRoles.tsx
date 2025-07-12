@@ -83,27 +83,34 @@ export const AdminRoles = () => {
     }
   });
 
-  // Fetch users without roles for assignment
-  const { data: usersWithoutRoles = [] } = useQuery({
-    queryKey: ['admin_users_without_roles'],
+  // Fetch all users for role assignment - simplified approach
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['admin_all_users'],
     queryFn: async () => {
+      console.log('🔍 Fetching all users for role assignment...');
+      
       const { data, error } = await supabase
         .from('profiles')
-        .select(`
-          id,
-          email,
-          first_name,
-          last_name
-        `)
-        .not('id', 'in', 
-          `(${usersWithRoles.filter(u => u.user_roles && u.user_roles.length > 0).map(u => `'${u.id}'`).join(',') || "''"})`)
-        .limit(20);
+        .select('id, email, first_name, last_name')
+        .order('created_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Error fetching all users:', error);
+        throw error;
+      }
+      
+      console.log('✅ All users fetched:', data?.length);
       return data || [];
-    },
-    enabled: usersWithRoles.length > 0
+    }
   });
+
+  // Filter users without roles on the client side
+  const usersWithoutRoles = allUsers.filter(user => {
+    const userWithRole = usersWithRoles.find(u => u.id === user.id);
+    return !userWithRole || !userWithRole.user_roles || userWithRole.user_roles.length === 0;
+  });
+
+  console.log('📊 Users without roles:', usersWithoutRoles.length);
 
   // Mutation to assign role
   const assignRoleMutation = useMutation({
@@ -117,7 +124,7 @@ export const AdminRoles = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin_users_roles'] });
-      queryClient.invalidateQueries({ queryKey: ['admin_users_without_roles'] });
+      queryClient.invalidateQueries({ queryKey: ['admin_all_users'] });
       toast({
         title: t('success', { fallback: 'Succès' }),
         description: t('roleAssigned', { fallback: 'Rôle assigné avec succès' }),
@@ -146,7 +153,7 @@ export const AdminRoles = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin_users_roles'] });
-      queryClient.invalidateQueries({ queryKey: ['admin_users_without_roles'] });
+      queryClient.invalidateQueries({ queryKey: ['admin_all_users'] });
       toast({
         title: t('success', { fallback: 'Succès' }),
         description: t('roleRemoved', { fallback: 'Rôle supprimé avec succès' }),
