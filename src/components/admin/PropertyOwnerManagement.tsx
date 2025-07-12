@@ -209,7 +209,7 @@ export const PropertyOwnerManagement = () => {
               <div>
                 <p className="text-sm text-muted-foreground">{t('totalRevenue', { fallback: 'Revenus' })}</p>
                 <p className="text-2xl font-bold">
-                  €{filteredOwners.reduce((sum, owner) => {
+                  ${filteredOwners.reduce((sum, owner) => {
                     const stats = getOwnerStats(owner);
                     return sum + stats.totalRevenue;
                   }, 0).toLocaleString()}
@@ -309,7 +309,7 @@ export const PropertyOwnerManagement = () => {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <DollarSign className="h-4 w-4 text-emerald-600" />
-                          <span className="font-medium">€{stats.totalRevenue.toLocaleString()}</span>
+                          <span className="font-medium">${stats.totalRevenue.toLocaleString()}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
