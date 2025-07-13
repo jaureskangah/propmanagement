@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/components/AuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -71,10 +71,14 @@ const TenantSignup = () => {
 
   const handleFormSubmit = async (values: { password: string; confirmPassword: string }) => {
     await signUpTenant(values, tenantData, invitationToken);
+  };
+
+  // Surveiller les changements de signupStatus
+  useEffect(() => {
     if (signupStatus === 'success') {
       handleSignupSuccess();
     }
-  };
+  }, [signupStatus]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
