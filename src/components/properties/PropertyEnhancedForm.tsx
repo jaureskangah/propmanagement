@@ -255,7 +255,7 @@ export function PropertyEnhancedForm({
           name="rent_amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Loyer mensuel (€)</FormLabel>
+              <FormLabel>Loyer mensuel ($)</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 

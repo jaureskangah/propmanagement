@@ -48,7 +48,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
                 ) : properties && properties.length > 0 ? (
                   properties.map((property) => (
                     <SelectItem key={property.id} value={property.id}>
-                      {property.name} - {property.address} ({property.rent_amount}€/mois)
+                      {property.name} - {property.address} (${property.rent_amount}/mois)
                     </SelectItem>
                   ))
                 ) : (
