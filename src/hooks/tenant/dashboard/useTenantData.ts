@@ -69,8 +69,31 @@ export const useTenantData = () => {
       setIsLoading(true);
       setHasError(false);
 
-      // Une seule requête optimisée qui récupère toutes les données nécessaires
-      console.log("Fetching all tenant data in one query...");
+      // Étape 1: Récupérer les données du profil
+      console.log("Step 1: Fetching profile data...");
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('first_name, last_name, is_tenant_user')
+        .eq('id', user.id)
+        .maybeSingle();
+        
+      console.log("Profile data:", profileData);
+      
+      if (profileError) {
+        console.error("Profile error:", profileError);
+        // Continuer même en cas d'erreur de profil
+      }
+      
+      // Vérifier que l'utilisateur est bien un locataire
+      if (profileData && !profileData.is_tenant_user) {
+        console.log("User is not a tenant user according to profile");
+        setTenant(null);
+        setIsLoading(false);
+        return;
+      }
+      
+      // Étape 2: Récupérer les données du tenant avec la propriété
+      console.log("Step 2: Fetching tenant data with property...");
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
         .select(`
@@ -82,8 +105,7 @@ export const useTenantData = () => {
           lease_end, 
           rent_amount,
           property_id,
-          properties:property_id(name),
-          tenant_profile_id
+          properties:property_id(name)
         `)
         .eq('tenant_profile_id', user.id)
         .maybeSingle();
@@ -105,11 +127,9 @@ export const useTenantData = () => {
         return;
       }
 
-      // Construire le nom d'affichage à partir des métadonnées utilisateur
-      const firstName = user?.user_metadata?.first_name;
-      const lastName = user?.user_metadata?.last_name;
-      const displayName = firstName && lastName 
-        ? `${firstName} ${lastName}` 
+      // Construire le nom d'affichage
+      const displayName = profileData?.first_name && profileData?.last_name 
+        ? `${profileData.first_name} ${profileData.last_name}` 
         : tenantData.name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
       
       // Gérer les données de propriété
@@ -136,8 +156,8 @@ export const useTenantData = () => {
       const finalTenantData: TenantData = {
         ...tenantData,
         name: displayName,
-        firstName: firstName,
-        lastName: lastName,
+        firstName: profileData?.first_name || user?.user_metadata?.first_name,
+        lastName: profileData?.last_name || user?.user_metadata?.last_name,
         fullName: displayName,
         properties: propertyData
       };
