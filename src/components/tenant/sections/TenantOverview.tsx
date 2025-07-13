@@ -108,19 +108,32 @@ export const TenantOverview = ({
               </CardTitle>
             </CardHeader>
             <CardContent className="relative space-y-3">
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${getLeaseStatusColor()}`}>
-                {getLeaseStatusIcon()}
-                <span className="font-medium">
-                  {getLeaseStatusText()}
-                </span>
-              </div>
-              <div className="space-y-1 text-sm text-muted-foreground">
-                <p><strong>{t('leaseStart', 'Début du bail')}:</strong> {formatLeaseDate(tenant.lease_start)}</p>
-                <p><strong>{t('leaseEnd', 'Fin du bail')}:</strong> {formatLeaseDate(tenant.lease_end)}</p>
-                {leaseStatus.status !== 'expired' && (
-                  <p><strong>{t('daysRemaining', 'Jours restants')}:</strong> {leaseStatus.daysLeft} jours</p>
-                )}
-              </div>
+              {/* Only show lease status when we have actual lease data */}
+              {tenant.lease_start && tenant.lease_end ? (
+                <>
+                  <div className={`flex items-center gap-2 px-3 py-2 rounded-lg border ${getLeaseStatusColor()}`}>
+                    {getLeaseStatusIcon()}
+                    <span className="font-medium">
+                      {getLeaseStatusText()}
+                    </span>
+                  </div>
+                  <div className="space-y-1 text-sm text-muted-foreground">
+                    <p><strong>{t('leaseStart', 'Début du bail')}:</strong> {formatLeaseDate(tenant.lease_start)}</p>
+                    <p><strong>{t('leaseEnd', 'Fin du bail')}:</strong> {formatLeaseDate(tenant.lease_end)}</p>
+                    {leaseStatus.status !== 'expired' && (
+                      <p><strong>{t('daysRemaining', 'Jours restants')}:</strong> {leaseStatus.daysLeft} jours</p>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="animate-pulse space-y-3">
+                  <div className="h-10 bg-muted rounded-lg"></div>
+                  <div className="space-y-2">
+                    <div className="h-4 bg-muted rounded w-3/4"></div>
+                    <div className="h-4 bg-muted rounded w-2/3"></div>
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

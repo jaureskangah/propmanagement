@@ -8,7 +8,7 @@ export const useLeaseStatus = (leaseEnd?: string) => {
     
     if (!leaseEnd) {
       console.log("No lease end date provided");
-      return { daysLeft: 0, status: 'expired' as const };
+      return { daysLeft: 0, status: 'active' as const }; // Retourner "active" par défaut plutôt qu'"expired"
     }
 
     const endDate = new Date(leaseEnd);
