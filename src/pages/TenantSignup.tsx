@@ -19,6 +19,25 @@ const TenantSignup = () => {
   const { loading, signupStatus, signUpTenant } = useTenantSignup();
   const [signupSuccess, setSignupSuccess] = useState(false);
 
+  const handleSignupSuccess = () => {
+    setSignupSuccess(true);
+    // Rediriger vers le dashboard locataire après un court délai
+    setTimeout(() => {
+      navigate('/tenant/dashboard');
+    }, 2000);
+  };
+
+  const handleFormSubmit = async (values: { password: string; confirmPassword: string }) => {
+    await signUpTenant(values, tenantData, invitationToken);
+  };
+
+  // Surveiller les changements de signupStatus
+  useEffect(() => {
+    if (signupStatus === 'success') {
+      handleSignupSuccess();
+    }
+  }, [signupStatus]);
+
   // Redirect if already authenticated
   if (isAuthenticated) {
     return <Navigate to="/tenant/dashboard" replace />;
@@ -43,14 +62,6 @@ const TenantSignup = () => {
     );
   }
 
-  const handleSignupSuccess = () => {
-    setSignupSuccess(true);
-    // Rediriger vers le dashboard locataire après un court délai
-    setTimeout(() => {
-      navigate('/tenant/dashboard');
-    }, 2000);
-  };
-
   if (signupSuccess) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -68,17 +79,6 @@ const TenantSignup = () => {
       </div>
     );
   }
-
-  const handleFormSubmit = async (values: { password: string; confirmPassword: string }) => {
-    await signUpTenant(values, tenantData, invitationToken);
-  };
-
-  // Surveiller les changements de signupStatus
-  useEffect(() => {
-    if (signupStatus === 'success') {
-      handleSignupSuccess();
-    }
-  }, [signupStatus]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
