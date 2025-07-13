@@ -10,6 +10,7 @@ export interface Property {
   address: string;
   units: number;
   type: string;
+  rent_amount: number;
   image_url?: string;
   user_id: string;
   created_at: string;
@@ -21,6 +22,7 @@ export interface PropertyFormData {
   address: string;
   units: number;
   type: string;
+  rent_amount: number;
   image?: string;
 }
 
@@ -42,7 +44,7 @@ export const useProperties = () => {
 
       const { data, error } = await supabase
         .from("properties")
-        .select("id, name, address, type, units, image_url, user_id, created_at, updated_at")
+        .select("id, name, address, type, units, rent_amount, image_url, user_id, created_at, updated_at")
         .eq("user_id", user.id)
         .order("name");
 
@@ -76,6 +78,7 @@ export const useProperties = () => {
           address: propertyData.address,
           units: propertyData.units,
           type: propertyData.type,
+          rent_amount: propertyData.rent_amount,
           image_url: propertyData.image,
           user_id: user.id,
         })
@@ -99,6 +102,7 @@ export const useProperties = () => {
           address: data.address,
           units: data.units,
           type: data.type,
+          rent_amount: data.rent_amount,
           image_url: data.image,
           updated_at: new Date().toISOString(),
         })

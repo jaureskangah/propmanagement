@@ -15,6 +15,17 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
   const { t } = useTenantFormTranslations();
   const { properties, isLoading } = useProperties();
 
+  const handlePropertyChange = (propertyId: string) => {
+    // Mettre à jour le property_id
+    form.setValue("property_id", propertyId);
+    
+    // Auto-remplir le loyer basé sur la propriété sélectionnée
+    const selectedProperty = properties?.find(p => p.id === propertyId);
+    if (selectedProperty && selectedProperty.rent_amount) {
+      form.setValue("rent_amount", selectedProperty.rent_amount);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <FormField
@@ -23,7 +34,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel>{t('formPropertyLabel')}</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select onValueChange={handlePropertyChange} defaultValue={field.value}>
               <FormControl>
                 <SelectTrigger>
                   <SelectValue placeholder={t('formPropertyPlaceholder')} />
@@ -37,7 +48,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
                 ) : properties && properties.length > 0 ? (
                   properties.map((property) => (
                     <SelectItem key={property.id} value={property.id}>
-                      {property.name} - {property.address}
+                      {property.name} - {property.address} ({property.rent_amount}€/mois)
                     </SelectItem>
                   ))
                 ) : (

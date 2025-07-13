@@ -4,6 +4,7 @@ export interface Property {
   address: string;
   units: number;
   type: string;
+  rent_amount: number;
   image_url?: string;
   user_id: string;
   created_at: string;
@@ -15,5 +16,6 @@ export interface PropertyFormData {
   address: string;
   units: number;
   type: string;
+  rent_amount: number;
   image?: string;
 }

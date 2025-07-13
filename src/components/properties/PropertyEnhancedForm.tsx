@@ -5,7 +5,7 @@ import { z } from "zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { PropertyFormData } from "@/hooks/useProperties";
+import { PropertyFormData } from "@/types/property";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Upload, X, CheckCircle } from "lucide-react";
@@ -28,6 +28,7 @@ const propertySchema = z.object({
   address: z.string().min(5, "L'adresse doit contenir au moins 5 caractères"),
   units: z.number().min(0, "Le nombre d'unités doit être positif").max(1000, "Maximum 1000 unités"),
   type: z.enum(PROPERTY_TYPES, { required_error: "Veuillez sélectionner un type" }),
+  rent_amount: z.number().min(0, "Le loyer doit être positif"),
   image: z.string().optional(),
 });
 
@@ -56,6 +57,7 @@ export function PropertyEnhancedForm({
       address: "",
       units: 0,
       type: "",
+      rent_amount: 0,
     },
   });
 
@@ -240,6 +242,29 @@ export function PropertyEnhancedForm({
                   {...field}
                   onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                   className="transition-all duration-200"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* Loyer */}
+        <FormField
+          control={form.control}
+          name="rent_amount"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Loyer mensuel (€)</FormLabel>
+              <FormControl>
+                <Input 
+                  type="number" 
+                  min="0"
+                  step="0.01"
+                  {...field}
+                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                  className="transition-all duration-200"
+                  placeholder="0.00"
                 />
               </FormControl>
               <FormMessage />

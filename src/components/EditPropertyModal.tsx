@@ -38,6 +38,7 @@ export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyMod
     address: property.address,
     units: property.units,
     type: property.type,
+    rent_amount: property.rent_amount,
     image: property.image_url,
   };
 

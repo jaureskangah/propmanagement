@@ -530,6 +530,7 @@ export type Database = {
           id: string
           image_url: string | null
           name: string
+          rent_amount: number | null
           type: string
           units: number
           updated_at: string
@@ -541,6 +542,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name: string
+          rent_amount?: number | null
           type: string
           units?: number
           updated_at?: string
@@ -552,6 +554,7 @@ export type Database = {
           id?: string
           image_url?: string | null
           name?: string
+          rent_amount?: number | null
           type?: string
           units?: number
           updated_at?: string
