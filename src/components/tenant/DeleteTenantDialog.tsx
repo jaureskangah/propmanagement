@@ -39,9 +39,9 @@ export const DeleteTenantDialog = ({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{t('confirmDeleteTenant')}</AlertDialogTitle>
+          <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('tenantDeleteWarning')}
+            {t('deleteWarning')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
