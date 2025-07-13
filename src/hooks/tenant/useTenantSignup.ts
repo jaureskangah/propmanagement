@@ -185,14 +185,8 @@ export const useTenantSignup = () => {
 
       toast({
         title: "Compte créé avec succès",
-        description: "Votre compte a été créé et activé. Redirection vers le tableau de bord...",
+        description: "Votre compte a été créé et activé.",
       });
-
-      // Rediriger vers le dashboard tenant avec un délai
-      setTimeout(() => {
-        console.log("Redirecting to tenant dashboard...");
-        window.location.href = '/tenant/dashboard';
-      }, 2000);
 
     } catch (error: any) {
       console.error("=== LINKING PROCESS FAILED ===", error);

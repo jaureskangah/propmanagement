@@ -5,7 +5,9 @@ import { useAuth } from '@/components/AuthProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { useTenantInvitation } from '@/hooks/tenant/useTenantInvitation';
-import { TenantSignupForm } from '@/components/auth/TenantSignupForm';
+import { TenantSignupCard } from '@/components/tenant/signup/TenantSignupCard';
+import { TenantSignupForm } from '@/components/tenant/signup/TenantSignupForm';
+import { useTenantSignup } from '@/hooks/tenant/useTenantSignup';
 import { AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
@@ -14,6 +16,7 @@ const TenantSignup = () => {
   const { t } = useLocale();
   const navigate = useNavigate();
   const { tenantData, invitationToken } = useTenantInvitation();
+  const { loading, signupStatus, signUpTenant } = useTenantSignup();
   const [signupSuccess, setSignupSuccess] = useState(false);
 
   // Redirect if already authenticated
@@ -66,33 +69,22 @@ const TenantSignup = () => {
     );
   }
 
+  const handleFormSubmit = async (values: { password: string; confirmPassword: string }) => {
+    await signUpTenant(values, tenantData, invitationToken);
+    if (signupStatus === 'success') {
+      handleSignupSuccess();
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            Créer votre compte locataire
-          </CardTitle>
-          <CardDescription>
-            Bienvenue {tenantData.name} !<br />
-            Créez votre compte pour accéder au portail locataire.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Alert className="mb-4">
-            <AlertDescription>
-              <strong>Propriété :</strong> {tenantData.properties?.name || 'Non spécifiée'}<br />
-              <strong>Email :</strong> {tenantData.email}
-            </AlertDescription>
-          </Alert>
-          
-          <TenantSignupForm 
-            tenantData={tenantData}
-            invitationToken={invitationToken}
-            onSuccess={handleSignupSuccess}
-          />
-        </CardContent>
-      </Card>
+      <TenantSignupCard tenantData={tenantData}>
+        <TenantSignupForm 
+          onSubmit={handleFormSubmit}
+          loading={loading}
+          signupStatus={signupStatus}
+        />
+      </TenantSignupCard>
     </div>
   );
 };
