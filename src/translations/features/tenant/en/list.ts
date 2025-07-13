@@ -13,6 +13,7 @@ export const enList: TenantListTranslations = {
   cancel: "Cancel",
   confirm: "Confirm",
   deleting: "Deleting...",
+  saving: "Saving...",
   tenantCount: "{count} tenants",
   tenantCountSingular: "1 tenant",
   noTenants: "No tenants found",

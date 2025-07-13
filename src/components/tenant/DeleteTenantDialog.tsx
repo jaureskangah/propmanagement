@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
 import { Loader2 } from "lucide-react";
 
 interface DeleteTenantDialogProps {
@@ -25,7 +25,7 @@ export const DeleteTenantDialog = ({
   onConfirm,
   isDeleting = false,
 }: DeleteTenantDialogProps) => {
-  const { t } = useLocale();
+  const { t } = useTenantListTranslations();
   
   const handleConfirm = async () => {
     try {
@@ -41,7 +41,7 @@ export const DeleteTenantDialog = ({
         <AlertDialogHeader>
           <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
           <AlertDialogDescription>
-            {t('deleteWarning')}
+            {t('confirmDeleteMessage')}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

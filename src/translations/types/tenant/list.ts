@@ -11,6 +11,7 @@ export interface TenantListTranslations {
   cancel: string;
   confirm: string;
   deleting: string;
+  saving: string;
   tenantCount: string;
   tenantCountSingular: string;
   noTenants: string;
