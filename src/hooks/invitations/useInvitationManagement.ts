@@ -31,6 +31,7 @@ export const useInvitationManagement = () => {
           *,
           tenants:tenant_id (
             name,
+            tenant_profile_id,
             properties (name)
           )
         `)
@@ -38,6 +39,47 @@ export const useInvitationManagement = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
+
+      // Vérifier et corriger automatiquement les invitations qui devraient être acceptées
+      const pendingInvitations = data.filter(invitation => 
+        invitation.status === 'pending' && 
+        invitation.tenants?.tenant_profile_id !== null
+      );
+
+      if (pendingInvitations.length > 0) {
+        console.log(`🔄 Found ${pendingInvitations.length} pending invitations that should be accepted`);
+        
+        // Mettre à jour automatiquement ces invitations
+        const invitationIds = pendingInvitations.map(inv => inv.id);
+        const { error: updateError } = await supabase
+          .from('tenant_invitations')
+          .update({ status: 'accepted' })
+          .in('id', invitationIds);
+
+        if (updateError) {
+          console.error("❌ Error auto-updating invitation statuses:", updateError);
+        } else {
+          console.log("✅ Auto-updated invitation statuses for signed-up tenants");
+          
+          // Refaire la requête pour récupérer les données mises à jour
+          const { data: updatedData, error: refetchError } = await supabase
+            .from('tenant_invitations')
+            .select(`
+              *,
+              tenants:tenant_id (
+                name,
+                tenant_profile_id,
+                properties (name)
+              )
+            `)
+            .eq('user_id', user?.id)
+            .order('created_at', { ascending: false });
+
+          if (!refetchError && updatedData) {
+            data.splice(0, data.length, ...updatedData);
+          }
+        }
+      }
 
       const transformedData = data.map(invitation => ({
         ...invitation,
