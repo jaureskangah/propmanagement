@@ -120,7 +120,7 @@ export const TenantOverview = ({
                   <div className="space-y-1 text-sm text-muted-foreground">
                     <p><strong>{t('leaseStart', 'Début du bail')}:</strong> {formatLeaseDate(tenant.lease_start)}</p>
                     <p><strong>{t('leaseEnd', 'Fin du bail')}:</strong> {formatLeaseDate(tenant.lease_end)}</p>
-                    {leaseStatus.status !== 'expired' && (
+                    {leaseStatus.status !== 'expired' && leaseStatus.daysLeft !== null && (
                       <p><strong>{t('daysRemaining', 'Jours restants')}:</strong> {leaseStatus.daysLeft} jours</p>
                     )}
                   </div>
