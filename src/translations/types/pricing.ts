@@ -13,6 +13,12 @@ export interface PricingTranslations {
   comparePlans: string;
   comparePlansTitle: string;
   feature: string;
+  
+  // Plan descriptions
+  standardPlanDescription: string;
+  proPlanDescription: string;
+  standardPlanTagline: string;
+  proPlanTagline: string;
 }
 
 export interface PlanFeaturesTranslations {

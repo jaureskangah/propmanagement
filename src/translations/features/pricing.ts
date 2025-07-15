@@ -14,7 +14,13 @@ export const enPricing: PricingTranslations = {
   pricingGetStarted: "Get Started",
   comparePlans: "Compare Plans",
   comparePlansTitle: "Plan Feature Comparison",
-  feature: "Feature"
+  feature: "Feature",
+  
+  // Plan descriptions
+  standardPlanDescription: "Perfect for small to medium property managers who want professional features without the complexity. Manage up to 10 properties with complete tenant management, unlimited document generation, and financial reporting.",
+  proPlanDescription: "The ultimate solution for property management professionals and growing businesses. Unlimited properties, advanced analytics, automation tools, and dedicated support to scale your property management operations.",
+  standardPlanTagline: "Professional property management made simple",
+  proPlanTagline: "Enterprise-grade tools for serious property managers"
 };
 
 export const frPricing: PricingTranslations = {
@@ -30,7 +36,13 @@ export const frPricing: PricingTranslations = {
   pricingGetStarted: "Commencer",
   comparePlans: "Comparer les plans",
   comparePlansTitle: "Comparaison des fonctionnalités",
-  feature: "Fonctionnalité"
+  feature: "Fonctionnalité",
+  
+  // Plan descriptions
+  standardPlanDescription: "Parfait pour les gestionnaires de petites à moyennes propriétés qui souhaitent des fonctionnalités professionnelles sans la complexité. Gérez jusqu'à 10 propriétés avec une gestion complète des locataires, génération illimitée de documents et rapports financiers.",
+  proPlanDescription: "La solution ultime pour les professionnels de la gestion immobilière et les entreprises en croissance. Propriétés illimitées, analyses avancées, outils d'automatisation et support dédié pour faire évoluer vos opérations de gestion immobilière.",
+  standardPlanTagline: "Gestion immobilière professionnelle simplifiée",
+  proPlanTagline: "Outils de niveau entreprise pour gestionnaires sérieux"
 };
 
 export const enPlanFeatures: PlanFeaturesTranslations = {
