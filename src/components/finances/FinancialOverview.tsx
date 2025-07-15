@@ -63,7 +63,7 @@ const FinancialOverview = ({ propertyId, selectedYear }: FinancialOverviewProps)
             <IncomeTable payments={payments} tenants={tenants} isLoading={isLoading} />
           </TabsContent>
           <TabsContent value="expenses">
-            <ExpensesTable expenses={expenses} isLoading={isLoading} />
+            <ExpensesTable expenses={expenses} isLoading={isLoading} propertyId={propertyId} />
           </TabsContent>
         </Tabs>
       </CardContent>
