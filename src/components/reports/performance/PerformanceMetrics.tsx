@@ -132,15 +132,6 @@ export const PerformanceMetrics = () => {
       icon: Activity,
       color: maintenanceEfficiency >= 85 ? 'text-green-600' : maintenanceEfficiency >= 70 ? 'text-yellow-600' : 'text-red-600',
       bgColor: maintenanceEfficiency >= 85 ? 'bg-green-50' : maintenanceEfficiency >= 70 ? 'bg-yellow-50' : 'bg-red-50'
-    },
-    {
-      title: t('responseRate', { fallback: 'Taux de Réponse' }),
-      value: `${responseRate.toFixed(0)}%`,
-      target: 90,
-      actual: responseRate,
-      icon: Clock,
-      color: responseRate >= 90 ? 'text-green-600' : responseRate >= 75 ? 'text-yellow-600' : 'text-red-600',
-      bgColor: responseRate >= 90 ? 'bg-green-50' : responseRate >= 75 ? 'bg-yellow-50' : 'bg-red-50'
     }
   ];
 
