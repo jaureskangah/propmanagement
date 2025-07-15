@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import SignInForm from '@/components/auth/SignInForm';
 import { useAuth } from '@/components/AuthProvider';
-import { useLocale } from '@/components/providers/LocaleProvider';
+import { useSafeTranslation } from '@/hooks/useSafeTranslation';
 import { ModernAuthCard } from '@/components/ui/modern-auth-card';
 import { motion } from 'framer-motion';
 
 const Login = () => {
   const { isAuthenticated } = useAuth();
-  const { t } = useLocale();
+  const { t } = useSafeTranslation();
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -36,7 +36,7 @@ const Login = () => {
           transition={{ delay: 0.2 }}
           className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80"
         >
-          {t('welcome')}
+          {t('welcome', 'Welcome')}
         </motion.h1>
         
         <motion.p
@@ -45,7 +45,7 @@ const Login = () => {
           transition={{ delay: 0.3 }}
           className="text-white/60 text-sm"
         >
-          {t('authDescription')}
+          {t('authDescription', 'Sign in to your account')}
         </motion.p>
       </div>
 
