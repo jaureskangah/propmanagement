@@ -72,6 +72,8 @@ export const enFinances = {
   
   // Messages
   noFinancialData: "No financial data available",
+  noIncomeData: "No income data available",
+  noExpenseData: "No expense data available",
   loadingFinancialData: "Loading financial data...",
   errorLoadingFinancialData: "Error loading financial data",
   
@@ -175,6 +177,8 @@ export const frFinances = {
   
   // Messages
   noFinancialData: "Aucune donnée financière disponible",
+  noIncomeData: "Aucune donnée de revenus disponible",
+  noExpenseData: "Aucune donnée de dépenses disponible",
   loadingFinancialData: "Chargement des données financières...",
   errorLoadingFinancialData: "Erreur lors du chargement des données financières",
   
