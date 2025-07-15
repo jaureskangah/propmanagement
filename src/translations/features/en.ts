@@ -6,6 +6,7 @@ import { enMaintenance } from './maintenance';
 import { enAuth } from './auth';
 import { enLease } from './tenant/en/lease';
 import { enDashboard as enTenantDashboard } from './tenant/en/dashboard';
+import { enToasts } from './toasts';
 
 export const en = {
   ...enCommon,
@@ -13,6 +14,7 @@ export const en = {
   ...enFinances,
   ...enMaintenance,
   ...enAuth,
+  ...enToasts,
   
   // Lease translations
   ...enLease,

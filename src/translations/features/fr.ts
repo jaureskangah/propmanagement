@@ -7,6 +7,7 @@ import { frMaintenance } from './maintenance';
 import { frSettings } from './settings';
 import { frLease } from './tenant/fr/lease';
 import { frDashboard as frTenantDashboard } from './tenant/fr/dashboard';
+import { frToasts } from './toasts';
 
 export const fr = {
   ...frCommon,
@@ -15,6 +16,7 @@ export const fr = {
   ...frFinances,
   ...frMaintenance,
   ...frSettings,
+  ...frToasts,
   
   // Lease translations
   ...frLease,
