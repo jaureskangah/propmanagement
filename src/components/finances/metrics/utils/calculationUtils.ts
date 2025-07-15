@@ -50,7 +50,8 @@ export function calculateOccupancyRate(occupiedUnits: number, totalUnits: number
 }
 
 /**
- * Calculates unpaid rent
+ * Calculates unpaid rent based on due dates vs actual payments
+ * This approach is more accurate as it considers actual payment schedules
  */
 export function calculateUnpaidRent(
   tenants: any[] = [], 
@@ -58,46 +59,85 @@ export function calculateUnpaidRent(
   currentMonth: number, 
   currentYear: number
 ): number {
-  // Expected rent for all tenants
-  const expectedRent = tenants.reduce(
-    (total, tenant) => {
-      const rentAmount = Number(tenant.rent_amount) || 0;
-      return total + rentAmount;
-    }, 0);
-  
-  // Filter payments for current month
-  const currentMonthPayments = payments.filter(payment => {
-    if (!payment.payment_date) return false;
-    const paymentDate = new Date(payment.payment_date);
-    return paymentDate.getMonth() === currentMonth && 
-           paymentDate.getFullYear() === currentYear;
+  const currentDate = new Date(currentYear, currentMonth);
+  let totalUnpaidRent = 0;
+
+  // For each tenant, calculate their specific unpaid rent
+  tenants.forEach(tenant => {
+    const rentAmount = Number(tenant.rent_amount) || 0;
+    if (rentAmount === 0) return;
+
+    // Get lease period
+    const leaseStart = new Date(tenant.lease_start);
+    const leaseEnd = new Date(tenant.lease_end);
+    
+    // Check if tenant should be paying rent this month
+    const monthStart = new Date(currentYear, currentMonth, 1);
+    const monthEnd = new Date(currentYear, currentMonth + 1, 0);
+    
+    // Skip if lease hasn't started yet or has already ended
+    if (leaseEnd < monthStart || leaseStart > monthEnd) {
+      return;
+    }
+
+    // Get all payments made by this tenant for the current month
+    const tenantPaymentsCurrentMonth = payments.filter(payment => {
+      if (payment.tenant_id !== tenant.id || !payment.payment_date) return false;
+      
+      const paymentDate = new Date(payment.payment_date);
+      return paymentDate.getMonth() === currentMonth && 
+             paymentDate.getFullYear() === currentYear &&
+             payment.status === 'paid';
+    });
+
+    // Calculate total paid amount for this tenant this month
+    const totalPaidThisMonth = tenantPaymentsCurrentMonth.reduce(
+      (sum, payment) => sum + (Number(payment.amount) || 0), 
+      0
+    );
+
+    // Check for overdue payments from previous months
+    const overduePayments = payments.filter(payment => {
+      if (payment.tenant_id !== tenant.id || !payment.payment_date) return false;
+      
+      const paymentDate = new Date(payment.payment_date);
+      const paymentMonthYear = new Date(paymentDate.getFullYear(), paymentDate.getMonth());
+      
+      return paymentMonthYear < monthStart && 
+             (payment.status === 'pending' || payment.status === 'overdue' || payment.status === 'late');
+    });
+
+    const totalOverdue = overduePayments.reduce(
+      (sum, payment) => sum + (Number(payment.amount) || 0), 
+      0
+    );
+
+    // Calculate unpaid rent for this tenant
+    // Current month shortfall + overdue from previous months
+    const currentMonthShortfall = Math.max(0, rentAmount - totalPaidThisMonth);
+    const tenantUnpaidRent = currentMonthShortfall + totalOverdue;
+
+    totalUnpaidRent += tenantUnpaidRent;
+
+    // Detailed logging for each tenant
+    if (tenantUnpaidRent > 0) {
+      console.log(`Tenant ${tenant.name} unpaid rent:`, {
+        rentAmount,
+        totalPaidThisMonth,
+        currentMonthShortfall,
+        totalOverdue,
+        tenantUnpaidRent
+      });
+    }
   });
-  
-  // Paid amount for current month
-  const currentMonthPaid = currentMonthPayments.reduce(
-    (total, payment) => payment.status === 'paid' ? total + Number(payment.amount || 0) : total, 
-    0
-  );
-  
-  // Pending/overdue payments
-  const pendingPayments = payments
-    .filter(payment => payment.status === 'pending' || payment.status === 'overdue' || payment.status === 'late')
-    .reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
-  
-  // Unpaid rent calculation
-  const unpaidRent = Math.max(0, expectedRent - currentMonthPaid) + pendingPayments;
-  
-  console.log("Unpaid rent calculation:", {
-    expectedRent,
-    currentMonthPaid,
-    pendingPayments,
-    unpaidRent,
-    currentMonth,
+
+  console.log("Improved unpaid rent calculation:", {
+    totalUnpaidRent,
+    currentMonth: currentMonth + 1, // Display 1-based month
     currentYear,
-    tenantsCount: tenants.length,
-    paymentsCount: payments.length,
-    currentMonthPaymentsCount: currentMonthPayments.length
+    activeTenantsCount: tenants.length,
+    totalPaymentsCount: payments.length
   });
-  
-  return unpaidRent;
+
+  return totalUnpaidRent;
 }
