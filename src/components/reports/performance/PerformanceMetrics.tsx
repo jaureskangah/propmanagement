@@ -151,7 +151,7 @@ export const PerformanceMetrics = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {kpiMetrics.map((metric, index) => {
           const Icon = metric.icon;
           const performance = (metric.actual / metric.target) * 100;
