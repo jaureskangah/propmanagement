@@ -38,6 +38,8 @@ const Invitations = lazy(() => import('./pages/Invitations'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Admin = lazy(() => import('./pages/Admin'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
@@ -58,6 +60,10 @@ function App() {
         
         {/* Landing Page - Accessible à tous */}
         <Route path="/" element={<LandingPage />} />
+        
+        {/* Legal Pages - Accessible à tous */}
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/terms" element={<TermsOfService />} />
 
         {/* Protected Routes - only accessible when logged in */}
         <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
