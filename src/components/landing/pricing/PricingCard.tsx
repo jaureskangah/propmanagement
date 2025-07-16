@@ -80,7 +80,7 @@ export const PricingCard = ({
           </motion.div>
         )}
         <CardHeader className={`pb-0 ${popular ? 'pt-8' : 'pt-4'}`}>
-          <CardTitle className="text-2xl md:text-3xl font-extrabold tracking-tight text-black">
+          <CardTitle className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
             {name}
           </CardTitle>
         </CardHeader>
@@ -90,7 +90,7 @@ export const PricingCard = ({
             whileHover={{ scale: 1.05 }}
           >
             <motion.span 
-              className="text-5xl font-extrabold tracking-tight text-gray-900 transition-transform duration-300"
+              className="text-5xl font-extrabold tracking-tight text-foreground transition-transform duration-300"
               animate={{ 
                 scale: popular ? [1, 1.05, 1] : 1,
                 transition: { 
@@ -102,7 +102,7 @@ export const PricingCard = ({
             >
               {formatPrice(price)}
             </motion.span>
-            <span className="ml-1 text-xl font-medium text-gray-600">/{t('month')}</span>
+            <span className="ml-1 text-xl font-medium text-muted-foreground">/{t('month')}</span>
           </motion.div>
           <motion.ul 
             className="mt-8 space-y-4"
@@ -130,7 +130,7 @@ export const PricingCard = ({
                 <motion.div variants={checkIconVariants}>
                   <Check className={`h-5 w-5 ${iconColor} mr-2 flex-shrink-0 transition-transform duration-200`} />
                 </motion.div>
-                <span className="text-gray-700">{feature}</span>
+                <span className="text-foreground">{feature}</span>
               </motion.li>
             ))}
           </motion.ul>
