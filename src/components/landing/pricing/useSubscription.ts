@@ -46,8 +46,8 @@ export const useSubscription = (t: (key: string) => string) => {
       }
 
       if (data?.url) {
-        console.log('Redirecting to checkout URL:', data.url);
-        window.location.href = data.url;
+        console.log('Opening checkout URL in new tab:', data.url);
+        window.open(data.url, '_blank');
       } else {
         console.error('No checkout URL received');
         toast({
