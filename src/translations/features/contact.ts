@@ -12,7 +12,9 @@ export const enContact: ContactTranslations = {
   yourEmail: "Your Email",
   message: "Message",
   sending: "Sending...",
-  send: "Send Message"
+  send: "Send Message",
+  getSupport: "Get Support",
+  supportCenter: "Support Center"
 };
 
 export const frContact: ContactTranslations = {
@@ -26,5 +28,7 @@ export const frContact: ContactTranslations = {
   yourEmail: "Votre email",
   message: "Message",
   sending: "Envoi en cours...",
-  send: "Envoyer le message"
+  send: "Envoyer le message",
+  getSupport: "Obtenir de l'aide",
+  supportCenter: "Centre de Support"
 };

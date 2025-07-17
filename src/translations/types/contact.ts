@@ -11,4 +11,6 @@ export interface ContactTranslations {
   message: string;
   sending: string;
   send: string;
+  getSupport: string;
+  supportCenter: string;
 }

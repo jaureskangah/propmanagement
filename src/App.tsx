@@ -40,6 +40,7 @@ const Reports = lazy(() => import('./pages/Reports'));
 const Admin = lazy(() => import('./pages/Admin'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const SupportPage = lazy(() => import('./pages/SupportPage'));
 
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
@@ -91,6 +92,7 @@ function App() {
         <Route path="/reports" element={isAuthenticated ? <Reports /> : <Navigate to="/login" />} />
         <Route path="/admin" element={isAuthenticated ? <Admin /> : <Navigate to="/login" />} />
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
+        <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

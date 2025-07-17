@@ -77,7 +77,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   };
 
   const handleSupportClick = () => {
-    window.open('mailto:contact@propmanagement.app', '_blank');
+    navigate('/support');
   };
 
   const handleLogoClick = (e: React.MouseEvent) => {
