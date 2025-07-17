@@ -50,34 +50,41 @@ if (process.env.NODE_ENV === 'development') {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <Sentry.ErrorBoundary fallback={({ error, resetError }) => (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-destructive mb-4">Une erreur s'est produite</h1>
-          <p className="text-muted-foreground mb-4">Nous avons été notifiés de ce problème.</p>
-          <button 
-            onClick={resetError}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-          >
-            Réessayer
-          </button>
-        </div>
-      </div>
-    )}>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <LocaleProvider>
-            <ThemeProvider>
-              <TooltipProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <LocaleProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              <Sentry.ErrorBoundary fallback={({ error, resetError }) => (
+                <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#dc2626', marginBottom: '1rem' }}>Une erreur s'est produite</h1>
+                    <p style={{ color: '#6b7280', marginBottom: '1rem' }}>Nous avons été notifiés de ce problème.</p>
+                    <button 
+                      onClick={resetError}
+                      style={{ 
+                        padding: '0.5rem 1rem', 
+                        backgroundColor: '#3b82f6', 
+                        color: 'white', 
+                        borderRadius: '0.375rem', 
+                        border: 'none',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      Réessayer
+                    </button>
+                  </div>
+                </div>
+              )}>
                 <BrowserRouter>
                   <App />
                   <Toaster />
                 </BrowserRouter>
-              </TooltipProvider>
-            </ThemeProvider>
-          </LocaleProvider>
-        </AuthProvider>
-      </QueryClientProvider>
-    </Sentry.ErrorBoundary>
+              </Sentry.ErrorBoundary>
+            </TooltipProvider>
+          </ThemeProvider>
+        </LocaleProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </React.StrictMode>,
 )
