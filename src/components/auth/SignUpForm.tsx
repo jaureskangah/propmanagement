@@ -57,6 +57,23 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         throw new Error(t('signUpError'));
       }
 
+      // Send onboarding email in background
+      try {
+        await supabase.functions.invoke('user-onboarding-email', {
+          body: {
+            userId: data.user.id,
+            email: data.user.email,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            isOwner: true, // This is the owner signup form
+          },
+        });
+        console.log('Onboarding email sent successfully');
+      } catch (emailError) {
+        console.error('Failed to send onboarding email:', emailError);
+        // Don't throw - email failure shouldn't block signup success
+      }
+
       toast({
         title: t('signUpSuccess'),
         description: data.session ? 

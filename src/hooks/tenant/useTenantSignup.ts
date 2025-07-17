@@ -62,6 +62,23 @@ export const useTenantSignup = () => {
       }
       
       console.log("✅ New user created successfully with ID:", signUpData.user.id);
+
+      // Send onboarding email in background for tenant
+      try {
+        await supabase.functions.invoke('user-onboarding-email', {
+          body: {
+            userId: signUpData.user.id,
+            email: tenantData.email,
+            firstName: tenantData.name.split(' ')[0] || '',
+            lastName: tenantData.name.split(' ').slice(1).join(' ') || '',
+            isOwner: false, // This is tenant signup
+          },
+        });
+        console.log('✅ Tenant onboarding email sent successfully');
+      } catch (emailError) {
+        console.error('❌ Failed to send tenant onboarding email:', emailError);
+        // Don't throw - email failure shouldn't block signup success
+      }
       
       // Lier immédiatement le profil du locataire avec la nouvelle fonction RPC améliorée
       await linkTenantProfileEnhanced(signUpData.user.id, tenantData, invitationToken);
