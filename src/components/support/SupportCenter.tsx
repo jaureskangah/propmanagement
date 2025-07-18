@@ -91,7 +91,7 @@ export default function SupportCenter() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <motion.div 
@@ -100,8 +100,8 @@ export default function SupportCenter() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Centre de Support</h1>
-          <p className="text-gray-600">Comment pouvons-nous vous aider aujourd'hui ?</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Centre de Support</h1>
+          <p className="text-muted-foreground">Comment pouvons-nous vous aider aujourd'hui ?</p>
         </motion.div>
 
         {/* Search Bar */}
@@ -112,12 +112,12 @@ export default function SupportCenter() {
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
             <Input
               placeholder="Rechercher dans l'aide..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-base"
+              className="pl-10 h-12 text-base dark-card-subtle"
             />
           </div>
         </motion.div>
@@ -134,29 +134,29 @@ export default function SupportCenter() {
             return (
               <Card 
                 key={option.id}
-                className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-red-500"
+                className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-primary dark-card-gradient dark-hover-effect"
                 onClick={option.action}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="h-10 w-10 bg-red-50 rounded-lg flex items-center justify-center">
-                        <IconComponent className="h-5 w-5 text-red-600" />
+                      <div className="h-10 w-10 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
+                        <IconComponent className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <CardTitle className="text-lg">{option.title}</CardTitle>
-                        <CardDescription className="text-sm">
+                        <CardTitle className="text-lg text-foreground">{option.title}</CardTitle>
+                        <CardDescription className="text-sm text-muted-foreground">
                           {option.description}
                         </CardDescription>
                       </div>
                     </div>
                     <div className="flex items-center space-x-2">
                       {option.available && (
-                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                        <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
                           Disponible
                         </Badge>
                       )}
-                      <ChevronRight className="h-4 w-4 text-gray-400" />
+                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     </div>
                   </div>
                 </CardHeader>
@@ -172,13 +172,13 @@ export default function SupportCenter() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Card>
+            <Card className="dark-card-gradient">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <HelpCircle className="h-5 w-5 text-red-600" />
+                <CardTitle className="flex items-center space-x-2 text-foreground">
+                  <HelpCircle className="h-5 w-5 text-primary" />
                   <span>Aide rapide</span>
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-muted-foreground">
                   Articles les plus consultés
                 </CardDescription>
               </CardHeader>
@@ -186,18 +186,18 @@ export default function SupportCenter() {
                 {quickHelp.map((item, index) => (
                   <div 
                     key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors"
+                    className="flex items-center justify-between p-3 bg-muted/50 dark:bg-gray-800/30 rounded-lg hover:bg-muted dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
                   >
                     <div>
-                      <p className="font-medium text-gray-900">{item.title}</p>
-                      <div className="flex items-center space-x-2 text-sm text-gray-500">
+                      <p className="font-medium text-foreground">{item.title}</p>
+                      <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                         <Clock className="h-3 w-3" />
                         <span>{item.time}</span>
                         <span>•</span>
                         <span>{item.category}</span>
                       </div>
                     </div>
-                    <ChevronRight className="h-4 w-4 text-gray-400" />
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
                   </div>
                 ))}
               </CardContent>
@@ -210,13 +210,13 @@ export default function SupportCenter() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Card>
+            <Card className="dark-card-gradient">
               <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <CheckCircle className="h-5 w-5 text-green-600" />
+                <CardTitle className="flex items-center space-x-2 text-foreground">
+                  <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
                   <span>État du système</span>
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-muted-foreground">
                   Tous les services sont opérationnels
                 </CardDescription>
               </CardHeader>
@@ -224,17 +224,17 @@ export default function SupportCenter() {
                 {systemStatus.map((service, index) => (
                   <div 
                     key={index}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                    className="flex items-center justify-between p-3 bg-muted/50 dark:bg-gray-800/30 rounded-lg"
                   >
                     <div className="flex items-center space-x-3">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="font-medium text-gray-900">{service.service}</span>
+                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                      <span className="font-medium text-foreground">{service.service}</span>
                     </div>
                     <div className="text-right">
-                      <Badge variant="secondary" className="bg-green-100 text-green-800 mb-1">
+                      <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 mb-1">
                         Opérationnel
                       </Badge>
-                      <p className="text-xs text-gray-500">{service.lastCheck}</p>
+                      <p className="text-xs text-muted-foreground">{service.lastCheck}</p>
                     </div>
                   </div>
                 ))}
@@ -245,15 +245,15 @@ export default function SupportCenter() {
 
         {/* Contact Information */}
         <motion.div 
-          className="mt-8 text-center p-6 bg-white rounded-lg border"
+          className="mt-8 text-center p-6 bg-card rounded-lg border dark-card-gradient"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">
+          <h3 className="text-lg font-semibold text-foreground mb-2">
             Besoin d'aide supplémentaire ?
           </h3>
-          <p className="text-gray-600 mb-4">
+          <p className="text-muted-foreground mb-4">
             Notre équipe est disponible du lundi au vendredi, de 9h à 17h
           </p>
           <div className="flex justify-center space-x-4">
