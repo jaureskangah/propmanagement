@@ -100,6 +100,16 @@ export default function SupportCenter() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          <div className="flex items-center justify-between mb-4">
+            <Button 
+              variant="outline" 
+              onClick={() => window.location.href = '/dashboard'}
+              className="flex items-center space-x-2"
+            >
+              <ChevronRight className="h-4 w-4 rotate-180" />
+              <span>Retour au tableau de bord</span>
+            </Button>
+          </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">Centre de Support</h1>
           <p className="text-muted-foreground">Comment pouvons-nous vous aider aujourd'hui ?</p>
         </motion.div>
