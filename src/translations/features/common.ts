@@ -113,7 +113,13 @@ export const enCommon = {
   
   // Missing translations from finances
   pleaseSelectProperty: "Please select a property to view financial data",
-  selectProperty: "Select Property"
+  selectProperty: "Select Property",
+  
+  // Loading states
+  initializing: "Initializing...",
+  loadingData: "Loading data...",
+  preparingInterface: "Preparing interface...",
+  finalizing: "Finalizing..."
 };
 
 export const frCommon = {
@@ -230,5 +236,11 @@ export const frCommon = {
   
   // Traductions manquantes des finances
   pleaseSelectProperty: "Veuillez sélectionner une propriété pour voir les données financières",
-  selectProperty: "Sélectionner une Propriété"
+  selectProperty: "Sélectionner une Propriété",
+  
+  // États de chargement
+  initializing: "Initialisation...",
+  loadingData: "Chargement des données...",
+  preparingInterface: "Préparation de l'interface...",
+  finalizing: "Finalisation..."
 };

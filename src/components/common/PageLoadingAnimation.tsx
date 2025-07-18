@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface PageLoadingAnimationProps {
   duration?: number;
 }
 
 export const PageLoadingAnimation = ({ duration = 2000 }: PageLoadingAnimationProps) => {
+  const { t } = useLocale();
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
@@ -77,10 +79,10 @@ export const PageLoadingAnimation = ({ duration = 2000 }: PageLoadingAnimationPr
             transition={{ delay: 0.3 }}
             className="text-muted-foreground text-sm"
           >
-            {progress < 30 && "Initialisation..."}
-            {progress >= 30 && progress < 60 && "Chargement des données..."}
-            {progress >= 60 && progress < 90 && "Préparation de l'interface..."}
-            {progress >= 90 && "Finalisation..."}
+            {progress < 30 && t('initializing')}
+            {progress >= 30 && progress < 60 && t('loadingData')}
+            {progress >= 60 && progress < 90 && t('preparingInterface')}
+            {progress >= 90 && t('finalizing')}
           </motion.div>
 
           {/* Points de chargement animés */}
