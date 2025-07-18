@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { supportTranslations } from "@/translations/features/support";
 import SupportChat from "./SupportChat";
 import ContactSupport from "./ContactSupport";
 
@@ -31,40 +30,39 @@ interface SupportOption {
 }
 
 export default function SupportCenter() {
-  const { locale } = useLocale();
-  const t = supportTranslations[locale as keyof typeof supportTranslations];
+  const { t } = useLocale();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const supportOptions: SupportOption[] = [
     {
       id: "chat",
-      title: t.supportOptions.chat.title,
-      description: t.supportOptions.chat.description,
+      title: "Chat en direct",
+      description: "Obtenez une aide immédiate de notre équipe",
       icon: MessageSquare,
       action: () => setActiveSection("chat"),
       available: true
     },
     {
       id: "email",
-      title: t.supportOptions.email.title,
-      description: t.supportOptions.email.description,
+      title: "Support par email",
+      description: "Envoyez-nous un message détaillé",
       icon: Mail,
       action: () => setActiveSection("email"),
       available: true
     },
     {
       id: "phone",
-      title: t.supportOptions.phone.title,
-      description: t.supportOptions.phone.description,
+      title: "Support téléphonique",
+      description: "Appelez-nous directement",
       icon: PhoneCall,
       action: () => window.open("tel:+15067811872"),
       available: true
     },
     {
       id: "docs",
-      title: t.supportOptions.docs.title,
-      description: t.supportOptions.docs.description,
+      title: "Documentation",
+      description: "Consultez nos guides et tutoriels",
       icon: Book,
       action: () => setActiveSection("docs"),
       available: true
@@ -72,16 +70,16 @@ export default function SupportCenter() {
   ];
 
   const quickHelp = [
-    { title: t.quickHelp.articles.createProperty, time: "2 min", category: t.quickHelp.categories.getting_started },
-    { title: t.quickHelp.articles.addTenants, time: "1 min", category: t.quickHelp.categories.management },
-    { title: t.quickHelp.articles.managePayments, time: "3 min", category: t.quickHelp.categories.finance },
-    { title: t.quickHelp.articles.scheduleMaintenance, time: "2 min", category: t.quickHelp.categories.maintenance }
+    { title: "Comment créer une propriété", time: "2 min", category: "Démarrage" },
+    { title: "Ajouter des locataires", time: "1 min", category: "Gestion" },
+    { title: "Gérer les paiements", time: "3 min", category: "Finance" },
+    { title: "Planifier la maintenance", time: "2 min", category: "Maintenance" }
   ];
 
   const systemStatus = [
-    { service: t.systemStatus.services.api, status: "operational", lastCheck: `${t.systemStatus.lastCheck} 2 ${t.timeUnits.minutes}` },
-    { service: t.systemStatus.services.email, status: "operational", lastCheck: `${t.systemStatus.lastCheck} 1 ${t.timeUnits.minutes}` },
-    { service: t.systemStatus.services.database, status: "operational", lastCheck: `${t.systemStatus.lastCheck} 30 secondes` }
+    { service: "API PropManagement", status: "operational", lastCheck: "Il y a 2 minutes" },
+    { service: "Service Email", status: "operational", lastCheck: "Il y a 1 minute" },
+    { service: "Base de données", status: "operational", lastCheck: "Il y a 30 secondes" }
   ];
 
   if (activeSection === "chat") {
@@ -109,11 +107,11 @@ export default function SupportCenter() {
               className="flex items-center space-x-2"
             >
               <ChevronRight className="h-4 w-4 rotate-180" />
-              <span>{t.backToDashboard}</span>
+              <span>Retour au tableau de bord</span>
             </Button>
           </div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">{t.title}</h1>
-          <p className="text-muted-foreground">{t.subtitle}</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Centre de Support</h1>
+          <p className="text-muted-foreground">Comment pouvons-nous vous aider aujourd'hui ?</p>
         </motion.div>
 
         {/* Search Bar */}
@@ -126,7 +124,7 @@ export default function SupportCenter() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
             <Input
-              placeholder={t.searchPlaceholder}
+              placeholder="Rechercher dans l'aide..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-12 text-base dark-card-subtle"
@@ -165,7 +163,7 @@ export default function SupportCenter() {
                     <div className="flex items-center space-x-2">
                       {option.available && (
                         <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
-                          {t.badges.available}
+                          Disponible
                         </Badge>
                       )}
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
@@ -188,10 +186,10 @@ export default function SupportCenter() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-foreground">
                   <HelpCircle className="h-5 w-5 text-primary" />
-                  <span>{t.quickHelp.title}</span>
+                  <span>Aide rapide</span>
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  {t.quickHelp.subtitle}
+                  Articles les plus consultés
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -226,10 +224,10 @@ export default function SupportCenter() {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-foreground">
                   <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  <span>{t.systemStatus.title}</span>
+                  <span>État du système</span>
                 </CardTitle>
                 <CardDescription className="text-muted-foreground">
-                  {t.systemStatus.subtitle}
+                  Tous les services sont opérationnels
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -244,7 +242,7 @@ export default function SupportCenter() {
                     </div>
                     <div className="text-right">
                       <Badge variant="secondary" className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 mb-1">
-                        {t.systemStatus.operational}
+                        Opérationnel
                       </Badge>
                       <p className="text-xs text-muted-foreground">{service.lastCheck}</p>
                     </div>
@@ -263,10 +261,10 @@ export default function SupportCenter() {
           transition={{ duration: 0.5, delay: 0.5 }}
         >
           <h3 className="text-lg font-semibold text-foreground mb-2">
-            {t.contactInfo.title}
+            Besoin d'aide supplémentaire ?
           </h3>
           <p className="text-muted-foreground mb-4">
-            {t.contactInfo.subtitle}
+            Notre équipe est disponible du lundi au vendredi, de 9h à 17h
           </p>
           <div className="flex justify-center space-x-4">
             <Button variant="outline" onClick={() => window.open("tel:+15067811872")}>
