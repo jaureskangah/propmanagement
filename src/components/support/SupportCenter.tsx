@@ -127,7 +127,7 @@ export default function SupportCenter() {
               placeholder={translations.searchPlaceholder}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 text-base dark-card-subtle"
+              className="pl-10 h-12 text-base bg-background border-input"
             />
           </div>
         </motion.div>
@@ -144,13 +144,13 @@ export default function SupportCenter() {
             return (
               <Card 
                 key={option.id}
-                className="cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-primary dark-card-gradient dark-hover-effect"
+                className="support-card cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-primary"
                 onClick={option.action}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="h-10 w-10 bg-primary/10 dark:bg-primary/20 rounded-lg flex items-center justify-center">
+                      <div className="support-option-icon h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                         <IconComponent className="h-5 w-5 text-primary" />
                       </div>
                       <div>
@@ -182,7 +182,7 @@ export default function SupportCenter() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <Card className="dark-card-gradient">
+            <Card className="support-card">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-foreground">
                   <HelpCircle className="h-5 w-5 text-primary" />
@@ -196,7 +196,7 @@ export default function SupportCenter() {
                 {quickHelp.map((item, index) => (
                   <div 
                     key={index}
-                    className="flex items-center justify-between p-3 bg-muted/50 dark:bg-gray-800/30 rounded-lg hover:bg-muted dark:hover:bg-gray-700/50 cursor-pointer transition-colors"
+                    className="support-quick-help-item flex items-center justify-between p-3 bg-muted/50 rounded-lg cursor-pointer transition-colors"
                   >
                     <div>
                       <p className="font-medium text-foreground">{item.title}</p>
@@ -220,7 +220,7 @@ export default function SupportCenter() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}
           >
-            <Card className="dark-card-gradient">
+            <Card className="support-card">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2 text-foreground">
                   <CheckCircle className="h-5 w-5 text-green-600 dark:text-green-400" />
@@ -234,7 +234,7 @@ export default function SupportCenter() {
                 {systemStatus.map((service, index) => (
                   <div 
                     key={index}
-                    className="flex items-center justify-between p-3 bg-muted/50 dark:bg-gray-800/30 rounded-lg"
+                    className="support-system-status-item flex items-center justify-between p-3 bg-muted/50 rounded-lg"
                   >
                     <div className="flex items-center space-x-3">
                       <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
@@ -255,7 +255,7 @@ export default function SupportCenter() {
 
         {/* Contact Information */}
         <motion.div 
-          className="mt-8 text-center p-6 bg-card rounded-lg border dark-card-gradient"
+          className="support-contact-info mt-8 text-center p-6 bg-card rounded-lg border"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
