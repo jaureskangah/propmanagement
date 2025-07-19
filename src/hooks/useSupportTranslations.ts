@@ -3,9 +3,9 @@ import { enSupport } from "@/translations/features/support/en";
 import { frSupport } from "@/translations/features/support/fr";
 
 export const useSupportTranslations = () => {
-  const { locale } = useLocale();
+  const { language } = useLocale();
   
-  const translations = locale === 'en' ? enSupport : frSupport;
+  const translations = language === 'en' ? enSupport : frSupport;
   
   const t = (key: keyof typeof translations) => {
     return translations[key] || key;
