@@ -51,7 +51,11 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         },
       });
 
-      if (error) throw error;
+      console.log('Signup response:', { data, error });
+      if (error) {
+        console.log('Signup error details:', error);
+        throw error;
+      }
 
       if (!data.user) {
         throw new Error(t('signUpError'));
@@ -90,6 +94,10 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       }
 
     } catch (error: any) {
+      console.log('Signup error caught:', error);
+      console.log('Error message:', error.message);
+      console.log('Error code:', error.code);
+      
       let errorMessage = t('signUpError');
       
       if (error.message && (
@@ -100,6 +108,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         errorMessage = t('emailAlreadyRegistered');
       }
 
+      console.log('Showing toast with message:', errorMessage);
       toast({
         title: t('error'),
         description: errorMessage,
