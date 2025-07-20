@@ -10,6 +10,7 @@ import { LocaleProvider } from './components/providers/LocaleProvider.tsx'
 import { ThemeProvider } from './components/theme-provider.tsx'
 import { TooltipProvider } from './components/ui/tooltip'
 import { Toaster } from './components/ui/sonner'
+import { Toaster as RadixToaster } from './components/ui/toaster'
 import * as Sentry from "@sentry/react"
 
 // Configuration de Sentry pour le monitoring d'erreurs
@@ -79,6 +80,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <BrowserRouter>
                   <App />
                   <Toaster />
+                  <RadixToaster />
                 </BrowserRouter>
               </Sentry.ErrorBoundary>
             </TooltipProvider>
