@@ -92,7 +92,11 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
     } catch (error: any) {
       let errorMessage = t('signUpError');
       
-      if (error.message.includes('already registered')) {
+      if (error.message && (
+        error.message.includes('User already registered') || 
+        error.message.includes('already registered') ||
+        error.message.includes('user_already_exists')
+      )) {
         errorMessage = t('emailAlreadyRegistered');
       }
 
