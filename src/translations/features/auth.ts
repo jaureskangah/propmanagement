@@ -46,6 +46,8 @@ export const enAuth = {
   passwordsDoNotMatch: "Passwords do not match",
   firstNameRequired: "First name is required",
   lastNameRequired: "Last name is required",
+  signUpError: "Sign up failed",
+  emailAlreadyRegistered: "This email is already registered. Please use a different email or try signing in.",
   
   // Auth success
   signInSuccess: "Successfully signed in",
@@ -142,6 +144,8 @@ export const frAuth = {
   passwordsDoNotMatch: "Les mots de passe ne correspondent pas",
   firstNameRequired: "Le prénom est requis",
   lastNameRequired: "Le nom est requis",
+  signUpError: "Échec de l'inscription",
+  emailAlreadyRegistered: "Cet email est déjà enregistré. Veuillez utiliser un autre email ou essayer de vous connecter.",
   
   // Succès d'auth
   signInSuccess: "Connexion réussie",
