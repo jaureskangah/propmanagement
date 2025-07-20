@@ -49,7 +49,7 @@ export default function OptimizedHero({ onShowAuthModal }: HeroProps) {
             <Button
               size="lg"
               onClick={onShowAuthModal}
-              className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 transform hover:scale-105 ring-2 ring-blue-500/30 hover:ring-blue-500/50"
+              className="bg-gradient-to-r from-[#ea384c] to-[#d31c3f] hover:from-[#f04357] hover:to-[#e42349] text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 transform hover:scale-105"
             >
               {t('heroGetStarted')}
             </Button>
