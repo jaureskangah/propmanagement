@@ -47,9 +47,10 @@ export default function OptimizedHero({ onShowAuthModal }: HeroProps) {
             style={{ animationDelay: '0.4s', animationFillMode: 'both' }}
           >
             <Button
+              variant="hero"
               size="lg"
               onClick={onShowAuthModal}
-              className="bg-blue-600 hover:bg-red-500 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-full px-8 py-6 transform hover:scale-105"
+              className="rounded-full px-8 py-6 transform hover:scale-105"
             >
               {t('heroGetStarted')}
             </Button>
