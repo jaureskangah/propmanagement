@@ -43,7 +43,10 @@ export const SupabaseLogs = () => {
           console.error('Error fetching edge function logs:', error);
           return [];
         }
-        return data || [];
+        return data?.map((log: any) => ({
+          ...log,
+          timestamp: log.log_timestamp
+        })) || [];
       } catch (error) {
         console.error('Failed to fetch edge function logs:', error);
         return [];
@@ -62,7 +65,10 @@ export const SupabaseLogs = () => {
           console.error('Error fetching auth logs:', error);
           return [];
         }
-        return data || [];
+        return data?.map((log: any) => ({
+          ...log,
+          timestamp: log.log_timestamp
+        })) || [];
       } catch (error) {
         console.error('Failed to fetch auth logs:', error);
         return [];
@@ -81,7 +87,10 @@ export const SupabaseLogs = () => {
           console.error('Error fetching db logs:', error);
           return [];
         }
-        return data || [];
+        return data?.map((log: any) => ({
+          ...log,
+          timestamp: log.log_timestamp
+        })) || [];
       } catch (error) {
         console.error('Failed to fetch db logs:', error);
         return [];

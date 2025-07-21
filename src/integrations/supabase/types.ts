@@ -1132,6 +1132,39 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      get_auth_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          log_timestamp: string
+          level: string
+          message: string
+          metadata: Json
+          status: string
+        }[]
+      }
+      get_db_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          log_timestamp: string
+          level: string
+          message: string
+          metadata: Json
+        }[]
+      }
+      get_edge_function_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          log_timestamp: string
+          level: string
+          message: string
+          metadata: Json
+          function_id: string
+          status: string
+        }[]
+      }
       get_user_tenant_data: {
         Args: { p_user_id: string }
         Returns: {
