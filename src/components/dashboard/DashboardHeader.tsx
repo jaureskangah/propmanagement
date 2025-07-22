@@ -51,13 +51,18 @@ export const DashboardHeader = ({ title, onDateRangeChange }: DashboardHeaderPro
       console.log("Final first name to display:", firstName);
       setDisplayName(firstName);
       
-      if (firstName) {
+      // Prevent duplicate welcome notifications by checking if already shown in this session
+      const welcomeShownKey = `welcome_shown_${user?.id}`;
+      const welcomeAlreadyShown = sessionStorage.getItem(welcomeShownKey);
+      
+      if (firstName && !welcomeAlreadyShown) {
         console.log("Showing welcome toast for:", firstName);
         toast({
           title: t('success'),
           description: t('welcomeTenant', { name: firstName }),
           duration: 3000,
         });
+        sessionStorage.setItem(welcomeShownKey, 'true');
       }
     };
     

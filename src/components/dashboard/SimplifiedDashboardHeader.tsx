@@ -46,12 +46,17 @@ export const SimplifiedDashboardHeader = ({ title, onDateRangeChange }: Simplifi
       
       setDisplayName(firstName);
       
-      if (firstName) {
+      // Prevent duplicate welcome notifications by checking if already shown in this session
+      const welcomeShownKey = `welcome_shown_${user?.id}`;
+      const welcomeAlreadyShown = sessionStorage.getItem(welcomeShownKey);
+      
+      if (firstName && !welcomeAlreadyShown) {
         toast({
           title: t('success'),
           description: t('welcomeTenant', { name: firstName }),
           duration: 3000,
         });
+        sessionStorage.setItem(welcomeShownKey, 'true');
       }
     };
     
