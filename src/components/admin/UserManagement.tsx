@@ -161,7 +161,7 @@ export const UserManagement = () => {
             {t('manageSystemUsers', { fallback: 'Gérer tous les utilisateurs du système' })}
           </p>
         </div>
-        <Button className="gap-2">
+        <Button variant="default" className="gap-2">
           <UserPlus className="h-4 w-4" />
           {t('addUser', { fallback: 'Ajouter Utilisateur' })}
         </Button>
