@@ -108,7 +108,7 @@ ${formData.message}
   const selectedPriority = priorities.find(p => p.value === formData.priority);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-background p-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <motion.div 
@@ -127,11 +127,11 @@ ${formData.message}
           </Button>
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Mail className="h-5 w-5 text-red-600" />
+              <CardTitle className="flex items-center space-x-2 text-foreground">
+                <Mail className="h-5 w-5 text-primary" />
                 <span>Contacter le support</span>
               </CardTitle>
-              <p className="text-gray-600">
+              <p className="text-muted-foreground">
                 Décrivez votre problème en détail et nous vous répondrons rapidement.
               </p>
             </CardHeader>
@@ -227,11 +227,11 @@ ${formData.message}
 
                 {/* Response Time Info */}
                 {selectedPriority && (
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="p-3 bg-muted/50 border border-border rounded-lg">
                     <div className="flex items-start space-x-2">
-                      <AlertCircle className="h-4 w-4 text-blue-600 mt-0.5" />
+                      <AlertCircle className="h-4 w-4 text-primary mt-0.5" />
                       <div>
-                        <p className="text-sm text-blue-800">
+                        <p className="text-sm text-foreground">
                           <strong>Temps de réponse estimé:</strong> {expectedResponseTimes[formData.priority as keyof typeof expectedResponseTimes]}
                         </p>
                       </div>
@@ -250,7 +250,7 @@ ${formData.message}
                     className="mt-1 min-h-32"
                     placeholder="Décrivez votre problème en détail. Plus vous fournirez d'informations, plus nous pourrons vous aider efficacement."
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     Minimum 10 caractères ({formData.message.length}/10)
                   </p>
                 </div>
@@ -258,12 +258,12 @@ ${formData.message}
                 {/* File Upload Placeholder */}
                 <div>
                   <Label>Pièces jointes (optionnel)</Label>
-                  <div className="mt-1 border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
-                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">
+                  <div className="mt-1 border-2 border-dashed border-border rounded-lg p-6 text-center">
+                    <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
+                    <p className="text-sm text-muted-foreground">
                       Glissez-déposez des fichiers ici ou cliquez pour sélectionner
                     </p>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p className="text-xs text-muted-foreground/70 mt-1">
                       PNG, JPG, PDF jusqu'à 10MB
                     </p>
                   </div>
@@ -281,7 +281,7 @@ ${formData.message}
                   <Button
                     type="submit"
                     disabled={isLoading || !formData.name || !formData.email || !formData.subject || !formData.category || formData.message.length < 10}
-                    className="bg-red-600 hover:bg-red-700 text-white"
+                    variant="default"
                   >
                     {isLoading ? (
                       <>

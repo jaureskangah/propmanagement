@@ -114,7 +114,7 @@ export default function SupportChat({ onBack }: SupportChatProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <Card className="rounded-none border-b">
         <CardHeader className="pb-4">
@@ -129,14 +129,14 @@ export default function SupportChat({ onBack }: SupportChatProps) {
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <Avatar className="h-10 w-10">
-                <AvatarFallback className="bg-red-100 text-red-600">
+                <AvatarFallback className="bg-primary/10 text-primary">
                   <Bot className="h-5 w-5" />
                 </AvatarFallback>
               </Avatar>
               <div>
-                <CardTitle className="text-lg">Support PropManagement</CardTitle>
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <div className="h-2 w-2 bg-green-400 rounded-full"></div>
+                <CardTitle className="text-lg text-foreground">Support PropManagement</CardTitle>
+                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  <div className="h-2 w-2 bg-green-500 rounded-full"></div>
                   <span>En ligne</span>
                 </div>
               </div>
@@ -162,11 +162,11 @@ export default function SupportChat({ onBack }: SupportChatProps) {
             >
               <div className={`flex items-start space-x-2 max-w-xs lg:max-w-md ${message.sender === "user" ? "flex-row-reverse space-x-reverse" : ""}`}>
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className={message.sender === "user" ? "bg-blue-100 text-blue-600" : "bg-red-100 text-red-600"}>
+                  <AvatarFallback className={message.sender === "user" ? "bg-primary/10 text-primary" : "bg-secondary/10 text-secondary-foreground"}>
                     {message.sender === "user" ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
                   </AvatarFallback>
                 </Avatar>
-                <div className={`rounded-lg p-3 ${message.sender === "user" ? "bg-blue-600 text-white" : "bg-white border shadow-sm"}`}>
+                <div className={`rounded-lg p-3 ${message.sender === "user" ? "bg-primary text-primary-foreground" : "bg-card border shadow-sm text-card-foreground"}`}>
                   <p className="text-sm">{message.content}</p>
                   <div className="flex items-center space-x-1 mt-1">
                     <Clock className="h-3 w-3 opacity-50" />
@@ -191,15 +191,15 @@ export default function SupportChat({ onBack }: SupportChatProps) {
             >
               <div className="flex items-start space-x-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-red-100 text-red-600">
+                  <AvatarFallback className="bg-secondary/10 text-secondary-foreground">
                     <Bot className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
-                <div className="bg-white border shadow-sm rounded-lg p-3">
+                <div className="bg-card border shadow-sm rounded-lg p-3">
                   <div className="flex space-x-1">
-                    <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
-                    <div className="h-2 w-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
+                    <div className="h-2 w-2 bg-muted-foreground/60 rounded-full animate-bounce"></div>
+                    <div className="h-2 w-2 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: "0.1s" }}></div>
+                    <div className="h-2 w-2 bg-muted-foreground/60 rounded-full animate-bounce" style={{ animationDelay: "0.2s" }}></div>
                   </div>
                 </div>
               </div>
@@ -212,14 +212,14 @@ export default function SupportChat({ onBack }: SupportChatProps) {
 
       {/* Quick Replies */}
       {messages.length === 1 && (
-        <div className="p-4 border-t bg-white">
-          <p className="text-sm text-gray-600 mb-3">Réponses rapides :</p>
+        <div className="p-4 border-t bg-card">
+          <p className="text-sm text-muted-foreground mb-3">Réponses rapides :</p>
           <div className="flex flex-wrap gap-2">
             {quickReplies.map((reply, index) => (
               <Badge
                 key={index}
                 variant="secondary"
-                className="cursor-pointer hover:bg-gray-200 transition-colors"
+                className="cursor-pointer hover:bg-secondary/80 transition-colors"
                 onClick={() => handleSendMessage(reply)}
               >
                 {reply}
@@ -230,7 +230,7 @@ export default function SupportChat({ onBack }: SupportChatProps) {
       )}
 
       {/* Input Area */}
-      <div className="p-4 border-t bg-white">
+      <div className="p-4 border-t bg-card">
         <div className="flex items-center space-x-2">
           <Button variant="ghost" size="sm" className="p-2">
             <Paperclip className="h-4 w-4" />
@@ -247,13 +247,14 @@ export default function SupportChat({ onBack }: SupportChatProps) {
               onClick={() => handleSendMessage()}
               disabled={!newMessage.trim() || isTyping}
               size="sm"
-              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0 bg-red-600 hover:bg-red-700"
+              className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+              variant="default"
             >
               <Send className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2 text-center">
+        <p className="text-xs text-muted-foreground mt-2 text-center">
           Appuyez sur Entrée pour envoyer
         </p>
       </div>
