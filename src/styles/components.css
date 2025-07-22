@@ -28,7 +28,7 @@
 
 /* Button styles */
 .button-primary {
-  @apply bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-white shadow-lg shadow-primary/20;
+  @apply bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-primary-foreground shadow-lg shadow-primary/20;
 }
 
 .button-secondary {
