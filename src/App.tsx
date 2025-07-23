@@ -46,7 +46,7 @@ const SupportPage = lazy(() => import('./pages/SupportPage'));
 const PageLoader = () => <PageLoadingAnimation />;
 
 function App() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isTenant } = useAuth();
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -66,31 +66,79 @@ function App() {
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
 
-        {/* Protected Routes - only accessible when logged in */}
-        <Route path="/dashboard" element={isAuthenticated ? <Dashboard /> : <Navigate to="/login" />} />
+        {/* Owner Routes - only accessible to property owners */}
+        <Route path="/dashboard" element={
+          isAuthenticated ? (
+            isTenant ? <Navigate to="/tenant/dashboard" /> : <Dashboard />
+          ) : <Navigate to="/login" />
+        } />
         
-        <Route path="/vendors" element={isAuthenticated ? <Vendors /> : <Navigate to="/login" />} />
-        <Route path="/add-vendor" element={isAuthenticated ? <AddVendor /> : <Navigate to="/login" />} />
-        <Route path="/tasks" element={isAuthenticated ? <TaskList /> : <Navigate to="/login" />} />
-        <Route path="/add-task" element={isAuthenticated ? <AddTask /> : <Navigate to="/login" />} />
-        <Route path="/edit-task/:id" element={isAuthenticated ? <EditTask /> : <Navigate to="/login" />} />
-        <Route path="/finances" element={isAuthenticated ? <Finances /> : <Navigate to="/login" />} />
-        <Route path="/add-tenant" element={isAuthenticated ? <AddTenant /> : <Navigate to="/login" />} />
-        <Route path="/document-generator" element={isAuthenticated ? <DocumentGenerator /> : <Navigate to="/login" />} />
-        <Route path="/document-history" element={isAuthenticated ? <DocumentHistory /> : <Navigate to="/login" />} />
-        <Route path="/tenants" element={isAuthenticated ? <Tenants /> : <Navigate to="/login" />} />
-        <Route path="/invitations" element={isAuthenticated ? <Invitations /> : <Navigate to="/login" />} />
+        <Route path="/vendors" element={
+          isAuthenticated && !isTenant ? <Vendors /> : <Navigate to="/login" />
+        } />
+        <Route path="/add-vendor" element={
+          isAuthenticated && !isTenant ? <AddVendor /> : <Navigate to="/login" />
+        } />
+        <Route path="/tasks" element={
+          isAuthenticated && !isTenant ? <TaskList /> : <Navigate to="/login" />
+        } />
+        <Route path="/add-task" element={
+          isAuthenticated && !isTenant ? <AddTask /> : <Navigate to="/login" />
+        } />
+        <Route path="/edit-task/:id" element={
+          isAuthenticated && !isTenant ? <EditTask /> : <Navigate to="/login" />
+        } />
+        <Route path="/finances" element={
+          isAuthenticated && !isTenant ? <Finances /> : <Navigate to="/login" />
+        } />
+        <Route path="/add-tenant" element={
+          isAuthenticated && !isTenant ? <AddTenant /> : <Navigate to="/login" />
+        } />
+        <Route path="/document-generator" element={
+          isAuthenticated && !isTenant ? <DocumentGenerator /> : <Navigate to="/login" />
+        } />
+        <Route path="/document-history" element={
+          isAuthenticated && !isTenant ? <DocumentHistory /> : <Navigate to="/login" />
+        } />
+        <Route path="/tenants" element={
+          isAuthenticated && !isTenant ? <Tenants /> : <Navigate to="/login" />
+        } />
+        <Route path="/invitations" element={
+          isAuthenticated && !isTenant ? <Invitations /> : <Navigate to="/login" />
+        } />
+        <Route path="/properties" element={
+          isAuthenticated && !isTenant ? <Properties /> : <Navigate to="/login" />
+        } />
+        <Route path="/maintenance" element={
+          isAuthenticated && !isTenant ? <Maintenance /> : <Navigate to="/login" />
+        } />
+        <Route path="/maintenance-requests" element={
+          isAuthenticated && !isTenant ? <MaintenanceRequestList /> : <Navigate to="/login" />
+        } />
+        <Route path="/reports" element={
+          isAuthenticated && !isTenant ? <Reports /> : <Navigate to="/login" />
+        } />
+        <Route path="/admin" element={
+          isAuthenticated && !isTenant ? <Admin /> : <Navigate to="/login" />
+        } />
         
-        <Route path="/tenant/dashboard" element={isAuthenticated ? <TenantDashboardPage /> : <Navigate to="/login" />} />
-        <Route path="/tenant/maintenance" element={isAuthenticated ? <TenantMaintenance /> : <Navigate to="/login" />} />
-        <Route path="/tenant/maintenance/new" element={isAuthenticated ? <AddMaintenanceRequest /> : <Navigate to="/login" />} />
-        <Route path="/tenant/documents" element={isAuthenticated ? <DocumentsPage /> : <Navigate to="/login" />} />
+        {/* Tenant Routes - only accessible to tenants */}
+        <Route path="/tenant/dashboard" element={
+          isAuthenticated ? (
+            isTenant ? <TenantDashboardPage /> : <Navigate to="/dashboard" />
+          ) : <Navigate to="/login" />
+        } />
+        <Route path="/tenant/maintenance" element={
+          isAuthenticated && isTenant ? <TenantMaintenance /> : <Navigate to="/login" />
+        } />
+        <Route path="/tenant/maintenance/new" element={
+          isAuthenticated && isTenant ? <AddMaintenanceRequest /> : <Navigate to="/login" />
+        } />
+        <Route path="/tenant/documents" element={
+          isAuthenticated && isTenant ? <DocumentsPage /> : <Navigate to="/login" />
+        } />
         
-        <Route path="/properties" element={isAuthenticated ? <Properties /> : <Navigate to="/login" />} />
-        <Route path="/maintenance" element={isAuthenticated ? <Maintenance /> : <Navigate to="/login" />} />
-        <Route path="/maintenance-requests" element={isAuthenticated ? <MaintenanceRequestList /> : <Navigate to="/login" />} />
-        <Route path="/reports" element={isAuthenticated ? <Reports /> : <Navigate to="/login" />} />
-        <Route path="/admin" element={isAuthenticated ? <Admin /> : <Navigate to="/login" />} />
+        {/* Shared Routes - accessible to both owners and tenants */}
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
         <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
