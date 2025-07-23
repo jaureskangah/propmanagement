@@ -135,19 +135,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!tenantData) {
         console.log("❌ No tenant found for this user - user is NOT a tenant");
         
-        // ÉTAPE 3: Nettoyer le flag is_tenant_user dans le profil s'il est incorrectement défini
+        // ÉTAPE 3: Vérifier si cet utilisateur était précédemment un locataire
         const { data: profileData } = await supabase
           .from('profiles')
-          .select('is_tenant_user')
+          .select('is_tenant_user, email')
           .eq('id', userId)
           .maybeSingle();
 
+        // Si l'utilisateur était marqué comme locataire mais n'a plus d'entrée tenant,
+        // cela signifie que son compte locataire a été supprimé
         if (profileData?.is_tenant_user) {
-          console.log("🧹 Cleaning up incorrect tenant flag in profile...");
+          console.log("🚨 CRITICAL: User was a tenant but tenant record was deleted!");
+          console.log("🧹 Cleaning up profile and forcing sign out...");
+          
+          // Nettoyer le profil
           await supabase
             .from('profiles')
             .update({ is_tenant_user: false })
             .eq('id', userId);
+          
+          // Forcer la déconnexion immédiate
+          await supabase.auth.signOut();
+          
+          // Rediriger vers la page d'authentification avec un message
+          alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
+          window.location.href = '/auth';
+          return;
         }
 
         setIsTenant(false);
