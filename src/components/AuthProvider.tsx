@@ -102,126 +102,65 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("=== CHECKING TENANT STATUS - ENHANCED VERSION ===");
       console.log("Checking tenant status for user:", userId);
 
-      // Requête optimisée avec plus de détails
-      const { data: userData, error: userError } = await supabase
-        .from('profiles')
+      // ÉTAPE 1: Vérifier directement dans la table tenants si le tenant existe
+      const { data: tenantData, error: tenantError } = await supabase
+        .from('tenants')
         .select(`
-          is_tenant_user,
+          id,
+          name,
           email,
-          first_name,
-          last_name,
-          tenants!tenants_tenant_profile_id_fkey(
-            id,
-            name,
-            email,
-            unit_number,
-            lease_start,
-            lease_end,
-            rent_amount,
-            property_id,
-            properties:property_id(name)
-          )
+          unit_number,
+          lease_start,
+          lease_end,
+          rent_amount,
+          property_id,
+          properties:property_id(name)
         `)
-        .eq('id', userId)
+        .eq('tenant_profile_id', userId)
         .maybeSingle();
 
       console.log("=== TENANT CHECK RESULTS ===");
-      console.log("User data:", userData);
-      console.log("Query error:", userError);
+      console.log("Tenant data found:", tenantData);
+      console.log("Tenant query error:", tenantError);
 
-      if (userError) {
-        console.error("❌ Error fetching user data:", userError);
-        
-        // Essayer une approche de récupération directe
-        console.log("🔄 Attempting direct tenant lookup...");
-        const { data: directTenantData, error: directError } = await supabase
-          .from('tenants')
-          .select(`
-            id,
-            name,
-            email,
-            unit_number,
-            lease_start,
-            lease_end,
-            rent_amount,
-            property_id,
-            properties:property_id(name)
-          `)
-          .eq('tenant_profile_id', userId)
-          .maybeSingle();
-
-        console.log("Direct tenant lookup result:", directTenantData);
-        console.log("Direct tenant lookup error:", directError);
-
-        if (directTenantData) {
-          console.log("✅ Found tenant via direct lookup!");
-          setIsTenant(true);
-          setTenantData(directTenantData);
-        } else {
-          console.log("❌ No tenant found via direct lookup either");
-          setIsTenant(false);
-          setTenantData(null);
-        }
-        
-        setLoading(false);
-        return;
-      }
-
-      if (!userData) {
-        console.log("❌ No profile found for user");
+      if (tenantError) {
+        console.error("❌ Error fetching tenant data:", tenantError);
         setIsTenant(false);
         setTenantData(null);
         setLoading(false);
         return;
       }
 
-      // Vérifier si l'utilisateur est marqué comme locataire ET a des données de locataire
-      const hasTenantData = userData.tenants && userData.tenants.length > 0;
-      const isMarkedAsTenant = userData.is_tenant_user;
-
-      console.log("=== TENANT STATUS ANALYSIS ===");
-      console.log("Is marked as tenant user:", isMarkedAsTenant);
-      console.log("Has tenant data:", hasTenantData);
-      console.log("Tenant data:", userData.tenants);
-
-      if (isMarkedAsTenant && hasTenantData) {
-        console.log("✅ User is confirmed as a tenant:", userData.tenants[0]);
-        setIsTenant(true);
-        setTenantData(userData.tenants[0]);
-      } else if (isMarkedAsTenant && !hasTenantData) {
-        console.log("⚠️ User marked as tenant but no tenant data found - attempting recovery");
+      // ÉTAPE 2: Si aucun tenant trouvé, l'utilisateur n'est PAS un locataire
+      if (!tenantData) {
+        console.log("❌ No tenant found for this user - user is NOT a tenant");
         
-        // Tentative de récupération
-        const { data: recoveryData, error: recoveryError } = await supabase
-          .from('tenants')
-          .select(`
-            id,
-            name,
-            email,
-            unit_number,
-            lease_start,
-            lease_end,
-            rent_amount,
-            property_id,
-            properties:property_id(name)
-          `)
-          .eq('tenant_profile_id', userId)
+        // ÉTAPE 3: Nettoyer le flag is_tenant_user dans le profil s'il est incorrectement défini
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('is_tenant_user')
+          .eq('id', userId)
           .maybeSingle();
 
-        if (recoveryData) {
-          console.log("✅ Recovery successful - found tenant data!");
-          setIsTenant(true);
-          setTenantData(recoveryData);
-        } else {
-          console.log("❌ Recovery failed - no tenant data found");
-          setIsTenant(false);
-          setTenantData(null);
+        if (profileData?.is_tenant_user) {
+          console.log("🧹 Cleaning up incorrect tenant flag in profile...");
+          await supabase
+            .from('profiles')
+            .update({ is_tenant_user: false })
+            .eq('id', userId);
         }
-      } else {
-        console.log("❌ User is not a tenant or no tenant data found");
+
         setIsTenant(false);
         setTenantData(null);
+        setLoading(false);
+        return;
       }
+
+      // ÉTAPE 4: Tenant trouvé - l'utilisateur est un locataire valide
+      console.log("✅ User is confirmed as a valid tenant:", tenantData);
+      setIsTenant(true);
+      setTenantData(tenantData);
+
     } catch (err) {
       console.error("❌ Exception checking tenant status:", err);
       setIsTenant(false);
