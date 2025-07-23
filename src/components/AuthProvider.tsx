@@ -101,6 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log("=== CHECKING TENANT STATUS - ENHANCED VERSION ===");
       console.log("Checking tenant status for user:", userId);
+      console.log("Current URL:", window.location.href);
 
       // ÉTAPE 1: Vérifier directement dans la table tenants si le tenant existe
       const { data: tenantData, error: tenantError } = await supabase
