@@ -34,6 +34,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let isMounted = true;
 
+    // Fonction pour forcer la déconnexion des utilisateurs supprimés
+    const forceSignOutDeletedUsers = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user) {
+        console.log("🔍 Checking if user should be signed out:", session.user.email);
+        
+        // Vérifier si l'utilisateur a un profil tenant valide
+        const { data: profileData } = await supabase
+          .from('profiles')
+          .select('is_tenant_user')
+          .eq('id', session.user.id)
+          .maybeSingle();
+        
+        // Si l'utilisateur est marqué comme tenant
+        if (profileData?.is_tenant_user) {
+          const { data: tenantData } = await supabase
+            .from('tenants')
+            .select('id')
+            .eq('tenant_profile_id', session.user.id)
+            .maybeSingle();
+          
+          // Si pas de tenant trouvé, forcer la déconnexion
+          if (!tenantData) {
+            console.log("🚨 FORCING SIGNOUT: User marked as tenant but no tenant record found");
+            alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
+            await supabase.auth.signOut();
+            window.location.href = '/auth';
+            return;
+          }
+        }
+      }
+    };
+
     // Get initial session
     const getInitialSession = async () => {
       try {
@@ -42,7 +75,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (isMounted) {
           if (session?.user) {
             setUser(session.user);
-            await checkTenantStatus(session.user.id);
+            // Forcer la vérification avant de charger les données
+            await forceSignOutDeletedUsers();
+            if (isMounted) {
+              await checkTenantStatus(session.user.id);
+            }
           } else {
             setUser(null);
             setIsTenant(false);
@@ -70,7 +107,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (session?.user) {
           setUser(session.user);
-          if (event === 'SIGNED_IN') {
+          
+          // Forcer la vérification immédiate pour tous les événements
+          await forceSignOutDeletedUsers();
+          
+          if (isMounted && event === 'SIGNED_IN') {
             // Délai plus long pour s'assurer que la liaison est terminée
             setTimeout(() => {
               if (isMounted) {
