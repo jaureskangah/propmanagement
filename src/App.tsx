@@ -1,6 +1,7 @@
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './components/AuthProvider';
+import { useDeletedTenantCheck } from './hooks/useDeletedTenantCheck';
 import { lazy, Suspense } from 'react';
 import { PageLoadingAnimation } from './components/common/PageLoadingAnimation';
 
@@ -47,6 +48,9 @@ const PageLoader = () => <PageLoadingAnimation />;
 
 function App() {
   const { isAuthenticated, isTenant } = useAuth();
+  
+  // Hook pour vérifier et déconnecter les comptes tenant supprimés
+  useDeletedTenantCheck();
 
   return (
     <Suspense fallback={<PageLoader />}>
