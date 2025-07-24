@@ -34,39 +34,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     let isMounted = true;
 
-    // Fonction pour forcer la déconnexion des utilisateurs supprimés
-    const forceSignOutDeletedUsers = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user) {
-        console.log("🔍 Checking if user should be signed out:", session.user.email);
-        
-        // Vérifier si l'utilisateur a un profil tenant valide
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('is_tenant_user')
-          .eq('id', session.user.id)
-          .maybeSingle();
-        
-        // Si l'utilisateur est marqué comme tenant
-        if (profileData?.is_tenant_user) {
-          const { data: tenantData } = await supabase
-            .from('tenants')
-            .select('id')
-            .eq('tenant_profile_id', session.user.id)
-            .maybeSingle();
-          
-          // Si pas de tenant trouvé, forcer la déconnexion
-          if (!tenantData) {
-            console.log("🚨 FORCING SIGNOUT: User marked as tenant but no tenant record found");
-            alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
-            await supabase.auth.signOut();
-            window.location.href = '/auth';
-            return;
-          }
-        }
-      }
-    };
-
     // Get initial session
     const getInitialSession = async () => {
       try {
@@ -75,11 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (isMounted) {
           if (session?.user) {
             setUser(session.user);
-            // Forcer la vérification avant de charger les données
-            await forceSignOutDeletedUsers();
-            if (isMounted) {
-              await checkTenantStatus(session.user.id);
-            }
+            await checkTenantStatus(session.user.id);
           } else {
             setUser(null);
             setIsTenant(false);
@@ -100,25 +63,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       async (event, session) => {
         if (!isMounted) return;
 
-        console.log("=== AUTH STATE CHANGE - ENHANCED VERSION ===");
+        console.log("=== AUTH STATE CHANGE ===");
         console.log("Event:", event);
-        console.log("Session exists:", !!session);
-        console.log("User ID:", session?.user?.id);
+        console.log("User:", session?.user?.email);
         
         if (session?.user) {
           setUser(session.user);
-          
-          // Forcer la vérification immédiate pour tous les événements
-          await forceSignOutDeletedUsers();
-          
-          if (isMounted && event === 'SIGNED_IN') {
-            // Délai plus long pour s'assurer que la liaison est terminée
+          if (event === 'SIGNED_IN') {
             setTimeout(() => {
               if (isMounted) {
-                console.log("Checking tenant status after sign in with enhanced recovery...");
                 checkTenantStatusWithRecovery(session.user.id);
               }
-            }, 1000);
+            }, 500);
           }
         } else {
           console.log("No session, clearing user data");
@@ -140,93 +96,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkTenantStatus = async (userId: string) => {
     try {
-      console.log("=== CHECKING TENANT STATUS - ENHANCED VERSION ===");
-      console.log("Checking tenant status for user:", userId);
-      console.log("Current URL:", window.location.href);
+      console.log("🔍 Checking tenant status for:", userId);
 
-      // FORCER LA DÉCONNEXION IMMÉDIATE si l'utilisateur n'est plus autorisé
-      const { data: authUser } = await supabase.auth.getUser();
-      if (!authUser.user || authUser.user.id !== userId) {
-        console.log("🚨 Auth user mismatch or not found, forcing sign out");
+      // Une seule requête pour vérifier tenant + profile
+      const [tenantResult, profileResult] = await Promise.all([
+        supabase
+          .from('tenants')
+          .select('id, name, email, unit_number, lease_start, lease_end, rent_amount, property_id, properties:property_id(name)')
+          .eq('tenant_profile_id', userId)
+          .maybeSingle(),
+        supabase
+          .from('profiles')
+          .select('is_tenant_user')
+          .eq('id', userId)
+          .maybeSingle()
+      ]);
+
+      const { data: tenantData } = tenantResult;
+      const { data: profileData } = profileResult;
+
+      // Si marqué comme tenant mais pas de record tenant → compte supprimé
+      if (profileData?.is_tenant_user && !tenantData) {
+        console.log("🚨 Deleted tenant account detected, forcing signout");
+        alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
         await supabase.auth.signOut();
         window.location.href = '/auth';
         return;
       }
 
-      // ÉTAPE 1: Vérifier directement dans la table tenants si le tenant existe
-      const { data: tenantData, error: tenantError } = await supabase
-        .from('tenants')
-        .select(`
-          id,
-          name,
-          email,
-          unit_number,
-          lease_start,
-          lease_end,
-          rent_amount,
-          property_id,
-          properties:property_id(name)
-        `)
-        .eq('tenant_profile_id', userId)
-        .maybeSingle();
-
-      console.log("=== TENANT CHECK RESULTS ===");
-      console.log("Tenant data found:", tenantData);
-      console.log("Tenant query error:", tenantError);
-
-      if (tenantError) {
-        console.error("❌ Error fetching tenant data:", tenantError);
-        setIsTenant(false);
-        setTenantData(null);
-        setLoading(false);
-        return;
-      }
-
-      // ÉTAPE 2: Si aucun tenant trouvé, l'utilisateur n'est PAS un locataire
-      if (!tenantData) {
-        console.log("❌ No tenant found for this user - user is NOT a tenant");
-        
-        // ÉTAPE 3: Vérifier si cet utilisateur était précédemment un locataire
-        const { data: profileData } = await supabase
-          .from('profiles')
-          .select('is_tenant_user, email')
-          .eq('id', userId)
-          .maybeSingle();
-
-        // Si l'utilisateur était marqué comme locataire mais n'a plus d'entrée tenant,
-        // cela signifie que son compte locataire a été supprimé
-        if (profileData?.is_tenant_user) {
-          console.log("🚨 CRITICAL: User was a tenant but tenant record was deleted!");
-          console.log("🧹 Cleaning up profile and forcing sign out...");
-          
-          // Nettoyer le profil
-          await supabase
-            .from('profiles')
-            .update({ is_tenant_user: false })
-            .eq('id', userId);
-          
-          // Forcer la déconnexion immédiate
-          await supabase.auth.signOut();
-          
-          // Rediriger vers la page d'authentification avec un message
-          alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
-          window.location.href = '/auth';
-          return;
-        }
-
-        setIsTenant(false);
-        setTenantData(null);
-        setLoading(false);
-        return;
-      }
-
-      // ÉTAPE 4: Tenant trouvé - l'utilisateur est un locataire valide
-      console.log("✅ User is confirmed as a valid tenant:", tenantData);
-      setIsTenant(true);
+      // Sinon, définir le statut normalement
+      setIsTenant(!!tenantData);
       setTenantData(tenantData);
 
     } catch (err) {
-      console.error("❌ Exception checking tenant status:", err);
+      console.error("❌ Error checking tenant status:", err);
       setIsTenant(false);
       setTenantData(null);
     } finally {
