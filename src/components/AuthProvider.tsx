@@ -103,6 +103,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.log("Checking tenant status for user:", userId);
       console.log("Current URL:", window.location.href);
 
+      // FORCER LA DÉCONNEXION IMMÉDIATE si l'utilisateur n'est plus autorisé
+      const { data: authUser } = await supabase.auth.getUser();
+      if (!authUser.user || authUser.user.id !== userId) {
+        console.log("🚨 Auth user mismatch or not found, forcing sign out");
+        await supabase.auth.signOut();
+        window.location.href = '/auth';
+        return;
+      }
+
       // ÉTAPE 1: Vérifier directement dans la table tenants si le tenant existe
       const { data: tenantData, error: tenantError } = await supabase
         .from('tenants')
