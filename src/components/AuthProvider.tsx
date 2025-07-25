@@ -116,9 +116,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: profileData } = profileResult;
 
       // Vérifier si l'utilisateur a un rôle admin pour éviter de bloquer les comptes admin
-      const { data: hasAdminRole } = await supabase
-        .rpc('has_role', { role: 'admin' })
-        .single();
+      const { data: adminRole } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
+      
+      const hasAdminRole = !!adminRole;
 
       // Si marqué comme tenant mais pas de record tenant ET pas admin → compte supprimé
       if (profileData?.is_tenant_user && !tenantData && !hasAdminRole) {
