@@ -43,6 +43,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         email: values.email,
         password: values.password,
         options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             first_name: values.firstName,
             last_name: values.lastName,
