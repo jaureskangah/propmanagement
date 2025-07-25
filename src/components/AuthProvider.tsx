@@ -115,8 +115,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const { data: tenantData } = tenantResult;
       const { data: profileData } = profileResult;
 
-      // Si marqué comme tenant mais pas de record tenant → compte supprimé
-      if (profileData?.is_tenant_user && !tenantData) {
+      // Vérifier si l'utilisateur a un rôle admin pour éviter de bloquer les comptes admin
+      const { data: hasAdminRole } = await supabase
+        .rpc('has_role', { role: 'admin' })
+        .single();
+
+      // Si marqué comme tenant mais pas de record tenant ET pas admin → compte supprimé
+      if (profileData?.is_tenant_user && !tenantData && !hasAdminRole) {
         console.log("🚨 Deleted tenant account detected, forcing signout");
         alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
         await supabase.auth.signOut();
