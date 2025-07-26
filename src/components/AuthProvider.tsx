@@ -152,49 +152,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       console.log("=== CHECKING TENANT STATUS WITH RECOVERY ===");
       
-      // Première tentative
+      // Pour la récupération, utilisons directement checkTenantStatus sans la boucle des appels répétés
       await checkTenantStatus(userId);
       
-      // Si toujours pas de données tenant mais marqué comme tenant, tenter une récupération
-      const { data: profileData } = await supabase
-        .from('profiles')
-        .select('email, is_tenant_user')
-        .eq('id', userId)
-        .single();
-        
-      if (profileData?.is_tenant_user && !isTenant) {
-        console.log("🔄 Attempting tenant profile recovery for recently created account..."); 
-        
-        // Chercher un tenant avec cet email qui n'est pas encore lié
-        const { data: unlinkedTenant } = await supabase
-          .from('tenants')
-          .select('id, name, email')
-          .eq('email', profileData.email)
-          .is('tenant_profile_id', null)
-          .maybeSingle();
-          
-        if (unlinkedTenant) {
-          console.log("🔗 Found unlinked tenant, attempting automatic linking...");
-          
-          // Utiliser la fonction RPC pour lier automatiquement
-          const { data: linkResult, error: linkError } = await supabase
-            .rpc('link_tenant_profile', {
-              p_tenant_id: unlinkedTenant.id,
-              p_user_id: userId
-            });
-            
-          if (!linkError && linkResult?.success) {
-            console.log("✅ Automatic linking successful, rechecking status...");
-            
-            // Refaire une vérification après 500ms
-            setTimeout(() => {
-              checkTenantStatus(userId);
-            }, 500);
-          } else {
-            console.error("❌ Automatic linking failed:", linkError || linkResult);
-          }
-        }
-      }
     } catch (error) {
       console.error("❌ Error in checkTenantStatusWithRecovery:", error);
     }
