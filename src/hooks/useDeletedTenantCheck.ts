@@ -15,6 +15,20 @@ export const useDeletedTenantCheck = () => {
       console.log("🔍 Current isTenant status:", isTenant);
 
       try {
+        // Vérifier d'abord si l'utilisateur a un rôle admin
+        const { data: adminRole } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .maybeSingle();
+
+        // Si l'utilisateur est admin, il a accès à tout - pas besoin de vérifications
+        if (adminRole) {
+          console.log("🔍 User is admin - skipping tenant/property checks");
+          return;
+        }
+
         // Vérifier si l'utilisateur a des propriétés (pour confirmer qu'il est propriétaire)
         const { data: propertiesData } = await supabase
           .from('properties')
