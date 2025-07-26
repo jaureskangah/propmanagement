@@ -86,7 +86,9 @@ export const useDeletedTenantCheck = () => {
       // Forcer déconnexion
       await supabase.auth.signOut();
       
-      alert(message);
+      // Améliorer l'affichage du message en évitant les URLs longues
+      const cleanMessage = message.replace(/https?:\/\/[^\s]+/g, '[URL de redirection]');
+      alert(cleanMessage);
       navigate('/auth');
     };
 
