@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
+import { useToast } from '@/hooks/use-toast';
 
 export const useDeletedTenantCheck = () => {
   const { user, isTenant } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
     const checkDeletedTenant = async () => {
@@ -86,9 +88,13 @@ export const useDeletedTenantCheck = () => {
       // Forcer déconnexion
       await supabase.auth.signOut();
       
-      // Améliorer l'affichage du message en évitant les URLs longues
-      const cleanMessage = message.replace(/https?:\/\/[^\s]+/g, '[URL de redirection]');
-      alert(cleanMessage);
+      // Afficher un toast élégant
+      toast({
+        variant: "destructive",
+        title: "Accès refusé",
+        description: message,
+      });
+      
       navigate('/auth');
     };
 
