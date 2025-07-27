@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
-import { useLocale } from '@/components/providers/LocaleProvider';
+import { useToastTranslations } from '@/hooks/useToastTranslations';
 
 export const useDeletedTenantCheck = () => {
   const { user, isTenant } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { t, translations } = useToastTranslations();
   const isProcessingRef = useRef(false);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export const useDeletedTenantCheck = () => {
           // Si pas de tenant trouvé = compte supprimé
           if (!tenantData) {
             console.log("🚨 DETECTED DELETED TENANT - FORCING SIGNOUT");
-            await forceSignOut(t('toasts.deletedTenantAccount'));
+            await forceSignOut(t('deletedTenantAccount'), 'accessDenied');
             return;
           }
         }
@@ -73,7 +73,7 @@ export const useDeletedTenantCheck = () => {
         // Si pas marqué comme tenant ET pas de propriétés = compte invalide
         if (!profileData?.is_tenant_user && (!propertiesData || propertiesData.length === 0)) {
           console.log("🚨 DETECTED INVALID ACCOUNT - NO PROPERTIES AND NOT TENANT");
-          await forceSignOut(t('toasts.invalidAccount'));
+          await forceSignOut(t('invalidAccount'), 'accessDenied');
           return;
         }
 
@@ -82,7 +82,7 @@ export const useDeletedTenantCheck = () => {
       }
     };
 
-    const forceSignOut = async (message: string, titleKey: string = 'toasts.accessDenied') => {
+    const forceSignOut = async (message: string, titleKey: keyof typeof translations = 'accessDenied') => {
       // Nettoyer le profil
       await supabase
         .from('profiles')
