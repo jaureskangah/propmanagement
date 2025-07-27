@@ -10,8 +10,11 @@ export const useDeletedTenantCheck = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    let isProcessing = false;
+    
     const checkDeletedTenant = async () => {
-      if (!user) return;
+      if (!user || isProcessing) return;
+      isProcessing = true;
 
       console.log("🔍 DELETED TENANT CHECK - User:", user.email);
       console.log("🔍 Current isTenant status:", isTenant);
