@@ -82,7 +82,7 @@ export const useDeletedTenantCheck = () => {
       }
     };
 
-    const forceSignOut = async (message: string) => {
+    const forceSignOut = async (message: string, titleKey: string = 'accessDenied') => {
       // Nettoyer le profil
       await supabase
         .from('profiles')
@@ -95,7 +95,7 @@ export const useDeletedTenantCheck = () => {
       // Afficher un toast élégant
       toast({
         variant: "destructive",
-        title: t('accessDenied'),
+        title: t(titleKey),
         description: message,
       });
       
