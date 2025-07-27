@@ -65,7 +65,7 @@ export const useDeletedTenantCheck = () => {
           // Si pas de tenant trouvé = compte supprimé
           if (!tenantData) {
             console.log("🚨 DETECTED DELETED TENANT - FORCING SIGNOUT");
-            await forceSignOut(t('deletedTenantAccount'));
+            await forceSignOut(t('toasts.deletedTenantAccount'));
             return;
           }
         }
@@ -73,7 +73,7 @@ export const useDeletedTenantCheck = () => {
         // Si pas marqué comme tenant ET pas de propriétés = compte invalide
         if (!profileData?.is_tenant_user && (!propertiesData || propertiesData.length === 0)) {
           console.log("🚨 DETECTED INVALID ACCOUNT - NO PROPERTIES AND NOT TENANT");
-          await forceSignOut(t('invalidAccount'));
+          await forceSignOut(t('toasts.invalidAccount'));
           return;
         }
 
@@ -82,7 +82,7 @@ export const useDeletedTenantCheck = () => {
       }
     };
 
-    const forceSignOut = async (message: string, titleKey: string = 'accessDenied') => {
+    const forceSignOut = async (message: string, titleKey: string = 'toasts.accessDenied') => {
       // Nettoyer le profil
       await supabase
         .from('profiles')
