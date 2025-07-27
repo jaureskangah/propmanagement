@@ -34,4 +34,7 @@ export interface ToastTranslations {
   shareError: string;
   shareEmailSuccess: string;
   shareEmailError: string;
+  accessDenied: string;
+  deletedTenantAccount: string;
+  invalidAccount: string;
 }

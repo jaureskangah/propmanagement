@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 export const useDeletedTenantCheck = () => {
   const { user, isTenant } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { t } = useLocale();
   const isProcessingRef = useRef(false);
 
   useEffect(() => {
@@ -63,7 +65,7 @@ export const useDeletedTenantCheck = () => {
           // Si pas de tenant trouvé = compte supprimé
           if (!tenantData) {
             console.log("🚨 DETECTED DELETED TENANT - FORCING SIGNOUT");
-            await forceSignOut("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
+            await forceSignOut(t('deletedTenantAccount'));
             return;
           }
         }
@@ -71,7 +73,7 @@ export const useDeletedTenantCheck = () => {
         // Si pas marqué comme tenant ET pas de propriétés = compte invalide
         if (!profileData?.is_tenant_user && (!propertiesData || propertiesData.length === 0)) {
           console.log("🚨 DETECTED INVALID ACCOUNT - NO PROPERTIES AND NOT TENANT");
-          await forceSignOut("Votre compte n'a pas accès à cette application. Veuillez contacter l'administrateur.");
+          await forceSignOut(t('invalidAccount'));
           return;
         }
 
@@ -93,7 +95,7 @@ export const useDeletedTenantCheck = () => {
       // Afficher un toast élégant
       toast({
         variant: "destructive",
-        title: "Accès refusé",
+        title: t('accessDenied'),
         description: message,
       });
       

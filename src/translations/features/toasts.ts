@@ -37,6 +37,9 @@ export const enToasts: ToastTranslations = {
   shareError: "Share error",
   shareEmailSuccess: "Report sent by email successfully",
   shareEmailError: "Error sending report",
+  accessDenied: "Access Denied",
+  deletedTenantAccount: "Your tenant account has been deleted. Please request a new invitation from your landlord.",
+  invalidAccount: "Your account does not have access to this application. Please contact the administrator.",
 };
 
 export const frToasts: ToastTranslations = {
@@ -75,4 +78,7 @@ export const frToasts: ToastTranslations = {
   shareError: "Erreur lors du partage",
   shareEmailSuccess: "Rapport envoyé par email avec succès",
   shareEmailError: "Erreur lors de l'envoi du rapport",
+  accessDenied: "Accès refusé",
+  deletedTenantAccount: "Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.",
+  invalidAccount: "Votre compte n'a pas accès à cette application. Veuillez contacter l'administrateur.",
 };
