@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
@@ -8,13 +8,12 @@ export const useDeletedTenantCheck = () => {
   const { user, isTenant } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isProcessingRef = useRef(false);
 
   useEffect(() => {
-    let isProcessing = false;
-    
     const checkDeletedTenant = async () => {
-      if (!user || isProcessing) return;
-      isProcessing = true;
+      if (!user || isProcessingRef.current) return;
+      isProcessingRef.current = true;
 
       console.log("🔍 DELETED TENANT CHECK - User:", user.email);
       console.log("🔍 Current isTenant status:", isTenant);
