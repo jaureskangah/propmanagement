@@ -15,7 +15,7 @@ interface PricingCardProps {
   borderColor: string;
   iconColor: string;
   onSubscribe: (priceId: string) => void;
-  formatPrice: (price: string | number) => string;
+  formatPrice: (price: string | number, language: string) => string;
   t: (key: string) => string;
 }
 
@@ -100,7 +100,7 @@ export const PricingCard = ({
                 }
               }}
             >
-              {formatPrice(price)}
+              {formatPrice(price, t('locale') || 'en')}
             </motion.span>
             <span className="ml-1 text-xl font-medium text-muted-foreground">/{t('month')}</span>
           </motion.div>

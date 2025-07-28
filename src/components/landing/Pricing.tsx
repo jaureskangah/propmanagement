@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { PlanComparisonModal } from "./pricing/PlanComparisonModal";
 
 export default function Pricing() {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const plans = getPlans(t);
   const { handleSubscribe } = useSubscription(t);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
@@ -108,7 +108,7 @@ export default function Pricing() {
               <PricingCard
                 {...plan}
                 onSubscribe={handleSubscribe}
-                formatPrice={formatPrice}
+                formatPrice={(price) => formatPrice(price, language)}
                 t={t}
               />
             </motion.div>
