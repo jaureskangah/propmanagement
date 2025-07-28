@@ -109,6 +109,7 @@ export default function Pricing() {
                 {...plan}
                 onSubscribe={handleSubscribe}
                 formatPrice={(price) => formatPrice(price, language)}
+                language={language}
                 t={t}
               />
             </motion.div>

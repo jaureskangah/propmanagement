@@ -16,6 +16,7 @@ interface PricingCardProps {
   iconColor: string;
   onSubscribe: (priceId: string) => void;
   formatPrice: (price: string | number, language: string) => string;
+  language: string;
   t: (key: string) => string;
 }
 
@@ -31,6 +32,7 @@ export const PricingCard = ({
   iconColor,
   onSubscribe,
   formatPrice,
+  language,
   t
 }: PricingCardProps) => {
   // Définir de nouvelles animations pour les cases à cocher et les items de la liste
@@ -100,7 +102,7 @@ export const PricingCard = ({
                 }
               }}
             >
-              {formatPrice(price, t('locale') || 'en')}
+              {formatPrice(price, language)}
             </motion.span>
             <span className="ml-1 text-xl font-medium text-muted-foreground">/{t('month')}</span>
           </motion.div>
