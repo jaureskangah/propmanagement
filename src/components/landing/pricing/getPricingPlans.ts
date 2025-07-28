@@ -32,7 +32,7 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
   },
   {
     name: t('standardPlan'),
-    price: "29",
+    price: "9.99",
     popular: true,
     features: [
       t('upTo10Properties'),
@@ -44,14 +44,14 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
       t('prioritySupport'),
     ],
     buttonText: "pricingGetStarted",
-    priceId: "price_1RlHpABQGq0kS1iiEBUO9Y2g",
+    priceId: "price_1RpmiqBQGq0kS1iiOLKab9L6",
     gradient: "from-rose-50 via-pink-50 to-orange-100",
     borderColor: "border-[#ea384c]",
     iconColor: "text-[#ea384c]",
   },
   {
     name: t('proPlan'),
-    price: "59",
+    price: "29.99",
     features: [
       t('unlimitedProperties'),
       t('unlimitedTenants'),
@@ -62,7 +62,7 @@ export const getPlans = (t: (key: string) => string): PricingPlan[] => [
       t('dedicatedSupport'),
     ],
     buttonText: "pricingGetStarted",
-    priceId: "price_1RlHq5BQGq0kS1ii93tZNOGv",
+    priceId: "price_1RpmhGBQGq0kS1iieBEcFUE9",
     gradient: "from-violet-50 via-purple-50 to-fuchsia-100",
     borderColor: "border-purple-600",
     iconColor: "text-purple-700",
