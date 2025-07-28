@@ -103,13 +103,12 @@ export default function Pricing() {
           viewport={{ once: true }}
           className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
         >
-          {plans.map((plan) => (
-            <motion.div key={plan.name} variants={item}>
+          {plans.map((plan, index) => (
+            <motion.div key={`plan-${index}`} variants={item}>
               <PricingCard
                 {...plan}
                 onSubscribe={handleSubscribe}
-                formatPrice={(price) => formatPrice(price, language)}
-                language={language}
+                formatPrice={formatPrice}
                 t={t}
               />
             </motion.div>
