@@ -90,8 +90,8 @@ export const PricingCard = ({
             whileHover={{ scale: 1.05 }}
           >
             <motion.span 
-              className="text-5xl font-extrabold tracking-tight text-foreground transition-transform duration-300"
-              animate={{ 
+              className="text-4xl font-extrabold tracking-tight text-foreground transition-transform duration-300"
+              animate={{
                 scale: popular ? [1, 1.05, 1] : 1,
                 transition: { 
                   duration: popular ? 2 : 0,
