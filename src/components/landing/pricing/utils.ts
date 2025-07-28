@@ -1,12 +1,16 @@
 
 export const formatPrice = (price: string | number, language: string = 'en') => {
-  if (price === "0") {
+  // Convert to string first to ensure consistent handling
+  const priceStr = String(price);
+  
+  if (priceStr === "0") {
     return language === 'fr' ? "Gratuit" : "Free";
   }
   
+  // For French, replace decimal point with comma
   const formattedPrice = language === 'fr' 
-    ? String(price).replace('.', ',')
-    : String(price);
+    ? priceStr.replace('.', ',')
+    : priceStr;
     
   return `${formattedPrice}$ CAD`;
 };
