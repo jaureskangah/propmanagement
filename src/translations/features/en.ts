@@ -34,4 +34,9 @@ export const en = {
   emailOnly: "Email only",
   appOnly: "App only",
   leaseStatus: "Lease Status",
+  
+  // Reports translations
+  revenueEvolution: "Revenue Evolution",
+  maintenanceByPriority: "Maintenance by Priority",
+  maintenanceByStatus: "Maintenance by Status",
 };

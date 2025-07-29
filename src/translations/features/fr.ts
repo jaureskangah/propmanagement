@@ -51,4 +51,9 @@ export const fr = {
   totalUsers: "Total des utilisateurs",
   usersWithRoles: "Utilisateurs avec rôles",
   roleDistribution: "Répartition des rôles",
+  
+  // Reports translations
+  revenueEvolution: "Évolution des Revenus",
+  maintenanceByPriority: "Maintenance par Priorité",
+  maintenanceByStatus: "Maintenance par Statut",
 };
