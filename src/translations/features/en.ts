@@ -39,4 +39,8 @@ export const en = {
   revenueEvolution: "Revenue Evolution",
   maintenanceByPriority: "Maintenance by Priority",
   maintenanceByStatus: "Maintenance by Status",
+  occupancyTrends: "Occupancy Trends",
+  currentOccupancy: "Current Occupancy",
+  activeTenants: "Active Tenants",
+  totalUnits: "Total Units",
 };

@@ -56,4 +56,8 @@ export const fr = {
   revenueEvolution: "Évolution des Revenus",
   maintenanceByPriority: "Maintenance par Priorité",
   maintenanceByStatus: "Maintenance par Statut",
+  occupancyTrends: "Tendances d'Occupation",
+  currentOccupancy: "Occupation Actuelle",
+  activeTenants: "Locataires Actifs",
+  totalUnits: "Unités Totales",
 };
