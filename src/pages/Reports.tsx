@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { BarChart3 } from 'lucide-react';
@@ -16,7 +17,7 @@ const Reports = () => {
         <div className="flex flex-col items-center space-y-4 animate-fade-in">
           <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full" />
           <p className="text-sm text-muted-foreground animate-pulse">
-            {t('loadingReports', { fallback: 'Chargement des rapports...' })}
+            {t('loadingReports', { fallback: 'Loading reports...' })}
           </p>
         </div>
       </div>
@@ -40,10 +41,10 @@ const Reports = () => {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div className="space-y-1">
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent hover-scale transition-transform duration-200">
-                  {t('advancedReports', { fallback: 'Rapports Avancés' })}
+                  {t('advancedReports', { fallback: 'Advanced Reports' })}
                 </h1>
                 <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                  {t('analyticsDescription', { fallback: 'Tableaux de bord analytics et métriques de performance' })}
+                  {t('analyticsDescription', { fallback: 'Analytics dashboards and performance metrics' })}
                 </p>
               </div>
               <div className="hidden sm:flex items-center space-x-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full animate-scale-in">

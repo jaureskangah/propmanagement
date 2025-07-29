@@ -14,22 +14,22 @@ export const ReportsContainer = () => {
 
   const navItems = [
     {
-      name: t('analytics', { fallback: 'Aperçu' }),
+      name: t('analytics', { fallback: 'Analytics' }),
       value: "analytics",
       icon: BarChart3,
     },
     {
-      name: t('financial', { fallback: 'Financier' }),
+      name: t('financial', { fallback: 'Financial' }),
       value: "financial",
       icon: TrendingUp,
     },
     {
-      name: t('properties', { fallback: 'Propriétés' }),
+      name: t('properties', { fallback: 'Properties' }),
       value: "properties",
       icon: Building2,
     },
     {
-      name: t('tenants', { fallback: 'Locataires' }),
+      name: t('tenants', { fallback: 'Tenants' }),
       value: "tenants",
       icon: Users,
     },

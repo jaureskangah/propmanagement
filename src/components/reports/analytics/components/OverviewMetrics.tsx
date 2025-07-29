@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building2, Users, TrendingUp, AlertCircle, DollarSign } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { useReportsTranslations } from "@/hooks/useReportsTranslations";
 
 interface OverviewMetricsProps {
   properties: any[];
@@ -11,52 +11,52 @@ interface OverviewMetricsProps {
 }
 
 export const OverviewMetrics = ({ properties, tenants, payments, maintenance }: OverviewMetricsProps) => {
-  const { t } = useLocale();
+  const { t, totalProperties, totalTenants, occupancyRate, totalRevenue, pendingMaintenance } = useReportsTranslations();
 
   // Calculate metrics
-  const totalProperties = properties.length;
-  const totalTenants = tenants.length;
-  const totalRevenue = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
-  const pendingMaintenance = maintenance.filter(item => 
+  const totalPropertiesValue = properties.length;
+  const totalTenantsValue = tenants.length;
+  const totalRevenueValue = payments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
+  const pendingMaintenanceValue = maintenance.filter(item => 
     item.status === 'pending' || item.status === 'Pending'
   ).length;
   
   // Calculate total units across all properties
   const totalUnits = properties.reduce((sum, property) => sum + (property.units || 1), 0);
-  const occupancyRate = totalUnits > 0 ? Math.round((totalTenants / totalUnits) * 100) : 0;
+  const occupancyRateValue = totalUnits > 0 ? Math.round((totalTenantsValue / totalUnits) * 100) : 0;
 
   const metrics = [
     {
-      title: t('totalProperties', { fallback: 'Propriétés Totales' }),
-      value: totalProperties.toString(),
+      title: totalProperties,
+      value: totalPropertiesValue.toString(),
       icon: Building2,
       color: "text-blue-600",
       bgColor: "bg-blue-50 dark:bg-blue-900/20"
     },
     {
-      title: t('totalTenants', { fallback: 'Locataires Totaux' }),
-      value: totalTenants.toString(),
+      title: totalTenants,
+      value: totalTenantsValue.toString(),
       icon: Users,
       color: "text-green-600",
       bgColor: "bg-green-50 dark:bg-green-900/20"
     },
     {
-      title: t('occupancyRate', { fallback: 'Taux d\'Occupation' }),
-      value: `${occupancyRate}%`,
+      title: occupancyRate,
+      value: `${occupancyRateValue}%`,
       icon: TrendingUp,
       color: "text-purple-600",
       bgColor: "bg-purple-50 dark:bg-purple-900/20"
     },
     {
-      title: t('totalRevenue', { fallback: 'Revenus Totaux' }),
-      value: `$${totalRevenue.toLocaleString()}`,
+      title: totalRevenue,
+      value: `$${totalRevenueValue.toLocaleString()}`,
       icon: DollarSign,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50 dark:bg-emerald-900/20"
     },
     {
-      title: t('pendingMaintenance', { fallback: 'Maintenance en Attente' }),
-      value: pendingMaintenance.toString(),
+      title: pendingMaintenance,
+      value: pendingMaintenanceValue.toString(),
       icon: AlertCircle,
       color: "text-orange-600",
       bgColor: "bg-orange-50 dark:bg-orange-900/20"
