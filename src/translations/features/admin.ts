@@ -30,7 +30,16 @@ export const enAdmin = {
   goBack: "Go Back",
   adminPanel: "Admin Panel",
   adminDescription: "Global system management and administrative metrics",
-  adminMode: "Admin Mode"
+  adminMode: "Admin Mode",
+  // Admin navigation translations
+  users: "Users",
+  propertyOwners: "Property Owners",
+  roles: "Roles",
+  systemSettings: "System Settings",
+  globalMetrics: "Global Metrics",
+  // Admin metrics descriptions
+  globalSystemOverview: "Global system overview and statistics",
+  growthTrend: "Growth Trend"
 };
 
 export const frAdmin = {
@@ -64,5 +73,14 @@ export const frAdmin = {
   goBack: "Retour",
   adminPanel: "Panel d'Administration",
   adminDescription: "Gestion globale du système et métriques administrateur",
-  adminMode: "Mode Admin"
+  adminMode: "Mode Admin",
+  // Admin navigation translations
+  users: "Utilisateurs",
+  propertyOwners: "Propriétaires",
+  roles: "Rôles",
+  systemSettings: "Paramètres",
+  globalMetrics: "Métriques Globales",
+  // Admin metrics descriptions
+  globalSystemOverview: "Vue d'ensemble du système et statistiques globales",
+  growthTrend: "Tendance de Croissance"
 };

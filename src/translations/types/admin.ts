@@ -22,4 +22,18 @@ export interface AdminDashboardTranslations {
   share: string;
   overview: string;
   statistics: string;
+  loadingAdmin: string;
+  accessDenied: string;
+  adminRequired: string;
+  goBack: string;
+  adminPanel: string;
+  adminDescription: string;
+  adminMode: string;
+  users: string;
+  propertyOwners: string;
+  roles: string;
+  systemSettings: string;
+  globalMetrics: string;
+  globalSystemOverview: string;
+  growthTrend: string;
 }
