@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import { fr } from 'date-fns/locale';
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -23,11 +24,12 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
-  const { t } = useLocale();
+  const { t, language } = useLocale();
+  const dateLocale = language === 'fr' ? fr : undefined;
 
   useEffect(() => {
     fetchMetrics();
-  }, []);
+  }, [language]); // Refetch when language changes
 
   const fetchMetrics = async () => {
     try {
@@ -41,7 +43,7 @@ export default function AdminDashboard() {
 
       const formattedData = data?.map(metric => ({
         ...metric,
-        metric_date: format(new Date(metric.metric_date), 'dd/MM/yyyy'),
+        metric_date: format(new Date(metric.metric_date), 'd MMM', { locale: dateLocale }),
         total_revenue: Number(metric.total_revenue)
       })) || [];
 
