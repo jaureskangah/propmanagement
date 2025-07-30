@@ -7,6 +7,7 @@ import { enAuth } from './auth';
 import { enLease } from './tenant/en/lease';
 import { enDashboard as enTenantDashboard } from './tenant/en/dashboard';
 import { enToasts } from './toasts';
+import { enAdmin } from './admin';
 
 export const en = {
   ...enCommon,
@@ -15,6 +16,7 @@ export const en = {
   ...enMaintenance,
   ...enAuth,
   ...enToasts,
+  ...enAdmin,
   
   // Lease translations
   ...enLease,
