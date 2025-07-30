@@ -56,5 +56,13 @@ export const frAdmin = {
   export: "Exporter",
   share: "Partager",
   overview: "Aperçu",
-  statistics: "Statistiques"
+  statistics: "Statistiques",
+  // Admin page specific translations
+  loadingAdmin: "Chargement du panel admin...",
+  accessDenied: "Accès refusé",
+  adminRequired: "Vous devez avoir des privilèges administrateur pour accéder à cette page.",
+  goBack: "Retour",
+  adminPanel: "Panel d'Administration",
+  adminDescription: "Gestion globale du système et métriques administrateur",
+  adminMode: "Mode Admin"
 };
