@@ -22,7 +22,15 @@ export const enAdmin = {
   export: "Export",
   share: "Share",
   overview: "Overview",
-  statistics: "Statistics"
+  statistics: "Statistics",
+  // Admin page specific translations
+  loadingAdmin: "Loading admin panel...",
+  accessDenied: "Access Denied",
+  adminRequired: "You must have administrator privileges to access this page.",
+  goBack: "Go Back",
+  adminPanel: "Admin Panel",
+  adminDescription: "Global system management and administrative metrics",
+  adminMode: "Admin Mode"
 };
 
 export const frAdmin = {
