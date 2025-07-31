@@ -50,6 +50,39 @@ export const en = {
   analyticsOverview: "Analytics Overview",
   comprehensiveAnalytics: "Comprehensive analysis of your real estate data",
   
+  // Financial Reports translations
+  financialReports: "Financial Reports",
+  comprehensiveFinancialAnalysis: "Comprehensive financial analysis",
+  financialOverviewByProperty: "Financial Overview by Property",
+  totalExpenses: "Total Expenses",
+  netIncome: "Net Income",
+  roi: "ROI on Expenses",
+  totalRevenueTooltip: "Sum of all rent payments received from tenants over the selected period.",
+  totalExpensesTooltip: "Total amount of maintenance expenses and other costs related to managing your properties.",
+  netIncomeTooltip: "Difference between total revenue and total expenses. Indicates the actual profitability of your properties.",
+  roiTooltip: "Return on investment calculated as (Net Income / Total Expenses) × 100. Measures the efficiency of your expenses.",
+  noPropertiesFound: "No properties found",
+  
+  // Financial Overview translations
+  financialOverview: "Financial Overview",
+  income: "Income",
+  expenses: "Expenses",
+  noIncomeData: "No income data available",
+  noExpenseData: "No expense data available",
+  
+  // Property Selector translations
+  noPropertiesAvailable: "No properties available",
+  selectProperty: "Select property",
+  
+  // Table columns
+  date: "Date",
+  tenant: "Tenant",
+  unitNumber: "Unit Number",
+  amount: "Amount",
+  status: "Status",
+  category: "Category",
+  description: "Description",
+  
   // Supabase Logs translations
   supabaseLogs: "Supabase Logs",
   edgeFunctionsLogs: "Edge Functions Logs",
@@ -68,4 +101,11 @@ export const en = {
   pending: "Pending",
   in_progress: "In Progress",
   completed: "Completed",
+  paid: "Paid",
+  overdue: "Overdue",
+  
+  // Metrics translations
+  occupancyRateDescription: "Current year",
+  yearToDate: "Year to date",
+  totalRentPaid: "Total Rent Paid",
 };

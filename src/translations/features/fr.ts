@@ -67,6 +67,39 @@ export const fr = {
   analyticsOverview: "Vue d'ensemble Analytics",
   comprehensiveAnalytics: "Analyse complète de vos données immobilières",
   
+  // Financial Reports translations
+  financialReports: "Rapports Financiers",
+  comprehensiveFinancialAnalysis: "Analyse financière complète",
+  financialOverviewByProperty: "Vue d'ensemble par propriété",
+  totalExpenses: "Dépenses Totales",
+  netIncome: "Revenu Net",
+  roi: "ROI sur dépenses",
+  totalRevenueTooltip: "Somme de tous les paiements de loyers reçus des locataires sur la période sélectionnée.",
+  totalExpensesTooltip: "Montant total des dépenses de maintenance et autres frais liés à la gestion de vos propriétés.",
+  netIncomeTooltip: "Différence entre les revenus totaux et les dépenses totales. Indique la rentabilité réelle de vos propriétés.",
+  roiTooltip: "Retour sur investissement calculé comme (Revenu Net / Dépenses Totales) × 100. Mesure l'efficacité de vos dépenses.",
+  noPropertiesFound: "Aucune propriété trouvée",
+  
+  // Financial Overview translations
+  financialOverview: "Vue d'ensemble financière",
+  income: "Revenus",
+  expenses: "Dépenses",
+  noIncomeData: "Aucune donnée de revenus disponible",
+  noExpenseData: "Aucune donnée de dépenses disponible",
+  
+  // Property Selector translations
+  noPropertiesAvailable: "Aucune propriété disponible",
+  selectProperty: "Sélectionner une propriété",
+  
+  // Table columns
+  date: "Date",
+  tenant: "Locataire",
+  unitNumber: "Numéro d'unité",
+  amount: "Montant",
+  status: "Statut",
+  category: "Catégorie",
+  description: "Description",
+  
   // Supabase Logs translations
   supabaseLogs: "Logs Supabase",
   edgeFunctionsLogs: "Logs Edge Functions",
@@ -85,4 +118,11 @@ export const fr = {
   pending: "En attente",
   in_progress: "En cours",
   completed: "Terminé",
+  paid: "Payé",
+  overdue: "En retard",
+  
+  // Metrics translations
+  occupancyRateDescription: "Année en cours",
+  yearToDate: "Année en cours",
+  totalRentPaid: "Total des loyers payés",
 };
