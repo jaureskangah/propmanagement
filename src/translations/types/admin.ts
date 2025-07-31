@@ -35,5 +35,7 @@ export interface AdminDashboardTranslations {
   systemSettings: string;
   globalMetrics: string;
   globalSystemOverview: string;
+  systemOverview: string;
+  pendingMaintenance: string;
   growthTrend: string;
 }
