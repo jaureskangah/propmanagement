@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { fr } from 'date-fns/locale';
+import { fr, enUS } from 'date-fns/locale';
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -25,7 +25,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const { t, language } = useLocale();
-  const dateLocale = language === 'fr' ? fr : undefined;
+  const dateLocale = language === 'fr' ? fr : enUS;
 
   useEffect(() => {
     fetchMetrics();
