@@ -163,7 +163,7 @@ export default function AdminDashboard() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <GrowthChart
-              title="userGrowth"
+              title="growthTrend"
               data={metrics}
               lines={[
                 { key: 'total_users', name: 'totalUsers', color: '#8884d8' },
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
               ]}
             />
             <GrowthChart
-              title="revenueGrowth"
+              title="revenueEvolution"
               data={metrics}
               lines={[
                 { key: 'total_revenue', name: 'totalRevenue', color: '#82ca9d' }
