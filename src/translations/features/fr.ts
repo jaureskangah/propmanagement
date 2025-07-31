@@ -62,4 +62,27 @@ export const fr = {
   currentOccupancy: "Occupation Actuelle",
   activeTenants: "Locataires Actifs",
   totalUnits: "Unités Totales",
+  
+  // Analytics translations
+  analyticsOverview: "Vue d'ensemble Analytics",
+  comprehensiveAnalytics: "Analyse complète de vos données immobilières",
+  
+  // Supabase Logs translations
+  supabaseLogs: "Logs Supabase",
+  edgeFunctionsLogs: "Logs Edge Functions",
+  authLogs: "Logs Authentification",
+  databaseLogs: "Logs Base de Données",
+  noLogsAvailable: "Aucun log disponible",
+  metadata: "Métadonnées",
+  
+  // Priority translations
+  urgent: "Urgent",
+  high: "Élevé",
+  medium: "Moyen",
+  low: "Faible",
+  
+  // Status translations
+  pending: "En attente",
+  in_progress: "En cours",
+  completed: "Terminé",
 };

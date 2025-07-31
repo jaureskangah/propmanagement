@@ -45,4 +45,27 @@ export const en = {
   currentOccupancy: "Current Occupancy",
   activeTenants: "Active Tenants",
   totalUnits: "Total Units",
+  
+  // Analytics translations
+  analyticsOverview: "Analytics Overview",
+  comprehensiveAnalytics: "Comprehensive analysis of your real estate data",
+  
+  // Supabase Logs translations
+  supabaseLogs: "Supabase Logs",
+  edgeFunctionsLogs: "Edge Functions Logs",
+  authLogs: "Authentication Logs",
+  databaseLogs: "Database Logs",
+  noLogsAvailable: "No logs available",
+  metadata: "Metadata",
+  
+  // Priority translations
+  urgent: "Urgent",
+  high: "High",
+  medium: "Medium",
+  low: "Low",
+  
+  // Status translations
+  pending: "Pending",
+  in_progress: "In Progress",
+  completed: "Completed",
 };
