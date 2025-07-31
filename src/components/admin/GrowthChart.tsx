@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { AdminChartTooltip } from "./AdminChartTooltip";
 
 interface GrowthChartProps {
   title: string;
@@ -37,16 +38,7 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
             />
             <YAxis tick={{ fontSize: 10 }} stroke="#888" />
             <Tooltip 
-              formatter={tooltipFormatter}
-              contentStyle={{
-                fontSize: '11px',
-                padding: '8px',
-                borderRadius: '8px',
-                boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
-                border: '1px solid rgba(229, 231, 235, 0.5)',
-                backdropFilter: 'blur(8px)',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)'
-              }}
+              content={<AdminChartTooltip />}
               cursor={{ stroke: '#888', strokeDasharray: '3 3', strokeWidth: 1 }}
             />
             {lines.map((line) => (
