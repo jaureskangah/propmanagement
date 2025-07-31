@@ -28,7 +28,7 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" className="stroke-muted/50" />
             <XAxis 
-              dataKey="metric_date" 
+              dataKey="metric_date_formatted" 
               tick={{ fontSize: 10 }}
               angle={-45}
               textAnchor="end"

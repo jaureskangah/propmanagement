@@ -43,7 +43,8 @@ export default function AdminDashboard() {
 
       const formattedData = data?.map(metric => ({
         ...metric,
-        metric_date: format(new Date(metric.metric_date), 'd MMM', { locale: dateLocale }),
+        metric_date: metric.metric_date, // Keep raw date for chart processing
+        metric_date_formatted: format(new Date(metric.metric_date), 'd MMM', { locale: dateLocale }),
         total_revenue: Number(metric.total_revenue)
       })) || [];
 
