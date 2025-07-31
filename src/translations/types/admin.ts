@@ -56,4 +56,16 @@ export interface AdminDashboardTranslations {
   managingRolesFor: string;
   tenant: string;
   owner: string;
+  propertyOwnerManagement: string;
+  managePropertyOwners: string;
+  searchOwners: string;
+  totalOwners: string;
+  contact: string;
+  occupancy: string;
+  revenue: string;
+  viewDetails: string;
+  manageProperties: string;
+  units: string;
+  viewingDetailsFor: string;
+  managingPropertiesFor: string;
 }

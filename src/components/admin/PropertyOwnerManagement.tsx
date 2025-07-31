@@ -126,16 +126,16 @@ export const PropertyOwnerManagement = () => {
 
   const handleViewDetails = (owner: any) => {
     toast({
-      title: "Voir détails",
-      description: `Affichage des détails pour ${owner.first_name} ${owner.last_name}`,
+      title: t('viewDetails', { fallback: 'Voir détails' }),
+      description: `${t('viewingDetailsFor', { fallback: 'Affichage des détails pour' })} ${owner.first_name} ${owner.last_name}`,
     });
     // TODO: Implémenter la navigation vers la page de détails
   };
 
   const handleManageProperties = (owner: any) => {
     toast({
-      title: "Gérer propriétés",
-      description: `Gestion des propriétés de ${owner.first_name} ${owner.last_name}`,
+      title: t('manageProperties', { fallback: 'Gérer propriétés' }),
+      description: `${t('managingPropertiesFor', { fallback: 'Gestion des propriétés de' })} ${owner.first_name} ${owner.last_name}`,
     });
     // TODO: Implémenter la navigation vers la page de gestion des propriétés
   };
@@ -464,7 +464,7 @@ export const PropertyOwnerManagement = () => {
                             <Building2 className="h-4 w-4 text-blue-600" />
                             <span className="font-medium">{stats.totalProperties}</span>
                             <span className="text-sm text-muted-foreground">
-                              ({stats.totalUnits} unités)
+                              ({stats.totalUnits} {t('units', { fallback: 'unités' })})
                             </span>
                           </div>
                         </TableCell>

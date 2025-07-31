@@ -60,7 +60,20 @@ export const enAdmin = {
   editingUser: "Editing user",
   managingRolesFor: "Managing roles for",
   tenant: "Tenant",
-  owner: "Owner"
+  owner: "Owner",
+  // Property owner management translations
+  propertyOwnerManagement: "Property Owner Management",
+  managePropertyOwners: "Manage property owners and their real estate assets",
+  searchOwners: "Search property owners...",
+  totalOwners: "Total Owners",
+  contact: "Contact",
+  occupancy: "Occupancy",
+  revenue: "Revenue",
+  viewDetails: "View Details",
+  manageProperties: "Manage Properties",
+  units: "units",
+  viewingDetailsFor: "Viewing details for",
+  managingPropertiesFor: "Managing properties for"
 };
 
 export const frAdmin = {
@@ -124,5 +137,18 @@ export const frAdmin = {
   editingUser: "Modification de",
   managingRolesFor: "Gestion des rôles pour",
   tenant: "Locataire",
-  owner: "Propriétaire"
+  owner: "Propriétaire",
+  // Property owner management translations
+  propertyOwnerManagement: "Gestion des Propriétaires",
+  managePropertyOwners: "Gérer les propriétaires et leurs biens immobiliers",
+  searchOwners: "Rechercher des propriétaires...",
+  totalOwners: "Propriétaires",
+  contact: "Contact",
+  occupancy: "Occupation",
+  revenue: "Revenus",
+  viewDetails: "Voir détails",
+  manageProperties: "Gérer propriétés",
+  units: "unités",
+  viewingDetailsFor: "Affichage des détails pour",
+  managingPropertiesFor: "Gestion des propriétés de"
 };
