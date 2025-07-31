@@ -297,21 +297,21 @@ export const AdminRoles = () => {
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
                     <HoverCardContent className="w-80" side="top">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold flex items-center gap-2">
-                          <Crown className="h-4 w-4 text-red-600" />
-                          Administrateurs
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                          Les administrateurs ont un accès complet à toutes les fonctionnalités :
-                        </p>
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          <li>• Gestion complète des utilisateurs et rôles</li>
-                          <li>• Accès à toutes les données du système</li>
-                          <li>• Configuration système et paramètres</li>
-                          <li>• Supervision de toutes les activités</li>
-                        </ul>
-                      </div>
+                       <div className="space-y-2">
+                         <h4 className="text-sm font-semibold flex items-center gap-2">
+                           <Crown className="h-4 w-4 text-red-600" />
+                           {t('admins', { fallback: 'Administrateurs' })}
+                         </h4>
+                         <p className="text-sm text-muted-foreground">
+                           {t('adminDescription', { fallback: 'Les administrateurs ont un accès complet à toutes les fonctionnalités :' })}
+                         </p>
+                         <ul className="text-sm text-muted-foreground space-y-1">
+                           <li>• {t('adminPermission1', { fallback: 'Gestion complète des utilisateurs et rôles' })}</li>
+                           <li>• {t('adminPermission2', { fallback: 'Accès à toutes les données du système' })}</li>
+                           <li>• {t('adminPermission3', { fallback: 'Configuration système et paramètres' })}</li>
+                           <li>• {t('adminPermission4', { fallback: 'Supervision de toutes les activités' })}</li>
+                         </ul>
+                       </div>
                     </HoverCardContent>
                   </HoverCard>
                 </div>
@@ -332,21 +332,21 @@ export const AdminRoles = () => {
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
                     <HoverCardContent className="w-80" side="top">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold flex items-center gap-2">
-                          <Settings className="h-4 w-4 text-orange-600" />
-                          Modérateurs
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                          Les modérateurs ont des droits étendus mais limités :
-                        </p>
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          <li>• Gestion des contenus et publications</li>
-                          <li>• Modération des interactions utilisateurs</li>
-                          <li>• Accès aux rapports et statistiques</li>
-                          <li>• Pas d'accès aux paramètres système</li>
-                        </ul>
-                      </div>
+                       <div className="space-y-2">
+                         <h4 className="text-sm font-semibold flex items-center gap-2">
+                           <Settings className="h-4 w-4 text-orange-600" />
+                           {t('moderators', { fallback: 'Modérateurs' })}
+                         </h4>
+                         <p className="text-sm text-muted-foreground">
+                           {t('moderatorDescription', { fallback: 'Les modérateurs ont des droits étendus mais limités :' })}
+                         </p>
+                         <ul className="text-sm text-muted-foreground space-y-1">
+                           <li>• {t('moderatorPermission1', { fallback: 'Gestion des contenus et publications' })}</li>
+                           <li>• {t('moderatorPermission2', { fallback: 'Modération des interactions utilisateurs' })}</li>
+                           <li>• {t('moderatorPermission3', { fallback: 'Accès aux rapports et statistiques' })}</li>
+                           <li>• {t('moderatorPermission4', { fallback: 'Pas d\'accès aux paramètres système' })}</li>
+                         </ul>
+                       </div>
                     </HoverCardContent>
                   </HoverCard>
                 </div>
@@ -367,20 +367,20 @@ export const AdminRoles = () => {
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
                     <HoverCardContent className="w-80" side="top">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold flex items-center gap-2">
-                          <User className="h-4 w-4 text-gray-600" />
-                          Total Utilisateurs
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                          Nombre total d'utilisateurs enregistrés dans le système, incluant :
-                        </p>
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          <li>• Utilisateurs avec rôles (admin, modérateur, utilisateur)</li>
-                          <li>• Utilisateurs sans rôle assigné</li>
-                          <li>• Tous les profils créés</li>
-                        </ul>
-                      </div>
+                       <div className="space-y-2">
+                         <h4 className="text-sm font-semibold flex items-center gap-2">
+                           <User className="h-4 w-4 text-gray-600" />
+                           {t('totalUsers', { fallback: 'Total Utilisateurs' })}
+                         </h4>
+                         <p className="text-sm text-muted-foreground">
+                           {t('totalUsersDescription', { fallback: 'Nombre total d\'utilisateurs enregistrés dans le système, incluant :' })}
+                         </p>
+                         <ul className="text-sm text-muted-foreground space-y-1">
+                           <li>• {t('totalUsersInclude1', { fallback: 'Utilisateurs avec rôles (admin, modérateur, utilisateur)' })}</li>
+                           <li>• {t('totalUsersInclude2', { fallback: 'Utilisateurs sans rôle assigné' })}</li>
+                           <li>• {t('totalUsersInclude3', { fallback: 'Tous les profils créés' })}</li>
+                         </ul>
+                       </div>
                     </HoverCardContent>
                   </HoverCard>
                 </div>
@@ -401,20 +401,20 @@ export const AdminRoles = () => {
                       <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                     </HoverCardTrigger>
                     <HoverCardContent className="w-80" side="top">
-                      <div className="space-y-2">
-                        <h4 className="text-sm font-semibold flex items-center gap-2">
-                          <UserPlus className="h-4 w-4 text-blue-600" />
-                          Utilisateurs sans rôle
-                        </h4>
-                        <p className="text-sm text-muted-foreground">
-                          Utilisateurs enregistrés mais sans rôle spécifique assigné :
-                        </p>
-                        <ul className="text-sm text-muted-foreground space-y-1">
-                          <li>• Accès de base au système uniquement</li>
-                          <li>• Peuvent être assignés à un rôle</li>
-                          <li>• Permissions limitées par défaut</li>
-                        </ul>
-                      </div>
+                       <div className="space-y-2">
+                         <h4 className="text-sm font-semibold flex items-center gap-2">
+                           <UserPlus className="h-4 w-4 text-blue-600" />
+                           {t('noRoleUsers', { fallback: 'Utilisateurs sans rôle' })}
+                         </h4>
+                         <p className="text-sm text-muted-foreground">
+                           {t('noRoleDescription', { fallback: 'Utilisateurs enregistrés mais sans rôle spécifique assigné :' })}
+                         </p>
+                         <ul className="text-sm text-muted-foreground space-y-1">
+                           <li>• {t('noRolePermission1', { fallback: 'Accès de base au système uniquement' })}</li>
+                           <li>• {t('noRolePermission2', { fallback: 'Peuvent être assignés à un rôle' })}</li>
+                           <li>• {t('noRolePermission3', { fallback: 'Permissions limitées par défaut' })}</li>
+                         </ul>
+                       </div>
                     </HoverCardContent>
                   </HoverCard>
                 </div>
