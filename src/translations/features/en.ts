@@ -73,6 +73,21 @@ export const en = {
   occupied: "Occupied",
   occupancy: "Occupancy",
   
+  // Tenant Reports translations
+  tenantReports: "Tenant Reports",
+  detailedTenantAnalysis: "Detailed tenant analysis",
+  leaseExpiryAlerts: "Lease Expiry Alerts",
+  sendReminder: "Send Reminder",
+  noUpcomingLeaseExpiry: "No upcoming lease expiry",
+  rentAmount: "Rent Amount",
+  unit: "Unit",
+  totalPaid: "Total Paid",
+  lastPayment: "Last Payment",
+  expired: "Expired",
+  payments: "payments",
+  unread: "unread",
+  daysRemaining: "days remaining",
+  
   // Property types translations
   apartment: "Apartment",
   house: "House",

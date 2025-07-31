@@ -90,6 +90,21 @@ export const fr = {
   occupied: "Occupé",
   occupancy: "Occupation",
   
+  // Tenant Reports translations
+  tenantReports: "Rapports Locataires",
+  detailedTenantAnalysis: "Analyse détaillée des locataires",
+  leaseExpiryAlerts: "Alertes Fin de Bail",
+  sendReminder: "Envoyer rappel",
+  noUpcomingLeaseExpiry: "Aucune fin de bail prochaine",
+  rentAmount: "Loyer",
+  unit: "Unité",
+  totalPaid: "Total payé",
+  lastPayment: "Dernier paiement",
+  expired: "Expiré",
+  payments: "paiements",
+  unread: "non lu",
+  daysRemaining: "jours restants",
+  
   // Property types translations
   apartment: "Appartement",
   house: "Maison",
