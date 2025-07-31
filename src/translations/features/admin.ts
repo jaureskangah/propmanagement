@@ -39,7 +39,8 @@ export const enAdmin = {
   globalMetrics: "Global Metrics",
   // Admin metrics descriptions
   globalSystemOverview: "Global system overview and statistics",
-  growthTrend: "Growth Trend"
+  growthTrend: "Growth Trend",
+  revenueEvolution: "Revenue Evolution"
 };
 
 export const frAdmin = {
@@ -82,5 +83,6 @@ export const frAdmin = {
   globalMetrics: "Métriques Globales",
   // Admin metrics descriptions
   globalSystemOverview: "Vue d'ensemble du système et statistiques globales",
-  growthTrend: "Tendance de Croissance"
+  growthTrend: "Tendance de Croissance",
+  revenueEvolution: "Évolution des Revenus"
 };

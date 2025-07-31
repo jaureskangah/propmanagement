@@ -55,7 +55,7 @@ export function GrowthChart({ title, data, lines, tooltipFormatter }: GrowthChar
                 type="monotone"
                 dataKey={line.key}
                 stroke={line.color}
-                name={t(line.name)}
+                name={line.name}
                 strokeWidth={1.5}
                 dot={{ r: 2, strokeWidth: 1, stroke: line.color, fill: 'white' }}
                 activeDot={{ r: 4, stroke: line.color, strokeWidth: 1, fill: 'white' }}

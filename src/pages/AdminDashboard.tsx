@@ -166,15 +166,15 @@ export default function AdminDashboard() {
               title="growthTrend"
               data={metrics}
               lines={[
-                { key: 'total_users', name: 'totalUsers', color: '#8884d8' },
-                { key: 'active_users', name: 'activeUsers', color: '#82ca9d' }
+                { key: 'total_users', name: t('totalUsers'), color: '#8884d8' },
+                { key: 'active_users', name: t('activeUsers'), color: '#82ca9d' }
               ]}
             />
             <GrowthChart
               title="revenueEvolution"
               data={metrics}
               lines={[
-                { key: 'total_revenue', name: 'totalRevenue', color: '#82ca9d' }
+                { key: 'total_revenue', name: t('totalRevenue'), color: '#82ca9d' }
               ]}
               tooltipFormatter={(value) => [`$${Number(value).toLocaleString()}`, t('totalRevenue')]}
             />
