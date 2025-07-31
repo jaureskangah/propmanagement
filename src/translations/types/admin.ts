@@ -38,4 +38,22 @@ export interface AdminDashboardTranslations {
   systemOverview: string;
   pendingMaintenance: string;
   growthTrend: string;
+  revenueEvolution: string;
+  userManagement: string;
+  manageSystemUsers: string;
+  addUser: string;
+  searchUsers: string;
+  systemUsers: string;
+  user: string;
+  email: string;
+  role: string;
+  type: string;
+  createdAt: string;
+  actions: string;
+  editUser: string;
+  manageRoles: string;
+  editingUser: string;
+  managingRolesFor: string;
+  tenant: string;
+  owner: string;
 }

@@ -42,7 +42,25 @@ export const enAdmin = {
   systemOverview: "Global system overview and statistics",
   pendingMaintenance: "Pending Maintenance",
   growthTrend: "Growth Trend",
-  revenueEvolution: "Revenue Evolution"
+  revenueEvolution: "Revenue Evolution",
+  // User management translations
+  userManagement: "User Management",
+  manageSystemUsers: "Manage all system users",
+  addUser: "Add User", 
+  searchUsers: "Search users...",
+  systemUsers: "System Users",
+  user: "User",
+  email: "Email",
+  role: "Role",
+  type: "Type",
+  createdAt: "Created At",
+  actions: "Actions",
+  editUser: "Edit User",
+  manageRoles: "Manage Roles",
+  editingUser: "Editing user",
+  managingRolesFor: "Managing roles for",
+  tenant: "Tenant",
+  owner: "Owner"
 };
 
 export const frAdmin = {
@@ -88,5 +106,23 @@ export const frAdmin = {
   systemOverview: "Vue d'ensemble du système et statistiques globales",
   pendingMaintenance: "Maintenance en Attente",
   growthTrend: "Tendance de Croissance",
-  revenueEvolution: "Évolution des Revenus"
+  revenueEvolution: "Évolution des Revenus",
+  // User management translations
+  userManagement: "Gestion des Utilisateurs",
+  manageSystemUsers: "Gérer tous les utilisateurs du système",
+  addUser: "Ajouter Utilisateur",
+  searchUsers: "Rechercher des utilisateurs...",
+  systemUsers: "Utilisateurs du Système",
+  user: "Utilisateur",
+  email: "Email",
+  role: "Rôle",
+  type: "Type",
+  createdAt: "Créé le",
+  actions: "Actions",
+  editUser: "Modifier",
+  manageRoles: "Gérer les rôles",
+  editingUser: "Modification de",
+  managingRolesFor: "Gestion des rôles pour",
+  tenant: "Locataire",
+  owner: "Propriétaire"
 };
