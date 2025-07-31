@@ -105,6 +105,21 @@ export const fr = {
   unread: "non lu",
   daysRemaining: "jours restants",
   
+  // Performance Metrics translations
+  performanceMetrics: "Métriques de Performance",
+  keyPerformanceIndicators: "Indicateurs clés de performance",
+  paymentRate: "Taux de Paiement",
+  maintenanceEfficiency: "Efficacité Maintenance",
+  target: "Objectif",
+  ofTarget: "de l'objectif",
+  occupancyBreakdown: "Répartition de l'Occupation",
+  occupiedUnits: "Unités occupées",
+  vacantUnits: "Unités vacantes",
+  financialPerformance: "Performance Financière",
+  averageRent: "Loyer moyen",
+  onTimePayments: "Paiements à temps",
+  latePayments: "Paiements en retard",
+  
   // Property types translations
   apartment: "Appartement",
   house: "Maison",

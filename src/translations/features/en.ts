@@ -88,6 +88,21 @@ export const en = {
   unread: "unread",
   daysRemaining: "days remaining",
   
+  // Performance Metrics translations
+  performanceMetrics: "Performance Metrics",
+  keyPerformanceIndicators: "Key Performance Indicators",
+  paymentRate: "Payment Rate",
+  maintenanceEfficiency: "Maintenance Efficiency",
+  target: "Target",
+  ofTarget: "of target",
+  occupancyBreakdown: "Occupancy Breakdown",
+  occupiedUnits: "Occupied Units",
+  vacantUnits: "Vacant Units",
+  financialPerformance: "Financial Performance",
+  averageRent: "Average Rent",
+  onTimePayments: "On-time Payments",
+  latePayments: "Late Payments",
+  
   // Property types translations
   apartment: "Apartment",
   house: "House",
