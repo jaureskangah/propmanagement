@@ -63,6 +63,23 @@ export const en = {
   roiTooltip: "Return on investment calculated as (Net Income / Total Expenses) × 100. Measures the efficiency of your expenses.",
   noPropertiesFound: "No properties found",
   
+  // Property Reports translations
+  propertyReports: "Property Reports",
+  detailedPropertyAnalysis: "Detailed analysis by property",
+  propertySummary: "Property Summary",
+  property: "Property",
+  type: "Type",
+  units: "Units",
+  occupied: "Occupied",
+  occupancy: "Occupancy",
+  
+  // Property types translations
+  apartment: "Apartment",
+  house: "House",
+  condo: "Condo",
+  propertyOffice: "Office",
+  commercialspace: "Commercial Space",
+  
   // Financial Overview translations
   financialOverview: "Financial Overview",
   income: "Income",

@@ -80,6 +80,23 @@ export const fr = {
   roiTooltip: "Retour sur investissement calculé comme (Revenu Net / Dépenses Totales) × 100. Mesure l'efficacité de vos dépenses.",
   noPropertiesFound: "Aucune propriété trouvée",
   
+  // Property Reports translations
+  propertyReports: "Rapports par Propriété",
+  detailedPropertyAnalysis: "Analyse détaillée par propriété",
+  propertySummary: "Résumé des Propriétés",
+  property: "Propriété",
+  type: "Type",
+  units: "Unités",
+  occupied: "Occupé",
+  occupancy: "Occupation",
+  
+  // Property types translations
+  apartment: "Appartement",
+  house: "Maison",
+  condo: "Condo",
+  propertyOffice: "Bureau",
+  commercialspace: "Espace Commercial",
+  
   // Financial Overview translations
   financialOverview: "Vue d'ensemble financière",
   income: "Revenus",
