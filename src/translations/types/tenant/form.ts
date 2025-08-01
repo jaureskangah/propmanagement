@@ -28,6 +28,7 @@ export interface TenantFormTranslations {
   saveTenant: string;
   saveChanges: string;
   cancel: string;
+  saving: string;
   required: string;
   optional: string;
   // Lease status and other translations

@@ -90,7 +90,7 @@ export const TenantSearch = ({
             className="text-muted-foreground hover:text-foreground"
           >
             <X className="h-4 w-4 mr-1" />
-            Effacer
+            {t('clearFilters')}
           </Button>
         )}
       </div>
@@ -101,7 +101,7 @@ export const TenantSearch = ({
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium mb-2 block">
-                  Filtrer par propriété
+                  {t('filterByProperty')}
                 </label>
                 <Select
                   value={filters.propertyId || "all"}
@@ -109,10 +109,10 @@ export const TenantSearch = ({
                   disabled={propertiesLoading}
                 >
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Sélectionner une propriété" />
+                    <SelectValue placeholder={t('selectProperty')} />
                   </SelectTrigger>
                   <SelectContent className="bg-popover border shadow-md">
-                    <SelectItem value="all">Toutes les propriétés</SelectItem>
+                    <SelectItem value="all">{t('allProperties')}</SelectItem>
                     {properties?.map((property) => (
                       <SelectItem key={property.id} value={property.id}>
                         {property.name}

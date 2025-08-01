@@ -66,7 +66,19 @@ const translations = {
   uploadNewDocument: "Add New Document",
   // Security disclaimer translations
   securityReminder: "Security Reminder:",
-  securityDisclaimerText: "Never share sensitive information (passwords, credit card numbers, identity documents) through this application. Use secure channels for this type of information."
+  securityDisclaimerText: "Never share sensitive information (passwords, credit card numbers, identity documents) through this application. Use secure channels for this type of information.",
+  
+  // Additional tenant list translations
+  listBack: "Back",
+  listSelectTenant: "Select a tenant to view details",
+  unitLabel: "Unit",
+  propertyNotFound: "Property not found",
+  propertyError: "Error loading property",
+  filters: "Filters",
+  filterByProperty: "Filter by property",
+  allProperties: "All properties",
+  clearFilters: "Clear",
+  saving: "Saving..."
 };
 
 // Debug: Log final des traductions composées

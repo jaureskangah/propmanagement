@@ -30,6 +30,7 @@ export const frForm: TenantFormTranslations = {
   saveTenant: "Enregistrer le locataire",
   saveChanges: "Enregistrer les modifications",
   cancel: "Annuler",
+  saving: "Enregistrement...",
   required: "Requis",
   optional: "Facultatif",
   expired: "Expiré",

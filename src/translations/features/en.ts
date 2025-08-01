@@ -88,6 +88,17 @@ export const en = {
   unread: "unread",
   daysRemaining: "days remaining",
   
+  // Tenant page translations
+  listBack: "Back",
+  listSelectTenant: "Select a tenant to view details",
+  unitLabel: "Unit",
+  propertyNotFound: "Property not found",
+  propertyError: "Error loading property",
+  filters: "Filters",
+  filterByProperty: "Filter by property",
+  allProperties: "All properties",
+  clearFilters: "Clear",
+  
   // Performance Metrics translations
   performanceMetrics: "Performance Metrics",
   keyPerformanceIndicators: "Key Performance Indicators",

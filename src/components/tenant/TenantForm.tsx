@@ -59,7 +59,7 @@ export function TenantForm({ onSubmit, isSubmitting, onCancel, defaultValues }: 
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? (
-              "Enregistrement..."
+              t('saving')
             ) : isEditMode ? (
               t('saveChanges')
             ) : (

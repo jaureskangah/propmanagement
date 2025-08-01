@@ -105,6 +105,17 @@ export const fr = {
   unread: "non lu",
   daysRemaining: "jours restants",
   
+  // Tenant page translations
+  listBack: "Retour",
+  listSelectTenant: "Sélectionnez un locataire pour voir les détails",
+  unitLabel: "Unité",
+  propertyNotFound: "Propriété non trouvée",
+  propertyError: "Erreur lors du chargement de la propriété",
+  filters: "Filtres",
+  filterByProperty: "Filtrer par propriété",
+  allProperties: "Toutes les propriétés",
+  clearFilters: "Effacer",
+  
   // Performance Metrics translations
   performanceMetrics: "Métriques de Performance",
   keyPerformanceIndicators: "Indicateurs clés de performance",

@@ -30,6 +30,7 @@ export const enForm: TenantFormTranslations = {
   saveTenant: "Save Tenant",
   saveChanges: "Save Changes",
   cancel: "Cancel",
+  saving: "Saving...",
   required: "Required",
   optional: "Optional",
   // New translations for lease status and other texts
