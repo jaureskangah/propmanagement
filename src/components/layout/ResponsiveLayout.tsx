@@ -1,5 +1,5 @@
 import { MobileHeader } from './MobileHeader';
-import { useSidebarContext } from '@/contexts/SidebarContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
@@ -8,7 +8,7 @@ interface ResponsiveLayoutProps {
 }
 
 export const ResponsiveLayout = ({ children, title, className = '' }: ResponsiveLayoutProps) => {
-  const { isMobile } = useSidebarContext();
+  const isMobile = useIsMobile();
 
   return (
     <>
