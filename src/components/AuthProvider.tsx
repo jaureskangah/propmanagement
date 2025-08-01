@@ -207,8 +207,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsTenant(false);
       setTenantData(null);
       
-      // Then sign out from Supabase
-      await supabase.auth.signOut();
+      // Clear all local storage keys related to auth
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+          localStorage.removeItem(key);
+        }
+      });
+      
+      // Then sign out from Supabase with global scope
+      await supabase.auth.signOut({ scope: 'global' });
       
       console.log("Sign out successful");
       

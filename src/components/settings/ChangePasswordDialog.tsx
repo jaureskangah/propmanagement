@@ -32,10 +32,38 @@ export function ChangePasswordDialog() {
       return;
     }
 
-    if (formData.newPassword.length < 6) {
+    // Enhanced password validation
+    if (formData.newPassword.length < 8) {
       toast({
         title: t('error'),
-        description: t('passwordTooShort'),
+        description: 'Password must be at least 8 characters',
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!/[A-Z]/.test(formData.newPassword)) {
+      toast({
+        title: t('error'),
+        description: 'Password must contain at least one uppercase letter',
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!/[a-z]/.test(formData.newPassword)) {
+      toast({
+        title: t('error'),
+        description: 'Password must contain at least one lowercase letter',
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!/[0-9]/.test(formData.newPassword)) {
+      toast({
+        title: t('error'),
+        description: 'Password must contain at least one number',
         variant: "destructive"
       });
       return;
