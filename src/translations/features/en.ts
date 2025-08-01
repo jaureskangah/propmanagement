@@ -243,4 +243,13 @@ export const en = {
   delete: "Delete", 
   invite: "Invite",
   noPropertyAssigned: "No property assigned",
+  
+  // Additional tenant list translations
+  tenantsList: "Tenants",
+  tenantsSubtitle: "Manage your tenants", 
+  addTenant: "Add Tenant",
+  noTenants: "No tenants found",
+  noTenantsFiltered: "No tenants match the current filters",
+  tenantCount: "{count} tenants",
+  tenantCountSingular: "1 tenant",
 };

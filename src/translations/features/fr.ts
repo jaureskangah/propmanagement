@@ -260,4 +260,13 @@ export const fr = {
   delete: "Supprimer", 
   invite: "Inviter",
   noPropertyAssigned: "Aucune propriété assignée",
+  
+  // Additional tenant list translations
+  tenantsList: "Locataires",
+  tenantsSubtitle: "Gérer vos locataires", 
+  addTenant: "Ajouter un locataire",
+  noTenants: "Aucun locataire trouvé",
+  noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
+  tenantCount: "{count} locataires",
+  tenantCountSingular: "1 locataire",
 };
