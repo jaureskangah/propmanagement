@@ -42,7 +42,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
               </FormControl>
               <SelectContent>
                 {isLoading ? (
-                  <SelectItem value="" disabled>
+                  <SelectItem value="loading" disabled>
                     Chargement...
                   </SelectItem>
                 ) : properties && properties.length > 0 ? (
@@ -52,7 +52,7 @@ export const PropertyFields = ({ form }: PropertyFieldsProps) => {
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value="" disabled>
+                  <SelectItem value="no-properties" disabled>
                     Aucune propriété disponible
                   </SelectItem>
                 )}
