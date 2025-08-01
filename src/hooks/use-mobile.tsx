@@ -25,3 +25,8 @@ export const useMediaQuery = (query: string): boolean => {
 export const useIsMobile = (): boolean => {
   return useMediaQuery("(max-width: 768px)");
 };
+
+// Hook for detecting devices that need hamburger menu (mobile + tablet)
+export const useNeedsHamburgerMenu = (): boolean => {
+  return useMediaQuery("(max-width: 1024px)");
+};

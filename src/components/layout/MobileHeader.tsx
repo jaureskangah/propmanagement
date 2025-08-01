@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useIsMobile, useNeedsHamburgerMenu } from '@/hooks/use-mobile';
 import { useSidebarContext } from '@/contexts/SidebarContext';
 
 interface MobileHeaderProps {
@@ -10,6 +10,7 @@ interface MobileHeaderProps {
 
 export const MobileHeader = ({ title, className = '' }: MobileHeaderProps) => {
   const isMobile = useIsMobile();
+  const needsHamburgerMenu = useNeedsHamburgerMenu();
   
   // Utilisation conditionnelle du contexte seulement si on est dans un SidebarProvider
   let setIsMobileOpen: ((open: boolean) => void) | undefined;
@@ -22,10 +23,10 @@ export const MobileHeader = ({ title, className = '' }: MobileHeaderProps) => {
     console.log("MobileHeader: No SidebarProvider found, header will be display-only");
   }
 
-  if (!isMobile) return null;
+  if (!needsHamburgerMenu) return null;
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b h-14 flex items-center px-4 md:hidden ${className}`}>
+    <header className={`fixed top-0 left-0 right-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b h-14 flex items-center px-4 lg:hidden ${className}`}>
       {setIsMobileOpen && (
         <Button
           variant="ghost"
