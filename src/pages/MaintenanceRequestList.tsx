@@ -6,7 +6,6 @@ import { MaintenanceRequestDialog } from '@/components/maintenance/request/Maint
 import { MaintenanceRequest } from '@/components/maintenance/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocale } from '@/components/providers/LocaleProvider';
-import AppSidebar from '@/components/AppSidebar';
 import { useAuth } from '@/components/AuthProvider';
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
@@ -69,9 +68,7 @@ const MaintenanceRequestList = () => {
   };
 
   return (
-    <>
-      <AppSidebar isTenant={isTenantUser} />
-      <ResponsiveLayout title={t('maintenanceRequests')} className="p-3 sm:p-6 md:p-8">
+    <ResponsiveLayout title={t('maintenanceRequests')} className="p-3 sm:p-6 md:p-8" isTenant={isTenantUser}>
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>{t('maintenanceRequests')}</CardTitle>
@@ -103,8 +100,7 @@ const MaintenanceRequestList = () => {
             open={dialogOpen}
           />
         )}
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

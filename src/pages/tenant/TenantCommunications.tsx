@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AppSidebar from "@/components/AppSidebar";
 import { useTenantCommunications } from "@/hooks/tenant/useTenantCommunications";
 import { TenantCommunicationsContent } from "@/components/tenant/communications/TenantCommunicationsContent";
 import { UnlinkedTenantMessage } from "@/components/tenant/communications/UnlinkedTenantMessage";
@@ -63,9 +62,7 @@ const TenantCommunications = () => {
   const noOpFunction = () => {};
 
   return (
-    <>
-      <AppSidebar isTenant={true} />
-      <ResponsiveLayout title={t('communications')} className="p-3 sm:p-4 md:p-6">
+    <ResponsiveLayout title={t('communications')} className="p-3 sm:p-4 md:p-6" isTenant={true}>
         <div className="space-y-6">
           {isLoading ? (
             <div className="flex flex-col justify-center items-center h-64">
@@ -98,8 +95,7 @@ const TenantCommunications = () => {
             />
           )}
         </div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

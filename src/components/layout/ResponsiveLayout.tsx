@@ -1,17 +1,25 @@
 import { MobileHeader } from './MobileHeader';
 import { useIsMobile } from '@/hooks/use-mobile';
+import AppSidebar from '@/components/AppSidebar';
+import { useAuth } from '@/components/AuthProvider';
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
   title?: string;
   className?: string;
+  isTenant?: boolean;
 }
 
-export const ResponsiveLayout = ({ children, title, className = '' }: ResponsiveLayoutProps) => {
+export const ResponsiveLayout = ({ children, title, className = '', isTenant }: ResponsiveLayoutProps) => {
   const isMobile = useIsMobile();
+  const { user } = useAuth();
+  
+  // Determine if user is tenant from props or user metadata
+  const isUserTenant = isTenant ?? user?.user_metadata?.is_tenant_user;
 
   return (
     <>
+      <AppSidebar isTenant={isUserTenant} />
       <MobileHeader title={title} />
       <main className={`
         ${isMobile ? 'pt-14' : 'ml-20 pt-16 md:pt-8'} 

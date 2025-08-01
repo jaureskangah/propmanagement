@@ -1,5 +1,4 @@
 
-import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from "@/components/AuthProvider";
 import { TenantInfoCard } from "@/components/tenant/profile/TenantInfoCard";
 import { UnlinkedTenantProfile } from "@/components/tenant/profile/UnlinkedTenantProfile";
@@ -52,9 +51,7 @@ const TenantProfile = () => {
   };
 
   return (
-    <>
-      <AppSidebar isTenant={true} />
-      <ResponsiveLayout title={t('profile')} className="p-6">
+    <ResponsiveLayout title={t('profile')} className="p-6" isTenant={true}>
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -85,8 +82,7 @@ const TenantProfile = () => {
             onProfileLinked={handleProfileLinked}
           />
         )}
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

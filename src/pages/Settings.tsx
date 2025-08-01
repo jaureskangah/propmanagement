@@ -2,7 +2,7 @@
 import React from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Navigate } from "react-router-dom";
-import AppSidebar from "@/components/AppSidebar";
+
 import { motion } from "framer-motion";
 import SettingsPageHeader from "@/components/settings/SettingsPageHeader";
 import { ProfileSection } from "@/components/settings/ProfileSection";
@@ -40,9 +40,7 @@ const Settings = () => {
   }
 
   return (
-    <>
-      <AppSidebar isTenant={isTenantUser} />
-      <ResponsiveLayout title={t('settings')} className="p-6 md:p-8">
+    <ResponsiveLayout title={t('settings')} className="p-6 md:p-8" isTenant={isTenantUser}>
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -116,8 +114,7 @@ const Settings = () => {
             </motion.div>
           )}
         </motion.div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

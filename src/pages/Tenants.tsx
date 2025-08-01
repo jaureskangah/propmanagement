@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useTenantPage } from "@/hooks/useTenantPage";
 import { useIsMobile } from "@/hooks/use-mobile";
-import AppSidebar from "@/components/AppSidebar";
+
 import { TenantLayout } from "@/components/tenant/TenantLayout";
 import { TenantModals } from "@/components/tenant/TenantModals";
 import { TenantsHeader } from "@/components/tenant/TenantsHeader";
@@ -48,7 +48,6 @@ const Tenants = () => {
 
   return (
     <TooltipProvider>
-      <AppSidebar />
       <ResponsiveLayout title={t('tenants')} className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}

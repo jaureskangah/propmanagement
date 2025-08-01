@@ -1,6 +1,5 @@
 
 import React from "react";
-import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from "@/components/AuthProvider";
 import { SimplifiedMaintenanceContainer } from "@/components/maintenance/SimplifiedMaintenanceContainer";
 import { TenantUserContainer } from "@/components/maintenance/TenantUserContainer";
@@ -15,16 +14,13 @@ const Maintenance = () => {
   const isMobile = useIsMobile();
   
   return (
-    <>
-      <AppSidebar isTenant={isTenantUser} />
-      <ResponsiveLayout title={t('maintenance')} className="p-4 md:p-6">
-        {isTenantUser ? (
-          <TenantUserContainer />
-        ) : (
-          <SimplifiedMaintenanceContainer />
-        )}
-      </ResponsiveLayout>
-    </>
+    <ResponsiveLayout title={t('maintenance')} className="p-4 md:p-6" isTenant={isTenantUser}>
+      {isTenantUser ? (
+        <TenantUserContainer />
+      ) : (
+        <SimplifiedMaintenanceContainer />
+      )}
+    </ResponsiveLayout>
   );
 };
 

@@ -1,7 +1,6 @@
 
 import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-import AppSidebar from "@/components/AppSidebar";
 import { SimplifiedDashboardHeader } from "@/components/dashboard/SimplifiedDashboardHeader";
 import { SimplifiedDashboardContainer } from "@/components/dashboard/SimplifiedDashboardContainer";
 import { useAuth } from '@/components/AuthProvider';
@@ -97,24 +96,19 @@ const Dashboard = () => {
   // Only property owners should reach this point
   console.log("✅ Rendering owner dashboard for property owner");
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <ResponsiveLayout title={t('dashboard')}>
-        <div className="p-6 md:p-8">
-          <SimplifiedDashboardHeader 
-            title={t('dashboard')}
-            onDateRangeChange={handleDateRangeChange}
-          />
-          <SimplifiedDashboardContainer 
-            dateRange={dateRange}
-            propertiesData={propertiesData}
-            maintenanceData={maintenanceData}
-            tenantsData={tenantsData}
-            paymentsData={paymentsData}
-          />
-        </div>
-      </ResponsiveLayout>
-    </div>
+    <ResponsiveLayout title={t('dashboard')} className="p-6 md:p-8">
+      <SimplifiedDashboardHeader 
+        title={t('dashboard')}
+        onDateRangeChange={handleDateRangeChange}
+      />
+      <SimplifiedDashboardContainer 
+        dateRange={dateRange}
+        propertiesData={propertiesData}
+        maintenanceData={maintenanceData}
+        tenantsData={tenantsData}
+        paymentsData={paymentsData}
+      />
+    </ResponsiveLayout>
   );
 };
 

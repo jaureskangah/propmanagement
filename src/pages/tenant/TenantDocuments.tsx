@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import AppSidebar from "@/components/AppSidebar";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
 import { DocumentGenerator } from "@/components/tenant/documents/DocumentGenerator";
@@ -13,9 +12,7 @@ const TenantDocuments = () => {
   const isMobile = useIsMobile();
 
   return (
-    <>
-      <AppSidebar isTenant={true} />
-      <ResponsiveLayout title={t('documentGenerator.documentGenerator')} className="p-4 md:p-6">
+    <ResponsiveLayout title={t('documentGenerator.documentGenerator')} className="p-4 md:p-6" isTenant={true}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -43,8 +40,7 @@ const TenantDocuments = () => {
             <DocumentGenerator />
           </div>
         </motion.div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

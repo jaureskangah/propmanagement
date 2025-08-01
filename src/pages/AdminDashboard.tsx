@@ -5,7 +5,7 @@ import { fr, enUS } from 'date-fns/locale';
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import AppSidebar from "@/components/AppSidebar";
+
 import { MetricsGrid } from "@/components/admin/MetricsGrid";
 import { GrowthChart } from "@/components/admin/GrowthChart";
 import { AdminHeader } from "@/components/admin/AdminHeader";
@@ -150,9 +150,7 @@ export default function AdminDashboard() {
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <>
-      <AppSidebar />
-      <ResponsiveLayout title={t('adminDashboard')}>
+    <ResponsiveLayout title={t('adminDashboard')}>
         <div className="container mx-auto px-4 py-6 sm:px-6">
           <AdminHeader onDownload={handleDownload} onShare={handleShare} />
           
@@ -182,7 +180,6 @@ export default function AdminDashboard() {
             />
           </div>
         </div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 }

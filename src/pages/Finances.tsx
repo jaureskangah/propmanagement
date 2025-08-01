@@ -1,7 +1,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import AppSidebar from "@/components/AppSidebar";
+
 import { useFinancesFilters } from "@/hooks/useFinancesFilters";
 import { useOptimizedFinancialData } from "@/hooks/useOptimizedFinancialData";
 import { FinancesHeader } from "@/components/finances/FinancesHeader";
@@ -23,9 +23,7 @@ const Finances = () => {
   const { properties, isLoadingProperties } = useOptimizedFinancialData(selectedPropertyId);
   
   return (
-    <>
-      <AppSidebar />
-      <ResponsiveLayout title={t('finances')} className="p-6 md:p-8">
+    <ResponsiveLayout title={t('finances')} className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -59,8 +57,7 @@ const Finances = () => {
             </div>
           </div>
         </motion.div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

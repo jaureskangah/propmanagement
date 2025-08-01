@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AppSidebar from "@/components/AppSidebar";
+
 import { motion } from "framer-motion";
 import { useProperties } from "@/hooks/useProperties";
 import { usePropertyActions } from "@/hooks/usePropertyActions";
@@ -139,9 +139,7 @@ const Properties = () => {
   }, []);
 
   return (
-    <>
-      <AppSidebar isTenant={isTenant} />
-      <ResponsiveLayout title={t('properties')} className="p-6 md:p-8">
+    <ResponsiveLayout title={t('properties')} className="p-6 md:p-8" isTenant={isTenant}>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -290,8 +288,7 @@ const Properties = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

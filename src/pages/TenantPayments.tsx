@@ -1,5 +1,4 @@
 
-import AppSidebar from "@/components/AppSidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/AuthProvider";
 import { useState, useEffect } from "react";
@@ -103,9 +102,7 @@ const TenantPayments = () => {
   };
 
   return (
-    <>
-      <AppSidebar isTenant={true} />
-      <ResponsiveLayout title={t('payments')} className="p-6">
+    <ResponsiveLayout title={t('payments')} className="p-6" isTenant={true}>
         <Card>
           <CardHeader>
             <CardTitle>Mes paiements</CardTitle>
@@ -146,8 +143,7 @@ const TenantPayments = () => {
             )}
           </CardContent>
         </Card>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

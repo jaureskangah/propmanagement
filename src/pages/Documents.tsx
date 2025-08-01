@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import AppSidebar from "@/components/AppSidebar";
+
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DocumentGenerator } from "@/components/tenant/documents/DocumentGenerator";
 import { motion } from "framer-motion";
@@ -16,9 +16,7 @@ const Documents = () => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <AppSidebar />
-      <ResponsiveLayout title={t('documentGenerator.documentGenerator')} className="p-4 md:p-6">
+    <ResponsiveLayout title={t('documentGenerator.documentGenerator')} className="p-4 md:p-6">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -56,8 +54,7 @@ const Documents = () => {
             </div>
           </motion.div>
         </div>
-      </ResponsiveLayout>
-    </div>
+    </ResponsiveLayout>
   );
 };
 

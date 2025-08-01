@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { TenantMaintenanceView } from "@/components/tenant/maintenance/TenantMaintenanceView";
-import AppSidebar from "@/components/AppSidebar";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/components/AuthProvider";
@@ -84,14 +83,11 @@ const TenantMaintenance = () => {
   }
 
   return (
-    <>
-      <AppSidebar isTenant={true} />
-      <ResponsiveLayout title={t('maintenance')} className="p-3 sm:p-4 md:p-6">
+    <ResponsiveLayout title={t('maintenance')} className="p-3 sm:p-4 md:p-6" isTenant={true}>
         <div className="space-y-6">
           <TenantMaintenanceView />
         </div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

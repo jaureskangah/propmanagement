@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import AppSidebar from "@/components/AppSidebar";
 import { TenantDashboard } from "@/components/tenant/TenantDashboard";
 import { useAuth } from '@/components/AuthProvider';
 import { motion } from "framer-motion";
@@ -46,9 +45,7 @@ const TenantDashboardPage = () => {
 
   console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
-    <>
-      <AppSidebar isTenant={true} />
-      <ResponsiveLayout title={t('dashboard')}>
+    <ResponsiveLayout title={t('dashboard')} isTenant={true}>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -57,8 +54,7 @@ const TenantDashboardPage = () => {
         >
           <TenantDashboard />
         </motion.div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

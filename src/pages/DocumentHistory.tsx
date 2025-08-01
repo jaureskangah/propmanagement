@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import AppSidebar from "@/components/AppSidebar";
+
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { DocumentHistory } from "@/components/documents/history/DocumentHistory";
 import { motion } from "framer-motion";
@@ -16,9 +16,7 @@ const DocumentHistoryPage = () => {
   const isMobile = useIsMobile();
 
   return (
-    <>
-      <AppSidebar />
-      <ResponsiveLayout title={t('documentGenerator.documentHistory')} className="p-4 md:p-6">
+    <ResponsiveLayout title={t('documentGenerator.documentHistory')} className="p-4 md:p-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -54,8 +52,7 @@ const DocumentHistoryPage = () => {
             <DocumentHistory />
           </div>
         </motion.div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 

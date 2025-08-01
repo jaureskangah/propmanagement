@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from "react";
-import AppSidebar from "@/components/AppSidebar";
+
 import { InvitationsHeader } from "@/components/invitations/InvitationsHeader";
 import { InvitationFilters } from "@/components/invitations/InvitationFilters";
 import { InvitationsList } from "@/components/invitations/InvitationsList";
@@ -37,9 +37,7 @@ const Invitations = () => {
   }, [invitations]);
 
   return (
-    <>
-      <AppSidebar />
-      <ResponsiveLayout title={t('invitations')} className="p-6 md:p-8">
+    <ResponsiveLayout title={t('invitations')} className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -67,8 +65,7 @@ const Invitations = () => {
             />
           </InvitationFilters>
         </motion.div>
-      </ResponsiveLayout>
-    </>
+    </ResponsiveLayout>
   );
 };
 
