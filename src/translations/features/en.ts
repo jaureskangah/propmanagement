@@ -201,4 +201,5 @@ export const en = {
   maintenanceTasks: "Tasks",
   maintenanceVendors: "Vendors",
   maintenanceExpenses: "Expenses",
+  manageAllMaintenanceActivities: "Manage all your maintenance activities from one place",
 };

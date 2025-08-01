@@ -18,7 +18,7 @@ export const MaintenanceContainerHeader = () => {
           </h1>
         </div>
         <p className="text-muted-foreground mt-2">
-          Gérez toutes vos activités de maintenance depuis un seul endroit
+          {t('manageAllMaintenanceActivities')}
         </p>
       </div>
     </div>

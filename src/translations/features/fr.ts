@@ -218,4 +218,5 @@ export const fr = {
   maintenanceTasks: "Tâches",
   maintenanceVendors: "Prestataires",
   maintenanceExpenses: "Dépenses",
+  manageAllMaintenanceActivities: "Gérez toutes vos activités de maintenance depuis un seul endroit",
 };
