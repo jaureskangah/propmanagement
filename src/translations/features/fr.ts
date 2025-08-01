@@ -196,4 +196,7 @@ export const fr = {
   loading: "Chargement...",
   viewOtherRequests: "Voir {count} autre{s} demande{s}",
   viewMoreRequests: "Voir plus de demandes",
+  
+  // Maintenance Vendors Section translations
+  manageVendorsAndInterventions: "Gérez vos prestataires et leurs interventions",
 };

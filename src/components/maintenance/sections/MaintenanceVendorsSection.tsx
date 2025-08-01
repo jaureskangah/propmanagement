@@ -12,7 +12,7 @@ export const MaintenanceVendorsSection = () => {
       <div>
         <h2 className="text-2xl font-semibold">{t('vendors')}</h2>
         <p className="text-muted-foreground">
-          Gérez vos prestataires et leurs interventions
+          {t('manageVendorsAndInterventions')}
         </p>
       </div>
 

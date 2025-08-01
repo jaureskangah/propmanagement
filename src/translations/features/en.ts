@@ -179,4 +179,7 @@ export const en = {
   loading: "Loading...",
   viewOtherRequests: "View {count} other request{s}",
   viewMoreRequests: "View more requests",
+  
+  // Maintenance Vendors Section translations
+  manageVendorsAndInterventions: "Manage your vendors and their interventions",
 };
