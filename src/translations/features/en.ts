@@ -234,4 +234,7 @@ export const en = {
   cancelAction: "Cancel",
   resendAction: "Resend",
   sending: "Sending...",
+  
+  // Additional maintenance translations
+  loadingProperties: "Loading properties...",
 };

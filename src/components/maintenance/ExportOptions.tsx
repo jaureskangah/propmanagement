@@ -7,12 +7,14 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from "date-fns";
 import { Task } from "./types";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface ExportOptionsProps {
   tasks: Task[];
 }
 
 export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
+  const { t } = useLocale();
   const handleExcelExport = () => {
     console.log("Exporting to Excel...");
     const workbook = XLSX.utils.book_new();
@@ -59,7 +61,7 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
         className="flex items-center gap-2"
       >
         <FileSpreadsheet className="h-4 w-4" />
-        Export Excel
+        {t('exportExcel')}
       </Button>
       <Button
         variant="outline"
@@ -67,7 +69,7 @@ export const ExportOptions = ({ tasks }: ExportOptionsProps) => {
         className="flex items-center gap-2"
       >
         <FileText className="h-4 w-4" />
-        Export PDF
+        {t('exportPDF')}
       </Button>
     </div>
   );

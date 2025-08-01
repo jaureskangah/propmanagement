@@ -179,7 +179,7 @@ export const MaintenancePageContainer = () => {
     return (
       <div className="space-y-6 font-sans">
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Chargement des propriétés...</p>
+          <p className="text-muted-foreground">{t('loadingProperties')}</p>
         </div>
       </div>
     );

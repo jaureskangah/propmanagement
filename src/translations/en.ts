@@ -78,7 +78,10 @@ const translations = {
   filterByProperty: "Filter by property",
   allProperties: "All properties",
   clearFilters: "Clear",
-  saving: "Saving..."
+  saving: "Saving...",
+  
+  // Additional maintenance translations
+  loadingProperties: "Loading properties...",
 };
 
 // Debug: Log final des traductions composées

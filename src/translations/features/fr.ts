@@ -251,4 +251,7 @@ export const fr = {
   cancelAction: "Annuler",
   resendAction: "Renvoyer",
   sending: "Envoi...",
+  
+  // Additional maintenance translations
+  loadingProperties: "Chargement des propriétés...",
 };
