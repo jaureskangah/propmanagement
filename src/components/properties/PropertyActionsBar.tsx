@@ -36,7 +36,7 @@ const PropertyActionsBar = ({
         {selectedCount > 0 ? (
           <>
             <Badge variant="secondary" className="font-medium">
-              {selectedCount} {selectedCount === 1 ? 'propriété sélectionnée' : 'propriétés sélectionnées'}
+              {selectedCount} {selectedCount === 1 ? t('propertySelected') : t('propertiesSelected')}
             </Badge>
             <Button
               size="sm"
@@ -45,7 +45,7 @@ const PropertyActionsBar = ({
               className="h-8"
             >
               <Trash2 className="h-4 w-4 mr-1" />
-              Supprimer
+              {t('deleteSelected')}
             </Button>
             <Button
               size="sm"
@@ -53,7 +53,7 @@ const PropertyActionsBar = ({
               onClick={onClearSelection}
               className="h-8"
             >
-              Désélectionner
+              {t('unselectAll')}
             </Button>
           </>
         ) : (
@@ -63,7 +63,7 @@ const PropertyActionsBar = ({
             onClick={onSelectAll}
             className="h-8"
           >
-            Tout sélectionner
+            {t('selectAll')}
           </Button>
         )}
       </div>

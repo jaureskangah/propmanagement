@@ -113,6 +113,13 @@ const translations = {
   occupation: "Occupation",
   createdAt: "Created",
   actions: "Actions",
+  selectAll: "Select All",
+  
+  // Property actions bar
+  propertySelected: "property selected",
+  propertiesSelected: "properties selected",
+  deleteSelected: "Delete",
+  unselectAll: "Unselect",
 };
 
 // Debug: Log final des traductions composées
