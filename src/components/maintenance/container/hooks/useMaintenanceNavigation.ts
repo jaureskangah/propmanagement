@@ -1,8 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { BarChart3, AlertCircle, CheckSquare, Users, DollarSign } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const useMaintenanceNavigation = (getCountForTab: (tab: string) => number | undefined) => {
+  const { t } = useLocale();
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem('maintenanceActiveTab') || 'overview';
   });
@@ -24,31 +26,31 @@ export const useMaintenanceNavigation = (getCountForTab: (tab: string) => number
 
   const navItems = [
     { 
-      name: "Vue d'ensemble", 
+      name: t('maintenanceOverview'), 
       value: "overview", 
       icon: BarChart3,
       count: getCountForTab('overview')
     },
     { 
-      name: "Demandes", 
+      name: t('maintenanceRequests'), 
       value: "requests", 
       icon: AlertCircle,
       count: getCountForTab('requests')
     },
     { 
-      name: "Tâches", 
+      name: t('maintenanceTasks'), 
       value: "tasks", 
       icon: CheckSquare,
       count: getCountForTab('tasks')
     },
     { 
-      name: "Prestataires", 
+      name: t('maintenanceVendors'), 
       value: "vendors", 
       icon: Users,
       count: getCountForTab('vendors')
     },
     { 
-      name: "Dépenses", 
+      name: t('maintenanceExpenses'), 
       value: "finances", 
       icon: DollarSign,
       count: getCountForTab('finances')

@@ -194,4 +194,11 @@ export const en = {
   averageMonthlyExpenses: "Average Monthly Expenses",
   thisMonth: "This Month",
   pleaseSelectProperty: "Please select a property",
+  
+  // Maintenance Navigation translations
+  maintenanceOverview: "Overview",
+  maintenanceRequests: "Requests", 
+  maintenanceTasks: "Tasks",
+  maintenanceVendors: "Vendors",
+  maintenanceExpenses: "Expenses",
 };

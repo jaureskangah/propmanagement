@@ -211,4 +211,11 @@ export const fr = {
   averageMonthlyExpenses: "Dépenses mensuelles moyennes",
   thisMonth: "Ce mois",
   pleaseSelectProperty: "Veuillez sélectionner une propriété",
+  
+  // Maintenance Navigation translations
+  maintenanceOverview: "Vue d'ensemble",
+  maintenanceRequests: "Demandes", 
+  maintenanceTasks: "Tâches",
+  maintenanceVendors: "Prestataires",
+  maintenanceExpenses: "Dépenses",
 };
