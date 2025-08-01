@@ -6,8 +6,11 @@ import { InvitationFilters } from "@/components/invitations/InvitationFilters";
 import { InvitationsList } from "@/components/invitations/InvitationsList";
 import { useInvitationManagement } from "@/hooks/invitations/useInvitationManagement";
 import { motion } from "framer-motion";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const Invitations = () => {
+  const { t } = useLocale();
   const [activeTab, setActiveTab] = useState('all');
   
   const {
@@ -34,9 +37,9 @@ const Invitations = () => {
   }, [invitations]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <AppSidebar />
-      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
+      <ResponsiveLayout title={t('invitations')} className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -64,8 +67,8 @@ const Invitations = () => {
             />
           </InvitationFilters>
         </motion.div>
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

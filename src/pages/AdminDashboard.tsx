@@ -9,6 +9,7 @@ import AppSidebar from "@/components/AppSidebar";
 import { MetricsGrid } from "@/components/admin/MetricsGrid";
 import { GrowthChart } from "@/components/admin/GrowthChart";
 import { AdminHeader } from "@/components/admin/AdminHeader";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 interface AdminMetrics {
   total_users: number;
@@ -149,9 +150,9 @@ export default function AdminDashboard() {
   if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
-    <div className="min-h-screen flex">
+    <>
       <AppSidebar />
-      <div className="flex-1">
+      <ResponsiveLayout title={t('adminDashboard')}>
         <div className="container mx-auto px-4 py-6 sm:px-6">
           <AdminHeader onDownload={handleDownload} onShare={handleShare} />
           
@@ -181,7 +182,7 @@ export default function AdminDashboard() {
             />
           </div>
         </div>
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 }
