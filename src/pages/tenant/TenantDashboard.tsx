@@ -5,9 +5,13 @@ import AppSidebar from "@/components/AppSidebar";
 import { TenantDashboard } from "@/components/tenant/TenantDashboard";
 import { useAuth } from '@/components/AuthProvider';
 import { motion } from "framer-motion";
+import { SidebarProvider } from '@/contexts/SidebarContext';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 const TenantDashboardPage = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
+  const { t } = useLocale();
 
   React.useEffect(() => {
     console.log("=== TENANT DASHBOARD ===");
@@ -42,19 +46,21 @@ const TenantDashboardPage = () => {
 
   console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar isTenant={true} />
-      <main className="ml-20 pt-16 md:pt-8 transition-all duration-300">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="pb-8"
-        >
-          <TenantDashboard />
-        </motion.div>
-      </main>
-    </div>
+    <SidebarProvider>
+      <div className="min-h-screen bg-background">
+        <AppSidebar isTenant={true} />
+        <ResponsiveLayout title={t('dashboard')}>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="pb-8"
+          >
+            <TenantDashboard />
+          </motion.div>
+        </ResponsiveLayout>
+      </div>
+    </SidebarProvider>
   );
 };
 

@@ -18,6 +18,8 @@ import {
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
 import { useAdminRole } from "@/hooks/useAdminRole";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { useSidebarContext } from "@/contexts/SidebarContext";
 import "./modernSidebar.css";
 
 export interface ModernSidebarProps {
@@ -29,6 +31,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const navigate = useNavigate();
   const { t } = useLocale();
   const { isAdmin } = useAdminRole();
+  const { isMobileOpen, setIsMobileOpen, isMobile } = useSidebarContext();
   
   // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {
@@ -91,7 +94,8 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
     }
   };
 
-  return (
+  // Desktop sidebar component
+  const DesktopSidebar = () => (
     <aside className="modern-sidebar">
       {/* Logo Section */}
       <div className="modern-sidebar-logo" onClick={handleLogoClick}>
@@ -143,6 +147,67 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
         </button>
       </div>
     </aside>
+  );
+
+  // Mobile sidebar component
+  const MobileSidebar = () => (
+    <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
+      <SheetContent side="left" className="w-[85vw] sm:w-[350px] p-0 pt-0" data-mobile-sidebar>
+        <div className="flex flex-col h-full">
+          {/* Logo Section */}
+          <div className="p-6 border-b">
+            <div className="flex items-center gap-3" onClick={handleLogoClick}>
+              <Building2 className="h-8 w-8 text-[#ea384c]" />
+              <span className="font-bold text-lg">PropManagement</span>
+            </div>
+          </div>
+
+          {/* Navigation Links */}
+          <nav className="flex-1 space-y-2 px-4 py-6">
+            {links.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  onClick={() => setIsMobileOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
+                    "hover:bg-muted",
+                    isActive(link.to, 'section' in link ? link.section : undefined) 
+                      ? "bg-primary text-primary-foreground" 
+                      : "text-muted-foreground"
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                  <span>{link.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Support Button */}
+          <div className="p-4 border-t">
+            <button 
+              className="flex items-center gap-3 px-3 py-2 rounded-lg transition-colors hover:bg-muted text-muted-foreground w-full text-left"
+              onClick={() => {
+                handleSupportClick();
+                setIsMobileOpen(false);
+              }}
+            >
+              <HelpCircle className="h-4 w-4" />
+              <span>{String(t('getSupport') || 'Get Support')}</span>
+            </button>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+
+  return (
+    <>
+      {isMobile ? <MobileSidebar /> : <DesktopSidebar />}
+    </>
   );
 };
 
