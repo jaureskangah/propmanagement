@@ -179,4 +179,14 @@ export const fr = {
   occupancyRateDescription: "Année en cours",
   yearToDate: "Année en cours",
   totalRentPaid: "Total des loyers payés",
+  
+  // Maintenance Overview translations
+  loadingData: "Chargement des données...",
+  totalRequestsDescription: "Total des demandes",
+  pendingRequestsDescription: "En cours de traitement",
+  resolvedRequestsDescription: "Demandes résolues",
+  maintenanceRequestsTrends: "Tendances des demandes de maintenance",
+  maintenanceExpensesTrends: "Tendances des dépenses de maintenance",
+  errorLoadingData: "Erreur lors du chargement des données",
+  retry: "Réessayer",
 };

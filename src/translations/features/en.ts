@@ -162,4 +162,14 @@ export const en = {
   occupancyRateDescription: "Current year",
   yearToDate: "Year to date",
   totalRentPaid: "Total Rent Paid",
+  
+  // Maintenance Overview translations
+  loadingData: "Loading data...",
+  totalRequestsDescription: "Total requests",
+  pendingRequestsDescription: "Being processed",
+  resolvedRequestsDescription: "Resolved requests",
+  maintenanceRequestsTrends: "Maintenance Requests Trends",
+  maintenanceExpensesTrends: "Maintenance Expenses Trends",
+  errorLoadingData: "Error loading data",
+  retry: "Retry",
 };

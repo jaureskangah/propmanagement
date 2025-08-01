@@ -4,8 +4,10 @@ import { MaintenanceMetricsSection } from "../metrics/MaintenanceMetricsSection"
 import { MaintenanceCharts } from "../charts/MaintenanceCharts";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const MaintenanceOverview = () => {
+  const { t } = useLocale();
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("");
   const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
   const [isLoadingProperty, setIsLoadingProperty] = useState(true);
@@ -89,7 +91,7 @@ export const MaintenanceOverview = () => {
     return (
       <div className="space-y-6">
         <div className="text-center py-8">
-          <p className="text-muted-foreground">Chargement des données...</p>
+          <p className="text-muted-foreground">{t('loadingData')}</p>
         </div>
       </div>
     );

@@ -31,21 +31,21 @@ export const ModernMaintenanceMetrics = ({
     {
       title: t('totalRequests'),
       value: isLoading ? "..." : total.toString(),
-      description: "Total des demandes",
+      description: t('totalRequestsDescription'),
       icon: <ClipboardList className="h-5 w-5" />,
       chartColor: "#3B82F6", // Blue
     },
     {
       title: t('pendingRequests'),
       value: isLoading ? "..." : pending.toString(),
-      description: "En cours de traitement",
+      description: t('pendingRequestsDescription'),
       icon: <Clock className="h-5 w-5" />,
       chartColor: "#F59E0B", // Amber
     },
     {
       title: t('resolvedRequests'),
       value: isLoading ? "..." : resolved.toString(),
-      description: "Demandes résolues",
+      description: t('resolvedRequestsDescription'),
       icon: <CheckCircle className="h-5 w-5" />,
       chartColor: "#22C55E", // Green
     },
