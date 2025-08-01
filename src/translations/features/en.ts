@@ -182,4 +182,16 @@ export const en = {
   
   // Maintenance Vendors Section translations
   manageVendorsAndInterventions: "Manage your vendors and their interventions",
+  
+  // Maintenance Finances Section translations
+  financesTitle: "Expenses",
+  trackAndManageExpenses: "Track and manage all your maintenance expenses",
+  propertySelectionRequired: "Property selection required",
+  selectPropertyToManageExpenses: "Please select a property to manage expenses",
+  selectPropertyPlaceholder: "Select a property",
+  noPropertiesFoundMessage: "No properties found. Add a property first to manage expenses.",
+  selectPropertyToViewExpenses: "Select a property to view and manage expenses.",
+  averageMonthlyExpenses: "Average Monthly Expenses",
+  thisMonth: "This Month",
+  pleaseSelectProperty: "Please select a property",
 };

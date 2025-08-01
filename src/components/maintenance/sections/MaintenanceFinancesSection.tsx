@@ -4,8 +4,10 @@ import { SimplifiedExpensesView } from "../financials/SimplifiedExpensesView";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 export const MaintenanceFinancesSection = () => {
+  const { t } = useLocale();
   const [currentPropertyId, setCurrentPropertyId] = useState<string>("");
   const { toast } = useToast();
 
@@ -49,8 +51,8 @@ export const MaintenanceFinancesSection = () => {
     } else if (properties.length > 1 && !savedPropertyId) {
       // Plusieurs propriétés mais aucune sélectionnée
       toast({
-        title: "Sélection de propriété requise",
-        description: "Veuillez sélectionner une propriété pour gérer les dépenses",
+        title: t('propertySelectionRequired'),
+        description: t('selectPropertyToManageExpenses'),
         variant: "default",
       });
     }
@@ -70,9 +72,9 @@ export const MaintenanceFinancesSection = () => {
       {/* Section Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-semibold">Dépenses</h2>
+          <h2 className="text-2xl font-semibold">{t('financesTitle')}</h2>
           <p className="text-muted-foreground">
-            Suivez et gérez toutes vos dépenses de maintenance
+            {t('trackAndManageExpenses')}
           </p>
         </div>
         <div className="flex items-center space-x-4">
@@ -83,7 +85,7 @@ export const MaintenanceFinancesSection = () => {
               onChange={(e) => handlePropertySelect(e.target.value)}
               className="px-3 py-2 border rounded-md text-sm"
             >
-              <option value="">Sélectionner une propriété</option>
+              <option value="">{t('selectPropertyPlaceholder')}</option>
               {properties.map((property) => (
                 <option key={property.id} value={property.id}>
                   {property.name}
@@ -98,7 +100,7 @@ export const MaintenanceFinancesSection = () => {
       {properties.length === 0 && (
         <div className="text-center p-6 bg-muted/50 rounded-lg">
           <p className="text-muted-foreground">
-            Aucune propriété trouvée. Ajoutez d'abord une propriété pour gérer les dépenses.
+            {t('noPropertiesFoundMessage')}
           </p>
         </div>
       )}
@@ -106,7 +108,7 @@ export const MaintenanceFinancesSection = () => {
       {properties.length > 0 && !currentPropertyId && (
         <div className="text-center p-6 bg-muted/50 rounded-lg">
           <p className="text-muted-foreground">
-            Sélectionnez une propriété pour voir et gérer les dépenses.
+            {t('selectPropertyToViewExpenses')}
           </p>
         </div>
       )}
