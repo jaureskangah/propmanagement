@@ -6,6 +6,7 @@ import AppSidebar from "@/components/AppSidebar";
 import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ReportsContainer } from "@/components/reports/ReportsContainer";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const Reports = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
@@ -33,10 +34,10 @@ const Reports = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <AppSidebar />
-      <div className="ml-0 md:ml-20 p-3 sm:p-6 md:p-8 pt-16 sm:pt-20 md:pt-8 transition-all duration-300 ease-in-out">
-        <div className="max-w-7xl mx-auto">
+      <ResponsiveLayout title={t('advancedReports', { fallback: 'Advanced Reports' })}>
+        <div className="max-w-7xl mx-auto p-3 sm:p-6 md:p-8">
           <div className="mb-6 sm:mb-8 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
               <div className="space-y-1">
@@ -57,8 +58,8 @@ const Reports = () => {
             <ReportsContainer />
           </div>
         </div>
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

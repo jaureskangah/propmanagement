@@ -14,8 +14,11 @@ import { TenantUserCard } from "@/components/settings/TenantUserCard";
 import { useProfileData } from "@/hooks/useProfileData";
 import { useNotificationPreferences } from "@/hooks/useNotificationPreferences";
 import { useThemeSettings } from "@/hooks/useThemeSettings";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const Settings = () => {
+  const { t } = useLocale();
   const { user, isAuthenticated, loading } = useAuth();
   const { profile, isLoading: profileLoading, updateProfile, refetch } = useProfileData();
   const { updatePreference, isLoading: preferencesLoading } = useNotificationPreferences(profile);
@@ -37,9 +40,9 @@ const Settings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <AppSidebar isTenant={isTenantUser} />
-      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
+      <ResponsiveLayout title={t('settings')} className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,8 +116,8 @@ const Settings = () => {
             </motion.div>
           )}
         </motion.div>
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

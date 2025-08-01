@@ -18,6 +18,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import PropertyDetailView from "@/components/properties/PropertyDetailView";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const Properties = () => {
   const { t } = useLocale();
@@ -138,9 +139,9 @@ const Properties = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <AppSidebar isTenant={isTenant} />
-      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
+      <ResponsiveLayout title={t('properties')} className="p-6 md:p-8">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -289,8 +290,8 @@ const Properties = () => {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 
