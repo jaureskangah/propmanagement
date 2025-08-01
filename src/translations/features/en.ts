@@ -103,6 +103,13 @@ export const en = {
   onTimePayments: "On-time Payments",
   latePayments: "Late Payments",
   
+  // Export Options translations
+  exportExcel: "Export Excel",
+  exportPDF: "Export PDF",
+  shareByEmail: "Share by Email",
+  shareReport: "Share Report",
+  recipientEmail: "Recipient Email",
+  
   // Property types translations
   apartment: "Apartment",
   house: "House",
