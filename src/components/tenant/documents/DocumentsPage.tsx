@@ -91,49 +91,49 @@ const DocumentsPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <>
       <AppSidebar isTenant={true} />
       <ResponsiveLayout title="Documents" className="p-4 md:p-6">
         <div 
           ref={containerRef} 
           className="w-full"
         >
-        <div className="container mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="space-y-6 max-w-[1200px] mx-auto"
-          >
-            <DocumentsHeader 
-              tenant={tenant} 
-              onDocumentUpdate={handleDocumentUpdate}
-            />
-            
-            <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
-              <DocumentsTabs
-                documents={documents}
-                filteredDocuments={filteredDocuments}
-                isLoading={isLoading}
-                tenant={tenant}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                selectedDocType={selectedDocType}
-                setSelectedDocType={setSelectedDocType}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-                sortBy={sortBy}
-                setSortBy={setSortBy}
-                sortOrder={sortOrder}
-                setSortOrder={setSortOrder}
-                onViewDocument={handleViewDocument}
-                onDeleteDocument={handleDeleteDocument}
+          <div className="container mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="space-y-6 max-w-[1200px] mx-auto"
+            >
+              <DocumentsHeader 
+                tenant={tenant} 
                 onDocumentUpdate={handleDocumentUpdate}
-                error={error}
               />
-            </div>
-          </motion.div>
-        </div>
+              
+              <div className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 sm:p-6 shadow-sm">
+                <DocumentsTabs
+                  documents={documents}
+                  filteredDocuments={filteredDocuments}
+                  isLoading={isLoading}
+                  tenant={tenant}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                  selectedDocType={selectedDocType}
+                  setSelectedDocType={setSelectedDocType}
+                  selectedCategory={selectedCategory}
+                  setSelectedCategory={setSelectedCategory}
+                  sortBy={sortBy}
+                  setSortBy={setSortBy}
+                  sortOrder={sortOrder}
+                  setSortOrder={setSortOrder}
+                  onViewDocument={handleViewDocument}
+                  onDeleteDocument={handleDeleteDocument}
+                  onDocumentUpdate={handleDocumentUpdate}
+                  error={error}
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
         
         <DocumentViewerDialog 
@@ -142,7 +142,7 @@ const DocumentsPage = () => {
           onOpenChange={setViewerOpen}
         />
       </ResponsiveLayout>
-    </div>
+    </>
   );
 };
 
