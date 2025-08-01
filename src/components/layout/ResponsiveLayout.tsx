@@ -1,6 +1,7 @@
 import { MobileHeader } from './MobileHeader';
 import { useIsMobile } from '@/hooks/use-mobile';
-import AppSidebar from '@/components/AppSidebar';
+import ModernSidebar from '@/components/sidebar/ModernSidebar';
+import { SidebarProvider } from '@/contexts/SidebarContext';
 import { useAuth } from '@/components/AuthProvider';
 
 interface ResponsiveLayoutProps {
@@ -18,8 +19,8 @@ export const ResponsiveLayout = ({ children, title, className = '', isTenant }: 
   const isUserTenant = isTenant ?? user?.user_metadata?.is_tenant_user;
 
   return (
-    <>
-      <AppSidebar isTenant={isUserTenant} />
+    <SidebarProvider>
+      <ModernSidebar isTenant={isUserTenant} />
       <MobileHeader title={title} />
       <main className={`
         ${isMobile ? 'pt-14' : 'ml-20 pt-16 md:pt-8'} 
@@ -28,6 +29,6 @@ export const ResponsiveLayout = ({ children, title, className = '', isTenant }: 
       `}>
         {children}
       </main>
-    </>
+    </SidebarProvider>
   );
 };
