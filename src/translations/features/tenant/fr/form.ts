@@ -58,4 +58,8 @@ export const frForm: TenantFormTranslations = {
   formLeaseEndFormLabel: "Date de fin",
   formRentLabel: "Loyer mensuel",
   formRentPlaceholder: "Entrez le montant du loyer mensuel",
+  // Property field specific texts
+  loading: "Chargement...",
+  noPropertiesAvailable: "Aucune propriété disponible",
+  month: "mois",
 };

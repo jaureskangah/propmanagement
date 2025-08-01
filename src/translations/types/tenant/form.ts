@@ -57,4 +57,8 @@ export interface TenantFormTranslations {
   formLeaseEndFormLabel: string;
   formRentLabel: string;
   formRentPlaceholder: string;
+  // Property field specific texts
+  loading: string;
+  noPropertiesAvailable: string;
+  month: string;
 }

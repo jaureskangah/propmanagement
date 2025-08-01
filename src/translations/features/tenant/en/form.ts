@@ -59,4 +59,8 @@ export const enForm: TenantFormTranslations = {
   formLeaseEndFormLabel: "End Date",
   formRentLabel: "Monthly Rent",
   formRentPlaceholder: "Enter monthly rent amount",
+  // Property field specific texts
+  loading: "Loading...",
+  noPropertiesAvailable: "No properties available",
+  month: "month",
 };
