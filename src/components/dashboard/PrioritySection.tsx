@@ -90,8 +90,8 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
   }, [tasks]);
 
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <Card>
+    <div className="grid gap-4 md:grid-cols-2 mobile-priority-grid">
+      <Card className="mobile-priority-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <AlertOctagon className="h-5 w-5 text-red-500" />
@@ -99,7 +99,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-[300px] pr-4">
+          <ScrollArea className="h-[300px] pr-4 mobile-scroll-area">
             {urgentMaintenance.length === 0 ? (
               <p className="text-muted-foreground text-center py-8">
                 {t('noUrgentTasks')}
@@ -121,7 +121,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                         <p className="text-sm text-muted-foreground mt-1 dark:text-gray-300">
                           {task.description || t('urgentMaintenanceRequest')}
                         </p>
-                        <div className="flex flex-wrap gap-2 mt-2">
+                        <div className="flex flex-wrap gap-2 mt-2 mobile-badge-spacing">
                           {propertyName && (
                             <Badge variant="success" className="text-xs flex items-center gap-1">
                               {propertyName}
@@ -163,7 +163,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="mobile-priority-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg">
             <CalendarIcon className="h-5 w-5 text-blue-500" />
@@ -171,7 +171,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-[300px] pr-4">
+          <ScrollArea className="h-[300px] pr-4 mobile-scroll-area">
             {isLoading ? (
               <p className="text-muted-foreground text-center py-8">
                 {t('loading')}
@@ -190,7 +190,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                     <Calendar className="h-5 w-5 text-blue-500 mt-0.5" />
                     <div className="flex-1">
                       <h4 className="font-medium dark:text-white">{task.title}</h4>
-                      <div className="flex gap-2 mt-2 flex-wrap">
+                      <div className="flex gap-2 mt-2 flex-wrap mobile-badge-spacing">
                         <Badge variant="outline" className="text-xs dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
                           {format(new Date(task.date), 'dd MMM yyyy', { locale: dateLocale })}
                         </Badge>

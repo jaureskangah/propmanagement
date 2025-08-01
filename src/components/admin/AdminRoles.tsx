@@ -434,7 +434,7 @@ export const AdminRoles = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 mobile-admin-actions mobile-form-spacing">
             <div className="flex-1">
               <Select value={selectedUserId} onValueChange={setSelectedUserId}>
                 <SelectTrigger>

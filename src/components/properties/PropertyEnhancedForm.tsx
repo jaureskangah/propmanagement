@@ -143,8 +143,8 @@ export function PropertyEnhancedForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 mobile-form-spacing">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 form-grid mobile-property-form">
           {/* Nom de la propriété */}
           <FormField
             control={form.control}
@@ -216,11 +216,11 @@ export function PropertyEnhancedForm({
                 )}
               </FormLabel>
               <FormControl>
-                <Input 
-                  placeholder={t('enterAddress')} 
-                  {...field}
-                  className="transition-all duration-200"
-                />
+                   <Input 
+                    placeholder={t('enterAddress')} 
+                    {...field}
+                    className="transition-all duration-200 mobile-touch-target"
+                  />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -235,14 +235,14 @@ export function PropertyEnhancedForm({
             <FormItem>
               <FormLabel>{t('propertyUnits')}</FormLabel>
               <FormControl>
-                <Input 
-                  type="number" 
-                  min="0"
-                  max="1000"
-                  {...field}
-                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
-                  className="transition-all duration-200"
-                />
+                 <Input 
+                   type="number" 
+                   min="0"
+                   max="1000"
+                   {...field}
+                   onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                   className="transition-all duration-200 mobile-touch-target mobile-select-large"
+                 />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -257,15 +257,15 @@ export function PropertyEnhancedForm({
             <FormItem>
               <FormLabel>{t('monthlyRent')}</FormLabel>
               <FormControl>
-                <Input 
-                  type="number" 
-                  min="0"
-                  step="0.01"
-                  {...field}
-                  onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                  className="transition-all duration-200"
-                  placeholder="0.00"
-                />
+                 <Input 
+                   type="number" 
+                   min="0"
+                   step="0.01"
+                   {...field}
+                   onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                   className="transition-all duration-200 mobile-touch-target mobile-select-large"
+                   placeholder="0.00"
+                 />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -282,12 +282,12 @@ export function PropertyEnhancedForm({
               <FormControl>
                 <div className="space-y-4">
                   {!watchedImage ? (
-                    <div
-                      className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
-                        dragActive 
-                          ? 'border-primary bg-primary/5' 
-                          : 'border-muted-foreground/25 hover:border-primary/50'
-                      }`}
+                     <div
+                       className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 upload-area mobile-touch-target ${
+                         dragActive 
+                           ? 'border-primary bg-primary/5' 
+                           : 'border-muted-foreground/25 hover:border-primary/50'
+                       }`}
                       onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
                       onDragLeave={() => setDragActive(false)}
                       onDrop={handleDrop}

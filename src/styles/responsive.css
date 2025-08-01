@@ -111,9 +111,68 @@
       z-index: 100;
     }
     
-    .tooltip-btn:focus::before {
+    .tooltip-btn:focus::before,
+    .tooltip-btn:active::before {
       opacity: 1;
       visibility: visible;
+    }
+
+    /* Optimisations pour les tableaux sur mobile */
+    .mobile-table-responsive {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .mobile-table-responsive table {
+      min-width: 100% !important;
+      font-size: 0.875rem !important;
+    }
+
+    .mobile-table-responsive th,
+    .mobile-table-responsive td {
+      padding: 0.5rem !important;
+      min-width: 100px !important;
+    }
+
+    /* Cards avec touch friendly */
+    .mobile-card-responsive {
+      padding: 1rem !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .mobile-card-responsive .card-actions {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+    }
+
+    .mobile-card-responsive .card-actions > * {
+      width: 100% !important;
+    }
+
+    /* Optimisation des formulaires */
+    .mobile-form-spacing {
+      gap: 1rem !important;
+    }
+
+    .mobile-form-spacing .form-field {
+      margin-bottom: 1rem !important;
+    }
+
+    /* Amélioration des sélecteurs */
+    .mobile-select-large {
+      min-height: 48px !important;
+      font-size: 1rem !important;
+    }
+
+    /* Badges et tags plus visibles */
+    .mobile-badge-spacing {
+      gap: 0.375rem !important;
+      flex-wrap: wrap !important;
+    }
+
+    .mobile-badge-spacing .badge {
+      font-size: 0.75rem !important;
+      padding: 0.25rem 0.5rem !important;
     }
     
     /* Styles pour les modals sur mobile */
@@ -150,6 +209,75 @@
     
     .rdp-head_cell {
       font-size: 0.75rem !important;
+    }
+
+    /* Optimisations spécifiques pour les composants existants */
+    
+    /* PropertyEnhancedForm améliorations */
+    .mobile-property-form {
+      padding: 1rem !important;
+    }
+
+    .mobile-property-form .form-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+
+    .mobile-property-form .upload-area {
+      min-height: 120px !important;
+      padding: 1rem !important;
+    }
+
+    /* Dashboard metrics améliorations */
+    .mobile-metrics-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0.75rem !important;
+    }
+
+    .mobile-metric-card {
+      padding: 0.75rem !important;
+    }
+
+    .mobile-metric-card .metric-value {
+      font-size: 1.25rem !important;
+    }
+
+    .mobile-metric-card .metric-label {
+      font-size: 0.75rem !important;
+    }
+
+    /* Admin panels améliorations */
+    .mobile-admin-header {
+      padding: 1rem !important;
+      text-align: center !important;
+    }
+
+    .mobile-admin-actions {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+      width: 100% !important;
+    }
+
+    .mobile-admin-actions button {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+
+    /* Scroll areas sur mobile */
+    .mobile-scroll-area {
+      max-height: 60vh !important;
+      padding-right: 0.5rem !important;
+    }
+
+    /* Priority section améliorations */
+    .mobile-priority-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1rem !important;
+    }
+
+    .mobile-priority-card {
+      height: auto !important;
+      max-height: 400px !important;
     }
   }
 }
