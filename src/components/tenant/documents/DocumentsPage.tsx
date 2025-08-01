@@ -10,6 +10,7 @@ import { DocumentViewerDialog } from "./DocumentViewerDialog";
 import { useDocumentState } from "./hooks/useDocumentState";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
 
 const DocumentsPage = () => {
   const { user } = useAuth();
@@ -92,10 +93,11 @@ const DocumentsPage = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar isTenant={true} />
-      <div 
-        ref={containerRef} 
-        className="flex-1 overflow-auto ml-20 p-4 md:p-6 pt-24 md:pt-8 transition-all duration-300"
-      >
+      <ResponsiveLayout title="Documents" className="p-4 md:p-6">
+        <div 
+          ref={containerRef} 
+          className="w-full"
+        >
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -132,13 +134,14 @@ const DocumentsPage = () => {
             </div>
           </motion.div>
         </div>
+        </div>
         
         <DocumentViewerDialog 
           document={selectedDocument}
           open={viewerOpen}
           onOpenChange={setViewerOpen}
         />
-      </div>
+      </ResponsiveLayout>
     </div>
   );
 };
