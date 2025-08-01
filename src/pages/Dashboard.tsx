@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const Dashboard = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
@@ -98,19 +99,21 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="ml-20 p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
-        <SimplifiedDashboardHeader 
-          title={t('dashboard')}
-          onDateRangeChange={handleDateRangeChange}
-        />
-        <SimplifiedDashboardContainer 
-          dateRange={dateRange}
-          propertiesData={propertiesData}
-          maintenanceData={maintenanceData}
-          tenantsData={tenantsData}
-          paymentsData={paymentsData}
-        />
-      </div>
+      <ResponsiveLayout title={t('dashboard')}>
+        <div className="p-6 md:p-8">
+          <SimplifiedDashboardHeader 
+            title={t('dashboard')}
+            onDateRangeChange={handleDateRangeChange}
+          />
+          <SimplifiedDashboardContainer 
+            dateRange={dateRange}
+            propertiesData={propertiesData}
+            maintenanceData={maintenanceData}
+            tenantsData={tenantsData}
+            paymentsData={paymentsData}
+          />
+        </div>
+      </ResponsiveLayout>
     </div>
   );
 };

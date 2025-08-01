@@ -46,21 +46,19 @@ const TenantDashboardPage = () => {
 
   console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
-    <SidebarProvider>
-      <div className="min-h-screen bg-background">
-        <AppSidebar isTenant={true} />
-        <ResponsiveLayout title={t('dashboard')}>
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="pb-8"
-          >
-            <TenantDashboard />
-          </motion.div>
-        </ResponsiveLayout>
-      </div>
-    </SidebarProvider>
+    <div className="min-h-screen bg-background">
+      <AppSidebar isTenant={true} />
+      <ResponsiveLayout title={t('dashboard')}>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="pb-8"
+        >
+          <TenantDashboard />
+        </motion.div>
+      </ResponsiveLayout>
+    </div>
   );
 };
 
