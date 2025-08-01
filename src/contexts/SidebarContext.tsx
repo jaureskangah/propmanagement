@@ -30,7 +30,7 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
   // Simple mobile detection
   useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
+      const mobile = window.innerWidth < 1024; // Changé de 768 à 1024 pour inclure les tablettes
       console.log("📱 Mobile check:", { width: window.innerWidth, isMobile: mobile });
       setIsMobile(mobile);
     };
