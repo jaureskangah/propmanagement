@@ -28,12 +28,13 @@ export function FormatToolbar({
   const [cols, setCols] = useState(2);
 
   return (
-    <div className="flex flex-wrap gap-1 p-2 mb-2 border rounded-md bg-muted/30">
+    <div className="toolbar-grid md:flex md:flex-wrap gap-1 p-2 mb-2 border rounded-md bg-muted/30 mobile-tabs-scroll overflow-x-auto">
       <Button
         variant="ghost"
         size="sm"
         onClick={() => onInsertFormat("**text**")}
         title={t('bold') || "Gras"}
+        className="mobile-touch-target flex-shrink-0"
       >
         <Bold className="h-4 w-4" />
       </Button>
@@ -43,6 +44,7 @@ export function FormatToolbar({
         size="sm"
         onClick={() => onInsertFormat("*text*")}
         title={t('italic') || "Italique"}
+        className="mobile-touch-target flex-shrink-0"
       >
         <Italic className="h-4 w-4" />
       </Button>
@@ -52,13 +54,14 @@ export function FormatToolbar({
         size="sm"
         onClick={() => onInsertFormat("\n- Item 1\n- Item 2\n- Item 3")}
         title={t('bulletList') || "Liste à puces"}
+        className="mobile-touch-target flex-shrink-0"
       >
         <List className="h-4 w-4" />
       </Button>
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" title={t('insertImage') || "Insérer une image"}>
+          <Button variant="ghost" size="sm" title={t('insertImage') || "Insérer une image"} className="mobile-touch-target flex-shrink-0">
             <Image className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
@@ -87,7 +90,7 @@ export function FormatToolbar({
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="ghost" size="sm" title={t('insertTable') || "Insérer un tableau"}>
+          <Button variant="ghost" size="sm" title={t('insertTable') || "Insérer un tableau"} className="mobile-touch-target flex-shrink-0">
             <Table className="h-4 w-4" />
           </Button>
         </PopoverTrigger>
@@ -133,6 +136,7 @@ export function FormatToolbar({
         size="sm"
         onClick={onInsertSignature}
         title={t('addSignature') || "Ajouter une signature"}
+        className="mobile-touch-target flex-shrink-0"
       >
         <Signature className="h-4 w-4" />
       </Button>
