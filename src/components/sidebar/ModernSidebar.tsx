@@ -31,7 +31,10 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const navigate = useNavigate();
   const { t } = useLocale();
   const { isAdmin } = useAdminRole();
+  
+  console.log("🔍 ModernSidebar: About to use useSidebarContext");
   const { isMobileOpen, setIsMobileOpen, isMobile } = useSidebarContext();
+  console.log("✅ ModernSidebar: Successfully got sidebar context", { isMobile, isMobileOpen });
   
   // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {

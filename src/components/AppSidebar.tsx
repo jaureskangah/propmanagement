@@ -7,6 +7,8 @@ interface AppSidebarProps {
 }
 
 const AppSidebar = ({ isTenant = false }: AppSidebarProps) => {
+  console.log("🔍 AppSidebar: Rendering with SidebarProvider", { isTenant });
+  
   return (
     <SidebarProvider>
       <ModernSidebar isTenant={isTenant} />

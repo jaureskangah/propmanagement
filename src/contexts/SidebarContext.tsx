@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SidebarContextType {
   isMobileOpen: boolean;
@@ -12,6 +11,7 @@ const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 export const useSidebarContext = () => {
   const context = useContext(SidebarContext);
   if (!context) {
+    console.error("❌ useSidebarContext must be used within a SidebarProvider");
     throw new Error('useSidebarContext must be used within a SidebarProvider');
   }
   return context;
@@ -22,8 +22,23 @@ interface SidebarProviderProps {
 }
 
 export const SidebarProvider = ({ children }: SidebarProviderProps) => {
+  console.log("🔍 SidebarProvider: Initializing");
+  
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const isMobile = useIsMobile();
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Simple mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth < 768;
+      console.log("📱 Mobile check:", { width: window.innerWidth, isMobile: mobile });
+      setIsMobile(mobile);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Close mobile sidebar when switching to desktop
   useEffect(() => {
@@ -32,23 +47,7 @@ export const SidebarProvider = ({ children }: SidebarProviderProps) => {
     }
   }, [isMobile]);
 
-  // Close mobile sidebar when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (isMobile && isMobileOpen) {
-        const sidebar = document.querySelector('[data-mobile-sidebar]');
-        const trigger = document.querySelector('[data-mobile-trigger]');
-        
-        if (sidebar && !sidebar.contains(event.target as Node) && 
-            trigger && !trigger.contains(event.target as Node)) {
-          setIsMobileOpen(false);
-        }
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isMobile, isMobileOpen]);
+  console.log("🔍 SidebarProvider: Providing context", { isMobile, isMobileOpen });
 
   return (
     <SidebarContext.Provider value={{ isMobileOpen, setIsMobileOpen, isMobile }}>
