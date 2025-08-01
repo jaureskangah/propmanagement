@@ -6,6 +6,7 @@ import { useLocale } from '@/components/providers/LocaleProvider';
 import { Shield } from 'lucide-react';
 import AppSidebar from '@/components/AppSidebar';
 import { AdminContainer } from '@/components/admin/AdminContainer';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const Admin = () => {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -33,7 +34,7 @@ const Admin = () => {
     return (
       <div className="min-h-screen bg-background">
         <AppSidebar />
-        <div className="ml-0 md:ml-20 p-4 sm:p-6 flex items-center justify-center min-h-screen">
+        <ResponsiveLayout title={t('accessDenied', { fallback: 'Accès refusé' })} className="flex items-center justify-center min-h-screen">
           <div className="text-center space-y-6 max-w-md mx-auto animate-fade-in">
             <div className="animate-scale-in">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-destructive/10 flex items-center justify-center">
@@ -55,7 +56,7 @@ const Admin = () => {
               </button>
             </div>
           </div>
-        </div>
+        </ResponsiveLayout>
       </div>
     );
   }
@@ -63,7 +64,7 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppSidebar />
-      <div className="ml-0 md:ml-20 p-3 sm:p-6 md:p-8 pt-16 sm:pt-20 md:pt-8 transition-all duration-300 ease-in-out">
+      <ResponsiveLayout title={t('adminPanel', { fallback: 'Panel d\'Administration' })} className="p-3 sm:p-6 md:p-8">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 sm:mb-8 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
@@ -85,7 +86,7 @@ const Admin = () => {
             <AdminContainer />
           </div>
         </div>
-      </div>
+      </ResponsiveLayout>
     </div>
   );
 };
