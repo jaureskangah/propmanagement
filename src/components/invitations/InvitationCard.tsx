@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Mail, RefreshCw, X, CheckCircle2, Clock, AlertCircle } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 type Invitation = {
   id: string;
@@ -37,6 +38,7 @@ export const InvitationCard = ({
   onCancel, 
   isResending 
 }: InvitationCardProps) => {
+  const { t } = useLocale();
   const isExpired = (invitation: Invitation) => {
     return new Date(invitation.expires_at) < new Date();
   };
@@ -79,16 +81,16 @@ export const InvitationCard = ({
 
   const getStatusBadge = (invitation: Invitation) => {
     if (isExpired(invitation) && invitation.status === 'pending') {
-      return <Badge variant="outline" className="bg-gray-100 text-gray-700">Expirée</Badge>;
+      return <Badge variant="outline" className="bg-gray-100 text-gray-700">{t('expiredInvitations')}</Badge>;
     }
     
     switch (invitation.status) {
       case 'pending':
-        return <Badge variant="outline" className="bg-blue-100 text-blue-700">En attente</Badge>;
+        return <Badge variant="outline" className="bg-blue-100 text-blue-700">{t('pendingInvitations')}</Badge>;
       case 'accepted':
-        return <Badge variant="outline" className="bg-green-100 text-green-700">Acceptée</Badge>;
+        return <Badge variant="outline" className="bg-green-100 text-green-700">{t('acceptedInvitations')}</Badge>;
       case 'cancelled':
-        return <Badge variant="outline" className="bg-red-100 text-red-700">Annulée</Badge>;
+        return <Badge variant="outline" className="bg-red-100 text-red-700">{t('cancelledInvitations')}</Badge>;
       default:
         return <Badge variant="outline">Unknown</Badge>;
     }
@@ -140,23 +142,23 @@ export const InvitationCard = ({
       <CardContent className="pb-2">
         <div className="space-y-2">
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Propriété:</span>
+            <span className="text-sm text-muted-foreground">{t('propertyLabel')}:</span>
             <span className="text-sm font-medium">{invitation.property_name}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Date d'envoi:</span>
+            <span className="text-sm text-muted-foreground">{t('sendDate')}:</span>
             <span className="text-sm">
               {new Date(invitation.created_at).toLocaleDateString()}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-sm text-muted-foreground">Expiration:</span>
+            <span className="text-sm text-muted-foreground">{t('expiration')}:</span>
             <span className="text-sm">
               {new Date(invitation.expires_at).toLocaleDateString()}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Statut:</span>
+            <span className="text-sm text-muted-foreground">{t('statusLabel')}:</span>
             {getStatusBadge(invitation)}
           </div>
         </div>
@@ -171,7 +173,7 @@ export const InvitationCard = ({
               onClick={() => onCancel(invitation)}
             >
               <X className="h-4 w-4 mr-1" />
-              Annuler
+              {t('cancelAction')}
             </Button>
             <Button 
               variant="outline" 
@@ -183,12 +185,12 @@ export const InvitationCard = ({
               {isResending ? (
                 <>
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-1"></div>
-                  Envoi...
+                  {t('sending')}
                 </>
               ) : (
                 <>
                   <RefreshCw className="h-4 w-4 mr-1" />
-                  Renvoyer
+                  {t('resendAction')}
                 </>
               )}
             </Button>
@@ -205,12 +207,12 @@ export const InvitationCard = ({
             {isResending ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 mr-1"></div>
-                Envoi...
+                {t('sending')}
               </>
             ) : (
               <>
                 <RefreshCw className="h-4 w-4 mr-1" />
-                Renvoyer
+                {t('resendAction')}
               </>
             )}
           </Button>

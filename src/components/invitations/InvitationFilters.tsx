@@ -2,6 +2,7 @@
 import React from "react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
 import { Clock, CheckCircle, XCircle, Calendar, Mail } from "lucide-react";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface InvitationFiltersProps {
   activeTab: string;
@@ -28,33 +29,35 @@ export const InvitationFilters = ({
     cancelled: 0
   }
 }: InvitationFiltersProps) => {
+  const { t } = useLocale();
+  
   const navItems = [
     { 
-      name: "Toutes", 
+      name: t('allInvitations'), 
       value: "all", 
       icon: Mail,
       count: invitationsCount.all 
     },
     { 
-      name: "En attente", 
+      name: t('pendingInvitations'), 
       value: "pending", 
       icon: Clock,
       count: invitationsCount.pending 
     },
     { 
-      name: "Expirées", 
+      name: t('expiredInvitations'), 
       value: "expired", 
       icon: Calendar,
       count: invitationsCount.expired 
     },
     { 
-      name: "Acceptées", 
+      name: t('acceptedInvitations'), 
       value: "completed", 
       icon: CheckCircle,
       count: invitationsCount.completed 
     },
     { 
-      name: "Annulées", 
+      name: t('cancelledInvitations'), 
       value: "cancelled", 
       icon: XCircle,
       count: invitationsCount.cancelled 

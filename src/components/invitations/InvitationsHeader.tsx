@@ -30,14 +30,14 @@ export const InvitationsHeader = ({
               {t('invitations')}
             </h1>
             <p className="text-muted-foreground mt-1">
-              Gérez les invitations envoyées aux locataires
+              {t('manageInvitationsSentToTenants')}
             </p>
           </div>
         </div>
         <div className="flex items-center gap-4">
           <Badge variant="secondary" className="text-sm px-3 py-1.5">
             <Info className="h-4 w-4 mr-1.5" />
-            {invitationsCount} {invitationsCount === 1 ? 'invitation' : 'invitations'}
+            {invitationsCount} {invitationsCount === 1 ? t('invitation') : t('invitations_plural')}
           </Badge>
           
           <Button 
@@ -48,7 +48,7 @@ export const InvitationsHeader = ({
             disabled={isLoading}
           >
             <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            <span>Actualiser</span>
+            <span>{t('refresh')}</span>
           </Button>
         </div>
       </div>

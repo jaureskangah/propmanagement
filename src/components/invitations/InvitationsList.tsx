@@ -2,6 +2,7 @@
 import React from "react";
 import { Mail } from "lucide-react";
 import { InvitationCard } from "./InvitationCard";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 type Invitation = {
   id: string;
@@ -31,6 +32,7 @@ export const InvitationsList = ({
   onResendInvitation,
   onCancelInvitation
 }: InvitationsListProps) => {
+  const { t } = useLocale();
   const isExpired = (invitation: Invitation) => {
     return new Date(invitation.expires_at) < new Date();
   };
@@ -62,9 +64,9 @@ export const InvitationsList = ({
     return (
       <div className="bg-muted rounded-lg p-8 flex flex-col items-center justify-center h-64">
         <Mail className="h-16 w-16 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-medium">Aucune invitation</h3>
+        <h3 className="text-lg font-medium">{t('noInvitation')}</h3>
         <p className="text-muted-foreground text-center mt-1">
-          Aucune invitation {activeTab !== 'all' ? `dans cette catégorie` : ''} pour le moment
+          {activeTab !== 'all' ? t('noInvitationInCategory') : t('noInvitation')}
         </p>
       </div>
     );
