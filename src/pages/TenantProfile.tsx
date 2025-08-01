@@ -7,8 +7,11 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 import type { Tenant } from "@/types/tenant";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const TenantProfile = () => {
+  const { t } = useLocale();
   const { user } = useAuth();
   const { toast } = useToast();
   const [tenant, setTenant] = useState<Tenant | null>(null);
@@ -49,9 +52,9 @@ const TenantProfile = () => {
   };
 
   return (
-    <div className="flex">
+    <>
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-6">
+      <ResponsiveLayout title={t('profile')} className="p-6">
         {isLoading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -82,8 +85,8 @@ const TenantProfile = () => {
             onProfileLinked={handleProfileLinked}
           />
         )}
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

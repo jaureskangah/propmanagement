@@ -8,8 +8,11 @@ import { useToast } from "@/hooks/use-toast";
 import { TenantPayment } from "@/types/tenant";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 const TenantPayments = () => {
+  const { t } = useLocale();
   const { user } = useAuth();
   const { toast } = useToast();
   const [payments, setPayments] = useState<TenantPayment[]>([]);
@@ -100,9 +103,9 @@ const TenantPayments = () => {
   };
 
   return (
-    <div className="flex">
+    <>
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-6">
+      <ResponsiveLayout title={t('payments')} className="p-6">
         <Card>
           <CardHeader>
             <CardTitle>Mes paiements</CardTitle>
@@ -143,8 +146,8 @@ const TenantPayments = () => {
             )}
           </CardContent>
         </Card>
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import AppSidebar from '@/components/AppSidebar';
 import { useAuth } from '@/components/AuthProvider';
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const MaintenanceRequestList = () => {
   const { t } = useLocale();
@@ -68,9 +69,9 @@ const MaintenanceRequestList = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <AppSidebar isTenant={isTenantUser} />
-      <div className="ml-20 p-3 sm:p-6 md:p-8 pt-24 md:pt-8 transition-all duration-300">
+      <ResponsiveLayout title={t('maintenanceRequests')} className="p-3 sm:p-6 md:p-8">
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>{t('maintenanceRequests')}</CardTitle>
@@ -102,8 +103,8 @@ const MaintenanceRequestList = () => {
             open={dialogOpen}
           />
         )}
-      </div>
-    </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

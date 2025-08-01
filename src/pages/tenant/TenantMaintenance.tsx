@@ -10,6 +10,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { useRealtimeNotifications } from "@/hooks/useRealtimeNotifications";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const TenantMaintenance = () => {
   const { toast } = useToast();
@@ -83,12 +84,14 @@ const TenantMaintenance = () => {
   }
 
   return (
-    <div className="flex">
+    <>
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6 transition-all duration-300">
-        <TenantMaintenanceView />
-      </div>
-    </div>
+      <ResponsiveLayout title={t('maintenance')} className="p-3 sm:p-4 md:p-6">
+        <div className="space-y-6">
+          <TenantMaintenanceView />
+        </div>
+      </ResponsiveLayout>
+    </>
   );
 };
 

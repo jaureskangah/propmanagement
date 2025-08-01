@@ -46,7 +46,7 @@ const TenantDashboardPage = () => {
 
   console.log("✅ Rendering tenant dashboard for authenticated tenant");
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <AppSidebar isTenant={true} />
       <ResponsiveLayout title={t('dashboard')}>
         <motion.div 
@@ -58,7 +58,7 @@ const TenantDashboardPage = () => {
           <TenantDashboard />
         </motion.div>
       </ResponsiveLayout>
-    </div>
+    </>
   );
 };
 

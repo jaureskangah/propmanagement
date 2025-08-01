@@ -11,6 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
 import { MessageSquareOff } from "lucide-react";
+import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
 
 const Communications = () => {
   const { t } = useLocale();
@@ -72,60 +73,62 @@ const Communications = () => {
   };
 
   return (
-    <div className="flex">
+    <>
       <AppSidebar isTenant={true} />
-      <div className="flex-1 container mx-auto p-3 sm:p-4 md:p-6 space-y-6">
-        {isLoading ? (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
-            <p className="ml-4 text-muted-foreground">{t('loadingCommunications')}</p>
-          </div>
-        ) : !tenantId ? (
-          <UnlinkedTenantMessage />
-        ) : communications.length === 0 ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-            <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
-            <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
-            <p className="text-muted-foreground text-center mt-2 max-w-md">
-              {t('startSendingMessages')}
-            </p>
-          </motion.div>
-        ) : (
-          <TenantCommunicationsComponent
-            communications={communications}
-            tenantId={tenantId}
-            onCommunicationUpdate={refreshCommunications}
-            tenant={tenant}
-            onToggleStatus={handleToggleStatusAndRefresh}
-            onDeleteCommunication={setCommunicationToDelete}
-          />
-        )}
-      </div>
+      <ResponsiveLayout title={t('communications')} className="p-3 sm:p-4 md:p-6">
+        <div className="space-y-6">
+          {isLoading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100"></div>
+              <p className="ml-4 text-muted-foreground">{t('loadingCommunications')}</p>
+            </div>
+          ) : !tenantId ? (
+            <UnlinkedTenantMessage />
+          ) : communications.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="flex flex-col items-center justify-center p-12 h-64 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+              <MessageSquareOff className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-4" />
+              <h3 className="text-lg font-medium">{t('noCommunications')}</h3>
+              <p className="text-muted-foreground text-center mt-2 max-w-md">
+                {t('startSendingMessages')}
+              </p>
+            </motion.div>
+          ) : (
+            <TenantCommunicationsComponent
+              communications={communications}
+              tenantId={tenantId}
+              onCommunicationUpdate={refreshCommunications}
+              tenant={tenant}
+              onToggleStatus={handleToggleStatusAndRefresh}
+              onDeleteCommunication={setCommunicationToDelete}
+            />
+          )}
+        </div>
 
-      <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
-            <AlertDialogDescription>
-              {t('confirmDeleteMessage')}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleDeleteConfirm}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              {t('deleteMessage')}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
+        <AlertDialog open={!!communicationToDelete} onOpenChange={() => setCommunicationToDelete(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t('confirmDelete')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t('confirmDeleteMessage')}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleDeleteConfirm}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {t('deleteMessage')}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      </ResponsiveLayout>
+    </>
   );
 };
 
