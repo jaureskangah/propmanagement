@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { History, FileText } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ResponsiveLayout } from "@/components/layout/ResponsiveLayout";
 
 const DocumentGenerator = () => {
   const { t } = useLocale();
@@ -17,7 +18,7 @@ const DocumentGenerator = () => {
   return (
     <div className="flex min-h-screen bg-background">
       <AppSidebar />
-      <div className="flex-1 overflow-auto ml-20 p-4 md:p-6 pt-24 md:pt-8 transition-all duration-300">
+      <ResponsiveLayout title={t('documentGenerator.documentGenerator')} className="p-4 md:p-6">
         <div className="container mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -55,7 +56,7 @@ const DocumentGenerator = () => {
             </div>
           </motion.div>
         </div>
-      </div>
+      </ResponsiveLayout>
     </div>
   );
 };
