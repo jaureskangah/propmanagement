@@ -255,7 +255,7 @@ export function PropertyEnhancedForm({
           name="rent_amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Loyer mensuel ($)</FormLabel>
+              <FormLabel>{t('monthlyRent')}</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 
@@ -304,10 +304,10 @@ export function PropertyEnhancedForm({
                         <Upload className="h-10 w-10 mx-auto text-muted-foreground" />
                         <div>
                           <p className="text-sm font-medium">
-                            Glissez une image ici ou cliquez pour sélectionner
+                            {t('dragImageHere')}
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            PNG, JPG, GIF jusqu'à 10MB
+                            {t('imageFormats')}
                           </p>
                         </div>
                       </div>
@@ -372,10 +372,10 @@ export function PropertyEnhancedForm({
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Sauvegarde...
+                {t('saving')}
               </>
             ) : (
-              initialData ? 'Mettre à jour' : 'Créer la propriété'
+              initialData ? t('updateProperty') : t('createProperty')
             )}
           </Button>
         </div>

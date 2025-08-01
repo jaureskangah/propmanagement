@@ -97,6 +97,13 @@ const translations = {
   noTenantsFiltered: "No tenants match the current filters",
   tenantCount: "{count} tenants",
   tenantCountSingular: "1 tenant",
+  
+  // Property form translations
+  monthlyRent: "Monthly Rent ($)",
+  dragImageHere: "Drag an image here or click to select",
+  imageFormats: "PNG, JPG, GIF up to 10MB",
+  createProperty: "Create Property",
+  updateProperty: "Update Property",
 };
 
 // Debug: Log final des traductions composées
