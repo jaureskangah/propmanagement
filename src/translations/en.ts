@@ -104,6 +104,15 @@ const translations = {
   imageFormats: "PNG, JPG, GIF up to 10MB",
   createProperty: "Create Property",
   updateProperty: "Update Property",
+  
+  // Property table headers
+  propertyName: "Property Name",
+  address: "Address",
+  type: "Type",
+  units: "Units",
+  occupation: "Occupation",
+  createdAt: "Created",
+  actions: "Actions",
 };
 
 // Debug: Log final des traductions composées

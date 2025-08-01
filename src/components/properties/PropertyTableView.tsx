@@ -118,7 +118,7 @@ const PropertyTableView = ({
             >
               <div className="flex items-center gap-2">
                 <Building2 className="h-4 w-4" />
-                Nom de la propriété
+                {t('propertyName')}
               </div>
             </TableHead>
             <TableHead 
@@ -127,32 +127,32 @@ const PropertyTableView = ({
             >
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
-                Adresse
+                {t('address')}
               </div>
             </TableHead>
             <TableHead 
               className="cursor-pointer hover:bg-muted/50"
               onClick={() => handleSort('type')}
             >
-              Type
+              {t('type')}
             </TableHead>
             <TableHead 
               className="cursor-pointer hover:bg-muted/50 text-center"
               onClick={() => handleSort('units')}
             >
-              Unités
+              {t('units')}
             </TableHead>
-            <TableHead className="text-center">Occupation</TableHead>
+            <TableHead className="text-center">{t('occupation')}</TableHead>
             <TableHead 
               className="cursor-pointer hover:bg-muted/50"
               onClick={() => handleSort('created_at')}
             >
               <div className="flex items-center gap-2">
                 <Calendar className="h-4 w-4" />
-                Créé le
+                {t('createdAt')}
               </div>
             </TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right">{t('actions')}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
