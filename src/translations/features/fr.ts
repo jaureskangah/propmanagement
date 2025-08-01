@@ -254,4 +254,10 @@ export const fr = {
   
   // Additional maintenance translations
   loadingProperties: "Chargement des propriétés...",
+  
+  // Tenant actions
+  modify: "Modifier",
+  delete: "Supprimer", 
+  invite: "Inviter",
+  noPropertyAssigned: "Aucune propriété assignée",
 };

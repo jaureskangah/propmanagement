@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { UserPlus, Edit, Trash2, Mail } from "lucide-react";
 import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface TenantActionsProps {
   onAddClick?: () => void;
@@ -13,6 +14,7 @@ interface TenantActionsProps {
 
 export const TenantActions = ({ onAddClick, onEdit, onDelete, onInvite }: TenantActionsProps) => {
   const { t } = useTenantListTranslations();
+  const { t: tCommon } = useLocale();
 
   // Si on a onAddClick, c'est le bouton d'ajout principal
   if (onAddClick) {
@@ -40,7 +42,7 @@ export const TenantActions = ({ onAddClick, onEdit, onDelete, onInvite }: Tenant
           className="flex items-center gap-1"
         >
           <Edit className="h-3 w-3" />
-          Modifier
+          {tCommon('modify')}
         </Button>
       )}
       {onDelete && (
@@ -51,7 +53,7 @@ export const TenantActions = ({ onAddClick, onEdit, onDelete, onInvite }: Tenant
           className="flex items-center gap-1 text-red-600 hover:text-red-700"
         >
           <Trash2 className="h-3 w-3" />
-          Supprimer
+          {tCommon('delete')}
         </Button>
       )}
       {onInvite && (
@@ -62,7 +64,7 @@ export const TenantActions = ({ onAddClick, onEdit, onDelete, onInvite }: Tenant
           className="flex items-center gap-1"
         >
           <Mail className="h-3 w-3" />
-          Inviter
+          {tCommon('invite')}
         </Button>
       )}
     </div>

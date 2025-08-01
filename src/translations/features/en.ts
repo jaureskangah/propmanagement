@@ -237,4 +237,10 @@ export const en = {
   
   // Additional maintenance translations
   loadingProperties: "Loading properties...",
+  
+  // Tenant actions
+  modify: "Modify",
+  delete: "Delete", 
+  invite: "Invite",
+  noPropertyAssigned: "No property assigned",
 };

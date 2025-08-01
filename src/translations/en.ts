@@ -82,6 +82,12 @@ const translations = {
   
   // Additional maintenance translations
   loadingProperties: "Loading properties...",
+  
+  // Tenant actions
+  modify: "Modify",
+  delete: "Delete", 
+  invite: "Invite",
+  noPropertyAssigned: "No property assigned",
 };
 
 // Debug: Log final des traductions composées
