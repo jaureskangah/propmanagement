@@ -172,4 +172,11 @@ export const en = {
   maintenanceExpensesTrends: "Maintenance Expenses Trends",
   errorLoadingData: "Error loading data",
   retry: "Retry",
+  
+  // Maintenance Requests Section translations
+  maintenanceRequestsTitle: "Maintenance Requests",
+  manageMaintenanceRequests: "Manage all maintenance requests",
+  loading: "Loading...",
+  viewOtherRequests: "View {count} other request{s}",
+  viewMoreRequests: "View more requests",
 };

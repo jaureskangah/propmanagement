@@ -74,9 +74,9 @@ export const MaintenanceRequestsSection = () => {
     <div className="space-y-6">
       {/* Section Header */}
       <div>
-        <h2 className="text-2xl font-semibold">Demandes de maintenance</h2>
+        <h2 className="text-2xl font-semibold">{t('maintenanceRequestsTitle')}</h2>
         <p className="text-muted-foreground">
-          Gérez toutes les demandes de maintenance
+          {t('manageMaintenanceRequests')}
         </p>
       </div>
 
@@ -85,7 +85,7 @@ export const MaintenanceRequestsSection = () => {
         <CardContent className="p-6">
           {isLoading ? (
             <div className="text-center py-8 text-muted-foreground">
-              Chargement...
+              {t('loading')}
             </div>
           ) : displayedRequests.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
@@ -107,9 +107,12 @@ export const MaintenanceRequestsSection = () => {
                     onClick={handleViewMoreRequests} 
                     variant="outline"
                     className="w-full"
-                  >
-                    Voir {remainingCount} autre{remainingCount > 1 ? 's' : ''} demande{remainingCount > 1 ? 's' : ''}
-                  </Button>
+                    >
+                      {t('viewOtherRequests', { 
+                        count: remainingCount.toString(), 
+                        s: remainingCount > 1 ? 's' : '' 
+                      })}
+                    </Button>
                 </div>
               )}
             </div>

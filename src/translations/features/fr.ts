@@ -189,4 +189,11 @@ export const fr = {
   maintenanceExpensesTrends: "Tendances des dépenses de maintenance",
   errorLoadingData: "Erreur lors du chargement des données",
   retry: "Réessayer",
+  
+  // Maintenance Requests Section translations
+  maintenanceRequestsTitle: "Demandes de maintenance",
+  manageMaintenanceRequests: "Gérez toutes les demandes de maintenance",
+  loading: "Chargement...",
+  viewOtherRequests: "Voir {count} autre{s} demande{s}",
+  viewMoreRequests: "Voir plus de demandes",
 };
