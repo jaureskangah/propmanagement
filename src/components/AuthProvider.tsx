@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
@@ -8,9 +7,15 @@ interface AuthContextType {
   loading: boolean;
   isTenant: boolean;
   tenantData: any | null;
+  subscription: {
+    tier: 'free' | 'standard' | 'pro';
+    subscribed: boolean;
+    subscription_end: string | null;
+  };
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signUp: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  refreshSubscription: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,9 +24,15 @@ const AuthContext = createContext<AuthContextType>({
   loading: true,
   isTenant: false,
   tenantData: null,
+  subscription: {
+    tier: 'free',
+    subscribed: false,
+    subscription_end: null,
+  },
   signIn: async () => ({ error: null }),
   signUp: async () => ({ error: null }),
   signOut: async () => {},
+  refreshSubscription: async () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -29,6 +40,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [isTenant, setIsTenant] = useState(false);
   const [tenantData, setTenantData] = useState<any | null>(null);
+  const [subscription, setSubscription] = useState({
+    tier: 'free' as 'free' | 'standard' | 'pro',
+    subscribed: false,
+    subscription_end: null as string | null,
+  });
   const isAuthenticated = !!user;
 
   useEffect(() => {
@@ -43,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (session?.user) {
             setUser(session.user);
             await checkTenantStatus(session.user.id);
+            await checkSubscriptionStatus();
           } else {
             setUser(null);
             setIsTenant(false);
@@ -59,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const { data: { subscription: authSubscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!isMounted) return;
 
@@ -73,6 +90,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setTimeout(() => {
               if (isMounted) {
                 checkTenantStatusWithRecovery(session.user.id);
+                checkSubscriptionStatus();
               }
             }, 500);
           }
@@ -81,6 +99,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setUser(null);
           setIsTenant(false);
           setTenantData(null);
+          setSubscription({
+            tier: 'free',
+            subscribed: false,
+            subscription_end: null,
+          });
           setLoading(false);
         }
       }
@@ -90,9 +113,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     return () => {
       isMounted = false;
-      subscription.unsubscribe();
+      authSubscription.unsubscribe();
     };
   }, []);
+
+  const checkSubscriptionStatus = async () => {
+    try {
+      const { data } = await supabase.functions.invoke('check-subscription');
+      if (data) {
+        setSubscription({
+          tier: (data.subscription_tier || 'free') as 'free' | 'standard' | 'pro',
+          subscribed: data.subscribed || false,
+          subscription_end: data.subscription_end,
+        });
+      }
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+    }
+  };
+
+  const refreshSubscription = async () => {
+    await checkSubscriptionStatus();
+  };
 
   const checkTenantStatus = async (userId: string) => {
     try {
@@ -206,6 +248,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(null);
       setIsTenant(false);
       setTenantData(null);
+      setSubscription({
+        tier: 'free',
+        subscribed: false,
+        subscription_end: null,
+      });
       
       // Clear all local storage keys related to auth
       Object.keys(localStorage).forEach((key) => {
@@ -237,9 +284,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       loading, 
       isTenant, 
       tenantData, 
+      subscription,
       signIn, 
       signUp, 
-      signOut 
+      signOut,
+      refreshSubscription 
     }}>
       {children}
     </AuthContext.Provider>
