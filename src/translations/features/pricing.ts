@@ -47,10 +47,10 @@ export const frPricing: PricingTranslations = {
 
 export const enPlanFeatures: PlanFeaturesTranslations = {
   // Plan Gratuit
-  upTo2Properties: "Up to 2 properties",
-  upTo5Tenants: "Up to 5 tenants",
+  upTo1Property: "1 property",
+  upTo1Tenant: "1 tenant",
   basicRentManagement: "Basic rent tracking",
-  limitedDocumentGeneration: "5 document generations/month",
+  maintenanceManagement: "Maintenance management",
   basicSupport: "Email support",
   
   // Plan Standard
@@ -58,25 +58,24 @@ export const enPlanFeatures: PlanFeaturesTranslations = {
   unlimitedTenants: "Unlimited tenants",
   fullTenantManagement: "Complete tenant management",
   unlimitedDocumentGeneration: "Unlimited document generation",
-  maintenanceManagement: "Maintenance management",
+  automatedReminders: "Automated reminders",
   financialReports: "Financial reports",
+  dataExportImport: "Data export/import",
   prioritySupport: "Priority support",
   
   // Plan Pro
+  allStandardFeatures: "All Standard Plan benefits",
   unlimitedProperties: "Unlimited properties",
   advancedFinancialReports: "Advanced financial reports",
-  dataExportImport: "Data export/import",
-  automatedReminders: "Automated reminders",
-  customDashboard: "Custom dashboard",
   dedicatedSupport: "Dedicated support team"
 };
 
 export const frPlanFeatures: PlanFeaturesTranslations = {
   // Plan Gratuit
-  upTo2Properties: "Jusqu'à 2 propriétés",
-  upTo5Tenants: "Jusqu'à 5 locataires",
-  basicRentManagement: "Suivi des loyers basique",
-  limitedDocumentGeneration: "5 générations de documents/mois",
+  upTo1Property: "1 propriété",
+  upTo1Tenant: "1 locataire",
+  basicRentManagement: "Suivi basique des loyers",
+  maintenanceManagement: "Gestion de la maintenance",
   basicSupport: "Support par email",
   
   // Plan Standard
@@ -84,15 +83,14 @@ export const frPlanFeatures: PlanFeaturesTranslations = {
   unlimitedTenants: "Locataires illimités",
   fullTenantManagement: "Gestion complète des locataires",
   unlimitedDocumentGeneration: "Génération de documents illimitée",
-  maintenanceManagement: "Gestion de la maintenance",
+  automatedReminders: "Rappels automatisés",
   financialReports: "Rapports financiers",
+  dataExportImport: "Export de données",
   prioritySupport: "Support prioritaire",
   
   // Plan Pro
+  allStandardFeatures: "Tous les avantages du Plan Standard",
   unlimitedProperties: "Propriétés illimitées",
   advancedFinancialReports: "Rapports financiers avancés",
-  dataExportImport: "Export/import de données",
-  automatedReminders: "Rappels automatisés",
-  customDashboard: "Tableau de bord personnalisable",
   dedicatedSupport: "Équipe de support dédiée"
 };

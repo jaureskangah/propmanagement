@@ -23,10 +23,10 @@ export interface PricingTranslations {
 
 export interface PlanFeaturesTranslations {
   // Plan Gratuit
-  upTo2Properties: string;
-  upTo5Tenants: string;
+  upTo1Property: string;
+  upTo1Tenant: string;
   basicRentManagement: string;
-  limitedDocumentGeneration: string;
+  maintenanceManagement: string;
   basicSupport: string;
   
   // Plan Standard
@@ -34,15 +34,14 @@ export interface PlanFeaturesTranslations {
   unlimitedTenants: string;
   fullTenantManagement: string;
   unlimitedDocumentGeneration: string;
-  maintenanceManagement: string;
+  automatedReminders: string;
   financialReports: string;
+  dataExportImport: string;
   prioritySupport: string;
   
   // Plan Pro
+  allStandardFeatures: string;
   unlimitedProperties: string;
   advancedFinancialReports: string;
-  dataExportImport: string;
-  automatedReminders: string;
-  customDashboard: string;
   dedicatedSupport: string;
 }

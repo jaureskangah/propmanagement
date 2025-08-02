@@ -120,6 +120,11 @@ const translations = {
   propertiesSelected: "properties selected",
   deleteSelected: "Delete",
   unselectAll: "Unselect",
+  
+  // Additional pricing plan features
+  upTo1Property: "1 property",
+  upTo1Tenant: "1 tenant",
+  allStandardFeatures: "All Standard Plan benefits",
 };
 
 // Debug: Log final des traductions composées
