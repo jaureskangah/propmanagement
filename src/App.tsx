@@ -45,6 +45,7 @@ const SupportPage = lazy(() => import('./pages/SupportPage'));
 const Subscription = lazy(() => import('./pages/Subscription'));
 const TestRestrictions = lazy(() => import('./pages/TestRestrictions'));
 const SubscriptionSyncValidator = lazy(() => import('./components/subscription/SubscriptionSyncValidator').then(module => ({ default: module.SubscriptionSyncValidator })));
+const ProductionDashboard = lazy(() => import('./components/admin/ProductionDashboard').then(module => ({ default: module.ProductionDashboard })));
 
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
@@ -151,6 +152,7 @@ function App() {
         <Route path="/subscription" element={isAuthenticated ? <Subscription /> : <Navigate to="/login" />} />
         <Route path="/test-restrictions" element={isAuthenticated ? <TestRestrictions /> : <Navigate to="/login" />} />
         <Route path="/sync-validation" element={isAuthenticated ? <SubscriptionSyncValidator /> : <Navigate to="/login" />} />
+        <Route path="/production-dashboard" element={isAuthenticated ? <ProductionDashboard /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
