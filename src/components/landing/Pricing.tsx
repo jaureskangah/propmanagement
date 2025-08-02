@@ -108,7 +108,7 @@ export default function Pricing() {
               <PricingCard
                 {...plan}
                 onSubscribe={handleSubscribe}
-                formatPrice={formatPrice}
+                formatPrice={(price) => formatPrice(price, t)}
                 t={t}
               />
             </motion.div>
