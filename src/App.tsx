@@ -42,6 +42,7 @@ const Admin = lazy(() => import('./pages/Admin'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
 const SupportPage = lazy(() => import('./pages/SupportPage'));
+const Subscription = lazy(() => import('./pages/Subscription'));
 const TestRestrictions = lazy(() => import('./pages/TestRestrictions'));
 
 // Loading fallback component with percentage animation
@@ -146,6 +147,7 @@ function App() {
         {/* Shared Routes - accessible to both owners and tenants */}
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
         <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
+        <Route path="/subscription" element={isAuthenticated ? <Subscription /> : <Navigate to="/login" />} />
         <Route path="/test-restrictions" element={isAuthenticated ? <TestRestrictions /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
