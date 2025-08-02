@@ -146,7 +146,7 @@ function App() {
         {/* Shared Routes - accessible to both owners and tenants */}
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
         <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
-        <Route path="/test-restrictions" element={isAuthenticated && !isTenant ? <TestRestrictions /> : <Navigate to="/login" />} />
+        <Route path="/test-restrictions" element={isAuthenticated ? <TestRestrictions /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>

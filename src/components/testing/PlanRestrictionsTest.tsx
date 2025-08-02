@@ -5,10 +5,12 @@ import { Badge } from '@/components/ui/badge';
 import { FeatureGate } from '@/components/subscription/FeatureGate';
 import { LimitChecker } from '@/components/subscription/LimitChecker';
 import { useSubscriptionLimits } from '@/hooks/useSubscriptionLimits';
+import { useAuth } from '@/components/AuthProvider';
 import { AlertTriangle, Check, X, Crown } from 'lucide-react';
 
 export const PlanRestrictionsTest = () => {
   const limits = useSubscriptionLimits();
+  const { isTenant } = useAuth();
   const [testPropertyCount, setTestPropertyCount] = useState(1);
   const [testTenantCount, setTestTenantCount] = useState(1);
 
@@ -31,6 +33,9 @@ export const PlanRestrictionsTest = () => {
           <CardTitle className="flex items-center gap-2">
             <Crown className="h-5 w-5" />
             Test des Restrictions de Plan
+            <Badge variant="outline" className="ml-auto">
+              {isTenant ? 'Compte Locataire' : 'Compte Propriétaire'}
+            </Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
