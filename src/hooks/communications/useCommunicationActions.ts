@@ -13,7 +13,7 @@ export const useCommunicationActions = (tenantId?: string) => {
     category: string;
   }) => {
     if (!tenantId) {
-      console.error("Missing tenantId in handleCreateCommunication");
+      // Production-ready: removed console.log
       toast({
         title: "Error",
         description: "Tenant ID missing",

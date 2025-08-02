@@ -48,7 +48,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     vendor_id: ""
   });
 
-  console.log("AddExpenseDialog rendu avec propertyId:", propertyId);
+  // Production-ready: removed console.log
 
   // Fetch vendors for the dropdown
   const { data: vendors = [] } = useQuery({

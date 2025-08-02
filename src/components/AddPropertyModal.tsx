@@ -5,6 +5,7 @@ import { useProperties, PropertyFormData } from "@/hooks/useProperties";
 import { toast } from "@/hooks/use-toast";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { LimitChecker } from "@/components/subscription/LimitChecker";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -12,7 +13,7 @@ interface AddPropertyModalProps {
 }
 
 export function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
-  const { addProperty } = useProperties();
+  const { addProperty, properties } = useProperties();
   const { t } = useLocale();
 
   const handleSubmit = async (data: PropertyFormData) => {
@@ -39,11 +40,17 @@ export function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
           <DialogTitle>{t('addProperty')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="max-h-[calc(90vh-100px)] pr-4">
-          <PropertyEnhancedForm
-            onSubmit={handleSubmit}
-            onCancel={onClose}
-            isSubmitting={false}
-          />
+          <LimitChecker
+            type="properties"
+            currentCount={properties?.length || 0}
+            onLimitReached={onClose}
+          >
+            <PropertyEnhancedForm
+              onSubmit={handleSubmit}
+              onCancel={onClose}
+              isSubmitting={false}
+            />
+          </LimitChecker>
         </ScrollArea>
       </DialogContent>
     </Dialog>

@@ -71,7 +71,7 @@ export const MaintenanceTasksSection = () => {
         property_id: propertyId || newTask.property_id
       };
       
-      console.log("MaintenanceTasksSection - Adding task with property ID:", taskWithCorrectProperty.property_id);
+      // Production-ready: removed console.log
       
       const result = await handleAddTask(taskWithCorrectProperty);
       toast({

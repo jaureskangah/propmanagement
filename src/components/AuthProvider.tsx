@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { logger } from '@/utils/logger';
 
 interface AuthContextType {
   user: any | null;
@@ -80,9 +81,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       async (event, session) => {
         if (!isMounted) return;
 
-        console.log("=== AUTH STATE CHANGE ===");
-        console.log("Event:", event);
-        console.log("User:", session?.user?.email);
+        logger.auth("Auth state change", { event, email: session?.user?.email });
         
         if (session?.user) {
           setUser(session.user);
@@ -95,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }, 500);
           }
         } else {
-          console.log("No session, clearing user data");
+          logger.auth("No session, clearing user data");
           setUser(null);
           setIsTenant(false);
           setTenantData(null);
@@ -138,7 +137,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const checkTenantStatus = async (userId: string) => {
     try {
-      console.log("🔍 Checking tenant status for:", userId);
+      logger.tenant("Checking tenant status for:", userId);
 
       // Une seule requête pour vérifier tenant + profile
       const [tenantResult, profileResult] = await Promise.all([
@@ -169,7 +168,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Si marqué comme tenant mais pas de record tenant ET pas admin → compte supprimé
       if (profileData?.is_tenant_user && !tenantData && !hasAdminRole) {
-        console.log("🚨 Deleted tenant account detected, forcing signout");
+        logger.warn("Deleted tenant account detected, forcing signout");
         alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
         await supabase.auth.signOut();
         window.location.href = '/auth';
@@ -192,7 +191,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Nouvelle fonction avec récupération automatique pour les nouveaux comptes
   const checkTenantStatusWithRecovery = async (userId: string) => {
     try {
-      console.log("=== CHECKING TENANT STATUS WITH RECOVERY ===");
+      logger.tenant("Checking tenant status with recovery");
       
       // Pour la récupération, utilisons directement checkTenantStatus sans la boucle des appels répétés
       await checkTenantStatus(userId);
@@ -241,7 +240,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      console.log("Signing out...");
+      logger.auth("Signing out...");
       setLoading(true);
       
       // Clear state first
@@ -264,7 +263,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Then sign out from Supabase with global scope
       await supabase.auth.signOut({ scope: 'global' });
       
-      console.log("Sign out successful");
+      logger.auth("Sign out successful");
       
       // Force redirect to auth page
       window.location.href = '/auth';

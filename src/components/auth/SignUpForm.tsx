@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { logger } from '@/utils/logger';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { supabase } from '@/lib/supabase';
 import { Form } from '@/components/ui/form';
@@ -52,9 +53,8 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         },
       });
 
-      console.log('Signup response:', { data, error });
       if (error) {
-        console.log('Signup error details:', error);
+        logger.error('Signup error details:', error);
         throw error;
       }
 
@@ -73,9 +73,9 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
             isOwner: true, // This is the owner signup form
           },
         });
-        console.log('Onboarding email sent successfully');
+        logger.info('Onboarding email sent successfully');
       } catch (emailError) {
-        console.error('Failed to send onboarding email:', emailError);
+        logger.error('Failed to send onboarding email:', emailError);
         // Don't throw - email failure shouldn't block signup success
       }
 
@@ -95,9 +95,7 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       }
 
     } catch (error: any) {
-      console.log('Signup error caught:', error);
-      console.log('Error message:', error.message);
-      console.log('Error code:', error.code);
+      logger.error('Signup error caught:', error);
       
       let errorMessage = t('signUpError');
       
@@ -108,8 +106,6 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
       )) {
         errorMessage = t('emailAlreadyRegistered');
       }
-
-      console.log('Showing toast with message:', errorMessage);
       toast({
         title: t('error'),
         description: errorMessage,

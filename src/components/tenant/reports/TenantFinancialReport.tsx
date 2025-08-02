@@ -17,7 +17,7 @@ export const TenantFinancialReport = ({ tenantId }: TenantFinancialReportProps) 
   const { data: tenant, isLoading: isLoadingTenant } = useQuery({
     queryKey: ["tenant", tenantId],
     queryFn: async () => {
-      console.log("Fetching tenant data for financial report:", tenantId);
+      // Production-ready: removed console.log
       const { data, error } = await supabase
         .from("tenants")
         .select("*")

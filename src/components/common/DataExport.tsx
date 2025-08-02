@@ -13,6 +13,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
+import { FeatureGate } from "@/components/subscription/FeatureGate";
 
 export interface TableColumn {
   header: string;
@@ -148,35 +149,37 @@ export const DataExport = ({
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-2">
-          {isExporting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Download className="h-4 w-4" />
-          )}
-          Exporter
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem 
-          onClick={handleExcelExport}
-          disabled={isExporting !== null}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <FileSpreadsheet className="h-4 w-4 text-green-600" />
-          <span>Exporter en Excel</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={handlePDFExport}
-          disabled={isExporting !== null}
-          className="flex items-center gap-2 cursor-pointer"
-        >
-          <FileText className="h-4 w-4 text-red-600" />
-          <span>Exporter en PDF</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <FeatureGate feature="exportData">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="sm" className="flex items-center gap-2">
+            {isExporting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Download className="h-4 w-4" />
+            )}
+            Exporter
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem 
+            onClick={handleExcelExport}
+            disabled={isExporting !== null}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <FileSpreadsheet className="h-4 w-4 text-green-600" />
+            <span>Exporter en Excel</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={handlePDFExport}
+            disabled={isExporting !== null}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <FileText className="h-4 w-4 text-red-600" />
+            <span>Exporter en PDF</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </FeatureGate>
   );
 };

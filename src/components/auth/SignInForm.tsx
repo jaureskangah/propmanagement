@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { logger } from '@/utils/logger';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -42,9 +43,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setLoading(true);
-      
-      console.log("=== ATTEMPTING SIGN IN ===");
-      console.log("Email:", values.email);
+      logger.auth("Attempting sign in", { email: values.email });
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
@@ -52,11 +51,11 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
       });
 
       if (error) {
-        console.error("Sign in error:", error);
+        logger.error("Sign in error:", error);
         throw error;
       }
 
-      console.log("✅ Sign in successful:", data);
+      logger.auth("Sign in successful");
 
       toast({
         title: t('success'),
@@ -73,7 +72,7 @@ export default function SignInForm({ onSuccess }: SignInFormProps) {
       }, 500);
 
     } catch (error: any) {
-      console.error("Sign in failed:", error);
+      logger.error("Sign in failed:", error);
       
       let errorMessage = t('invalidCredentials');
       

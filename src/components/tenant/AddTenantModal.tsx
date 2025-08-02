@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { TenantForm } from "./TenantForm";
 import type { TenantFormValues } from "./tenantValidation";
 import { useTenantListTranslations } from "@/hooks/useTenantListTranslations";
+import { LimitChecker } from "@/components/subscription/LimitChecker";
+import { useTenants } from "@/hooks/useTenants";
 
 interface AddTenantModalProps {
   isOpen: boolean;
@@ -16,6 +18,7 @@ interface AddTenantModalProps {
 export function AddTenantModal({ isOpen, onClose, onSubmit }: AddTenantModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTenantListTranslations();
+  const { tenants } = useTenants();
 
   const handleSubmit = async (data: TenantFormValues) => {
     try {
@@ -44,11 +47,17 @@ export function AddTenantModal({ isOpen, onClose, onSubmit }: AddTenantModalProp
           <DialogTitle>{t('addTenant')}</DialogTitle>
         </DialogHeader>
         <ScrollArea className="flex-grow pr-4">
-          <TenantForm 
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            onCancel={onClose}
-          />
+          <LimitChecker
+            type="tenants"
+            currentCount={tenants?.length || 0}
+            onLimitReached={onClose}
+          >
+            <TenantForm 
+              onSubmit={handleSubmit}
+              isSubmitting={isSubmitting}
+              onCancel={onClose}
+            />
+          </LimitChecker>
         </ScrollArea>
       </DialogContent>
     </Dialog>

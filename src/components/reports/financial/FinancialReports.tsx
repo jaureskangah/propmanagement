@@ -9,6 +9,7 @@ import FinancialOverview from "@/components/finances/FinancialOverview";
 import { MetricsCards } from "@/components/maintenance/financials/MetricsCards";
 import PropertyFinancialSelector from "@/components/finances/PropertyFinancialSelector";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { FeatureGate } from "@/components/subscription/FeatureGate";
 
 export const FinancialReports = () => {
   const { t } = useLocale();
@@ -79,7 +80,9 @@ export const FinancialReports = () => {
             {t('comprehensiveFinancialAnalysis', { fallback: 'Analyse financière complète' })}
           </p>
         </div>
-        <GlobalExportOptions data={financialData} type="financial" />
+        <FeatureGate feature="advancedFinancialReports">
+          <GlobalExportOptions data={financialData} type="financial" />
+        </FeatureGate>
       </div>
 
       {/* Financial Summary Cards */}

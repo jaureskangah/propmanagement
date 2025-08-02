@@ -89,7 +89,7 @@ export const useTenantPage = () => {
       await addTenant.mutateAsync(data);
       setIsAddModalOpen(false);
     } catch (error) {
-      console.error("Error adding tenant:", error);
+      // Error already handled by mutation
       throw error;
     }
   };
