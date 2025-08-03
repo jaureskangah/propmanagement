@@ -46,6 +46,9 @@ const Subscription = lazy(() => import('./pages/Subscription'));
 const TestRestrictions = lazy(() => import('./pages/TestRestrictions'));
 const SubscriptionSyncValidator = lazy(() => import('./components/subscription/SubscriptionSyncValidator').then(module => ({ default: module.SubscriptionSyncValidator })));
 const ProductionDashboard = lazy(() => import('./components/admin/ProductionDashboard').then(module => ({ default: module.ProductionDashboard })));
+const MonitoringDashboard = lazy(() => import('./components/admin/MonitoringDashboard').then(module => ({ default: module.MonitoringDashboard })));
+const UserDocumentationCenter = lazy(() => import('./components/admin/UserDocumentationCenter').then(module => ({ default: module.UserDocumentationCenter })));
+const GoLiveDashboard = lazy(() => import('./components/admin/GoLiveDashboard').then(module => ({ default: module.GoLiveDashboard })));
 
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
@@ -153,6 +156,9 @@ function App() {
         <Route path="/test-restrictions" element={isAuthenticated ? <TestRestrictions /> : <Navigate to="/login" />} />
         <Route path="/sync-validation" element={isAuthenticated ? <SubscriptionSyncValidator /> : <Navigate to="/login" />} />
         <Route path="/production-dashboard" element={isAuthenticated ? <ProductionDashboard /> : <Navigate to="/login" />} />
+        <Route path="/monitoring" element={isAuthenticated ? <MonitoringDashboard /> : <Navigate to="/login" />} />
+        <Route path="/documentation" element={isAuthenticated ? <UserDocumentationCenter /> : <Navigate to="/login" />} />
+        <Route path="/go-live" element={isAuthenticated ? <GoLiveDashboard /> : <Navigate to="/login" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
