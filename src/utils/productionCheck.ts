@@ -20,6 +20,9 @@ export class ProductionChecker {
     await this.checkEdgeFunctions();
     await this.checkSubscriptionFlow();
     await this.checkPerformance();
+    await this.checkConsoleLogging();
+    await this.checkSecretsConfiguration();
+    await this.checkBackupConfiguration();
     
     return this.results;
   }
@@ -149,5 +152,62 @@ export class ProductionChecker {
     if (errorCount > 0) return 'critical';
     if (warningCount > 2) return 'warning';
     return 'healthy';
+  }
+
+  private async checkConsoleLogging() {
+    try {
+      // Check if we're in production mode
+      const isProduction = import.meta.env.PROD;
+      
+      if (isProduction) {
+        // In production, console logging should be minimized
+        this.addResult('Production', 'Console Logging', 'success', 'Production mode active - console logs minimized');
+      } else {
+        this.addResult('Production', 'Console Logging', 'warning', 'Development mode - console logs active', 'Replace console.log with logger utility');
+      }
+    } catch (error) {
+      this.addResult('Production', 'Console Logging', 'error', 'Failed to check console logging configuration');
+    }
+  }
+
+  private async checkSecretsConfiguration() {
+    try {
+      // Check for environment variables that should be configured
+      const requiredSecrets = [
+        'VITE_SUPABASE_URL',
+        'VITE_SUPABASE_ANON_KEY'
+      ];
+      
+      let missingSecrets = [];
+      for (const secret of requiredSecrets) {
+        if (!import.meta.env[secret]) {
+          missingSecrets.push(secret);
+        }
+      }
+      
+      if (missingSecrets.length === 0) {
+        this.addResult('Security', 'Environment Variables', 'success', 'All required environment variables configured');
+      } else {
+        this.addResult('Security', 'Environment Variables', 'error', `Missing variables: ${missingSecrets.join(', ')}`, 'Configure missing environment variables');
+      }
+    } catch (error) {
+      this.addResult('Security', 'Environment Variables', 'error', 'Failed to check environment variables');
+    }
+  }
+
+  private async checkBackupConfiguration() {
+    try {
+      // Check if we can connect to verify backup configuration
+      const { data, error } = await supabase.from('profiles').select('count').limit(1);
+      
+      if (!error) {
+        this.addResult('Backup', 'Database Access', 'success', 'Database accessible for backup verification');
+        this.addResult('Backup', 'Configuration', 'warning', 'Verify Supabase backup settings in dashboard', 'Check Supabase dashboard for backup configuration');
+      } else {
+        this.addResult('Backup', 'Database Access', 'error', 'Cannot verify backup configuration - database access failed');
+      }
+    } catch (error) {
+      this.addResult('Backup', 'Configuration', 'error', 'Failed to check backup configuration');
+    }
   }
 }

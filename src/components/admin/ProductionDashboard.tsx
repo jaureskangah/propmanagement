@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ProductionChecker, ProductionCheckResult } from '@/utils/productionCheck';
+import { ProductionConfigTools } from './ProductionConfigTools';
 import { 
   CheckCircle, 
   AlertTriangle, 
@@ -14,7 +15,8 @@ import {
   Zap,
   CreditCard,
   Gauge,
-  Server
+  Server,
+  Settings
 } from 'lucide-react';
 
 export const ProductionDashboard = () => {
@@ -83,6 +85,10 @@ export const ProductionDashboard = () => {
         return <CreditCard className="h-5 w-5 text-indigo-500" />;
       case 'Performance':
         return <Gauge className="h-5 w-5 text-teal-500" />;
+      case 'Production':
+        return <Settings className="h-5 w-5 text-red-500" />;
+      case 'Backup':
+        return <Database className="h-5 w-5 text-cyan-500" />;
       default:
         return <Server className="h-5 w-5 text-gray-500" />;
     }
@@ -239,6 +245,9 @@ export const ProductionDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Outils de Configuration */}
+      <ProductionConfigTools />
     </div>
   );
 };

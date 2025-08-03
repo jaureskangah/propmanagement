@@ -40,3 +40,17 @@ if (import.meta.env.DEV) {
     return originalConsoleLog(...args);
   };
 }
+
+// Production cleanup utility
+export const cleanupProductionLogging = () => {
+  if (import.meta.env.PROD) {
+    // In production, disable console logs except errors
+    console.log = () => {};
+    console.info = () => {};
+    console.warn = () => {};
+    // Keep console.error for critical issues
+  }
+};
+
+// Auto-cleanup in production
+cleanupProductionLogging();
