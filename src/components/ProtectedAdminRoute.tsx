@@ -12,21 +12,33 @@ export const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({ childr
   const { isAuthenticated, isTenant } = useAuth();
   const { isAdmin, loading } = useAdminRole();
 
+  console.log('🔍 DEBUG: ProtectedAdminRoute - Auth status:', { 
+    isAuthenticated, 
+    isTenant, 
+    isAdmin, 
+    loading 
+  });
+
   if (!isAuthenticated) {
+    console.log('🔍 DEBUG: ProtectedAdminRoute - Not authenticated, redirecting to login');
     return <Navigate to="/login" />;
   }
 
   if (isTenant) {
+    console.log('🔍 DEBUG: ProtectedAdminRoute - User is tenant, redirecting to tenant dashboard');
     return <Navigate to="/tenant/dashboard" />;
   }
 
   if (loading) {
+    console.log('🔍 DEBUG: ProtectedAdminRoute - Still loading admin status');
     return <PageLoadingAnimation />;
   }
 
   if (!isAdmin) {
+    console.log('🔍 DEBUG: ProtectedAdminRoute - User is not admin, redirecting to dashboard');
     return <Navigate to="/dashboard" />;
   }
 
+  console.log('🔍 DEBUG: ProtectedAdminRoute - User is admin, allowing access');
   return <>{children}</>;
 };

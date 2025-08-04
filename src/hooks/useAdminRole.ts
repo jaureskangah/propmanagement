@@ -9,7 +9,10 @@ export const useAdminRole = () => {
 
   useEffect(() => {
     const checkAdminRole = async () => {
+      console.log('🔍 DEBUG: useAdminRole - Checking admin role for user:', user?.id);
+      
       if (!user) {
+        console.log('🔍 DEBUG: useAdminRole - No user found');
         setIsAdmin(false);
         setLoading(false);
         return;
@@ -17,6 +20,7 @@ export const useAdminRole = () => {
 
       try {
         // Check if user has admin role directly from the table
+        console.log('🔍 DEBUG: useAdminRole - Querying user_roles table for user:', user.id);
         const { data: adminRole, error: roleError } = await supabase
           .from('user_roles')
           .select('role')
@@ -24,14 +28,18 @@ export const useAdminRole = () => {
           .eq('role', 'admin')
           .maybeSingle();
 
+        console.log('🔍 DEBUG: useAdminRole - Query result:', { adminRole, roleError });
+
         if (roleError) {
-          console.error('Error checking admin role:', roleError);
+          console.error('❌ ERROR: useAdminRole - Error checking admin role:', roleError);
           setIsAdmin(false);
         } else {
-          setIsAdmin(!!adminRole);
+          const isAdminUser = !!adminRole;
+          console.log('🔍 DEBUG: useAdminRole - Final admin status:', isAdminUser);
+          setIsAdmin(isAdminUser);
         }
       } catch (error) {
-        console.error('Error in admin role check:', error);
+        console.error('❌ ERROR: useAdminRole - Error in admin role check:', error);
         setIsAdmin(false);
       } finally {
         setLoading(false);
