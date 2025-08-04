@@ -4,6 +4,7 @@ import { useAuth } from './components/AuthProvider';
 import { useDeletedTenantCheck } from './hooks/useDeletedTenantCheck';
 import { lazy, Suspense } from 'react';
 import { PageLoadingAnimation } from './components/common/PageLoadingAnimation';
+import { ProtectedAdminRoute } from './components/ProtectedAdminRoute';
 
 // Landing page - load immediately
 import LandingPage from './pages/LandingPage';
@@ -130,7 +131,7 @@ function App() {
           isAuthenticated && !isTenant ? <Reports /> : <Navigate to="/login" />
         } />
         <Route path="/admin" element={
-          isAuthenticated && !isTenant ? <Admin /> : <Navigate to="/login" />
+          <ProtectedAdminRoute><Admin /></ProtectedAdminRoute>
         } />
         
         {/* Tenant Routes - only accessible to tenants */}
@@ -154,11 +155,11 @@ function App() {
         <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
         <Route path="/subscription" element={isAuthenticated ? <Subscription /> : <Navigate to="/login" />} />
         <Route path="/test-restrictions" element={isAuthenticated ? <TestRestrictions /> : <Navigate to="/login" />} />
-        <Route path="/sync-validation" element={isAuthenticated ? <SubscriptionSyncValidator /> : <Navigate to="/login" />} />
-        <Route path="/production-dashboard" element={isAuthenticated ? <ProductionDashboard /> : <Navigate to="/login" />} />
-        <Route path="/monitoring" element={isAuthenticated ? <MonitoringDashboard /> : <Navigate to="/login" />} />
-        <Route path="/documentation" element={isAuthenticated ? <UserDocumentationCenter /> : <Navigate to="/login" />} />
-        <Route path="/go-live" element={isAuthenticated ? <GoLiveDashboard /> : <Navigate to="/login" />} />
+        <Route path="/sync-validation" element={<ProtectedAdminRoute><SubscriptionSyncValidator /></ProtectedAdminRoute>} />
+        <Route path="/production-dashboard" element={<ProtectedAdminRoute><ProductionDashboard /></ProtectedAdminRoute>} />
+        <Route path="/monitoring" element={<ProtectedAdminRoute><MonitoringDashboard /></ProtectedAdminRoute>} />
+        <Route path="/documentation" element={<ProtectedAdminRoute><UserDocumentationCenter /></ProtectedAdminRoute>} />
+        <Route path="/go-live" element={<ProtectedAdminRoute><GoLiveDashboard /></ProtectedAdminRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
