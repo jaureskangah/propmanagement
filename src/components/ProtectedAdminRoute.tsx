@@ -36,7 +36,7 @@ export const ProtectedAdminRoute: React.FC<ProtectedAdminRouteProps> = ({ childr
 
   if (!isAdmin) {
     console.log('🔍 DEBUG: ProtectedAdminRoute - User is not admin, redirecting to dashboard');
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   console.log('🔍 DEBUG: ProtectedAdminRoute - User is admin, allowing access');
