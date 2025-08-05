@@ -50,6 +50,7 @@ const ProductionDashboard = lazy(() => import('./components/admin/ProductionDash
 const MonitoringDashboard = lazy(() => import('./components/admin/MonitoringDashboard').then(module => ({ default: module.MonitoringDashboard })));
 const UserDocumentationCenter = lazy(() => import('./components/admin/UserDocumentationCenter').then(module => ({ default: module.UserDocumentationCenter })));
 const GoLiveDashboard = lazy(() => import('./components/admin/GoLiveDashboard').then(module => ({ default: module.GoLiveDashboard })));
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
 
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
@@ -154,12 +155,12 @@ function App() {
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
         <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
         <Route path="/subscription" element={isAuthenticated ? <Subscription /> : <Navigate to="/login" />} />
-        <Route path="/test-restrictions" element={isAuthenticated ? <TestRestrictions /> : <Navigate to="/login" />} />
+        <Route path="/test-restrictions" element={<ProtectedAdminRoute><AdminLayout><TestRestrictions /></AdminLayout></ProtectedAdminRoute>} />
         <Route path="/sync-validation" element={<ProtectedAdminRoute><SubscriptionSyncValidator /></ProtectedAdminRoute>} />
-        <Route path="/production-dashboard" element={<ProtectedAdminRoute><ProductionDashboard /></ProtectedAdminRoute>} />
-        <Route path="/monitoring" element={<ProtectedAdminRoute><MonitoringDashboard /></ProtectedAdminRoute>} />
-        <Route path="/documentation" element={<ProtectedAdminRoute><UserDocumentationCenter /></ProtectedAdminRoute>} />
-        <Route path="/go-live" element={<ProtectedAdminRoute><GoLiveDashboard /></ProtectedAdminRoute>} />
+        <Route path="/production-dashboard" element={<ProtectedAdminRoute><AdminLayout><ProductionDashboard /></AdminLayout></ProtectedAdminRoute>} />
+        <Route path="/monitoring" element={<ProtectedAdminRoute><AdminLayout><MonitoringDashboard /></AdminLayout></ProtectedAdminRoute>} />
+        <Route path="/documentation" element={<ProtectedAdminRoute><AdminLayout><UserDocumentationCenter /></AdminLayout></ProtectedAdminRoute>} />
+        <Route path="/go-live" element={<ProtectedAdminRoute><AdminLayout><GoLiveDashboard /></AdminLayout></ProtectedAdminRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
