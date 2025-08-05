@@ -61,6 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(session.user);
             await checkTenantStatus(session.user.id);
             await checkSubscriptionStatus();
+            setLoading(false); // ✅ Très important: définir loading à false après toutes les vérifications
           } else {
             setUser(null);
             setIsTenant(false);
