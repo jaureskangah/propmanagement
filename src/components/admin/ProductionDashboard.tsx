@@ -21,7 +21,8 @@ import {
   Settings,
   Monitor,
   BookOpen,
-  Rocket
+  Rocket,
+  TestTube
 } from 'lucide-react';
 
 export const ProductionDashboard = () => {
@@ -55,6 +56,12 @@ export const ProductionDashboard = () => {
       label: "Déploiement", 
       icon: Rocket,
       description: "Préparation déploiement" 
+    },
+    { 
+      to: "/test-restrictions", 
+      label: "Tests", 
+      icon: TestTube,
+      description: "Tests de restrictions" 
     }
   ];
 
