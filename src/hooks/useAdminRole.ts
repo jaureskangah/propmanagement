@@ -19,22 +19,18 @@ export const useAdminRole = () => {
       }
 
       try {
-        // Check if user has admin role directly from the table
-        console.log('🔍 DEBUG: useAdminRole - Querying user_roles table for user:', user.id);
-        const { data: adminRole, error: roleError } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', user.id)
-          .eq('role', 'admin')
-          .maybeSingle();
+        // Use the has_role function directly
+        console.log('🔍 DEBUG: useAdminRole - Calling has_role function for user:', user.id);
+        const { data: hasAdminRole, error: roleError } = await supabase
+          .rpc('has_role', { role: 'admin' });
 
-        console.log('🔍 DEBUG: useAdminRole - Query result:', { adminRole, roleError });
+        console.log('🔍 DEBUG: useAdminRole - has_role result:', { hasAdminRole, roleError });
 
         if (roleError) {
-          console.error('❌ ERROR: useAdminRole - Error checking admin role:', roleError);
+          console.error('❌ ERROR: useAdminRole - Error calling has_role:', roleError);
           setIsAdmin(false);
         } else {
-          const isAdminUser = !!adminRole;
+          const isAdminUser = !!hasAdminRole;
           console.log('🔍 DEBUG: useAdminRole - Final admin status:', isAdminUser);
           setIsAdmin(isAdminUser);
         }
