@@ -12,9 +12,11 @@ import {
   Wrench,
   CreditCard,
   Mail,
-  BarChart3
+  BarChart3,
+  Factory
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useAdminRole } from "@/hooks/useAdminRole";
 import {
   Tooltip,
   TooltipContent,
@@ -31,6 +33,7 @@ export interface SidebarLinksProps {
 const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = false }: SidebarLinksProps) => {
   const location = useLocation();
   const { t } = useLocale();
+  const { isAdmin } = useAdminRole();
   
   // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {
@@ -45,7 +48,7 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
     }
     
     // Menu complet pour les propriétaires
-    return [
+    const baseLinks = [
       { to: "/dashboard", icon: LayoutDashboard, label: t('dashboard'), tooltip: t('dashboard') },
       { to: "/properties", icon: Building, label: t('properties'), tooltip: t('properties') },
       { to: "/tenants", icon: Users, label: t('tenants'), tooltip: t('tenants') },
@@ -55,7 +58,14 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
       { to: "/reports", icon: BarChart3, label: t('reports'), tooltip: t('reports') },
       { to: "/settings", icon: Settings, label: t('settings'), tooltip: t('settings') }
     ];
-  }, [isTenant, t]);
+    
+    // Ajouter le lien Production uniquement pour les admins
+    if (isAdmin) {
+      baseLinks.splice(-1, 0, { to: "/production-dashboard", icon: Factory, label: "Production", tooltip: "Production Dashboard" });
+    }
+    
+    return baseLinks;
+  }, [isTenant, t, isAdmin]);
 
   const isActive = (path: string, section?: string) => {
     if (isTenant && path.startsWith("/tenant/dashboard")) {
