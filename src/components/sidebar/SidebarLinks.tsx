@@ -35,6 +35,8 @@ const SidebarLinks = ({ isTenant = false, tooltipEnabled = true, collapsed = fal
   const { t } = useLocale();
   const { isAdmin } = useAdminRole();
   
+  console.log('🔍 DEBUG: SidebarLinks - isAdmin:', isAdmin);
+  
   // Links différents selon le type d'utilisateur
   const links = React.useMemo(() => {
     if (isTenant) {
