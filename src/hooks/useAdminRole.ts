@@ -53,5 +53,6 @@ export const useAdminRole = () => {
     checkAdminRole();
   }, [user]);
 
+  console.log('🔍 DEBUG: useAdminRole - FINAL RETURN:', { isAdmin, loading, userId: user?.id });
   return { isAdmin, loading };
 };
