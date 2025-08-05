@@ -19,6 +19,14 @@ export const useAdminRole = () => {
       }
 
       try {
+        // Debug: Check current auth session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        console.log('🔍 DEBUG: useAdminRole - Current session:', { 
+          hasSession: !!session, 
+          userId: session?.user?.id, 
+          sessionError 
+        });
+
         // Use the has_role function directly
         console.log('🔍 DEBUG: useAdminRole - Calling has_role function for user:', user.id);
         const { data: hasAdminRole, error: roleError } = await supabase
