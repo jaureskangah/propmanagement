@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ProductionChecker, ProductionCheckResult } from '@/utils/productionCheck';
 import { ProductionConfigTools } from './ProductionConfigTools';
+import { cn } from '@/lib/utils';
 import { 
   CheckCircle, 
   AlertTriangle, 
@@ -16,14 +18,45 @@ import {
   CreditCard,
   Gauge,
   Server,
-  Settings
+  Settings,
+  Monitor,
+  BookOpen,
+  Rocket
 } from 'lucide-react';
 
 export const ProductionDashboard = () => {
   const { toast } = useToast();
+  const location = useLocation();
   const [isChecking, setIsChecking] = useState(false);
   const [results, setResults] = useState<ProductionCheckResult[]>([]);
   const [checker] = useState(new ProductionChecker());
+
+  const adminPages = [
+    { 
+      to: "/production-dashboard", 
+      label: "Production", 
+      icon: Settings,
+      description: "Vérification production" 
+    },
+    { 
+      to: "/monitoring", 
+      label: "Surveillance", 
+      icon: Monitor,
+      description: "Surveillance temps réel" 
+    },
+    { 
+      to: "/documentation", 
+      label: "Documentation", 
+      icon: BookOpen,
+      description: "Documentation complète" 
+    },
+    { 
+      to: "/go-live", 
+      label: "Déploiement", 
+      icon: Rocket,
+      description: "Préparation déploiement" 
+    }
+  ];
 
   const runChecks = async () => {
     setIsChecking(true);
@@ -109,6 +142,37 @@ export const ProductionDashboard = () => {
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-6">
+      {/* Navigation Admin */}
+      <Card className="border-muted">
+        <CardContent className="p-4">
+          <nav className="flex flex-wrap gap-2">
+            {adminPages.map((page) => {
+              const Icon = page.icon;
+              const isActive = location.pathname === page.to;
+              return (
+                <Link
+                  key={page.to}
+                  to={page.to}
+                  className={cn(
+                    "flex items-center gap-2 px-4 py-2 rounded-lg transition-all",
+                    "hover:bg-accent/50 border",
+                    isActive 
+                      ? "bg-primary text-primary-foreground border-primary shadow-sm" 
+                      : "border-border hover:border-accent-foreground/20"
+                  )}
+                >
+                  <Icon className="h-4 w-4" />
+                  <div className="text-left">
+                    <div className="font-medium text-sm">{page.label}</div>
+                    <div className="text-xs opacity-70">{page.description}</div>
+                  </div>
+                </Link>
+              );
+            })}
+          </nav>
+        </CardContent>
+      </Card>
+
       <div className="text-center space-y-2">
         <h1 className="text-3xl font-bold">Tableau de Bord Production</h1>
         <p className="text-muted-foreground">
