@@ -71,37 +71,52 @@ export const useReminderSettings = () => {
       .delete()
       .eq('user_id', user.id);
 
-    const defaultSettings = [
-      {
-        user_id: user.id,
-        reminder_type: 'rent_payment',
-        enabled: false,
-        days_before_due: 3,
-        notification_methods: ['email', 'app']
-      },
-      {
-        user_id: user.id,
-        reminder_type: 'lease_expiry',
-        enabled: false,
-        days_before_due: 30,
-        notification_methods: ['email']
-      },
-      {
-        user_id: user.id,
-        reminder_type: 'maintenance_due',
-        enabled: false,
-        days_before_due: 7,
-        notification_methods: ['email', 'app']
-      }
-    ];
-
     try {
-      const { data, error } = await supabase
-        .from('reminder_settings')
-        .insert(defaultSettings)
-        .select();
+      // Insérer chaque type de rappel individuellement pour s'assurer qu'ils sont tous créés
+      const reminderTypes = [
+        {
+          user_id: user.id,
+          reminder_type: 'rent_payment',
+          enabled: false,
+          days_before_due: 3,
+          notification_methods: ['email', 'app']
+        },
+        {
+          user_id: user.id,
+          reminder_type: 'lease_expiry',
+          enabled: false,
+          days_before_due: 30,
+          notification_methods: ['email']
+        },
+        {
+          user_id: user.id,
+          reminder_type: 'maintenance_due',
+          enabled: false,
+          days_before_due: 7,
+          notification_methods: ['email', 'app']
+        }
+      ];
 
-      if (error) throw error;
+      const insertedSettings = [];
+      
+      for (const setting of reminderTypes) {
+        const { data, error } = await supabase
+          .from('reminder_settings')
+          .insert(setting)
+          .select()
+          .single();
+          
+        if (error) {
+          console.error(`Erreur lors de l'insertion du rappel ${setting.reminder_type}:`, error);
+          throw error;
+        }
+        
+        if (data) {
+          insertedSettings.push(data);
+        }
+      }
+
+      const data = insertedSettings;
 
       // Convertir vers le format attendu
       const formattedSettings: ReminderSettings[] = data.map(setting => ({
