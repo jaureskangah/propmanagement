@@ -65,60 +65,95 @@ export const useReminderSettings = () => {
   const createDefaultSettings = async () => {
     if (!user?.id) return;
 
+    console.log('🔍 Création des paramètres par défaut pour:', user.id);
+
     // D'abord, supprimer tous les paramètres existants pour cet utilisateur
-    await supabase
+    const { error: deleteError } = await supabase
       .from('reminder_settings')
       .delete()
       .eq('user_id', user.id);
 
-    try {
-      // Insérer chaque type de rappel individuellement pour s'assurer qu'ils sont tous créés
-      const reminderTypes = [
-        {
-          user_id: user.id,
-          reminder_type: 'rent_payment',
-          enabled: false,
-          days_before_due: 3,
-          notification_methods: ['email', 'app']
-        },
-        {
-          user_id: user.id,
-          reminder_type: 'lease_expiry',
-          enabled: false,
-          days_before_due: 30,
-          notification_methods: ['email']
-        },
-        {
-          user_id: user.id,
-          reminder_type: 'maintenance_due',
-          enabled: false,
-          days_before_due: 7,
-          notification_methods: ['email', 'app']
-        }
-      ];
+    if (deleteError) {
+      console.error('Erreur lors de la suppression:', deleteError);
+    }
 
-      const insertedSettings = [];
-      
-      for (const setting of reminderTypes) {
-        const { data, error } = await supabase
-          .from('reminder_settings')
-          .insert(setting)
-          .select()
-          .single();
-          
-        if (error) {
-          console.error(`Erreur lors de l'insertion du rappel ${setting.reminder_type}:`, error);
-          throw error;
+    // Définir tous les types de rappels par défaut
+    const reminderTypes = [
+      {
+        user_id: user.id,
+        reminder_type: 'rent_payment',
+        enabled: false,
+        days_before_due: 3,
+        notification_methods: ['email', 'app']
+      },
+      {
+        user_id: user.id,
+        reminder_type: 'lease_expiry',
+        enabled: false,
+        days_before_due: 30,
+        notification_methods: ['email']
+      },
+      {
+        user_id: user.id,
+        reminder_type: 'maintenance_due',
+        enabled: false,
+        days_before_due: 7,
+        notification_methods: ['email', 'app']
+      }
+    ];
+
+    console.log('🔍 Insertion de tous les rappels en une seule fois...');
+
+    try {
+      // Insérer tous les rappels en une seule fois
+      const { data, error } = await supabase
+        .from('reminder_settings')
+        .insert(reminderTypes)
+        .select();
+
+      if (error) {
+        console.error('Erreur lors de l\'insertion en masse:', error);
+        
+        // Si l'insertion en masse échoue, essayer individuellement
+        console.log('🔍 Tentative d\'insertion individuelle...');
+        const insertedSettings = [];
+        
+        for (const setting of reminderTypes) {
+          const { data: singleData, error: singleError } = await supabase
+            .from('reminder_settings')
+            .insert(setting)
+            .select()
+            .single();
+            
+          if (singleError) {
+            console.error(`❌ Erreur pour ${setting.reminder_type}:`, singleError);
+          } else if (singleData) {
+            console.log(`✅ Rappel créé: ${setting.reminder_type}`);
+            insertedSettings.push(singleData);
+          }
         }
         
-        if (data) {
-          insertedSettings.push(data);
+        // Utiliser les données insérées individuellement
+        if (insertedSettings.length > 0) {
+          const formattedSettings: ReminderSettings[] = insertedSettings.map(setting => ({
+            id: setting.reminder_type,
+            type: setting.reminder_type as 'rent_payment' | 'lease_expiry' | 'maintenance_due',
+            title: getTranslatedTitle(setting.reminder_type),
+            description: getTranslatedDescription(setting.reminder_type),
+            enabled: setting.enabled,
+            daysBeforeDue: setting.days_before_due,
+            methods: setting.notification_methods as ('email' | 'app')[]
+          }));
+          
+          setReminderSettings(formattedSettings);
+          console.log('✅ Paramètres par défaut créés avec succès (individuellement):', formattedSettings.length);
         }
+        return;
       }
 
-      const data = insertedSettings;
-
-      // Convertir vers le format attendu
+      // Si l'insertion en masse a réussi
+      console.log('✅ Insertion en masse réussie:', data.length);
+      
       const formattedSettings: ReminderSettings[] = data.map(setting => ({
         id: setting.reminder_type,
         type: setting.reminder_type as 'rent_payment' | 'lease_expiry' | 'maintenance_due',
@@ -130,8 +165,10 @@ export const useReminderSettings = () => {
       }));
 
       setReminderSettings(formattedSettings);
+      console.log('✅ Paramètres par défaut créés avec succès:', formattedSettings.length);
+
     } catch (error) {
-      console.error('Erreur lors de la création des paramètres par défaut:', error);
+      console.error('❌ Erreur lors de la création des paramètres par défaut:', error);
     }
   };
 
