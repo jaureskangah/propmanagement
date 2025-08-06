@@ -23,11 +23,7 @@ export const AutomatedReminders = () => {
   const { locale, language } = useLocale();
   const { toast } = useToast();
   
-  console.log('AutomatedReminders - Current locale:', locale, 'language:', language);
-  console.log('Available translations:', Object.keys(automatedRemindersTranslations));
-  
-  const t = automatedRemindersTranslations[locale as keyof typeof automatedRemindersTranslations] || automatedRemindersTranslations.en;
-  console.log('Selected translation title:', t.title);
+  const t = automatedRemindersTranslations[language as keyof typeof automatedRemindersTranslations] || automatedRemindersTranslations.en;
   
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings[]>([]);
 
