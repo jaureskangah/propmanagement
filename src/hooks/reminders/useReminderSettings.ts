@@ -32,10 +32,24 @@ export const useReminderSettings = () => {
 
       if (error) throw error;
 
-      // Si aucun paramètre n'existe, créer les paramètres par défaut
+      // Vérifier si tous les types de rappels existent
+      const expectedTypes = ['rent_payment', 'lease_expiry', 'maintenance_due'];
+      const existingTypes = data ? data.map(setting => setting.reminder_type) : [];
+      const missingTypes = expectedTypes.filter(type => !existingTypes.includes(type));
+
+      console.log('🔍 Types existants:', existingTypes);
+      console.log('🔍 Types manquants:', missingTypes);
+
       if (!data || data.length === 0) {
+        console.log('🔍 Aucun paramètre trouvé, création de tous les paramètres par défaut');
         await createDefaultSettings();
+      } else if (missingTypes.length > 0) {
+        console.log('🔍 Certains types manquent, création des types manquants:', missingTypes);
+        await createMissingSettings(missingTypes);
+        // Recharger les données après avoir créé les types manquants
+        return loadReminderSettings();
       } else {
+        console.log('🔍 Tous les types de rappels existent, formatage des données');
         // Convertir les données de la DB vers le format attendu
         const formattedSettings: ReminderSettings[] = data.map(setting => ({
           id: setting.reminder_type,
@@ -169,6 +183,67 @@ export const useReminderSettings = () => {
 
     } catch (error) {
       console.error('❌ Erreur lors de la création des paramètres par défaut:', error);
+    }
+  };
+
+  // Créer les types de rappels manquants
+  const createMissingSettings = async (missingTypes: string[]) => {
+    if (!user?.id) return;
+
+    console.log('🔍 Création des types manquants:', missingTypes);
+
+    const getDefaultSettingsForType = (type: string) => {
+      const baseSettings = {
+        user_id: user.id,
+        reminder_type: type,
+        enabled: false,
+      };
+
+      switch (type) {
+        case 'rent_payment':
+          return {
+            ...baseSettings,
+            days_before_due: 3,
+            notification_methods: ['email', 'app']
+          };
+        case 'lease_expiry':
+          return {
+            ...baseSettings,
+            days_before_due: 30,
+            notification_methods: ['email']
+          };
+        case 'maintenance_due':
+          return {
+            ...baseSettings,
+            days_before_due: 7,
+            notification_methods: ['email', 'app']
+          };
+        default:
+          return {
+            ...baseSettings,
+            days_before_due: 7,
+            notification_methods: ['email']
+          };
+      }
+    };
+
+    try {
+      for (const type of missingTypes) {
+        const setting = getDefaultSettingsForType(type);
+        const { data, error } = await supabase
+          .from('reminder_settings')
+          .insert(setting)
+          .select()
+          .single();
+          
+        if (error) {
+          console.error(`❌ Erreur pour ${type}:`, error);
+        } else if (data) {
+          console.log(`✅ Rappel manquant créé: ${type}`);
+        }
+      }
+    } catch (error) {
+      console.error('❌ Erreur lors de la création des types manquants:', error);
     }
   };
 
