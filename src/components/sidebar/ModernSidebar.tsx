@@ -14,7 +14,8 @@ import {
   Building2,
   BarChart3,
   Shield,
-  Factory
+  Factory,
+  Bell
 } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
@@ -55,6 +56,7 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
       { to: "/invitations", icon: Mail, label: String(t('invitations') || 'Invitations') },
       { to: "/finances", icon: CreditCard, label: String(t('finances') || 'Finances') },
       { to: "/maintenance", icon: Wrench, label: "Maintenance" },
+      { to: "/reminders", icon: Bell, label: "Rappels automatisés" },
       { to: "/reports", icon: BarChart3, label: String(t('reports') || 'Reports') },
       { to: "/production-dashboard", icon: Factory, label: "Production", adminOnly: true },
       { to: "/admin", icon: Shield, label: String(t('admin') || 'Admin'), adminOnly: true },

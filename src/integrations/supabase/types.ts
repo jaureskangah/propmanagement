@@ -570,6 +570,86 @@ export type Database = {
           },
         ]
       }
+      reminder_logs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          recipient_email: string
+          reminder_type: string
+          sent_at: string
+          status: string
+          subject: string
+          tenant_id: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          recipient_email: string
+          reminder_type: string
+          sent_at?: string
+          status?: string
+          subject: string
+          tenant_id?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          recipient_email?: string
+          reminder_type?: string
+          sent_at?: string
+          status?: string
+          subject?: string
+          tenant_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_logs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reminder_settings: {
+        Row: {
+          created_at: string
+          days_before_due: number
+          enabled: boolean
+          id: string
+          notification_methods: string[]
+          reminder_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          days_before_due?: number
+          enabled?: boolean
+          id?: string
+          notification_methods?: string[]
+          reminder_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          days_before_due?: number
+          enabled?: boolean
+          id?: string
+          notification_methods?: string[]
+          reminder_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rent_payment_reminders: {
         Row: {
           created_at: string
