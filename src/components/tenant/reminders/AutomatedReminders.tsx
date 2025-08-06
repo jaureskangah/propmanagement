@@ -1,78 +1,26 @@
-import React, { useState, useEffect } from 'react';
+
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Badge } from '@/components/ui/badge';
-import { Bell, Calendar, Mail, MessageSquare, Settings, Clock } from 'lucide-react';
+import { Bell, Calendar, Mail, MessageSquare, Settings, Clock, Loader2 } from 'lucide-react';
 import { FeatureGate } from '@/components/subscription/FeatureGate';
 import { useLocale } from '@/components/providers/LocaleProvider';
-import { useToast } from '@/hooks/use-toast';
 import { automatedRemindersTranslations } from '@/translations/features/automatedReminders';
-
-interface ReminderSettings {
-  id: string;
-  type: 'rent_payment' | 'lease_expiry' | 'maintenance_due';
-  title: string;
-  description: string;
-  enabled: boolean;
-  daysBeforeDue: number;
-  methods: ('email' | 'app')[];
-}
+import { useReminderSettings } from '@/hooks/reminders/useReminderSettings';
 
 export const AutomatedReminders = () => {
-  const { locale, language } = useLocale();
-  const { toast } = useToast();
-  
+  const { language } = useLocale();
   const t = automatedRemindersTranslations[language as keyof typeof automatedRemindersTranslations] || automatedRemindersTranslations.en;
   
-  const [reminderSettings, setReminderSettings] = useState<ReminderSettings[]>([]);
+  const { reminderSettings, loading, updateReminderSetting } = useReminderSettings();
 
-  // Update translations when locale changes
-  useEffect(() => {
-    setReminderSettings([
-      {
-        id: 'rent_payment',
-        type: 'rent_payment',
-        title: t.rentPaymentTitle,
-        description: t.rentPaymentDescription,
-        enabled: false,
-        daysBeforeDue: 3,
-        methods: ['email', 'app']
-      },
-      {
-        id: 'lease_expiry',
-        type: 'lease_expiry',
-        title: t.leaseExpiryTitle,
-        description: t.leaseExpiryDescription,
-        enabled: false,
-        daysBeforeDue: 30,
-        methods: ['email']
-      },
-      {
-        id: 'maintenance_due',
-        type: 'maintenance_due',
-        title: t.maintenanceDueTitle,
-        description: t.maintenanceDueDescription,
-        enabled: false,
-        daysBeforeDue: 7,
-        methods: ['email', 'app']
-      }
-    ]);
-  }, [t]);
+  const toggleReminder = async (id: string) => {
+    const setting = reminderSettings.find(s => s.id === id);
+    if (!setting) return;
 
-  const toggleReminder = (id: string) => {
-    setReminderSettings(prev => 
-      prev.map(setting => 
-        setting.id === id 
-          ? { ...setting, enabled: !setting.enabled }
-          : setting
-      )
-    );
-    
-    toast({
-      title: t.reminderUpdated,
-      description: t.settingsSaved,
-    });
+    await updateReminderSetting(id, { enabled: !setting.enabled });
   };
 
   const getTypeIcon = (type: string) => {
@@ -108,6 +56,19 @@ export const AutomatedReminders = () => {
         return null;
     }
   };
+
+  if (loading) {
+    return (
+      <FeatureGate feature="automatedReminders">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-muted-foreground">{t.loadingReminders}</p>
+          </div>
+        </div>
+      </FeatureGate>
+    );
+  }
 
   return (
     <FeatureGate feature="automatedReminders">
