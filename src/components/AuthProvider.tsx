@@ -59,9 +59,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (isMounted) {
           if (session?.user) {
             setUser(session.user);
-            await checkTenantStatus(session.user.id);
+            await checkTenantStatus(session.user.id); // checkTenantStatus gère déjà setLoading(false)
             await checkSubscriptionStatus();
-            setLoading(false); // ✅ Très important: définir loading à false après toutes les vérifications
+            // Note: pas besoin de setLoading(false) ici car checkTenantStatus le fait déjà
           } else {
             setUser(null);
             setIsTenant(false);
@@ -170,6 +170,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Si marqué comme tenant mais pas de record tenant ET pas admin → compte supprimé
       if (profileData?.is_tenant_user && !tenantData && !hasAdminRole) {
         logger.warn("Deleted tenant account detected, forcing signout");
+        setLoading(false); // Important: définir loading à false avant la redirection
         alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
         await supabase.auth.signOut();
         window.location.href = '/auth';
@@ -179,12 +180,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Sinon, définir le statut normalement
       setIsTenant(!!tenantData);
       setTenantData(tenantData);
+      
+      logger.tenant("Tenant status set:", { isTenant: !!tenantData, tenantData });
 
     } catch (err) {
       console.error("❌ Error checking tenant status:", err);
       setIsTenant(false);
       setTenantData(null);
     } finally {
+      // Toujours s'assurer que loading est mis à false
       setLoading(false);
     }
   };
