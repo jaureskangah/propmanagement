@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { useAdminRole } from "@/hooks/useAdminRole";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useSidebarContext } from "@/contexts/SidebarContext";
+import { automatedRemindersTranslations } from "@/translations/features/automatedReminders";
 import "./modernSidebar.css";
 
 export interface ModernSidebarProps {
@@ -31,8 +32,9 @@ export interface ModernSidebarProps {
 const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const { isAdmin } = useAdminRole();
+  const remindersT = automatedRemindersTranslations[locale] || automatedRemindersTranslations.en;
   
   console.log("🔍 ModernSidebar: About to use useSidebarContext");
   const { isMobileOpen, setIsMobileOpen, isMobile } = useSidebarContext();
@@ -56,13 +58,13 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
       { to: "/invitations", icon: Mail, label: String(t('invitations') || 'Invitations') },
       { to: "/finances", icon: CreditCard, label: String(t('finances') || 'Finances') },
       { to: "/maintenance", icon: Wrench, label: "Maintenance" },
-      { to: "/reminders", icon: Bell, label: "Rappels automatisés" },
+      { to: "/reminders", icon: Bell, label: remindersT.title },
       { to: "/reports", icon: BarChart3, label: String(t('reports') || 'Reports') },
       { to: "/production-dashboard", icon: Factory, label: "Production", adminOnly: true },
       { to: "/admin", icon: Shield, label: String(t('admin') || 'Admin'), adminOnly: true },
       { to: "/settings", icon: Settings, label: String(t('settings') || 'Settings') }
     ].filter(link => !link.adminOnly || isAdmin);
-  }, [isTenant, t, isAdmin]);
+  }, [isTenant, t, isAdmin, remindersT.title]);
 
   const isActive = (path: string, section?: string) => {
     if (isTenant && path.startsWith("/tenant/dashboard")) {

@@ -7,6 +7,7 @@ import { Bell, Calendar, Mail, MessageSquare, Settings, Clock } from 'lucide-rea
 import { FeatureGate } from '@/components/subscription/FeatureGate';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { useToast } from '@/hooks/use-toast';
+import { automatedRemindersTranslations } from '@/translations/features/automatedReminders';
 
 interface ReminderSettings {
   id: string;
@@ -19,15 +20,16 @@ interface ReminderSettings {
 }
 
 export const AutomatedReminders = () => {
-  const { t } = useLocale();
+  const { locale } = useLocale();
   const { toast } = useToast();
+  const t = automatedRemindersTranslations[locale] || automatedRemindersTranslations.en;
   
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings[]>([
     {
       id: 'rent_payment',
       type: 'rent_payment',
-      title: 'Rappels de paiement de loyer',
-      description: 'Rappels automatiques avant l\'échéance du loyer',
+      title: t.rentPaymentTitle,
+      description: t.rentPaymentDescription,
       enabled: false,
       daysBeforeDue: 3,
       methods: ['email', 'app']
@@ -35,8 +37,8 @@ export const AutomatedReminders = () => {
     {
       id: 'lease_expiry',
       type: 'lease_expiry',
-      title: 'Expiration du bail',
-      description: 'Rappels avant l\'expiration des baux',
+      title: t.leaseExpiryTitle,
+      description: t.leaseExpiryDescription,
       enabled: false,
       daysBeforeDue: 30,
       methods: ['email']
@@ -44,8 +46,8 @@ export const AutomatedReminders = () => {
     {
       id: 'maintenance_due',
       type: 'maintenance_due',
-      title: 'Maintenance préventive',
-      description: 'Rappels pour les tâches de maintenance programmées',
+      title: t.maintenanceDueTitle,
+      description: t.maintenanceDueDescription,
       enabled: false,
       daysBeforeDue: 7,
       methods: ['email', 'app']
@@ -62,8 +64,8 @@ export const AutomatedReminders = () => {
     );
     
     toast({
-      title: "Rappel mis à jour",
-      description: "Les paramètres de rappel ont été sauvegardés.",
+      title: t.reminderUpdated,
+      description: t.settingsSaved,
     });
   };
 
@@ -86,14 +88,14 @@ export const AutomatedReminders = () => {
         return (
           <Badge variant="outline" className="text-xs">
             <Mail className="h-3 w-3 mr-1" />
-            Email
+            {t.email}
           </Badge>
         );
       case 'app':
         return (
           <Badge variant="outline" className="text-xs">
             <MessageSquare className="h-3 w-3 mr-1" />
-            App
+            {t.app}
           </Badge>
         );
       default:
@@ -106,14 +108,14 @@ export const AutomatedReminders = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold">Rappels Automatisés</h2>
+            <h2 className="text-2xl font-bold">{t.title}</h2>
             <p className="text-muted-foreground">
-              Configurez les notifications automatiques pour vos locataires et propriétés
+              {t.subtitle}
             </p>
           </div>
           <Button variant="outline">
             <Settings className="h-4 w-4 mr-2" />
-            Paramètres avancés
+            {t.advancedSettings}
           </Button>
         </div>
 
@@ -142,14 +144,14 @@ export const AutomatedReminders = () => {
                 <CardContent className="pt-0">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Délai d'envoi :</span>
+                      <span className="text-muted-foreground">{t.sendDelay}</span>
                       <Badge variant="secondary">
-                        {setting.daysBeforeDue} jour{setting.daysBeforeDue > 1 ? 's' : ''} avant
+                        {setting.daysBeforeDue} {setting.daysBeforeDue > 1 ? t.daysBeforePlural : t.daysBefore}
                       </Badge>
                     </div>
                     
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Méthodes :</span>
+                      <span className="text-muted-foreground">{t.methods}</span>
                       <div className="flex space-x-2">
                         {setting.methods.map((method) => getMethodBadge(method))}
                       </div>
@@ -165,22 +167,22 @@ export const AutomatedReminders = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Bell className="h-5 w-5" />
-              <span>Statistiques des rappels</span>
+              <span>{t.reminderStats}</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-primary">24</div>
-                <div className="text-sm text-muted-foreground">Rappels envoyés ce mois</div>
+                <div className="text-sm text-muted-foreground">{t.sentThisMonth}</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-600">18</div>
-                <div className="text-sm text-muted-foreground">Paiements à temps</div>
+                <div className="text-sm text-muted-foreground">{t.onTimePayments}</div>
               </div>
               <div>
                 <div className="text-2xl font-bold text-amber-600">6</div>
-                <div className="text-sm text-muted-foreground">Rappels en attente</div>
+                <div className="text-sm text-muted-foreground">{t.pendingReminders}</div>
               </div>
             </div>
           </CardContent>
