@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useSupportTranslations } from "@/hooks/useSupportTranslations";
+import { FeatureGate } from "@/components/subscription/FeatureGate";
+import { useSubscriptionLimits } from "@/hooks/useSubscriptionLimits";
 import SupportChat from "./SupportChat";
 import ContactSupport from "./ContactSupport";
 
@@ -31,6 +33,7 @@ interface SupportOption {
 
 export default function SupportCenter() {
   const { t, translations } = useSupportTranslations();
+  const limits = useSubscriptionLimits();
   const [searchQuery, setSearchQuery] = useState("");
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
@@ -38,7 +41,7 @@ export default function SupportCenter() {
     {
       id: "chat",
       title: translations.chatTitle,
-      description: translations.chatDescription,
+      description: limits.hasPrioritySupport ? translations.chatDescription : "Support basique disponible",
       icon: MessageSquare,
       action: () => setActiveSection("chat"),
       available: true
@@ -57,7 +60,7 @@ export default function SupportCenter() {
       description: translations.phoneDescription,
       icon: PhoneCall,
       action: () => window.open("tel:+15067811872"),
-      available: true
+      available: limits.hasDedicatedSupport
     },
     {
       id: "docs",
@@ -142,10 +145,12 @@ export default function SupportCenter() {
           {supportOptions.map((option) => {
             const IconComponent = option.icon;
             return (
-              <Card 
+                <Card 
                 key={option.id}
-                className="support-card cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-l-primary"
-                onClick={option.action}
+                className={`support-card transition-shadow border-l-4 border-l-primary ${
+                  option.available ? 'cursor-pointer hover:shadow-lg' : 'opacity-60 cursor-not-allowed'
+                }`}
+                onClick={option.available ? option.action : undefined}
               >
                 <CardHeader className="pb-4">
                   <div className="flex items-center justify-between">
@@ -153,8 +158,13 @@ export default function SupportCenter() {
                       <div className="support-option-icon h-10 w-10 bg-primary/10 rounded-lg flex items-center justify-center">
                         <IconComponent className="h-5 w-5 text-primary" />
                       </div>
-                      <div>
-                        <CardTitle className="text-lg text-foreground">{option.title}</CardTitle>
+                       <div>
+                        <CardTitle className="text-lg text-foreground">
+                          {option.title}
+                          {option.id === 'phone' && !option.available && (
+                            <Badge variant="outline" className="ml-2 text-xs">Pro</Badge>
+                          )}
+                        </CardTitle>
                         <CardDescription className="text-sm text-muted-foreground">
                           {option.description}
                         </CardDescription>
