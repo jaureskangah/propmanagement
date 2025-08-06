@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -24,35 +24,40 @@ export const AutomatedReminders = () => {
   const { toast } = useToast();
   const t = automatedRemindersTranslations[locale] || automatedRemindersTranslations.en;
   
-  const [reminderSettings, setReminderSettings] = useState<ReminderSettings[]>([
-    {
-      id: 'rent_payment',
-      type: 'rent_payment',
-      title: t.rentPaymentTitle,
-      description: t.rentPaymentDescription,
-      enabled: false,
-      daysBeforeDue: 3,
-      methods: ['email', 'app']
-    },
-    {
-      id: 'lease_expiry',
-      type: 'lease_expiry',
-      title: t.leaseExpiryTitle,
-      description: t.leaseExpiryDescription,
-      enabled: false,
-      daysBeforeDue: 30,
-      methods: ['email']
-    },
-    {
-      id: 'maintenance_due',
-      type: 'maintenance_due',
-      title: t.maintenanceDueTitle,
-      description: t.maintenanceDueDescription,
-      enabled: false,
-      daysBeforeDue: 7,
-      methods: ['email', 'app']
-    }
-  ]);
+  const [reminderSettings, setReminderSettings] = useState<ReminderSettings[]>([]);
+
+  // Update translations when locale changes
+  useEffect(() => {
+    setReminderSettings([
+      {
+        id: 'rent_payment',
+        type: 'rent_payment',
+        title: t.rentPaymentTitle,
+        description: t.rentPaymentDescription,
+        enabled: false,
+        daysBeforeDue: 3,
+        methods: ['email', 'app']
+      },
+      {
+        id: 'lease_expiry',
+        type: 'lease_expiry',
+        title: t.leaseExpiryTitle,
+        description: t.leaseExpiryDescription,
+        enabled: false,
+        daysBeforeDue: 30,
+        methods: ['email']
+      },
+      {
+        id: 'maintenance_due',
+        type: 'maintenance_due',
+        title: t.maintenanceDueTitle,
+        description: t.maintenanceDueDescription,
+        enabled: false,
+        daysBeforeDue: 7,
+        methods: ['email', 'app']
+      }
+    ]);
+  }, [t]);
 
   const toggleReminder = (id: string) => {
     setReminderSettings(prev => 
