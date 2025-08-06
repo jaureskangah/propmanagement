@@ -70,12 +70,10 @@ export const useDeletedTenantCheck = () => {
           }
         }
 
-        // Si pas marqué comme tenant ET pas de propriétés = compte invalide
-        if (!profileData?.is_tenant_user && (!propertiesData || propertiesData.length === 0)) {
-          console.log("🚨 DETECTED INVALID ACCOUNT - NO PROPERTIES AND NOT TENANT");
-          await forceSignOut(t('invalidAccount'), 'accessDenied');
-          return;
-        }
+        // NOTE: Ne pas forcer la déconnexion si pas de propriétés ET pas tenant
+        // Un nouveau propriétaire peut ne pas encore avoir créé de propriétés
+        // Cette vérification était trop agressive et causait des déconnexions incorrectes
+        console.log("🔍 Valid property owner account (may not have properties yet)");
 
       } catch (error) {
         console.error("❌ Error in deleted tenant check:", error);
