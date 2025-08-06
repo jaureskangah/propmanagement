@@ -32,9 +32,9 @@ export interface ModernSidebarProps {
 const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { t, locale } = useLocale();
+  const { t, locale, language } = useLocale();
   const { isAdmin } = useAdminRole();
-  const remindersT = automatedRemindersTranslations[locale] || automatedRemindersTranslations.en;
+  const remindersT = automatedRemindersTranslations[language] || automatedRemindersTranslations.en;
   
   console.log("🔍 ModernSidebar: About to use useSidebarContext");
   const { isMobileOpen, setIsMobileOpen, isMobile } = useSidebarContext();
