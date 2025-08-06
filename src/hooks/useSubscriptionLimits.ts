@@ -1,4 +1,5 @@
 import { useSubscription } from './useSubscription';
+import { useAdminRole } from './useAdminRole';
 
 export interface SubscriptionLimits {
   maxProperties: number;
@@ -16,6 +17,7 @@ export const useSubscriptionLimits = (): SubscriptionLimits & {
   isLoading: boolean;
 } => {
   const { subscription, loading } = useSubscription();
+  const { isAdmin, loading: adminLoading } = useAdminRole();
 
   const getLimitsForTier = (tier: string): SubscriptionLimits => {
     switch (tier) {
@@ -55,11 +57,23 @@ export const useSubscriptionLimits = (): SubscriptionLimits & {
     }
   };
 
-  const limits = getLimitsForTier(subscription.subscription_tier);
+  // Admin users get unlimited access to everything
+  const adminLimits: SubscriptionLimits = {
+    maxProperties: Infinity,
+    maxTenants: Infinity,
+    canUseAdvancedReports: true,
+    canExportData: true,
+    canUseAutomatedReminders: true,
+    hasPrioritySupport: true,
+    hasAdvancedFinancialReports: true,
+    hasDedicatedSupport: true,
+  };
+
+  const limits = isAdmin ? adminLimits : getLimitsForTier(subscription.subscription_tier);
 
   return {
     ...limits,
-    tier: subscription.subscription_tier,
-    isLoading: loading,
+    tier: isAdmin ? 'admin' : subscription.subscription_tier,
+    isLoading: loading || adminLoading,
   };
 };
