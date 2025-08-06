@@ -65,6 +65,12 @@ export const useReminderSettings = () => {
   const createDefaultSettings = async () => {
     if (!user?.id) return;
 
+    // D'abord, supprimer tous les paramètres existants pour cet utilisateur
+    await supabase
+      .from('reminder_settings')
+      .delete()
+      .eq('user_id', user.id);
+
     const defaultSettings = [
       {
         user_id: user.id,
