@@ -7,6 +7,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { ReportsContainer } from "@/components/reports/ReportsContainer";
 import { ResponsiveLayout } from '@/components/layout/ResponsiveLayout';
+import { FeatureGate } from '@/components/subscription/FeatureGate';
 
 const Reports = () => {
   const { isAuthenticated, loading, isTenant } = useAuth();
@@ -35,27 +36,29 @@ const Reports = () => {
 
   return (
     <ResponsiveLayout title={t('advancedReports', { fallback: 'Advanced Reports' })}>
-      <div className="max-w-7xl mx-auto p-3 sm:p-6 md:p-8">
-        <div className="mb-6 sm:mb-8 animate-fade-in">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-            <div className="space-y-1">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent hover-scale transition-transform duration-200">
-                {t('advancedReports', { fallback: 'Advanced Reports' })}
-              </h1>
-              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                {t('analyticsDescription', { fallback: 'Analytics dashboards and performance metrics' })}
-              </p>
-            </div>
-            <div className="hidden sm:flex items-center space-x-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full animate-scale-in">
-              <BarChart3 className="w-3 h-3" />
-              <span>{t('analyticsMode', { fallback: 'Analytics' })}</span>
+      <FeatureGate feature="advancedReports">
+        <div className="max-w-7xl mx-auto p-3 sm:p-6 md:p-8">
+          <div className="mb-6 sm:mb-8 animate-fade-in">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+              <div className="space-y-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent hover-scale transition-transform duration-200">
+                  {t('advancedReports', { fallback: 'Advanced Reports' })}
+                </h1>
+                <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                  {t('analyticsDescription', { fallback: 'Analytics dashboards and performance metrics' })}
+                </p>
+              </div>
+              <div className="hidden sm:flex items-center space-x-2 text-xs text-muted-foreground bg-muted/50 px-3 py-1.5 rounded-full animate-scale-in">
+                <BarChart3 className="w-3 h-3" />
+                <span>{t('analyticsMode', { fallback: 'Analytics' })}</span>
+              </div>
             </div>
           </div>
+          <div className="animate-slide-in-right">
+            <ReportsContainer />
+          </div>
         </div>
-        <div className="animate-slide-in-right">
-          <ReportsContainer />
-        </div>
-      </div>
+      </FeatureGate>
     </ResponsiveLayout>
   );
 };
