@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Crown, Zap, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLocale } from '@/components/providers/LocaleProvider';
+import { planUpgradeTranslations } from '@/translations/features/planUpgrade';
 
 interface PlanUpgradeProps {
   feature: string;
@@ -9,50 +11,54 @@ interface PlanUpgradeProps {
   description?: string;
 }
 
-const featureMessages = {
+const getFeatureMessages = (t: any) => ({
   advancedReports: {
-    title: 'Rapports Avancés',
-    description: 'Accédez à des rapports détaillés avec le plan Standard ou Pro.',
+    title: t.advancedReports,
+    description: t.advancedReportsDesc,
     icon: <Zap className="h-6 w-6 text-primary" />,
     requiredPlan: 'Standard'
   },
   exportData: {
-    title: 'Export de Données',
-    description: 'Exportez vos données en différents formats avec le plan Standard ou Pro.',
+    title: t.exportData,
+    description: t.exportDataDesc,
     icon: <Crown className="h-6 w-6 text-primary" />,
     requiredPlan: 'Standard'
   },
   automatedReminders: {
-    title: 'Rappels Automatisés',
-    description: 'Automatisez vos rappels de paiement avec le plan Standard ou Pro.',
+    title: t.automatedReminders,
+    description: t.automatedRemindersDesc,
     icon: <Zap className="h-6 w-6 text-primary" />,
     requiredPlan: 'Standard'
   },
   prioritySupport: {
-    title: 'Support Prioritaire',
-    description: 'Bénéficiez d\'un support prioritaire avec le plan Standard ou Pro.',
+    title: t.prioritySupport,
+    description: t.prioritySupportDesc,
     icon: <Shield className="h-6 w-6 text-primary" />,
     requiredPlan: 'Standard'
   },
   advancedFinancialReports: {
-    title: 'Rapports Financiers Avancés',
-    description: 'Accédez à des analyses financières approfondies avec le plan Pro.',
+    title: t.advancedFinancialReports,
+    description: t.advancedFinancialReportsDesc,
     icon: <Crown className="h-6 w-6 text-primary" />,
     requiredPlan: 'Pro'
   },
   dedicatedSupport: {
-    title: 'Support Dédié',
-    description: 'Profitez d\'une équipe de support dédiée avec le plan Pro.',
+    title: t.dedicatedSupport,
+    description: t.dedicatedSupportDesc,
     icon: <Shield className="h-6 w-6 text-primary" />,
     requiredPlan: 'Pro'
   }
-};
+});
 
 export const PlanUpgrade = ({ feature, title, description }: PlanUpgradeProps) => {
   const navigate = useNavigate();
+  const { locale } = useLocale();
+  const t = planUpgradeTranslations[locale] || planUpgradeTranslations.en;
+  const featureMessages = getFeatureMessages(t);
+  
   const featureInfo = featureMessages[feature as keyof typeof featureMessages] || {
-    title: title || 'Fonctionnalité Premium',
-    description: description || 'Cette fonctionnalité nécessite un plan supérieur.',
+    title: title || t.premiumFeature,
+    description: description || t.requiresUpgrade,
     icon: <Crown className="h-6 w-6 text-primary" />,
     requiredPlan: 'Standard'
   };
@@ -73,7 +79,7 @@ export const PlanUpgrade = ({ feature, title, description }: PlanUpgradeProps) =
           onClick={() => navigate('/#pricing')}
           className="w-full"
         >
-          Passer au plan {featureInfo.requiredPlan}
+          {featureInfo.requiredPlan === 'Pro' ? t.upgradeToPro : t.upgradeToStandard}
         </Button>
       </CardContent>
     </Card>
