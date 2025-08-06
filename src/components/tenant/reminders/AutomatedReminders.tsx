@@ -20,9 +20,14 @@ interface ReminderSettings {
 }
 
 export const AutomatedReminders = () => {
-  const { locale } = useLocale();
+  const { locale, language } = useLocale();
   const { toast } = useToast();
-  const t = automatedRemindersTranslations[locale] || automatedRemindersTranslations.en;
+  
+  console.log('AutomatedReminders - Current locale:', locale, 'language:', language);
+  console.log('Available translations:', Object.keys(automatedRemindersTranslations));
+  
+  const t = automatedRemindersTranslations[locale as keyof typeof automatedRemindersTranslations] || automatedRemindersTranslations.en;
+  console.log('Selected translation title:', t.title);
   
   const [reminderSettings, setReminderSettings] = useState<ReminderSettings[]>([]);
 
