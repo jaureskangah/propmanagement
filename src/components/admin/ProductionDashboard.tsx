@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { ProductionChecker, ProductionCheckResult } from '@/utils/productionCheck';
 import { ProductionConfigTools } from './ProductionConfigTools';
+import { SupabaseLogs } from '@/components/reports/analytics/components/SupabaseLogs';
 import { cn } from '@/lib/utils';
 import { 
   CheckCircle, 
@@ -250,6 +251,11 @@ export const ProductionDashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Logs Supabase */}
+      <div className="animate-fade-in">
+        <SupabaseLogs />
+      </div>
 
       {/* Outils de Configuration */}
       <ProductionConfigTools />

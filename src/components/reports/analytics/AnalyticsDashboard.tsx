@@ -9,7 +9,7 @@ import { OverviewMetrics } from "./components/OverviewMetrics";
 import { RevenueChart } from "./components/RevenueChart";
 import { MaintenanceAnalytics } from "./components/MaintenanceAnalytics";
 import { OccupancyTrends } from "./components/OccupancyTrends";
-import { SupabaseLogs } from "./components/SupabaseLogs";
+
 import { GlobalExportOptions } from "../shared/GlobalExportOptions";
 
 export const AnalyticsDashboard = () => {
@@ -108,9 +108,6 @@ export const AnalyticsDashboard = () => {
         </div>
         <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.3s' }}>
           <OccupancyTrends tenants={tenants} properties={properties} />
-        </div>
-        <div className="lg:col-span-2 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-          <SupabaseLogs />
         </div>
       </div>
     </div>
