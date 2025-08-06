@@ -42,6 +42,7 @@ const Reports = lazy(() => import('./pages/Reports'));
 const Admin = lazy(() => import('./pages/Admin'));
 const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const AutomatedReminders = lazy(() => import('./pages/AutomatedReminders'));
 const SupportPage = lazy(() => import('./pages/SupportPage'));
 const Subscription = lazy(() => import('./pages/Subscription'));
 const TestRestrictions = lazy(() => import('./pages/TestRestrictions'));
@@ -154,6 +155,7 @@ function App() {
         {/* Shared Routes - accessible to both owners and tenants */}
         <Route path="/settings" element={isAuthenticated ? <Settings /> : <Navigate to="/login" />} />
         <Route path="/support" element={isAuthenticated ? <SupportPage /> : <Navigate to="/login" />} />
+        <Route path="/reminders" element={isAuthenticated ? <AutomatedReminders /> : <Navigate to="/login" />} />
         <Route path="/subscription" element={isAuthenticated ? <Subscription /> : <Navigate to="/login" />} />
         <Route path="/test-restrictions" element={<ProtectedAdminRoute><AdminLayout><TestRestrictions /></AdminLayout></ProtectedAdminRoute>} />
         <Route path="/sync-validation" element={<ProtectedAdminRoute><SubscriptionSyncValidator /></ProtectedAdminRoute>} />
