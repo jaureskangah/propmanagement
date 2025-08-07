@@ -98,7 +98,7 @@ export const AdvancedReminderSettings: React.FC<AdvancedReminderSettingsProps> =
             <span>{t.advancedSettings}</span>
           </DialogTitle>
           <DialogDescription>
-            Modifiez les délais d'envoi par défaut pour chaque type de rappel.
+            {t.advancedSettingsDescription}
           </DialogDescription>
         </DialogHeader>
         
@@ -122,7 +122,7 @@ export const AdvancedReminderSettings: React.FC<AdvancedReminderSettingsProps> =
                   className="w-20"
                 />
                 <span className="text-sm text-muted-foreground">
-                  jour(s) avant l'échéance
+                  {t.daysBeforeDue}
                 </span>
               </div>
             </div>
@@ -135,7 +135,7 @@ export const AdvancedReminderSettings: React.FC<AdvancedReminderSettingsProps> =
             onClick={() => setOpen(false)}
             disabled={saving}
           >
-            Annuler
+            {t.cancel}
           </Button>
           <Button 
             onClick={handleSave}
@@ -144,12 +144,12 @@ export const AdvancedReminderSettings: React.FC<AdvancedReminderSettingsProps> =
             {saving ? (
               <>
                 <Settings className="h-4 w-4 mr-2 animate-spin" />
-                Sauvegarde...
+                {t.saving}
               </>
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                Sauvegarder
+                {t.save}
               </>
             )}
           </Button>

@@ -31,7 +31,14 @@ export const automatedRemindersTranslations = {
     settingsSaved: "Reminder settings have been saved.",
     
     // Loading
-    loadingReminders: "Loading reminders..."
+    loadingReminders: "Loading reminders...",
+    
+    // Advanced Settings Dialog
+    advancedSettingsDescription: "Modify default sending delays for each reminder type.",
+    daysBeforeDue: "day(s) before due date",
+    cancel: "Cancel",
+    save: "Save",
+    saving: "Saving..."
   },
   fr: {
     title: "Rappels Automatisés",
@@ -65,6 +72,13 @@ export const automatedRemindersTranslations = {
     settingsSaved: "Les paramètres de rappel ont été sauvegardés.",
     
     // Loading
-    loadingReminders: "Chargement des rappels..."
+    loadingReminders: "Chargement des rappels...",
+    
+    // Advanced Settings Dialog
+    advancedSettingsDescription: "Modifiez les délais d'envoi par défaut pour chaque type de rappel.",
+    daysBeforeDue: "jour(s) avant l'échéance",
+    cancel: "Annuler",
+    save: "Sauvegarder",
+    saving: "Sauvegarde..."
   }
 };
