@@ -64,24 +64,26 @@ export const PlanUpgrade = ({ feature, title, description }: PlanUpgradeProps) =
   };
 
   return (
-    <Card className="border-primary/20">
-      <CardHeader className="text-center">
-        <div className="flex justify-center mb-2">
-          {featureInfo.icon}
-        </div>
-        <CardTitle className="text-lg">{featureInfo.title}</CardTitle>
-      </CardHeader>
-      <CardContent className="text-center space-y-4">
-        <p className="text-muted-foreground">
-          {featureInfo.description}
-        </p>
-        <Button 
-          onClick={() => navigate('/#pricing')}
-          className="w-full"
-        >
-          {featureInfo.requiredPlan === 'Pro' ? t.upgradeToPro : t.upgradeToStandard}
-        </Button>
-      </CardContent>
-    </Card>
+    <div className="flex justify-center w-full px-4 sm:px-6">
+      <Card className="border-primary/20 max-w-md w-full">
+        <CardHeader className="text-center">
+          <div className="flex justify-center mb-2">
+            {featureInfo.icon}
+          </div>
+          <CardTitle className="text-lg">{featureInfo.title}</CardTitle>
+        </CardHeader>
+        <CardContent className="text-center space-y-4">
+          <p className="text-muted-foreground">
+            {featureInfo.description}
+          </p>
+          <Button 
+            onClick={() => navigate('/#pricing')}
+            className="w-full"
+          >
+            {featureInfo.requiredPlan === 'Pro' ? t.upgradeToPro : t.upgradeToStandard}
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
