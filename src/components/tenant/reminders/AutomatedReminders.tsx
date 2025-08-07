@@ -9,6 +9,7 @@ import { FeatureGate } from '@/components/subscription/FeatureGate';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { automatedRemindersTranslations } from '@/translations/features/automatedReminders';
 import { useReminderSettings } from '@/hooks/reminders/useReminderSettings';
+import { AdvancedReminderSettings } from './AdvancedReminderSettings';
 
 export const AutomatedReminders = () => {
   const { language } = useLocale();
@@ -21,6 +22,10 @@ export const AutomatedReminders = () => {
     if (!setting) return;
 
     await updateReminderSetting(id, { enabled: !setting.enabled });
+  };
+
+  const handleUpdateAdvancedSettings = async (id: string, daysBeforeDue: number) => {
+    await updateReminderSetting(id, { daysBeforeDue });
   };
 
   const getTypeIcon = (type: string) => {
@@ -80,10 +85,10 @@ export const AutomatedReminders = () => {
               {t.subtitle}
             </p>
           </div>
-          <Button variant="outline">
-            <Settings className="h-4 w-4 mr-2" />
-            {t.advancedSettings}
-          </Button>
+          <AdvancedReminderSettings 
+            reminderSettings={reminderSettings}
+            onUpdateSettings={handleUpdateAdvancedSettings}
+          />
         </div>
 
         <div className="grid gap-4">
@@ -120,7 +125,9 @@ export const AutomatedReminders = () => {
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">{t.methods}</span>
                       <div className="flex space-x-2">
-                        {setting.methods.map((method) => getMethodBadge(method))}
+                        {setting.methods.map((method, index) => (
+                          <span key={index}>{getMethodBadge(method)}</span>
+                        ))}
                       </div>
                     </div>
                   </div>
