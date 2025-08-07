@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/components/AuthProvider';
+import { useLocale } from '@/components/providers/LocaleProvider';
+import { automatedRemindersTranslations } from '@/translations/features/automatedReminders';
 
 interface ReminderSettings {
   id: string;
@@ -19,6 +21,8 @@ export const useReminderSettings = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { language } = useLocale();
+  const t = automatedRemindersTranslations[language as keyof typeof automatedRemindersTranslations] || automatedRemindersTranslations.en;
 
   // Charger les paramètres depuis la base de données
   const loadReminderSettings = async () => {
@@ -290,15 +294,15 @@ export const useReminderSettings = () => {
     }
   };
 
-  // Fonctions utilitaires pour les traductions (sera remplacé par les vraies traductions)
+  // Fonctions utilitaires pour les traductions
   const getTranslatedTitle = (type: string) => {
     switch (type) {
       case 'rent_payment':
-        return 'Rappels de paiement de loyer';
+        return t.rentPaymentTitle;
       case 'lease_expiry':
-        return 'Expiration du bail';
+        return t.leaseExpiryTitle;
       case 'maintenance_due':
-        return 'Maintenance préventive';
+        return t.maintenanceDueTitle;
       default:
         return type;
     }
@@ -307,11 +311,11 @@ export const useReminderSettings = () => {
   const getTranslatedDescription = (type: string) => {
     switch (type) {
       case 'rent_payment':
-        return 'Rappels automatiques avant l\'échéance du loyer';
+        return t.rentPaymentDescription;
       case 'lease_expiry':
-        return 'Rappels avant l\'expiration des baux';
+        return t.leaseExpiryDescription;
       case 'maintenance_due':
-        return 'Rappels pour les tâches de maintenance programmées';
+        return t.maintenanceDueDescription;
       default:
         return '';
     }
