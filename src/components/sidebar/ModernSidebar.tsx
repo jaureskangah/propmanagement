@@ -12,6 +12,7 @@ import {
   Mail,
   HelpCircle,
   Building2,
+  TrendingUp,
   BarChart3,
   Shield,
   Factory,
@@ -108,8 +109,9 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
     <aside className="modern-sidebar">
       {/* Logo Section */}
       <div className="modern-sidebar-logo" onClick={handleLogoClick}>
-        <div className="logo-icon">
+        <div className="logo-icon relative">
           <Building2 className="h-8 w-8 text-[#ea384c]" />
+          <TrendingUp className="h-6 w-6 text-[#ea384c] absolute -top-1 -right-1" />
         </div>
         <div className="logo-text">
           <span>PropManagement</span>
@@ -165,8 +167,11 @@ const ModernSidebar = ({ isTenant = false }: ModernSidebarProps) => {
         <div className="flex flex-col h-full">
           {/* Logo Section */}
           <div className="p-6 border-b">
-            <div className="flex items-center gap-3" onClick={handleLogoClick}>
-              <Building2 className="h-8 w-8 text-[#ea384c]" />
+            <div className="flex items-center gap-3 cursor-pointer" onClick={handleLogoClick}>
+              <div className="relative">
+                <Building2 className="h-8 w-8 text-[#ea384c]" />
+                <TrendingUp className="h-6 w-6 text-[#ea384c] absolute -top-1 -right-1" />
+              </div>
               <span className="font-bold text-lg">PropManagement</span>
             </div>
           </div>
