@@ -9,6 +9,7 @@ import { FeatureGate } from '@/components/subscription/FeatureGate';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { automatedRemindersTranslations } from '@/translations/features/automatedReminders';
 import { useReminderSettings } from '@/hooks/reminders/useReminderSettings';
+import { useReminderStatistics } from '@/hooks/reminders/useReminderStatistics';
 import { AdvancedReminderSettings } from './AdvancedReminderSettings';
 
 export const AutomatedReminders = () => {
@@ -16,6 +17,7 @@ export const AutomatedReminders = () => {
   const t = automatedRemindersTranslations[language as keyof typeof automatedRemindersTranslations] || automatedRemindersTranslations.en;
   
   const { reminderSettings, loading, updateReminderSetting } = useReminderSettings();
+  const { statistics, loading: statsLoading } = useReminderStatistics();
 
   const toggleReminder = async (id: string) => {
     const setting = reminderSettings.find(s => s.id === id);
@@ -147,15 +149,33 @@ export const AutomatedReminders = () => {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-primary">24</div>
+                <div className="text-2xl font-bold text-primary">
+                  {statsLoading ? (
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  ) : (
+                    statistics.sentThisMonth
+                  )}
+                </div>
                 <div className="text-sm text-muted-foreground">{t.sentThisMonth}</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-green-600">18</div>
+                <div className="text-2xl font-bold text-green-600">
+                  {statsLoading ? (
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  ) : (
+                    statistics.onTimePayments
+                  )}
+                </div>
                 <div className="text-sm text-muted-foreground">{t.onTimePayments}</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-amber-600">6</div>
+                <div className="text-2xl font-bold text-amber-600">
+                  {statsLoading ? (
+                    <Loader2 className="h-6 w-6 animate-spin mx-auto" />
+                  ) : (
+                    statistics.pendingReminders
+                  )}
+                </div>
                 <div className="text-sm text-muted-foreground">{t.pendingReminders}</div>
               </div>
             </div>
