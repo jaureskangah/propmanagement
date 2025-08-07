@@ -1,5 +1,5 @@
 
-import { Building, TrendingUp } from "lucide-react";
+import { Building2, TrendingUp } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
@@ -62,7 +62,7 @@ export const Logo = ({ onClick, scrolled, variant = 'default', size = 'md' }: Lo
       >
         <motion.div className="relative">
           <motion.div variants={iconVariants}>
-            <Building className={`${sizeClasses[size].icon} text-[#ea384c]`} />
+            <Building2 className={`${sizeClasses[size].icon} text-[#ea384c]`} />
           </motion.div>
           <motion.div 
             className="absolute -top-1 -right-1"
@@ -87,7 +87,7 @@ export const Logo = ({ onClick, scrolled, variant = 'default', size = 'md' }: Lo
     >
       <motion.div className="relative flex items-center">
         <motion.div variants={iconVariants}>
-          <Building className={`${sizeClasses[size].icon} text-[#ea384c] transition-all duration-300`} />
+          <Building2 className={`${sizeClasses[size].icon} text-[#ea384c] transition-all duration-300`} />
         </motion.div>
         <motion.div 
           className="absolute -top-1 -right-1"

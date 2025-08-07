@@ -1,6 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
-import { Building, TrendingUp } from "lucide-react";
+import { Building2, TrendingUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -63,7 +63,7 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
         )}>
           <motion.div className="relative flex items-center">
             <motion.div variants={iconVariants}>
-              <Building className="h-8 w-8 text-[#ea384c] transition-all duration-300" />
+              <Building2 className="h-8 w-8 text-[#ea384c] transition-all duration-300" />
             </motion.div>
             <motion.div 
               className="absolute -top-1 -right-1"
