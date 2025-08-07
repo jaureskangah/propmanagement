@@ -13,11 +13,12 @@ export const SimpleLogoDownloader = () => {
       // Create a high-resolution canvas from the actual rendered logo
       const canvas = await html2canvas(logoRef.current, {
         backgroundColor: '#ffffff',
-        scale: 4, // High resolution
-        width: 128,
-        height: 128,
+        scale: 3, // High resolution
+        width: 140,
+        height: 140,
         useCORS: true,
-        logging: false
+        logging: false,
+        allowTaint: true
       });
 
       // Resize to 512x512
@@ -105,17 +106,18 @@ export const SimpleLogoDownloader = () => {
         <h3 className="text-xl font-bold mb-2">Logo PropManagement</h3>
         <div 
           ref={logoRef} 
-          className="flex items-center justify-center gap-0 mb-4 p-4"
+          className="flex items-center justify-center gap-0 mb-4 p-6"
           style={{ 
-            width: '128px', 
-            height: '128px', 
+            width: '140px', 
+            height: '140px', 
             margin: '0 auto',
-            backgroundColor: '#ffffff'
+            backgroundColor: '#ffffff',
+            position: 'relative'
           }}
         >
-          <div className="relative">
+          <div className="relative flex items-center justify-center" style={{ width: '80px', height: '80px' }}>
             <Building2 size={64} className="text-[#ea384c]" />
-            <TrendingUp size={48} className="text-[#ea384c] absolute -top-2 -right-2" />
+            <TrendingUp size={40} className="text-[#ea384c] absolute top-0 right-0" style={{ transform: 'translate(8px, -8px)' }} />
           </div>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
