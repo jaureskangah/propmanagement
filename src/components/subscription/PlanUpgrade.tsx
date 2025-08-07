@@ -52,8 +52,8 @@ const getFeatureMessages = (t: any) => ({
 
 export const PlanUpgrade = ({ feature, title, description }: PlanUpgradeProps) => {
   const navigate = useNavigate();
-  const { locale } = useLocale();
-  const t = planUpgradeTranslations[locale] || planUpgradeTranslations.en;
+  const { language } = useLocale();
+  const t = planUpgradeTranslations[language] || planUpgradeTranslations.en;
   const featureMessages = getFeatureMessages(t);
   
   const featureInfo = featureMessages[feature as keyof typeof featureMessages] || {
