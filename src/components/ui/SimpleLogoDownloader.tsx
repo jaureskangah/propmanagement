@@ -106,18 +106,19 @@ export const SimpleLogoDownloader = () => {
         <h3 className="text-xl font-bold mb-2">Logo PropManagement</h3>
         <div 
           ref={logoRef} 
-          className="flex items-center justify-center gap-0 mb-4 p-6"
+          className="flex items-center justify-center gap-0 mb-4"
           style={{ 
-            width: '140px', 
-            height: '140px', 
+            width: '160px', 
+            height: '160px', 
             margin: '0 auto',
             backgroundColor: '#ffffff',
-            position: 'relative'
+            position: 'relative',
+            padding: '20px'
           }}
         >
-          <div className="relative flex items-center justify-center" style={{ width: '80px', height: '80px' }}>
+          <div className="relative" style={{ width: '120px', height: '120px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Building2 size={64} className="text-[#ea384c]" />
-            <TrendingUp size={40} className="text-[#ea384c] absolute top-0 right-0" style={{ transform: 'translate(8px, -8px)' }} />
+            <TrendingUp size={32} className="text-[#ea384c] absolute" style={{ top: '10px', right: '10px' }} />
           </div>
         </div>
         <p className="text-sm text-muted-foreground mb-4">
