@@ -5,6 +5,7 @@ export const frPayments: TenantPaymentsTranslations = {
   payments: "Paiements",
   addPayment: "Ajouter un paiement",
   editPayment: "Modifier le paiement",
+  updatePayment: "Mettre à jour",
   deletePayment: "Supprimer le paiement",
   paymentDate: "Date du paiement",
   amount: "Montant",

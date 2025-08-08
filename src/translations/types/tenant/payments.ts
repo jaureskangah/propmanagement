@@ -3,6 +3,7 @@ export interface TenantPaymentsTranslations {
   payments: string;
   addPayment: string;
   editPayment: string;
+  updatePayment: string;
   deletePayment: string;
   paymentDate: string;
   amount: string;

@@ -5,6 +5,7 @@ export const enPayments: TenantPaymentsTranslations = {
   payments: "Payment History",
   addPayment: "Add Payment",
   editPayment: "Edit Payment",
+  updatePayment: "Update",
   deletePayment: "Delete Payment",
   paymentDate: "Payment Date",
   amount: "Amount",

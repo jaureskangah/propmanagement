@@ -14,6 +14,8 @@ import { enPricing, enPlanFeatures } from './features/pricing';
 import { enNavigation } from './features/navigation';
 import { enAdmin } from './features/admin';
 import { en as enFeatures } from './features/en';
+import { enList } from './features/tenant/en/list';
+import { enPayments } from './features/tenant/en/payments';
 
 // Support extensions
 const supportExtensions = {
@@ -38,6 +40,8 @@ const baseTranslations = {
   ...enFinances,
   ...enMaintenance,
   ...enTenant,
+  ...enList,
+  ...enPayments,
   ...enSettings,
   ...enPricing,
   ...enPlanFeatures,
