@@ -90,7 +90,7 @@ export const LeaseStatusCard = ({
               {t('leaseStart', 'Début du bail')}
             </p>
             <p className="text-base font-semibold">
-              {parseDateSafe(leaseStart).toLocaleDateString('fr-FR')}
+              {parseDateSafe(leaseStart).toLocaleDateString(navigator.language || 'fr-FR')}
             </p>
           </div>
           <div>
@@ -98,7 +98,7 @@ export const LeaseStatusCard = ({
               {t('leaseEnd', 'Fin du bail')}
             </p>
             <p className="text-base font-semibold">
-              {parseDateSafe(leaseEnd).toLocaleDateString('fr-FR')}
+              {parseDateSafe(leaseEnd).toLocaleDateString(navigator.language || 'fr-FR')}
             </p>
           </div>
         </div>

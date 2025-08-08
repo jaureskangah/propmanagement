@@ -10,6 +10,7 @@ import { useMemo } from "react";
 import type { Communication, MaintenanceRequest } from "@/types/tenant";
 import type { TenantData } from "@/hooks/tenant/dashboard/useTenantData";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { parseDateSafe } from "@/lib/date";
 
 interface TenantOverviewProps {
   tenant: TenantData;
@@ -43,9 +44,9 @@ export const TenantOverview = ({
     }
   };
 
-  // Format dates according to language
+  // Format dates according to language without timezone shifts
   const formatLeaseDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = parseDateSafe(dateString);
     return date.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
       day: 'numeric',
       month: 'long',

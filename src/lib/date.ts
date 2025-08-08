@@ -2,7 +2,7 @@
 // Prevents timezone shifts when parsing YYYY-MM-DD by constructing dates in local time
 
 export const DATE_ONLY_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-export const DATE_ONLY_ISO_MIDNIGHT_REGEX = /^\d{4}-\d{2}-\d{2}T00:00(?::00(?:\.\d{1,3})?)?(?:Z|[+-]00:00)?$/i;
+export const DATE_ONLY_ISO_MIDNIGHT_REGEX = /^\d{4}-\d{2}-\d{2}T00:00(?::00(?:\.\d{1,3})?)?(?:Z|[+-]\d{2}:?\d{2})?$/i;
 
 export function isDateOnly(value: unknown): value is string {
   return typeof value === 'string' && DATE_ONLY_REGEX.test(value);
