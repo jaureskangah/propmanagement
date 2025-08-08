@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { InviteTenantDialog } from "../communications/InviteTenantDialog";
 import { supabase } from "@/lib/supabase";
+import { parseDateSafe } from "@/lib/date";
 
 interface TenantHeaderProps {
   tenant: Tenant;
@@ -67,9 +68,9 @@ export const TenantHeader = ({ tenant }: TenantHeaderProps) => {
     getPropertyName();
   }, [tenant.property_id, tenant.properties, t]);
   
-  const leaseEnded = new Date(tenant.lease_end) < new Date();
+  const leaseEnded = parseDateSafe(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
-    (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
+    (parseDateSafe(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
 
   const getLeaseBadgeVariant = () => {
     if (leaseEnded) return "destructive";

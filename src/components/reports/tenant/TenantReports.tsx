@@ -9,6 +9,7 @@ import { format, differenceInDays } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { parseDateSafe } from "@/lib/date";
 
 export const TenantReports = () => {
   const { t, language } = useLocale();
@@ -105,9 +106,9 @@ export const TenantReports = () => {
     
     const totalPaid = tenantPayments.reduce((sum, payment) => sum + (payment.amount || 0), 0);
     const lastPayment = tenantPayments.length > 0 ? 
-      Math.max(...tenantPayments.map(p => new Date(p.payment_date).getTime())) : null;
+      Math.max(...tenantPayments.map(p => parseDateSafe(p.payment_date).getTime())) : null;
     
-    const leaseEnd = new Date(tenant.lease_end);
+    const leaseEnd = parseDateSafe(tenant.lease_end);
     const today = new Date();
     const daysUntilLeaseEnd = differenceInDays(leaseEnd, today);
     
@@ -167,7 +168,7 @@ export const TenantReports = () => {
                       {`${tenant.daysUntilLeaseEnd} ${t('daysRemaining', { fallback: 'jours restants' })}`}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {format(new Date(tenant.lease_end), 'dd/MM/yyyy', { locale })}
+                      {format(parseDateSafe(tenant.lease_end), 'dd/MM/yyyy', { locale })}
                     </p>
                   </div>
                   <Button
@@ -259,7 +260,7 @@ export const TenantReports = () => {
                     </span>
                   </div>
                   <p className="text-xs text-muted-foreground mt-1">
-                    {format(new Date(tenant.lease_start), 'dd/MM/yyyy', { locale })} - {format(new Date(tenant.lease_end), 'dd/MM/yyyy', { locale })}
+                    {format(parseDateSafe(tenant.lease_start), 'dd/MM/yyyy', { locale })} - {format(parseDateSafe(tenant.lease_end), 'dd/MM/yyyy', { locale })}
                   </p>
                 </div>
 

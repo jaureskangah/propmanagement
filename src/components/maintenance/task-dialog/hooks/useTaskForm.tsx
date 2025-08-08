@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { NewTask, RecurrencePattern } from "../../types";
+import { parseDateSafe } from "@/lib/date";
 
 interface UseTaskFormProps {
   onSubmit: (task: NewTask) => void;
@@ -21,13 +22,13 @@ export const useTaskForm = ({ onSubmit, initialDate, initialValue }: UseTaskForm
   
   // Properties for reminders - Fix the type conversion for reminder_date
   const [hasReminder, setHasReminder] = useState(initialValue?.has_reminder || false);
-  const [reminderDate, setReminderDate] = useState<Date | undefined>(
-    initialValue?.reminder_date instanceof Date 
-      ? initialValue.reminder_date 
-      : initialValue?.reminder_date 
-        ? new Date(initialValue.reminder_date)
-        : undefined
-  );
+const [reminderDate, setReminderDate] = useState<Date | undefined>(
+  initialValue?.reminder_date instanceof Date 
+    ? initialValue.reminder_date 
+    : initialValue?.reminder_date 
+      ? parseDateSafe(initialValue.reminder_date as any)
+      : undefined
+);
   const [reminderMethod, setReminderMethod] = useState<"app" | "email" | "both">(initialValue?.reminder_method || "app");
   
   // Property for property selection

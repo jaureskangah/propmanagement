@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { RentRollData, TenantWithPayments } from "./types";
+import { parseDateSafe } from "@/lib/date";
 
 export const useRentRollData = (propertyId: string) => {
   return useQuery({
@@ -31,7 +32,7 @@ export const useRentRollData = (propertyId: string) => {
       return (tenants as TenantWithPayments[])?.map(tenant => {
         // Get the most recent payment
         const latestPayment = tenant.tenant_payments
-          ?.sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime())[0];
+          ?.sort((a, b) => parseDateSafe(b.payment_date).getTime() - parseDateSafe(a.payment_date).getTime())[0];
 
         return {
           name: tenant.name,

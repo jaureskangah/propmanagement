@@ -5,6 +5,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Loader2 } from "lucide-react";
 import { TableShowMoreButton } from "./TableShowMoreButton";
+import { parseDateSafe } from "@/lib/date";
 
 interface IncomeTableProps {
   payments: any[];
@@ -68,7 +69,7 @@ export function IncomeTable({ payments, tenants, isLoading }: IncomeTableProps) 
             const tenant = tenants?.find(t => t.id === payment.tenant_id);
             return (
               <TableRow key={payment.id} className="text-xs">
-                <TableCell>{format(new Date(payment.payment_date), 'yyyy-MM-dd')}</TableCell>
+                <TableCell>{format(parseDateSafe(payment.payment_date), 'yyyy-MM-dd')}</TableCell>
                 <TableCell>{tenant?.name || '-'}</TableCell>
                 <TableCell>{tenant?.unit_number || '-'}</TableCell>
                 <TableCell className="text-right">${payment.amount.toLocaleString()}</TableCell>

@@ -8,6 +8,7 @@ import { MapPin, Phone, Mail } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import type { Tenant } from "@/types/tenant";
+import { parseDateSafe } from "@/lib/date";
 
 interface TenantCardProps {
   tenant: Tenant;
@@ -30,9 +31,9 @@ export const TenantCard = ({
   const [propertyName, setPropertyName] = useState<string>(t('loading'));
 
   // Calculate lease status for gradient
-  const leaseEnded = new Date(tenant.lease_end) < new Date();
+  const leaseEnded = parseDateSafe(tenant.lease_end) < new Date();
   const leaseEnding = !leaseEnded && 
-    (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
+    (parseDateSafe(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
 
   // Get gradient based on lease status
   const getBackgroundGradient = () => {

@@ -65,8 +65,8 @@ export const generateLeaseAgreement = async (tenant: Tenant) => {
       { text: 'LEASE TERMS', style: 'subheader' },
       {
         ul: [
-          `Lease Start Date: ${formatDate(new Date(tenant.lease_start))}`,
-          `Lease End Date: ${formatDate(new Date(tenant.lease_end))}`,
+          `Lease Start Date: ${formatDate(tenant.lease_start)}`,
+          `Lease End Date: ${formatDate(tenant.lease_end)}`,
           `Monthly Rent: $${tenant.rent_amount}`,
         ]
       },

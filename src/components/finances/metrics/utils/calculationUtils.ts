@@ -1,3 +1,4 @@
+import { parseDateSafe } from "@/lib/date";
 
 /**
  * Calculates trend percentage between current and previous values
@@ -68,8 +69,8 @@ export function calculateUnpaidRent(
     if (rentAmount === 0) return;
 
     // Get lease period
-    const leaseStart = new Date(tenant.lease_start);
-    const leaseEnd = new Date(tenant.lease_end);
+    const leaseStart = parseDateSafe(tenant.lease_start);
+    const leaseEnd = parseDateSafe(tenant.lease_end);
     
     // Check if tenant should be paying rent this month
     const monthStart = new Date(currentYear, currentMonth, 1);
@@ -84,7 +85,7 @@ export function calculateUnpaidRent(
     const tenantPaymentsCurrentMonth = payments.filter(payment => {
       if (payment.tenant_id !== tenant.id || !payment.payment_date) return false;
       
-      const paymentDate = new Date(payment.payment_date);
+      const paymentDate = parseDateSafe(payment.payment_date);
       return paymentDate.getMonth() === currentMonth && 
              paymentDate.getFullYear() === currentYear &&
              payment.status === 'paid';
@@ -100,7 +101,7 @@ export function calculateUnpaidRent(
     const overduePayments = payments.filter(payment => {
       if (payment.tenant_id !== tenant.id || !payment.payment_date) return false;
       
-      const paymentDate = new Date(payment.payment_date);
+      const paymentDate = parseDateSafe(payment.payment_date);
       const paymentMonthYear = new Date(paymentDate.getFullYear(), paymentDate.getMonth());
       
       return paymentMonthYear < monthStart && 

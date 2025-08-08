@@ -11,6 +11,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from "date-fns";
 import { toast } from "sonner";
+import { parseDateSafe } from "@/lib/date";
 
 interface GlobalExportOptionsProps {
   data: any;
@@ -50,8 +51,8 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
             [t('name', { fallback: 'Nom' })]: tenant.name,
             [t('email', { fallback: 'Email' })]: tenant.email,
             [t('rentAmount', { fallback: 'Loyer' })]: tenant.rent_amount,
-            [t('leaseStart', { fallback: 'Début bail' })]: format(new Date(tenant.lease_start), 'dd/MM/yyyy'),
-            [t('leaseEnd', { fallback: 'Fin bail' })]: format(new Date(tenant.lease_end), 'dd/MM/yyyy')
+            [t('leaseStart', { fallback: 'Début bail' })]: format(parseDateSafe(tenant.lease_start), 'dd/MM/yyyy'),
+            [t('leaseEnd', { fallback: 'Fin bail' })]: format(parseDateSafe(tenant.lease_end), 'dd/MM/yyyy')
           }));
           const tenantsSheet = XLSX.utils.json_to_sheet(tenantsData);
           XLSX.utils.book_append_sheet(workbook, tenantsSheet, t('tenants', { fallback: 'Locataires' }));
@@ -62,7 +63,7 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
           const paymentsData = data.payments.map((payment: any) => ({
             [t('amount', { fallback: 'Montant' })]: payment.amount,
             [t('status', { fallback: 'Statut' })]: payment.status,
-            [t('date', { fallback: 'Date' })]: format(new Date(payment.payment_date), 'dd/MM/yyyy')
+            [t('date', { fallback: 'Date' })]: format(parseDateSafe(payment.payment_date), 'dd/MM/yyyy')
           }));
           const paymentsSheet = XLSX.utils.json_to_sheet(paymentsData);
           XLSX.utils.book_append_sheet(workbook, paymentsSheet, t('payments', { fallback: 'Paiements' }));
@@ -182,7 +183,7 @@ export const GlobalExportOptions = ({ data, type, filename }: GlobalExportOption
           content += `- ${tenant.name}\n`;
           content += `  Email: ${tenant.email}\n`;
           content += `  Loyer: $${tenant.rent_amount}\n`;
-          content += `  Bail: ${format(new Date(tenant.lease_start), 'dd/MM/yyyy')} - ${format(new Date(tenant.lease_end), 'dd/MM/yyyy')}\n\n`;
+          content += `  Bail: ${format(parseDateSafe(tenant.lease_start), 'dd/MM/yyyy')} - ${format(parseDateSafe(tenant.lease_end), 'dd/MM/yyyy')}\n\n`;
         });
       }
       

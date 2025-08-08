@@ -3,13 +3,14 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { format, formatRelative, isToday, isYesterday } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
+import { parseDateSafe } from "@/lib/date";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function formatDate(date: string | Date, localeCode: string = 'en') {
-  const dateObj = new Date(date);
+  const dateObj = parseDateSafe(date);
   const locale = localeCode === 'fr' ? fr : enUS;
   
   return format(dateObj, "d MMMM yyyy", {
@@ -18,14 +19,14 @@ export function formatDate(date: string | Date, localeCode: string = 'en') {
 }
 
 export function formatDateTime(date: string | Date, localeCode: string = 'en') {
-  const dateObj = new Date(date);
+  const dateObj = parseDateSafe(date);
   return format(dateObj, "d MMM yyyy, HH:mm", {
     locale: localeCode === 'fr' ? fr : enUS
   });
 }
 
 export function formatRelativeDate(date: string | Date, localeCode: string = 'en') {
-  const dateObj = new Date(date);
+  const dateObj = parseDateSafe(date);
   const locale = localeCode === 'fr' ? fr : enUS;
   
   if (isToday(dateObj)) {

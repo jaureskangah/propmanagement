@@ -8,6 +8,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useEffect } from "react";
 import { RevenueAreaChart } from "./RevenueAreaChart";
 import { motion } from "framer-motion";
+import { parseDateSafe } from "@/lib/date";
 
 export const RevenueChartComponent = () => {
   const { t } = useLocale();
@@ -87,7 +88,7 @@ const aggregateRevenue = (payments = [], properties = []) => {
   
   // Sinon, agréger les paiements par mois
   const aggregatedByMonth = paidPayments.reduce((acc, payment) => {
-    const date = new Date(payment.payment_date);
+    const date = parseDateSafe(payment.payment_date);
     const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
     
     if (!acc[monthKey]) {
@@ -116,7 +117,7 @@ const aggregateExpenses = (expenses = [], properties = []) => {
   
   // Sinon, agréger les dépenses par mois
   const aggregatedByMonth = expenses.reduce((acc, expense) => {
-    const date = new Date(expense.date);
+    const date = parseDateSafe(expense.date);
     const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`;
     
     if (!acc[monthKey]) {
