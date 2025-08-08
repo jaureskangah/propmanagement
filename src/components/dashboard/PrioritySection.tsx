@@ -8,6 +8,7 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { useMaintenanceTasks } from "@/components/maintenance/tasks/useMaintenanceTasks";
 import { format } from "date-fns";
 import { fr } from 'date-fns/locale';
+import { parseDateSafe } from "@/lib/date";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface PrioritySectionProps {
@@ -25,7 +26,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
   const urgentMaintenance = useMemo(() => 
     maintenanceData?.filter(
       req => req.priority === "Urgent" && req.status !== "Resolved"
-    ).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()) || [], 
+    ).sort((a, b) => parseDateSafe(b.created_at).getTime() - parseDateSafe(a.created_at).getTime()) || [], 
     [maintenanceData]
   );
 
@@ -85,7 +86,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
     if (!tasks) return [];
     return tasks
       .filter(task => !task.completed)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .sort((a, b) => parseDateSafe(b.date).getTime() - parseDateSafe(a.date).getTime())
       .slice(0, 5); // Limiter à 5 tâches
   }, [tasks]);
 
@@ -192,7 +193,7 @@ export const PrioritySection = ({ maintenanceData, tenantsData, paymentsData }: 
                       <h4 className="font-medium dark:text-white">{task.title}</h4>
                       <div className="flex gap-2 mt-2 flex-wrap mobile-badge-spacing">
                         <Badge variant="outline" className="text-xs dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
-                          {format(new Date(task.date), 'dd MMM yyyy', { locale: dateLocale })}
+                          {format(parseDateSafe(task.date), 'dd MMM yyyy', { locale: dateLocale })}
                         </Badge>
                         <Badge 
                           variant="outline" 
