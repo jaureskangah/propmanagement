@@ -7,6 +7,7 @@ import { ShowMoreButton } from "./ShowMoreButton";
 import { format } from "date-fns";
 import { fr, enUS } from "date-fns/locale";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { parseDateSafe } from "@/lib/date";
 
 interface PaymentsListProps {
   payments: TenantPayment[];
@@ -47,7 +48,7 @@ export const PaymentsList = ({
                 <PaymentStatus status={payment.status} />
               </div>
               <span className="text-sm text-muted-foreground">
-                {format(new Date(payment.payment_date), 'MMMM dd, yyyy', { 
+                {format(parseDateSafe(payment.payment_date), 'MMMM dd, yyyy', { 
                   locale: language === 'fr' ? fr : enUS 
                 })}
               </span>

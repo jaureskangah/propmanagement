@@ -1,9 +1,9 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, AlertTriangle, CheckCircle, Clock } from "lucide-react";
 import { useSafeTranslation } from "@/hooks/useSafeTranslation";
+import { parseDateSafe } from "@/lib/date";
 
 interface LeaseStatusCardProps {
   leaseStart: string;
@@ -90,7 +90,7 @@ export const LeaseStatusCard = ({
               {t('leaseStart', 'Début du bail')}
             </p>
             <p className="text-base font-semibold">
-              {new Date(leaseStart).toLocaleDateString('fr-FR')}
+              {parseDateSafe(leaseStart).toLocaleDateString('fr-FR')}
             </p>
           </div>
           <div>
@@ -98,7 +98,7 @@ export const LeaseStatusCard = ({
               {t('leaseEnd', 'Fin du bail')}
             </p>
             <p className="text-base font-semibold">
-              {new Date(leaseEnd).toLocaleDateString('fr-FR')}
+              {parseDateSafe(leaseEnd).toLocaleDateString('fr-FR')}
             </p>
           </div>
         </div>

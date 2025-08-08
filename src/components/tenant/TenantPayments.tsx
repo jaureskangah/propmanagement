@@ -12,6 +12,7 @@ import { PaymentsEmptyState } from "./payments/PaymentsEmptyState";
 import { PaymentsList } from "./payments/PaymentsList";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTenantPayments } from "@/hooks/useTenantPayments";
+import { parseDateSafe } from "@/lib/date";
 
 const INITIAL_PAYMENTS_LIMIT = 5;
 
@@ -82,7 +83,7 @@ export const TenantPayments = ({ tenantId, onPaymentUpdate }: TenantPaymentsProp
   };
 
   // Calculer les paiements affichés en fonction de l'état showAllPayments
-  const sortedPayments = payments.sort((a, b) => new Date(b.payment_date).getTime() - new Date(a.payment_date).getTime());
+  const sortedPayments = payments.sort((a, b) => parseDateSafe(b.payment_date).getTime() - parseDateSafe(a.payment_date).getTime());
   const displayedPayments = showAllPayments 
     ? sortedPayments 
     : sortedPayments.slice(0, INITIAL_PAYMENTS_LIMIT);

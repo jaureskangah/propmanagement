@@ -14,6 +14,7 @@ import type { Payment } from "@/types/tenant";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { parseDateSafe } from "@/lib/date";
 
 interface PaymentWidgetProps {
   rentAmount: number;
@@ -29,7 +30,7 @@ export const PaymentWidget = ({ rentAmount, payments }: PaymentWidgetProps) => {
   const nextMonth = addMonths(currentMonth, 1);
   
   const currentMonthPayment = payments.find(payment => {
-    const paymentDate = new Date(payment.payment_date);
+    const paymentDate = parseDateSafe(payment.payment_date);
     return isAfter(paymentDate, currentMonth) && isBefore(paymentDate, nextMonth);
   });
   

@@ -5,6 +5,7 @@ import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/comp
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import { parseDateSafe } from "@/lib/date";
 
 interface InfoItemProps {
   icon: React.ReactNode;
@@ -30,7 +31,7 @@ export const InfoItem = ({ icon, label, value, highlight = false, onClick, isAmo
     
     if (isDate) {
       try {
-        const date = new Date(val);
+        const date = parseDateSafe(val);
         return format(date, "d MMMM yyyy", {
           locale: language === 'fr' ? fr : undefined
         });
