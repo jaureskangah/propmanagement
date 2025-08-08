@@ -1,5 +1,7 @@
 
 import { useMemo } from 'react';
+import { startOfDay, differenceInCalendarDays } from 'date-fns';
+import { parseDateSafe } from '@/lib/date';
 
 export const useLeaseStatus = (leaseEnd?: string) => {
   return useMemo(() => {
@@ -11,17 +13,15 @@ export const useLeaseStatus = (leaseEnd?: string) => {
       return { daysLeft: null, status: 'active' as const }; // Retourner null pour indiquer qu'on charge
     }
 
-    const endDate = new Date(leaseEnd);
-    const today = new Date();
+    const end = startOfDay(parseDateSafe(leaseEnd));
+    const today = startOfDay(new Date());
     
-    console.log("End date object:", endDate);
-    console.log("Today date object:", today);
+    console.log("End date (local start of day):", end);
+    console.log("Today date (local start of day):", today);
     
-    const diffTime = endDate.getTime() - today.getTime();
-    const daysDifference = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    const daysDifference = differenceInCalendarDays(end, today);
     
-    console.log("Time difference (ms):", diffTime);
-    console.log("Days difference (calculated):", daysDifference);
+    console.log("Days difference (calendar):", daysDifference);
 
     let status: 'active' | 'expiring' | 'expired';
     let daysLeft: number;

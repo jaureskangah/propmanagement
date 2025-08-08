@@ -1,10 +1,11 @@
 
 import { Mail, Phone, DollarSign, CalendarDays } from "lucide-react";
-import { format } from "date-fns";
+import { format, startOfDay, differenceInCalendarDays } from "date-fns";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { cn } from "@/lib/utils";
 import type { Tenant } from "@/types/tenant";
 import { InfoItem } from "./InfoItem";
+import { parseDateSafe } from "@/lib/date";
 
 interface TenantInfoGridProps {
   tenant: Tenant;
@@ -13,9 +14,11 @@ interface TenantInfoGridProps {
 export const TenantInfoGrid = ({ tenant }: TenantInfoGridProps) => {
   const { t } = useLocale();
   
-  const leaseEnded = new Date(tenant.lease_end) < new Date();
-  const leaseEnding = !leaseEnded && 
-    (new Date(tenant.lease_end).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24 * 30) <= 2;
+  const end = startOfDay(parseDateSafe(tenant.lease_end));
+  const today = startOfDay(new Date());
+  const daysUntilEnd = differenceInCalendarDays(end, today);
+  const leaseEnded = daysUntilEnd < 0;
+  const leaseEnding = !leaseEnded && daysUntilEnd <= 60;
 
   return (
     <div className={cn(

@@ -1,7 +1,8 @@
-
 import { Calendar, AlertTriangle, CheckCircle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { motion } from "framer-motion";
+import { parseDateSafe } from "@/lib/date";
+import { startOfDay } from "date-fns";
 
 interface LeaseWidgetProps {
   leaseStart: string;
@@ -33,9 +34,9 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
   
   const getProgressPercentage = () => {
     try {
-      const start = new Date(leaseStart).getTime();
-      const end = new Date(leaseEnd).getTime();
-      const now = new Date().getTime();
+      const start = startOfDay(parseDateSafe(leaseStart)).getTime();
+      const end = startOfDay(parseDateSafe(leaseEnd)).getTime();
+      const now = startOfDay(new Date()).getTime();
       const totalDuration = end - start;
       const elapsed = now - start;
       
@@ -52,7 +53,7 @@ export const LeaseWidget = ({ leaseStart, leaseEnd, daysLeft, status }: LeaseWid
 
   // Format dates according to language
   const formatLeaseDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const date = parseDateSafe(dateString);
     return date.toLocaleDateString(language === 'fr' ? 'fr-FR' : 'en-US', {
       day: 'numeric',
       month: 'long',

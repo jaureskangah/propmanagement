@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
+import { parseDateSafe } from '@/lib/date';
+import { startOfDay, differenceInCalendarDays } from 'date-fns';
 
 export interface LeaseNotification {
   id: string;
@@ -35,10 +37,9 @@ export const useLeaseNotifications = (tenantId?: string) => {
       if (error) throw error;
 
       if (tenant?.lease_end) {
-        const endDate = new Date(tenant.lease_end);
-        const today = new Date();
-        const diffTime = endDate.getTime() - today.getTime();
-        const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const end = startOfDay(parseDateSafe(tenant.lease_end));
+        const today = startOfDay(new Date());
+        const daysLeft = differenceInCalendarDays(end, today);
 
         const mockNotifications: LeaseNotification[] = [];
 
