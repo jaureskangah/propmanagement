@@ -273,4 +273,11 @@ export const fr = {
   noTenantsFiltered: "Aucun locataire ne correspond aux filtres actuels",
   tenantCount: "{count} locataires",
   tenantCountSingular: "1 locataire",
+
+  // Property actions bar
+  selectAll: "Tout sélectionner",
+  propertySelected: "propriété sélectionnée",
+  propertiesSelected: "propriétés sélectionnées",
+  deleteSelected: "Supprimer",
+  unselectAll: "Tout désélectionner",
 };
