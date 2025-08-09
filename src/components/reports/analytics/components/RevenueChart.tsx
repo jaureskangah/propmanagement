@@ -2,8 +2,9 @@ import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from "recharts";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { format, startOfMonth, eachMonthOfInterval, subMonths } from "date-fns";
+import { format, startOfMonth, eachMonthOfInterval, subMonths, addMonths } from "date-fns";
 import { fr } from "date-fns/locale";
+import { parseDateSafe } from "@/lib/date";
 
 interface RevenueChartProps {
   payments: any[];
@@ -20,16 +21,16 @@ export const RevenueChart = ({ payments }: RevenueChartProps) => {
 
   const revenueData = months.map(month => {
     const monthStart = startOfMonth(month);
-    const monthEnd = new Date(month.getFullYear(), month.getMonth() + 1, 0);
+    const nextMonthStart = startOfMonth(addMonths(month, 1));
     
     const monthlyRevenue = payments
       .filter(payment => {
-        const paymentDate = new Date(payment.payment_date || payment.created_at);
-        const inMonth = paymentDate >= monthStart && paymentDate <= monthEnd;
+        const paymentDate = parseDateSafe(payment.payment_date ?? payment.created_at);
+        const inMonth = paymentDate >= monthStart && paymentDate < nextMonthStart;
         const status = typeof payment.status === 'string' ? payment.status.toLowerCase() : '';
         return inMonth && status === 'paid';
       })
-      .reduce((sum, payment) => sum + (payment.amount || 0), 0);
+      .reduce((sum, payment) => sum + (Number(payment.amount) || 0), 0);
 
     return {
       month: format(month, 'MMM yyyy', { locale }),
