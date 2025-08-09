@@ -25,7 +25,9 @@ export const RevenueChart = ({ payments }: RevenueChartProps) => {
     const monthlyRevenue = payments
       .filter(payment => {
         const paymentDate = new Date(payment.payment_date || payment.created_at);
-        return paymentDate >= monthStart && paymentDate <= monthEnd;
+        const inMonth = paymentDate >= monthStart && paymentDate <= monthEnd;
+        const status = typeof payment.status === 'string' ? payment.status.toLowerCase() : '';
+        return inMonth && status === 'paid';
       })
       .reduce((sum, payment) => sum + (payment.amount || 0), 0);
 
