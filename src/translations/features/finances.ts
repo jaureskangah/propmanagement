@@ -18,6 +18,9 @@ export const enFinances = {
   // Income and expenses
   income: "Income",
   expenses: "Expenses",
+  propertyExpenses: "Property expenses",
+  addExpense: "Add Expense",
+  noDescription: "No description",
   expense: "Expense",
   revenue: "Revenue",
   costs: "Costs",
