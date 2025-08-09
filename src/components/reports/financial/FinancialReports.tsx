@@ -165,7 +165,7 @@ export const FinancialReports = () => {
           <Card>
             <CardContent className="p-6">
               <div className={`text-2xl font-bold ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {roi.toFixed(1)}%
+                {Math.round(roi)}%
               </div>
               <div className="flex items-center gap-2">
                 <p className="text-sm text-muted-foreground">
