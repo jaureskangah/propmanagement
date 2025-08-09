@@ -22,8 +22,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enUS } from "date-fns/locale";
 import { supabase } from "@/lib/supabase";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -38,6 +39,7 @@ interface AddExpenseDialogProps {
 
 export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: AddExpenseDialogProps) => {
   const { toast } = useToast();
+  const { language, t } = useLocale();
   const { invalidateFinancialData } = useFinancialCacheInvalidation();
   const [isLoading, setIsLoading] = useState(false);
   const [date, setDate] = useState<Date>();
@@ -70,9 +72,11 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     }
   });
 
-  const expenseCategories = [
+  const dateLocale = language === 'fr' ? fr : enUS;
+
+  const expenseCategories = language === 'fr' ? [
     "Plomberie",
-    "Électricité", 
+    "Électricité",
     "Chauffage/Climatisation",
     "Peinture",
     "Nettoyage",
@@ -80,13 +84,23 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     "Réparations générales",
     "Matériaux",
     "Autre"
+  ] : [
+    "Plumbing",
+    "Electrical",
+    "HVAC",
+    "Painting",
+    "Cleaning",
+    "Landscaping",
+    "General Repairs",
+    "Materials",
+    "Other"
   ];
 
   const validateForm = () => {
     if (!date) {
       toast({
-        title: "Erreur de validation",
-        description: "Veuillez sélectionner une date",
+        title: language === 'fr' ? "Erreur de validation" : "Validation error",
+        description: language === 'fr' ? "Veuillez sélectionner une date" : "Please select a date",
         variant: "destructive",
       });
       return false;
@@ -94,8 +108,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     
     if (!formData.category) {
       toast({
-        title: "Erreur de validation",
-        description: "Veuillez sélectionner une catégorie",
+        title: language === 'fr' ? "Erreur de validation" : "Validation error",
+        description: language === 'fr' ? "Veuillez sélectionner une catégorie" : "Please select a category",
         variant: "destructive",
       });
       return false;
@@ -103,8 +117,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     
     if (!formData.amount || parseFloat(formData.amount) <= 0) {
       toast({
-        title: "Erreur de validation",
-        description: "Veuillez saisir un montant valide",
+        title: language === 'fr' ? "Erreur de validation" : "Validation error",
+        description: language === 'fr' ? "Veuillez saisir un montant valide" : "Please enter a valid amount",
         variant: "destructive",
       });
       return false;
@@ -112,8 +126,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
 
     if (!propertyId) {
       toast({
-        title: "Erreur de validation",
-        description: "Propriété non sélectionnée",
+        title: language === 'fr' ? "Erreur de validation" : "Validation error",
+        description: language === 'fr' ? "Propriété non sélectionnée" : "Property not selected",
         variant: "destructive",
       });
       return false;
@@ -145,7 +159,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       // Récupérer l'utilisateur actuel
       const { data: userData, error: userError } = await supabase.auth.getUser();
       if (userError || !userData.user) {
-        throw new Error("Utilisateur non authentifié");
+        throw new Error(language === 'fr' ? "Utilisateur non authentifié" : "User not authenticated");
       }
 
       // Préparer les données avec une gestion propre du vendor_id
@@ -182,8 +196,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
       await invalidateFinancialData(propertyId);
 
       toast({
-        title: "Succès",
-        description: "Dépense ajoutée - Données financières mises à jour",
+        title: language === 'fr' ? "Succès" : "Success",
+        description: language === 'fr' ? "Dépense ajoutée - Données financières mises à jour" : "Expense added - Financial data updated",
       });
 
       // Reset form et fermer
@@ -197,8 +211,8 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     } catch (error: any) {
       console.error("Erreur lors de l'ajout de la dépense:", error);
       toast({
-        title: "Erreur",
-        description: error.message || "Impossible d'ajouter la dépense",
+        title: language === 'fr' ? "Erreur" : "Error",
+        description: error.message || (language === 'fr' ? "Impossible d'ajouter la dépense" : "Unable to add the expense"),
         variant: "destructive",
       });
     } finally {
@@ -228,19 +242,19 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
     }}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Ajouter une dépense</DialogTitle>
+          <DialogTitle>{language === 'fr' ? "Ajouter une dépense" : t('addExpense', { fallback: 'Add Expense' })}</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="category">Catégorie *</Label>
+            <Label htmlFor="category">{language === 'fr' ? 'Catégorie *' : `${t('category', { fallback: 'Category' })} *`}</Label>
             <Select
               value={formData.category}
               onValueChange={(value) => handleInputChange("category", value)}
               disabled={isLoading}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionner une catégorie" />
+                <SelectValue placeholder={language === 'fr' ? 'Sélectionner une catégorie' : 'Select category'} />
               </SelectTrigger>
               <SelectContent>
                 {expenseCategories.map((category) => (
@@ -253,7 +267,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="amount">Montant (CAD) *</Label>
+            <Label htmlFor="amount">{language === 'fr' ? 'Montant (CAD) *' : `${t('amount', { fallback: 'Amount' })} (CAD) *`}</Label>
             <Input
               id="amount"
               type="number"
@@ -267,7 +281,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
           </div>
 
           <div className="space-y-2">
-            <Label>Date *</Label>
+            <Label>{language === 'fr' ? 'Date *' : `${t('date', { fallback: 'Date' })} *`}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -279,7 +293,7 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
                   disabled={isLoading}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP", { locale: fr }) : "Sélectionner une date"}
+                  {date ? format(date, "PPP", { locale: dateLocale }) : (language === 'fr' ? "Sélectionner une date" : "Select date")}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
@@ -294,17 +308,17 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="vendor">Fournisseur (optionnel)</Label>
+            <Label htmlFor="vendor">{language === 'fr' ? 'Fournisseur (optionnel)' : `${t('vendor', { fallback: 'Vendor' })} (optional)`}</Label>
             <Select
               value={formData.vendor_id}
               onValueChange={(value) => handleInputChange("vendor_id", value)}
               disabled={isLoading}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Sélectionner un fournisseur" />
+                <SelectValue placeholder={language === 'fr' ? 'Sélectionner un fournisseur' : 'Select a vendor'} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">Aucun fournisseur</SelectItem>
+                <SelectItem value="none">{language === 'fr' ? 'Aucun fournisseur' : 'No vendor'}</SelectItem>
                 {vendors.map((vendor) => (
                   <SelectItem key={vendor.id} value={vendor.id}>
                     {vendor.name}
@@ -315,12 +329,12 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description (optionnel)</Label>
+            <Label htmlFor="description">{language === 'fr' ? 'Description (optionnel)' : `${t('description', { fallback: 'Description' })} (optional)`}</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
-              placeholder="Description de la dépense..."
+              placeholder={language === 'fr' ? 'Description de la dépense...' : 'Expense description...'}
               rows={3}
               disabled={isLoading}
             />
@@ -333,10 +347,10 @@ export const AddExpenseDialog = ({ isOpen, onClose, propertyId, onSuccess }: Add
               onClick={handleClose}
               disabled={isLoading}
             >
-              Annuler
+              {language === 'fr' ? 'Annuler' : 'Cancel'}
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Ajout..." : "Ajouter"}
+              {isLoading ? (language === 'fr' ? "Ajout..." : "Adding...") : t('addExpense', { fallback: 'Add Expense' })}
             </Button>
           </DialogFooter>
         </form>
