@@ -19,8 +19,27 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
 
     // Handle common aliases and special computed fields first
     if (f === 'properties.name') {
-      // Try multiple shapes: properties as object, array, or direct property_name field
       const anyData: any = data as any;
+
+      // Try generic path resolution first (handles nested objects/arrays)
+      try {
+        const parts = f.split('.');
+        let val: any = anyData;
+        for (const part of parts) {
+          if (Array.isArray(val)) val = val[0];
+          if (val && typeof val === 'object' && part in val) {
+            val = (val as any)[part];
+          } else {
+            val = undefined;
+            break;
+          }
+        }
+        if (val !== undefined && val !== null) {
+          return String(val);
+        }
+      } catch {}
+
+      // Fallbacks: handle object/array shapes and common aliases
       let name: string | undefined;
 
       if (anyData?.properties) {
@@ -28,21 +47,21 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
         if (Array.isArray(props) && props.length > 0) {
           const first = props[0];
           if (first && typeof first === 'object' && 'name' in first) {
-            name = String(first.name ?? '');
+            name = String((first as any).name ?? '');
           }
         } else if (typeof props === 'object' && 'name' in props) {
           name = String((props as any).name ?? '');
         }
       }
 
-      if (!name && typeof anyData?.property_name === 'string') {
+      if (name === undefined && typeof anyData?.property_name === 'string') {
         name = anyData.property_name;
       }
-      if (!name && typeof anyData?.propertyName === 'string') {
+      if (name === undefined && typeof anyData?.propertyName === 'string') {
         name = anyData.propertyName;
       }
 
-      return name && name.length > 0 ? name : match;
+      return name !== undefined && name !== null ? String(name) : match;
     }
 
     // Traitement des champs imbriqués (ex: properties.name)
