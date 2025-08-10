@@ -15,8 +15,10 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
   const regex = /\{\{([^}]+)\}\}/g;
   
   return content.replace(regex, (match, field) => {
+    const f = (typeof field === 'string' ? field : String(field)).trim();
+
     // Handle common aliases and special computed fields first
-    if (field === 'properties.name') {
+    if (f === 'properties.name') {
       // Try multiple shapes: properties as object, array, or direct property_name field
       const anyData: any = data as any;
       let name: string | undefined;
@@ -44,8 +46,8 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
     }
 
     // Traitement des champs imbriqués (ex: properties.name)
-    if (field.includes('.')) {
-      const parts = field.split('.');
+    if (f.includes('.')) {
+      const parts = f.split('.');
       let value: any = data;
       
       for (const part of parts) {
@@ -64,12 +66,12 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
     }
     
     // Cas spéciaux
-    if (field === 'currentDate') {
+    if (f === 'currentDate') {
       return new Date().toLocaleDateString();
     }
     
     // Champs directs
-    const value = (data as any)[field as keyof typeof data];
+    const value = (data as any)[f as keyof typeof data];
     return value !== null && value !== undefined ? String(value) : match;
   });
 };
