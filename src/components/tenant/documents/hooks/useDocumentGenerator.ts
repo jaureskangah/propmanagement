@@ -25,11 +25,15 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
   };
 
   const handleGeneratePreview = async (content?: string) => {
-    const contentToUse = content || documentContent;
+    const rawContent: unknown = content ?? documentContent;
+    const contentToUse = typeof rawContent === 'string' ? rawContent : '';
     setIsGenerating(true);
     setPreviewError(null);
     
     try {
+      if (typeof rawContent !== 'string') {
+        throw new Error(t('documentGenerator.invalidContent') || 'Invalid document content');
+      }
       if (!contentToUse || contentToUse.trim() === '') {
         throw new Error(t('documentGenerator.emptyDocument') || "Le contenu du document est vide");
       }
