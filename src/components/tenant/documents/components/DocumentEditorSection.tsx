@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DocumentEditor } from "@/components/documents/DocumentEditor";
@@ -7,7 +8,6 @@ import { useLocale } from "@/components/providers/LocaleProvider";
 import { Edit, Eye, Download, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-
 interface DocumentEditorSectionProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
@@ -39,6 +39,12 @@ export function DocumentEditorSection({
 }: DocumentEditorSectionProps) {
   const { t } = useLocale();
 
+  // Auto-generate preview when switching to the Preview tab and no preview exists yet
+  useEffect(() => {
+    if (activeTab === "preview" && !isGenerating && !previewUrl && documentContent?.trim()) {
+      handleGeneratePreview();
+    }
+  }, [activeTab, isGenerating, previewUrl, documentContent, handleGeneratePreview]);
   return (
     <Card className="h-full overflow-hidden border-0 bg-gradient-to-br from-white to-slate-50/30 shadow-xl shadow-primary/5">
       <motion.div

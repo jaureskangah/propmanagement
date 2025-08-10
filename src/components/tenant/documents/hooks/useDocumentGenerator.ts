@@ -14,7 +14,7 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
   const [documentContent, setDocumentContent] = useState("");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [activeTab, setActiveTab] = useState("editor");
+  const [activeTab, setActiveTab] = useState("edit");
   const [previewError, setPreviewError] = useState<string | null>(null);
   const [isSaveTemplateDialogOpen, setIsSaveTemplateDialogOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
