@@ -15,14 +15,46 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
   const regex = /\{\{([^}]+)\}\}/g;
   
   return content.replace(regex, (match, field) => {
+    // Handle common aliases and special computed fields first
+    if (field === 'properties.name') {
+      // Try multiple shapes: properties as object, array, or direct property_name field
+      const anyData: any = data as any;
+      let name: string | undefined;
+
+      if (anyData?.properties) {
+        const props = anyData.properties;
+        if (Array.isArray(props) && props.length > 0) {
+          const first = props[0];
+          if (first && typeof first === 'object' && 'name' in first) {
+            name = String(first.name ?? '');
+          }
+        } else if (typeof props === 'object' && 'name' in props) {
+          name = String((props as any).name ?? '');
+        }
+      }
+
+      if (!name && typeof anyData?.property_name === 'string') {
+        name = anyData.property_name;
+      }
+      if (!name && typeof anyData?.propertyName === 'string') {
+        name = anyData.propertyName;
+      }
+
+      return name && name.length > 0 ? name : match;
+    }
+
     // Traitement des champs imbriqués (ex: properties.name)
     if (field.includes('.')) {
       const parts = field.split('.');
       let value: any = data;
       
       for (const part of parts) {
+        // If we encounter arrays along the path, use the first element by default
+        if (Array.isArray(value)) {
+          value = value[0];
+        }
         if (value && typeof value === 'object' && part in value) {
-          value = value[part as keyof typeof value];
+          value = (value as any)[part];
         } else {
           return match; // Si le champ n'existe pas, on laisse le texte original
         }
@@ -37,7 +69,7 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
     }
     
     // Champs directs
-    const value = data[field as keyof typeof data];
+    const value = (data as any)[field as keyof typeof data];
     return value !== null && value !== undefined ? String(value) : match;
   });
 };
