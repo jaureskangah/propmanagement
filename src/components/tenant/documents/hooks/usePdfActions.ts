@@ -3,6 +3,7 @@ import { generateCustomPdf } from "../templates/customPdf";
 import { generateTemplateContent } from "../templates/templateContent";
 import { uploadDocumentToStorage, generateFileName } from "../storage/documentStorage";
 import type { Tenant } from "@/types/tenant";
+import { useLocale } from "@/components/providers/LocaleProvider";
 
 interface UsePdfActionsProps {
   tenant: Tenant;
@@ -26,6 +27,7 @@ export const usePdfActions = ({
   cleanup,
 }: UsePdfActionsProps) => {
   const { toast } = useToast();
+  const { language } = useLocale();
 
   const generateDocument = async (selectedTemplate: string) => {
     if (!selectedTemplate) {
@@ -39,7 +41,7 @@ export const usePdfActions = ({
 
     setIsGenerating(true);
     try {
-      const initialContent = generateTemplateContent(selectedTemplate, tenant);
+      const initialContent = generateTemplateContent(selectedTemplate, tenant, language);
       console.log("Generating PDF with content:", initialContent);
       
       const pdfBuffer = await generateCustomPdf(initialContent);

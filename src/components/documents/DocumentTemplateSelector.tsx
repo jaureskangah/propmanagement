@@ -27,7 +27,7 @@ export function DocumentTemplateSelector({
   setIsGenerating,
   tenant
 }: DocumentTemplateSelectorProps) {
-  const { t } = useLocale();
+  const { t, language } = useLocale();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [showTemplatesDialog, setShowTemplatesDialog] = useState(false);
@@ -62,7 +62,7 @@ export function DocumentTemplateSelector({
       let content = '';
       
       try {
-        content = generateTemplateContent(selectedTemplate, tenant || undefined);
+        content = generateTemplateContent(selectedTemplate, tenant || undefined, language);
         
         if (tenant) {
           content = processDynamicFields(content, tenant);

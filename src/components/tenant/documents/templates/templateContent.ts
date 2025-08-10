@@ -1,7 +1,341 @@
 
 import type { Tenant } from "@/types/tenant";
 
-export const generateTemplateContent = (template: string, tenant?: Tenant): string => {
+export const generateTemplateContent = (template: string, tenant?: Tenant, language: 'en' | 'fr' = 'fr'): string => {
+  // Return content based on selected language
+  if (language === 'en') {
+    switch (template) {
+      case "lease":
+        return `LEASE AGREEMENT
+
+Tenant: {{name}}
+Email: {{email}}
+Phone: {{phone}}
+Property: {{properties.name}}
+Unit Number: {{unit_number}}
+Start Date: {{lease_start}}
+End Date: {{lease_end}}
+Monthly Rent: {{rent_amount}}
+
+This LEASE AGREEMENT is made on {{currentDate}} between the Landlord and the Tenant.
+
+1. PREMISES
+   The Landlord agrees to rent to the Tenant the premises located at {{properties.name}}, Unit {{unit_number}}.
+
+2. TERM
+   The term of this lease begins on {{lease_start}} and ends on {{lease_end}}.
+
+3. RENT
+   The monthly rent for the premises is {{rent_amount}}, due on the first day of each month.
+
+4. SECURITY DEPOSIT
+   The Tenant shall pay a security deposit of ________ at the signing of this agreement.
+
+5. UTILITIES
+   The Tenant is responsible for payment of all utilities, except:
+   _______________________________________
+
+6. MAINTENANCE
+   The Tenant agrees to keep the premises clean and sanitary and promptly notify the Landlord of any defects or maintenance issues.
+
+[Additional conditions may be added here]
+
+Landlord: _________________________     Date: _____________
+
+Tenant: __________________________     Date: _____________`;
+
+      case "receipt":
+        return `RENT RECEIPT
+
+Tenant: {{name}}
+Property: {{properties.name}}
+Unit Number: {{unit_number}}
+Amount: {{rent_amount}}
+Date: {{currentDate}}
+
+This document certifies that the landlord has received a payment from {{name}} in the amount of {{rent_amount}} representing the monthly rent for the property located at {{properties.name}}, Unit {{unit_number}}.
+
+Payment Method: ________________
+Payment Period: ________________
+
+Landlord's Signature: _________________________
+
+Thank you for your payment!`;
+
+      case "notice":
+        return `NOTICE TO VACATE
+
+Date: {{currentDate}}
+
+To: {{name}}
+{{properties.name}}
+Unit {{unit_number}}
+
+Dear {{name}},
+
+This letter serves as formal notice that you are required to vacate the premises described above.
+
+Current Lease Details:
+- Lease start date: {{lease_start}}
+- Lease end date: {{lease_end}}
+- Monthly rent: {{rent_amount}}
+
+Please ensure that:
+1. All personal belongings are removed
+2. The unit is thoroughly cleaned
+3. All keys are returned
+4. A forwarding address is provided
+
+Reason for notice: ________________________
+
+Move-out date: ________________________
+
+Sincerely,
+Management`;
+
+      case "lease_renewal":
+        return `LEASE RENEWAL NOTICE
+
+Date: {{currentDate}}
+
+Tenant: {{name}}
+Property: {{properties.name}}
+Unit Number: {{unit_number}}
+
+Dear {{name}},
+
+We are writing regarding the renewal of your lease for Unit {{unit_number}} at {{properties.name}}.
+
+Your current lease ends on {{lease_end}}. We are pleased to offer a renewal under the following terms:
+
+1. NEW TERM
+   The new lease term will begin on ________________ and end on ________________.
+
+2. RENT
+   The new monthly rent will be ________________, which is an increase of ________________ from the current rent.
+
+3. OTHER TERMS
+   All other terms of your current lease will remain unchanged unless otherwise stated below:
+   ________________
+   ________________
+
+Please inform us of your decision to renew or not by ________________.
+
+Sincerely,
+Management`;
+
+      case "payment_reminder":
+        return `PAYMENT REMINDER
+
+Date: {{currentDate}}
+
+To: {{name}}
+{{properties.name}}
+Unit {{unit_number}}
+
+Subject: Rent payment reminder
+
+Dear {{name}},
+
+This is a friendly reminder that your rent payment in the amount of {{rent_amount}} is due on ________________.
+
+If you have already made the payment, please disregard this reminder and thank you.
+
+If you have not yet paid, please make your payment as soon as possible to avoid late fees.
+
+Accepted payment methods:
+- Bank transfer
+- Check
+- Online payment
+
+If you are experiencing difficulties making your payment on time or have questions, please contact us.
+
+Sincerely,
+Management`;
+
+      case "late_payment":
+        return `LATE PAYMENT NOTICE
+
+Date: {{currentDate}}
+
+To: {{name}}
+{{properties.name}}
+Unit {{unit_number}}
+
+LATE PAYMENT NOTICE
+
+Dear {{name}},
+
+According to our records, we have not received your rent payment in the amount of {{rent_amount}} which was due on ________________.
+
+Your payment is currently ________________ days late.
+
+In accordance with your lease agreement, a late fee of ________________ has been added to your balance, bringing the total amount due to ________________.
+
+Please make this payment immediately to avoid further penalties or actions.
+
+If you have already made the payment, please contact us with proof of payment.
+
+Sincerely,
+Management`;
+
+      case "entry_notice":
+        return `ENTRY NOTICE
+
+Date: {{currentDate}}
+
+To: {{name}}
+{{properties.name}}
+Unit {{unit_number}}
+
+Dear {{name}},
+
+This is a formal notice to inform you that we need access to your unit for the following reason:
+
+Reason: ________________________________
+_______________________________
+
+Planned entry date: ________________
+Time: from ________________ to ________________
+
+In accordance with residential tenancy laws, we are providing this notice at least 24 hours before the planned entry.
+
+If this date/time is not convenient for you, please contact us as soon as possible to arrange another time.
+
+Sincerely,
+Management`;
+
+      case "maintenance_notice":
+        return `MAINTENANCE NOTICE
+
+Date: {{currentDate}}
+
+To: {{name}}
+{{properties.name}}
+Unit {{unit_number}}
+
+Dear {{name}},
+
+We are informing you that maintenance work is scheduled in your building/unit.
+
+Work description: ________________________________
+_______________________________
+
+Planned date and time: ________________ from ________________ to ________________
+
+Expected impact:
+- Water interruption: Yes □ No □ Estimated duration: ________________
+- Power interruption: Yes □ No □ Estimated duration: ________________
+- Noise: Minimal □ Moderate □ Significant □
+- Unit access required: Yes □ No □
+
+We will strive to minimize inconvenience during these necessary works. If you have any concerns, please contact us.
+
+Sincerely,
+Maintenance Team`;
+
+      case "move_in_checklist":
+        return `MOVE-IN CHECKLIST
+
+Tenant: {{name}}
+Property: {{properties.name}}
+Unit: {{unit_number}}
+Move-in Date: {{lease_start}}
+Inspection Date: {{currentDate}}
+
+Instructions: Indicate the condition of each item (Excellent, Good, Fair, Poor) and any relevant comments.
+
+LIVING ROOM:
+- Walls & ceiling: __________ Comments: __________
+- Floor/carpet: __________ Comments: __________
+- Windows & blinds: __________ Comments: __________
+- Lighting: __________ Comments: __________
+- Electrical outlets: __________ Comments: __________
+
+KITCHEN:
+- Appliances: __________ Comments: __________
+- Cabinets & countertops: __________ Comments: __________
+- Sink & faucets: __________ Comments: __________
+- Floor: __________ Comments: __________
+
+BATHROOM(S):
+- Toilet: __________ Comments: __________
+- Tub/Shower: __________ Comments: __________
+- Sink & faucets: __________ Comments: __________
+- Floor: __________ Comments: __________
+
+BEDROOM(S):
+- Walls & ceiling: __________ Comments: __________
+- Floor/carpet: __________ Comments: __________
+- Closets: __________ Comments: __________
+- Windows & blinds: __________ Comments: __________
+
+OTHER:
+- Smoke/CO detectors: __________ Comments: __________
+- Heating/AC systems: __________ Comments: __________
+- Keys provided: __________ Comments: __________
+
+Tenant signature: _________________________ Date: _________________
+
+Landlord/Manager signature: _________________________ Date: _________________`;
+
+      case "move_out_checklist":
+        return `MOVE-OUT CHECKLIST
+
+Tenant: {{name}}
+Property: {{properties.name}}
+Unit: {{unit_number}}
+Move-out Date: ________________
+Inspection Date: {{currentDate}}
+
+Instructions: Compare current condition with the move-in checklist. Note any damage beyond normal wear and tear.
+
+LIVING ROOM:
+- Walls & ceiling: __________ Damage: __________
+- Floor/carpet: __________ Damage: __________
+- Windows & blinds: __________ Damage: __________
+- Lighting: __________ Damage: __________
+- Electrical outlets: __________ Damage: __________
+
+KITCHEN:
+- Appliances: __________ Damage: __________
+- Cabinets & countertops: __________ Damage: __________
+- Sink & faucets: __________ Damage: __________
+- Floor: __________ Damage: __________
+
+BATHROOM(S):
+- Toilet: __________ Damage: __________
+- Tub/Shower: __________ Damage: __________
+- Sink & faucets: __________ Damage: __________
+- Floor: __________ Damage: __________
+
+BEDROOM(S):
+- Walls & ceiling: __________ Damage: __________
+- Floor/carpet: __________ Damage: __________
+- Closets: __________ Damage: __________
+- Windows & blinds: __________ Damage: __________
+
+Cleaning condition: Excellent □ Good □ Fair □ Unsatisfactory □
+
+SECURITY DEPOSIT CALCULATION:
+- Initial deposit: __________
+- Deductions for damages: __________
+- Deductions for cleaning: __________
+- Other deductions: __________
+- Amount refunded: __________
+
+Refund address: __________________________________________
+
+Tenant signature: _________________________ Date: _________________
+
+Landlord/Manager signature: _________________________ Date: _________________`;
+
+      default:
+        throw new Error("Template not implemented");
+    }
+  }
+
+  // Default FR content (existing)
   switch (template) {
     case "lease":
       return `CONTRAT DE BAIL
@@ -191,7 +525,7 @@ Cher/Chère {{name}},
 Ceci est un avis formel pour vous informer que nous avons besoin d'accéder à votre unité pour la raison suivante:
 
 Raison: ________________________________
-________________________________
+______________________________
 
 Date d'entrée prévue: ________________
 Heure: de ________________ à ________________
@@ -217,7 +551,7 @@ Cher/Chère {{name}},
 Nous vous informons que des travaux de maintenance sont prévus dans votre bâtiment/unité.
 
 Description des travaux: ________________________________
-________________________________
+_______________________________
 
 Date et heure prévues: ________________ de ________________ à ________________
 
