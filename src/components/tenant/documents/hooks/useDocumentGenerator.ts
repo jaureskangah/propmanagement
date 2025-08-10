@@ -24,16 +24,32 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
     setSelectedTemplateName(templateName);
   };
 
-  const handleGeneratePreview = async (content?: string) => {
+  const handleGeneratePreview = async (content?: unknown) => {
     const rawContent: unknown = content ?? documentContent;
-    const contentToUse = typeof rawContent === 'string' ? rawContent : '';
+    let contentToUse: string = "";
+
+    // Coerce various content shapes into a usable string
+    if (typeof rawContent === "string") {
+      contentToUse = rawContent;
+    } else if (rawContent && typeof rawContent === "object") {
+      const maybe: any = rawContent as any;
+      if (typeof maybe.content === "string") {
+        contentToUse = maybe.content;
+      } else if (typeof maybe.text === "string") {
+        contentToUse = maybe.text;
+      } else if (Array.isArray(rawContent)) {
+        contentToUse = (rawContent as any[]).join("\n");
+      } else {
+        contentToUse = String(rawContent);
+      }
+    } else {
+      contentToUse = String(rawContent ?? "");
+    }
+
     setIsGenerating(true);
     setPreviewError(null);
     
     try {
-      if (typeof rawContent !== 'string') {
-        throw new Error(t('documentGenerator.invalidContent') || 'Invalid document content');
-      }
       if (!contentToUse || contentToUse.trim() === '') {
         throw new Error(t('documentGenerator.emptyDocument') || "Le contenu du document est vide");
       }
