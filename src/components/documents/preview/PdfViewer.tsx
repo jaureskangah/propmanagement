@@ -50,20 +50,37 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onError }) => {
       }}
       data-pdf-container="true"
     >
-      <iframe
-        ref={iframeRef}
-        src={pdfUrl}
+      <object
+        data={pdfUrl}
+        type="application/pdf"
         className="w-full h-full pdf-viewer"
-        title="PDF Document"
-        style={{ 
-          border: "none", 
+        aria-label="PDF Document"
+        style={{
           backgroundColor: "#ffffff",
           position: "absolute",
           top: 0,
           left: 0,
           width: "100%",
-          height: "100%"
+          height: "100%",
+          border: "none"
         }}
+        onError={onError as any}
+      >
+        <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#ffffff" }}>
+          <p>
+            Impossible d'afficher le PDF dans la page. 
+            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">Ouvrir le document dans un nouvel onglet</a>.
+          </p>
+        </div>
+      </object>
+
+      {/* Fallback iframe (caché) si certains navigateurs ne gèrent pas <object> */}
+      <iframe
+        ref={iframeRef}
+        src={pdfUrl}
+        title="PDF Document"
+        className="w-full h-full"
+        style={{ display: "none", border: "none", backgroundColor: "#ffffff" }}
         onError={onError}
       />
     </div>
