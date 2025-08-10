@@ -137,7 +137,12 @@ export const enDocuments = {
   // File upload
   dragFilesHere: "Drag your files here",
   orClickToUpload: "or click to browse",
-  supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG"
+  supportedFormats: "Supported formats: PDF, DOC, DOCX, JPG, PNG",
+  // PDF viewer fallback messages
+  pdfViewer: {
+    unableToDisplay: "Unable to display the PDF on this page.",
+    openInNewTab: "Open the document in a new tab"
+  }
 };
 
 export const frDocuments = {
@@ -278,7 +283,12 @@ export const frDocuments = {
   // Téléversement de fichier
   dragFilesHere: "Glissez vos fichiers ici",
   orClickToUpload: "ou cliquez pour parcourir",
-  supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG"
+  supportedFormats: "Formats supportés : PDF, DOC, DOCX, JPG, PNG",
+  // Messages de secours du lecteur PDF
+  pdfViewer: {
+    unableToDisplay: "Impossible d'afficher le PDF dans la page.",
+    openInNewTab: "Ouvrir le document dans un nouvel onglet"
+  }
 };
 
 // Debug: vérification de l'export

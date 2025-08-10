@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef } from "react";
+import { useSafeTranslation } from "@/hooks/useSafeTranslation";
 
 interface PdfViewerProps {
   pdfUrl: string;
@@ -8,7 +9,8 @@ interface PdfViewerProps {
 
 export const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onError }) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  
+  const { t } = useSafeTranslation();
+
   useEffect(() => {
     if (iframeRef.current) {
       iframeRef.current.style.backgroundColor = "#ffffff";
@@ -67,9 +69,16 @@ export const PdfViewer: React.FC<PdfViewerProps> = ({ pdfUrl, onError }) => {
         onError={onError as any}
       >
         <div className="w-full h-full flex items-center justify-center" style={{ backgroundColor: "#ffffff" }}>
-          <p>
-            Impossible d'afficher le PDF dans la page. 
-            <a href={pdfUrl} target="_blank" rel="noopener noreferrer">Ouvrir le document dans un nouvel onglet</a>.
+          <p className="text-center">
+            {t("pdfViewer.unableToDisplay", "Unable to display the PDF on this page.")}{" "}
+            <a
+              href={pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary underline font-medium hover:opacity-90 focus:outline-none focus:underline"
+            >
+              {t("pdfViewer.openInNewTab", "Open the document in a new tab")}
+            </a>.
           </p>
         </div>
       </object>
