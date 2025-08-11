@@ -20,6 +20,7 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
     // Handle common aliases and special computed fields first
     if (f === 'properties.name') {
       const anyData: any = data as any;
+      try { console.log('[contentParser] resolving properties.name; tenant.properties =', JSON.stringify((anyData as any)?.properties ?? null)); } catch {}
 
       // Try generic path resolution first (handles nested objects/arrays)
       try {
@@ -35,6 +36,7 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
           }
         }
         if (val !== undefined && val !== null) {
+          try { console.log('[contentParser] properties.name resolved via path =', val); } catch {}
           return String(val);
         }
       } catch {}

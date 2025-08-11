@@ -19,6 +19,7 @@ import { Tenant } from "@/types/tenant";
  */
 export const generateCustomPdf = async (content: string, options: PdfOptions = {}, tenant?: Tenant | null) => {
   console.log("Generating PDF with content:", content);
+  try { console.log("PDF tenant snapshot:", JSON.stringify(tenant)); } catch {}
   
   // Process any dynamic fields in the content
   const processedContent = processDynamicFields(content, tenant);

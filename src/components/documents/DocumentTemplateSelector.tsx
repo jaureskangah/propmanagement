@@ -63,6 +63,7 @@ export function DocumentTemplateSelector({
       
       try {
         content = generateTemplateContent(selectedTemplate, tenant || undefined, language);
+        try { console.log('[TemplateSelector] tenant snapshot', tenant); } catch {}
         
         if (tenant) {
           content = processDynamicFields(content, tenant);
