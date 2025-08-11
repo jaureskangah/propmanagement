@@ -60,16 +60,26 @@ export function useDocumentGenerator(tenant?: Tenant | null) {
         
         // Traiter les champs dynamiques si un locataire est fourni
         let processedContent = contentToUse;
+        let enrichedTenant = tenant || null;
         if (tenant) {
-          processedContent = processDynamicFields(contentToUse, tenant);
+          try {
+            const { normalizeTenantForDocuments } = await import("../utils/normalizeTenant");
+            enrichedTenant = await normalizeTenantForDocuments(tenant);
+          } catch (e) {
+            try { console.warn('[useDocumentGenerator] normalize import failed', e); } catch {}
+            enrichedTenant = tenant;
+          }
+          processedContent = processDynamicFields(contentToUse, enrichedTenant || undefined);
         }
         
         const pdfBuffer = await generateCustomPdf(processedContent, {
+
           title: title,
           headerText: selectedTemplateName || t('documentGenerator.document') || 'Document',
           showPageNumbers: true,
           showDate: true
-        }, tenant);
+        }, enrichedTenant || tenant);
+
         
         const pdfBlob = new Blob([pdfBuffer], { type: 'application/pdf' });
         const previewUrl = URL.createObjectURL(pdfBlob);

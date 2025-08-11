@@ -65,8 +65,16 @@ export function DocumentTemplateSelector({
         content = generateTemplateContent(selectedTemplate, tenant || undefined, language);
         try { console.log('[TemplateSelector] tenant snapshot', tenant); } catch {}
         
+        let enrichedTenant = tenant || null;
         if (tenant) {
-          content = processDynamicFields(content, tenant);
+          try {
+            const { normalizeTenantForDocuments } = await import("@/components/tenant/documents/utils/normalizeTenant");
+            enrichedTenant = await normalizeTenantForDocuments(tenant);
+          } catch (e) {
+            try { console.warn('[TemplateSelector] normalize import failed', e); } catch {}
+            enrichedTenant = tenant;
+          }
+          content = processDynamicFields(content, enrichedTenant || undefined);
         }
         
         onGenerateContent(content);
@@ -75,6 +83,7 @@ export function DocumentTemplateSelector({
           description: t('documentGenerator.templateLoadedDescription')
         });
       } catch (error) {
+
         console.error("Error generating template content:", error);
         toast({
           title: t('documentGenerator.errorTitle'),
