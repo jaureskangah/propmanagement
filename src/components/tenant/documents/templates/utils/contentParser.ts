@@ -61,7 +61,51 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
         name = anyData.propertyName;
       }
 
-      return name !== undefined && name !== null ? String(name) : match;
+      // Deep scan for any property-like structure containing a name
+      if (name === undefined) {
+        try {
+          const visited = new Set<any>();
+          const stack: any[] = [anyData];
+          while (stack.length) {
+            const cur = stack.pop();
+            if (!cur || visited.has(cur)) continue;
+            visited.add(cur);
+
+            if (Array.isArray(cur)) {
+              for (const item of cur) stack.push(item);
+              continue;
+            }
+
+            if (typeof cur === 'object') {
+              for (const key of Object.keys(cur)) {
+                const val = (cur as any)[key];
+                // Look for keys like 'property', 'properties', etc.
+                if (key.toLowerCase().includes('propert') && val) {
+                  if (Array.isArray(val)) {
+                    const first = val[0];
+                    if (first && typeof first === 'object' && 'name' in first) {
+                      name = String((first as any).name ?? '');
+                      if (name) break;
+                    }
+                  } else if (typeof val === 'object' && 'name' in val) {
+                    const n = (val as any).name;
+                    if (n !== undefined && n !== null) {
+                      name = String(n);
+                      if (name) break;
+                    }
+                  }
+                }
+                if (val && (typeof val === 'object' || Array.isArray(val))) {
+                  stack.push(val);
+                }
+              }
+            }
+            if (name) break;
+          }
+        } catch {}
+      }
+
+      return name !== undefined && name !== null && name !== '' ? String(name) : match;
     }
 
     // Traitement des champs imbriqués (ex: properties.name)
