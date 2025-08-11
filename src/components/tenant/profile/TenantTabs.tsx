@@ -142,8 +142,26 @@ export const TenantTabs = ({ tenant, isTenantUser, handleDataUpdate }: TenantTab
             onMaintenanceUpdate={handleDataUpdate}
           />
         );
-      case 'documentGenerator':
-        return <DocumentGenerator tenant={tenant} />;
+      case 'documentGenerator': {
+        // Ensure property name is present in the shape expected by the generator
+        const props: any = (tenant as any)?.properties;
+        let propertyName = '';
+        if (props) {
+          if (Array.isArray(props)) {
+            propertyName = props[0]?.name || '';
+          } else if (typeof props === 'object' && 'name' in props) {
+            propertyName = String(props.name || '');
+          }
+        }
+        const enrichedTenant: any = {
+          ...tenant,
+          // Normalize to a simple object with name so {{properties.name}} always resolves
+          properties: { name: propertyName || '' },
+          // Extra alias for our parser fallbacks
+          property_name: propertyName || (tenant as any)?.property_name || ''
+        };
+        return <DocumentGenerator tenant={enrichedTenant} />;
+      }
       default:
         return (
           <TenantDocuments 
