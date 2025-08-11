@@ -5,8 +5,19 @@ import { Tenant } from "@/types/tenant";
 import { useDocumentGenerator } from "./hooks/useDocumentGenerator";
 import { DocumentTemplateSection } from "./components/DocumentTemplateSection";
 import { DocumentEditorSection } from "./components/DocumentEditorSection";
+import { useTenant as useTenantCtx } from "@/components/providers/TenantProvider";
 
 export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
+  // Fallback to TenantProvider context when tenant prop is not provided
+  let effectiveTenant: Tenant | null = null;
+  try {
+    const { tenant: tenantFromContext } = useTenantCtx();
+    effectiveTenant = tenant ?? tenantFromContext ?? null;
+  } catch {
+    // If used outside of TenantProvider, silently ignore and rely on prop
+    effectiveTenant = tenant ?? null;
+  }
+
   const {
     selectedTemplate,
     selectedTemplateName,
@@ -23,7 +34,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
     setDocumentContent,
     setActiveTab,
     setIsSaveTemplateDialogOpen
-  } = useDocumentGenerator(tenant);
+  } = useDocumentGenerator(effectiveTenant);
 
   return (
     <div className="space-y-8">
@@ -42,7 +53,7 @@ export function DocumentGenerator({ tenant }: { tenant?: Tenant | null }) {
               setDocumentContent(content);
             }}
             isGenerating={isGenerating}
-            tenant={tenant}
+            tenant={effectiveTenant}
           />
         </motion.div>
 
