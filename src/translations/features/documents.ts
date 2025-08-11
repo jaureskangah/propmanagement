@@ -13,7 +13,11 @@ export const enDocuments = {
   // Document Generator - nested structure
   documentGenerator: {
     documentGenerator: "Document Generator",
-    documentTemplates: "Document Templates", 
+    documentTemplates: "Document Templates",
+    chooseStartingPoint: "Choose your starting point",
+    availableTemplates: "Available templates",
+    documentEditor: "Document Editor",
+    noTemplateSelected: "No template selected",
     selectDocumentTemplate: "Select Document Template",
     generateDocument: "Generate Document",
     mySavedTemplates: "My Saved Templates",

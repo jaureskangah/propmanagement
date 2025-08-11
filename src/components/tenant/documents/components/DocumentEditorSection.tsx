@@ -59,10 +59,10 @@ export function DocumentEditorSection({
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                  Éditeur de Document
+                  {t('documentGenerator.documentEditor')}
                 </h3>
                 <p className="text-sm text-muted-foreground/70 mt-1">
-                  {selectedTemplateName || "Aucun modèle sélectionné"}
+                  {selectedTemplateName || t('documentGenerator.noTemplateSelected')}
                 </p>
               </div>
               
@@ -75,7 +75,7 @@ export function DocumentEditorSection({
                   className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md"
                 >
                   <Eye className="h-4 w-4 mr-2" />
-                  Aperçu
+                  {t('documentGenerator.preview')}
                 </Button>
                 <Button
                   onClick={handleDownload}

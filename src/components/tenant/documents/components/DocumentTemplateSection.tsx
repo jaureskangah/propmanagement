@@ -39,7 +39,7 @@ export function DocumentTemplateSection({
             <CardTitle className="text-lg font-semibold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               {t('documentGenerator.documentTemplates')}
             </CardTitle>
-            <p className="text-sm text-muted-foreground/70 mt-1">Choisissez votre point de départ</p>
+            <p className="text-sm text-muted-foreground/70 mt-1">{t('documentGenerator.chooseStartingPoint')}</p>
           </div>
         </motion.div>
       </CardHeader>
@@ -54,16 +54,16 @@ export function DocumentTemplateSection({
           <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100">
             <div className="flex items-center gap-2 mb-2">
               <Sparkles className="h-4 w-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-900">Templates disponibles</span>
+              <span className="text-sm font-medium text-blue-900">{t('documentGenerator.availableTemplates')}</span>
             </div>
             <div className="grid grid-cols-2 gap-3 text-center">
               <div className="bg-white/70 rounded-lg p-2">
                 <div className="text-lg font-bold text-blue-600">10+</div>
-                <div className="text-xs text-blue-700">Contrats</div>
+                <div className="text-xs text-blue-700">{t('documentGenerator.leaseDocuments')}</div>
               </div>
               <div className="bg-white/70 rounded-lg p-2">
                 <div className="text-lg font-bold text-green-600">5+</div>
-                <div className="text-xs text-green-700">Avis</div>
+                <div className="text-xs text-green-700">{t('documentGenerator.noticeDocuments')}</div>
               </div>
             </div>
           </div>
