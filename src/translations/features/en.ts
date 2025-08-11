@@ -8,8 +8,13 @@ import { enLease } from './tenant/en/lease';
 import { enDashboard as enTenantDashboard } from './tenant/en/dashboard';
 import { enToasts } from './toasts';
 import { enAdmin } from './admin';
+// Documents feature translations
+import documentsEnFeature from './documents/en';
+import { enDocuments as documentsEnIndex } from './documents/en/index';
 
 export const en = {
+  ...documentsEnIndex,
+  ...documentsEnFeature,
   ...enCommon,
   ...enDashboard,
   ...enFinances,
@@ -252,4 +257,5 @@ export const en = {
   noTenantsFiltered: "No tenants match the current filters",
   tenantCount: "{count} tenants",
   tenantCountSingular: "1 tenant",
+  "documentGenerator.recipients": "Recipients",
 };

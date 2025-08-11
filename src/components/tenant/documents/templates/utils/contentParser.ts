@@ -35,7 +35,7 @@ export const processDynamicFields = (content: string, data?: Tenant | null): str
             break;
           }
         }
-        if (val !== undefined && val !== null) {
+        if (val !== undefined && val !== null && String(val).trim() !== '') {
           try { console.log('[contentParser] properties.name resolved via path =', val); } catch {}
           return String(val);
         }
