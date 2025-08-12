@@ -1299,6 +1299,10 @@ export type Database = {
         Args: { p_tenant_id: string; p_user_id: string }
         Returns: Json
       }
+      request_header: {
+        Args: { header_name: string }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
