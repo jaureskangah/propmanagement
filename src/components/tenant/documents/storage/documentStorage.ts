@@ -28,19 +28,24 @@ export const uploadDocumentToStorage = async (
     throw uploadError;
   }
 
-  console.log("File uploaded successfully, getting public URL");
-  const { data: { publicUrl } } = supabase.storage
+  console.log("File uploaded successfully, creating signed URL");
+  const { data: signedData, error: signError } = await supabase.storage
     .from('tenant_documents')
-    .getPublicUrl(filePath);
+    .createSignedUrl(filePath, 60 * 60 * 24 * 7); // 7 days
 
-  console.log("Public URL generated:", publicUrl);
+  if (signError || !signedData?.signedUrl) {
+    console.error('Signed URL error:', signError);
+    throw signError || new Error('Failed to create signed URL');
+  }
+
+  console.log("Signed URL generated:", signedData.signedUrl);
 
   const { error: dbError } = await supabase
     .from('tenant_documents')
     .insert({
       tenant_id: tenant.id,
       name: filePath.split('/').pop() || 'document.pdf',
-      file_url: publicUrl
+      file_url: signedData.signedUrl
     });
 
   if (dbError) {
@@ -48,7 +53,7 @@ export const uploadDocumentToStorage = async (
     throw dbError;
   }
 
-  return publicUrl;
+  return signedData.signedUrl;
 };
 
 export const generateFileName = (template: string, tenant: Tenant): string => {

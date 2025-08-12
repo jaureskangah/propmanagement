@@ -72,19 +72,19 @@ export const documentUploadService = {
         return { success: false, error: "uploadError" };
       }
 
-      console.log("File uploaded successfully:", uploadData, "getting public URL");
+      console.log("File uploaded successfully:", uploadData, "creating signed URL");
 
-      // Generate public URL
-      const { data: publicUrlData } = await supabase.storage
+      // Generate signed URL (valid for 7 days)
+      const { data: signedData, error: signError } = await supabase.storage
         .from('tenant_documents')
-        .getPublicUrl(fileName);
+        .createSignedUrl(fileName, 60 * 60 * 24 * 7);
 
-      if (!publicUrlData?.publicUrl) {
-        console.error("Failed to generate public URL");
-        return { success: false, error: "publicUrlError" };
+      if (signError || !signedData?.signedUrl) {
+        console.error("Failed to generate signed URL", signError);
+        return { success: false, error: "signedUrlError" };
       }
 
-      console.log("Generated public URL:", publicUrlData.publicUrl);
+      console.log("Generated signed URL:", signedData.signedUrl);
 
       // Determine document type
       let document_type: DocumentType = 'other';
@@ -100,7 +100,7 @@ export const documentUploadService = {
         .insert({
           tenant_id: tenantId,
           name: file.name,
-          file_url: publicUrlData.publicUrl,
+          file_url: signedData.signedUrl,
           document_type: document_type,
           category: category,
           uploaded_by: userData.user.id
@@ -134,7 +134,7 @@ export const documentUploadService = {
       return { 
         success: true, 
         data: insertData, 
-        publicUrl: publicUrlData.publicUrl 
+        publicUrl: signedData.signedUrl 
       };
     } catch (error: any) {
       console.error('Upload error:', error);

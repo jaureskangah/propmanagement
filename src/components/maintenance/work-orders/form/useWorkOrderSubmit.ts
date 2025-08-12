@@ -61,11 +61,13 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
             
           if (uploadError) throw uploadError;
           
-          const { data: { publicUrl } } = supabase.storage
+          const { data: { signedUrl } } = await supabase.storage
             .from('tenant_documents')
-            .getPublicUrl(filePath);
-            
-          photoUrls.push(publicUrl);
+            .createSignedUrl(filePath, 60 * 60 * 24 * 7);
+          
+          if (signedUrl) {
+            photoUrls.push(signedUrl);
+          }
         }
       }
 

@@ -38,10 +38,10 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.share-document]
-verify_jwt = false
+verify_jwt = true
 
 [functions.send-tenant-email]
-verify_jwt = false
+verify_jwt = true
 
 [studio]
 enabled = true
