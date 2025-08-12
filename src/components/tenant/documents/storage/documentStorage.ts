@@ -6,7 +6,8 @@ export const uploadDocumentToStorage = async (
   tenant: Tenant,
   filePath: string
 ) => {
-  console.log("Uploading file to path:", filePath);
+  const normalizedPath = filePath.startsWith(`${tenant.id}/`) ? filePath : `${tenant.id}/${filePath}`;
+  console.log("Uploading file to path:", normalizedPath);
   console.log("File type:", file.type);
   console.log("File size:", file.size);
 
@@ -17,7 +18,7 @@ export const uploadDocumentToStorage = async (
 
   const { error: uploadError, data } = await supabase.storage
     .from('tenant_documents')
-    .upload(filePath, pdfBlob, {
+    .upload(normalizedPath, pdfBlob, {
       contentType: 'application/pdf',
       cacheControl: '3600',
       upsert: true
@@ -31,7 +32,7 @@ export const uploadDocumentToStorage = async (
   console.log("File uploaded successfully, creating signed URL");
   const { data: signedData, error: signError } = await supabase.storage
     .from('tenant_documents')
-    .createSignedUrl(filePath, 60 * 60 * 24 * 7); // 7 days
+    .createSignedUrl(normalizedPath, 60 * 60 * 24 * 7); // 7 days
 
   if (signError || !signedData?.signedUrl) {
     console.error('Signed URL error:', signError);
@@ -44,7 +45,7 @@ export const uploadDocumentToStorage = async (
     .from('tenant_documents')
     .insert({
       tenant_id: tenant.id,
-      name: filePath.split('/').pop() || 'document.pdf',
+      name: normalizedPath.split('/').pop() || 'document.pdf',
       file_url: signedData.signedUrl
     });
 

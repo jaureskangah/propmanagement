@@ -49,20 +49,24 @@ export const useWorkOrderSubmit = ({ onSuccess }: UseWorkOrderSubmitProps) => {
       });
 
       const photoUrls: string[] = [];
+      const { data: authData } = await supabase.auth.getUser();
+      const userId = authData.user?.id;
+      if (!userId) throw new Error("Not authenticated");
+
       if (photos.length > 0) {
         for (const photo of photos) {
           const fileExt = photo.name.split('.').pop();
           const fileName = `${Math.random()}.${fileExt}`;
-          const filePath = `work-orders/${fileName}`;
+          const filePath = `${userId}/work-orders/${fileName}`;
           
           const { error: uploadError } = await supabase.storage
-            .from('tenant_documents')
+            .from('maintenance_photos')
             .upload(filePath, photo);
             
           if (uploadError) throw uploadError;
           
           const { data: { signedUrl } } = await supabase.storage
-            .from('tenant_documents')
+            .from('maintenance_photos')
             .createSignedUrl(filePath, 60 * 60 * 24 * 7);
           
           if (signedUrl) {
