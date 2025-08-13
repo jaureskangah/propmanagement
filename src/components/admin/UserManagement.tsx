@@ -7,6 +7,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
+import { useSupabaseDelete } from "@/hooks/supabase/useSupabaseDelete";
 import { 
   Loader2, 
   Search, 
@@ -18,7 +19,8 @@ import {
   User,
   Settings,
   Edit,
-  UserCog
+  UserCog,
+  Trash2
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -137,6 +139,22 @@ export const UserManagement = () => {
       title: t('manageRoles', { fallback: 'Gérer les rôles' }),
       description: `${t('managingRolesFor', { fallback: 'Gestion des rôles pour' })} ${user.email}`,
     });
+  };
+
+  // Delete user mutation
+  const deleteUser = useSupabaseDelete('profiles', {
+    successMessage: t('userDeleted', { fallback: 'Utilisateur supprimé avec succès' }),
+    queryKeysToInvalidate: [['admin_users']]
+  });
+
+  const handleDeleteUser = (user: any) => {
+    const userName = user.first_name && user.last_name 
+      ? `${user.first_name} ${user.last_name}`
+      : user.email?.split('@')[0] || 'cet utilisateur';
+    
+    if (confirm(`${t('confirmDeleteUser', { fallback: 'Êtes-vous sûr de vouloir supprimer' })} ${userName} ? ${t('confirmDeleteUserWarning', { fallback: 'Cette action est irréversible.' })}`)) {
+      deleteUser.mutate(user.id);
+    }
   };
 
   if (isLoading) {
@@ -279,6 +297,14 @@ export const UserManagement = () => {
                             <DropdownMenuItem onClick={() => handleManageRoles(user)}>
                               <UserCog className="h-4 w-4 mr-2" />
                               {t('manageRoles', { fallback: 'Gérer les rôles' })}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                              onClick={() => handleDeleteUser(user)}
+                              className="text-red-600 hover:text-red-700 focus:text-red-700"
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              {t('deleteUser', { fallback: 'Supprimer' })}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
