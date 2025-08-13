@@ -38,9 +38,9 @@ export const documentUploadService = {
       console.log("Current user:", userData.user.id);
       console.log("Attempting to upload document for tenant:", tenantId);
       
-      // Create a unique filename with appropriate path structure
+      // Create a unique filename with user-scoped folder structure
       const fileExt = file.name.split('.').pop();
-      const fileName = `${tenantId}/${crypto.randomUUID()}.${fileExt}`;
+      const fileName = `${userData.user.id}/tenant-documents/${tenantId}/${crypto.randomUUID()}.${fileExt}`;
 
       console.log("Uploading to storage with path:", fileName);
 
@@ -72,19 +72,7 @@ export const documentUploadService = {
         return { success: false, error: "uploadError" };
       }
 
-      console.log("File uploaded successfully:", uploadData, "creating signed URL");
-
-      // Generate signed URL (valid for 7 days)
-      const { data: signedData, error: signError } = await supabase.storage
-        .from('tenant_documents')
-        .createSignedUrl(fileName, 60 * 60 * 24 * 7);
-
-      if (signError || !signedData?.signedUrl) {
-        console.error("Failed to generate signed URL", signError);
-        return { success: false, error: "signedUrlError" };
-      }
-
-      console.log("Generated signed URL:", signedData.signedUrl);
+      console.log("File uploaded successfully:", uploadData);
 
       // Determine document type
       let document_type: DocumentType = 'other';
@@ -94,13 +82,13 @@ export const documentUploadService = {
         document_type = 'receipt';
       }
 
-      // Save document reference in database
+      // Save document reference in database with storage path instead of signed URL
       const { data: insertData, error: dbError } = await supabase
         .from('tenant_documents')
         .insert({
           tenant_id: tenantId,
           name: file.name,
-          file_url: signedData.signedUrl,
+          file_url: fileName, // Store the path instead of signed URL
           document_type: document_type,
           category: category,
           uploaded_by: userData.user.id
@@ -133,8 +121,8 @@ export const documentUploadService = {
 
       return { 
         success: true, 
-        data: insertData, 
-        publicUrl: signedData.signedUrl 
+        data: insertData,
+        publicUrl: fileName // Return the storage path
       };
     } catch (error: any) {
       console.error('Upload error:', error);

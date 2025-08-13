@@ -6,7 +6,11 @@ export const uploadDocumentToStorage = async (
   tenant: Tenant,
   filePath: string
 ) => {
-  const normalizedPath = filePath.startsWith(`${tenant.id}/`) ? filePath : `${tenant.id}/${filePath}`;
+  // Get current user for scoped folder structure
+  const { data: userData } = await supabase.auth.getUser();
+  if (!userData.user) throw new Error("Not authenticated");
+  
+  const normalizedPath = `${userData.user.id}/tenant-documents/${tenant.id}/${filePath}`;
   console.log("Uploading file to path:", normalizedPath);
   console.log("File type:", file.type);
   console.log("File size:", file.size);
@@ -29,24 +33,14 @@ export const uploadDocumentToStorage = async (
     throw uploadError;
   }
 
-  console.log("File uploaded successfully, creating signed URL");
-  const { data: signedData, error: signError } = await supabase.storage
-    .from('tenant_documents')
-    .createSignedUrl(normalizedPath, 60 * 60 * 24 * 7); // 7 days
-
-  if (signError || !signedData?.signedUrl) {
-    console.error('Signed URL error:', signError);
-    throw signError || new Error('Failed to create signed URL');
-  }
-
-  console.log("Signed URL generated:", signedData.signedUrl);
+  console.log("File uploaded successfully");
 
   const { error: dbError } = await supabase
     .from('tenant_documents')
     .insert({
       tenant_id: tenant.id,
       name: normalizedPath.split('/').pop() || 'document.pdf',
-      file_url: signedData.signedUrl
+      file_url: normalizedPath // Store path instead of signed URL
     });
 
   if (dbError) {
@@ -54,7 +48,7 @@ export const uploadDocumentToStorage = async (
     throw dbError;
   }
 
-  return signedData.signedUrl;
+  return normalizedPath;
 };
 
 export const generateFileName = (template: string, tenant: Tenant): string => {
