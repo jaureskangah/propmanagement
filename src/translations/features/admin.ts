@@ -60,6 +60,10 @@ export const enAdmin = {
   managingRolesFor: "Managing roles for",
   tenant: "Tenant",
   owner: "Owner",
+  deleteUser: "Delete",
+  userDeleted: "User deleted successfully",
+  confirmDeleteUser: "Are you sure you want to delete",
+  confirmDeleteUserWarning: "This action cannot be undone.",
   // Property owner management translations
   propertyOwnerManagement: "Property Owner Management",
   managePropertyOwners: "Manage property owners and their real estate assets",
@@ -212,6 +216,10 @@ export const frAdmin = {
   managingRolesFor: "Gestion des rôles pour",
   tenant: "Locataire",
   owner: "Propriétaire",
+  deleteUser: "Supprimer",
+  userDeleted: "Utilisateur supprimé avec succès",
+  confirmDeleteUser: "Êtes-vous sûr de vouloir supprimer",
+  confirmDeleteUserWarning: "Cette action est irréversible.",
   // Property owner management translations
   propertyOwnerManagement: "Gestion des Propriétaires",
   managePropertyOwners: "Gérer les propriétaires et leurs biens immobiliers",
