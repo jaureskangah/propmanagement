@@ -14,6 +14,7 @@ export const enProperties = {
   propertyType: "Property Type",
   propertyUnits: "Units",
   propertyImage: "Property Image",
+  monthlyRent: "Monthly Rent",
   
   // Property types
   selectPropertyType: "Select Property Type",
@@ -33,6 +34,8 @@ export const enProperties = {
   selectImage: "Select an image",
   imageUploadError: "Error uploading image",
   imageUploaded: "Image uploaded successfully",
+  dragImageHere: "Drag and drop an image here or click to browse",
+  imageFormats: "PNG, JPG, GIF up to 10MB",
   
   // Search and filters
   searchProperties: "Search properties...",
@@ -47,6 +50,9 @@ export const enProperties = {
   // Actions and feedback
   viewFinancials: "View Financials",
   saveProperty: "Save Property",
+  createProperty: "Create Property",
+  updateProperty: "Update Property",
+  saving: "Saving...",
   confirmPropertyDelete: "Confirm Property Deletion",
   propertyDeleteWarning: "Are you sure you want to delete this property? This action cannot be undone.",
   propertyDeleted: "Property deleted successfully",
@@ -80,6 +86,7 @@ export const frProperties = {
   propertyType: "Type de Propriété",
   propertyUnits: "Unités",
   propertyImage: "Image de la Propriété",
+  monthlyRent: "Loyer Mensuel",
   
   // Types de propriété
   selectPropertyType: "Sélectionner le Type de Propriété",
@@ -99,6 +106,8 @@ export const frProperties = {
   selectImage: "Sélectionner une image",
   imageUploadError: "Erreur lors du téléchargement de l'image",
   imageUploaded: "Image téléchargée avec succès",
+  dragImageHere: "Glissez-déposez une image ici ou cliquez pour parcourir",
+  imageFormats: "PNG, JPG, GIF jusqu'à 10MB",
   
   // Recherche et filtres
   searchProperties: "Rechercher des propriétés...",
@@ -113,6 +122,9 @@ export const frProperties = {
   // Actions et retours
   viewFinancials: "Voir les Finances",
   saveProperty: "Enregistrer la Propriété",
+  createProperty: "Créer la Propriété",
+  updateProperty: "Mettre à jour la Propriété",
+  saving: "Enregistrement...",
   confirmPropertyDelete: "Confirmer la Suppression de la Propriété",
   propertyDeleteWarning: "Êtes-vous sûr de vouloir supprimer cette propriété ? Cette action ne peut pas être annulée.",
   propertyDeleted: "Propriété supprimée avec succès",
