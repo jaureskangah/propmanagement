@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -1252,8 +1252,8 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           id: string
-          log_timestamp: string
           level: string
+          log_timestamp: string
           message: string
           metadata: Json
           status: string
@@ -1263,8 +1263,8 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: {
           id: string
-          log_timestamp: string
           level: string
+          log_timestamp: string
           message: string
           metadata: Json
         }[]
@@ -1272,23 +1272,23 @@ export type Database = {
       get_edge_function_logs: {
         Args: Record<PropertyKey, never>
         Returns: {
+          function_id: string
           id: string
-          log_timestamp: string
           level: string
+          log_timestamp: string
           message: string
           metadata: Json
-          function_id: string
           status: string
         }[]
       }
       get_user_tenant_data: {
         Args: { p_user_id: string }
         Returns: {
+          is_tenant: boolean
+          property_name: string
+          tenant_email: string
           tenant_id: string
           tenant_name: string
-          tenant_email: string
-          property_name: string
-          is_tenant: boolean
         }[]
       }
       has_role: {
