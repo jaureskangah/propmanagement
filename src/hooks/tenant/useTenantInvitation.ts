@@ -38,12 +38,12 @@ export const useTenantInvitation = () => {
         .from('tenant_invitations')
         .select(`
           *,
-          tenants:tenant_id (
+          tenants!tenant_id (
             id,
             name,
             email,
             phone,
-            properties:property_id (name)
+            properties!property_id (name)
           )
         `)
         .eq('token', token)
