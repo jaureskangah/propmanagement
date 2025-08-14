@@ -49,7 +49,7 @@ export const useTenantInvitation = () => {
         .eq('token', token)
         .eq('status', 'pending')
         .gt('expires_at', new Date().toISOString())
-        .single();
+        .maybeSingle();
 
       if (invitationError || !invitation) {
         console.error("Invalid invitation:", invitationError);
