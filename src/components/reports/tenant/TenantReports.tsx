@@ -21,7 +21,10 @@ export const TenantReports = () => {
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ['tenants'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('tenants').select('*, properties(name, address)');
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error("User not authenticated");
+      
+      const { data, error } = await supabase.from('tenants').select('*, properties(name, address)').eq('user_id', user.id);
       if (error) throw error;
       return data;
     }

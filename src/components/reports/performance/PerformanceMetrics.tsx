@@ -22,7 +22,10 @@ export const PerformanceMetrics = () => {
   const { data: tenants = [], isLoading: isLoadingTenants } = useQuery({
     queryKey: ['tenants'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('tenants').select('*');
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error("User not authenticated");
+      
+      const { data, error } = await supabase.from('tenants').select('*').eq('user_id', user.id);
       if (error) throw error;
       return data;
     }
