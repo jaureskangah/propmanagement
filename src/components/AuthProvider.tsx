@@ -167,14 +167,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const hasAdminRole = !!adminRole;
 
-      // Si marqué comme tenant mais pas de record tenant ET pas admin → compte supprimé
+      // Si marqué comme tenant mais pas de record tenant ET pas admin → vérifier s'il y a une invitation en cours
       if (profileData?.is_tenant_user && !tenantData && !hasAdminRole) {
-        logger.warn("Deleted tenant account detected, forcing signout");
-        setLoading(false); // Important: définir loading à false avant la redirection
-        alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
-        await supabase.auth.signOut();
-        window.location.href = '/auth';
-        return;
+        // Vérifier s'il y a une invitation en cours pour cet utilisateur
+        const { data: invitation } = await supabase
+          .from('tenant_invitations')
+          .select('id, tenant_id, status')
+          .eq('user_id', userId)
+          .eq('status', 'pending')
+          .gt('expires_at', new Date().toISOString())
+          .maybeSingle();
+
+        // Si pas d'invitation en cours, alors le compte a été supprimé
+        if (!invitation) {
+          logger.warn("Deleted tenant account detected, forcing signout");
+          setLoading(false);
+          alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
+          await supabase.auth.signOut();
+          window.location.href = '/auth';
+          return;
+        }
+        
+        // Si invitation en cours, ne pas forcer la déconnexion - laisser le processus de liaison se faire
+        logger.tenant("Tenant account creation in progress, invitation found:", invitation.id);
       }
 
       // Sinon, définir le statut normalement
