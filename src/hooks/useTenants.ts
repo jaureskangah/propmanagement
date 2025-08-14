@@ -9,6 +9,12 @@ export const useTenants = () => {
   const { data: tenants, isLoading } = useQuery({
     queryKey: ["tenants"],
     queryFn: async () => {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      
+      if (userError || !user) {
+        throw new Error("Vous devez être connecté pour voir les locataires");
+      }
+
       const { data, error } = await supabase
         .from("tenants")
         .select(`
@@ -42,7 +48,8 @@ export const useTenants = () => {
             subject,
             created_at
           )
-        `);
+        `)
+        .eq('user_id', user.id);
 
       if (error) {
         console.error("Error fetching tenants:", error);
