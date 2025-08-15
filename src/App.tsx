@@ -60,7 +60,7 @@ function App() {
   const { isAuthenticated, isTenant } = useAuth();
   
   // Hook pour vérifier et déconnecter les comptes tenant supprimés
-  useDeletedTenantCheck();
+  // useDeletedTenantCheck(); // Temporairement désactivé pour éviter les faux positifs
 
   return (
     <Suspense fallback={<PageLoader />}>
