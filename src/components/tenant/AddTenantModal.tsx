@@ -24,10 +24,6 @@ export function AddTenantModal({ isOpen, onClose, onSubmit }: AddTenantModalProp
     try {
       setIsSubmitting(true);
       await onSubmit(data);
-      toast({
-        title: "Succès",
-        description: "Locataire ajouté avec succès",
-      });
       onClose();
     } catch (error: any) {
       toast({

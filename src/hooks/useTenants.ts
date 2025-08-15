@@ -2,9 +2,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import { useTenantMessagesTranslations } from "@/hooks/useTenantMessagesTranslations";
 
 export const useTenants = () => {
   const queryClient = useQueryClient();
+  const { t } = useTenantMessagesTranslations();
 
   const { data: tenants, isLoading } = useQuery({
     queryKey: ["tenants"],
@@ -111,8 +113,8 @@ export const useTenants = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tenants"] });
       toast({
-        title: "Success",
-        description: "Tenant added successfully",
+        title: t('success'),
+        description: t('tenantAdded'),
       });
     },
     onError: (error: Error) => {
