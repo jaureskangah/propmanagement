@@ -24,6 +24,6 @@ export const frModalCommon: ModalCommonTranslations = {
   error: "Erreur",
   warning: "Attention",
   info: "Info",
-  deleteConfirmation: "Êtes-vous sûr de vouloir supprimer ceci ?",
+  deleteConfirmation: "Confirmer la suppression",
   deleteWarning: "Cette action ne peut pas être annulée",
 };

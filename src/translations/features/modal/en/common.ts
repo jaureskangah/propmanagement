@@ -24,6 +24,6 @@ export const enModalCommon: ModalCommonTranslations = {
   error: "Error",
   warning: "Warning",
   info: "Info",
-  deleteConfirmation: "Are you sure you want to delete this?",
+  deleteConfirmation: "Confirm Deletion",
   deleteWarning: "This action cannot be undone",
 };

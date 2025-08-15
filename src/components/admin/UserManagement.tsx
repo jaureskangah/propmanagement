@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useToast } from "@/hooks/use-toast";
 import { useSupabaseDelete } from "@/hooks/supabase/useSupabaseDelete";
+import { UserDeleteConfirmationDialog } from "./UserDeleteConfirmationDialog";
 import { 
   Loader2, 
   Search, 
@@ -47,6 +48,8 @@ export const UserManagement = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<any>(null);
 
   // Fetch users with profiles and roles
   const { data: users = [], isLoading, refetch, error } = useQuery({
@@ -148,13 +151,22 @@ export const UserManagement = () => {
   });
 
   const handleDeleteUser = (user: any) => {
-    const userName = user.first_name && user.last_name 
-      ? `${user.first_name} ${user.last_name}`
-      : user.email?.split('@')[0] || 'cet utilisateur';
-    
-    if (confirm(`${t('confirmDeleteUser', { fallback: 'Êtes-vous sûr de vouloir supprimer' })} ${userName} ? ${t('confirmDeleteUserWarning', { fallback: 'Cette action est irréversible.' })}`)) {
-      deleteUser.mutate(user.id);
+    setUserToDelete(user);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteUser = () => {
+    if (userToDelete) {
+      deleteUser.mutate(userToDelete.id);
+      setIsDeleteDialogOpen(false);
+      setUserToDelete(null);
     }
+  };
+
+  const getUserDisplayName = (user: any) => {
+    return user.first_name && user.last_name 
+      ? `${user.first_name} ${user.last_name}`
+      : user.email?.split('@')[0] || t('unknownUser', { fallback: 'Utilisateur inconnu' });
   };
 
   if (isLoading) {
@@ -317,6 +329,16 @@ export const UserManagement = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Delete Confirmation Dialog */}
+      <UserDeleteConfirmationDialog
+        isOpen={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onConfirm={confirmDeleteUser}
+        isDeleting={deleteUser.isPending}
+        userName={userToDelete ? getUserDisplayName(userToDelete) : ''}
+        userEmail={userToDelete?.email || ''}
+      />
     </div>
   );
 };

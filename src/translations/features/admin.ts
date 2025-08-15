@@ -62,8 +62,9 @@ export const enAdmin = {
   owner: "Owner",
   deleteUser: "Delete",
   userDeleted: "User deleted successfully",
-  confirmDeleteUser: "Are you sure you want to delete",
+  confirmDeleteUser: "Are you sure you want to delete this user?",
   confirmDeleteUserWarning: "This action cannot be undone.",
+  unknownUser: "Unknown User",
   // Property owner management translations
   propertyOwnerManagement: "Property Owner Management",
   managePropertyOwners: "Manage property owners and their real estate assets",
@@ -218,8 +219,9 @@ export const frAdmin = {
   owner: "Propriétaire",
   deleteUser: "Supprimer",
   userDeleted: "Utilisateur supprimé avec succès",
-  confirmDeleteUser: "Êtes-vous sûr de vouloir supprimer",
+  confirmDeleteUser: "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
   confirmDeleteUserWarning: "Cette action est irréversible.",
+  unknownUser: "Utilisateur inconnu",
   // Property owner management translations
   propertyOwnerManagement: "Gestion des Propriétaires",
   managePropertyOwners: "Gérer les propriétaires et leurs biens immobiliers",
