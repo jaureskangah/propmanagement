@@ -19,6 +19,7 @@ export const useTenantInvitation = () => {
   const [searchParams] = useSearchParams();
   const [tenantData, setTenantData] = useState<TenantData | null>(null);
   const [invitationToken, setInvitationToken] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const token = searchParams.get('invitation');
@@ -29,6 +30,7 @@ export const useTenantInvitation = () => {
   }, [searchParams]);
 
   const fetchTenantDataFromInvitation = async (token: string) => {
+    setIsLoading(true);
     try {
       console.log("=== FETCHING TENANT DATA ===");
       console.log("Invitation token:", token);
@@ -58,6 +60,7 @@ export const useTenantInvitation = () => {
           description: "Ce lien d'invitation n'est pas valide ou a expiré.",
           variant: "destructive",
         });
+        setIsLoading(false);
         return;
       }
 
@@ -70,11 +73,14 @@ export const useTenantInvitation = () => {
         description: "Impossible de récupérer les informations du locataire.",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
     tenantData,
     invitationToken,
+    isLoading,
   };
 };

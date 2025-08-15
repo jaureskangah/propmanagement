@@ -15,7 +15,7 @@ const TenantSignup = () => {
   const { isAuthenticated } = useAuth();
   const { t } = useLocale();
   const navigate = useNavigate();
-  const { tenantData, invitationToken } = useTenantInvitation();
+  const { tenantData, invitationToken, isLoading } = useTenantInvitation();
   const { loading, signupStatus, signUpTenant } = useTenantSignup();
   const [signupSuccess, setSignupSuccess] = useState(false);
 
@@ -43,7 +43,25 @@ const TenantSignup = () => {
     return <Navigate to="/tenant/dashboard" replace />;
   }
 
-  // Show error if no valid invitation
+  // Show loading while checking invitation
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-xl">
+              Vérification de l'invitation...
+            </CardTitle>
+            <CardDescription>
+              Veuillez patienter
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show error if no valid invitation (only after loading is complete)
   if (!invitationToken || !tenantData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
