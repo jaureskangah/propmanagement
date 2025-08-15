@@ -140,24 +140,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       logger.tenant("Checking tenant status for:", userId);
 
-      // Une seule requête pour vérifier tenant + profile
-      const [tenantResult, profileResult] = await Promise.all([
-        supabase
-          .from('tenants')
-          .select('id, name, email, unit_number, lease_start, lease_end, rent_amount, property_id, properties:property_id(name)')
-          .eq('tenant_profile_id', userId)
-          .maybeSingle(),
-        supabase
-          .from('profiles')
-          .select('is_tenant_user')
-          .eq('id', userId)
-          .maybeSingle()
-      ]);
-
-      const { data: tenantData } = tenantResult;
-      const { data: profileData } = profileResult;
-
-      // Vérifier si l'utilisateur a un rôle admin pour éviter de bloquer les comptes admin
+      // Vérifier d'abord si l'utilisateur a un rôle admin pour éviter de bloquer les comptes admin
       const { data: adminRole } = await supabase
         .from('user_roles')
         .select('role')
@@ -167,36 +150,124 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const hasAdminRole = !!adminRole;
 
-      // Si marqué comme tenant mais pas de record tenant ET pas admin → vérifier s'il y a une invitation en cours
-      if (profileData?.is_tenant_user && !tenantData && !hasAdminRole) {
-        // Vérifier s'il y a une invitation en cours pour cet utilisateur
-        const { data: invitation } = await supabase
+      // Pour les admins, pas besoin de vérifier le statut tenant
+      if (hasAdminRole) {
+        setIsTenant(false);
+        setTenantData(null);
+        logger.tenant("Admin user detected, skipping tenant checks");
+        return;
+      }
+
+      // Vérifier si un tenant existe avec ce tenant_profile_id (priorité absolue)
+      const { data: tenantData } = await supabase
+        .from('tenants')
+        .select('id, name, email, unit_number, lease_start, lease_end, rent_amount, property_id, properties:property_id(name)')
+        .eq('tenant_profile_id', userId)
+        .maybeSingle();
+
+      // Si un tenant existe avec ce profile_id, c'est un compte valide
+      if (tenantData) {
+        setIsTenant(true);
+        setTenantData(tenantData);
+        logger.tenant("Valid tenant found with profile_id:", tenantData);
+
+        // Marquer automatiquement l'invitation comme acceptée si elle existe encore en pending
+        const { data: pendingInvitation } = await supabase
+          .from('tenant_invitations')
+          .select('id')
+          .eq('tenant_id', tenantData.id)
+          .eq('status', 'pending')
+          .maybeSingle();
+
+        if (pendingInvitation) {
+          await supabase
+            .from('tenant_invitations')
+            .update({ status: 'accepted' })
+            .eq('id', pendingInvitation.id);
+          logger.tenant("Updated invitation status to accepted");
+        }
+        return;
+      }
+
+      // Si pas de tenant lié, vérifier le profil pour voir si c'est marqué comme tenant_user
+      const { data: profileData } = await supabase
+        .from('profiles')
+        .select('is_tenant_user')
+        .eq('id', userId)
+        .maybeSingle();
+
+      // Si le profil n'est pas marqué comme tenant_user, c'est un utilisateur normal
+      if (!profileData?.is_tenant_user) {
+        setIsTenant(false);
+        setTenantData(null);
+        logger.tenant("Regular user (not tenant)");
+        return;
+      }
+
+      // Si marqué comme tenant_user mais pas de tenant lié, vérifier les invitations
+      const { data: invitation } = await supabase
+        .from('tenant_invitations')
+        .select('id, tenant_id, status, email')
+        .eq('user_id', userId)
+        .eq('status', 'pending')
+        .gt('expires_at', new Date().toISOString())
+        .maybeSingle();
+
+      if (invitation) {
+        // Invitation valide en cours, ne pas bloquer
+        setIsTenant(false);
+        setTenantData(null);
+        logger.tenant("Valid invitation found, allowing access:", invitation.id);
+        return;
+      }
+
+      // Vérifier aussi par email au cas où l'invitation n'aurait pas encore été liée
+      const userEmail = user?.email;
+      if (userEmail) {
+        const { data: emailInvitation } = await supabase
           .from('tenant_invitations')
           .select('id, tenant_id, status')
-          .eq('user_id', userId)
+          .eq('email', userEmail)
           .eq('status', 'pending')
           .gt('expires_at', new Date().toISOString())
           .maybeSingle();
 
-        // Si pas d'invitation en cours, alors le compte a été supprimé
-        if (!invitation) {
-          logger.warn("Deleted tenant account detected, forcing signout");
-          setLoading(false);
-          alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
-          await supabase.auth.signOut();
-          window.location.href = '/auth';
+        if (emailInvitation) {
+          setIsTenant(false);
+          setTenantData(null);
+          logger.tenant("Valid email invitation found, allowing access:", emailInvitation.id);
           return;
         }
-        
-        // Si invitation en cours, ne pas forcer la déconnexion - laisser le processus de liaison se faire
-        logger.tenant("Tenant account creation in progress, invitation found:", invitation.id);
       }
 
-      // Sinon, définir le statut normalement
-      setIsTenant(!!tenantData);
-      setTenantData(tenantData);
-      
-      logger.tenant("Tenant status set:", { isTenant: !!tenantData, tenantData });
+      // Dernière chance: vérifier si un tenant existe avec cet email même sans profile_id
+      if (userEmail) {
+        const { data: emailTenant } = await supabase
+          .from('tenants')
+          .select('id, name, email, unit_number, lease_start, lease_end, rent_amount, property_id, properties:property_id(name)')
+          .eq('email', userEmail)
+          .maybeSingle();
+
+        if (emailTenant) {
+          // Lier automatiquement le tenant au profil
+          await supabase
+            .from('tenants')
+            .update({ tenant_profile_id: userId })
+            .eq('id', emailTenant.id);
+          
+          setIsTenant(true);
+          setTenantData(emailTenant);
+          logger.tenant("Tenant found by email and linked:", emailTenant);
+          return;
+        }
+      }
+
+      // Si aucune condition n'est remplie, alors le compte a été supprimé
+      logger.warn("No valid tenant or invitation found, account appears deleted");
+      setLoading(false);
+      alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
+      await supabase.auth.signOut();
+      window.location.href = '/auth';
 
     } catch (err) {
       console.error("❌ Error checking tenant status:", err);
