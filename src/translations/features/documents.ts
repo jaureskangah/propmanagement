@@ -164,6 +164,10 @@ export const frDocuments = {
   documentGenerator: {
     documentGenerator: "Générateur de Documents",
     documentTemplates: "Modèles de Documents",
+    chooseStartingPoint: "Choisissez votre point de départ",
+    availableTemplates: "Modèles disponibles",
+    documentEditor: "Éditeur de documents",
+    noTemplateSelected: "Aucun modèle sélectionné",
     selectDocumentTemplate: "Sélectionner un Modèle de Document",
     generateDocument: "Générer un Document", 
     mySavedTemplates: "Mes Modèles Sauvegardés",
