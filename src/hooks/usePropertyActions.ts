@@ -4,12 +4,14 @@ import { supabase } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { Property } from "@/hooks/useProperties";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function usePropertyActions() {
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const { toast } = useToast();
   const { t } = useLocale();
+  const queryClient = useQueryClient();
 
   const handleEdit = (properties: Property[], id: string) => {
     const property = properties.find(p => p.id === id);
@@ -82,6 +84,9 @@ export function usePropertyActions() {
       if (selectedPropertyId === id) {
         setSelectedPropertyId(null);
       }
+
+      // Invalider la query pour mettre à jour la liste des propriétés
+      queryClient.invalidateQueries({ queryKey: ["properties"] });
 
       toast({
         title: t('propertyDeleted'),
