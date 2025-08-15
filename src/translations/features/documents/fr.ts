@@ -156,6 +156,12 @@ export default {
   generateDocument: "Générer un document",
   templateLoadError: "Impossible de charger le contenu du modèle",
   
+  // Missing editor translations
+  documentEditor: "Éditeur de documents",
+  noTemplateSelected: "Aucun modèle sélectionné",
+  chooseStartingPoint: "Choisissez un point de départ",
+  availableTemplates: "Modèles disponibles",
+  
   // Save template dialog
   templateName: "Nom du modèle",
   templateNamePlaceholder: "Entrez un nom pour votre modèle",
