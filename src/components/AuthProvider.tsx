@@ -265,9 +265,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Si aucune condition n'est remplie, alors le compte a été supprimé
       logger.warn("No valid tenant or invitation found, account appears deleted");
       setLoading(false);
-      alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
-      await supabase.auth.signOut();
-      window.location.href = '/auth';
+      // Temporairement désactivé pour éviter les faux positifs
+      // alert("Votre compte locataire a été supprimé. Veuillez demander une nouvelle invitation à votre propriétaire.");
+      // await supabase.auth.signOut();
+      // window.location.href = '/auth';
 
     } catch (err) {
       console.error("❌ Error checking tenant status:", err);
