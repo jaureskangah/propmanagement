@@ -8,7 +8,10 @@ export const enProperty: PropertyManagementTranslations = {
   editProperty: "Edit",
   deleteProperty: "Delete",
   propertyName: "Property Name",
-  propertyAddress: "Address",
+  propertyAddress: "Civic Address",
+  propertyCity: "City",
+  propertyProvince: "Province/Territory",
+  propertyPostalCode: "Postal Code",
   propertyType: "Property Type",
   propertyUnits: "Units",
   propertyImage: "Property Image",
@@ -20,7 +23,7 @@ export const enProperty: PropertyManagementTranslations = {
   studio: "Studio",
   condo: "Condo",
   office: "Office",
-  commercialSpace: "Commercial Space", // Keep this for backwards compatibility
+  commercialSpace: "Commercial Space",
   searchProperties: "Search Properties",
   filterByType: "Filter by Type",
   noProperties: "No properties found",
@@ -38,7 +41,14 @@ export const enProperty: PropertyManagementTranslations = {
   adding: "Adding...",
   cancel: "Cancel",
   occupancyRate: "Occupancy Rate",
-  notAvailable: "N/A"
+  notAvailable: "N/A",
+  // Nouveaux champs canadiens
+  enterCivicAddress: "Enter civic address",
+  enterCity: "Enter city",
+  selectProvince: "Select province/territory",
+  enterPostalCode: "Enter postal code",
+  canadianPostalCodeFormat: "Canadian format required (e.g., H3A 1A1)",
+  propertyLocationCanada: "Location (Canada)",
 };
 
 export const frProperty: PropertyManagementTranslations = {
@@ -48,7 +58,10 @@ export const frProperty: PropertyManagementTranslations = {
   editProperty: "Modifier",
   deleteProperty: "Supprimer",
   propertyName: "Nom de la propriété",
-  propertyAddress: "Adresse",
+  propertyAddress: "Adresse civique",
+  propertyCity: "Ville",
+  propertyProvince: "Province/Territoire",
+  propertyPostalCode: "Code postal",
   propertyType: "Type de propriété",
   propertyUnits: "Unités",
   propertyImage: "Image de la propriété",
@@ -60,7 +73,7 @@ export const frProperty: PropertyManagementTranslations = {
   studio: "Studio",
   condo: "Condo",
   office: "Bureau",
-  commercialSpace: "Espace commercial", // Keep this for backwards compatibility
+  commercialSpace: "Espace commercial",
   searchProperties: "Rechercher des propriétés",
   filterByType: "Filtrer par type",
   noProperties: "Aucune propriété trouvée",
@@ -78,5 +91,12 @@ export const frProperty: PropertyManagementTranslations = {
   adding: "Ajout...",
   cancel: "Annuler",
   occupancyRate: "Taux d'occupation",
-  notAvailable: "N/D"
+  notAvailable: "N/D",
+  // Nouveaux champs canadiens
+  enterCivicAddress: "Entrez l'adresse civique",
+  enterCity: "Entrez la ville",
+  selectProvince: "Sélectionnez une province/territoire",
+  enterPostalCode: "Entrez le code postal",
+  canadianPostalCodeFormat: "Format canadien requis (ex: H3A 1A1)",
+  propertyLocationCanada: "Localisation (Canada)",
 };

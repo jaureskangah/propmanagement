@@ -7,6 +7,9 @@ export interface PropertyManagementTranslations {
   deleteProperty: string;
   propertyName: string;
   propertyAddress: string;
+  propertyCity: string;
+  propertyProvince: string;
+  propertyPostalCode: string;
   propertyType: string;
   propertyUnits: string;
   propertyImage: string;
@@ -37,4 +40,11 @@ export interface PropertyManagementTranslations {
   cancel: string;
   occupancyRate: string;
   notAvailable: string;
+  // Nouveaux champs canadiens
+  enterCivicAddress: string;
+  enterCity: string;
+  selectProvince: string;
+  enterPostalCode: string;
+  canadianPostalCodeFormat: string;
+  propertyLocationCanada: string;
 }

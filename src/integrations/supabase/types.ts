@@ -526,10 +526,13 @@ export type Database = {
       properties: {
         Row: {
           address: string
+          city: string | null
           created_at: string
           id: string
           image_url: string | null
           name: string
+          postal_code: string | null
+          province: string | null
           rent_amount: number | null
           type: string
           units: number
@@ -538,10 +541,13 @@ export type Database = {
         }
         Insert: {
           address: string
+          city?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
           name: string
+          postal_code?: string | null
+          province?: string | null
           rent_amount?: number | null
           type: string
           units?: number
@@ -550,10 +556,13 @@ export type Database = {
         }
         Update: {
           address?: string
+          city?: string | null
           created_at?: string
           id?: string
           image_url?: string | null
           name?: string
+          postal_code?: string | null
+          province?: string | null
           rent_amount?: number | null
           type?: string
           units?: number
