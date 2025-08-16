@@ -255,7 +255,7 @@ export function PropertyEnhancedForm({
                 {t('serviceCanadaOnlyDescription')}
                 <Button 
                   variant="link" 
-                  className="p-0 h-auto ml-2"
+                  className="p-0 h-auto ml-2 font-semibold text-primary underline hover:text-primary/80 hover:underline"
                   onClick={() => navigate('/coming-soon-international')}
                 >
                   {t('notifyInternationalExpansion')}
