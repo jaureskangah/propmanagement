@@ -267,7 +267,7 @@ export const InternationalContacts = () => {
                 {filteredContacts.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                      Aucun contact trouvé
+                      {t('admin.noContactsFound')}
                     </TableCell>
                   </TableRow>
                 ) : (

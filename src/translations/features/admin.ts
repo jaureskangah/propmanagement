@@ -174,7 +174,8 @@ export const enAdmin = {
   markProcessed: "Mark as Processed",
   viewingContact: "Viewing contact",
   contactProcessed: "Contact marked as processed",
-  errorProcessingContact: "Error processing contact"
+  errorProcessingContact: "Error processing contact",
+  noContactsFound: "No contacts found"
 };
 
 export const frAdmin = {
@@ -352,5 +353,6 @@ export const frAdmin = {
   markProcessed: "Marquer comme traité",
   viewingContact: "Affichage du contact",
   contactProcessed: "Contact marqué comme traité",
-  errorProcessingContact: "Erreur lors du traitement du contact"
+  errorProcessingContact: "Erreur lors du traitement du contact",
+  noContactsFound: "Aucun contact trouvé"
 };
