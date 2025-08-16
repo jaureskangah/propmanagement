@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CANADIAN_PROVINCES, formatCanadianPostalCode, validateCanadianPostalCode } from "@/types/canadianData";
-import { canadianAddressSchema, NON_CANADIAN_ERROR_MESSAGE } from "@/utils/validations/canadianValidation";
+import { canadianAddressSchema } from "@/utils/validations/canadianValidation";
 import { useNavigate } from "react-router-dom";
 
 const PROPERTY_TYPES = [
@@ -252,13 +252,13 @@ export function PropertyEnhancedForm({
             <Alert className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {NON_CANADIAN_ERROR_MESSAGE.description}
+                {t('serviceCanadaOnlyDescription')}
                 <Button 
                   variant="link" 
                   className="p-0 h-auto ml-2"
                   onClick={() => navigate('/coming-soon-international')}
                 >
-                  {NON_CANADIAN_ERROR_MESSAGE.actionText}
+                  {t('notifyInternationalExpansion')}
                 </Button>
               </AlertDescription>
             </Alert>

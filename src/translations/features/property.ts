@@ -49,6 +49,10 @@ export const enProperty: PropertyManagementTranslations = {
   enterPostalCode: "Enter postal code",
   canadianPostalCodeFormat: "Canadian format required (e.g., H3A 1A1)",
   propertyLocationCanada: "Location (Canada)",
+  // Messages d'alerte géolocalisation
+  serviceCanadaOnlyTitle: "Service available in Canada only",
+  serviceCanadaOnlyDescription: "PropManagement is currently available in Canada only. Would you like to be notified when we expand our services?",
+  notifyInternationalExpansion: "Get notified about international expansion",
 };
 
 export const frProperty: PropertyManagementTranslations = {
@@ -99,4 +103,8 @@ export const frProperty: PropertyManagementTranslations = {
   enterPostalCode: "Entrez le code postal",
   canadianPostalCodeFormat: "Format canadien requis (ex: H3A 1A1)",
   propertyLocationCanada: "Localisation (Canada)",
+  // Messages d'alerte géolocalisation
+  serviceCanadaOnlyTitle: "Service disponible au Canada uniquement",
+  serviceCanadaOnlyDescription: "PropManagement est actuellement disponible au Canada seulement. Souhaitez-vous être notifié quand nous étendrons nos services?",
+  notifyInternationalExpansion: "Être notifié de l'expansion internationale",
 };
