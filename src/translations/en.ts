@@ -2,7 +2,7 @@
 // Main English translations file - now using modular approach
 import { enCommon } from './features/common';
 import { enLanding } from './features/landing';
-import { enProperties } from './features/properties';
+import { enProperty } from './features/property';
 import { enDashboard } from './features/dashboard';
 import { enDocuments } from './features/documents';
 import { enAuth } from './features/auth';
@@ -34,8 +34,8 @@ console.log('🔍 DEBUG: enDocuments import:', {
 const baseTranslations = {
   ...enCommon,
   ...enLanding,
-  ...enProperties,
   ...enDashboard,
+  ...enDocuments,
   ...enAuth,
   ...enFinances,
   ...enMaintenance,
@@ -49,6 +49,7 @@ const baseTranslations = {
   ...enAdmin,
   ...enFeatures,
   ...supportExtensions,
+  property: enProperty
 };
 
 // Extraire documentGenerator de enDocuments et l'ajouter séparément

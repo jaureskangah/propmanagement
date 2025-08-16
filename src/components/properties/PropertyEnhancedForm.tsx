@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CANADIAN_PROVINCES, formatCanadianPostalCode, validateCanadianPostalCode } from "@/types/canadianData";
-import { canadianAddressSchema, NON_CANADIAN_ERROR_MESSAGE } from "@/utils/validations/canadianValidation";
+import { canadianAddressSchema } from "@/utils/validations/canadianValidation";
 import { useNavigate } from "react-router-dom";
 
 const PROPERTY_TYPES = [
@@ -52,8 +52,8 @@ export function PropertyEnhancedForm({
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showNonCanadianAlert, setShowNonCanadianAlert] = useState(false);
-  const navigate = useNavigate();
   const { t } = useLocale();
+  const navigate = useNavigate();
   
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
@@ -244,7 +244,7 @@ export function PropertyEnhancedForm({
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-4">
             <MapPin className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold">Adresse de la propriété</h3>
+            <h3 className="font-semibold">{t('property.propertyAddress')}</h3>
             <Badge variant="outline" className="text-xs">🇨🇦 Canada</Badge>
           </div>
           
@@ -252,13 +252,13 @@ export function PropertyEnhancedForm({
             <Alert className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {NON_CANADIAN_ERROR_MESSAGE.description}
+                {t('property.serviceDescription')}
                 <Button 
                   variant="link" 
                   className="p-0 h-auto ml-2"
                   onClick={() => navigate('/coming-soon-international')}
                 >
-                  {NON_CANADIAN_ERROR_MESSAGE.actionText}
+                  {t('property.notifyExpansion')}
                 </Button>
               </AlertDescription>
             </Alert>
@@ -270,17 +270,17 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="address"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Adresse civique</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="123 Rue Principale" 
-                      {...field}
-                      className="transition-all duration-200"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                 <FormItem>
+                   <FormLabel>{t('property.enterCivicAddress')}</FormLabel>
+                   <FormControl>
+                     <Input 
+                       placeholder="123 Rue Principale" 
+                       {...field}
+                       className="transition-all duration-200"
+                     />
+                   </FormControl>
+                   <FormMessage />
+                 </FormItem>
               )}
             />
 
@@ -289,17 +289,17 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="city"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Ville</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Montréal, Toronto, Vancouver..." 
-                      {...field}
-                      className="transition-all duration-200"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                 <FormItem>
+                   <FormLabel>{t('property.enterCity')}</FormLabel>
+                   <FormControl>
+                     <Input 
+                       placeholder="Montréal, Toronto, Vancouver..." 
+                       {...field}
+                       className="transition-all duration-200"
+                     />
+                   </FormControl>
+                   <FormMessage />
+                 </FormItem>
               )}
             />
 
@@ -308,14 +308,14 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="province"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Province/Territoire</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner..." />
-                      </SelectTrigger>
-                    </FormControl>
+                 <FormItem>
+                   <FormLabel>{t('property.selectProvince')}</FormLabel>
+                   <Select onValueChange={field.onChange} defaultValue={field.value}>
+                     <FormControl>
+                       <SelectTrigger>
+                         <SelectValue placeholder={t('property.selectProvince')} />
+                       </SelectTrigger>
+                     </FormControl>
                     <SelectContent>
                       {CANADIAN_PROVINCES.map((province) => (
                         <SelectItem key={province.code} value={province.code}>
@@ -334,25 +334,25 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="postal_code"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Code postal</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="A1A 1A1" 
-                      {...field}
-                      onChange={(e) => {
-                        const formatted = formatCanadianPostalCode(e.target.value);
-                        field.onChange(formatted);
-                      }}
-                      className="transition-all duration-200 uppercase"
-                      maxLength={7}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                  <p className="text-xs text-muted-foreground">
-                    Format canadien requis (ex: H3A 1A1)
-                  </p>
-                </FormItem>
+                 <FormItem>
+                   <FormLabel>{t('property.enterPostalCode')}</FormLabel>
+                   <FormControl>
+                     <Input 
+                       placeholder="A1A 1A1" 
+                       {...field}
+                       onChange={(e) => {
+                         const formatted = formatCanadianPostalCode(e.target.value);
+                         field.onChange(formatted);
+                       }}
+                       className="transition-all duration-200 uppercase"
+                       maxLength={7}
+                     />
+                   </FormControl>
+                   <FormMessage />
+                   <p className="text-xs text-muted-foreground">
+                     {t('property.canadianPostalCodeFormat')}
+                   </p>
+                 </FormItem>
               )}
             />
           </div>

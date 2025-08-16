@@ -47,4 +47,9 @@ export interface PropertyManagementTranslations {
   enterPostalCode: string;
   canadianPostalCodeFormat: string;
   propertyLocationCanada: string;
+  // Messages pour les non-canadiens
+  serviceCanadaOnly: string;
+  serviceDescription: string;
+  notifyExpansion: string;
+  canadianPostalCodeError: string;
 }
