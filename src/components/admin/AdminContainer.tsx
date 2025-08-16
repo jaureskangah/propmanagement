@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useLocale } from "@/components/providers/LocaleProvider";
-import { Settings, Users, BarChart3, Building2, Shield } from "lucide-react";
+import { Settings, Users, BarChart3, Building2, Shield, Globe } from "lucide-react";
 import { TubelightNavBar } from "@/components/ui/tubelight-navbar";
 import { GlobalMetrics } from "./GlobalMetrics";
 import { UserManagement } from "./UserManagement";
 import { PropertyOwnerManagement } from "./PropertyOwnerManagement";
 import { SystemSettings } from "./SystemSettings";
 import { AdminRoles } from "./AdminRoles";
+import { InternationalContacts } from "./InternationalContacts";
 
 export const AdminContainer = () => {
   const { t } = useLocale();
@@ -29,6 +30,11 @@ export const AdminContainer = () => {
       icon: Building2,
     },
     {
+      name: t('internationalContacts', { fallback: 'Contacts Internationaux' }),
+      value: "international",
+      icon: Globe,
+    },
+    {
       name: t('roles', { fallback: 'Rôles' }),
       value: "roles",
       icon: Shield,
@@ -48,6 +54,8 @@ export const AdminContainer = () => {
         return <UserManagement />;
       case "owners":
         return <PropertyOwnerManagement />;
+      case "international":
+        return <InternationalContacts />;
       case "roles":
         return <AdminRoles />;
       case "settings":

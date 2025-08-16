@@ -141,4 +141,25 @@ export interface AdminDashboardTranslations {
   systemResetWarning: string;
   cancel: string;
   confirmReset: string;
+  // International contacts
+  internationalContacts: string;
+  manageInternationalContacts: string;
+  totalContacts: string;
+  searchContacts: string;
+  contactName: string;
+  contactEmail: string;
+  message: string;
+  submittedDate: string;
+  markAsProcessed: string;
+  processed: string;
+  pending: string;
+  exportContacts: string;
+  contactDetails: string;
+  viewMessage: string;
+  contactStatus: string;
+  contactActions: string;
+  markProcessed: string;
+  viewingContact: string;
+  contactProcessed: string;
+  errorProcessingContact: string;
 }

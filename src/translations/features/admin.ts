@@ -153,7 +153,28 @@ export const enAdmin = {
   areYouSure: "Are you sure?",
   systemResetWarning: "This action is irreversible and will delete all system data.",
   cancel: "Cancel",
-  confirmReset: "Confirm Reset"
+  confirmReset: "Confirm Reset",
+  // International contacts
+  internationalContacts: "International Contacts",
+  manageInternationalContacts: "Manage international launch contacts",
+  totalContacts: "Total Contacts",
+  searchContacts: "Search contacts...",
+  contactName: "Name",
+  contactEmail: "Email",
+  message: "Message",
+  submittedDate: "Submitted",
+  markAsProcessed: "Mark as Processed",
+  processed: "Processed",
+  pending: "Pending",
+  exportContacts: "Export Contacts",
+  contactDetails: "Contact Details",
+  viewMessage: "View Message",
+  contactStatus: "Status",
+  contactActions: "Actions",
+  markProcessed: "Mark as Processed",
+  viewingContact: "Viewing contact",
+  contactProcessed: "Contact marked as processed",
+  errorProcessingContact: "Error processing contact"
 };
 
 export const frAdmin = {
@@ -310,5 +331,26 @@ export const frAdmin = {
   areYouSure: "Êtes-vous sûr ?",
   systemResetWarning: "Cette action est irréversible et supprimera toutes les données du système.",
   cancel: "Annuler",
-  confirmReset: "Confirmer la réinitialisation"
+  confirmReset: "Confirmer la réinitialisation",
+  // International contacts
+  internationalContacts: "Contacts Internationaux",
+  manageInternationalContacts: "Gérer les contacts pour le lancement international",
+  totalContacts: "Contacts Totaux",
+  searchContacts: "Rechercher des contacts...",
+  contactName: "Nom",
+  contactEmail: "Email",
+  message: "Message",
+  submittedDate: "Soumis le",
+  markAsProcessed: "Marquer comme traité",
+  processed: "Traité",
+  pending: "En attente",
+  exportContacts: "Exporter Contacts",
+  contactDetails: "Détails du Contact",
+  viewMessage: "Voir le Message",
+  contactStatus: "Statut",
+  contactActions: "Actions",
+  markProcessed: "Marquer comme traité",
+  viewingContact: "Affichage du contact",
+  contactProcessed: "Contact marqué comme traité",
+  errorProcessingContact: "Erreur lors du traitement du contact"
 };
