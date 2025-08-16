@@ -244,7 +244,7 @@ export function PropertyEnhancedForm({
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-4">
             <MapPin className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold">Adresse de la propriété</h3>
+            <h3 className="font-semibold">{t('propertyLocationCanada')}</h3>
             <Badge variant="outline" className="text-xs">🇨🇦 Canada</Badge>
           </div>
           
@@ -271,10 +271,10 @@ export function PropertyEnhancedForm({
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Adresse civique</FormLabel>
+                  <FormLabel>{t('propertyAddress')}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="123 Rue Principale" 
+                      placeholder={t('enterCivicAddress')} 
                       {...field}
                       className="transition-all duration-200"
                     />
@@ -290,10 +290,10 @@ export function PropertyEnhancedForm({
               name="city"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Ville</FormLabel>
+                  <FormLabel>{t('propertyCity')}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="Montréal, Toronto, Vancouver..." 
+                      placeholder={t('enterCity')} 
                       {...field}
                       className="transition-all duration-200"
                     />
@@ -309,17 +309,17 @@ export function PropertyEnhancedForm({
               name="province"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Province/Territoire</FormLabel>
+                  <FormLabel>{t('propertyProvince')}</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner..." />
+                        <SelectValue placeholder={t('selectProvince')} />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       {CANADIAN_PROVINCES.map((province) => (
                         <SelectItem key={province.code} value={province.code}>
-                          {province.nameFr} ({province.code})
+                          {t('locale') === 'fr' ? province.nameFr : province.name} ({province.code})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -335,10 +335,10 @@ export function PropertyEnhancedForm({
               name="postal_code"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Code postal</FormLabel>
+                  <FormLabel>{t('propertyPostalCode')}</FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="A1A 1A1" 
+                      placeholder={t('enterPostalCode')} 
                       {...field}
                       onChange={(e) => {
                         const formatted = formatCanadianPostalCode(e.target.value);
@@ -350,7 +350,7 @@ export function PropertyEnhancedForm({
                   </FormControl>
                   <FormMessage />
                   <p className="text-xs text-muted-foreground">
-                    Format canadien requis (ex: H3A 1A1)
+                    {t('canadianPostalCodeFormat')}
                   </p>
                 </FormItem>
               )}
