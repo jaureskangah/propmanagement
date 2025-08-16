@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Building, Info, Search, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { usePropertyTranslations } from "@/hooks/usePropertyTranslations";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -27,7 +28,8 @@ const PropertyPageHeader = ({
   searchQuery,
   setSearchQuery
 }: PropertyPageHeaderProps) => {
-  const { t } = usePropertyTranslations();
+  const { t: propertyT } = usePropertyTranslations();
+  const { t } = useLocale();
   const { isTenant } = useAuth();
 
   return (
@@ -40,10 +42,10 @@ const PropertyPageHeader = ({
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent font-sans">
-                {t('propertiesManagement')}
+                {propertyT('propertiesManagement')}
               </h1>
               <p className="text-muted-foreground mt-1 font-sans">
-                {t('propertiesSubtitle')}
+                {propertyT('propertiesSubtitle')}
               </p>
             </div>
           </div>
@@ -51,7 +53,7 @@ const PropertyPageHeader = ({
         <div className="flex items-center justify-between lg:justify-end gap-4">
           <Badge variant="secondary" className="text-sm px-3 py-1.5 font-sans">
             <Info className="h-4 w-4 mr-1.5" />
-            {propertiesCount} {propertiesCount === 1 ? t('totalProperties').slice(0, -1) : t('totalProperties')}
+            {propertiesCount} {propertyT('totalProperties')}
           </Badge>
           
           {!isTenant && (
@@ -61,7 +63,7 @@ const PropertyPageHeader = ({
               onClick={() => setIsAddModalOpen(true)}
             >
               <Plus className="h-4 w-4" />
-              {t('addProperty')}
+              {propertyT('addProperty')}
             </Button>
           )}
         </div>
@@ -72,7 +74,7 @@ const PropertyPageHeader = ({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder={t('searchProperties')}
+            placeholder={propertyT('searchProperties')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 font-sans"

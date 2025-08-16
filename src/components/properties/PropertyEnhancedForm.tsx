@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/lib/supabase";
 import { Loader2, Upload, X, CheckCircle, MapPin, AlertTriangle } from "lucide-react";
 import { usePropertyTranslations } from "@/hooks/usePropertyTranslations";
+import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,7 +53,8 @@ export function PropertyEnhancedForm({
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showNonCanadianAlert, setShowNonCanadianAlert] = useState(false);
-  const { t } = usePropertyTranslations();
+  const { t: propertyT } = usePropertyTranslations();
+  const { t } = useLocale();
   const navigate = useNavigate();
   
   const form = useForm<PropertyFormData>({
@@ -188,15 +190,15 @@ export function PropertyEnhancedForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  {t('propertyName')}
+                 <FormLabel className="flex items-center gap-2">
+                   {propertyT('propertyName')}
                   {field.value && field.value.length >= 2 && (
                     <CheckCircle className="h-4 w-4 text-green-500" />
                   )}
                 </FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder={t('enterName')} 
+                    placeholder="Enter property name" 
                     {...field}
                     className="transition-all duration-200"
                   />
@@ -212,8 +214,8 @@ export function PropertyEnhancedForm({
             name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="flex items-center gap-2">
-                  {t('propertyType')}
+                 <FormLabel className="flex items-center gap-2">
+                   {propertyT('propertyType')}
                   {field.value && (
                     <Badge variant="secondary" className="text-xs">
                       {getPropertyTypeTranslation(field.value)}
@@ -223,7 +225,7 @@ export function PropertyEnhancedForm({
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder={t('selectPropertyType')} />
+                      <SelectValue placeholder={propertyT('selectPropertyType')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -244,7 +246,7 @@ export function PropertyEnhancedForm({
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-4">
             <MapPin className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold">{t('propertyAddress')}</h3>
+            <h3 className="font-semibold">{propertyT('propertyLocationCanada')}</h3>
             <Badge variant="outline" className="text-xs">🇨🇦 Canada</Badge>
           </div>
           
@@ -252,13 +254,13 @@ export function PropertyEnhancedForm({
             <Alert className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {t('serviceDescription')}
+                {propertyT('serviceDescription')}
                 <Button 
                   variant="link" 
                   className="p-0 h-auto ml-2"
                   onClick={() => navigate('/coming-soon-international')}
                 >
-                  {t('notifyExpansion')}
+                  {propertyT('notifyExpansion')}
                 </Button>
               </AlertDescription>
             </Alert>
@@ -271,10 +273,10 @@ export function PropertyEnhancedForm({
               name="address"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('enterCivicAddress')}</FormLabel>
+                   <FormLabel>{propertyT('propertyAddress')}</FormLabel>
                    <FormControl>
                      <Input 
-                       placeholder="123 Rue Principale" 
+                       placeholder={propertyT('enterCivicAddress')} 
                        {...field}
                        className="transition-all duration-200"
                      />
@@ -290,10 +292,10 @@ export function PropertyEnhancedForm({
               name="city"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('enterCity')}</FormLabel>
+                   <FormLabel>{propertyT('propertyCity')}</FormLabel>
                    <FormControl>
                      <Input 
-                       placeholder="Montréal, Toronto, Vancouver..." 
+                       placeholder={propertyT('enterCity')} 
                        {...field}
                        className="transition-all duration-200"
                      />
@@ -309,11 +311,11 @@ export function PropertyEnhancedForm({
               name="province"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('selectProvince')}</FormLabel>
+                   <FormLabel>{propertyT('propertyProvince')}</FormLabel>
                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                      <FormControl>
                        <SelectTrigger>
-                         <SelectValue placeholder={t('selectProvince')} />
+                         <SelectValue placeholder={propertyT('selectProvince')} />
                        </SelectTrigger>
                      </FormControl>
                     <SelectContent>
@@ -335,10 +337,10 @@ export function PropertyEnhancedForm({
               name="postal_code"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('enterPostalCode')}</FormLabel>
+                   <FormLabel>{propertyT('propertyPostalCode')}</FormLabel>
                    <FormControl>
                      <Input 
-                       placeholder="A1A 1A1" 
+                       placeholder={propertyT('enterPostalCode')} 
                        {...field}
                        onChange={(e) => {
                          const formatted = formatCanadianPostalCode(e.target.value);
@@ -350,7 +352,7 @@ export function PropertyEnhancedForm({
                    </FormControl>
                    <FormMessage />
                    <p className="text-xs text-muted-foreground">
-                     {t('canadianPostalCodeFormat')}
+                     {propertyT('canadianPostalCodeFormat')}
                    </p>
                  </FormItem>
               )}
@@ -364,7 +366,7 @@ export function PropertyEnhancedForm({
           name="units"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('propertyUnits')}</FormLabel>
+              <FormLabel>{propertyT('propertyUnits')}</FormLabel>
               <FormControl>
                  <Input 
                    type="number" 
@@ -386,7 +388,7 @@ export function PropertyEnhancedForm({
           name="rent_amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('monthlyRent')}</FormLabel>
+              <FormLabel>Monthly Rent</FormLabel>
               <FormControl>
                  <Input 
                    type="number" 
@@ -409,7 +411,7 @@ export function PropertyEnhancedForm({
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('propertyImage')}</FormLabel>
+              <FormLabel>{propertyT('propertyImage')}</FormLabel>
               <FormControl>
                 <div className="space-y-4">
                   {!watchedImage ? (
@@ -435,10 +437,10 @@ export function PropertyEnhancedForm({
                         <Upload className="h-10 w-10 mx-auto text-muted-foreground" />
                         <div>
                           <p className="text-sm font-medium">
-                            {t('dragImageHere')}
+                            Drag and drop an image here
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            {t('imageFormats')}
+                            Supported formats: JPG, PNG, GIF (max 5MB)
                           </p>
                         </div>
                       </div>
@@ -493,7 +495,7 @@ export function PropertyEnhancedForm({
 
         <div className="flex justify-end gap-3 pt-6 border-t">
           <Button type="button" variant="outline" onClick={onCancel}>
-            {t('cancel')}
+            {propertyT('cancel')}
           </Button>
           <Button 
             type="submit" 
@@ -503,10 +505,10 @@ export function PropertyEnhancedForm({
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                {t('saving')}
+                Saving...
               </>
             ) : (
-              initialData ? t('updateProperty') : t('createProperty')
+              initialData ? propertyT('saveProperty') : propertyT('saveProperty')
             )}
           </Button>
         </div>
