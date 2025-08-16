@@ -6,12 +6,14 @@ import { MapPin, Mail, CheckCircle } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { toast } from '@/hooks/use-toast';
 import { Link } from 'react-router-dom';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 export default function ComingSoonInternational() {
   const [email, setEmail] = useState('');
   const [country, setCountry] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const { t } = useLocale();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,9 +24,9 @@ export default function ComingSoonInternational() {
       const { error } = await supabase
         .from('contact_messages')
         .insert({
-          name: `International Interest - ${country}`,
+          name: `${t('dbRecordName')} - ${country}`,
           email,
-          message: `Intérêt pour l'expansion internationale depuis ${country}`,
+          message: `${t('dbRecordMessage')} ${country}`,
           status: 'pending'
         });
 
@@ -32,13 +34,13 @@ export default function ComingSoonInternational() {
 
       setIsSubmitted(true);
       toast({
-        title: 'Merci pour votre intérêt !',
-        description: 'Nous vous contacterons dès que nous serons disponibles dans votre région.',
+        title: t('successTitle'),
+        description: t('successDescription'),
       });
     } catch (error) {
       toast({
-        title: 'Erreur',
-        description: 'Une erreur est survenue. Veuillez réessayer.',
+        title: t('errorTitle'),
+        description: t('errorDescription'),
         variant: 'destructive',
       });
     } finally {
@@ -52,13 +54,13 @@ export default function ComingSoonInternational() {
         <Card className="w-full max-w-md text-center">
           <CardContent className="pt-6">
             <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Merci !</h2>
+            <h2 className="text-2xl font-bold mb-2">{t('thankYou')}</h2>
             <p className="text-muted-foreground mb-6">
-              Votre intérêt a été enregistré. Nous vous contacterons dès que nous étendrons nos services à votre région.
+              {t('registeredMessage')}
             </p>
             <Link to="/">
               <Button variant="outline" className="w-full">
-                Retour à l'accueil
+                {t('backToHomeButton')}
               </Button>
             </Link>
           </CardContent>
@@ -74,31 +76,31 @@ export default function ComingSoonInternational() {
           <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
             <MapPin className="h-8 w-8 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Bientôt disponible dans votre région</CardTitle>
+          <CardTitle className="text-2xl">{t('pageTitle')}</CardTitle>
           <CardDescription className="text-lg">
-            PropertyPilot se concentre actuellement sur le marché canadien. Nous prévoyons d'étendre nos services internationalement prochainement.
+            {t('pageDescription')}
           </CardDescription>
         </CardHeader>
         
         <CardContent>
           <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
             <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
-              🇨🇦 Actuellement disponible au Canada
+              {t('currentlyAvailableTitle')}
             </h3>
             <p className="text-sm text-blue-800 dark:text-blue-200">
-              Nous offrons une plateforme complète de gestion immobilière adaptée aux lois et réglementations canadiennes, avec support en français et anglais.
+              {t('currentlyAvailableDescription')}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="country" className="block text-sm font-medium mb-2">
-                Votre pays/région
+                {t('countryLabel')}
               </label>
               <Input
                 id="country"
                 type="text"
-                placeholder="Ex: France, Belgique, États-Unis..."
+                placeholder={t('countryPlaceholder')}
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 required
@@ -108,12 +110,12 @@ export default function ComingSoonInternational() {
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-2">
                 <Mail className="inline h-4 w-4 mr-1" />
-                Email
+                {t('emailLabel')}
               </label>
               <Input
                 id="email"
                 type="email"
-                placeholder="votre@email.com"
+                placeholder={t('emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -121,17 +123,17 @@ export default function ComingSoonInternational() {
             </div>
 
             <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Envoi...' : 'Être notifié du lancement'}
+              {isSubmitting ? t('submittingButton') : t('submitButton')}
             </Button>
           </form>
 
           <div className="mt-6 pt-6 border-t text-center">
             <p className="text-sm text-muted-foreground mb-2">
-              Vous êtes au Canada ?
+              {t('canadaQuestion')}
             </p>
             <Link to="/">
               <Button variant="outline" size="sm">
-                Accéder à la plateforme canadienne
+                {t('accessCanadianPlatform')}
               </Button>
             </Link>
           </div>

@@ -15,6 +15,7 @@ import { frPricing, frPlanFeatures } from './features/pricing';
 import { frNavigation } from './features/navigation';
 import { frAdmin } from './features/admin';
 import { fr as frFeatures } from './features/fr';
+import { frComingSoon } from './features/comingSoon';
 
 // Extensions de support
 const supportExtensions = {
@@ -39,6 +40,7 @@ const baseTranslations = {
   ...frNavigation,
   ...frAdmin,
   ...frFeatures,
+  ...frComingSoon,
   ...supportExtensions,
 };
 
