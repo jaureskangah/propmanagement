@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -14,7 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CANADIAN_PROVINCES, formatCanadianPostalCode } from "@/types/canadianData";
+import { CANADIAN_PROVINCES, formatCanadianPostalCode, validateCanadianPostalCode } from "@/types/canadianData";
 import { canadianAddressSchema, NON_CANADIAN_ERROR_MESSAGE } from "@/utils/validations/canadianValidation";
 import { useNavigate } from "react-router-dom";
 
@@ -129,6 +129,35 @@ export function PropertyEnhancedForm({
   const removeImage = () => {
     form.setValue('image', '');
   };
+
+  // Fonction pour détecter les codes postaux non-canadiens
+  const isNonCanadianPostalCode = (postalCode: string): boolean => {
+    if (!postalCode || postalCode.length < 3) return false;
+    
+    // Formats courants de codes postaux internationaux
+    const patterns = [
+      /^\d{5}(-\d{4})?$/, // USA (12345 ou 12345-6789)
+      /^\d{5}$/, // France (75001)
+      /^[A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}$/i, // UK (SW1A 1AA)
+      /^\d{4}$/, // Allemagne (10115)
+      /^\d{3}-\d{4}$/, // Japon (100-0001)
+    ];
+    
+    return patterns.some(pattern => pattern.test(postalCode.trim())) || 
+           !validateCanadianPostalCode(postalCode);
+  };
+
+  // Surveillance du code postal en temps réel
+  const watchedPostalCode = form.watch('postal_code');
+  
+  useEffect(() => {
+    if (watchedPostalCode && watchedPostalCode.length >= 3) {
+      const isNonCanadian = isNonCanadianPostalCode(watchedPostalCode);
+      setShowNonCanadianAlert(isNonCanadian);
+    } else {
+      setShowNonCanadianAlert(false);
+    }
+  }, [watchedPostalCode]);
 
   const getPropertyTypeTranslation = (type: string) => {
     switch (type) {
