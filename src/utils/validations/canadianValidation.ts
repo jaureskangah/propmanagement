@@ -26,4 +26,9 @@ export const canadianAddressSchema = z.object({
     .transform(code => code.replace(/\s+/g, ' ').toUpperCase())
 });
 
-// Note: Messages are now handled via translation system in PropertyEnhancedForm
+// Message d'erreur pour les utilisateurs non-canadiens
+export const NON_CANADIAN_ERROR_MESSAGE = {
+  title: "Service disponible au Canada uniquement",
+  description: "PropertyPilot est actuellement disponible au Canada seulement. Souhaitez-vous être notifié quand nous étendrons nos services?",
+  actionText: "Être notifié de l'expansion internationale"
+};

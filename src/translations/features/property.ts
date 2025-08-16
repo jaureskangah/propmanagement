@@ -49,11 +49,6 @@ export const enProperty: PropertyManagementTranslations = {
   enterPostalCode: "Enter postal code",
   canadianPostalCodeFormat: "Canadian format required (e.g., H3A 1A1)",
   propertyLocationCanada: "Location (Canada)",
-  // Messages pour les non-canadiens
-  serviceCanadaOnly: "Service available in Canada only",
-  serviceDescription: "PropertyPilot is currently available in Canada only. Would you like to be notified when we expand our services?",
-  notifyExpansion: "Get notified of international expansion",
-  canadianPostalCodeError: "Invalid Canadian postal code format. Use format A1A 1A1",
 };
 
 export const frProperty: PropertyManagementTranslations = {
@@ -104,9 +99,4 @@ export const frProperty: PropertyManagementTranslations = {
   enterPostalCode: "Entrez le code postal",
   canadianPostalCodeFormat: "Format canadien requis (ex: H3A 1A1)",
   propertyLocationCanada: "Localisation (Canada)",
-  // Messages pour les non-canadiens
-  serviceCanadaOnly: "Service disponible au Canada uniquement",
-  serviceDescription: "PropertyPilot est actuellement disponible au Canada seulement. Souhaitez-vous être notifié quand nous étendrons nos services?",
-  notifyExpansion: "Être notifié de l'expansion internationale",
-  canadianPostalCodeError: "Format de code postal canadien invalide. Utilisez le format A1A 1A1",
 };

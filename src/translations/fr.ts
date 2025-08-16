@@ -2,7 +2,7 @@
 // Main French translations file - now using modular approach
 import { frCommon } from './features/common';
 import { frLanding } from './features/landing';
-import { frProperty } from './features/property';
+import { frProperties } from './features/properties';
 import { frDashboard } from './features/dashboard';
 import { frDocuments } from './features/documents';
 import { frAuth } from './features/auth';
@@ -32,6 +32,7 @@ console.log('🔍 DEBUG: frDocuments import:', {
 const baseTranslations = {
   ...frCommon,
   ...frLanding,
+  ...frProperties,
   ...frDashboard,
   ...frAuth,
   ...frFinances,
@@ -44,7 +45,6 @@ const baseTranslations = {
   ...frAdmin,
   ...frFeatures,
   ...supportExtensions,
-  property: frProperty
 };
 
 // Extraire documentGenerator de frDocuments et l'ajouter séparément

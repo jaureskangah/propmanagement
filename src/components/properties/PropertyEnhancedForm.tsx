@@ -9,14 +9,13 @@ import { PropertyFormData } from "@/types/property";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Upload, X, CheckCircle, MapPin, AlertTriangle } from "lucide-react";
-import { usePropertyTranslations } from "@/hooks/usePropertyTranslations";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CANADIAN_PROVINCES, formatCanadianPostalCode, validateCanadianPostalCode } from "@/types/canadianData";
-import { canadianAddressSchema } from "@/utils/validations/canadianValidation";
+import { canadianAddressSchema, NON_CANADIAN_ERROR_MESSAGE } from "@/utils/validations/canadianValidation";
 import { useNavigate } from "react-router-dom";
 
 const PROPERTY_TYPES = [
@@ -53,9 +52,8 @@ export function PropertyEnhancedForm({
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showNonCanadianAlert, setShowNonCanadianAlert] = useState(false);
-  const { t: propertyT } = usePropertyTranslations();
-  const { t } = useLocale();
   const navigate = useNavigate();
+  const { t } = useLocale();
   
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
@@ -190,15 +188,15 @@ export function PropertyEnhancedForm({
             name="name"
             render={({ field }) => (
               <FormItem>
-                 <FormLabel className="flex items-center gap-2">
-                   {propertyT('propertyName')}
+                <FormLabel className="flex items-center gap-2">
+                  {t('propertyName')}
                   {field.value && field.value.length >= 2 && (
                     <CheckCircle className="h-4 w-4 text-green-500" />
                   )}
                 </FormLabel>
                 <FormControl>
                   <Input 
-                    placeholder="Enter property name" 
+                    placeholder={t('enterName')} 
                     {...field}
                     className="transition-all duration-200"
                   />
@@ -214,8 +212,8 @@ export function PropertyEnhancedForm({
             name="type"
             render={({ field }) => (
               <FormItem>
-                 <FormLabel className="flex items-center gap-2">
-                   {propertyT('propertyType')}
+                <FormLabel className="flex items-center gap-2">
+                  {t('propertyType')}
                   {field.value && (
                     <Badge variant="secondary" className="text-xs">
                       {getPropertyTypeTranslation(field.value)}
@@ -225,7 +223,7 @@ export function PropertyEnhancedForm({
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder={propertyT('selectPropertyType')} />
+                      <SelectValue placeholder={t('selectPropertyType')} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
@@ -246,7 +244,7 @@ export function PropertyEnhancedForm({
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-4">
             <MapPin className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold">{propertyT('propertyLocationCanada')}</h3>
+            <h3 className="font-semibold">Adresse de la propriété</h3>
             <Badge variant="outline" className="text-xs">🇨🇦 Canada</Badge>
           </div>
           
@@ -254,13 +252,13 @@ export function PropertyEnhancedForm({
             <Alert className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {propertyT('serviceDescription')}
+                {NON_CANADIAN_ERROR_MESSAGE.description}
                 <Button 
                   variant="link" 
                   className="p-0 h-auto ml-2"
                   onClick={() => navigate('/coming-soon-international')}
                 >
-                  {propertyT('notifyExpansion')}
+                  {NON_CANADIAN_ERROR_MESSAGE.actionText}
                 </Button>
               </AlertDescription>
             </Alert>
@@ -272,17 +270,17 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="address"
               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>{propertyT('propertyAddress')}</FormLabel>
-                   <FormControl>
-                     <Input 
-                       placeholder={propertyT('enterCivicAddress')} 
-                       {...field}
-                       className="transition-all duration-200"
-                     />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
+                <FormItem>
+                  <FormLabel>Adresse civique</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="123 Rue Principale" 
+                      {...field}
+                      className="transition-all duration-200"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
 
@@ -291,17 +289,17 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="city"
               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>{propertyT('propertyCity')}</FormLabel>
-                   <FormControl>
-                     <Input 
-                       placeholder={propertyT('enterCity')} 
-                       {...field}
-                       className="transition-all duration-200"
-                     />
-                   </FormControl>
-                   <FormMessage />
-                 </FormItem>
+                <FormItem>
+                  <FormLabel>Ville</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Montréal, Toronto, Vancouver..." 
+                      {...field}
+                      className="transition-all duration-200"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
 
@@ -310,14 +308,14 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="province"
               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>{propertyT('propertyProvince')}</FormLabel>
-                   <Select onValueChange={field.onChange} defaultValue={field.value}>
-                     <FormControl>
-                       <SelectTrigger>
-                         <SelectValue placeholder={propertyT('selectProvince')} />
-                       </SelectTrigger>
-                     </FormControl>
+                <FormItem>
+                  <FormLabel>Province/Territoire</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner..." />
+                      </SelectTrigger>
+                    </FormControl>
                     <SelectContent>
                       {CANADIAN_PROVINCES.map((province) => (
                         <SelectItem key={province.code} value={province.code}>
@@ -336,25 +334,25 @@ export function PropertyEnhancedForm({
               control={form.control}
               name="postal_code"
               render={({ field }) => (
-                 <FormItem>
-                   <FormLabel>{propertyT('propertyPostalCode')}</FormLabel>
-                   <FormControl>
-                     <Input 
-                       placeholder={propertyT('enterPostalCode')} 
-                       {...field}
-                       onChange={(e) => {
-                         const formatted = formatCanadianPostalCode(e.target.value);
-                         field.onChange(formatted);
-                       }}
-                       className="transition-all duration-200 uppercase"
-                       maxLength={7}
-                     />
-                   </FormControl>
-                   <FormMessage />
-                   <p className="text-xs text-muted-foreground">
-                     {propertyT('canadianPostalCodeFormat')}
-                   </p>
-                 </FormItem>
+                <FormItem>
+                  <FormLabel>Code postal</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="A1A 1A1" 
+                      {...field}
+                      onChange={(e) => {
+                        const formatted = formatCanadianPostalCode(e.target.value);
+                        field.onChange(formatted);
+                      }}
+                      className="transition-all duration-200 uppercase"
+                      maxLength={7}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-xs text-muted-foreground">
+                    Format canadien requis (ex: H3A 1A1)
+                  </p>
+                </FormItem>
               )}
             />
           </div>
@@ -366,7 +364,7 @@ export function PropertyEnhancedForm({
           name="units"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{propertyT('propertyUnits')}</FormLabel>
+              <FormLabel>{t('propertyUnits')}</FormLabel>
               <FormControl>
                  <Input 
                    type="number" 
@@ -388,7 +386,7 @@ export function PropertyEnhancedForm({
           name="rent_amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Monthly Rent</FormLabel>
+              <FormLabel>{t('monthlyRent')}</FormLabel>
               <FormControl>
                  <Input 
                    type="number" 
@@ -411,7 +409,7 @@ export function PropertyEnhancedForm({
           name="image"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{propertyT('propertyImage')}</FormLabel>
+              <FormLabel>{t('propertyImage')}</FormLabel>
               <FormControl>
                 <div className="space-y-4">
                   {!watchedImage ? (
@@ -437,10 +435,10 @@ export function PropertyEnhancedForm({
                         <Upload className="h-10 w-10 mx-auto text-muted-foreground" />
                         <div>
                           <p className="text-sm font-medium">
-                            Drag and drop an image here
+                            {t('dragImageHere')}
                           </p>
                           <p className="text-xs text-muted-foreground mt-1">
-                            Supported formats: JPG, PNG, GIF (max 5MB)
+                            {t('imageFormats')}
                           </p>
                         </div>
                       </div>
@@ -495,7 +493,7 @@ export function PropertyEnhancedForm({
 
         <div className="flex justify-end gap-3 pt-6 border-t">
           <Button type="button" variant="outline" onClick={onCancel}>
-            {propertyT('cancel')}
+            {t('cancel')}
           </Button>
           <Button 
             type="submit" 
@@ -505,10 +503,10 @@ export function PropertyEnhancedForm({
             {isSubmitting ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                Saving...
+                {t('saving')}
               </>
             ) : (
-              initialData ? propertyT('saveProperty') : propertyT('saveProperty')
+              initialData ? t('updateProperty') : t('createProperty')
             )}
           </Button>
         </div>
