@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { Building, Info, Search, Filter } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { usePropertyTranslations } from "@/hooks/usePropertyTranslations";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ const PropertyPageHeader = ({
   searchQuery,
   setSearchQuery
 }: PropertyPageHeaderProps) => {
-  const { t } = useLocale();
+  const { t } = usePropertyTranslations();
   const { isTenant } = useAuth();
 
   return (

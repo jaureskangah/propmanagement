@@ -9,7 +9,7 @@ import { PropertyFormData } from "@/types/property";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
 import { Loader2, Upload, X, CheckCircle, MapPin, AlertTriangle } from "lucide-react";
-import { useLocale } from "@/components/providers/LocaleProvider";
+import { usePropertyTranslations } from "@/hooks/usePropertyTranslations";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
@@ -52,7 +52,7 @@ export function PropertyEnhancedForm({
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showNonCanadianAlert, setShowNonCanadianAlert] = useState(false);
-  const { t } = useLocale();
+  const { t } = usePropertyTranslations();
   const navigate = useNavigate();
   
   const form = useForm<PropertyFormData>({
@@ -244,7 +244,7 @@ export function PropertyEnhancedForm({
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-4">
             <MapPin className="h-4 w-4 text-primary" />
-            <h3 className="font-semibold">{t('property.propertyAddress')}</h3>
+            <h3 className="font-semibold">{t('propertyAddress')}</h3>
             <Badge variant="outline" className="text-xs">🇨🇦 Canada</Badge>
           </div>
           
@@ -252,13 +252,13 @@ export function PropertyEnhancedForm({
             <Alert className="mb-4">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                {t('property.serviceDescription')}
+                {t('serviceDescription')}
                 <Button 
                   variant="link" 
                   className="p-0 h-auto ml-2"
                   onClick={() => navigate('/coming-soon-international')}
                 >
-                  {t('property.notifyExpansion')}
+                  {t('notifyExpansion')}
                 </Button>
               </AlertDescription>
             </Alert>
@@ -271,7 +271,7 @@ export function PropertyEnhancedForm({
               name="address"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('property.enterCivicAddress')}</FormLabel>
+                   <FormLabel>{t('enterCivicAddress')}</FormLabel>
                    <FormControl>
                      <Input 
                        placeholder="123 Rue Principale" 
@@ -290,7 +290,7 @@ export function PropertyEnhancedForm({
               name="city"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('property.enterCity')}</FormLabel>
+                   <FormLabel>{t('enterCity')}</FormLabel>
                    <FormControl>
                      <Input 
                        placeholder="Montréal, Toronto, Vancouver..." 
@@ -309,11 +309,11 @@ export function PropertyEnhancedForm({
               name="province"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('property.selectProvince')}</FormLabel>
+                   <FormLabel>{t('selectProvince')}</FormLabel>
                    <Select onValueChange={field.onChange} defaultValue={field.value}>
                      <FormControl>
                        <SelectTrigger>
-                         <SelectValue placeholder={t('property.selectProvince')} />
+                         <SelectValue placeholder={t('selectProvince')} />
                        </SelectTrigger>
                      </FormControl>
                     <SelectContent>
@@ -335,7 +335,7 @@ export function PropertyEnhancedForm({
               name="postal_code"
               render={({ field }) => (
                  <FormItem>
-                   <FormLabel>{t('property.enterPostalCode')}</FormLabel>
+                   <FormLabel>{t('enterPostalCode')}</FormLabel>
                    <FormControl>
                      <Input 
                        placeholder="A1A 1A1" 
@@ -350,7 +350,7 @@ export function PropertyEnhancedForm({
                    </FormControl>
                    <FormMessage />
                    <p className="text-xs text-muted-foreground">
-                     {t('property.canadianPostalCodeFormat')}
+                     {t('canadianPostalCodeFormat')}
                    </p>
                  </FormItem>
               )}
