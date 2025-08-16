@@ -52,6 +52,7 @@ const MonitoringDashboard = lazy(() => import('./components/admin/MonitoringDash
 const UserDocumentationCenter = lazy(() => import('./components/admin/UserDocumentationCenter').then(module => ({ default: module.UserDocumentationCenter })));
 const GoLiveDashboard = lazy(() => import('./components/admin/GoLiveDashboard').then(module => ({ default: module.GoLiveDashboard })));
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
+const ComingSoonInternational = lazy(() => import('./pages/ComingSoonInternational'));
 
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
@@ -79,6 +80,9 @@ function App() {
         {/* Legal Pages - Accessible à tous */}
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        
+        {/* International Route */}
+        <Route path="/coming-soon-international" element={<ComingSoonInternational />} />
 
         {/* Owner Routes - only accessible to property owners */}
         <Route path="/dashboard" element={

@@ -36,6 +36,9 @@ export function EditPropertyModal({ isOpen, onClose, property }: EditPropertyMod
   const initialData: PropertyFormData = {
     name: property.name,
     address: property.address,
+    city: property.city || "",
+    province: property.province || "ON",
+    postal_code: property.postal_code || "",
     units: property.units,
     type: property.type,
     rent_amount: property.rent_amount,

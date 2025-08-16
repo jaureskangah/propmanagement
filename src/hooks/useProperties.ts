@@ -4,10 +4,15 @@ import { supabase } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/components/AuthProvider";
 
+import { ProvinceCode } from "@/types/canadianData";
+
 export interface Property {
   id: string;
   name: string;
   address: string;
+  city?: string;
+  province?: ProvinceCode;
+  postal_code?: string;
   units: number;
   type: string;
   rent_amount: number;
@@ -20,6 +25,9 @@ export interface Property {
 export interface PropertyFormData {
   name: string;
   address: string;
+  city: string;
+  province: ProvinceCode;
+  postal_code: string;
   units: number;
   type: string;
   rent_amount: number;
@@ -44,7 +52,7 @@ export const useProperties = () => {
 
       const { data, error } = await supabase
         .from("properties")
-        .select("id, name, address, type, units, rent_amount, image_url, user_id, created_at, updated_at")
+        .select("id, name, address, city, province, postal_code, type, units, rent_amount, image_url, user_id, created_at, updated_at")
         .eq("user_id", user.id)
         .order("name");
 
@@ -76,6 +84,9 @@ export const useProperties = () => {
         .insert({
           name: propertyData.name,
           address: propertyData.address,
+          city: propertyData.city,
+          province: propertyData.province,
+          postal_code: propertyData.postal_code,
           units: propertyData.units,
           type: propertyData.type,
           rent_amount: propertyData.rent_amount,
@@ -100,6 +111,9 @@ export const useProperties = () => {
         .update({
           name: data.name,
           address: data.address,
+          city: data.city,
+          province: data.province,
+          postal_code: data.postal_code,
           units: data.units,
           type: data.type,
           rent_amount: data.rent_amount,

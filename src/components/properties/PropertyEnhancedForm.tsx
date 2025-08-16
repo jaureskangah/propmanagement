@@ -8,11 +8,15 @@ import { Button } from "@/components/ui/button";
 import { PropertyFormData } from "@/types/property";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/lib/supabase";
-import { Loader2, Upload, X, CheckCircle } from "lucide-react";
+import { Loader2, Upload, X, CheckCircle, MapPin, AlertTriangle } from "lucide-react";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { motion, AnimatePresence } from "framer-motion";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CANADIAN_PROVINCES, formatCanadianPostalCode } from "@/types/canadianData";
+import { canadianAddressSchema, NON_CANADIAN_ERROR_MESSAGE } from "@/utils/validations/canadianValidation";
+import { useNavigate } from "react-router-dom";
 
 const PROPERTY_TYPES = [
   "Apartment",
@@ -22,15 +26,14 @@ const PROPERTY_TYPES = [
   "Commercial Space"
 ] as const;
 
-// Schéma de validation amélioré
+// Schéma de validation avec adresse canadienne
 const propertySchema = z.object({
   name: z.string().min(2, "Le nom doit contenir au moins 2 caractères"),
-  address: z.string().min(5, "L'adresse doit contenir au moins 5 caractères"),
   units: z.number().min(0, "Le nombre d'unités doit être positif").max(1000, "Maximum 1000 unités"),
   type: z.enum(PROPERTY_TYPES, { required_error: "Veuillez sélectionner un type" }),
   rent_amount: z.number().min(0, "Le loyer doit être positif"),
   image: z.string().optional(),
-});
+}).merge(canadianAddressSchema);
 
 interface PropertyEnhancedFormProps {
   onSubmit: (data: PropertyFormData) => Promise<void>;
@@ -48,6 +51,8 @@ export function PropertyEnhancedForm({
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [showNonCanadianAlert, setShowNonCanadianAlert] = useState(false);
+  const navigate = useNavigate();
   const { t } = useLocale();
   
   const form = useForm<PropertyFormData>({
@@ -55,6 +60,9 @@ export function PropertyEnhancedForm({
     defaultValues: initialData || {
       name: "",
       address: "",
+      city: "",
+      province: "ON",
+      postal_code: "",
       units: 0,
       type: "",
       rent_amount: 0,
@@ -203,29 +211,123 @@ export function PropertyEnhancedForm({
           />
         </div>
 
-        {/* Adresse */}
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex items-center gap-2">
-                {t('propertyAddress')}
-                {field.value && field.value.length >= 5 && (
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                )}
-              </FormLabel>
-              <FormControl>
-                   <Input 
-                    placeholder={t('enterAddress')} 
-                    {...field}
-                    className="transition-all duration-200 mobile-touch-target"
-                  />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+        {/* Section Adresse Canadienne */}
+        <Card className="p-4">
+          <div className="flex items-center gap-2 mb-4">
+            <MapPin className="h-4 w-4 text-primary" />
+            <h3 className="font-semibold">Adresse de la propriété</h3>
+            <Badge variant="outline" className="text-xs">🇨🇦 Canada</Badge>
+          </div>
+          
+          {showNonCanadianAlert && (
+            <Alert className="mb-4">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                {NON_CANADIAN_ERROR_MESSAGE.description}
+                <Button 
+                  variant="link" 
+                  className="p-0 h-auto ml-2"
+                  onClick={() => navigate('/coming-soon-international')}
+                >
+                  {NON_CANADIAN_ERROR_MESSAGE.actionText}
+                </Button>
+              </AlertDescription>
+            </Alert>
           )}
-        />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Adresse civique */}
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Adresse civique</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="123 Rue Principale" 
+                      {...field}
+                      className="transition-all duration-200"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Ville */}
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ville</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="Montréal, Toronto, Vancouver..." 
+                      {...field}
+                      className="transition-all duration-200"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Province */}
+            <FormField
+              control={form.control}
+              name="province"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Province/Territoire</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sélectionner..." />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {CANADIAN_PROVINCES.map((province) => (
+                        <SelectItem key={province.code} value={province.code}>
+                          {province.nameFr} ({province.code})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Code postal */}
+            <FormField
+              control={form.control}
+              name="postal_code"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Code postal</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="A1A 1A1" 
+                      {...field}
+                      onChange={(e) => {
+                        const formatted = formatCanadianPostalCode(e.target.value);
+                        field.onChange(formatted);
+                      }}
+                      className="transition-all duration-200 uppercase"
+                      maxLength={7}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-xs text-muted-foreground">
+                    Format canadien requis (ex: H3A 1A1)
+                  </p>
+                </FormItem>
+              )}
+            />
+          </div>
+        </Card>
 
         {/* Nombre d'unités */}
         <FormField

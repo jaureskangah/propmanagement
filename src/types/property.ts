@@ -1,7 +1,12 @@
+import { ProvinceCode } from './canadianData';
+
 export interface Property {
   id: string;
   name: string;
   address: string;
+  city?: string;
+  province?: ProvinceCode;
+  postal_code?: string;
   units: number;
   type: string;
   rent_amount: number;
@@ -14,6 +19,9 @@ export interface Property {
 export interface PropertyFormData {
   name: string;
   address: string;
+  city: string;
+  province: ProvinceCode;
+  postal_code: string;
   units: number;
   type: string;
   rent_amount: number;
