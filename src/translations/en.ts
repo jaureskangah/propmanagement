@@ -3,6 +3,7 @@
 import { enCommon } from './features/common';
 import { enLanding } from './features/landing';
 import { enProperties } from './features/properties';
+import { enProperty } from './features/property';
 import { enDashboard } from './features/dashboard';
 import { enDocuments } from './features/documents';
 import { enAuth } from './features/auth';
@@ -22,19 +23,13 @@ const supportExtensions = {
   getSupport: "Get Support",
 };
 
-// Debug: Log pour vérifier l'import des documents
-console.log('🔍 DEBUG: enDocuments import:', {
-  imported: !!enDocuments,
-  hasDocumentGenerator: !!(enDocuments as any)?.documentGenerator,
-  documentGeneratorKeys: Object.keys((enDocuments as any)?.documentGenerator || {}),
-  allTemplatesKey: (enDocuments as any)?.documentGenerator?.allTemplates
-});
 
 // Composer toutes les traductions en préservant la structure documentGenerator
 const baseTranslations = {
   ...enCommon,
   ...enLanding,
   ...enProperties,
+  ...enProperty,
   ...enDashboard,
   ...enAuth,
   ...enFinances,
@@ -131,14 +126,5 @@ const translations = {
   allStandardFeatures: "All Standard Plan benefits",
 };
 
-// Debug: Log final des traductions composées
-console.log('🔍 DEBUG: Final EN translations:', {
-  hasDocumentGenerator: !!translations.documentGenerator,
-  documentGeneratorType: typeof translations.documentGenerator,
-  totalKeys: Object.keys(translations).length,
-  documentGeneratorKeys: typeof translations.documentGenerator === 'object' ? Object.keys(translations.documentGenerator || {}) : [],
-  hasDownloadDocument: !!translations.downloadDocument,
-  allTemplatesValue: translations.documentGenerator?.allTemplates
-});
 
 export default translations;
