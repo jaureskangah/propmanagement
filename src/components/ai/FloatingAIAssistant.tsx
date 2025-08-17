@@ -8,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Bot } from "lucide-react";
+import { Bot, MessageCircle, User, Cpu } from "lucide-react";
 import { AIAssistant } from "./AIAssistant";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -35,10 +35,12 @@ export function FloatingAIAssistant() {
               aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
               onClick={() => console.log('DEBUG: isAuthenticated =', isAuthenticated, 'Button clicked')}
             >
-              {/* TEST: Simple icône Bot */}
-              <Bot className="h-8 w-8 text-white" />
-              {/* TEST: Texte de fallback pour vérifier la visibilité */}
-              <span className="text-xs absolute bottom-0">AI</span>
+              {/* TEST: Multiple icônes pour diagnostiquer */}
+              <div className="flex flex-col items-center justify-center space-y-1">
+                <Bot className="h-6 w-6 text-white stroke-2" />
+                <MessageCircle className="h-4 w-4 text-yellow-400 stroke-2" />
+              </div>
+              <span className="text-xs absolute bottom-0 text-black bg-white px-1">ICONS</span>
             </Button>
           </SheetTrigger>
           
