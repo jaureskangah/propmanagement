@@ -33,57 +33,207 @@ serve(async (req) => {
     let contextData = '';
     
     if (userId) {
-      // Get user's properties and financial data for context
+      // Get user's properties and comprehensive financial data
       const { data: properties, error: propertiesError } = await supabase
         .from('properties')
         .select('*')
-        .eq('owner_id', userId);
+        .eq('user_id', userId);
 
-      if (!propertiesError && properties) {
-        const { data: payments } = await supabase
-          .from('tenant_payments')
-          .select('amount, status, due_date, created_at')
-          .in('property_id', properties.map(p => p.id))
-          .order('created_at', { ascending: false })
-          .limit(10);
+      if (!propertiesError && properties && properties.length > 0) {
+        const propertyIds = properties.map(p => p.id);
+        
+        // Get comprehensive financial data
+        const [
+          { data: payments },
+          { data: expenses },
+          { data: tenants },
+          { data: vendorInterventions },
+          { data: maintenanceRequests }
+        ] = await Promise.all([
+          supabase
+            .from('tenant_payments')
+            .select('amount, status, payment_date, tenant_id')
+            .in('property_id', propertyIds)
+            .gte('payment_date', new Date(new Date().getFullYear() - 1, 0, 1).toISOString())
+            .order('payment_date', { ascending: false }),
+          
+          supabase
+            .from('maintenance_expenses')
+            .select('amount, description, date, category, property_id')
+            .in('property_id', propertyIds)
+            .gte('date', new Date(new Date().getFullYear() - 1, 0, 1).toISOString())
+            .order('date', { ascending: false }),
+            
+          supabase
+            .from('tenants')
+            .select('id, name, rent_amount, lease_start, lease_end, property_id')
+            .in('property_id', propertyIds),
+            
+          supabase
+            .from('vendor_interventions')
+            .select('cost, date, description, status, property_id')
+            .in('property_id', propertyIds)
+            .gte('date', new Date(new Date().getFullYear() - 1, 0, 1).toISOString())
+            .order('date', { ascending: false }),
+            
+          supabase
+            .from('maintenance_requests')
+            .select('status, priority, created_at, title, tenant_id')
+            .order('created_at', { ascending: false })
+            .limit(20)
+        ]);
 
-        const { data: expenses } = await supabase
-          .from('maintenance_expenses')
-          .select('amount, description, date, status')
-          .in('property_id', properties.map(p => p.id))
-          .order('date', { ascending: false })
-          .limit(10);
-
-        const totalRevenue = payments?.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0) || 0;
-        const totalExpenses = expenses?.reduce((sum, e) => sum + e.amount, 0) || 0;
-        const pendingPayments = payments?.filter(p => p.status === 'pending').length || 0;
+        // Financial Calculations
+        const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth();
+        
+        // Revenue calculations
+        const totalRevenue = payments?.filter(p => p.status === 'paid').reduce((sum, p) => sum + Number(p.amount), 0) || 0;
+        const monthlyRevenue = payments?.filter(p => {
+          const paymentDate = new Date(p.payment_date);
+          return p.status === 'paid' && 
+                 paymentDate.getMonth() === currentMonth && 
+                 paymentDate.getFullYear() === currentYear;
+        }).reduce((sum, p) => sum + Number(p.amount), 0) || 0;
+        
+        // Expense calculations
+        const maintenanceExpenses = expenses?.reduce((sum, e) => sum + Number(e.amount), 0) || 0;
+        const vendorCosts = vendorInterventions?.reduce((sum, v) => sum + Number(v.cost || 0), 0) || 0;
+        const totalExpenses = maintenanceExpenses + vendorCosts;
+        
+        // Occupancy calculations
+        const totalUnits = properties.reduce((sum, p) => sum + (p.units || 0), 0);
+        const occupiedUnits = tenants?.length || 0;
+        const occupancyRate = totalUnits > 0 ? Math.round((occupiedUnits / totalUnits) * 100) : 0;
+        
+        // Cash flow analysis
+        const netIncome = totalRevenue - totalExpenses;
+        const monthlyExpenses = expenses?.filter(e => {
+          const expenseDate = new Date(e.date);
+          return expenseDate.getMonth() === currentMonth && expenseDate.getFullYear() === currentYear;
+        }).reduce((sum, e) => sum + Number(e.amount), 0) || 0;
+        const monthlyCashFlow = monthlyRevenue - monthlyExpenses;
+        
+        // Unpaid rent calculation
+        const unpaidRent = tenants?.reduce((total, tenant) => {
+          const expectedRent = Number(tenant.rent_amount) || 0;
+          const tenantPayments = payments?.filter(p => 
+            p.tenant_id === tenant.id && 
+            p.status === 'paid' &&
+            new Date(p.payment_date).getMonth() === currentMonth &&
+            new Date(p.payment_date).getFullYear() === currentYear
+          ).reduce((sum, p) => sum + Number(p.amount), 0) || 0;
+          
+          return total + Math.max(0, expectedRent - tenantPayments);
+        }, 0) || 0;
+        
+        // Maintenance analysis
+        const pendingRequests = maintenanceRequests?.filter(r => r.status === 'Pending').length || 0;
+        const urgentRequests = maintenanceRequests?.filter(r => r.priority === 'Urgent' || r.priority === 'High').length || 0;
+        
+        // Expense breakdown by category
+        const expenseCategories: Record<string, number> = {};
+        expenses?.forEach(e => {
+          const category = e.category || 'Autres';
+          expenseCategories[category] = (expenseCategories[category] || 0) + Number(e.amount);
+        });
+        
+        // Performance metrics
+        const averageRentPerUnit = totalUnits > 0 ? (tenants?.reduce((sum, t) => sum + Number(t.rent_amount || 0), 0) || 0) / totalUnits : 0;
+        const expenseRatio = totalRevenue > 0 ? Math.round((totalExpenses / totalRevenue) * 100) : 0;
+        
+        // Generate intelligent insights
+        const insights = [];
+        
+        if (occupancyRate < 85) {
+          insights.push(`⚠️ Taux d'occupation faible (${occupancyRate}%) - Considérez améliorer le marketing ou réduire les loyers`);
+        }
+        
+        if (expenseRatio > 40) {
+          insights.push(`💸 Ratio dépenses élevé (${expenseRatio}%) - Analysez les postes de coûts majeurs`);
+        }
+        
+        if (unpaidRent > 0) {
+          insights.push(`🔴 Loyers impayés de ${unpaidRent.toLocaleString('fr-FR')}€ - Actions de recouvrement nécessaires`);
+        }
+        
+        if (urgentRequests > 0) {
+          insights.push(`🚨 ${urgentRequests} demandes de maintenance urgentes à traiter`);
+        }
+        
+        if (monthlyCashFlow < 0) {
+          insights.push(`📉 Cash-flow mensuel négatif (${monthlyCashFlow.toLocaleString('fr-FR')}€) - Révision budgétaire recommandée`);
+        }
+        
+        if (netIncome > 0) {
+          const roi = Math.round((netIncome / (totalRevenue || 1)) * 100);
+          if (roi > 15) {
+            insights.push(`✅ Excellente rentabilité (${roi}%) - Portfolio performant`);
+          } else if (roi < 5) {
+            insights.push(`📊 Rentabilité faible (${roi}%) - Optimisation nécessaire`);
+          }
+        }
 
         contextData = `
-Données financières de l'utilisateur:
-- Nombre de propriétés: ${properties.length}
-- Revenus totaux récents: ${totalRevenue}€
-- Dépenses totales récentes: ${totalExpenses}€
-- Paiements en attente: ${pendingPayments}
-- Bénéfice net récent: ${totalRevenue - totalExpenses}€
+ANALYSE FINANCIÈRE DÉTAILLÉE:
 
-Propriétés: ${properties.map(p => `${p.name} (${p.property_type}, ${p.city})`).join(', ')}
+📊 REVENUS ET PERFORMANCE:
+- Revenus totaux (12 mois): ${totalRevenue.toLocaleString('fr-FR')}€
+- Revenus ce mois: ${monthlyRevenue.toLocaleString('fr-FR')}€
+- Loyer moyen par unité: ${Math.round(averageRentPerUnit).toLocaleString('fr-FR')}€
+- Loyers impayés: ${unpaidRent.toLocaleString('fr-FR')}€
+
+💰 DÉPENSES ET COÛTS:
+- Dépenses totales (12 mois): ${totalExpenses.toLocaleString('fr-FR')}€
+- Dépenses maintenance: ${maintenanceExpenses.toLocaleString('fr-FR')}€
+- Interventions prestataires: ${vendorCosts.toLocaleString('fr-FR')}€
+- Ratio dépenses/revenus: ${expenseRatio}%
+
+🏠 OCCUPATION ET PATRIMOINE:
+- Nombre de propriétés: ${properties.length}
+- Unités totales: ${totalUnits}
+- Unités occupées: ${occupiedUnits}
+- Taux d'occupation: ${occupancyRate}%
+- Locataires actifs: ${tenants?.length || 0}
+
+📈 ANALYSE CASH-FLOW:
+- Bénéfice net (12 mois): ${netIncome.toLocaleString('fr-FR')}€
+- Cash-flow mensuel: ${monthlyCashFlow.toLocaleString('fr-FR')}€
+- Rentabilité: ${totalRevenue > 0 ? Math.round((netIncome / totalRevenue) * 100) : 0}%
+
+🔧 MAINTENANCE:
+- Demandes en attente: ${pendingRequests}
+- Demandes urgentes: ${urgentRequests}
+- Coût maintenance/mois: ${Math.round(maintenanceExpenses / 12).toLocaleString('fr-FR')}€
+
+📋 RÉPARTITION DÉPENSES:
+${Object.entries(expenseCategories).map(([cat, amount]) => `- ${cat}: ${amount.toLocaleString('fr-FR')}€`).join('\n')}
+
+🏢 PROPRIÉTÉS:
+${properties.map(p => `- ${p.name} (${p.type || 'N/A'}, ${p.city || 'N/A'}) - ${p.units || 0} unités`).join('\n')}
+
+🧠 INSIGHTS INTELLIGENTS:
+${insights.join('\n')}
 `;
       }
     }
 
-    const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements.
+    const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements.
 
 ${contextData}
 
 Instructions:
-- Réponds en français
-- Sois concis et pratique  
-- Utilise les données financières ci-dessus pour donner des conseils personnalisés
-- Propose des actions concrètes basées sur les données
-- Si des données sont manquantes, demande des clarifications
-- Formate tes réponses avec des listes à puces pour plus de clarté`;
+- Réponds en français de manière professionnelle et bienveillante
+- Sois précis et utilise les données financières ci-dessus pour donner des conseils personnalisés
+- Propose des actions concrètes et réalisables basées sur l'analyse des données
+- Identifie les tendances, opportunités et risques dans le portfolio
+- Si des données sont manquantes, demande des clarifications spécifiques
+- Utilise des émojis pour structurer tes réponses de manière claire
+- Fournis des recommandations stratégiques pour optimiser la rentabilité
+- Alerte sur les points d'attention urgents (impayés, maintenance, etc.)
+- Suggère des améliorations concrètes basées sur les métriques de performance`;
 
-    console.log('Sending request to OpenAI with context:', contextData);
+    console.log('Sending request to OpenAI with enhanced financial context');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -97,7 +247,7 @@ Instructions:
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message }
         ],
-        max_tokens: 500,
+        max_tokens: 800,
         temperature: 0.7,
       }),
     });
@@ -110,7 +260,7 @@ Instructions:
     const data = await response.json();
     const assistantMessage = data.choices[0].message.content;
 
-    console.log('AI response generated successfully');
+    console.log('AI response generated successfully with financial intelligence');
 
     return new Response(JSON.stringify({ 
       message: assistantMessage,
