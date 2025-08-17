@@ -18,6 +18,7 @@ import { en as enFeatures } from './features/en';
 import { enList } from './features/tenant/en/list';
 import { enPayments } from './features/tenant/en/payments';
 import { enComingSoon } from './features/comingSoon';
+import { enAI } from './features/ai';
 
 // Support extensions
 const supportExtensions = {
@@ -45,6 +46,7 @@ const baseTranslations = {
   ...enAdmin,
   ...enFeatures,
   ...enComingSoon,
+  ...enAI,
   ...supportExtensions,
 };
 

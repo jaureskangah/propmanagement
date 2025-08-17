@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface WelcomeMessageBubbleProps {
   isVisible: boolean;
@@ -15,6 +16,7 @@ export function WelcomeMessageBubble({
   onClose, 
   isAuthenticated 
 }: WelcomeMessageBubbleProps) {
+  const { t } = useLocale();
   return (
     <AnimatePresence>
       {isVisible && (
@@ -71,7 +73,7 @@ export function WelcomeMessageBubble({
                     className="text-xs px-3 py-1 h-7"
                     onClick={() => window.location.href = '/auth'}
                   >
-                    S'inscrire
+                    {t('signUp')}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -79,7 +81,7 @@ export function WelcomeMessageBubble({
                     className="text-xs px-3 py-1 h-7"
                     onClick={onClose}
                   >
-                    Plus tard
+                    {t('later')}
                   </Button>
                 </motion.div>
               )}

@@ -77,6 +77,11 @@ export const LocaleProvider = ({ children }: { children: React.ReactNode }) => {
   }, [unitSystem]);
 
   const t = (key: string, params?: Record<string, string> | { fallback?: string }) => {
+    // Handle special __locale__ key to return current language
+    if (key === '__locale__') {
+      return language;
+    }
+    
     // Debug: Log de chaque tentative de traduction
     console.log(`🔍 DEBUG: Translating key "${key}" in language "${language}"`);
     

@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, userId } = await req.json();
+    const { message, userId, language = 'fr' } = await req.json();
     
     if (!message) {
       throw new Error('Message is required');

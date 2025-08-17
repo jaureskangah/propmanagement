@@ -57,7 +57,7 @@ export function AIAssistant() {
   const displayMessages = currentConversation && messages.length > 0 ? messages : [
     {
       id: 'welcome',
-      content: "Bonjour ! Je suis votre assistant IA pour la gestion immobilière. Comment puis-je vous aider aujourd'hui ?",
+      content: t('welcomeConversationMessage'),
       role: 'assistant' as const,
       timestamp: new Date()
     }
@@ -123,7 +123,8 @@ export function AIAssistant() {
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
         body: {
           message: messageContent,
-          userId: user.id
+          userId: user.id,
+          language: t('__locale__') // Transmettre la langue actuelle
         }
       });
 
@@ -134,8 +135,8 @@ export function AIAssistant() {
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
-        title: "Erreur",
-        description: "Impossible d'envoyer le message. Veuillez réessayer.",
+        title: t('errorTitle'),
+        description: t('sendMessageError'),
         variant: "destructive"
       });
     } finally {
@@ -167,7 +168,7 @@ export function AIAssistant() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  Afficher/Masquer les conversations
+                  {t('showHideConversations')}
                 </TooltipContent>
               </Tooltip>
               <Tooltip delayDuration={200}>
@@ -181,7 +182,7 @@ export function AIAssistant() {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom">
-                  Nouvelle conversation
+                  {t('newConversation')}
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -203,7 +204,7 @@ export function AIAssistant() {
                   className="flex-1 truncate"
                   onClick={() => selectConversation(conversation)}
                 >
-                  {conversation.title || `Conversation du ${new Date(conversation.created_at).toLocaleDateString()}`}
+                  {conversation.title || t('conversationFromDate', { date: new Date(conversation.created_at).toLocaleDateString() })}
                 </div>
                 <Button
                   variant="ghost"
@@ -266,7 +267,7 @@ export function AIAssistant() {
                 <div className="bg-primary rounded-lg p-3 text-primary-foreground">
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">L'assistant réfléchit...</span>
+                    <span className="text-sm">{t('aiThinking')}</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
@@ -284,7 +285,7 @@ export function AIAssistant() {
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Posez votre question sur la gestion immobilière..."
+              placeholder={t('messageInputPlaceholder')}
               className="flex-1"
               disabled={isLoading}
             />

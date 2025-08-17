@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/components/AuthProvider';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface BotAnimationState {
   isVisible: boolean;
@@ -11,7 +12,9 @@ interface BotAnimationState {
 }
 
 export const useFloatingBotAnimations = () => {
-  const { isAuthenticated, user } = useAuth();
+  const { user } = useAuth();
+  const { t } = useLocale();
+  const isAuthenticated = !!user;
   const [animationState, setAnimationState] = useState<BotAnimationState>({
     isVisible: false,
     isCompact: false,
@@ -138,13 +141,12 @@ export const useFloatingBotAnimations = () => {
     return () => clearInterval(interval);
   }, [animationState.lastActivity]);
 
-  const getWelcomeMessage = () => {
+  const getWelcomeMessage = useCallback(() => {
     if (isAuthenticated && user) {
-      const firstName = user.email?.split('@')[0] || 'utilisateur';
-      return `Bonjour ${firstName} ! Je suis Acadie, votre assistant IA pour la gestion immobilière. Comment puis-je vous aider aujourd'hui ?`;
+      return t('welcomeMessageAuthenticated');
     }
-    return "Bienvenue ! Découvrez notre assistant IA pour la gestion immobilière. Inscrivez-vous pour commencer à explorer toutes les fonctionnalités.";
-  };
+    return t('welcomeMessageGuest');
+  }, [isAuthenticated, user, t]);
 
   const triggerCelebration = useCallback(() => {
     setAnimationState(prev => ({
