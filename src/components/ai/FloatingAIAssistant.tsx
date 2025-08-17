@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -8,39 +9,107 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Bot, MessageCircle, Cpu, Brain } from "lucide-react";
+import { Bot } from "lucide-react";
 import { AIAssistant } from "./AIAssistant";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
+import { useFloatingBotAnimations } from "@/hooks/useFloatingBotAnimations";
+import { WelcomeMessageBubble } from "./WelcomeMessageBubble";
 
 export function FloatingAIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
   const { t } = useLocale();
+  const { 
+    animationState, 
+    welcomeMessage, 
+    triggerCelebration,
+    isAuthenticated 
+  } = useFloatingBotAnimations();
 
-  // Only show for authenticated users
-  if (!isAuthenticated) {
-    return null;
-  }
+  const handleWelcomeBubbleClose = () => {
+    // The welcome bubble state is managed in the hook
+  };
+
+  const handleBotClick = () => {
+    setIsOpen(true);
+    triggerCelebration();
+  };
 
   return (
-    <>
-      {/* Floating button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild>
-            <Button
-              size="lg"
-              className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary/80 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center border-2 border-white/20"
-              aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
-            >
-              <div className="flex items-center justify-center">
-                <Bot className="h-8 w-8 text-white stroke-2" />
-                {!Bot && <MessageCircle className="h-8 w-8 text-white stroke-2" />}
-                {!Bot && !MessageCircle && <Cpu className="h-8 w-8 text-white stroke-2" />}
-              </div>
-            </Button>
-          </SheetTrigger>
+    <AnimatePresence>
+      {animationState.isVisible && (
+        <motion.div 
+          className="fixed bottom-6 right-6 z-50"
+          initial={{ opacity: 0, scale: 0, y: 100 }}
+          animate={{ 
+            opacity: 1, 
+            scale: animationState.isCompact ? 0.7 : 1, 
+            y: 0,
+            transition: {
+              type: "spring",
+              damping: 20,
+              stiffness: 300,
+              scale: { duration: 0.3 }
+            }
+          }}
+          exit={{ 
+            opacity: 0, 
+            scale: 0, 
+            y: 100,
+            transition: { duration: 0.3 }
+          }}
+        >
+          {/* Welcome Message Bubble */}
+          <WelcomeMessageBubble
+            isVisible={animationState.showWelcomeBubble}
+            message={welcomeMessage}
+            onClose={handleWelcomeBubbleClose}
+            isAuthenticated={isAuthenticated}
+          />
+
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild>
+              <motion.div
+                whileHover={{ 
+                  scale: 1.05,
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ 
+                  scale: 0.95,
+                  transition: { duration: 0.1 }
+                }}
+              >
+                <Button
+                  size="lg"
+                  onClick={handleBotClick}
+                  className={`
+                    ${animationState.isCompact ? 'h-12 w-12' : 'h-16 w-16'} 
+                    rounded-full bg-gradient-to-br from-primary to-primary/80 text-white 
+                    shadow-lg hover:shadow-xl transition-all duration-300 
+                    flex items-center justify-center border-2 border-white/20
+                    ${animationState.isBreathing ? 'animate-pulse-glow' : ''}
+                    ${animationState.glowIntensity === 'high' ? 'animate-enhanced-glow' : ''}
+                  `}
+                  aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
+                  style={{
+                    filter: animationState.glowIntensity === 'high' 
+                      ? 'drop-shadow(0 0 20px hsl(var(--primary) / 0.6))'
+                      : animationState.glowIntensity === 'medium'
+                      ? 'drop-shadow(0 0 10px hsl(var(--primary) / 0.3))'
+                      : 'drop-shadow(0 0 5px hsl(var(--primary) / 0.2))'
+                  }}
+                >
+                  <motion.div
+                    animate={{
+                      rotate: isOpen ? 180 : 0,
+                      transition: { duration: 0.3 }
+                    }}
+                  >
+                    <Bot className={`${animationState.isCompact ? 'h-6 w-6' : 'h-8 w-8'} text-white stroke-2`} />
+                  </motion.div>
+                </Button>
+              </motion.div>
+            </SheetTrigger>
           
           <SheetContent 
             side="right" 
@@ -63,7 +132,8 @@ export function FloatingAIAssistant() {
             </div>
           </SheetContent>
         </Sheet>
-      </div>
-    </>
+      </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
