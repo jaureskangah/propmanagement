@@ -31,23 +31,32 @@ export function FloatingAIAssistant() {
           <SheetTrigger asChild>
             <Button
               size="lg"
-              className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 bg-primary hover:bg-primary/90"
+              className="h-16 w-16 rounded-full shadow-2xl hover:shadow-primary/25 transition-all duration-300 bg-gradient-to-tr from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary hover:to-primary border-0 relative overflow-hidden group animate-fade-in hover:scale-110 active:scale-95"
               aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
             >
-              <Bot className="h-6 w-6" />
+              {/* Glow effect background */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-primary-glow/30 blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+              
+              {/* Pulse ring */}
+              <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+              
+              {/* Icon */}
+              <Bot className="h-7 w-7 relative z-10 text-primary-foreground drop-shadow-sm group-hover:scale-110 transition-transform duration-200" />
             </Button>
           </SheetTrigger>
           
           <SheetContent 
             side="right" 
-            className="w-[400px] sm:w-[540px] p-0 overflow-hidden"
+            className="w-[400px] sm:w-[540px] p-0 overflow-hidden border-l bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl"
           >
-            <SheetHeader className="p-6 pb-4 border-b">
-              <SheetTitle className="flex items-center gap-2">
-                <Bot className="h-5 w-5 text-primary" />
+            <SheetHeader className="p-6 pb-4 border-b border-border/50 bg-gradient-to-r from-background/80 to-muted/20">
+              <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
+                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                  <Bot className="h-5 w-5 text-primary" />
+                </div>
                 {t('aiAssistant') || 'Assistant IA'}
               </SheetTitle>
-              <SheetDescription>
+              <SheetDescription className="text-muted-foreground/80 mt-2">
                 {t('aiAssistantDescription') || 'Votre assistant intelligent pour la gestion immobilière'}
               </SheetDescription>
             </SheetHeader>
