@@ -31,17 +31,14 @@ export function FloatingAIAssistant() {
           <SheetTrigger asChild>
             <Button
               size="lg"
-              className="h-16 w-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary border-0 relative overflow-hidden group hover:scale-110 active:scale-95"
+              className="h-16 w-16 rounded-full bg-red-500 text-white flex items-center justify-center"
               aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
+              onClick={() => console.log('DEBUG: isAuthenticated =', isAuthenticated, 'Button clicked')}
             >
-              {/* Icon - priorité maximale */}
-              <Bot className="h-7 w-7 relative z-50 text-white drop-shadow-lg group-hover:scale-110 transition-transform duration-200 filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" />
-              
-              {/* Simple glow effect - derrière l'icône */}
-              <div className="absolute inset-0 bg-primary/20 blur-xl opacity-50 group-hover:opacity-70 transition-opacity duration-300 z-0" />
-              
-              {/* Pulse ring - derrière l'icône */}
-              <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping z-0" />
+              {/* TEST: Simple icône Bot */}
+              <Bot className="h-8 w-8 text-white" />
+              {/* TEST: Texte de fallback pour vérifier la visibilité */}
+              <span className="text-xs absolute bottom-0">AI</span>
             </Button>
           </SheetTrigger>
           
