@@ -26,17 +26,46 @@ export function AIAssistant() {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isUserNearBottom, setIsUserNearBottom] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  const checkIfNearBottom = () => {
+    const scrollArea = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    if (!scrollArea) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = scrollArea;
+    const threshold = 100; // pixels from bottom
+    const isNearBottom = scrollTop + clientHeight >= scrollHeight - threshold;
+    setIsUserNearBottom(isNearBottom);
+  };
+
+  const scrollToBottom = (force = false) => {
+    if (force || isUserNearBottom) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleScroll = () => {
+    checkIfNearBottom();
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Only auto-scroll if user is near bottom or it's the first message
+    if (isUserNearBottom || messages.length === 1) {
+      scrollToBottom(true);
+    }
   }, [messages]);
+
+  useEffect(() => {
+    const scrollArea = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    if (scrollArea) {
+      scrollArea.addEventListener('scroll', handleScroll);
+      return () => scrollArea.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -101,7 +130,7 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 px-4 pb-4">
+        <ScrollArea ref={scrollAreaRef} className="flex-1 px-4 pb-4">
           <div className="space-y-4">
             {messages.map((message) => (
               <div
