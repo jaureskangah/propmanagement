@@ -61,12 +61,17 @@ export const SidebarLogo = ({ isCollapsed }: SidebarLogoProps) => {
           "flex items-center gap-2",
           isCollapsed ? "justify-center" : "justify-center"
         )}>
-          <motion.div variants={iconVariants}>
-            <img 
-              src="/lovable-uploads/65364ae9-e3c6-4f05-abfc-cda641b5e1b9.png" 
-              alt="PropManagement Logo" 
-              className="h-8 w-8 object-contain transition-all duration-300"
-            />
+          <motion.div className="relative flex items-center">
+            <motion.div variants={iconVariants}>
+              <Building2 className="h-8 w-8 text-[#ea384c] transition-all duration-300" />
+            </motion.div>
+            <motion.div 
+              className="absolute -top-1 -right-1"
+              whileHover={{ x: 1, y: -1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <TrendingUp className="h-6 w-6 text-[#ea384c] transition-all duration-300" />
+            </motion.div>
           </motion.div>
           
           {!isCollapsed && (
