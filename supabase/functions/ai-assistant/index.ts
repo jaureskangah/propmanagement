@@ -180,7 +180,7 @@ serve(async (req) => {
         }
         
         if (unpaidRent > 0) {
-          insights.push(`🔴 Loyers impayés de ${unpaidRent.toLocaleString('fr-FR')}€ - Actions de recouvrement nécessaires`);
+          insights.push(`🔴 Loyers impayés de ${unpaidRent.toLocaleString('fr-CA')}$ CAD - Actions de recouvrement nécessaires`);
         }
         
         if (urgentRequests > 0) {
@@ -188,7 +188,7 @@ serve(async (req) => {
         }
         
         if (monthlyCashFlow < 0) {
-          insights.push(`📉 Cash-flow mensuel négatif (${monthlyCashFlow.toLocaleString('fr-FR')}€) - Révision budgétaire recommandée`);
+          insights.push(`📉 Cash-flow mensuel négatif (${monthlyCashFlow.toLocaleString('fr-CA')}$ CAD) - Révision budgétaire recommandée`);
         }
         
         if (netIncome > 0) {
@@ -204,15 +204,15 @@ serve(async (req) => {
 ANALYSE FINANCIÈRE DÉTAILLÉE:
 
 📊 REVENUS ET PERFORMANCE:
-- Revenus totaux (12 mois): ${totalRevenue.toLocaleString('fr-FR')}€
-- Revenus ce mois: ${monthlyRevenue.toLocaleString('fr-FR')}€
-- Loyer moyen par unité: ${Math.round(averageRentPerUnit).toLocaleString('fr-FR')}€
-- Loyers impayés: ${unpaidRent.toLocaleString('fr-FR')}€
+- Revenus totaux (12 mois): ${totalRevenue.toLocaleString('fr-CA')}$ CAD
+- Revenus ce mois: ${monthlyRevenue.toLocaleString('fr-CA')}$ CAD
+- Loyer moyen par unité: ${Math.round(averageRentPerUnit).toLocaleString('fr-CA')}$ CAD
+- Loyers impayés: ${unpaidRent.toLocaleString('fr-CA')}$ CAD
 
 💰 DÉPENSES ET COÛTS:
-- Dépenses totales (12 mois): ${totalExpenses.toLocaleString('fr-FR')}€
-- Dépenses maintenance: ${maintenanceExpenses.toLocaleString('fr-FR')}€
-- Interventions prestataires: ${vendorCosts.toLocaleString('fr-FR')}€
+- Dépenses totales (12 mois): ${totalExpenses.toLocaleString('fr-CA')}$ CAD
+- Dépenses maintenance: ${maintenanceExpenses.toLocaleString('fr-CA')}$ CAD
+- Interventions prestataires: ${vendorCosts.toLocaleString('fr-CA')}$ CAD
 - Ratio dépenses/revenus: ${expenseRatio}%
 
 🏠 PATRIMOINE IMMOBILIER (par ordre d'acquisition):
@@ -221,7 +221,7 @@ ${index + 1}. **${p.name}** (${p.type})
    - Adresse: ${p.address}${p.city ? `, ${p.city}` : ''}${p.province ? `, ${p.province}` : ''}
    - Acquise le: ${p.created_date} (il y a ${p.days_since_acquired} jours)
    - Unités: ${p.units} | Locataires: ${p.tenant_count} | Taux d'occupation: ${p.occupancy_rate}%
-   - Loyer: ${p.rent_amount?.toLocaleString('fr-FR') || 'N/A'}€`).join('')}
+   - Loyer: ${p.rent_amount?.toLocaleString('fr-CA') || 'N/A'}$ CAD`).join('')}
 
 📋 RÉSUMÉ PATRIMOINE:
 - Nombre de propriétés: ${properties.length}
@@ -233,17 +233,17 @@ ${index + 1}. **${p.name}** (${p.type})
 - Locataires actifs: ${tenants?.length || 0}
 
 📈 ANALYSE CASH-FLOW:
-- Bénéfice net (12 mois): ${netIncome.toLocaleString('fr-FR')}€
-- Cash-flow mensuel: ${monthlyCashFlow.toLocaleString('fr-FR')}€
+- Bénéfice net (12 mois): ${netIncome.toLocaleString('fr-CA')}$ CAD
+- Cash-flow mensuel: ${monthlyCashFlow.toLocaleString('fr-CA')}$ CAD
 - Rentabilité: ${totalRevenue > 0 ? Math.round((netIncome / totalRevenue) * 100) : 0}%
 
 🔧 MAINTENANCE:
 - Demandes en attente: ${pendingRequests}
 - Demandes urgentes: ${urgentRequests}
-- Coût maintenance/mois: ${Math.round(maintenanceExpenses / 12).toLocaleString('fr-FR')}€
+- Coût maintenance/mois: ${Math.round(maintenanceExpenses / 12).toLocaleString('fr-CA')}$ CAD
 
 📋 RÉPARTITION DÉPENSES:
-${Object.entries(expenseCategories).map(([cat, amount]) => `- ${cat}: ${amount.toLocaleString('fr-FR')}€`).join('\n')}
+${Object.entries(expenseCategories).map(([cat, amount]) => `- ${cat}: ${amount.toLocaleString('fr-CA')}$ CAD`).join('\n')}
 
 🧠 INSIGHTS INTELLIGENTS:
 ${insights.join('\n')}
@@ -251,7 +251,7 @@ ${insights.join('\n')}
       }
     }
 
-    const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements.
+    const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière au Canada. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements. Toutes les valeurs monétaires sont en dollars canadiens (CAD).
 
 ${contextData}
 

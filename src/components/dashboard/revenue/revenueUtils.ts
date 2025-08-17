@@ -108,9 +108,9 @@ export const calculateAnnualTotals = (monthlyData: MonthlyDataItem[]) => {
 
 // Fonction pour formater les montants monétaires
 export const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat('fr-FR', {
+  return new Intl.NumberFormat('fr-CA', {
     style: 'currency',
-    currency: 'EUR',
+    currency: 'CAD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(amount);
