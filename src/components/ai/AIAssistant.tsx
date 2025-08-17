@@ -101,8 +101,8 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 px-4 pb-4 overflow-auto max-h-full">
-          <div className="space-y-4 min-h-0">
+        <ScrollArea className="flex-1 px-4 pb-4">
+          <div className="space-y-4">
             {messages.map((message) => (
               <div
                 key={message.id}
