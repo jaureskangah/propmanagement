@@ -147,13 +147,7 @@ export function AIAssistant() {
   return (
     <Card className="h-[600px] flex flex-col">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            {t('aiAssistant')}
-          </div>
+        <CardTitle className="flex items-center justify-end">
           <div className="flex items-center gap-2">
             <Button
               variant="ghost"
