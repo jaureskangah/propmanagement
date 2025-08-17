@@ -11,6 +11,7 @@ import { useDashboardPreferences } from "./hooks/useDashboardPreferences";
 import { DateRange } from "./DashboardDateFilter";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { AIAssistant } from "@/components/ai/AIAssistant";
 
 interface DashboardContentProps {
   isLoading: boolean;
@@ -131,6 +132,12 @@ export const DashboardContent = ({ isLoading, dateRange }: DashboardContentProps
       {!isHidden('activity') && (
         <motion.div variants={item} className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
           <RecentActivity />
+        </motion.div>
+      )}
+
+      {!isHidden('ai-assistant') && (
+        <motion.div variants={item} className="rounded-xl bg-gradient-to-br from-background/80 to-muted/30 backdrop-blur-sm border border-border/40 p-4 shadow-sm transition-all duration-200 hover:shadow-md dark:from-gray-900/80 dark:to-gray-800/30 dark:border-gray-700/40">
+          <AIAssistant />
         </motion.div>
       )}
     </motion.div>
