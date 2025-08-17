@@ -22,9 +22,9 @@ export const Logo = ({ onClick, scrolled, variant = 'default', size = 'md' }: Lo
   };
 
   const sizeClasses = {
-    sm: { icon: 'h-6 w-6', iconSecondary: 'h-4 w-4', text: 'text-lg' },
-    md: { icon: 'h-8 w-8', iconSecondary: 'h-6 w-6', text: 'text-xl' },
-    lg: { icon: 'h-10 w-10', iconSecondary: 'h-8 w-8', text: 'text-2xl' }
+    sm: { logo: 'h-6 w-6', text: 'text-lg' },
+    md: { logo: 'h-8 w-8', text: 'text-xl' },
+    lg: { logo: 'h-10 w-10', text: 'text-2xl' }
   };
 
   const iconVariants = {
@@ -60,17 +60,12 @@ export const Logo = ({ onClick, scrolled, variant = 'default', size = 'md' }: Lo
         whileHover="hover"
         whileTap="tap"
       >
-        <motion.div className="relative">
-          <motion.div variants={iconVariants}>
-            <Building2 className={`${sizeClasses[size].icon} text-[#ea384c]`} />
-          </motion.div>
-          <motion.div 
-            className="absolute -top-1 -right-1"
-            whileHover={{ x: 2, y: -2 }}
-            transition={{ duration: 0.3 }}
-          >
-            <TrendingUp className={`${sizeClasses[size].iconSecondary} text-[#ea384c]`} />
-          </motion.div>
+        <motion.div variants={iconVariants}>
+          <img 
+            src="/lovable-uploads/65364ae9-e3c6-4f05-abfc-cda641b5e1b9.png" 
+            alt="PropManagement Logo" 
+            className={`${sizeClasses[size].logo} object-contain`}
+          />
         </motion.div>
       </motion.div>
     );
@@ -85,17 +80,12 @@ export const Logo = ({ onClick, scrolled, variant = 'default', size = 'md' }: Lo
       whileTap="tap"
       transition={{ type: "spring", stiffness: 400, damping: 10 }}
     >
-      <motion.div className="relative flex items-center">
-        <motion.div variants={iconVariants}>
-          <Building2 className={`${sizeClasses[size].icon} text-[#ea384c] transition-all duration-300`} />
-        </motion.div>
-        <motion.div 
-          className="absolute -top-1 -right-1"
-          whileHover={{ x: 2, y: -2 }}
-          transition={{ duration: 0.3 }}
-        >
-          <TrendingUp className={`${sizeClasses[size].iconSecondary} text-[#ea384c] transition-all duration-300`} />
-        </motion.div>
+      <motion.div variants={iconVariants}>
+        <img 
+          src="/lovable-uploads/65364ae9-e3c6-4f05-abfc-cda641b5e1b9.png" 
+          alt="PropManagement Logo" 
+          className={`${sizeClasses[size].logo} object-contain transition-all duration-300`}
+        />
       </motion.div>
       
       {variant !== 'compact' && (
