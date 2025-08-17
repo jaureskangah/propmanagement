@@ -3,10 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Send, Bot, User, Sparkles } from 'lucide-react';
+import { Loader2, Send, Bot, User, Sparkles, Plus, MessageSquare, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
+import { useAIConversations } from '@/hooks/ai/useAIConversations';
 
 interface Message {
   id: string;
@@ -16,21 +17,43 @@ interface Message {
 }
 
 export function AIAssistant() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      content: "Bonjour ! Je suis votre assistant IA pour la gestion immobilière. Comment puis-je vous aider aujourd'hui ?",
-      role: 'assistant',
-      timestamp: new Date()
-    }
-  ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isUserNearBottom, setIsUserNearBottom] = useState(true);
+  const [showConversations, setShowConversations] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
+  
+  const {
+    conversations,
+    currentConversation,
+    messages: aiMessages,
+    isLoading: conversationsLoading,
+    createConversation,
+    saveMessage,
+    selectConversation,
+    deleteConversation
+  } = useAIConversations();
+
+  // Convertir les messages AI au format local
+  const messages: Message[] = aiMessages.map(msg => ({
+    id: msg.id,
+    content: msg.content,
+    role: msg.role,
+    timestamp: new Date(msg.timestamp)
+  }));
+
+  // Ajouter le message de bienvenue si aucune conversation n'est sélectionnée
+  const displayMessages = currentConversation && messages.length > 0 ? messages : [
+    {
+      id: 'welcome',
+      content: "Bonjour ! Je suis votre assistant IA pour la gestion immobilière. Comment puis-je vous aider aujourd'hui ?",
+      role: 'assistant' as const,
+      timestamp: new Date()
+    }
+  ];
 
   const checkIfNearBottom = () => {
     const scrollArea = scrollAreaRef.current;
@@ -54,10 +77,10 @@ export function AIAssistant() {
 
   useEffect(() => {
     // Only auto-scroll if user is near bottom or it's the first message
-    if (isUserNearBottom || messages.length === 1) {
+    if (isUserNearBottom || displayMessages.length === 1) {
       scrollToBottom(true);
     }
-  }, [messages]);
+  }, [displayMessages]);
 
   useEffect(() => {
     const scrollArea = scrollAreaRef.current;
@@ -68,37 +91,38 @@ export function AIAssistant() {
   }, []);
 
   const sendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+    if (!inputMessage.trim() || isLoading || !user?.id) return;
 
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputMessage,
-      role: 'user',
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
+    const messageContent = inputMessage;
     setInputMessage('');
     setIsLoading(true);
 
     try {
+      // Créer une conversation si aucune n'est sélectionnée
+      let conversationId = currentConversation?.id;
+      if (!conversationId) {
+        const newConversation = await createConversation();
+        if (!newConversation) {
+          throw new Error('Failed to create conversation');
+        }
+        conversationId = newConversation.id;
+      }
+
+      // Sauvegarder le message utilisateur
+      await saveMessage(conversationId, messageContent, 'user');
+
+      // Envoyer le message à l'AI
       const { data, error } = await supabase.functions.invoke('ai-assistant', {
         body: {
-          message: inputMessage,
-          userId: user?.id
+          message: messageContent,
+          userId: user.id
         }
       });
 
       if (error) throw error;
 
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: data.message,
-        role: 'assistant',
-        timestamp: new Date()
-      };
-
-      setMessages(prev => [...prev, assistantMessage]);
+      // Sauvegarder la réponse de l'assistant
+      await saveMessage(conversationId, data.message, 'assistant');
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
@@ -121,18 +145,69 @@ export function AIAssistant() {
   return (
     <Card className="h-[600px] flex flex-col">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600">
-            <Sparkles className="w-4 h-4 text-white" />
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600">
+              <Sparkles className="w-4 h-4 text-white" />
+            </div>
+            Assistant IA Immobilier
           </div>
-          Assistant IA Immobilier
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowConversations(!showConversations)}
+            >
+              <MessageSquare className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => createConversation()}
+            >
+              <Plus className="w-4 h-4" />
+            </Button>
+          </div>
         </CardTitle>
+        
+        {showConversations && (
+          <div className="mt-3 max-h-40 overflow-y-auto space-y-1">
+            {conversations.map((conversation) => (
+              <div
+                key={conversation.id}
+                className={`flex items-center justify-between p-2 rounded-md cursor-pointer text-sm ${
+                  currentConversation?.id === conversation.id
+                    ? 'bg-primary/10'
+                    : 'bg-muted/50 hover:bg-muted'
+                }`}
+              >
+                <div
+                  className="flex-1 truncate"
+                  onClick={() => selectConversation(conversation)}
+                >
+                  {conversation.title || `Conversation du ${new Date(conversation.created_at).toLocaleDateString()}`}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteConversation(conversation.id);
+                  }}
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
         <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 pb-4 max-h-[400px]">
           <div className="space-y-4">
-            {messages.map((message) => (
+            {displayMessages.map((message) => (
               <div
                 key={message.id}
                 className={`flex gap-3 ${
