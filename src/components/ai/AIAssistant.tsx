@@ -107,20 +107,20 @@ export function AIAssistant() {
               <div
                 key={message.id}
                 className={`flex gap-3 ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                  message.role === 'user' ? 'justify-start' : 'justify-end'
                 }`}
               >
-                {message.role === 'assistant' && (
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
-                    <Bot className="w-4 h-4 text-white" />
+                {message.role === 'user' && (
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary flex-shrink-0">
+                    <User className="w-4 h-4 text-primary-foreground" />
                   </div>
                 )}
                 
                 <div
                   className={`max-w-[80%] rounded-lg p-3 ${
                     message.role === 'user'
-                      ? 'bg-primary text-primary-foreground ml-auto'
-                      : 'bg-muted'
+                      ? 'bg-muted mr-auto'
+                      : 'bg-primary text-primary-foreground ml-auto'
                   }`}
                 >
                   <div className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">
@@ -131,24 +131,24 @@ export function AIAssistant() {
                   </div>
                 </div>
 
-                {message.role === 'user' && (
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary flex-shrink-0">
-                    <User className="w-4 h-4 text-primary-foreground" />
+                {message.role === 'assistant' && (
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
+                    <Bot className="w-4 h-4 text-white" />
                   </div>
                 )}
               </div>
             ))}
             
             {isLoading && (
-              <div className="flex gap-3 justify-start">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
-                  <Bot className="w-4 h-4 text-white" />
-                </div>
-                <div className="bg-muted rounded-lg p-3">
+              <div className="flex gap-3 justify-end">
+                <div className="bg-primary rounded-lg p-3 text-primary-foreground">
                   <div className="flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin" />
                     <span className="text-sm">L'assistant réfléchit...</span>
                   </div>
+                </div>
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
+                  <Bot className="w-4 h-4 text-white" />
                 </div>
               </div>
             )}
