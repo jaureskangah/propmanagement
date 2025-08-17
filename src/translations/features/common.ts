@@ -119,7 +119,12 @@ export const enCommon = {
   initializing: "Initializing...",
   loadingData: "Loading data...",
   preparingInterface: "Preparing interface...",
-  finalizing: "Finalizing..."
+  finalizing: "Finalizing...",
+  
+  // AI Assistant
+  aiAssistant: "Acadie",
+  aiAssistantDescription: "Your AI Real Estate Assistant",
+  openAIAssistant: "Open AI Assistant"
 };
 
 export const frCommon = {
@@ -242,5 +247,10 @@ export const frCommon = {
   initializing: "Initialisation...",
   loadingData: "Chargement des données...",
   preparingInterface: "Préparation de l'interface...",
-  finalizing: "Finalisation..."
+  finalizing: "Finalisation...",
+  
+  // Assistant IA
+  aiAssistant: "Acadie",
+  aiAssistantDescription: "Votre Assistant IA Immobilier",
+  openAIAssistant: "Ouvrir Acadie"
 };
