@@ -41,7 +41,11 @@ export function FloatingAIAssistant() {
               <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
               
               {/* Icon */}
-              <Bot className="h-7 w-7 relative z-10 text-primary-foreground drop-shadow-sm group-hover:scale-110 transition-transform duration-200" />
+              <img 
+                src="/lovable-uploads/b05d95df-c338-4442-bcef-14617a9a5273.png" 
+                alt="Assistant IA" 
+                className="h-7 w-7 relative z-10 object-contain drop-shadow-sm group-hover:scale-110 transition-transform duration-200"
+              />
             </Button>
           </SheetTrigger>
           
@@ -52,7 +56,11 @@ export function FloatingAIAssistant() {
             <SheetHeader className="p-6 pb-4 border-b border-border/50 bg-gradient-to-r from-background/80 to-muted/20">
               <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
                 <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                  <Bot className="h-5 w-5 text-primary" />
+                  <img 
+                    src="/lovable-uploads/b05d95df-c338-4442-bcef-14617a9a5273.png" 
+                    alt="Assistant IA" 
+                    className="h-5 w-5 object-contain"
+                  />
                 </div>
                 {t('aiAssistant') || 'Assistant IA'}
               </SheetTitle>
