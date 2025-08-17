@@ -31,17 +31,21 @@ export function FloatingAIAssistant() {
           <SheetTrigger asChild>
             <Button
               size="lg"
-              className="h-16 w-16 rounded-full shadow-2xl hover:shadow-primary/25 transition-all duration-300 bg-gradient-to-tr from-primary via-primary/90 to-primary/80 hover:from-primary/90 hover:via-primary hover:to-primary border-0 relative overflow-hidden group animate-fade-in hover:scale-110 active:scale-95"
+              className="h-16 w-16 rounded-full shadow-2xl hover:shadow-primary/50 transition-all duration-500 bg-gradient-to-tr from-primary via-primary/90 to-primary-glow border-0 relative overflow-hidden group animate-fade-in animate-pulse-glow hover:scale-125 active:scale-95"
               aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
             >
-              {/* Glow effect background */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-primary-glow/30 blur-xl opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
+              {/* Enhanced glow effect background */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary-glow/40 to-primary/60 blur-2xl opacity-70 group-hover:opacity-100 transition-all duration-500 animate-enhanced-glow" />
               
-              {/* Pulse ring */}
-              <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+              {/* Multiple pulse rings */}
+              <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping" />
+              <div className="absolute inset-0 rounded-full bg-primary-glow/20 animate-ping animation-delay-200" style={{animationDelay: '0.5s'}} />
+              
+              {/* Shimmer effect */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
               
               {/* Icon */}
-              <Bot className="h-7 w-7 relative z-10 text-primary-foreground drop-shadow-sm group-hover:scale-110 transition-transform duration-200" />
+              <Bot className="h-7 w-7 relative z-10 text-primary-foreground drop-shadow-lg group-hover:scale-125 group-hover:rotate-12 transition-all duration-300" />
             </Button>
           </SheetTrigger>
           
