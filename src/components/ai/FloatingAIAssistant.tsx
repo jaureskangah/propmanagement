@@ -8,7 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Bot, MessageCircle, Cpu, Brain } from "lucide-react";
+import { Bot } from "lucide-react";
 import { AIAssistant } from "./AIAssistant";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
@@ -34,13 +34,7 @@ export function FloatingAIAssistant() {
               className="h-16 w-16 rounded-full bg-gradient-to-br from-primary to-primary/80 text-white shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center border-2 border-white/20"
               aria-label={t('openAIAssistant') || 'Ouvrir l\'Assistant IA'}
             >
-              {/* Test de plusieurs icônes pour identifier le problème */}
-              <div className="flex items-center justify-center">
-                <Bot className="h-8 w-8 text-white stroke-2" />
-                {!Bot && <MessageCircle className="h-8 w-8 text-white stroke-2" />}
-                {!Bot && !MessageCircle && <Cpu className="h-8 w-8 text-white stroke-2" />}
-              </div>
-              <span className="text-xs absolute -bottom-1 text-black bg-white px-1 rounded">TEST</span>
+              <Bot className="h-8 w-8 text-white stroke-2" />
             </Button>
           </SheetTrigger>
           
