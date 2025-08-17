@@ -89,97 +89,107 @@ export function AIAssistant() {
     }
   };
 
-  return (
-    <Card className="h-[600px] flex flex-col">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600">
-            <Sparkles className="w-4 h-4 text-white" />
-          </div>
-          Assistant IA Immobilier
-        </CardTitle>
-      </CardHeader>
+  const [isFocused, setIsFocused] = useState(false);
 
-      <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 px-4 pb-4">
+  return (
+    <div className="h-[600px] bg-gradient-to-br from-background via-background to-muted/30 rounded-xl overflow-hidden shadow-2xl border border-primary/20 backdrop-blur-sm">
+      {/* Header */}
+      <div className="bg-primary/10 backdrop-blur-sm p-4 border-b border-primary/20 flex items-center gap-3">
+        <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/20 border border-primary/30">
+          <Sparkles className="w-5 h-5 text-primary" />
+        </div>
+        <h2 className="text-foreground font-semibold">Assistant IA</h2>
+      </div>
+      
+      {/* Messages container */}
+      <div className="p-4 h-[calc(100%-132px)] overflow-y-auto">
+        {messages.length === 1 ? (
+          <div className="flex flex-col items-center justify-center h-full text-center">
+            <div className="p-4 rounded-full bg-primary/10 mb-4 border border-primary/20">
+              <Sparkles className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-foreground text-lg mb-2 font-medium">Comment puis-je vous aider ?</h3>
+            <p className="text-muted-foreground text-sm max-w-xs">
+              Posez-moi vos questions sur la gestion immobilière !
+            </p>
+          </div>
+        ) : (
           <div className="space-y-4">
-            {messages.map((message) => (
+            {messages.slice(1).map((message) => (
               <div
                 key={message.id}
-                className={`flex gap-3 ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
-                }`}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                {message.role === 'assistant' && (
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
-                    <Bot className="w-4 h-4 text-white" />
-                  </div>
-                )}
-                
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`max-w-[80%] p-3 rounded-2xl transition-all duration-300 animate-fade-in ${
                     message.role === 'user'
-                      ? 'bg-primary text-primary-foreground ml-auto'
-                      : 'bg-muted'
+                      ? 'bg-primary text-primary-foreground rounded-tr-none shadow-lg'
+                      : 'bg-card/80 text-card-foreground rounded-tl-none border border-border/50 backdrop-blur-sm shadow-sm'
                   }`}
                 >
-                  <div className="text-sm whitespace-pre-wrap break-words">
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
                     {message.content}
-                  </div>
-                  <div className="text-xs opacity-70 mt-1">
+                  </p>
+                  <div className="text-xs opacity-70 mt-2">
                     {message.timestamp.toLocaleTimeString()}
                   </div>
                 </div>
-
-                {message.role === 'user' && (
-                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary flex-shrink-0">
-                    <User className="w-4 h-4 text-primary-foreground" />
-                  </div>
-                )}
               </div>
             ))}
             
             {isLoading && (
-              <div className="flex gap-3 justify-start">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
-                  <Bot className="w-4 h-4 text-white" />
-                </div>
-                <div className="bg-muted rounded-lg p-3">
-                  <div className="flex items-center gap-2">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span className="text-sm">L'assistant réfléchit...</span>
+              <div className="flex justify-start">
+                <div className="max-w-[80%] p-3 rounded-2xl bg-card/80 text-card-foreground rounded-tl-none border border-border/50 backdrop-blur-sm">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse delay-75"></div>
+                    <div className="w-2 h-2 rounded-full bg-primary animate-pulse delay-150"></div>
                   </div>
                 </div>
               </div>
             )}
+            <div ref={messagesEndRef} />
           </div>
-          <div ref={messagesEndRef} />
-        </ScrollArea>
-
-        <div className="p-4 border-t">
-          <div className="flex gap-2">
-            <Input
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Posez votre question sur la gestion immobilière..."
-              className="flex-1"
-              disabled={isLoading}
-            />
-            <Button 
-              onClick={sendMessage} 
-              disabled={isLoading || !inputMessage.trim()}
-              size="icon"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
+        )}
+      </div>
+      
+      {/* Input form */}
+      <div 
+        className={`p-4 border-t transition-all duration-200 ${
+          isFocused 
+            ? 'border-primary/50 bg-card/80 backdrop-blur-sm' 
+            : 'border-border/30 bg-card/50'
+        }`}
+      >
+        <div className="relative flex items-center">
+          <Input
+            value={inputMessage}
+            onChange={(e) => setInputMessage(e.target.value)}
+            onKeyPress={handleKeyPress}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            placeholder="Posez votre question sur la gestion immobilière..."
+            disabled={isLoading}
+            className="pr-12 rounded-full border-border/50 bg-background/80 backdrop-blur-sm focus:ring-2 focus:ring-primary/30 transition-all duration-200"
+          />
+          <Button
+            onClick={sendMessage}
+            disabled={isLoading || !inputMessage.trim()}
+            size="icon"
+            className={`absolute right-1 rounded-full h-9 w-9 transition-all duration-200 ${
+              inputMessage.trim() === ""
+                ? "text-muted-foreground bg-muted/50 cursor-not-allowed"
+                : "text-primary-foreground bg-primary hover:bg-primary/90 shadow-lg hover:shadow-primary/25"
+            }`}
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4" />
+            )}
+          </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
