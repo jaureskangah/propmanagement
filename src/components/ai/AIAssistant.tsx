@@ -28,6 +28,7 @@ export function AIAssistant() {
   const [isLoading, setIsLoading] = useState(false);
   const [isUserNearBottom, setIsUserNearBottom] = useState(true);
   const [showConversations, setShowConversations] = useState(false);
+  const [tooltipsEnabled, setTooltipsEnabled] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
@@ -98,6 +99,15 @@ export function AIAssistant() {
     }
   }, []);
 
+  // Activer les tooltips après un délai pour éviter l'affichage automatique
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTooltipsEnabled(true);
+    }, 1000); // Délai de 1 seconde
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading || !user?.id) return;
 
@@ -155,38 +165,57 @@ export function AIAssistant() {
     <Card className="h-[600px] flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-end">
-          <TooltipProvider>
+          {tooltipsEnabled ? (
+            <TooltipProvider delayDuration={800}>
+              <div className="flex items-center gap-2">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowConversations(!showConversations)}
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    {t('showHideConversations')}
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => createConversation()}
+                    >
+                      <Plus className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    {t('newConversation')}
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
+          ) : (
             <div className="flex items-center gap-2">
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowConversations(!showConversations)}
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  {t('showHideConversations')}
-                </TooltipContent>
-              </Tooltip>
-              <Tooltip delayDuration={200}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => createConversation()}
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom">
-                  {t('newConversation')}
-                </TooltipContent>
-              </Tooltip>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowConversations(!showConversations)}
+              >
+                <MessageSquare className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => createConversation()}
+              >
+                <Plus className="w-4 h-4" />
+              </Button>
             </div>
-          </TooltipProvider>
+          )}
         </CardTitle>
         
         {showConversations && (
