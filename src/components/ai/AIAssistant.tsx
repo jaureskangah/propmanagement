@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
 import { useAIConversations } from '@/hooks/ai/useAIConversations';
+import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface Message {
   id: string;
@@ -25,6 +26,7 @@ export function AIAssistant() {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLocale();
   
   const {
     conversations,
@@ -150,7 +152,7 @@ export function AIAssistant() {
             <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            Assistant IA Immobilier
+            {t('aiAssistant')}
           </div>
           <div className="flex items-center gap-2">
             <Button
