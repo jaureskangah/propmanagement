@@ -108,6 +108,7 @@ export function AIAssistant() {
                 >
                   <ChatBubbleAvatar
                     className="h-8 w-8 shrink-0"
+                    src={message.role === "assistant" ? "/lovable-uploads/6592be3d-5e57-4efb-b135-4ced796c0ea4.png" : undefined}
                     fallback={message.role === "user" ? "US" : "IA"}
                   />
                   <ChatBubbleMessage
@@ -127,6 +128,7 @@ export function AIAssistant() {
                 <ChatBubble variant="received">
                   <ChatBubbleAvatar
                     className="h-8 w-8 shrink-0"
+                    src="/lovable-uploads/6592be3d-5e57-4efb-b135-4ced796c0ea4.png"
                     fallback="IA"
                   />
                   <ChatBubbleMessage isLoading />
