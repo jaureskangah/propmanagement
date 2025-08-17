@@ -33,7 +33,7 @@ export function AIAssistant() {
   const { user } = useAuth();
 
   const checkIfNearBottom = () => {
-    const scrollArea = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    const scrollArea = scrollAreaRef.current;
     if (!scrollArea) return;
     
     const { scrollTop, scrollHeight, clientHeight } = scrollArea;
@@ -60,7 +60,7 @@ export function AIAssistant() {
   }, [messages]);
 
   useEffect(() => {
-    const scrollArea = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]') as HTMLElement;
+    const scrollArea = scrollAreaRef.current;
     if (scrollArea) {
       scrollArea.addEventListener('scroll', handleScroll);
       return () => scrollArea.removeEventListener('scroll', handleScroll);
@@ -130,7 +130,7 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea ref={scrollAreaRef} className="flex-1 px-4 pb-4">
+        <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 pb-4 max-h-[400px]">
           <div className="space-y-4">
             {messages.map((message) => (
               <div
@@ -183,7 +183,7 @@ export function AIAssistant() {
             )}
           </div>
           <div ref={messagesEndRef} />
-        </ScrollArea>
+        </div>
 
         <div className="p-4 border-t">
           <div className="flex gap-2">
