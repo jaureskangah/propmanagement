@@ -23,6 +23,7 @@ export function DashboardCustomization() {
     { id: "priority", label: t('prioritySection') },
     { id: "revenue", label: t('revenueChart') },
     { id: "activity", label: t('recentActivity') },
+    { id: "assistant", label: t('aiAssistant') || 'AI Assistant' },
   ];
 
   const toggleSection = (sectionId: string) => {
