@@ -142,6 +142,32 @@ serve(async (req) => {
         const averageRentPerUnit = totalUnits > 0 ? (tenants?.reduce((sum, t) => sum + Number(t.rent_amount || 0), 0) || 0) / totalUnits : 0;
         const expenseRatio = totalRevenue > 0 ? Math.round((totalExpenses / totalRevenue) * 100) : 0;
         
+        // Sort properties by creation date to identify most recent
+        const sortedProperties = properties.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+        const mostRecentProperty = sortedProperties[0];
+        const oldestProperty = sortedProperties[sortedProperties.length - 1];
+        
+        // Format property details with dates
+        const propertyDetails = sortedProperties.map(p => {
+          const createdDate = new Date(p.created_at);
+          const daysSinceCreated = Math.floor((Date.now() - createdDate.getTime()) / (1000 * 60 * 60 * 24));
+          const propertyTenants = tenants?.filter(t => t.property_id === p.id) || [];
+          
+          return {
+            name: p.name,
+            type: p.type,
+            units: p.units,
+            address: p.address,
+            city: p.city,
+            province: p.province,
+            created_date: createdDate.toLocaleDateString('fr-FR'),
+            days_since_acquired: daysSinceCreated,
+            rent_amount: p.rent_amount,
+            tenant_count: propertyTenants.length,
+            occupancy_rate: p.units > 0 ? Math.round((propertyTenants.length / p.units) * 100) : 0
+          };
+        });
+        
         // Generate intelligent insights
         const insights = [];
         
@@ -189,11 +215,21 @@ ANALYSE FINANCIÈRE DÉTAILLÉE:
 - Interventions prestataires: ${vendorCosts.toLocaleString('fr-FR')}€
 - Ratio dépenses/revenus: ${expenseRatio}%
 
-🏠 OCCUPATION ET PATRIMOINE:
+🏠 PATRIMOINE IMMOBILIER (par ordre d'acquisition):
+${propertyDetails.map((p, index) => `
+${index + 1}. **${p.name}** (${p.type})
+   - Adresse: ${p.address}${p.city ? `, ${p.city}` : ''}${p.province ? `, ${p.province}` : ''}
+   - Acquise le: ${p.created_date} (il y a ${p.days_since_acquired} jours)
+   - Unités: ${p.units} | Locataires: ${p.tenant_count} | Taux d'occupation: ${p.occupancy_rate}%
+   - Loyer: ${p.rent_amount?.toLocaleString('fr-FR') || 'N/A'}€`).join('')}
+
+📋 RÉSUMÉ PATRIMOINE:
 - Nombre de propriétés: ${properties.length}
+- Propriété la plus récente: ${mostRecentProperty.name} (${new Date(mostRecentProperty.created_at).toLocaleDateString('fr-FR')})
+- Propriété la plus ancienne: ${oldestProperty.name} (${new Date(oldestProperty.created_at).toLocaleDateString('fr-FR')})
 - Unités totales: ${totalUnits}
 - Unités occupées: ${occupiedUnits}
-- Taux d'occupation: ${occupancyRate}%
+- Taux d'occupation global: ${occupancyRate}%
 - Locataires actifs: ${tenants?.length || 0}
 
 📈 ANALYSE CASH-FLOW:
@@ -208,9 +244,6 @@ ANALYSE FINANCIÈRE DÉTAILLÉE:
 
 📋 RÉPARTITION DÉPENSES:
 ${Object.entries(expenseCategories).map(([cat, amount]) => `- ${cat}: ${amount.toLocaleString('fr-FR')}€`).join('\n')}
-
-🏢 PROPRIÉTÉS:
-${properties.map(p => `- ${p.name} (${p.type || 'N/A'}, ${p.city || 'N/A'}) - ${p.units || 0} unités`).join('\n')}
 
 🧠 INSIGHTS INTELLIGENTS:
 ${insights.join('\n')}
