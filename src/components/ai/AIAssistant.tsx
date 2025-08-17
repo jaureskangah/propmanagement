@@ -101,8 +101,8 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <ScrollArea className="flex-1 px-4 pb-4">
-          <div className="space-y-4">
+        <ScrollArea className="flex-1 px-4 pb-4 overflow-auto max-h-full">
+          <div className="space-y-4 min-h-0">
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -123,7 +123,7 @@ export function AIAssistant() {
                       : 'bg-muted'
                   }`}
                 >
-                  <div className="text-sm whitespace-pre-wrap break-words">
+                  <div className="text-sm whitespace-pre-wrap break-words overflow-wrap-anywhere">
                     {message.content}
                   </div>
                   <div className="text-xs opacity-70 mt-1">
