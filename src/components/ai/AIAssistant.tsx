@@ -1,13 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChatInput } from '@/components/ui/chat-input';
-import { ChatBubble, ChatBubbleAvatar, ChatBubbleMessage } from '@/components/ui/chat-bubble';
-import { ChatMessageList } from '@/components/ui/chat-message-list';
-import { Loader2, Send, Bot, User, Sparkles, CornerDownLeft } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Loader2, Send, Bot, User, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
-import { useLocale } from '@/components/providers/LocaleProvider';
 
 interface Message {
   id: string;
@@ -27,10 +26,17 @@ export function AIAssistant() {
   ]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { t } = useLocale();
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -76,104 +82,104 @@ export function AIAssistant() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    sendMessage();
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
   };
 
-
   return (
-    <div className="flex flex-col h-full">
-      {/* Messages */}
-      <div className="flex-1">
-        <ChatMessageList smooth>
-          {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center p-6">
-              <div className="p-4 rounded-full bg-primary/10 mb-4">
-                <Sparkles className="h-12 w-12 text-primary" />
-              </div>
-              <h3 className="text-xl font-semibold mb-2">
-                {t('aiAssistantWelcome') || 'Comment puis-je vous aider aujourd\'hui ?'}
-              </h3>
-              <p className="text-muted-foreground text-sm max-w-xs">
-                {t('aiAssistantDescription') || 'Posez-moi vos questions sur la gestion immobilière et je ferai de mon mieux pour vous aider !'}
-              </p>
-            </div>
-          ) : (
-            <>
-              {messages.map((message) => (
-                <ChatBubble
-                  key={message.id}
-                  variant={message.role === "user" ? "sent" : "received"}
+    <Card className="h-[600px] flex flex-col">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex items-center gap-2">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          Assistant IA Immobilier
+        </CardTitle>
+      </CardHeader>
+
+      <CardContent className="flex-1 flex flex-col p-0">
+        <ScrollArea className="flex-1 px-4 pb-4">
+          <div className="space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex gap-3 ${
+                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                }`}
+              >
+                {message.role === 'assistant' && (
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
+                    <Bot className="w-4 h-4 text-white" />
+                  </div>
+                )}
+                
+                <div
+                  className={`max-w-[80%] rounded-lg p-3 ${
+                    message.role === 'user'
+                      ? 'bg-primary text-primary-foreground ml-auto'
+                      : 'bg-muted'
+                  }`}
                 >
-                  <ChatBubbleAvatar
-                    className="h-8 w-8 shrink-0"
-                    src={message.role === "assistant" ? "/lovable-uploads/6592be3d-5e57-4efb-b135-4ced796c0ea4.png" : undefined}
-                    fallback={message.role === "user" ? "US" : "IA"}
-                  />
-                  <ChatBubbleMessage
-                    variant={message.role === "user" ? "sent" : "received"}
-                  >
-                    <div className="text-sm whitespace-pre-wrap break-words">
-                      {message.content}
-                    </div>
-                    <div className="text-xs opacity-70 mt-1">
-                      {message.timestamp.toLocaleTimeString()}
-                    </div>
-                  </ChatBubbleMessage>
-                </ChatBubble>
-              ))}
+                  <div className="text-sm whitespace-pre-wrap break-words">
+                    {message.content}
+                  </div>
+                  <div className="text-xs opacity-70 mt-1">
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                </div>
 
-              {isLoading && (
-                <ChatBubble variant="received">
-                  <ChatBubbleAvatar
-                    className="h-8 w-8 shrink-0"
-                    src="/lovable-uploads/6592be3d-5e57-4efb-b135-4ced796c0ea4.png"
-                    fallback="IA"
-                  />
-                  <ChatBubbleMessage isLoading />
-                </ChatBubble>
-              )}
-            </>
-          )}
-        </ChatMessageList>
-      </div>
+                {message.role === 'user' && (
+                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary flex-shrink-0">
+                    <User className="w-4 h-4 text-primary-foreground" />
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            {isLoading && (
+              <div className="flex gap-3 justify-start">
+                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-blue-600 flex-shrink-0">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+                <div className="bg-muted rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm">L'assistant réfléchit...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div ref={messagesEndRef} />
+        </ScrollArea>
 
-      {/* Input Form */}
-      <div className="p-4 border-t bg-background/50 backdrop-blur-sm">
-        <form
-          onSubmit={handleSubmit}
-          className="relative rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring p-1"
-        >
-          <ChatInput
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder={t('aiAssistantPlaceholder') || 'Posez votre question sur la gestion immobilière...'}
-            className="min-h-12 resize-none rounded-lg bg-background border-0 p-3 shadow-none focus-visible:ring-0"
-            disabled={isLoading}
-          />
-          <div className="flex items-center p-3 pt-0 justify-end">
+        <div className="p-4 border-t">
+          <div className="flex gap-2">
+            <Input
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Posez votre question sur la gestion immobilière..."
+              className="flex-1"
+              disabled={isLoading}
+            />
             <Button 
-              type="submit" 
-              size="sm" 
-              className="ml-auto gap-1.5"
+              onClick={sendMessage} 
               disabled={isLoading || !inputMessage.trim()}
+              size="icon"
             >
               {isLoading ? (
-                <>
-                  <Loader2 className="size-3.5 animate-spin" />
-                  {t('aiAssistantThinking') || 'Réflexion...'}
-                </>
+                <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                <>
-                  {t('sendMessage') || 'Envoyer'}
-                  <CornerDownLeft className="size-3.5" />
-                </>
+                <Send className="w-4 h-4" />
               )}
             </Button>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
