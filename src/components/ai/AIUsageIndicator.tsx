@@ -23,25 +23,37 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
 
   if (!usage.canSendMessage) {
     return (
-      <Card className="border-amber-200 bg-amber-50">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <Zap className="w-5 h-5 text-amber-600 mt-0.5" />
-            <div className="flex-1 space-y-2">
-              <div className="text-sm font-medium text-amber-800">
-                Limite quotidienne atteinte
+      <Card className="border-amber-200/60 bg-gradient-to-br from-amber-50 to-orange-50 shadow-md animate-fade-in">
+        <CardContent className="p-5">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+              <Zap className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1 space-y-3">
+              <div className="space-y-1">
+                <div className="text-sm font-semibold text-amber-800">
+                  🎯 Limite quotidienne atteinte
+                </div>
+                <div className="text-sm text-amber-700 leading-relaxed">
+                  Vous avez utilisé vos <span className="font-medium">{usage.totalMessages} messages quotidiens</span> de l'assistant IA. 
+                  Vos messages se renouvellent chaque jour à minuit.
+                </div>
               </div>
-              <div className="text-sm text-amber-700">
-                Vous avez utilisé vos {usage.totalMessages} messages quotidiens de l'assistant IA. 
-                Passez à un plan Premium pour un accès illimité.
+              <div className="bg-amber-100/50 rounded-lg p-3 border border-amber-200/50">
+                <div className="text-xs font-medium text-amber-800 mb-1">
+                  🚀 Accès illimité avec Premium
+                </div>
+                <div className="text-xs text-amber-700">
+                  Messages illimités • Analyses avancées • Support prioritaire
+                </div>
               </div>
               <Button 
                 size="sm" 
                 onClick={() => navigate('/#pricing')}
-                className="w-full"
+                className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white border-0 shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <Crown className="w-4 h-4 mr-2" />
-                Passer au Premium
+                Découvrir Premium
               </Button>
             </div>
           </div>
@@ -74,17 +86,23 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
       </div>
       
       {isNearLimit && (
-        <div className="text-xs text-amber-600 flex items-center gap-1">
-          <Zap className="w-3 h-3" />
-          <span>Bientôt à court de messages.</span>
-          <Button 
-            variant="link" 
-            size="sm" 
-            onClick={() => navigate('/#pricing')}
-            className="p-0 h-auto text-xs"
-          >
-            Passer au Premium
-          </Button>
+        <div className="bg-amber-50/50 rounded-lg p-3 border border-amber-200/30 animate-fade-in">
+          <div className="flex items-center gap-2 text-xs text-amber-700">
+            <div className="flex-shrink-0 w-6 h-6 rounded-full bg-amber-100 flex items-center justify-center">
+              <Zap className="w-3 h-3 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <span className="font-medium">Attention :</span> Il ne vous reste que quelques messages aujourd'hui.
+            </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/#pricing')}
+              className="text-xs h-auto py-1 px-2 text-amber-700 hover:text-amber-800 hover:bg-amber-100/50 transition-colors"
+            >
+              Voir Premium →
+            </Button>
+          </div>
         </div>
       )}
     </div>

@@ -3,12 +3,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Loader2, Send, Bot, User, Sparkles, Plus, MessageSquare, Trash2 } from 'lucide-react';
+import { Loader2, Send, Bot, User, Sparkles, Plus, MessageSquare, Trash2, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
 import { useAIConversations } from '@/hooks/ai/useAIConversations';
 import { useLocale } from '@/components/providers/LocaleProvider';
+import { useNavigate } from 'react-router-dom';
 import { useAIUsageLimits } from '@/hooks/useAIUsageLimits';
 import { AIUsageIndicator } from './AIUsageIndicator';
 import { GuestAuthPrompt } from './GuestAuthPrompt';
@@ -39,6 +40,7 @@ export function AIAssistant() {
   const aiUsage = useAIUsageLimits();
   const { user } = useAuth();
   const { t } = useLocale();
+  const navigate = useNavigate();
   
   const {
     conversations,
@@ -368,13 +370,26 @@ export function AIAssistant() {
                   </Button>
                 </div>
               ) : (
-                <div className="w-full">
-                  <Input
-                    type="text"
-                    placeholder="Limite quotidienne atteinte - Passez au Premium"
-                    disabled={true}
-                    className="flex-1 opacity-50"
-                  />
+                <div className="w-full relative">
+                  <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-lg">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center">
+                      <Zap className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div className="flex-1 text-sm">
+                      <div className="font-medium text-amber-800">Messages quotidiens épuisés</div>
+                      <div className="text-amber-700 text-xs mt-0.5">
+                        Renouvellement à minuit ou passez au Premium pour un accès illimité
+                      </div>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => navigate('/#pricing')}
+                      className="text-xs bg-amber-100 text-amber-700 hover:bg-amber-200 hover:text-amber-800 transition-colors flex-shrink-0"
+                    >
+                      Premium →
+                    </Button>
+                  </div>
                 </div>
               )}
             </>
