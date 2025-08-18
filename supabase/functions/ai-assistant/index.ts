@@ -294,9 +294,16 @@ ${insights.join('\n')}
       }
     }
 
+    // Récupérer à nouveau les données d'abonnement pour la documentation
+    const { data: subscriptionData } = await supabase
+      .from('subscribers')
+      .select('subscription_tier, subscribed')
+      .eq('user_id', userId)
+      .single();
+
     // Obtenir la documentation sécurisée selon l'abonnement
-    const userDocumentation = getUserDocumentation(subscription?.subscription_tier || 'free');
-    console.log('Documentation included for user subscription:', subscription?.subscription_tier || 'free');
+    const userDocumentation = getUserDocumentation(subscriptionData?.subscription_tier || 'free');
+    console.log('Documentation included for user subscription:', subscriptionData?.subscription_tier || 'free');
 
     const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière au Canada. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements. 
 
