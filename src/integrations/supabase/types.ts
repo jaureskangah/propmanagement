@@ -136,6 +136,33 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_validation_logs: {
+        Row: {
+          ai_response: string | null
+          context_data: string | null
+          created_at: string
+          id: string
+          user_id: string
+          validation_result: Json
+        }
+        Insert: {
+          ai_response?: string | null
+          context_data?: string | null
+          created_at?: string
+          id?: string
+          user_id: string
+          validation_result: Json
+        }
+        Update: {
+          ai_response?: string | null
+          context_data?: string | null
+          created_at?: string
+          id?: string
+          user_id?: string
+          validation_result?: Json
+        }
+        Relationships: []
+      }
       contact_messages: {
         Row: {
           created_at: string
@@ -1340,6 +1367,10 @@ export type Database = {
     }
     Functions: {
       calculate_and_insert_metrics: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      clean_old_ai_validation_logs: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
