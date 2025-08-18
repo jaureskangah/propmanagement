@@ -82,7 +82,26 @@ serve(async (req) => {
         .select('*')
         .eq('user_id', userId);
 
-      if (!propertiesError && properties && properties.length > 0) {
+      console.log(`User ${userId} has ${properties?.length || 0} properties`);
+
+      if (!propertiesError && properties) {
+        if (properties.length === 0) {
+          // Cas spécial : utilisateur sans propriétés
+          contextData = `
+📊 STATUT DU PORTFOLIO:
+- Nombre de propriétés: 0
+- Statut: Nouveau propriétaire sans propriétés enregistrées
+- Recommandation: Commencer par ajouter votre première propriété dans l'application
+
+🎯 PROCHAINES ÉTAPES SUGGÉRÉES:
+1. Ajouter une propriété dans la section "Propriétés"
+2. Enregistrer les informations des locataires
+3. Configurer le suivi des paiements de loyer
+4. Mettre en place les budgets de maintenance
+
+💡 CONSEIL: Une fois vos propriétés ajoutées, l'assistant pourra vous fournir des analyses financières détaillées et des recommandations personnalisées.
+          `;
+        } else {
         const propertyIds = properties.map(p => p.id);
         
         // Get comprehensive financial data
@@ -290,6 +309,14 @@ ${Object.entries(expenseCategories).map(([cat, amount]) => `- ${cat}: ${amount.t
 
 🧠 INSIGHTS INTELLIGENTS:
 ${insights.join('\n')}
+        `;
+        }
+      } else if (propertiesError) {
+        console.error('Error fetching properties:', propertiesError);
+        contextData = `
+❌ ERREUR: Impossible de récupérer les données de vos propriétés.
+- Veuillez réessayer dans quelques instants
+- Si le problème persiste, contactez le support technique
         `;
       }
     }
