@@ -8,6 +8,11 @@ export const enAI = {
   welcomeMessageGuest: "Welcome! Sign up to try our AI real estate assistant and get personalized insights for your properties.",
   welcomeMessageAuthenticated: "Hello! I'm Acadie, your AI real estate assistant. How can I help you today?",
   welcomeConversationMessage: "Hello! I'm your AI assistant for real estate management. How can I help you today?",
+  welcomeConversationMessageGuest: "👋 Hello! I'm Acadie, your real estate AI assistant. Sign up to start chatting with me!",
+  
+  // Auth Prompt
+  authPromptTitle: "Start chatting with Acadie",
+  authPromptDescription: "Create an account to access your personalized AI real estate assistant",
   
   // Action Buttons
   signUp: "Sign Up",
@@ -49,6 +54,11 @@ export const frAI = {
   welcomeMessageGuest: "Bienvenue ! Inscrivez-vous pour essayer notre assistant IA immobilier et obtenir des analyses personnalisées de vos propriétés.",
   welcomeMessageAuthenticated: "Bonjour ! Je suis Acadie, votre assistant IA immobilier. Comment puis-je vous aider aujourd'hui ?",
   welcomeConversationMessage: "Bonjour ! Je suis votre assistant IA pour la gestion immobilière. Comment puis-je vous aider aujourd'hui ?",
+  welcomeConversationMessageGuest: "👋 Bonjour ! Je suis Acadie, votre assistant IA immobilier. Inscrivez-vous pour commencer à discuter avec moi !",
+  
+  // Invitation à l'authentification
+  authPromptTitle: "Commencez à discuter avec Acadie",
+  authPromptDescription: "Créez un compte pour accéder à votre assistant IA immobilier personnalisé",
   
   // Boutons d'Action
   signUp: "S'inscrire",

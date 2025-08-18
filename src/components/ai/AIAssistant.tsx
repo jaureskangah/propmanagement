@@ -11,6 +11,7 @@ import { useAIConversations } from '@/hooks/ai/useAIConversations';
 import { useLocale } from '@/components/providers/LocaleProvider';
 import { useAIUsageLimits } from '@/hooks/useAIUsageLimits';
 import { AIUsageIndicator } from './AIUsageIndicator';
+import { GuestAuthPrompt } from './GuestAuthPrompt';
 import { 
   Tooltip,
   TooltipContent,
@@ -61,7 +62,7 @@ export function AIAssistant() {
   const displayMessages = currentConversation && messages.length > 0 ? messages : [
     {
       id: 'welcome',
-      content: t('welcomeConversationMessage'),
+      content: user ? t('welcomeConversationMessage') : t('welcomeConversationMessageGuest'),
       role: 'assistant' as const,
       timestamp: new Date()
     }
@@ -181,7 +182,7 @@ export function AIAssistant() {
     <Card className="h-[600px] flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center justify-end">
-          {tooltipsEnabled ? (
+          {user && (tooltipsEnabled ? (
             <TooltipProvider delayDuration={800}>
               <div className="flex items-center gap-2">
                 <Tooltip>
@@ -231,10 +232,10 @@ export function AIAssistant() {
                 <Plus className="w-4 h-4" />
               </Button>
             </div>
-          )}
+          ))}
         </CardTitle>
         
-        {showConversations && (
+        {user && showConversations && (
           <div className="mt-3 max-h-40 overflow-y-auto space-y-1">
             {conversations.map((conversation) => (
               <div
@@ -325,40 +326,46 @@ export function AIAssistant() {
         </div>
 
         <div className="p-4 border-t space-y-3">
-          {/* Indicateur d'utilisation IA */}
-          <AIUsageIndicator usage={aiUsage} />
-          
-          {aiUsage.canSendMessage ? (
-            <div className="flex gap-2">
-              <Input
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={t('messageInputPlaceholder')}
-                className="flex-1"
-                disabled={isLoading}
-              />
-              <Button 
-                onClick={sendMessage} 
-                disabled={isLoading || !inputMessage.trim()}
-                size="icon"
-              >
-                {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Send className="w-4 h-4" />
-                )}
-              </Button>
-            </div>
+          {user ? (
+            <>
+              {/* Indicateur d'utilisation IA */}
+              <AIUsageIndicator usage={aiUsage} />
+              
+              {aiUsage.canSendMessage ? (
+                <div className="flex gap-2">
+                  <Input
+                    value={inputMessage}
+                    onChange={(e) => setInputMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    placeholder={t('messageInputPlaceholder')}
+                    className="flex-1"
+                    disabled={isLoading}
+                  />
+                  <Button 
+                    onClick={sendMessage} 
+                    disabled={isLoading || !inputMessage.trim()}
+                    size="icon"
+                  >
+                    {isLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <div className="w-full">
+                  <Input
+                    type="text"
+                    placeholder="Limite quotidienne atteinte - Passez au Premium"
+                    disabled={true}
+                    className="flex-1 opacity-50"
+                  />
+                </div>
+              )}
+            </>
           ) : (
-            <div className="w-full">
-              <Input
-                type="text"
-                placeholder="Limite quotidienne atteinte - Passez au Premium"
-                disabled={true}
-                className="flex-1 opacity-50"
-              />
-            </div>
+            <GuestAuthPrompt />
           )}
         </div>
       </CardContent>
