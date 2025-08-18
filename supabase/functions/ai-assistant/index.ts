@@ -24,38 +24,17 @@ serve(async (req) => {
     
     // Vérifier les limites d'utilisation d'abord
     if (userId) {
-      // Vérifier d'abord si l'utilisateur est admin
-      const { data: adminRole, error: adminError } = await supabase
-        .from('user_roles')
-        .select('*')
+      // Récupérer les informations d'abonnement de l'utilisateur
+      const { data: subscription } = await supabase
+        .from('subscribers')
+        .select('subscription_tier, subscribed')
         .eq('user_id', userId)
-        .eq('role', 'admin')
-        .maybeSingle();
+        .single();
 
-      const isAdmin = !!adminRole;
-      console.log('Admin check:', { isAdmin, adminError, userId, adminRole });
+      console.log('User subscription retrieved:', subscription?.subscription_tier || 'free');
 
-      let maxMessages = 3; // Default pour les utilisateurs gratuits
-      let subscription = null; // Initialiser pour tous les utilisateurs
-
-      if (isAdmin) {
-        maxMessages = Infinity;
-        subscription = { subscription_tier: 'admin', subscribed: true }; // Valeur fictive pour admin
-        console.log('User is admin - unlimited messages granted');
-      } else {
-        // Récupérer les informations d'abonnement pour les non-admins
-        const { data: subscriptionData } = await supabase
-          .from('subscribers')
-          .select('subscription_tier, subscribed')
-          .eq('user_id', userId)
-          .single();
-
-        subscription = subscriptionData;
-        console.log('User subscription retrieved:', subscription?.subscription_tier || 'free');
-
-        // Déterminer les limites selon l'abonnement
-        maxMessages = (!subscription || !subscription.subscribed || subscription.subscription_tier === 'free') ? 3 : Infinity;
-      }
+      // Déterminer les limites selon l'abonnement
+      const maxMessages = (!subscription || !subscription.subscribed || subscription.subscription_tier === 'free') ? 3 : Infinity;
       
       if (maxMessages !== Infinity) {
         // Vérifier l'utilisation actuelle
