@@ -36,18 +36,21 @@ serve(async (req) => {
       console.log('Admin check:', { isAdmin, adminError, userId, adminRole });
 
       let maxMessages = 3; // Default pour les utilisateurs gratuits
+      let subscription = null; // Initialiser pour tous les utilisateurs
 
       if (isAdmin) {
         maxMessages = Infinity;
+        subscription = { subscription_tier: 'admin', subscribed: true }; // Valeur fictive pour admin
         console.log('User is admin - unlimited messages granted');
       } else {
         // Récupérer les informations d'abonnement pour les non-admins
-        const { data: subscription } = await supabase
+        const { data: subscriptionData } = await supabase
           .from('subscribers')
           .select('subscription_tier, subscribed')
           .eq('user_id', userId)
           .single();
 
+        subscription = subscriptionData;
         console.log('User subscription retrieved:', subscription?.subscription_tier || 'free');
 
         // Déterminer les limites selon l'abonnement
