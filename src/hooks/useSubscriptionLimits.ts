@@ -4,6 +4,7 @@ import { useAdminRole } from './useAdminRole';
 export interface SubscriptionLimits {
   maxProperties: number;
   maxTenants: number;
+  maxAIMessages: number;
   canUseAdvancedReports: boolean;
   canExportData: boolean;
   canUseAutomatedReminders: boolean;
@@ -25,6 +26,7 @@ export const useSubscriptionLimits = (): SubscriptionLimits & {
         return {
           maxProperties: 10,
           maxTenants: Infinity,
+          maxAIMessages: Infinity,
           canUseAdvancedReports: true,
           canExportData: true,
           canUseAutomatedReminders: true,
@@ -36,6 +38,7 @@ export const useSubscriptionLimits = (): SubscriptionLimits & {
         return {
           maxProperties: Infinity,
           maxTenants: Infinity,
+          maxAIMessages: Infinity,
           canUseAdvancedReports: true,
           canExportData: true,
           canUseAutomatedReminders: true,
@@ -47,6 +50,7 @@ export const useSubscriptionLimits = (): SubscriptionLimits & {
         return {
           maxProperties: 1,
           maxTenants: 1,
+          maxAIMessages: 3,
           canUseAdvancedReports: false,
           canExportData: false,
           canUseAutomatedReminders: false,
@@ -61,6 +65,7 @@ export const useSubscriptionLimits = (): SubscriptionLimits & {
   const adminLimits: SubscriptionLimits = {
     maxProperties: Infinity,
     maxTenants: Infinity,
+    maxAIMessages: Infinity,
     canUseAdvancedReports: true,
     canExportData: true,
     canUseAutomatedReminders: true,

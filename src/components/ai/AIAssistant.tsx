@@ -9,6 +9,8 @@ import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/components/AuthProvider';
 import { useAIConversations } from '@/hooks/ai/useAIConversations';
 import { useLocale } from '@/components/providers/LocaleProvider';
+import { useAIUsageLimits } from '@/hooks/useAIUsageLimits';
+import { AIUsageIndicator } from './AIUsageIndicator';
 import { 
   Tooltip,
   TooltipContent,
@@ -32,6 +34,7 @@ export function AIAssistant() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+  const aiUsage = useAIUsageLimits();
   const { user } = useAuth();
   const { t } = useLocale();
   
@@ -110,6 +113,16 @@ export function AIAssistant() {
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading || !user?.id) return;
+    
+    // Vérifier les limites d'utilisation
+    if (!aiUsage.canSendMessage) {
+      toast({
+        title: "Limite atteinte",
+        description: "Vous avez atteint votre limite quotidienne de messages IA. Passez au Premium pour un accès illimité.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const messageContent = inputMessage;
     setInputMessage('');
@@ -142,6 +155,9 @@ export function AIAssistant() {
 
       // Sauvegarder la réponse de l'assistant
       await saveMessage(conversationId, data.message, 'assistant');
+      
+      // Rafraîchir les limites d'utilisation après une réponse réussie
+      await aiUsage.refreshUsage();
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
@@ -308,28 +324,42 @@ export function AIAssistant() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 border-t">
-          <div className="flex gap-2">
-            <Input
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder={t('messageInputPlaceholder')}
-              className="flex-1"
-              disabled={isLoading}
-            />
-            <Button 
-              onClick={sendMessage} 
-              disabled={isLoading || !inputMessage.trim()}
-              size="icon"
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Send className="w-4 h-4" />
-              )}
-            </Button>
-          </div>
+        <div className="p-4 border-t space-y-3">
+          {/* Indicateur d'utilisation IA */}
+          <AIUsageIndicator usage={aiUsage} />
+          
+          {aiUsage.canSendMessage ? (
+            <div className="flex gap-2">
+              <Input
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={t('messageInputPlaceholder')}
+                className="flex-1"
+                disabled={isLoading}
+              />
+              <Button 
+                onClick={sendMessage} 
+                disabled={isLoading || !inputMessage.trim()}
+                size="icon"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Send className="w-4 h-4" />
+                )}
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full">
+              <Input
+                type="text"
+                placeholder="Limite quotidienne atteinte - Passez au Premium"
+                disabled={true}
+                className="flex-1 opacity-50"
+              />
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

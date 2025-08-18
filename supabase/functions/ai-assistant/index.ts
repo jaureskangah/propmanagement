@@ -16,6 +16,45 @@ serve(async (req) => {
   try {
     const { message, userId, language = 'fr' } = await req.json();
     
+    // Vérifier les limites d'utilisation d'abord
+    if (userId) {
+      // Récupérer les informations d'abonnement de l'utilisateur
+      const { data: subscription } = await supabase
+        .from('subscribers')
+        .select('subscription_tier, subscribed')
+        .eq('user_id', userId)
+        .single();
+
+      // Déterminer les limites selon l'abonnement
+      const maxMessages = (!subscription || !subscription.subscribed || subscription.subscription_tier === 'free') ? 3 : Infinity;
+      
+      if (maxMessages !== Infinity) {
+        // Vérifier l'utilisation actuelle
+        const today = new Date().toISOString().split('T')[0];
+        const { data: todayUsage } = await supabase
+          .from('ai_usage_daily')
+          .select('message_count')
+          .eq('user_id', userId)
+          .eq('usage_date', today)
+          .single();
+
+        const currentUsage = todayUsage?.message_count || 0;
+        
+        if (currentUsage >= maxMessages) {
+          return new Response(
+            JSON.stringify({ 
+              error: 'Limite quotidienne atteinte',
+              message: 'Vous avez atteint votre limite quotidienne de messages IA. Passez au Premium pour un accès illimité.'
+            }),
+            { 
+              status: 429,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+            }
+          );
+        }
+      }
+    }
+    
     if (!message) {
       throw new Error('Message is required');
     }
@@ -294,6 +333,38 @@ Instructions:
     const assistantMessage = data.choices[0].message.content;
 
     console.log('AI response generated successfully with financial intelligence');
+
+    // Incrémenter le compteur d'utilisation après une réponse réussie
+    if (userId) {
+      try {
+        const today = new Date().toISOString().split('T')[0];
+        
+        // Utiliser upsert pour créer ou mettre à jour l'enregistrement
+        const { data: existingUsage } = await supabase
+          .from('ai_usage_daily')
+          .select('message_count')
+          .eq('user_id', userId)
+          .eq('usage_date', today)
+          .maybeSingle();
+
+        const newCount = (existingUsage?.message_count || 0) + 1;
+        
+        await supabase
+          .from('ai_usage_daily')
+          .upsert({
+            user_id: userId,
+            usage_date: today,
+            message_count: newCount,
+          }, {
+            onConflict: 'user_id,usage_date'
+          });
+        
+        console.log(`AI usage incremented for user ${userId}, new count: ${newCount}`);
+      } catch (usageError) {
+        console.error('Error incrementing AI usage:', usageError);
+        // Ne pas faire échouer la requête pour une erreur de comptage
+      }
+    }
 
     return new Response(JSON.stringify({ 
       message: assistantMessage,
