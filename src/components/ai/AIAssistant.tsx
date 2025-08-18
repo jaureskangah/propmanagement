@@ -12,6 +12,7 @@ import { useLocale } from '@/components/providers/LocaleProvider';
 import { useAIUsageLimits } from '@/hooks/useAIUsageLimits';
 import { AIUsageIndicator } from './AIUsageIndicator';
 import { GuestAuthPrompt } from './GuestAuthPrompt';
+import { formatLocalDateForStorage, parseDateSafe } from '@/lib/date';
 import { 
   Tooltip,
   TooltipContent,
@@ -237,7 +238,13 @@ export function AIAssistant() {
         
         {user && showConversations && (
           <div className="mt-3 max-h-40 overflow-y-auto space-y-1">
-            {conversations.map((conversation) => (
+            {conversationsLoading ? (
+              <div className="flex items-center justify-center p-4">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="ml-2 text-sm text-muted-foreground">{t('loadingConversations') || 'Chargement...'}</span>
+              </div>
+            ) : conversations.length > 0 ? (
+              conversations.map((conversation) => (
               <div
                 key={conversation.id}
                 className={`flex items-center justify-between p-2 rounded-md cursor-pointer text-sm ${
@@ -250,7 +257,9 @@ export function AIAssistant() {
                   className="flex-1 truncate"
                   onClick={() => selectConversation(conversation)}
                 >
-                  {conversation.title || t('conversationFromDate', { date: new Date(conversation.created_at).toLocaleDateString() })}
+                  {conversation.title || t('conversationFromDate', { 
+                    date: formatLocalDateForStorage(parseDateSafe(conversation.created_at)).split('-').reverse().join('/')
+                  })}
                 </div>
                 <Button
                   variant="ghost"
@@ -264,7 +273,12 @@ export function AIAssistant() {
                   <Trash2 className="w-3 h-3" />
                 </Button>
               </div>
-            ))}
+              ))
+            ) : (
+              <div className="text-center p-4 text-sm text-muted-foreground">
+                {t('noConversations') || 'Aucune conversation'}
+              </div>
+            )}
           </div>
         )}
       </CardHeader>

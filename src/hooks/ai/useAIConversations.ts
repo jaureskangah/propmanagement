@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/components/AuthProvider';
 import { useToast } from '@/hooks/use-toast';
+import { formatLocalDateForStorage } from '@/lib/date';
 
 export interface AIConversation {
   id: string;
@@ -53,6 +54,8 @@ export function useAIConversations() {
   const loadMessages = async (conversationId: string) => {
     try {
       setIsLoading(true);
+      console.log('[LOAD_MESSAGES] Loading messages for conversation:', conversationId);
+      
       const { data, error } = await supabase
         .from('ai_messages')
         .select('*')
@@ -60,6 +63,8 @@ export function useAIConversations() {
         .order('timestamp', { ascending: true });
 
       if (error) throw error;
+      
+      console.log('[LOAD_MESSAGES] Messages loaded:', data?.length || 0, 'messages');
       setMessages((data || []) as AIMessage[]);
     } catch (error) {
       console.error('Error loading messages:', error);
@@ -83,7 +88,7 @@ export function useAIConversations() {
         .insert([
           {
             user_id: user.id,
-            title: title || `Conversation du ${new Date().toLocaleDateString()}`
+            title: title || `Conversation du ${formatLocalDateForStorage(new Date()).split('-').reverse().join('/')}`
           }
         ])
         .select()
@@ -149,6 +154,7 @@ export function useAIConversations() {
 
   // Sélectionner une conversation
   const selectConversation = async (conversation: AIConversation) => {
+    console.log('[SELECT_CONVERSATION] Selecting conversation:', conversation.id, conversation.title);
     setCurrentConversation(conversation);
     await loadMessages(conversation.id);
   };
