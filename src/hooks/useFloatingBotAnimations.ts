@@ -170,11 +170,19 @@ export const useFloatingBotAnimations = () => {
     }));
   }, []);
 
+  const closeWelcomeBubble = useCallback(() => {
+    setAnimationState(prev => ({
+      ...prev,
+      showWelcomeBubble: false,
+    }));
+  }, []);
+
   return {
     animationState,
     welcomeMessage: getWelcomeMessage(),
     triggerCelebration,
     triggerAttention,
+    closeWelcomeBubble,
     isAuthenticated,
   };
 };

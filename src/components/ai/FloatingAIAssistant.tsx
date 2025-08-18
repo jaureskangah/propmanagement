@@ -23,11 +23,12 @@ export function FloatingAIAssistant() {
     animationState, 
     welcomeMessage, 
     triggerCelebration,
+    closeWelcomeBubble,
     isAuthenticated 
   } = useFloatingBotAnimations();
 
   const handleWelcomeBubbleClose = () => {
-    // The welcome bubble state is managed in the hook
+    closeWelcomeBubble();
   };
 
   const handleBotClick = () => {
