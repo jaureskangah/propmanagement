@@ -92,8 +92,8 @@ serve(async (req) => {
         ] = await Promise.all([
           supabase
             .from('tenant_payments')
-            .select('amount, status, payment_date, tenant_id')
-            .in('property_id', propertyIds)
+            .select('amount, status, payment_date, tenant_id, tenants!inner(property_id)')
+            .in('tenants.property_id', propertyIds)
             .gte('payment_date', new Date(new Date().getFullYear() - 1, 0, 1).toISOString())
             .order('payment_date', { ascending: false }),
           
