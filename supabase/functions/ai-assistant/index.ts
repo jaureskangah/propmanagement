@@ -24,17 +24,30 @@ serve(async (req) => {
     
     // Vérifier les limites d'utilisation d'abord
     if (userId) {
-      // Récupérer les informations d'abonnement de l'utilisateur
-      const { data: subscription } = await supabase
-        .from('subscribers')
-        .select('subscription_tier, subscribed')
-        .eq('user_id', userId)
-        .single();
+      // Vérifier d'abord si l'utilisateur est admin
+      const { data: isAdmin, error: adminError } = await supabase
+        .rpc('has_role', { role: 'admin' });
 
-      console.log('User subscription retrieved:', subscription?.subscription_tier || 'free');
+      console.log('Admin check:', { isAdmin, adminError, userId });
 
-      // Déterminer les limites selon l'abonnement
-      const maxMessages = (!subscription || !subscription.subscribed || subscription.subscription_tier === 'free') ? 3 : Infinity;
+      let maxMessages = 3; // Default pour les utilisateurs gratuits
+
+      if (isAdmin) {
+        maxMessages = Infinity;
+        console.log('User is admin - unlimited messages granted');
+      } else {
+        // Récupérer les informations d'abonnement pour les non-admins
+        const { data: subscription } = await supabase
+          .from('subscribers')
+          .select('subscription_tier, subscribed')
+          .eq('user_id', userId)
+          .single();
+
+        console.log('User subscription retrieved:', subscription?.subscription_tier || 'free');
+
+        // Déterminer les limites selon l'abonnement
+        maxMessages = (!subscription || !subscription.subscribed || subscription.subscription_tier === 'free') ? 3 : Infinity;
+      }
       
       if (maxMessages !== Infinity) {
         // Vérifier l'utilisation actuelle
