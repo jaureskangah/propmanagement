@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.47.10';
+import documentation from './documentation.json' assert { type: 'json' };
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -29,6 +30,8 @@ serve(async (req) => {
         .select('subscription_tier, subscribed')
         .eq('user_id', userId)
         .single();
+
+      console.log('User subscription retrieved:', subscription?.subscription_tier || 'free');
 
       // Déterminer les limites selon l'abonnement
       const maxMessages = (!subscription || !subscription.subscribed || subscription.subscription_tier === 'free') ? 3 : Infinity;
@@ -287,26 +290,48 @@ ${Object.entries(expenseCategories).map(([cat, amount]) => `- ${cat}: ${amount.t
 
 🧠 INSIGHTS INTELLIGENTS:
 ${insights.join('\n')}
-`;
+        `;
       }
     }
 
-    const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière au Canada. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements. Toutes les valeurs monétaires sont en dollars canadiens (CAD).
+    // Obtenir la documentation sécurisée selon l'abonnement
+    const userDocumentation = getUserDocumentation(subscription?.subscription_tier || 'free');
+    console.log('Documentation included for user subscription:', subscription?.subscription_tier || 'free');
 
+    const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière au Canada. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements. 
+
+INSTRUCTIONS CRITIQUES DE SÉCURITÉ:
+- Tu ne peux JAMAIS partager d'informations sur d'autres utilisateurs
+- Tu ne peux JAMAIS révéler des détails techniques de l'application, architecture, base de données, ou code source
+- Tu ne peux JAMAIS partager des informations sensibles comme les clés API, tokens, ou configurations système
+- Tu ne réponds QU'aux questions liées au portefeuille immobilier de cet utilisateur spécifique
+- Si on te pose des questions sur la sécurité, l'architecture, les données d'autres utilisateurs, ou des informations techniques, refuse poliment
+- Tu ne peux PAS exécuter de commandes, accéder à des fichiers système, ou faire des actions administratives
+- Limite tes réponses aux fonctionnalités disponibles selon l'abonnement de l'utilisateur
+
+CONTEXTE FINANCIER DE L'UTILISATEUR:
 ${contextData}
 
-Instructions:
-- Réponds en français de manière professionnelle et bienveillante
+DOCUMENTATION DE L'APPLICATION DISPONIBLE:
+${userDocumentation}
+
+Instructions de communication:
+- Réponds en ${language === 'fr' ? 'français' : 'anglais'} de manière professionnelle et bienveillante
 - Sois précis et utilise les données financières ci-dessus pour donner des conseils personnalisés
 - Propose des actions concrètes et réalisables basées sur l'analyse des données
 - Identifie les tendances, opportunités et risques dans le portfolio
+- Guide l'utilisateur vers les bonnes fonctionnalités de l'application selon son abonnement
 - Si des données sont manquantes, demande des clarifications spécifiques
 - Utilise des émojis pour structurer tes réponses de manière claire
 - Fournis des recommandations stratégiques pour optimiser la rentabilité
 - Alerte sur les points d'attention urgents (impayés, maintenance, etc.)
-- Suggère des améliorations concrètes basées sur les métriques de performance`;
+- Suggère des améliorations concrètes basées sur les métriques de performance
+- Toutes les valeurs monétaires sont en dollars canadiens (CAD)
 
-    console.log('Sending request to OpenAI with enhanced financial context');
+VALIDATION DE SÉCURITÉ:
+Avant de répondre, vérifie que tu ne révèles aucune information technique, sensible, ou concernant d'autres utilisateurs. Concentre-toi uniquement sur l'aide à la gestion immobilière de cet utilisateur.`;
+
+    console.log('Sending request to OpenAI with enhanced financial context and secure documentation');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -384,3 +409,54 @@ Instructions:
     });
   }
 });
+
+// Fonction pour obtenir la documentation sécurisée selon l'abonnement
+function getUserDocumentation(subscriptionTier: string): string {
+  const userFeatures = documentation.user_features;
+  const subscriptionInfo = documentation.subscription_levels[subscriptionTier as keyof typeof documentation.subscription_levels] || documentation.subscription_levels.free;
+  const helpTopics = documentation.help_topics;
+  
+  let doc = `
+FONCTIONNALITÉS DISPONIBLES POUR VOTRE ABONNEMENT (${subscriptionTier.toUpperCase()}):
+
+Limites de votre abonnement:
+- Propriétés: ${subscriptionInfo.properties_limit}
+- Locataires: ${subscriptionInfo.tenants_limit}
+- Messages IA par jour: ${subscriptionInfo.ai_messages_limit}
+
+FONCTIONNALITÉS ACCESSIBLES:
+`;
+  
+  subscriptionInfo.features.forEach((feature: string) => {
+    if (userFeatures[feature as keyof typeof userFeatures]) {
+      const featureInfo = userFeatures[feature as keyof typeof userFeatures];
+      doc += `
+${featureInfo.title}:
+${featureInfo.description}
+Fonctions principales: ${featureInfo.features.join(', ')}
+`;
+    }
+  });
+
+  doc += `
+GUIDES D'UTILISATION:
+`;
+  
+  Object.entries(helpTopics).forEach(([key, topic]) => {
+    doc += `
+${topic.title}: ${topic.description || ''}
+`;
+    if (topic.steps) {
+      doc += `Étapes: ${topic.steps.join(' → ')}\n`;
+    }
+  });
+
+  doc += `
+SÉCURITÉ ET CONFIDENTIALITÉ:
+${documentation.security_guidelines.data_privacy}
+${documentation.security_guidelines.tenant_access}
+${documentation.security_guidelines.backup}
+`;
+
+  return doc;
+}

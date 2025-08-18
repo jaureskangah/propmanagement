@@ -1,0 +1,140 @@
+{
+  "user_features": {
+    "dashboard": {
+      "title": "Tableau de bord",
+      "description": "Vue d'ensemble de votre portefeuille immobilier avec indicateurs clés de performance",
+      "features": [
+        "Revenus totaux et mensuels",
+        "Taux d'occupation en temps réel",
+        "Suivi des paiements de loyer",
+        "Alertes et notifications importantes",
+        "Graphiques de performance financière"
+      ]
+    },
+    "properties": {
+      "title": "Gestion des propriétés",
+      "description": "Centralisez toutes les informations sur vos biens immobiliers",
+      "features": [
+        "Ajout et modification de propriétés",
+        "Suivi des détails (adresse, type, unités)",
+        "Gestion des montants de loyer",
+        "Photos et documentation des biens",
+        "Historique des modifications"
+      ]
+    },
+    "tenants": {
+      "title": "Gestion des locataires",
+      "description": "Administrez vos relations locataires de manière professionnelle",
+      "features": [
+        "Profils complets des locataires",
+        "Contrats de bail et échéances",
+        "Dépôts de garantie",
+        "Historique des communications",
+        "Invitations sécurisées pour accès locataire"
+      ]
+    },
+    "payments": {
+      "title": "Suivi des paiements",
+      "description": "Monitoring complet des revenus locatifs",
+      "features": [
+        "Enregistrement des paiements reçus",
+        "Identification des retards automatique",
+        "Rappels de paiement automatisés",
+        "Rapports financiers détaillés",
+        "Historique des transactions"
+      ]
+    },
+    "maintenance": {
+      "title": "Maintenance et réparations",
+      "description": "Gestionnaire centralisé pour l'entretien de vos biens",
+      "features": [
+        "Demandes de maintenance des locataires",
+        "Planification des tâches récurrentes",
+        "Suivi des coûts et budgets",
+        "Gestion des prestataires",
+        "Photos et documentation des interventions"
+      ]
+    },
+    "communications": {
+      "title": "Communications",
+      "description": "Canal de communication sécurisé avec vos locataires",
+      "features": [
+        "Messagerie intégrée",
+        "Notifications automatiques",
+        "Historique des échanges",
+        "Pièces jointes et documents",
+        "Statuts de lecture"
+      ]
+    },
+    "documents": {
+      "title": "Gestion documentaire",
+      "description": "Créez et gérez tous vos documents immobiliers",
+      "features": [
+        "Générateur de documents personnalisés",
+        "Modèles prédéfinis (baux, avis, rapports)",
+        "Champs dynamiques automatiques",
+        "Historique des documents générés",
+        "Export PDF sécurisé"
+      ]
+    },
+    "reports": {
+      "title": "Rapports et analyses",
+      "description": "Analyses financières approfondies de votre portefeuille",
+      "features": [
+        "Rapports de revenus mensuels/annuels",
+        "Analyse de la rentabilité par propriété",
+        "Tableaux de bord personnalisables",
+        "Export des données",
+        "Comparaisons temporelles"
+      ]
+    }
+  },
+  "subscription_levels": {
+    "free": {
+      "properties_limit": 2,
+      "tenants_limit": 4,
+      "ai_messages_limit": 10,
+      "features": ["dashboard", "properties", "tenants", "payments"]
+    },
+    "standard": {
+      "properties_limit": 10,
+      "tenants_limit": 25,
+      "ai_messages_limit": 100,
+      "features": ["dashboard", "properties", "tenants", "payments", "maintenance", "communications"]
+    },
+    "pro": {
+      "properties_limit": "unlimited",
+      "tenants_limit": "unlimited", 
+      "ai_messages_limit": 500,
+      "features": ["dashboard", "properties", "tenants", "payments", "maintenance", "communications", "documents", "reports", "advanced_analytics"]
+    }
+  },
+  "help_topics": {
+    "getting_started": {
+      "title": "Premiers pas",
+      "steps": [
+        "Créez votre première propriété dans la section Propriétés",
+        "Ajoutez vos locataires avec leurs informations de bail",
+        "Enregistrez les paiements reçus",
+        "Explorez le tableau de bord pour voir vos indicateurs"
+      ]
+    },
+    "adding_property": {
+      "title": "Ajouter une propriété",
+      "description": "Utilisez le bouton '+' dans la section Propriétés. Renseignez l'adresse complète, le type de bien, le nombre d'unités et le montant du loyer de base."
+    },
+    "tenant_management": {
+      "title": "Gestion des locataires",
+      "description": "Dans la section Locataires, vous pouvez ajouter de nouveaux locataires, gérer leurs baux, et leur envoyer des invitations pour accéder à leur portail."
+    },
+    "payment_tracking": {
+      "title": "Suivi des paiements",
+      "description": "Enregistrez chaque paiement reçu dans la section Paiements. Le système calculera automatiquement les retards et les montants dus."
+    }
+  },
+  "security_guidelines": {
+    "data_privacy": "Toutes vos données sont chiffrées et sécurisées. Seuls vous et vos locataires autorisés peuvent accéder aux informations pertinentes.",
+    "tenant_access": "Les locataires n'ont accès qu'à leurs propres informations via des invitations sécurisées.",
+    "backup": "Vos données sont sauvegardées automatiquement et en continu."
+  }
+}
