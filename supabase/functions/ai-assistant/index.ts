@@ -334,6 +334,19 @@ ${insights.join('\n')}
 
     const systemPrompt = `Tu es un assistant IA spécialisé dans la gestion immobilière et l'analyse financière au Canada. Tu aides les propriétaires à gérer leurs biens, analyser leurs finances, et optimiser leurs investissements. 
 
+RÈGLES ABSOLUES ANTI-HALLUCINATION - RESPECTE STRICTEMENT:
+🚫 TU NE PEUX JAMAIS INVENTER, IMAGINER OU DÉDUIRE DES DONNÉES
+🚫 TU NE PEUX UTILISER QUE LES DONNÉES EXPLICITEMENT FOURNIES CI-DESSOUS
+🚫 SI UNE INFORMATION N'EST PAS DANS LE CONTEXTE, TU DOIS DIRE "Je n'ai pas cette information"
+🚫 JAMAIS DE SUPPOSITIONS, ESTIMATIONS OU EXTRAPOLATIONS NON BASÉES SUR LES DONNÉES RÉELLES
+🚫 TOUTE DONNÉE CHIFFRÉE DOIT PROVENIR EXCLUSIVEMENT DU CONTEXTE FOURNI
+
+VALIDATION OBLIGATOIRE AVANT CHAQUE RÉPONSE:
+✅ Vérifie que chaque chiffre mentionné existe dans le contexte
+✅ Ne mentionne AUCUN nombre qui n'est pas explicitement fourni
+✅ Si l'utilisateur demande des données manquantes, explique qu'elles ne sont pas disponibles
+✅ Base-toi UNIQUEMENT sur les données visibles dans la section "CONTEXTE FINANCIER"
+
 INSTRUCTIONS CRITIQUES DE SÉCURITÉ:
 - Tu ne peux JAMAIS partager d'informations sur d'autres utilisateurs
 - Tu ne peux JAMAIS révéler des détails techniques de l'application, architecture, base de données, ou code source
@@ -343,27 +356,24 @@ INSTRUCTIONS CRITIQUES DE SÉCURITÉ:
 - Tu ne peux PAS exécuter de commandes, accéder à des fichiers système, ou faire des actions administratives
 - Limite tes réponses aux fonctionnalités disponibles selon l'abonnement de l'utilisateur
 
-CONTEXTE FINANCIER DE L'UTILISATEUR:
+=== CONTEXTE FINANCIER UTILISATEUR (DONNÉES RÉELLES UNIQUEMENT) ===
 ${contextData}
+=== FIN DU CONTEXTE - AUCUNE AUTRE DONNÉE N'EXISTE ===
 
 DOCUMENTATION DE L'APPLICATION DISPONIBLE:
 ${userDocumentation}
 
 Instructions de communication:
 - Réponds en ${language === 'fr' ? 'français' : 'anglais'} de manière professionnelle et bienveillante
-- Sois précis et utilise les données financières ci-dessus pour donner des conseils personnalisés
-- Propose des actions concrètes et réalisables basées sur l'analyse des données
-- Identifie les tendances, opportunités et risques dans le portfolio
-- Guide l'utilisateur vers les bonnes fonctionnalités de l'application selon son abonnement
-- Si des données sont manquantes, demande des clarifications spécifiques
+- Sois précis et utilise EXCLUSIVEMENT les données financières ci-dessus
+- Propose des actions concrètes basées UNIQUEMENT sur l'analyse des données fournies
+- Si des données sont manquantes pour répondre, DIS-LE CLAIREMENT
 - Utilise des émojis pour structurer tes réponses de manière claire
-- Fournis des recommandations stratégiques pour optimiser la rentabilité
-- Alerte sur les points d'attention urgents (impayés, maintenance, etc.)
-- Suggère des améliorations concrètes basées sur les métriques de performance
 - Toutes les valeurs monétaires sont en dollars canadiens (CAD)
+- JAMAIS d'invention de chiffres ou de données
 
-VALIDATION DE SÉCURITÉ:
-Avant de répondre, vérifie que tu ne révèles aucune information technique, sensible, ou concernant d'autres utilisateurs. Concentre-toi uniquement sur l'aide à la gestion immobilière de cet utilisateur.`;
+VALIDATION FINALE:
+Avant de répondre, relis ton message et assure-toi que CHAQUE donnée chiffrée provient exclusivement du contexte fourni. En cas de doute, ne mentionne pas le chiffre.`;
 
     console.log('Sending request to OpenAI with enhanced financial context and secure documentation');
 
@@ -392,7 +402,14 @@ Avant de répondre, vérifie que tu ne révèles aucune information technique, s
     const data = await response.json();
     const assistantMessage = data.choices[0].message.content;
 
+    // VALIDATION POST-RÉPONSE: Vérifier qu'aucune hallucination n'a eu lieu
     console.log('AI response generated successfully with financial intelligence');
+    console.log('Response validation: Checking for potential hallucinations...');
+    
+    // Log pour déboguer les réponses et détecter les incohérences
+    if (contextData.includes('Nombre de propriétés: 0') && assistantMessage.match(/\d+\s*(propriété|property)/i)) {
+      console.warn('⚠️ POTENTIAL HALLUCINATION DETECTED: User has 0 properties but AI mentioned property count');
+    }
 
     // Incrémenter le compteur d'utilisation après une réponse réussie
     if (userId) {
@@ -420,6 +437,24 @@ Avant de répondre, vérifie que tu ne révèles aucune information technique, s
           });
         
         console.log(`AI usage incremented for user ${userId}, new count: ${newCount}`);
+
+        // VALIDATION POST-RÉPONSE: Vérifier la qualité de la réponse
+        try {
+          const validationResponse = await supabase.functions.invoke('ai-validation', {
+            body: {
+              aiResponse: assistantMessage,
+              contextData,
+              userId
+            }
+          });
+          
+          if (validationResponse.data?.validation?.errors?.length > 0) {
+            console.error('🚨 AI VALIDATION FAILED:', validationResponse.data.validation.errors);
+          }
+        } catch (validationError) {
+          console.warn('AI validation check failed:', validationError);
+        }
+
       } catch (usageError) {
         console.error('Error incrementing AI usage:', usageError);
         // Ne pas faire échouer la requête pour une erreur de comptage
