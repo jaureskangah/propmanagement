@@ -25,10 +25,15 @@ serve(async (req) => {
     // Vérifier les limites d'utilisation d'abord
     if (userId) {
       // Vérifier d'abord si l'utilisateur est admin
-      const { data: isAdmin, error: adminError } = await supabase
-        .rpc('has_role', { role: 'admin' });
+      const { data: adminRole, error: adminError } = await supabase
+        .from('user_roles')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('role', 'admin')
+        .maybeSingle();
 
-      console.log('Admin check:', { isAdmin, adminError, userId });
+      const isAdmin = !!adminRole;
+      console.log('Admin check:', { isAdmin, adminError, userId, adminRole });
 
       let maxMessages = 3; // Default pour les utilisateurs gratuits
 
