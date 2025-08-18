@@ -13,6 +13,11 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Initialize Supabase client at the beginning
+  const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
   try {
     const { message, userId, language = 'fr' } = await req.json();
     
@@ -64,10 +69,6 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured');
     }
 
-    // Initialize Supabase client to get user context
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
     let contextData = '';
     
