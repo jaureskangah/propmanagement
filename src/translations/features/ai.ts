@@ -16,6 +16,8 @@ export const enAI = {
   
   // Action Buttons
   signUp: "Sign Up",
+  register: "Register",
+  signIn: "Sign In",
   later: "Later",
   close: "Close",
   
@@ -62,6 +64,8 @@ export const frAI = {
   
   // Boutons d'Action
   signUp: "S'inscrire",
+  register: "S'inscrire",
+  signIn: "Se connecter",
   later: "Plus tard",
   close: "Fermer",
   
