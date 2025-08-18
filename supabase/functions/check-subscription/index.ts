@@ -47,7 +47,29 @@ serve(async (req) => {
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     
     if (customers.data.length === 0) {
-      logStep("No customer found, updating free tier state");
+      logStep("No customer found, checking existing subscriber record");
+      
+      // Vérifier s'il y a déjà un enregistrement pour cet utilisateur
+      const { data: existingSubscriber } = await supabaseClient
+        .from("subscribers")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+      
+      if (existingSubscriber) {
+        logStep("Existing subscriber found, returning current status", existingSubscriber);
+        return new Response(JSON.stringify({ 
+          subscribed: existingSubscriber.subscribed, 
+          subscription_tier: existingSubscriber.subscription_tier,
+          subscription_end: existingSubscriber.subscription_end 
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+      
+      // Seulement créer un nouvel enregistrement free si aucun n'existe
+      logStep("No existing subscriber, creating free tier record");
       await supabaseClient.from("subscribers").upsert({
         email: user.email,
         user_id: user.id,
