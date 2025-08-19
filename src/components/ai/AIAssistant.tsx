@@ -14,6 +14,7 @@ import { useAIUsageLimits } from '@/hooks/useAIUsageLimits';
 import { AIUsageIndicator } from './AIUsageIndicator';
 import { GuestAuthPrompt } from './GuestAuthPrompt';
 import { formatLocalDateForStorage, parseDateSafe } from '@/lib/date';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Tooltip,
   TooltipContent,
@@ -41,6 +42,7 @@ export function AIAssistant() {
   const { user } = useAuth();
   const { t } = useLocale();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   const {
     conversations,
@@ -182,8 +184,8 @@ export function AIAssistant() {
   };
 
   return (
-    <Card className="h-[600px] flex flex-col">
-      <CardHeader className="pb-3">
+    <Card className={`${isMobile ? 'h-full' : 'h-[600px]'} flex flex-col border-none shadow-none bg-transparent`}>
+      <CardHeader className={`${isMobile ? 'pb-2 px-4' : 'pb-3'}`}>
         <CardTitle className="flex items-center justify-end">
           {user && (tooltipsEnabled ? (
             <TooltipProvider delayDuration={800}>
@@ -192,10 +194,11 @@ export function AIAssistant() {
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size={isMobile ? "default" : "sm"}
                       onClick={() => setShowConversations(!showConversations)}
+                      className={isMobile ? "h-10 w-10" : ""}
                     >
-                      <MessageSquare className="w-4 h-4" />
+                      <MessageSquare className={isMobile ? "w-5 h-5" : "w-4 h-4"} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
@@ -206,10 +209,11 @@ export function AIAssistant() {
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
-                      size="sm"
+                      size={isMobile ? "default" : "sm"}
                       onClick={() => createConversation()}
+                      className={isMobile ? "h-10 w-10" : ""}
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className={isMobile ? "w-5 h-5" : "w-4 h-4"} />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
@@ -222,17 +226,19 @@ export function AIAssistant() {
             <div className="flex items-center gap-2">
               <Button
                 variant="ghost"
-                size="sm"
+                size={isMobile ? "default" : "sm"}
                 onClick={() => setShowConversations(!showConversations)}
+                className={isMobile ? "h-10 w-10" : ""}
               >
-                <MessageSquare className="w-4 h-4" />
+                <MessageSquare className={isMobile ? "w-5 h-5" : "w-4 h-4"} />
               </Button>
               <Button
                 variant="ghost"
-                size="sm"
+                size={isMobile ? "default" : "sm"}
                 onClick={() => createConversation()}
+                className={isMobile ? "h-10 w-10" : ""}
               >
-                <Plus className="w-4 h-4" />
+                <Plus className={isMobile ? "w-5 h-5" : "w-4 h-4"} />
               </Button>
             </div>
           ))}
@@ -286,7 +292,7 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <div ref={scrollAreaRef} className="flex-1 overflow-y-auto px-4 pb-4 max-h-[400px]">
+        <div ref={scrollAreaRef} className={`flex-1 overflow-y-auto ${isMobile ? 'px-3 pb-3' : 'px-4 pb-4'} ${isMobile ? 'max-h-none' : 'max-h-[400px]'}`}>
           <div className="space-y-4">
             {displayMessages.map((message) => (
               <div
@@ -302,7 +308,7 @@ export function AIAssistant() {
                 )}
                 
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
+                  className={`${isMobile ? 'max-w-[85%]' : 'max-w-[80%]'} rounded-lg ${isMobile ? 'p-2.5' : 'p-3'} ${
                     message.role === 'user'
                       ? 'bg-muted mr-auto'
                       : 'bg-primary text-primary-foreground ml-auto'
@@ -341,7 +347,7 @@ export function AIAssistant() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="p-4 border-t space-y-3">
+        <div className={`${isMobile ? 'p-3' : 'p-4'} border-t space-y-3`}>
           {user ? (
             <>
               {/* Indicateur d'utilisation IA */}
@@ -354,13 +360,14 @@ export function AIAssistant() {
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder={t('messageInputPlaceholder')}
-                    className="flex-1"
+                    className={`flex-1 ${isMobile ? 'h-12 text-base' : ''}`}
                     disabled={isLoading}
                   />
                   <Button 
                     onClick={sendMessage} 
                     disabled={isLoading || !inputMessage.trim()}
-                    size="icon"
+                    size={isMobile ? "default" : "icon"}
+                    className={isMobile ? "h-12 w-12" : ""}
                   >
                     {isLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />

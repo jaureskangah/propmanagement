@@ -9,16 +9,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Bot } from "lucide-react";
+import { Bot, X } from "lucide-react";
 import { AIAssistant } from "./AIAssistant";
 import { useAuth } from "@/components/AuthProvider";
 import { useLocale } from "@/components/providers/LocaleProvider";
 import { useFloatingBotAnimations } from "@/hooks/useFloatingBotAnimations";
 import { WelcomeMessageBubble } from "./WelcomeMessageBubble";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function FloatingAIAssistant() {
   const [isOpen, setIsOpen] = useState(false);
   const { t } = useLocale();
+  const isMobile = useIsMobile();
   const { 
     animationState, 
     welcomeMessage, 
@@ -114,21 +116,37 @@ export function FloatingAIAssistant() {
           
           <SheetContent 
             side="right" 
-            className="w-[400px] sm:w-[540px] p-0 overflow-hidden border-l bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl"
+            className={`${
+              isMobile 
+                ? 'w-full h-full inset-0 max-w-none border-none' 
+                : 'w-[400px] sm:w-[540px] border-l'
+            } p-0 overflow-hidden bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl`}
           >
-            <SheetHeader className="p-6 pb-4 border-b border-border/50 bg-gradient-to-r from-background/80 to-muted/20">
-              <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
-                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                  <Bot className="h-5 w-5 text-primary" />
+            <SheetHeader className={`${isMobile ? 'p-4 pb-3' : 'p-6 pb-4'} border-b border-border/50 bg-gradient-to-r from-background/80 to-muted/20`}>
+              <SheetTitle className="flex items-center justify-between text-lg font-semibold">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                    <Bot className="h-5 w-5 text-primary" />
+                  </div>
+                  {t('aiAssistant') || 'Assistant IA'}
                 </div>
-                {t('aiAssistant') || 'Assistant IA'}
+                {isMobile && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}
+                    className="h-8 w-8 p-0"
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                )}
               </SheetTitle>
               <SheetDescription className="text-muted-foreground/80 mt-2">
                 {t('aiAssistantDescription') || 'Votre assistant intelligent pour la gestion immobilière'}
               </SheetDescription>
             </SheetHeader>
             
-            <div className="h-[calc(100vh-120px)] overflow-hidden">
+            <div className={`${isMobile ? 'h-[calc(100vh-80px)]' : 'h-[calc(100vh-120px)]'} overflow-hidden`}>
               <AIAssistant />
             </div>
           </SheetContent>
