@@ -124,8 +124,8 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
         </div>
       )}
       
-      {/* Bouton Premium toujours visible quand proche de la limite ou au maximum */}
-      {(isNearLimit || !usage.canSendMessage) && usage.canSendMessage && (
+      {/* Bouton Premium visible quand proche de la limite */}
+      {isNearLimit && usage.canSendMessage && (
         <div className="mt-2">
           <Button 
             variant="outline" 
