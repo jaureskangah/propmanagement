@@ -123,6 +123,30 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
           </div>
         </div>
       )}
+      
+      {/* Bouton Premium toujours visible quand proche de la limite ou au maximum */}
+      {(isNearLimit || !usage.canSendMessage) && usage.canSendMessage && (
+        <div className="mt-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => {
+              console.log('Premium button clicked from indicator');
+              navigate('/');
+              setTimeout(() => {
+                const pricingSection = document.getElementById('pricing');
+                if (pricingSection) {
+                  pricingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+              }, 100);
+            }}
+            className="w-full text-amber-700 border-amber-300 hover:bg-amber-50 transition-colors"
+          >
+            <Crown className="w-4 h-4 mr-2" />
+            Premium
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
