@@ -122,7 +122,7 @@ export function FloatingAIAssistant() {
                 : 'w-[400px] sm:w-[540px] border-l'
             } p-0 overflow-hidden bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl`}
           >
-            <SheetHeader className={`${isMobile ? 'p-4 pb-3' : 'p-6 pb-4'} border-b border-border/50 bg-gradient-to-r from-background/80 to-muted/20`}>
+            <SheetHeader className={`${isMobile ? 'sticky top-0 z-10 p-4 pb-3' : 'p-6 pb-4'} border-b border-border/50 bg-gradient-to-r from-background/95 to-muted/30 backdrop-blur-xl`}>
               <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
                 <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
                   <Bot className="h-5 w-5 text-primary" />
@@ -134,7 +134,7 @@ export function FloatingAIAssistant() {
               </SheetDescription>
             </SheetHeader>
             
-            <div className={`${isMobile ? 'h-[calc(100vh-80px)]' : 'h-[calc(100vh-120px)]'} overflow-hidden`}>
+            <div className={`${isMobile ? 'h-[calc(100vh-120px)] pb-safe' : 'h-[calc(100vh-120px)]'} overflow-hidden`}>
               <AIAssistant />
             </div>
           </SheetContent>

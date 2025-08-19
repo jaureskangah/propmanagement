@@ -292,7 +292,7 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <div ref={scrollAreaRef} className={`flex-1 overflow-y-auto ${isMobile ? 'px-3 pb-3' : 'px-4 pb-4'} ${isMobile ? 'max-h-none' : 'max-h-[400px]'}`}>
+        <div ref={scrollAreaRef} className={`flex-1 overflow-y-auto scroll-smooth ${isMobile ? 'px-3 pb-3 touch-pan-y' : 'px-4 pb-4'} ${isMobile ? 'max-h-none' : 'max-h-[400px]'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
           <div className="space-y-4">
             {displayMessages.map((message) => (
               <div
@@ -347,7 +347,7 @@ export function AIAssistant() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className={`${isMobile ? 'p-3' : 'p-4'} border-t space-y-3`}>
+        <div className={`${isMobile ? 'sticky bottom-0 bg-background/95 backdrop-blur-xl p-3 border-t' : 'p-4 border-t'} space-y-3`}>
           {user ? (
             <>
               {/* Indicateur d'utilisation IA */}
@@ -360,14 +360,14 @@ export function AIAssistant() {
                     onChange={(e) => setInputMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder={t('messageInputPlaceholder')}
-                    className={`flex-1 ${isMobile ? 'h-12 text-base' : ''}`}
+                    className={`flex-1 ${isMobile ? 'h-12 text-base touch-manipulation' : ''}`}
                     disabled={isLoading}
                   />
                   <Button 
                     onClick={sendMessage} 
                     disabled={isLoading || !inputMessage.trim()}
                     size={isMobile ? "default" : "icon"}
-                    className={isMobile ? "h-12 w-12" : ""}
+                    className={isMobile ? "h-12 w-12 touch-manipulation" : ""}
                   >
                     {isLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
