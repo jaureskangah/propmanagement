@@ -49,7 +49,16 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
               </div>
               <Button 
                 size="sm" 
-                onClick={() => navigate('/#pricing')}
+                onClick={() => {
+                  console.log('Navigating to pricing section');
+                  navigate('/');
+                  setTimeout(() => {
+                    const pricingSection = document.getElementById('pricing');
+                    if (pricingSection) {
+                      pricingSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }, 100);
+                }}
                 className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white border-0 shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <Crown className="w-4 h-4 mr-2" />
@@ -97,10 +106,19 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
             <Button 
               variant="ghost" 
               size="sm" 
-              onClick={() => navigate('/#pricing')}
+              onClick={() => {
+                console.log('Navigating to pricing section from warning');
+                navigate('/');
+                setTimeout(() => {
+                  const pricingSection = document.getElementById('pricing');
+                  if (pricingSection) {
+                    pricingSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }, 100);
+              }}
               className="text-xs h-auto py-1 px-2 text-amber-700 hover:text-amber-800 hover:bg-amber-100/50 transition-colors"
             >
-              Voir Premium →
+              Premium →
             </Button>
           </div>
         </div>
