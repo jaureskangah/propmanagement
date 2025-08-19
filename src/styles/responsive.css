@@ -211,6 +211,78 @@
       font-size: 0.75rem !important;
     }
 
+    /* Styles spécifiques pour l'assistant IA sur mobile */
+    .ai-assistant-mobile-scroll {
+      /* Force l'affichage de la scrollbar sur mobile */
+      overflow-y: scroll !important;
+      scrollbar-width: thin !important;
+      scrollbar-color: rgba(155, 155, 155, 0.5) transparent !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+
+    .ai-assistant-mobile-scroll::-webkit-scrollbar {
+      width: 6px !important;
+      display: block !important;
+    }
+
+    .ai-assistant-mobile-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1) !important;
+      border-radius: 3px !important;
+    }
+
+    .ai-assistant-mobile-scroll::-webkit-scrollbar-thumb {
+      background: rgba(155, 155, 155, 0.6) !important;
+      border-radius: 3px !important;
+    }
+
+    .ai-assistant-mobile-scroll::-webkit-scrollbar-thumb:hover {
+      background: rgba(155, 155, 155, 0.8) !important;
+    }
+
+    /* Header fixe pour l'assistant IA */
+    .ai-assistant-sticky-header {
+      position: sticky !important;
+      top: 0 !important;
+      z-index: 50 !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+    }
+
+    .dark .ai-assistant-sticky-header {
+      background: rgba(0, 0, 0, 0.95) !important;
+    }
+
+    /* Zone de saisie fixe en bas */
+    .ai-assistant-input-area {
+      position: sticky !important;
+      bottom: 0 !important;
+      z-index: 40 !important;
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .dark .ai-assistant-input-area {
+      background: rgba(0, 0, 0, 0.95) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Amélioration de la zone de contenu */
+    .ai-assistant-content {
+      height: calc(100vh - 140px) !important;
+      min-height: 400px !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+
+    .ai-assistant-messages {
+      flex: 1 !important;
+      overflow-y: auto !important;
+      padding-bottom: 80px !important; /* Espace pour la zone de saisie */
+    }
+
     /* Optimisations spécifiques pour les composants existants */
     
     /* PropertyEnhancedForm améliorations */

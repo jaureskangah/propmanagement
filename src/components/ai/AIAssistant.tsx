@@ -292,7 +292,7 @@ export function AIAssistant() {
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
-        <div ref={scrollAreaRef} className={`flex-1 overflow-y-auto scroll-smooth ${isMobile ? 'px-3 pb-3 touch-pan-y' : 'px-4 pb-4'} ${isMobile ? 'max-h-none' : 'max-h-[400px]'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
+        <div ref={scrollAreaRef} className={`${isMobile ? 'ai-assistant-mobile-scroll ai-assistant-messages flex-1 px-3' : 'flex-1 overflow-y-auto scroll-smooth px-4 pb-4 max-h-[400px]'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
           <div className="space-y-4">
             {displayMessages.map((message) => (
               <div
@@ -347,7 +347,7 @@ export function AIAssistant() {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className={`${isMobile ? 'sticky bottom-0 bg-background/95 backdrop-blur-xl p-3 border-t' : 'p-4 border-t'} space-y-3`}>
+        <div className={`${isMobile ? 'ai-assistant-input-area p-3' : 'p-4 border-t'} space-y-3`}>
           {user ? (
             <>
               {/* Indicateur d'utilisation IA */}
