@@ -291,9 +291,9 @@ export function AIAssistant() {
         )}
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col p-0">
-        <div ref={scrollAreaRef} className={`${isMobile ? 'ai-assistant-mobile-scroll ai-assistant-messages flex-1 px-3' : 'flex-1 overflow-y-auto scroll-smooth px-4 pb-4 max-h-[400px]'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
-          <div className="space-y-4">
+      <CardContent className="flex-1 flex flex-col p-0 min-h-0">
+        <div ref={scrollAreaRef} className={`${isMobile ? 'ai-assistant-mobile-scroll ai-assistant-messages flex-1 px-3 overflow-y-auto' : 'flex-1 overflow-y-auto scroll-smooth px-4 pb-4 max-h-[400px]'}`} style={{ WebkitOverflowScrolling: 'touch' }}>
+          <div className="space-y-4 py-4">
             {displayMessages.map((message) => (
               <div
                 key={message.id}

@@ -114,15 +114,15 @@ export function FloatingAIAssistant() {
               </motion.div>
             </SheetTrigger>
           
-          <SheetContent 
+            <SheetContent 
             side="right" 
             className={`${
               isMobile 
                 ? 'w-full h-full inset-0 max-w-none border-none' 
                 : 'w-[400px] sm:w-[540px] border-l'
-            } p-0 overflow-hidden bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl`}
+            } p-0 bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl flex flex-col`}
           >
-            <SheetHeader className={`${isMobile ? 'ai-assistant-sticky-header p-4 pb-3' : 'p-6 pb-4'} border-b border-border/50 bg-gradient-to-r from-background/95 to-muted/30 backdrop-blur-xl`}>
+            <SheetHeader className={`${isMobile ? 'ai-assistant-sticky-header p-4 pb-3' : 'p-6 pb-4'} border-b border-border/50 bg-gradient-to-r from-background/95 to-muted/30 backdrop-blur-xl flex-shrink-0`}>
               <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
                 <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
                   <Bot className="h-5 w-5 text-primary" />
@@ -134,7 +134,7 @@ export function FloatingAIAssistant() {
               </SheetDescription>
             </SheetHeader>
             
-            <div className={`${isMobile ? 'ai-assistant-content' : 'h-[calc(100vh-120px)]'} overflow-hidden`}>
+            <div className="flex-1 min-h-0">
               <AIAssistant />
             </div>
           </SheetContent>

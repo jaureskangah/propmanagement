@@ -75,15 +75,15 @@ export const AIUsageIndicator = ({ usage, className }: AIUsageIndicatorProps) =>
   const isNearLimit = usagePercentage >= 80;
 
   return (
-    <div className={`space-y-2 ${className}`}>
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">
-          Messages restants aujourd'hui
-        </span>
-        <span className={`font-medium ${isNearLimit ? 'text-amber-600' : 'text-primary'}`}>
-          {usage.remainingMessages}/{usage.totalMessages}
-        </span>
-      </div>
+      <div className={`space-y-2 mobile-usage-indicator ${className}`}>
+        <div className="flex items-center justify-between text-sm">
+          <span className="usage-text">
+            Messages restants aujourd'hui
+          </span>
+          <span className={`usage-value ${isNearLimit ? 'text-amber-600' : 'text-primary'}`}>
+            {usage.remainingMessages}/{usage.totalMessages}
+          </span>
+        </div>
       
       <div className="w-full bg-muted rounded-full h-2">
         <div 
