@@ -378,5 +378,32 @@
       height: auto !important;
       max-height: 400px !important;
     }
+
+    /* Bouton de fermeture visible sur mobile/tablette pour l'assistant IA */
+    [data-radix-dialog-content] button[data-radix-dialog-close] {
+      position: fixed !important;
+      top: 1rem !important;
+      right: 1rem !important;
+      z-index: 60 !important;
+      background: rgba(0, 0, 0, 0.8) !important;
+      color: white !important;
+      border-radius: 50% !important;
+      width: 2.5rem !important;
+      height: 2.5rem !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border: 2px solid rgba(255, 255, 255, 0.3) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      transition: all 0.2s ease !important;
+    }
+
+    [data-radix-dialog-content] button[data-radix-dialog-close]:hover,
+    [data-radix-dialog-content] button[data-radix-dialog-close]:active {
+      background: rgba(0, 0, 0, 0.9) !important;
+      border-color: rgba(255, 255, 255, 0.5) !important;
+      transform: scale(1.05) !important;
+    }
   }
 }
