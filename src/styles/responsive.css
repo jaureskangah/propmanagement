@@ -380,41 +380,46 @@
     }
 
     /* Bouton de fermeture visible sur mobile/tablette pour l'assistant IA */
-    [data-radix-dialog-content] .absolute.right-4.top-4 {
+    button[data-radix-dialog-close] {
       position: fixed !important;
       top: 1rem !important;
       right: 1rem !important;
       z-index: 70 !important;
-      background: rgba(0, 0, 0, 0.85) !important;
+      background: rgba(0, 0, 0, 0.9) !important;
       color: white !important;
       border-radius: 50% !important;
-      width: 2.75rem !important;
-      height: 2.75rem !important;
+      width: 44px !important;
+      height: 44px !important;
+      min-width: 44px !important;
+      min-height: 44px !important;
       display: flex !important;
       align-items: center !important;
       justify-content: center !important;
-      border: 2px solid rgba(255, 255, 255, 0.4) !important;
-      backdrop-filter: blur(10px) !important;
-      -webkit-backdrop-filter: blur(10px) !important;
+      border: 2px solid rgba(255, 255, 255, 0.5) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
       transition: all 0.2s ease !important;
       opacity: 1 !important;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+      visibility: visible !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+      cursor: pointer !important;
     }
 
-    [data-radix-dialog-content] .absolute.right-4.top-4:hover,
-    [data-radix-dialog-content] .absolute.right-4.top-4:active {
+    button[data-radix-dialog-close]:hover,
+    button[data-radix-dialog-close]:active {
       background: rgba(0, 0, 0, 0.95) !important;
-      border-color: rgba(255, 255, 255, 0.6) !important;
-      transform: scale(1.08) !important;
-      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4) !important;
+      border-color: rgba(255, 255, 255, 0.7) !important;
+      transform: scale(1.1) !important;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5) !important;
     }
 
     /* S'assurer que l'icône X est visible */
-    [data-radix-dialog-content] .absolute.right-4.top-4 svg {
-      width: 1.25rem !important;
-      height: 1.25rem !important;
-      stroke-width: 2.5 !important;
+    button[data-radix-dialog-close] svg {
+      width: 20px !important;
+      height: 20px !important;
+      stroke-width: 3 !important;
       color: white !important;
+      fill: none !important;
     }
   }
 }
