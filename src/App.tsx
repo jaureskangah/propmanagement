@@ -54,6 +54,15 @@ const GoLiveDashboard = lazy(() => import('./components/admin/GoLiveDashboard').
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout').then(module => ({ default: module.AdminLayout })));
 const ComingSoonInternational = lazy(() => import('./pages/ComingSoonInternational'));
 
+// Footer Pages
+const Features = lazy(() => import('./pages/Features'));
+const Pricing = lazy(() => import('./pages/Pricing'));
+const Security = lazy(() => import('./pages/Security'));
+const Contact = lazy(() => import('./pages/Contact'));
+const About = lazy(() => import('./pages/company/About'));
+const Careers = lazy(() => import('./pages/company/Careers'));
+const Cookies = lazy(() => import('./pages/legal/Cookies'));
+
 // Loading fallback component with percentage animation
 const PageLoader = () => <PageLoadingAnimation />;
 
@@ -77,9 +86,18 @@ function App() {
         {/* Landing Page - Accessible à tous */}
         <Route path="/" element={<LandingPage />} />
         
+        {/* Footer Pages - Accessible à tous */}
+        <Route path="/features" element={<Features />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/security" element={<Security />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/careers" element={<Careers />} />
+        
         {/* Legal Pages - Accessible à tous */}
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/terms" element={<TermsOfService />} />
+        <Route path="/cookies" element={<Cookies />} />
         
         {/* International Route */}
         <Route path="/coming-soon-international" element={<ComingSoonInternational />} />
