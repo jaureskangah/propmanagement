@@ -380,7 +380,7 @@
     }
 
     /* Bouton de fermeture visible sur mobile/tablette pour l'assistant IA */
-    [data-radix-dialog-content] .absolute.right-4.top-4 {
+    [data-radix-dialog-close] {
       position: absolute !important;
       top: 1rem !important;
       right: 1rem !important;
@@ -401,13 +401,13 @@
       cursor: pointer !important;
     }
 
-    [data-radix-dialog-content] .absolute.right-4.top-4:hover {
+    [data-radix-dialog-close]:hover {
       background: hsl(var(--accent)) !important;
       opacity: 1 !important;
     }
 
     /* S'assurer que l'icône X est visible */
-    [data-radix-dialog-content] .absolute.right-4.top-4 svg {
+    [data-radix-dialog-close] svg {
       width: 1rem !important;
       height: 1rem !important;
       stroke-width: 2 !important;
