@@ -26,7 +26,7 @@ export function GuestAuthPrompt() {
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
         <Button
           variant="default"
-          className="flex-1"
+          className="flex-1 h-12 touch-manipulation relative z-10"
           onClick={() => navigate('/auth')}
         >
           <UserPlus className="w-4 h-4 mr-2" />
@@ -35,7 +35,7 @@ export function GuestAuthPrompt() {
         
         <Button
           variant="outline"
-          className="flex-1"
+          className="flex-1 h-12 touch-manipulation relative z-10"
           onClick={() => navigate('/login')}
         >
           <LogIn className="w-4 h-4 mr-2" />
