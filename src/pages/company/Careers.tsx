@@ -1,4 +1,4 @@
-import { MapPin, Users, Coffee, Zap } from "lucide-react";
+import { MapPin, Users, Coffee, Zap, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
@@ -41,6 +41,14 @@ export default function Careers() {
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/')}
+            className="mb-8 text-gray-600 hover:text-[#ea384c] hover:border-[#ea384c]"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Retour à l'accueil
+          </Button>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             Join Our Team
           </h1>
