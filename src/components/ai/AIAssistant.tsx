@@ -29,7 +29,11 @@ interface Message {
   timestamp: Date;
 }
 
-export function AIAssistant() {
+interface AIAssistantProps {
+  onClose?: () => void;
+}
+
+export function AIAssistant({ onClose }: AIAssistantProps = {}) {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isUserNearBottom, setIsUserNearBottom] = useState(true);
@@ -401,7 +405,7 @@ export function AIAssistant() {
               )}
             </>
           ) : (
-            <GuestAuthPrompt />
+            <GuestAuthPrompt onClose={onClose} />
           )}
         </div>
       </CardContent>

@@ -150,7 +150,7 @@ export function FloatingAIAssistant() {
             </SheetHeader>
             
             <div className="flex-1 min-h-0">
-              <AIAssistant />
+              <AIAssistant onClose={() => setIsOpen(false)} />
             </div>
           </SheetContent>
         </Sheet>

@@ -4,9 +4,20 @@ import { LogIn, UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLocale } from '@/components/providers/LocaleProvider';
 
-export function GuestAuthPrompt() {
+interface GuestAuthPromptProps {
+  onClose?: () => void;
+}
+
+export function GuestAuthPrompt({ onClose }: GuestAuthPromptProps) {
   const navigate = useNavigate();
   const { t } = useLocale();
+
+  const handleNavigation = (path: string) => {
+    if (onClose) {
+      onClose();
+    }
+    navigate(path);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-6 text-center space-y-4">
@@ -27,7 +38,7 @@ export function GuestAuthPrompt() {
         <Button
           variant="default"
           className="flex-1 h-12 touch-manipulation relative z-10"
-          onClick={() => navigate('/auth')}
+          onClick={() => handleNavigation('/auth')}
         >
           <UserPlus className="w-4 h-4 mr-2" />
           {t('register')}
@@ -36,7 +47,7 @@ export function GuestAuthPrompt() {
         <Button
           variant="outline"
           className="flex-1 h-12 touch-manipulation relative z-10"
-          onClick={() => navigate('/login')}
+          onClick={() => handleNavigation('/login')}
         >
           <LogIn className="w-4 h-4 mr-2" />
           {t('signIn')}
