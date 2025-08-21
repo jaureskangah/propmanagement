@@ -8,6 +8,7 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
+  SheetClose,
 } from "@/components/ui/sheet";
 import { Bot, X } from "lucide-react";
 import { AIAssistant } from "./AIAssistant";
@@ -123,12 +124,26 @@ export function FloatingAIAssistant() {
             } p-0 bg-gradient-to-b from-background/95 to-muted/30 backdrop-blur-xl flex flex-col`}
           >
             <SheetHeader className={`${isMobile ? 'ai-assistant-sticky-header p-4 pb-3' : 'p-6 pb-4'} border-b border-border/50 bg-gradient-to-r from-background/95 to-muted/30 backdrop-blur-xl flex-shrink-0`}>
-              <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
-                <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
-                  <Bot className="h-5 w-5 text-primary" />
-                </div>
-                {t('aiAssistant') || 'Assistant IA'}
-              </SheetTitle>
+              <div className="flex items-center justify-between">
+                <SheetTitle className="flex items-center gap-3 text-lg font-semibold">
+                  <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+                    <Bot className="h-5 w-5 text-primary" />
+                  </div>
+                  {t('aiAssistant') || 'Assistant IA'}
+                </SheetTitle>
+                {isMobile && (
+                  <SheetClose asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-10 w-10 rounded-full"
+                      aria-label="Fermer l'assistant"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </SheetClose>
+                )}
+              </div>
               <SheetDescription className="text-muted-foreground/80 mt-2">
                 {t('aiAssistantDescription') || 'Votre assistant intelligent pour la gestion immobilière'}
               </SheetDescription>
