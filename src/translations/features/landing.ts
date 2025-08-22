@@ -125,6 +125,29 @@ export const enLanding = {
   readyToStart: "Ready to Simplify Your Management?",
   joinOthers: "Join thousands of property owners who trust our solution",
   ctaStartFree: "Try For Free",
+  
+  // Additional features
+  automatedReminders: "Automated Reminders",
+  automatedRemindersDesc: "Never miss rent collection or important dates",
+  automatedRemindersDetails: "Smart notifications for rent, lease renewals, and maintenance",
+  realTimeNotifications: "Real-time Notifications", 
+  realTimeNotificationsDesc: "Stay updated with instant alerts",
+  realTimeNotificationsDetails: "Push notifications for maintenance requests and payments",
+  dataExportImport: "Data Export & Import",
+  dataExportImportDesc: "Full control over your property data",
+  dataExportImportDetails: "Export reports and import existing property information",
+  
+  // Feature details
+  tenantManagementDetails: "Complete tenant lifecycle management with automated workflows",
+  financialTrackingDetails: "Track rent, expenses, and generate financial reports automatically",
+  maintenanceSchedulingDetails: "Streamline maintenance requests with vendor management",
+  documentGenerationDetails: "Generate leases, notices, and reports with one click",
+  reportingAnalyticsDetails: "Comprehensive analytics and insights for better decisions",
+  secureAccessDetails: "Bank-grade security with role-based access control",
+  
+  // Features page CTA
+  readyToTransform: "Ready to Transform Your Property Management?",
+  joinThousands: "Join thousands of property managers who trust PropManagement"
 };
 
 export const frLanding = {
@@ -253,4 +276,27 @@ export const frLanding = {
   readyToStart: "Prêt à Simplifier Votre Gestion ?",
   joinOthers: "Rejoignez des milliers de propriétaires qui font confiance à notre solution",
   ctaStartFree: "Essayer Gratuitement",
+  
+  // Fonctionnalités additionnelles
+  automatedReminders: "Rappels Automatisés",
+  automatedRemindersDesc: "Ne ratez jamais la collecte de loyer ou les dates importantes",
+  automatedRemindersDetails: "Notifications intelligentes pour loyers, renouvellements et maintenance",
+  realTimeNotifications: "Notifications Temps Réel",
+  realTimeNotificationsDesc: "Restez informé avec des alertes instantanées", 
+  realTimeNotificationsDetails: "Notifications push pour demandes de maintenance et paiements",
+  dataExportImport: "Export et Import de Données",
+  dataExportImportDesc: "Contrôle total sur vos données immobilières",
+  dataExportImportDetails: "Exportez rapports et importez informations de propriétés existantes",
+  
+  // Détails des fonctionnalités
+  tenantManagementDetails: "Gestion complète du cycle de vie des locataires avec workflows automatisés",
+  financialTrackingDetails: "Suivez loyers, dépenses et générez des rapports financiers automatiquement",
+  maintenanceSchedulingDetails: "Rationalisez les demandes de maintenance avec gestion des fournisseurs",
+  documentGenerationDetails: "Générez baux, avis et rapports en un clic",
+  reportingAnalyticsDetails: "Analyses complètes et insights pour de meilleures décisions",
+  secureAccessDetails: "Sécurité bancaire avec contrôle d'accès basé sur les rôles",
+  
+  // CTA page Fonctionnalités
+  readyToTransform: "Prêt à Transformer Votre Gestion Immobilière ?",
+  joinThousands: "Rejoignez des milliers de gestionnaires immobiliers qui font confiance à PropManagement"
 };

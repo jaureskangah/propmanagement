@@ -124,7 +124,12 @@ export const enCommon = {
   // AI Assistant
   aiAssistant: "Acadie",
   aiAssistantDescription: "Your AI Real Estate Assistant",
-  openAIAssistant: "Open AI Assistant"
+  openAIAssistant: "Open AI Assistant",
+  
+  // Navigation buttons
+  backToHome: "Back to Home",
+  startFreeTrial: "Start Free Trial",
+  contactSales: "Contact Sales"
 };
 
 export const frCommon = {
@@ -252,5 +257,10 @@ export const frCommon = {
   // Assistant IA
   aiAssistant: "Acadie",
   aiAssistantDescription: "Votre Assistant IA Immobilier",
-  openAIAssistant: "Ouvrir Acadie"
+  openAIAssistant: "Ouvrir Acadie",
+  
+  // Boutons de navigation
+  backToHome: "Retour à l'accueil",
+  startFreeTrial: "Essayer gratuitement",
+  contactSales: "Contacter les ventes"
 };

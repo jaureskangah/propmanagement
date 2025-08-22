@@ -12,55 +12,55 @@ export default function Features() {
       icon: Users,
       titleKey: "tenantManagement",
       descriptionKey: "tenantManagementDesc",
-      details: "Complete tenant lifecycle management with automated workflows"
+      detailsKey: "tenantManagementDetails"
     },
     {
       icon: Calculator,
       titleKey: "financialTracking",
       descriptionKey: "financialTrackingDesc",
-      details: "Track rent, expenses, and generate financial reports automatically"
+      detailsKey: "financialTrackingDetails"
     },
     {
       icon: Wrench,
       titleKey: "maintenanceScheduling",
       descriptionKey: "maintenanceSchedulingDesc",
-      details: "Streamline maintenance requests with vendor management"
+      detailsKey: "maintenanceSchedulingDetails"
     },
     {
       icon: FileText,
       titleKey: "documentGeneration",
       descriptionKey: "documentGenerationDesc",
-      details: "Generate leases, notices, and reports with one click"
+      detailsKey: "documentGenerationDetails"
     },
     {
       icon: BarChart3,
       titleKey: "reportingAnalytics",
       descriptionKey: "reportingAnalyticsDesc",
-      details: "Comprehensive analytics and insights for better decisions"
+      detailsKey: "reportingAnalyticsDetails"
     },
     {
       icon: Shield,
       titleKey: "secureAccess",
       descriptionKey: "secureAccessDesc",
-      details: "Bank-grade security with role-based access control"
+      detailsKey: "secureAccessDetails"
     },
     {
       icon: Clock,
-      title: "Automated Reminders",
-      description: "Never miss rent collection or important dates",
-      details: "Smart notifications for rent, lease renewals, and maintenance"
+      titleKey: "automatedReminders",
+      descriptionKey: "automatedRemindersDesc",
+      detailsKey: "automatedRemindersDetails"
     },
     {
       icon: Bell,
-      title: "Real-time Notifications",
-      description: "Stay updated with instant alerts",
-      details: "Push notifications for maintenance requests and payments"
+      titleKey: "realTimeNotifications",
+      descriptionKey: "realTimeNotificationsDesc",
+      detailsKey: "realTimeNotificationsDetails"
     },
     {
       icon: Database,
-      title: "Data Export & Import",
-      description: "Full control over your property data",
-      details: "Export reports and import existing property information"
+      titleKey: "dataExportImport",
+      descriptionKey: "dataExportImportDesc",
+      detailsKey: "dataExportImportDetails"
     }
   ];
 
@@ -75,7 +75,7 @@ export default function Features() {
             className="mb-8 text-gray-600 hover:text-[#ea384c] hover:border-[#ea384c]"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour à l'accueil
+            {t('backToHome')}
           </Button>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             {t('everythingYouNeed')}
@@ -88,7 +88,7 @@ export default function Features() {
             className="bg-[#ea384c] hover:bg-[#d31c3f]"
             onClick={() => navigate('/auth')}
           >
-            Start Free Trial
+            {t('startFreeTrial')}
           </Button>
         </div>
       </section>
@@ -114,7 +114,7 @@ export default function Features() {
                     {feature.descriptionKey ? t(feature.descriptionKey) : feature.description}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {feature.details}
+                    {feature.detailsKey ? t(feature.detailsKey) : feature.details}
                   </p>
                 </div>
               );
@@ -127,10 +127,10 @@ export default function Features() {
       <section className="py-20 px-4 bg-gradient-to-r from-[#ea384c] to-[#d31c3f]">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Transform Your Property Management?
+            {t('readyToTransform')}
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join thousands of property managers who trust PropManagement
+            {t('joinThousands')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
@@ -138,7 +138,7 @@ export default function Features() {
               variant="secondary"
               onClick={() => navigate('/auth')}
             >
-              Start Free Trial
+              {t('startFreeTrial')}
             </Button>
             <Button 
               size="lg" 
@@ -146,7 +146,7 @@ export default function Features() {
               className="border-white text-white hover:bg-white hover:text-[#ea384c]"
               onClick={() => navigate('/contact')}
             >
-              Contact Sales
+              {t('contactSales')}
             </Button>
           </div>
         </div>
