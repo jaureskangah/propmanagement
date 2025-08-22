@@ -19,6 +19,7 @@ import { enList } from './features/tenant/en/list';
 import { enPayments } from './features/tenant/en/payments';
 import { enComingSoon } from './features/comingSoon';
 import { enAI } from './features/ai';
+import { enSecurity } from './features/security';
 
 // Support extensions
 const supportExtensions = {
@@ -48,6 +49,7 @@ const baseTranslations = {
   ...enComingSoon,
   ...enAI,
   ...supportExtensions,
+  security: enSecurity,
 };
 
 // Extraire documentGenerator de enDocuments et l'ajouter séparément

@@ -17,6 +17,7 @@ import { frAdmin } from './features/admin';
 import { fr as frFeatures } from './features/fr';
 import { frComingSoon } from './features/comingSoon';
 import { frAI } from './features/ai';
+import { frSecurity } from './features/security';
 
 // Extensions de support
 const supportExtensions = {
@@ -44,6 +45,7 @@ const baseTranslations = {
   ...frComingSoon,
   ...frAI,
   ...supportExtensions,
+  security: frSecurity,
 };
 
 // Extraire documentGenerator de frDocuments et l'ajouter séparément
