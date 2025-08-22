@@ -130,6 +130,10 @@ const translations = {
   upTo1Property: "1 property",
   upTo1Tenant: "1 tenant",
   allStandardFeatures: "All Standard Plan benefits",
+  
+  // Generic security translations
+  security: "Security",
+  securityDesc: "Complete protection of your data with enterprise-grade encryption and access controls"
 };
 
 

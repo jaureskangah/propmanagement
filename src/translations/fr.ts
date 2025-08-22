@@ -129,7 +129,11 @@ const translations = {
   // Additional pricing plan features
   upTo1Property: "1 propriété",
   upTo1Tenant: "1 locataire",
-  allStandardFeatures: "Tous les avantages du Plan Standard"
+  allStandardFeatures: "Tous les avantages du Plan Standard",
+  
+  // Generic security translations
+  security: "Sécurité",
+  securityDesc: "Protection complète de vos données avec chiffrement de niveau entreprise et contrôles d'accès"
 };
 
 
