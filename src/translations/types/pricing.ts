@@ -19,6 +19,26 @@ export interface PricingTranslations {
   proPlanDescription: string;
   standardPlanTagline: string;
   proPlanTagline: string;
+  
+  // FAQ Section
+  faqTitle: string;
+  faqCanChangeTitle: string;
+  faqCanChangeAnswer: string;
+  faqSetupFeeTitle: string;
+  faqSetupFeeAnswer: string;
+  faqPaymentMethodsTitle: string;
+  faqPaymentMethodsAnswer: string;
+  faqCancelTitle: string;
+  faqCancelAnswer: string;
+  faqRefundsTitle: string;
+  faqRefundsAnswer: string;
+  faqDataSecureTitle: string;
+  faqDataSecureAnswer: string;
+  
+  // CTA Section
+  ctaTitle: string;
+  ctaSubtitle: string;
+  startTrialNoCreditCard: string;
 }
 
 export interface PlanFeaturesTranslations {

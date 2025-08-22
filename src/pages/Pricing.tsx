@@ -25,7 +25,7 @@ export default function Pricing() {
             className="mb-8 text-gray-600 hover:text-[#ea384c] hover:border-[#ea384c]"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour à l'accueil
+            {t('backToHome')}
           </Button>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             {t('pricingTitle')}
@@ -104,35 +104,35 @@ export default function Pricing() {
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            Frequently Asked Questions
+            {t('faqTitle')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Can I change plans anytime?</h3>
-                <p className="text-gray-600">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+                <h3 className="text-lg font-semibold mb-2">{t('faqCanChangeTitle')}</h3>
+                <p className="text-gray-600">{t('faqCanChangeAnswer')}</p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2">Is there a setup fee?</h3>
-                <p className="text-gray-600">No setup fees. Start using PropManagement immediately after signup.</p>
+                <h3 className="text-lg font-semibold mb-2">{t('faqSetupFeeTitle')}</h3>
+                <p className="text-gray-600">{t('faqSetupFeeAnswer')}</p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2">What payment methods do you accept?</h3>
-                <p className="text-gray-600">We accept all major credit cards and PayPal for your convenience.</p>
+                <h3 className="text-lg font-semibold mb-2">{t('faqPaymentMethodsTitle')}</h3>
+                <p className="text-gray-600">{t('faqPaymentMethodsAnswer')}</p>
               </div>
             </div>
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-2">Can I cancel anytime?</h3>
-                <p className="text-gray-600">Yes, cancel anytime. No long-term contracts or cancellation fees.</p>
+                <h3 className="text-lg font-semibold mb-2">{t('faqCancelTitle')}</h3>
+                <p className="text-gray-600">{t('faqCancelAnswer')}</p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2">Do you offer refunds?</h3>
-                <p className="text-gray-600">We offer a 30-day money-back guarantee if you're not completely satisfied.</p>
+                <h3 className="text-lg font-semibold mb-2">{t('faqRefundsTitle')}</h3>
+                <p className="text-gray-600">{t('faqRefundsAnswer')}</p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-2">Is my data secure?</h3>
-                <p className="text-gray-600">Absolutely. We use bank-grade encryption and security measures to protect your data.</p>
+                <h3 className="text-lg font-semibold mb-2">{t('faqDataSecureTitle')}</h3>
+                <p className="text-gray-600">{t('faqDataSecureAnswer')}</p>
               </div>
             </div>
           </div>
@@ -143,17 +143,17 @@ export default function Pricing() {
       <section className="py-20 px-4 bg-gradient-to-r from-[#ea384c] to-[#d31c3f]">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Get Started?
+            {t('ctaTitle')}
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Start your free trial today and see the difference PropManagement can make
+            {t('ctaSubtitle')}
           </p>
           <Button 
             size="lg" 
             variant="secondary"
             onClick={() => navigate('/auth')}
           >
-            Start Free Trial - No Credit Card Required
+            {t('startTrialNoCreditCard')}
           </Button>
         </div>
       </section>
