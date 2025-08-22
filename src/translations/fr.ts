@@ -18,6 +18,8 @@ import { fr as frFeatures } from './features/fr';
 import { frComingSoon } from './features/comingSoon';
 import { frAI } from './features/ai';
 import { frSecurity } from './features/security';
+import { frList } from './features/tenant/fr/list';
+import { frPayments } from './features/tenant/fr/payments';
 
 // Extensions de support
 const supportExtensions = {
@@ -44,6 +46,8 @@ const baseTranslations = {
   ...frFeatures,
   ...frComingSoon,
   ...frAI,
+  ...frList,
+  ...frPayments,
   ...supportExtensions,
   security: frSecurity,
 };
