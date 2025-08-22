@@ -108,13 +108,13 @@ export default function Features() {
                     <Icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                    {feature.titleKey ? t(feature.titleKey) : feature.title}
+                    {t(feature.titleKey)}
                   </h3>
                   <p className="text-gray-600 mb-3 text-lg">
-                    {feature.descriptionKey ? t(feature.descriptionKey) : feature.description}
+                    {t(feature.descriptionKey)}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {feature.detailsKey ? t(feature.detailsKey) : feature.details}
+                    {t(feature.detailsKey)}
                   </p>
                 </div>
               );
