@@ -65,27 +65,27 @@ export default function Features() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-gray-950">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <Button 
             variant="outline" 
             onClick={() => navigate('/')}
-            className="mb-8 text-gray-600 hover:text-[#ea384c] hover:border-[#ea384c]"
+            className="mb-8 text-muted-foreground hover:text-primary hover:border-primary"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('backToHome')}
           </Button>
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
             {t('everythingYouNeed')}
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
             {t('featuresSubtitle')}
           </p>
           <Button 
             size="lg" 
-            className="bg-[#ea384c] hover:bg-[#d31c3f]"
+            className="bg-primary hover:bg-primary/90"
             onClick={() => navigate('/auth')}
           >
             {t('startFreeTrial')}
@@ -102,18 +102,18 @@ export default function Features() {
               return (
                 <div
                   key={index}
-                  className="group p-8 rounded-2xl bg-white hover:bg-gradient-to-br hover:from-white hover:to-slate-50 transition-all duration-300 border border-slate-200 hover:border-slate-300 hover:shadow-xl"
+                  className="group p-8 rounded-2xl bg-white dark:bg-slate-800/50 hover:bg-gradient-to-br hover:from-white hover:to-slate-50 dark:hover:from-slate-800/70 dark:hover:to-slate-700/50 transition-all duration-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-primary/10"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-[#ea384c] to-[#d31c3f] rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="h-8 w-8 text-white" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <Icon className="h-8 w-8 text-primary-foreground" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  <h3 className="text-2xl font-bold text-foreground mb-3">
                     {t(feature.titleKey)}
                   </h3>
-                  <p className="text-gray-600 mb-3 text-lg">
+                  <p className="text-muted-foreground dark:text-gray-300 mb-3 text-lg">
                     {t(feature.descriptionKey)}
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground/70 dark:text-gray-400">
                     {t(feature.detailsKey)}
                   </p>
                 </div>
@@ -124,8 +124,8 @@ export default function Features() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-[#ea384c] to-[#d31c3f]">
-        <div className="max-w-4xl mx-auto text-center text-white">
+      <section className="py-20 px-4 bg-gradient-to-r from-primary to-secondary">
+        <div className="max-w-4xl mx-auto text-center text-primary-foreground">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             {t('readyToTransform')}
           </h2>
@@ -143,7 +143,7 @@ export default function Features() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-[#ea384c]"
+              className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
               onClick={() => navigate('/contact')}
             >
               {t('contactSales')}

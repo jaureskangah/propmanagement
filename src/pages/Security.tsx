@@ -67,20 +67,20 @@ export default function Security() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-gray-950">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <Button 
             variant="outline" 
             onClick={() => navigate('/')}
-            className="mb-8 text-gray-600 hover:text-[#ea384c] hover:border-[#ea384c]"
+            className="mb-8 text-muted-foreground hover:text-primary hover:border-primary"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             {t('common.backToHome')}
           </Button>
-          <Shield className="h-16 w-16 text-[#ea384c] mx-auto mb-6" />
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <Shield className="h-16 w-16 text-primary mx-auto mb-6" />
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
             {t('security.securityPrivacy')}
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
