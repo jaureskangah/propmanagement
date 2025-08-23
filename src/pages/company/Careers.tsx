@@ -30,7 +30,7 @@ export default function Careers() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-gray-950">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
@@ -63,13 +63,13 @@ export default function Careers() {
       </section>
 
       {/* About PropManagement */}
-      <section className="py-16 px-4 bg-white dark:bg-slate-950">
+      <section className="py-16 px-4 bg-white dark:bg-gray-900/95 dark:border-t dark:border-gray-800">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-foreground mb-8">
             {t("job.aboutPropManagement")}
           </h2>
           <div className="text-center max-w-4xl mx-auto mb-8">
-            <p className="text-lg text-muted-foreground mb-6">
+            <p className="text-lg text-muted-foreground dark:text-gray-300 mb-6">
               {t("job.aboutPropManagementDesc")}
             </p>
             <div className="mb-6">
@@ -77,13 +77,13 @@ export default function Careers() {
                 {t("job.propManagementFeatures")}
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="text-muted-foreground">{t("job.collectRent")}</div>
-                <div className="text-muted-foreground">{t("job.trackMaintenance")}</div>
-                <div className="text-muted-foreground">{t("job.communicateWithTenants")}</div>
-                <div className="text-muted-foreground">{t("job.centralizeDocuments")}</div>
+                <div className="text-muted-foreground dark:text-gray-300">{t("job.collectRent")}</div>
+                <div className="text-muted-foreground dark:text-gray-300">{t("job.trackMaintenance")}</div>
+                <div className="text-muted-foreground dark:text-gray-300">{t("job.communicateWithTenants")}</div>
+                <div className="text-muted-foreground dark:text-gray-300">{t("job.centralizeDocuments")}</div>
               </div>
             </div>
-            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
+            <div className="bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-6 rounded-lg border dark:border-gray-700">
               <p className="text-foreground font-medium">
                 {t("job.accelerateProgram")}
               </p>
@@ -102,9 +102,9 @@ export default function Careers() {
             {benefits.map((benefit, index) => {
               const Icon = benefit.icon;
               return (
-                <Card key={index} className="group hover:shadow-xl transition-all duration-300 text-center border-border">
+                <Card key={index} className="group hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-primary/10 transition-all duration-300 text-center border-border dark:bg-gray-800/50 dark:border-gray-700 dark:hover:bg-gray-800/70">
                   <CardHeader>
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                       <Icon className="h-8 w-8 text-primary-foreground" />
                     </div>
                     <CardTitle className="text-xl font-bold text-foreground">
@@ -112,7 +112,7 @@ export default function Careers() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">
+                    <p className="text-muted-foreground dark:text-gray-300">
                       {benefit.description}
                     </p>
                   </CardContent>
@@ -124,13 +124,13 @@ export default function Careers() {
       </section>
 
       {/* Job Opportunity */}
-      <section id="job-opportunity" className="py-16 px-4 bg-white dark:bg-slate-950">
+      <section id="job-opportunity" className="py-16 px-4 bg-white dark:bg-gray-900/95 dark:border-t dark:border-gray-800">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-foreground mb-12">
             {t("careers.opportunityTitle")}
           </h2>
           
-          <Card className="hover:shadow-lg transition-shadow border-border">
+          <Card className="hover:shadow-lg dark:hover:shadow-2xl dark:hover:shadow-primary/10 transition-shadow border-border dark:bg-gray-800/50 dark:border-gray-700">
             <CardContent className="p-8">
               {/* Job Header */}
               <div className="mb-6">
@@ -138,7 +138,7 @@ export default function Careers() {
                   🌟 {jobOffer.title}
                 </h3>
                 <div className="flex flex-wrap gap-3 mb-4">
-                  <Badge variant="secondary" className="text-sm">
+                  <Badge variant="secondary" className="text-sm dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600">
                     <MapPin className="h-3 w-3 mr-1" />
                     {jobOffer.location}
                   </Badge>
@@ -156,10 +156,10 @@ export default function Careers() {
                 <h4 className="text-xl font-bold text-foreground mb-3">
                   🎯 {t("job.theRole")}
                 </h4>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-muted-foreground dark:text-gray-300 mb-4">
                   {t("job.roleDescription")}
                 </p>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2 text-muted-foreground dark:text-gray-300">
                   <li>• {t("job.operationsOrg")}</li>
                   <li>• {t("job.growthAcquisition")}</li>
                   <li>• {t("job.userRelations")}</li>
@@ -172,7 +172,7 @@ export default function Careers() {
                 <h4 className="text-xl font-bold text-foreground mb-3">
                   🔎 {t("job.whoYouAre")}
                 </h4>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2 text-muted-foreground dark:text-gray-300">
                   <li>• {t("job.entrepreneurHeart")}</li>
                   <li>• {t("job.experiencedInterested")}</li>
                   <li>• {t("job.practicalOriented")}</li>
@@ -186,7 +186,7 @@ export default function Careers() {
                 <h4 className="text-xl font-bold text-foreground mb-3">
                   🎁 {t("job.whatWeOffer")}
                 </h4>
-                <ul className="space-y-2 text-muted-foreground">
+                <ul className="space-y-2 text-muted-foreground dark:text-gray-300">
                   <li>• {t("job.coFounderOpportunity")}</li>
                   <li>• {t("job.equityOwnership")}</li>
                   <li>• {t("job.centralRole")}</li>
@@ -195,11 +195,11 @@ export default function Careers() {
               </div>
 
               {/* How to Apply */}
-              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg">
+              <div className="bg-gradient-to-r from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 p-6 rounded-lg border dark:border-gray-700">
                 <h4 className="text-xl font-bold text-foreground mb-3">
                   📩 {t("job.howToApply")}
                 </h4>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-muted-foreground dark:text-gray-300 mb-4">
                   {t("job.applyDescription")}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -213,14 +213,14 @@ export default function Careers() {
                   </Button>
                   <Button 
                     variant="outline"
-                    className="flex items-center border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                    className="flex items-center border-primary text-primary hover:bg-primary hover:text-primary-foreground dark:border-primary dark:text-primary"
                     onClick={() => window.open(t("job.applyLinkedIn"), '_blank')}
                   >
                     <Linkedin className="h-4 w-4 mr-2" />
                     LinkedIn
                   </Button>
                 </div>
-                <p className="text-sm text-muted-foreground mt-4">
+                <p className="text-sm text-muted-foreground dark:text-gray-400 mt-4">
                   {t("job.applyInstructions")}
                 </p>
                 <p className="text-sm font-medium text-foreground mt-2">
