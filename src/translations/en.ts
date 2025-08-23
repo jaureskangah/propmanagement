@@ -167,7 +167,66 @@ const translations = {
   "about.values.integrity.title": "Integrity:",
   "about.values.integrity.description": "Operating with transparency and honesty in all our dealings.",
   "about.values.customerFocus.title": "Customer Focus:",
-  "about.values.customerFocus.description": "Putting our users' needs first in everything we do."
+  "about.values.customerFocus.description": "Putting our users' needs first in everything we do.",
+  
+  // Careers page translations
+  "careers.title": "Join Our Team",
+  "careers.subtitle": "Help us revolutionize property management while building your career with a team that values innovation, collaboration, and growth.",
+  "careers.viewPositions": "View Our Opportunity",
+  "careers.whyJoinUs": "Why Join PropManagement?",
+  "careers.opportunityTitle": "Co-Founder Opportunity",
+  
+  // Job offer
+  "job.title": "Right-Hand / Co-Founder – PropManagement",
+  "job.location": "Moncton (NB) – hybrid/remote possible",
+  "job.type": "Co-founder / Equity Partner",
+  "job.availability": "Immediate",
+  
+  // About PropManagement section
+  "job.aboutPropManagement": "About PropManagement",
+  "job.aboutPropManagementDesc": "PropManagement is a SaaS platform designed to help small landlords manage their rental properties simply, quickly, and effectively. Our mission is clear: \"Manage more, stress less.\"",
+  
+  "job.propManagementFeatures": "With PropManagement, landlords can:",
+  "job.collectRent": "Collect rent online 💰",
+  "job.trackMaintenance": "Track maintenance requests 🔧", 
+  "job.communicateWithTenants": "Communicate seamlessly with tenants 📩",
+  "job.centralizeDocuments": "Centralize all their property documents 📂",
+  
+  "job.accelerateProgram": "We've recently joined the Accelerate Tech 2025/26 program by Tribe Network, marking a key milestone in our journey.",
+  
+  // The role section
+  "job.theRole": "The Role",
+  "job.roleDescription": "We are looking for a right-hand / co-founder to join the adventure and help accelerate PropManagement's growth. Your role will include:",
+  
+  "job.operationsOrg": "Operations & organization: Structuring internal processes and ensuring goal tracking.",
+  "job.growthAcquisition": "Growth & acquisition: Developing and executing marketing, partnerships, and sales strategies.",
+  "job.userRelations": "User relations: Supporting our first landlords, gathering feedback, and improving customer experience.",
+  "job.fundraisingPartnerships": "Fundraising & partnerships: Helping prepare pitch decks, meeting investors, and building strategic alliances.",
+  
+  // Who you are section
+  "job.whoYouAre": "Who You Are",
+  "job.entrepreneurHeart": "An entrepreneur at heart, eager to join an early-stage startup.",
+  "job.experiencedInterested": "Experienced or highly interested in digital marketing, business development, or project management.",
+  "job.practicalOriented": "Practical and solution-oriented, able to handle diverse responsibilities independently.",
+  "job.motivatedImpact": "Motivated by having a direct impact on a project's success and building something meaningful from the ground up.",
+  "job.comfortableLean": "Comfortable working in a lean environment (limited resources, big ambitions 💡).",
+  
+  // What we offer section
+  "job.whatWeOffer": "What We Offer",
+  "job.coFounderOpportunity": "The opportunity to become a co-founder of a high-potential PropTech startup.",
+  "job.equityOwnership": "Equity (ownership) in the company, negotiable based on commitment.",
+  "job.centralRole": "A central role in transforming property management for small landlords in Canada.",
+  "job.networkAccess": "Access to a strong network of experts, mentors, and investors through the Accelerate Tech program.",
+  
+  // How to apply section
+  "job.howToApply": "How to Apply",
+  "job.applyDescription": "If you want to join this journey and become the key partner of PropManagement, get in touch:",
+  "job.applyEmail": "contact@propmanagement.app",
+  "job.applyLinkedIn": "https://www.linkedin.com/in/jaureskangah/",
+  "job.applyInstructions": "Tell us about your background, your motivation, and what you could bring to the project.",
+  "job.buildTogether": "Let's build together the solution small landlords have been waiting for!",
+  
+  "job.applyNow": "Apply Now"
 };
 
 

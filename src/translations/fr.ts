@@ -167,7 +167,66 @@ const translations = {
   "about.values.integrity.title": "Intégrité :",
   "about.values.integrity.description": "Opérer avec transparence et honnêteté dans toutes nos relations.",
   "about.values.customerFocus.title": "Orientation Client :",
-  "about.values.customerFocus.description": "Placer les besoins de nos utilisateurs au premier plan dans tout ce que nous faisons."
+  "about.values.customerFocus.description": "Placer les besoins de nos utilisateurs au premier plan dans tout ce que nous faisons.",
+  
+  // Careers page translations
+  "careers.title": "Rejoignez notre équipe",
+  "careers.subtitle": "Aidez-nous à révolutionner la gestion immobilière tout en développant votre carrière avec une équipe qui valorise l'innovation, la collaboration et la croissance.",
+  "careers.viewPositions": "Voir notre opportunité",
+  "careers.whyJoinUs": "Pourquoi rejoindre PropManagement?",
+  "careers.opportunityTitle": "Opportunité de Cofondateur",
+  
+  // Job offer
+  "job.title": "Bras Droit / Cofondateur – PropManagement",
+  "job.location": "Moncton (NB) – possibilité hybride/remote",
+  "job.type": "Cofondateur / Equity Partner",
+  "job.availability": "Dès maintenant",
+  
+  // About PropManagement section
+  "job.aboutPropManagement": "À propos de PropManagement",
+  "job.aboutPropManagementDesc": "PropManagement est une plateforme SaaS conçue pour aider les petits propriétaires à gérer leurs biens locatifs de manière simple, rapide et efficace. Notre mission est claire : « Gérez plus, stressez moins ».",
+  
+  "job.propManagementFeatures": "Avec PropManagement, les propriétaires peuvent :",
+  "job.collectRent": "Collecter les loyers en ligne 💰",
+  "job.trackMaintenance": "Suivre les demandes de maintenance 🔧",
+  "job.communicateWithTenants": "Communiquer facilement avec leurs locataires 📩", 
+  "job.centralizeDocuments": "Centraliser leurs documents 📂",
+  
+  "job.accelerateProgram": "Nous avons récemment intégré le programme Accelerate Tech 2025/26 de Tribe Network, ce qui marque une étape clé dans notre développement.",
+  
+  // The role section
+  "job.theRole": "Le rôle",
+  "job.roleDescription": "Nous recherchons un bras droit / cofondateur pour rejoindre l'aventure et accélérer la croissance de PropManagement. Ton rôle sera de m'épauler sur :",
+  
+  "job.operationsOrg": "Opérations & organisation : structurer les process internes et assurer le suivi des objectifs.",
+  "job.growthAcquisition": "Croissance & acquisition : élaborer et exécuter la stratégie marketing, partenariats et ventes.",
+  "job.userRelations": "Relations utilisateurs : accompagner nos premiers propriétaires, gérer leurs retours et améliorer l'expérience client.",
+  "job.fundraisingPartnerships": "Levée de fonds & partenariats : participer à la préparation des pitchs, rencontrer investisseurs et partenaires stratégiques.",
+  
+  // Who you are section
+  "job.whoYouAre": "Profil recherché",
+  "job.entrepreneurHeart": "Tu es entrepreneur dans l'âme, attiré(e) par les startups early-stage.",
+  "job.experiencedInterested": "Tu as une expérience ou un fort intérêt en marketing digital, business development ou gestion de projet.",
+  "job.practicalOriented": "Tu es pragmatique et orienté solutions, capable de gérer plusieurs missions avec autonomie.",
+  "job.motivatedImpact": "Tu veux avoir un impact direct sur la réussite d'un projet et bâtir quelque chose de grand dès le départ.",
+  "job.comfortableLean": "Tu es à l'aise dans un environnement lean (peu de moyens mais beaucoup d'ambition 💡).",
+  
+  // What we offer section
+  "job.whatWeOffer": "Ce que nous offrons",
+  "job.coFounderOpportunity": "L'opportunité de devenir cofondateur d'une startup PropTech à fort potentiel.",
+  "job.equityOwnership": "Une participation au capital (equity), négociable selon l'engagement.",
+  "job.centralRole": "Une place centrale dans un projet qui vise à transformer la gestion locative au Canada.",
+  "job.networkAccess": "L'accès à un réseau d'experts, de mentors et d'investisseurs via le programme Accelerate Tech.",
+  
+  // How to apply section
+  "job.howToApply": "Comment postuler",
+  "job.applyDescription": "Si tu veux rejoindre cette aventure et devenir le partenaire clé de PropManagement, contacte-moi :",
+  "job.applyEmail": "contact@propmanagement.app", 
+  "job.applyLinkedIn": "https://www.linkedin.com/in/jaureskangah/",
+  "job.applyInstructions": "Parle-moi de ton parcours, de tes motivations et de ce que tu pourrais apporter au projet.",
+  "job.buildTogether": "Construisons ensemble la solution que les petits propriétaires attendaient !",
+  
+  "job.applyNow": "Postuler maintenant"
 };
 
 
