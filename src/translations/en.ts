@@ -154,7 +154,20 @@ const translations = {
   
   // Generic security translations
   security: "Security",
-  securityDesc: "Complete protection of your data with enterprise-grade encryption and access controls"
+  securityDesc: "Complete protection of your data with enterprise-grade encryption and access controls",
+  
+  // About page translations
+  "about.title": "About PropManagement",
+  "about.description": "PropManagement is dedicated to simplifying property management for landlords and property managers. Our platform streamlines the entire property management process, from tenant screening to maintenance requests.",
+  "about.mission.title": "Our Mission",
+  "about.mission.description": "To provide innovative solutions that make property management more efficient, transparent, and profitable for property owners while ensuring a better experience for tenants.",
+  "about.values.title": "Our Values",
+  "about.values.innovation.title": "Innovation:",
+  "about.values.innovation.description": "Continuously improving our platform with cutting-edge technology.",
+  "about.values.integrity.title": "Integrity:",
+  "about.values.integrity.description": "Operating with transparency and honesty in all our dealings.",
+  "about.values.customerFocus.title": "Customer Focus:",
+  "about.values.customerFocus.description": "Putting our users' needs first in everything we do."
 };
 
 

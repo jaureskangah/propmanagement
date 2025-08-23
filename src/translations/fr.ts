@@ -154,7 +154,20 @@ const translations = {
   
   // Generic security translations
   security: "Sécurité",
-  securityDesc: "Protection complète de vos données avec chiffrement de niveau entreprise et contrôles d'accès"
+  securityDesc: "Protection complète de vos données avec chiffrement de niveau entreprise et contrôles d'accès",
+  
+  // About page translations
+  "about.title": "À propos de PropManagement",
+  "about.description": "PropManagement se consacre à simplifier la gestion immobilière pour les propriétaires et les gestionnaires immobiliers. Notre plateforme simplifie l'ensemble du processus de gestion immobilière, du tri des locataires aux demandes de maintenance.",
+  "about.mission.title": "Notre Mission",
+  "about.mission.description": "Fournir des solutions innovantes qui rendent la gestion immobilière plus efficace, transparente et rentable pour les propriétaires tout en assurant une meilleure expérience aux locataires.",
+  "about.values.title": "Nos Valeurs",
+  "about.values.innovation.title": "Innovation :",
+  "about.values.innovation.description": "Améliorer continuellement notre plateforme avec une technologie de pointe.",
+  "about.values.integrity.title": "Intégrité :",
+  "about.values.integrity.description": "Opérer avec transparence et honnêteté dans toutes nos relations.",
+  "about.values.customerFocus.title": "Orientation Client :",
+  "about.values.customerFocus.description": "Placer les besoins de nos utilisateurs au premier plan dans tout ce que nous faisons."
 };
 
 
