@@ -49,8 +49,25 @@ const baseTranslations = {
   ...enComingSoon,
   ...enAI,
   ...supportExtensions,
-  security: enSecurity,
 };
+
+// Utility function to flatten nested objects with prefix
+function flattenObject(obj: any, prefix = '', result: any = {}): any {
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const newKey = prefix ? `${prefix}.${key}` : key;
+      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+        flattenObject(obj[key], newKey, result);
+      } else {
+        result[newKey] = obj[key];
+      }
+    }
+  }
+  return result;
+}
+
+// Flatten security translations
+const flattenedSecurity = flattenObject(enSecurity, 'security');
 
 // Extraire documentGenerator de enDocuments et l'ajouter séparément
 const { documentGenerator, ...otherDocuments } = enDocuments;
@@ -58,6 +75,7 @@ const { documentGenerator, ...otherDocuments } = enDocuments;
 const translations = {
   ...baseTranslations,
   ...otherDocuments,
+  ...flattenedSecurity,
   documentGenerator: documentGenerator,
   // Ajouter downloadDocument à la racine pour compatibilité
   downloadDocument: documentGenerator.downloadDocument,
@@ -130,6 +148,9 @@ const translations = {
   upTo1Property: "1 property",
   upTo1Tenant: "1 tenant",
   allStandardFeatures: "All Standard Plan benefits",
+  
+  // Common translations
+  "common.backToHome": "Back to Home",
   
   // Generic security translations
   security: "Security",
