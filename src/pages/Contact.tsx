@@ -55,8 +55,8 @@ export default function Contact() {
       icon: Phone,
       title: "Phone Support",
       description: "Monday - Friday, 9AM - 6PM EST",
-      contact: "+1 (555) 123-4567",
-      action: () => window.open('tel:+15551234567')
+      contact: "+1 (506) 871-1872",
+      action: () => window.open('tel:+15068711872')
     },
     {
       icon: Mail,
@@ -76,22 +76,10 @@ export default function Contact() {
 
   const offices = [
     {
-      city: "New York",
-      address: "123 Broadway, Suite 400",
-      zipcode: "New York, NY 10001",
-      phone: "+1 (212) 555-0123"
-    },
-    {
-      city: "San Francisco",
-      address: "456 Market Street, Floor 10",
-      zipcode: "San Francisco, CA 94102",
-      phone: "+1 (415) 555-0456"
-    },
-    {
-      city: "Austin",
-      address: "789 Congress Avenue, Suite 200",
-      zipcode: "Austin, TX 78701",
-      phone: "+1 (512) 555-0789"
+      city: "Moncton",
+      address: "Bureau principal",
+      zipcode: "Moncton, New Brunswick",
+      phone: "+1 (506) 871-1872"
     }
   ];
 
@@ -235,7 +223,7 @@ export default function Contact() {
             {/* Office Locations */}
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-6">
-                Our Offices
+                Notre Bureau
               </h2>
               <div className="space-y-6">
                 {offices.map((office, index) => (
