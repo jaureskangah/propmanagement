@@ -101,18 +101,20 @@ export default function Contact() {
       <section className="py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 dark:from-primary/10 dark:to-secondary/10" />
         <div className="max-w-6xl mx-auto text-center relative">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate('/')}
-            className="mb-8 border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-muted/50 dark:hover:bg-muted/20"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            {t('common.backToHome')}
-          </Button>
+          <div className="flex justify-center mb-8">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/')}
+              className="border-border/50 text-muted-foreground hover:text-foreground hover:border-primary/50 hover:bg-muted/50 dark:hover:bg-muted/20"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              {t('common.backToHome')}
+            </Button>
+          </div>
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-secondary mb-6 shadow-lg dark:shadow-primary/20">
             <MessageSquare className="h-10 w-10 text-primary-foreground" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-br from-foreground to-muted-foreground bg-clip-text text-transparent mb-6 leading-tight">
+          <h1 className="text-4xl md:text-6xl font-bold text-foreground dark:text-foreground mb-6 leading-tight">
             {t('contactUs')}
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 dark:text-muted-foreground/80">
