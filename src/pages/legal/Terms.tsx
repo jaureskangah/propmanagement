@@ -38,7 +38,7 @@ export default function Terms() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-gray-950">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
@@ -64,13 +64,13 @@ export default function Terms() {
       </section>
 
       {/* Terms Content */}
-      <section className="py-16 px-4 bg-white dark:bg-gray-900/95 dark:border-t dark:border-gray-800">
+      <section className="py-16 px-4 bg-card/80 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {sections.map((section, index) => {
               const Icon = section.icon;
               return (
-                <Card key={index} className="group hover:shadow-xl dark:hover:shadow-2xl dark:hover:shadow-primary/10 transition-all duration-300 border-border dark:bg-gray-800/50 dark:border-gray-700 dark:hover:bg-gray-800/70">
+                <Card key={index} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border hover:border-primary">
                   <CardHeader>
                     <div className="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
                       <Icon className="h-8 w-8 text-primary-foreground" />
@@ -81,12 +81,12 @@ export default function Terms() {
                   </CardHeader>
                   <CardContent className="text-center">
                     {section.content && (
-                      <p className="text-muted-foreground dark:text-gray-300">
+                      <p className="text-muted-foreground">
                         {section.content}
                       </p>
                     )}
                     {section.items && (
-                      <ul className="list-disc pl-6 text-left text-muted-foreground dark:text-gray-300 space-y-2">
+                      <ul className="list-disc pl-6 text-left text-muted-foreground space-y-2">
                         {section.items.map((item, itemIndex) => (
                           <li key={itemIndex}>{item}</li>
                         ))}
@@ -100,7 +100,7 @@ export default function Terms() {
           
           {/* Additional Terms */}
           <div className="mt-16">
-            <Card className="border-border dark:bg-gray-800/50 dark:border-gray-700">
+            <Card className="glass-card border hover:border-primary transition-all duration-300">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-foreground text-center">
                   Additional Terms
@@ -109,7 +109,7 @@ export default function Terms() {
               <CardContent className="space-y-6">
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">5. Privacy and Data Protection</h3>
-                  <p className="text-muted-foreground dark:text-gray-300">
+                  <p className="text-muted-foreground">
                     Your privacy is important to us. Our use of your personal information is governed by our Privacy Policy, 
                     which is incorporated into these Terms by reference.
                   </p>
@@ -117,7 +117,7 @@ export default function Terms() {
                 
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">6. Modifications to Service</h3>
-                  <p className="text-muted-foreground dark:text-gray-300">
+                  <p className="text-muted-foreground">
                     We reserve the right to modify or discontinue our service at any time, with or without notice. 
                     We shall not be liable to you or any third party for any modification or discontinuance.
                   </p>
@@ -125,7 +125,7 @@ export default function Terms() {
                 
                 <div>
                   <h3 className="text-lg font-semibold text-foreground mb-2">7. Governing Law</h3>
-                  <p className="text-muted-foreground dark:text-gray-300">
+                  <p className="text-muted-foreground">
                     These Terms shall be governed by and construed in accordance with the laws of the jurisdiction 
                     in which PropManagement operates.
                   </p>
